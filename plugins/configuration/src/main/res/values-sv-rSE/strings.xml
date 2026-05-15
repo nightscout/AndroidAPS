@@ -32,18 +32,11 @@
     <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
     <string name="readstatus">Läs status</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Begäran</string>
-    <string name="error_asking_for_permissions">Fel vid begäran om behörigheter</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Vilken pump vill du använda med AAPS?</string>
     <string name="configbuilder_aps_description">Vilken algoritm ska användas för behandlingar?</string>
-    <string name="configbuilder_general_description">Dessa är några allmänna insticksprogram som kan vara användbara.</string>
-    <string name="configbuilder_constraints_description">Vilka begränsningar ska tillämpas?</string>
-    <string name="configbuilder_loop_description">Använd detta för att aktivera AAPS loop-möjligheter.</string>
-    <string name="configbuilder_insulin_description">Vilken typ av insulin använder du?</string>
     <string name="configbuilder_bgsource_description">Var ska AAPS få sitt data ifrån?</string>
-    <string name="configbuilder_smoothing_description">Välj utjämningsalgoritm</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump kommer AAPS skriva över pumpens basalprofil med den aktiva profilen i AAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
     <string name="nsclient_version_does_not_match">Följarversionen matchar inte AAPS-versionen. Vänligen uppdatera.</string>

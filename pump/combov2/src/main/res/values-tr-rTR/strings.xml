@@ -45,7 +45,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo taraması zaman aşımına uğradı</string>
     <string name="combov2_pairing_failed_due_to_error">Eşleştirme hata nedeniyle başarısız oldu: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Eşleştirme bilinmeyen nedenlerle iptal edildi</string>
-    <string name="combov2_pairing_invalid_pin_length">"Geçersiz eşleştirme PIN uzunluğu: %1$d haneye ihtiyaç var, %2$d alındı"</string>
     <string name="combov2_scanning_for_pump">Pompa taranıyor</string>
     <string name="combov2_establishing_bt_connection">Bluetooth bağlantısı kuruluyor (deneme no. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Pompa ile el sıkışma</string>
@@ -65,7 +64,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_setting_basal_profile_cmddesc">Bazal profil ayarlanıyor</string>
     <string name="combov2_setting_tbr_cmddesc">%2$d dakika için %1$d%% GBO ayarlanıyor</string>
     <string name="combov2_cancelling_tbr">Devam eden GBO iptal ediliyor</string>
-    <string name="combov2_delivering_bolus_cmddesc">%1$.1f Ü bolus gönderiliyor</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Geçmiş GTD alınıyor</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Pompa tarihsaati güncelleniyor</string>
     <string name="combov2_updating_pump_status_cmddesc">Pompa durumu güncelleniyor</string>

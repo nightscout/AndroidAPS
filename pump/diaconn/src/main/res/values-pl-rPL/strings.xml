@@ -11,11 +11,9 @@
     <string name="gettingpumpsettings">Otrzymywanie ustawień pompy</string>
     <string name="gettingpumptime">Otrzymywanie czasu pompy</string>
     <string name="largetimediff">Duża różnica czasu:\nCzas w pompie różni się o więcej niż 1,5 godziny od bieżącego czasu.\n. Ustaw czas na pompie ręcznie i upewnij się, że odczyt historii pompy nie powoduje błędu.\nJeśli to możliwe, usuń historię z pompy przed zmianą czasu lub wyłącz pętlę zamkniętą na okres jednego DIA po ostatnim nieprawidłowym wpisie historii, ale na co najmniej jeden DIA od teraz.</string>
-    <string name="largetimedifftitle">Duża różnica czasu</string>
     <string name="approachingdailylimit">Zbliżam się do dziennego limitu insuliny</string>
     <string name="startingbolus">Rozpoczynam podawanie bolusa</string>
     <string name="waitingforestimatedbolusend">Oczekiwanie na szacowany koniec bolusa</string>
-    <string name="gettingbolusstatus">Otrzymywanie statusu bolusa</string>
     <string name="stoppingtempbasal">Zatrzymywanie bazy tymczasowej</string>
     <string name="settingtempbasal">Ustawianie bazy tymczasowej</string>
     <string name="settingextendedbolus">Ustawianie bolusa przedłużonego</string>
@@ -30,10 +28,8 @@
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
     <string name="boluserrorcode">Zadano: %1$.2fU Dostarczono: %2$.2fU Kod błędu: %3$s</string>
     <string name="selectedpump">Wybrana pompa</string>
-    <string name="diaconn_g8_bluetooth_status">Status Bluetooth</string>
     <string name="bolus_step">Krok bolusa</string>
     <string name="basal_step">Krok bazy</string>
-    <string name="diaconn_g8_user_options">OPCJE UŻYTKOWNIKA</string>
     <string name="pairfirst">Proszę sparować swoją pompę z telefonem!</string>
     <string name="processinghistory">"Przetwarzanie zdarzenia "</string>
     <string name="diaconn_g8_history_tempbasal">Baza tymczasowa</string>

@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -36,7 +37,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
 
-    private val bolusProgressData = BolusProgressData()
+    private val bolusProgressData by lazy { BolusProgressData(ch, rh) }
     private lateinit var sut: TizenPlugin
 
     @BeforeEach
@@ -77,7 +78,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     fun prepareDataTestAPS() {
         whenever(config.APS).thenReturn(true)
         bolusProgressData.start(insulin = 1.0, isSMB = false)
-        bolusProgressData.updateProgress(100, "Some status", 1.0)
+        bolusProgressData.updateProgress(100, "Some status", PumpInsulin(1.0))
         val event = EventLoopUpdateGui()
         val bundle = BundleMock.mocked()
         sut.prepareData(event, bundle)
@@ -118,7 +119,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     fun prepareDataTestAAPSClient() {
         whenever(config.APS).thenReturn(false)
         bolusProgressData.start(insulin = 1.0, isSMB = false)
-        bolusProgressData.updateProgress(100, "Some status", 1.0)
+        bolusProgressData.updateProgress(100, "Some status", PumpInsulin(1.0))
         val event = EventLoopUpdateGui()
         val bundle = BundleMock.mocked()
         sut.prepareData(event, bundle)

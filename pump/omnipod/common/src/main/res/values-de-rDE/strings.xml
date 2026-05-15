@@ -37,7 +37,6 @@
     <string name="omnipod_common_overview_button_resume_delivery">Abgabe fortsetzen</string>
     <string name="omnipod_common_overview_button_silence_alerts">Alarme stummschalten</string>
     <string name="omnipod_common_overview_total_delivered">Insgesamt abgegeben</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f IE</string>
     <string name="omnipod_common_overview_pod_unique_id">Eindeutige ID</string>
     <string name="omnipod_common_overview_lot_number">LOT Nummer</string>
     <string name="omnipod_common_overview_pod_sequence_number">Laufende Nummer</string>

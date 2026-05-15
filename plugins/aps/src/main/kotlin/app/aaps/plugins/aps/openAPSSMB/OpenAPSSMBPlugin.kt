@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
-import app.aaps.core.interfaces.aps.GlucoseStatusSMB
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
@@ -43,6 +42,7 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -99,7 +99,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val profiler: Profiler,
     private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
     private val apsResultProvider: Provider<APSResult>,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    private val fabricPrivacy: FabricPrivacy
 ) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -131,7 +132,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             val variableSens = it.variableSens ?: return@forEach
             val timestamp = it.date
             val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
-            if (variableSens > 0) dynIsfCache.put(key, variableSens)
+            if (variableSens > 0) synchronized(dynIsfCache) { dynIsfCache.put(key, variableSens) }
             count++
         }
         aapsLogger.debug(LTag.APS, "Loaded $count variable sensitivity values from database")
@@ -162,10 +163,12 @@ open class OpenAPSSMBPlugin @Inject constructor(
         var count = 0
         var sum = 0.0
         val start = timestamp - T.hours(24).msecs()
-        dynIsfCache.forEach { key, value ->
-            if (key in start..timestamp) {
-                count++
-                sum += value
+        synchronized(dynIsfCache) {
+            dynIsfCache.forEach { key, value ->
+                if (key in start..timestamp) {
+                    count++
+                    sum += value
+                }
             }
         }
         val sensitivity = if (count == 0) null else sum / count
@@ -206,7 +209,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         // Round down to 30 min and use it as a key for caching
         // Add BG to key as it affects calculation
         val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
-        val cached = dynIsfCache[key]
+        val cached = synchronized(dynIsfCache) { dynIsfCache[key] }
         if (cached != null && timestamp < dateUtil.now()) {
             //aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
             return Pair("HIT", cached)
@@ -216,8 +219,10 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (!dynIsfResult.tddPartsCalculated()) return Pair("TDD miss", null)
         // no cached result found, let's calculate the value
         //aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
-        dynIsfResult.variableSensitivity?.let { dynIsfCache.put(key, it) }
-        if (dynIsfCache.size() > 1000) dynIsfCache.clear()
+        synchronized(dynIsfCache) {
+            dynIsfResult.variableSensitivity?.let { dynIsfCache.put(key, it) }
+            if (dynIsfCache.size() > 1000) dynIsfCache.clear()
+        }
         return Pair("CALC", dynIsfResult.variableSensitivity)
     }
 
@@ -247,7 +252,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         // DynamicISF specific
         // without these values DynISF doesn't work properly
         // Current implementation is fallback to SMB if TDD history is not available. Thus calculated here
-        val glucoseStatus = glucoseStatusProvider.glucoseStatusData as GlucoseStatusSMB?
+        val glucoseStatus = glucoseStatusCalculatorSMB.getGlucoseStatusData(allowOldData = false)
         dynIsfResult.tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1, allowMissingDays = false))?.data?.totalAmount
         tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = false))?.let {
             dynIsfResult.tdd7D = it.data.totalAmount
@@ -443,6 +448,26 @@ open class OpenAPSSMBPlugin @Inject constructor(
         )
         val microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value()
         val flatBGsDetected = bgQualityCheck.state == BgQualityCheck.State.FLAT
+        val effectiveDynIsfMode = dynIsfMode && dynIsfResult.tddPartsCalculated()
+
+        // Refuse to run the algorithm with degenerate ISF inputs — division by these would produce NaN/Infinity in the result.
+        val invalidInputs = !oapsProfile.sens.isFinite() || oapsProfile.sens <= 0.0 ||
+            (effectiveDynIsfMode && (
+                !oapsProfile.variable_sens.isFinite() || oapsProfile.variable_sens <= 0.0 ||
+                    !oapsProfile.TDD.isFinite() || oapsProfile.TDD <= 0.0 ||
+                    oapsProfile.insulinDivisor <= 0
+                ))
+        if (invalidInputs) {
+            val msg = "OpenAPS SMB aborting: invalid ISF inputs " +
+                "dynIsfMode=$effectiveDynIsfMode sens=${oapsProfile.sens} " +
+                "variable_sens=${oapsProfile.variable_sens} TDD=${oapsProfile.TDD} " +
+                "insulinDivisor=${oapsProfile.insulinDivisor}"
+            aapsLogger.error(LTag.APS, msg)
+            fabricPrivacy.logException(IllegalStateException(msg))
+            rxBus.send(EventResetOpenAPSGui(msg))
+            rxBus.send(EventOpenAPSUpdateGui())
+            return@withContext
+        }
 
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal SMB <<<")
         aapsLogger.debug(LTag.APS, "Glucose status:     $glucoseStatus")
@@ -465,7 +490,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             microBolusAllowed = microBolusAllowed,
             currentTime = now,
             flatBGsDetected = flatBGsDetected,
-            dynIsfMode = dynIsfMode && dynIsfResult.tddPartsCalculated()
+            dynIsfMode = effectiveDynIsfMode
         ).also {
             val determineBasalResult = apsResultProvider.get().with(it)
             // Preserve input data
@@ -492,7 +517,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         return value
     }
 
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
             val maxIobPref = preferences.get(DoubleKey.ApsSmbMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
@@ -525,7 +550,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         return absoluteRate
     }
 
-    override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+    override suspend fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = preferences.get(BooleanKey.ApsUseSmb)
         if (!enabled) value.set(false, rh.gs(R.string.smb_disabled_in_preferences), this)
         return value
@@ -554,11 +579,13 @@ open class OpenAPSSMBPlugin @Inject constructor(
         JsonObject(emptyMap())
             .put(BooleanKey.ApsUseDynamicSensitivity, preferences)
             .put(IntKey.ApsDynIsfAdjustmentFactor, preferences)
+            .put(BooleanKey.ApsUseSmb, preferences)
 
     override fun applyConfiguration(configuration: JsonObject) {
         configuration
             .store(BooleanKey.ApsUseDynamicSensitivity, preferences)
             .store(IntKey.ApsDynIsfAdjustmentFactor, preferences)
+            .store(BooleanKey.ApsUseSmb, preferences)
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

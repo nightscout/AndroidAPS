@@ -13,13 +13,13 @@
     <string name="patch_not_active">Patch non attivata</string>
     <string name="pump_setting_failed">Errore nella configurazione delle impostazioni utente sul micro!</string>
     <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o pompa.</string>
+    <string name="patch_reset_after_primed_error">Rilevato ripristino patch dopo il priming! Rimuovere il cerotto e avviare un nuova cerotto.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Ultima connessione</string>
     <string name="active_bolus_label">Bolo attivo</string>
     <string name="pump_state_label">Stato micro</string>
     <string name="active_alarms_label">Attiva allarmi</string>
     <string name="basal_type_label">Tipo basale</string>
-    <string name="basal_rate_label">Velocità basale</string>
     <string name="pump_type_label">Tipo micro</string>
     <string name="fw_version_label">Versione FW</string>
     <string name="patch_no_label">Patch no</string>
@@ -50,6 +50,15 @@
     <string name="alarm_no_calibration">No calibrazione</string>
     <string name="pump_time_update_failed">Impossibile aggiornare il fuso orario del microinfusore, posticipare il messaggio e aggiornare manualmente.</string>
     <string name="bolus_error">Errore bolo</string>
+    <!-- Status strings -->
+    <string name="status_idle">Inattivo</string>
+    <string name="status_filled">Riempito</string>
+    <string name="status_priming">Inizializzazione</string>
+    <string name="status_primed">Inizializzato</string>
+    <string name="status_ejecting">Espulsione</string>
+    <string name="status_ejected">Espulso</string>
+    <string name="status_active">Attivo</string>
+    <string name="status_stopped">Fermato</string>
     <!-- wizard-->
     <string name="retry">Riprova</string>
     <string name="step_prepare_patch">Attiva patch</string>
@@ -64,9 +73,9 @@
     <string name="step_deactivate">Disattiva patch</string>
     <string name="step_deactivating">Disattivazione...</string>
     <string name="step_deactivate_complete">Patch disattivata</string>
+    <string name="unpair_confirm_message">Questo cancellerà il numero di serie del microinfusore memorizzato e si disconnetterà. Attivare una nuova patch per eseguire la scansione di un micro.</string>
     <string name="step_retry_activation">Attivazione in corso</string>
     <string name="unexpected_state">Stato inaspettato: %1$s</string>
-    <string name="no_profile_selected">Nessun profilo selezionato. Seleziona un profilo e riprova.</string>
     <string name="patch_begin_activation">Nessuna patch attiva. Premi <b>Avanti</b> per iniziare il processo di attivazione.</string>
     <string name="patch_not_active_note">La base del micro non deve essere collegata alla patch fino alla fase successiva!</string>
     <string name="connect_pump_base">Collegare la base del micro a una nuova patch, rimuovere l\'aria residua e riempire con insulina, quindi premere <b>Avanti</b>.</string>
@@ -75,12 +84,10 @@
     <string name="do_not_attach_to_body">Non attaccare ancora la patch al corpo.</string>
     <string name="half_press_needle">Premere a metà il tasto dell\'ago. Poi tocca <b>Avanti</b> per avviare il caricamento.</string>
     <string name="wait_for_priming">Attendi il completamento del caricamento.</string>
-    <string name="priming_error">Impossibile caricare, premi <b>Riprova</b> per riprovare.</string>
     <string name="press_next">Premi <b>Avanti</b> per continuare.</string>
     <string name="press_next_to_start_activation">Premi <b>Avanti</b> per avviare l\'attivazione.</string>
     <string name="remove_safety_lock">Rimuovere il blocco di sicurezza. Fissare il micro al corpo. Premere il tasto dell’ago.</string>
     <string name="activating_pump">Attivazione del micro e impostazione della velocità basale iniziale. Attendere.</string>
-    <string name="activating_error">Impossibile attivare, premi <b>Riprova</b> per riprovare.</string>
     <string name="activating_complete">Nuova patch attivata. %.2f unità rimanenti.</string>
     <string name="can_export_settings">È possibile esportare le impostazioni per poter recuperare questa patch in seguito.</string>
     <string name="press_OK_to_return">Premi <b>OK</b> per tornare alla schermata principale.</string>
@@ -95,12 +102,8 @@
     <string name="press_next_or_OK">Premi <b>OK</b> per tornare alla schermata principale. Premi <b>Avanti</b> per avviare l\'attivazione di una nuova patch.</string>
     <string name="activation_in_progress">Oops! Qualcosa è andato storto, sembra ci sia già un\'attivazione in corso.</string>
     <string name="press_retry_or_discard">Premi <b>Avanti</b> per riprendere l\'attivazione o <b>Scarta</b> per resettare lo stato di attivazione.</string>
-    <string name="retry_activation_filled_error">L\'attivazione non può essere ripresa. Lo stato del micro è stato perso. NON rifare il prime, poiché il cerotto può già essere inserito. Eliminare il cerotto e iniziare una nuova attivazione.</string>
     <string name="reading_activation_status">Attendere, lettura dello stato di attivazione dal micro.</string>
     <!-- settings-->
-    <string name="sn_input_title">Numero seriale</string>
-    <string name="sn_input_invalid">Numero di serie non valido!</string>
-    <string name="change_sn">Cambiare</string>
     <string name="alarm_setting_title">Impostazioni allarmi</string>
     <string name="alarm_setting_summary">Seleziona le tue impostazioni di allarme del micro preferite.</string>
     <string name="alarm_setting_light_vibrate_beep">Luce, vibrazione e suono</string>

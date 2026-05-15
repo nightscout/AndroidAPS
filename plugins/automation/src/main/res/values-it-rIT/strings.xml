@@ -23,6 +23,20 @@
     <string name="automation_category_loop">Loop &amp; insulina</string>
     <string name="automation_category_alerts">Avvisi</string>
     <string name="automation_category_system">Sistema</string>
+    <string name="automation_category_scenes">Scene</string>
+    <string name="action_run_scene">Esegui scena</string>
+    <string name="action_run_scene_short">Esegui scena: %1$s</string>
+    <string name="action_enable_scene">Abilita scena</string>
+    <string name="action_enable_scene_short">Abilita scena: %1$s</string>
+    <string name="action_disable_scene">Disabilita scena</string>
+    <string name="action_disable_scene_short">Disabilita scena: %1$s</string>
+    <string name="action_scene_label">Scena</string>
+    <string name="trigger_scene_active">Scena</string>
+    <string name="trigger_scene_active_compared">Scene %1$s</string>
+    <string name="action_scene_not_found">Scena non trovata</string>
+    <string name="action_scene_disabled">La scena è disabilitata</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Inserisci un nome task.</string>
     <string name="automation_missing_trigger">Specifica almeno un trigger.</string>
     <string name="automation_missing_action">Specifica almeno un\'azione.</string>
@@ -73,7 +87,6 @@
     <string name="location_going_out">Quando lasci l\'area denominata</string>
     <string name="time_range">Intervallo di tempo</string>
     <string name="timerange_value">L\'intervallo di tempo è compreso tra %1$s e %2$s</string>
-    <string name="between">Tra </string>
     <string name="add_short">AGG</string>
     <string name="temptargetcompared">Temp-Target %1$s</string>
     <string name="btdevicecompared">Connessione Bluetooth a dispositivo %1$s %2$s</string>
@@ -114,8 +127,6 @@
     <string name="edit_short">MODIFICA</string>
     <string name="preconditions">Presupposti:</string>
     <string name="user_action">Azione utente</string>
-    <string name="remove_selected_items">Rimuovi elementi selezionati</string>
-    <string name="count_selected">%1$d selezionato</string>
     <string name="system_automation">Automazione sistema</string>
     <string name="run_automations">Esegui automazioni</string>
     <string name="add_automation">Aggiungi regola</string>

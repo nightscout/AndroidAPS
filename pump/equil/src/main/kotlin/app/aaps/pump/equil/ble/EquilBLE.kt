@@ -208,6 +208,7 @@ class EquilBLE @Inject constructor(
             preCmd = baseCmd
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "readHistory error")
+            synchronized(baseCmd) { baseCmd.notifyAll() }
         }
     }
 

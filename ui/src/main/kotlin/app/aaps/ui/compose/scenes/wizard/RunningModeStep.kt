@@ -1,0 +1,60 @@
+package app.aaps.ui.compose.scenes.wizard
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.data.model.SceneAction
+import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.ui.compose.scenes.RunningModeEditor
+
+@Composable
+internal fun RunningModeStep(
+    state: SceneWizardViewModel.WizardState,
+    onToggle: (Boolean) -> Unit,
+    onUpdate: (SceneAction) -> Unit,
+    onBack: () -> Unit,
+    onNext: () -> Unit
+) {
+    WizardStepLayout(
+        secondaryButton = WizardButton(text = stringResource(R.string.back), onClick = onBack),
+        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext)
+    ) {
+        Text(
+            text = stringResource(R.string.running_mode),
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Text(
+            text = stringResource(R.string.scene_wizard_loop_mode_info),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        ActionToggle(
+            label = stringResource(R.string.scene_wizard_include_action, stringResource(R.string.running_mode)),
+            checked = state.runningModeEnabled,
+            onCheckedChange = onToggle
+        )
+        AnimatedVisibility(
+            visible = state.runningModeEnabled,
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                RunningModeEditor(
+                    action = state.runningModeAction,
+                    onUpdate = onUpdate
+                )
+            }
+        }
+    }
+}

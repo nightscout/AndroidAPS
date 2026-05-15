@@ -17,7 +17,7 @@ import kotlin.time.Instant
 class OverviewDataImpl @Inject constructor() : OverviewData {
 
     // Initialize the window anchor so workers reading these fields before the
-    // first PreparePredictionsWorker run see sensible values. Rounded to next
+    // first predictions-prep run see sensible values. Rounded to next
     // full hour + GraphView-era 100ms nudge to avoid axis-label rounding.
     override var toTime: Long = initialToTime()
     override var fromTime: Long = toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()

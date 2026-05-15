@@ -19,7 +19,6 @@
     <string name="pump_state_label">Pompos būsena</string>
     <string name="active_alarms_label">Aktyvūs aliarmai</string>
     <string name="basal_type_label">Bazės tipas</string>
-    <string name="basal_rate_label">Bazės dydis</string>
     <string name="pump_type_label">Pompos tipas</string>
     <string name="fw_version_label">FW versija</string>
     <string name="patch_no_label">Rezervuaro nr.</string>
@@ -49,6 +48,7 @@
     <string name="alarm_no_calibration">Nėra kalibracijos</string>
     <string name="pump_time_update_failed">Laiko juosta pompoje neatnaujinta, nutildykite ir atnaujinkite rankiniu būdu.</string>
     <string name="bolus_error">Boluso klaida</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Kartoti</string>
     <string name="step_prepare_patch">Įjungti rezervuarą</string>
@@ -64,7 +64,6 @@
     <string name="step_deactivate_complete">Išjungta</string>
     <string name="step_retry_activation">Įjungiama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
-    <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
     <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Toliau</b> ir pradėkite aktyvavimą.</string>
     <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
     <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Toliau</b>.</string>
@@ -73,12 +72,10 @@
     <string name="do_not_attach_to_body">Kol kas neklijuokite pompos prie kūno.</string>
     <string name="half_press_needle">Spustelėkite adatos mygtuką. Spauskite <b>Toliau</b> pildymui pradėti.</string>
     <string name="wait_for_priming">Palaukite, kol baigsis pildymas.</string>
-    <string name="priming_error">Pildymas nepavyko, spauskite <b>Kartoti</b>.</string>
     <string name="press_next">Norėdami tęsti, spauskite <b>Toliau</b>.</string>
     <string name="press_next_to_start_activation">Aktyvavimui pradėti spauskite <b>Toliau</b>.</string>
     <string name="remove_safety_lock">Pašalinkite apsaugą. Priklijuokite pompą prie kūno. Paspauskite adatos mygtuką.</string>
     <string name="activating_pump">Palaukite, kol bus aktyvuota pompa ir nustatyta pradinė bazė.</string>
-    <string name="activating_error">Aktyvavimas nepavyko, spauskite <b>Kartoti</b>.</string>
     <string name="activating_complete">Naujas rezervuaras įjungtas. Yra %.2f v insulino.</string>
     <string name="can_export_settings">Galite eksportuoti nustatymus, kad vėliau galėtumėte atkurti šios pompos sesiją.</string>
     <string name="press_OK_to_return">Norėdanu grįžti į pradžios ekraną, spauskite <b>OK</b>.</string>
@@ -95,8 +92,6 @@
     <string name="press_retry_or_discard">Norėdami atnaujinti aktyvavimą, spauskite <b>Toliau</b>, norėdami atšaukti, spauskite <b>Baigti naudoti</b>.</string>
     <string name="reading_activation_status">Palaukite, nuskaitomas pompos aktyvavimo statusas.</string>
     <!-- settings-->
-    <string name="sn_input_title">Serijos numeris</string>
-    <string name="sn_input_invalid">Neteisingas serijos numeris!</string>
     <string name="alarm_setting_title">Aliarmų nustatymai</string>
     <string name="alarm_setting_summary">Pasirinkite pompos aliarmų nustatymus</string>
     <string name="pump_warning_notification_title">Pompos pranešimas apie įspėjimą</string>

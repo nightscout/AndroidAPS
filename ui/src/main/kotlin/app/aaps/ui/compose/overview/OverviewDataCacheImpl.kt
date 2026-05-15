@@ -18,6 +18,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -53,6 +54,8 @@ import app.aaps.core.interfaces.overview.graph.RunningModeGraphData
 import app.aaps.core.interfaces.overview.graph.RunningModeSegment
 import app.aaps.core.interfaces.overview.graph.StepsGraphData
 import app.aaps.core.interfaces.overview.graph.TargetLineData
+import app.aaps.core.interfaces.overview.graph.TbrDisplayData
+import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
 import app.aaps.core.interfaces.overview.graph.TempTargetState
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
@@ -88,13 +91,18 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -165,6 +173,11 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     private val _bgInfoFlow = MutableStateFlow<BgInfoData?>(null)
     override val bgInfoFlow: StateFlow<BgInfoData?> = _bgInfoFlow.asStateFlow()
 
+    // One-shot deferred recompute that flips isOutdated to true exactly when the last BG
+    // crosses 9 min old. Cancelled and re-armed by each updateBgInfoFromDatabase() call,
+    // so a fresh BG arriving before staleness simply restarts the timer.
+    private var staleBgTransitionJob: Job? = null
+
     // Overview chip flows
     private val _tempTargetFlow = MutableStateFlow<TempTargetDisplayData?>(null)
     override val tempTargetFlow: StateFlow<TempTargetDisplayData?> = _tempTargetFlow.asStateFlow()
@@ -172,9 +185,23 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     override val profileFlow: StateFlow<ProfileDisplayData?> = _profileFlow.asStateFlow()
     private val _runningModeFlow = MutableStateFlow<RunningModeDisplayData?>(null)
     override val runningModeFlow: StateFlow<RunningModeDisplayData?> = _runningModeFlow.asStateFlow()
+    private val _tbrFlow = MutableStateFlow<TbrDisplayData?>(null)
+    override val tbrFlow: StateFlow<TbrDisplayData?> = _tbrFlow.asStateFlow()
 
     override fun refreshTempTarget() {
         scope.launch { updateTempTargetFromDatabase() }
+    }
+
+    override fun refreshProfile() {
+        scope.launch { updateProfileFromDatabase() }
+    }
+
+    override fun refreshRunningMode() {
+        scope.launch { updateRunningModeFromDatabase() }
+    }
+
+    override fun refreshTbr() {
+        scope.launch { updateTbrFromDatabase() }
     }
 
     // Secondary graph flows
@@ -240,13 +267,20 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         }
 
         if (observeDatabase) {
-            // Load initial data from database
+            // Load initial data from database.
+            // Gated on app init: updateTbrFromDatabase -> iobCobCalculator.getBasalData ->
+            // PluginStore.activePumpInternal throws "No pump selected" when the cache is
+            // constructed before ConfigBuilder.initialize() has populated the active pump.
+            // initProgressFlow is a StateFlow, so if init is already done this returns
+            // immediately; otherwise it suspends until it completes.
             scope.launch {
+                config.initProgressFlow.first { it.done }
                 aapsLogger.debug(LTag.UI, "OverviewDataCache: Loading initial data")
                 updateBgInfoFromDatabase()
                 updateProfileFromDatabase()
                 updateTempTargetFromDatabase()
                 updateRunningModeFromDatabase()
+                updateTbrFromDatabase()
             }
 
             // Observe GlucoseValue changes
@@ -326,6 +360,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // Observe running mode changes for graph + chip
             scope.launch {
                 persistenceLayer.observeChanges(RM::class.java)
+                    .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
                         updateRunningModeFromDatabase()
@@ -336,6 +371,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // Observe TT changes for target line graph + chip
             scope.launch {
                 persistenceLayer.observeChanges(TT::class.java)
+                    .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
                         updateTempTargetFromDatabase()
@@ -349,6 +385,19 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     rxBus.toFlow(EventLoopUpdateGui::class.java),
                     rxBus.toFlow(EventNewOpenLoopNotification::class.java)
                 ).collect { updateTempTargetFromDatabase() }
+            }
+            // AAPSCLIENT counterpart: the ADJUSTED text comes from
+            // processedDeviceStatusData.getAPSResult()?.targetBG, which NSDeviceStatusHandler
+            // mutates in place when a new NS devicestatus arrives — no DB change, no flow.
+            // EventNsClientStatusUpdated fires after every devicestatus batch on AAPSCLIENT,
+            // so re-read the cache then. Also covers the post-expiry case where the master's
+            // APS result no longer matches the just-expired TT.
+            if (config.AAPSCLIENT) {
+                scope.launch {
+                    rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+                        .debounce(300)
+                        .collect { updateTempTargetFromDatabase() }
+                }
             }
             // EPS changes affect EPS graph, profile chip, TT chip, target line, and basal
             scope.launch {
@@ -368,7 +417,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             scope.launch {
                 persistenceLayer.observeChanges(TB::class.java)
                     .debounce(300)
-                    .collect { rebuildBasalGraph() }
+                    .collect {
+                        rebuildBasalGraph()
+                        updateTbrFromDatabase()
+                    }
             }
             scope.launch {
                 persistenceLayer.observeChanges(EB::class.java)
@@ -376,19 +428,44 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     .collect { rebuildBasalGraph() }
             }
 
-            // NSClient status: initial load + subscribe to updates + 60s ticker for time-ago refresh
-            if (config.AAPSCLIENT) {
-                scope.launch { rebuildNsClientStatus() }
-                scope.launch {
-                    rxBus.toFlow(EventNsClientStatusUpdated::class.java).collect {
-                        rebuildNsClientStatus()
-                    }
+            // observeChanges() does not fire when the DB is wiped via clearAllTables().
+            // databaseClearedFlow is the dedicated signal for that case. Re-fetching after
+            // reset() restores chips (RM, TT, profile) to their empty-DB defaults so they
+            // remain visible and interactive instead of disappearing entirely.
+            scope.launch {
+                persistenceLayer.databaseClearedFlow.collect {
+                    aapsLogger.debug(LTag.UI, "OverviewDataCache: DB cleared, reloading chip data")
+                    reset()
+                    updateBgInfoFromDatabase()
+                    updateProfileFromDatabase()
+                    updateTempTargetFromDatabase()
+                    updateRunningModeFromDatabase()
+                    updateTbrFromDatabase()
                 }
+            }
+
+            // NSClient status: initial load + rxBus subscription + 60s ticker — but only while
+            // the nsClientStatusFlow has observers. The cache is a singleton, so without this
+            // gate the 60s rebuild would fire 24/7 even though the flow is only consumed by the
+            // overview (AAPSCLIENT-only).
+            if (config.AAPSCLIENT) {
                 scope.launch {
-                    while (true) {
-                        delay(60_000)
-                        rebuildNsClientStatus()
-                    }
+                    _nsClientStatusFlow.subscriptionCount
+                        .map { it > 0 }
+                        .distinctUntilChanged()
+                        .collectLatest { hasSubscribers ->
+                            if (!hasSubscribers) return@collectLatest
+                            rebuildNsClientStatus()
+                            launch {
+                                rxBus.toFlow(EventNsClientStatusUpdated::class.java).collect {
+                                    rebuildNsClientStatus()
+                                }
+                            }
+                            while (true) {
+                                delay(60_000)
+                                rebuildNsClientStatus()
+                            }
+                        }
                 }
             }
         }
@@ -399,6 +476,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     // =========================================================================
 
     private suspend fun updateBgInfoFromDatabase() {
+        // Cancel any pending stale-transition timer; we'll re-arm at the bottom if needed.
+        staleBgTransitionJob?.cancel()
+        staleBgTransitionJob = null
+
         // Use bucketed (smoothed) data like legacy, with raw DB fallback
         val lastBg = iobCobCalculator.ads.bucketedData?.firstOrNull()
         val lastGv = lastBg ?: persistenceLayer.getLastGlucoseValue()?.let { InMemoryGlucoseValue.fromGv(it) }
@@ -438,6 +519,20 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             longAvgDelta = glucoseStatus?.let { profileUtil.fromMgdlToUnits(it.longAvgDelta) },
             longAvgDeltaText = glucoseStatus?.let { profileUtil.fromMgdlToSignedStringInUnits(it.longAvgDelta) }
         )
+
+        // Arm the one-shot timer so isOutdated flips to true the moment this BG turns 9 min old.
+        // No new DB event fires when time merely passes, so without this the strikethrough would
+        // never appear for an actually-stale value.
+        if (!isOutdated) {
+            val delayMs = lastGv.timestamp + T.mins(9).msecs() - dateUtil.now()
+            if (delayMs > 0) {
+                staleBgTransitionJob = scope.launch {
+                    delay(delayMs)
+                    aapsLogger.debug(LTag.UI, "BG crossed staleness threshold, refreshing BgInfo")
+                    updateBgInfoFromDatabase()
+                }
+            }
+        }
     }
 
     // =========================================================================
@@ -457,7 +552,8 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 state = TempTargetState.ACTIVE,
                 timestamp = tempTarget.timestamp,
                 duration = tempTarget.duration,
-                reason = tempTarget.reason
+                reason = tempTarget.reason,
+                recordId = tempTarget.id
             )
         } else {
             // No active TT - check profile
@@ -495,12 +591,14 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     private suspend fun updateProfileFromDatabase() {
         val profile = profileFunction.getProfile()
         var isModified = false
+        var percentage = 100
         var timestamp = 0L
         var duration = 0L
 
         if (profile is ProfileSealed.EPS) {
             val eps = profile.value
             isModified = eps.originalPercentage != 100 || eps.originalTimeshift != 0L || eps.originalDuration != 0L
+            percentage = eps.originalPercentage
             timestamp = eps.timestamp
             duration = eps.originalDuration
         }
@@ -509,8 +607,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             profileName = profileFunction.getProfileName(),  // Raw name, ViewModel adds remaining time
             isLoaded = profile != null,
             isModified = isModified,
+            percentage = percentage,
             timestamp = timestamp,
-            duration = duration
+            duration = duration,
+            originalPsId = (profile as? ProfileSealed.EPS)?.value?.originalPsId
         )
     }
 
@@ -522,13 +622,44 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         // Read directly from DB — loop.runningModeRecord routes through runningModePreCheck()
         // which touches activePump and crashes at startup before the pump plugin is selected.
         // Loop will correct mode itself when it next runs; the RM observer will pick it up.
-        val rmRecord = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
+        val now = dateUtil.now()
+        val rmRecord = persistenceLayer.getRunningModeActiveAt(now)
 
         // Store raw data only - ViewModel computes display text
         _runningModeFlow.value = RunningModeDisplayData(
             mode = rmRecord.mode,
             timestamp = rmRecord.timestamp,
-            duration = rmRecord.duration
+            duration = rmRecord.duration,
+            recordId = rmRecord.id
+        )
+    }
+
+    // =========================================================================
+    // Running TBR chip computation
+    // =========================================================================
+
+    private suspend fun updateTbrFromDatabase() {
+        val profile = profileFunction.getProfile()
+        if (profile == null) {
+            _tbrFlow.value = TbrDisplayData(TbrState.NONE, 0L, 0L)
+            return
+        }
+        val now = dateUtil.now()
+        val basalData = iobCobCalculator.getBasalData(profile, now)
+        val state = when {
+            !basalData.isTempBasalRunning                             -> TbrState.NONE
+            abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01 -> TbrState.NONE
+            basalData.tempBasalAbsolute > basalData.basal             -> TbrState.HIGH
+            else                                                      -> TbrState.LOW
+        }
+        // Pull timing from the active TB row for expiry detection on ticks. Extended boluses
+        // converted to TBR (EB-as-TB) won't have a TB row; state is still correct but the
+        // ViewModel won't auto-refresh on expiry — the next TB/EB DB event catches it.
+        val activeTb = if (state != TbrState.NONE) persistenceLayer.getTemporaryBasalActiveAt(now) else null
+        _tbrFlow.value = TbrDisplayData(
+            state = state,
+            timestamp = activeTb?.timestamp ?: 0L,
+            duration = activeTb?.duration ?: 0L
         )
     }
 
@@ -847,19 +978,19 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 clockSuggested + T.mins(preferences.get(IntKey.NsClientAlarmStaleData).toLong()).msecs() < now       -> AapsClientLevel.WARN
                 else                                                                                                 -> AapsClientLevel.INFO
             }
-            // Match original format: "2 min ago"
-            val value = dateUtil.minOrSecAgo(rh, clockSuggested)
+            val value = dateUtil.minAgo(rh, clockSuggested)
+            val clockEnacted = processedDeviceStatusData.openAPSData.clockEnacted
+            val enacted = processedDeviceStatusData.openAPSData.enacted
+            val sameCycle = enacted != null && clockSuggested - clockEnacted <= 60_000L
             val dialogText = buildString {
-                processedDeviceStatusData.openAPSData.enacted?.let {
-                    if (processedDeviceStatusData.openAPSData.clockEnacted != clockSuggested) {
-                        append("Enacted: ${dateUtil.minAgo(rh, processedDeviceStatusData.openAPSData.clockEnacted)}")
+                if (sameCycle) {
+                    append("Enacted: ${dateUtil.minAgo(rh, clockEnacted)}")
+                    append(" ${enacted.reason}")
+                } else {
+                    processedDeviceStatusData.openAPSData.suggested?.let {
+                        append("Suggested: ${dateUtil.minAgo(rh, clockSuggested)}")
                         append(" ${it.reason}")
-                        append("\n")
                     }
-                }
-                processedDeviceStatusData.openAPSData.suggested?.let {
-                    append("Suggested: ${dateUtil.minAgo(rh, clockSuggested)}")
-                    append(" ${it.reason}")
                 }
             }
             AapsClientStatusItem(
@@ -882,7 +1013,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // Match original format: "ᴪ 93%" or "93%"
             val value = buildString {
-                if (isCharging) append("\u26A1 ")
+                if (isCharging) append("\u26A1")
                 append("$minBattery%")
             }
             val dialogText = buildString {
@@ -929,7 +1060,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         _bgInfoFlow.value = null
         _tempTargetFlow.value = null
         _profileFlow.value = null
-        _runningModeFlow.value = null
+        // _runningModeFlow intentionally not nulled: getRunningModeActiveAt() always returns
+        // a non-null value (DEFAULT_MODE fallback for empty table), so callers should use
+        // updateRunningModeFromDatabase() to refresh it rather than forcing a null state.
+        _tbrFlow.value = null
         // Secondary graph flows
         _iobGraphFlow.value = IobGraphData(emptyList(), emptyList())
         _absIobGraphFlow.value = AbsIobGraphData(emptyList())

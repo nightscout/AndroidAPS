@@ -3,6 +3,7 @@ package app.aaps.pump.omnipod.dash.ui.wizard.compose
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
@@ -13,6 +14,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
@@ -65,12 +67,13 @@ class DashOmnipodWizardViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val fabricPrivacy: FabricPrivacy,
     private val insulinManager: InsulinManager,
-    private val profileFunction: ProfileFunction,
+    profileFunction: ProfileFunction,
+    localProfileManager: LocalProfileManager,
     private val persistenceLayer: PersistenceLayer,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
-) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider) {
+) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, localProfileManager) {
 
     init {
         viewModelScope.launch {
@@ -78,9 +81,14 @@ class DashOmnipodWizardViewModel @Inject constructor(
             val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
             loadInsulins(insulins, activeLabel)
             loadSiteRotationEntriesInternal()
+            resolveProfileGate()
             _ready.value = true
         }
     }
+
+    override val pumpSource: Sources = Sources.OmnipodDash
+
+    override fun fallbackICfg(): ICfg? = insulinManager.insulins.firstOrNull()
 
     override val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
@@ -278,11 +286,12 @@ class DashOmnipodWizardViewModel @Inject constructor(
 
     @StringRes
     override fun getTitleForStep(step: OmnipodWizardStep): Int = when (step) {
+        OmnipodWizardStep.PROFILE_GATE           -> app.aaps.core.ui.R.string.pump_wizard_profile_gate_title
         OmnipodWizardStep.START_POD_ACTIVATION   -> CommonR.string.omnipod_common_pod_activation_wizard_start_pod_activation_title
         OmnipodWizardStep.SELECT_INSULIN         -> app.aaps.core.ui.R.string.select_insulin
         OmnipodWizardStep.INITIALIZE_POD         -> CommonR.string.omnipod_common_pod_activation_wizard_initialize_pod_title
-        OmnipodWizardStep.ATTACH_POD             -> CommonR.string.omnipod_common_pod_activation_wizard_attach_pod_title
         OmnipodWizardStep.SITE_LOCATION          -> app.aaps.core.ui.R.string.site_location
+        OmnipodWizardStep.ATTACH_POD             -> CommonR.string.omnipod_common_pod_activation_wizard_attach_pod_title
         OmnipodWizardStep.INSERT_CANNULA         -> CommonR.string.omnipod_common_pod_activation_wizard_insert_cannula_title
         OmnipodWizardStep.POD_ACTIVATED          -> CommonR.string.omnipod_common_pod_activation_wizard_pod_activated_title
         OmnipodWizardStep.START_POD_DEACTIVATION -> CommonR.string.omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title
@@ -293,11 +302,13 @@ class DashOmnipodWizardViewModel @Inject constructor(
 
     @StringRes
     override fun getTextForStep(step: OmnipodWizardStep): Int = when (step) {
+        // PROFILE_GATE has its own composable that doesn't consume textResId — returned value is unused.
+        OmnipodWizardStep.PROFILE_GATE           -> 0
         OmnipodWizardStep.START_POD_ACTIVATION   -> R.string.omnipod_dash_pod_activation_wizard_start_pod_activation_text
         OmnipodWizardStep.SELECT_INSULIN         -> app.aaps.core.ui.R.string.select_insulin_description
         OmnipodWizardStep.INITIALIZE_POD         -> R.string.omnipod_dash_pod_activation_wizard_initialize_pod_text
-        OmnipodWizardStep.ATTACH_POD             -> CommonR.string.omnipod_common_pod_activation_wizard_attach_pod_text
         OmnipodWizardStep.SITE_LOCATION          -> app.aaps.core.ui.R.string.select_site_location
+        OmnipodWizardStep.ATTACH_POD             -> CommonR.string.omnipod_common_pod_activation_wizard_attach_pod_text
         OmnipodWizardStep.INSERT_CANNULA         -> CommonR.string.omnipod_common_pod_activation_wizard_insert_cannula_text
         OmnipodWizardStep.POD_ACTIVATED          -> CommonR.string.omnipod_common_pod_activation_wizard_pod_activated_text
         OmnipodWizardStep.START_POD_DEACTIVATION -> CommonR.string.omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text

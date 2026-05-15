@@ -38,8 +38,6 @@ import app.aaps.core.ui.R
  * Composable for a collapsible card section.
  * This is separated from the LazyListScope extension to avoid cross-module compilation issues
  * with @Composable lambda parameters.
- *
- * @param iconResId Optional drawable resource ID for the icon shown next to the title
  */
 @Composable
 fun CollapsibleCardSectionContent(
@@ -47,7 +45,6 @@ fun CollapsibleCardSectionContent(
     summaryItems: List<Int> = emptyList(),
     expanded: Boolean,
     onToggle: () -> Unit,
-    iconResId: Int? = null,
     icon: ImageVector? = null,
     content: @Composable () -> Unit
 ) {
@@ -68,7 +65,6 @@ fun CollapsibleCardSectionContent(
                 expanded = expanded,
                 onToggle = onToggle,
                 insideCard = true,
-                iconResId = iconResId,
                 icon = icon
             )
 

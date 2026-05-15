@@ -44,7 +44,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Er loopt een tijdelijk basaal op de Pod, maar AndroidAPS is zich niet bewust van deze tijdelijke basaal. Annuleer de tijdelijke basal handmatig.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink status</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Pulse log uitlezen</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse Log</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse log (gekopieerd naar klembord)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

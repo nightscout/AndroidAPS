@@ -30,10 +30,8 @@
     <string name="insulinlimitviolation">违反胰岛素限制</string>
     <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$s</string>
     <string name="selectedpump">已选择的泵</string>
-    <string name="diaconn_g8_bluetooth_status">蓝牙状态</string>
     <string name="bolus_step">大剂量步值</string>
     <string name="basal_step">基础率步值</string>
-    <string name="diaconn_g8_user_options">用户选项</string>
     <string name="pairfirst">请将您的泵与您的手机配对!</string>
     <string name="processinghistory">"正在处理事件 "</string>
     <string name="diaconn_g8_history_tempbasal">临时基础率</string>

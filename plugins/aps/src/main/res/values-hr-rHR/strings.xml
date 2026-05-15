@@ -19,7 +19,6 @@
     <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
     <!-- Autotune -->
     <string name="autotune_default_tune_days_title">Broj dana podataka</string>
-    <string name="autotune_default_tune_days_summary">Zadani broj dana podataka koje će obraditi Autotune (do 30)</string>
     <string name="autotune_tunedprofile_name">Ugođen</string>
     <string name="autotune_profile">Profile :</string>
     <string name="autotune_last_run">Zadnje izvođenje:</string>

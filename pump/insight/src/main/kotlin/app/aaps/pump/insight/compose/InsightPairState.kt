@@ -12,6 +12,7 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import app.aaps.pump.insight.connection_service.InsightConnectionService
@@ -36,6 +37,7 @@ import kotlinx.coroutines.launch
 internal class InsightPairState(
     private val context: Context,
     private val pumpSync: PumpSync,
+    private val rxBus: RxBus,
     private val scope: CoroutineScope
 ) : InsightConnectionService.StateCallback, InsightConnectionService.ExceptionCallback {
 
@@ -150,7 +152,7 @@ internal class InsightPairState(
     override fun onExceptionOccur(e: Exception?) {
         e?.let { ex ->
             scope.launch(Dispatchers.Main.immediate) {
-                ExceptionTranslator.makeToast(context, ex)
+                ExceptionTranslator.notify(context, rxBus, ex)
             }
         }
     }

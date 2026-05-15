@@ -51,7 +51,6 @@
     <string name="location_going_out">당신이 다음 이름의 지역에서 떠날 때</string>
     <string name="time_range">시간 범위</string>
     <string name="timerange_value">시간은 %1$s 와 %2$s사이입니다</string>
-    <string name="between">사이 </string>
     <string name="add_short">추가</string>
     <string name="temptargetcompared">임시 목표 %1$s</string>
     <string name="btdevicecompared">장치에 블루투스 연결 %1$s %2$s</string>
@@ -78,8 +77,6 @@
     <string name="edit_short">편집</string>
     <string name="preconditions">전제 조건:</string>
     <string name="user_action">사용자 동작</string>
-    <string name="remove_selected_items">선택된 항목 제거하기</string>
-    <string name="count_selected">%1$d 선택됨</string>
     <string name="system_automation">자동 설정 시스템</string>
     <string name="run_automations">자동 설정 실행하기</string>
     <string name="add_automation">규칙 추가하기</string>

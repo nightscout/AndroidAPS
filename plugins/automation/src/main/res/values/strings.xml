@@ -23,6 +23,20 @@
     <string name="automation_category_loop">Loop &amp; insulin</string>
     <string name="automation_category_alerts">Alerts</string>
     <string name="automation_category_system">System</string>
+    <string name="automation_category_scenes">Scenes</string>
+    <string name="action_run_scene">Run scene</string>
+    <string name="action_run_scene_short">Run scene: %1$s</string>
+    <string name="action_enable_scene">Enable scene</string>
+    <string name="action_enable_scene_short">Enable scene: %1$s</string>
+    <string name="action_disable_scene">Disable scene</string>
+    <string name="action_disable_scene_short">Disable scene: %1$s</string>
+    <string name="action_scene_label">Scene</string>
+    <string name="trigger_scene_active">Scene</string>
+    <string name="trigger_scene_active_compared">Scene %1$s</string>
+    <string name="action_scene_not_found">Scene not found</string>
+    <string name="action_scene_disabled">Scene is disabled</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Please enter a task name.</string>
     <string name="automation_missing_trigger">Please specify at least one trigger.</string>
     <string name="automation_missing_action">Please specify at least one action.</string>
@@ -73,7 +87,6 @@
     <string name="location_going_out">When you leave the area named</string>
     <string name="time_range">Time range</string>
     <string name="timerange_value">Time is between %1$s and %2$s</string>
-    <string name="between">Between </string>
     <string name="add_short">ADD</string>
     <string name="temptargetcompared">Temp target %1$s</string>
     <string name="btdevicecompared">Bluetooth connection to device %1$s %2$s</string>
@@ -114,8 +127,6 @@
     <string name="edit_short">EDIT</string>
     <string name="preconditions">Preconditions:</string>
     <string name="user_action">User action</string>
-    <string name="remove_selected_items">Remove selected items</string>
-    <string name="count_selected">%1$d selected</string>
     <string name="system_automation">System automation</string>
     <string name="run_automations">Run automations</string>
     <string name="add_automation">Add rule</string>

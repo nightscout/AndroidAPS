@@ -21,7 +21,6 @@
     <string name="equil_tone_mode_shake">Tik vibravimas</string>
     <string name="equil_tone_mode_tone">Tik garsas</string>
     <string name="equil_tone_mode_tone_and_shake">Vibracija ir garsas</string>
-    <string name="equil_unit_u">%1$s vv</string>
     <string name="equil_ble_config_confirmation_title">Suporuoti Equil patch pompą</string>
     <string name="equil_error">Sujungimo klaida</string>
     <string name="equil_change">Pakeisti pompą</string>

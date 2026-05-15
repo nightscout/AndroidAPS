@@ -44,7 +44,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Tymczasowa dawka bazowa jest uruchomiona w Podzie, ale AAPS nie posiada informacji o niej. Anuluj tymczasową dawkę bazową ręcznie.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Statystyki RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Odczytaj Pulse Log</string>
     <string name="omnipod_eros_pod_management_pulse_log">Logi pulsów omnipod</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (skopiowany do schowka)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

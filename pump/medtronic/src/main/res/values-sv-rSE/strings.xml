@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Serienummer felaktigt.</string>
     <string name="medtronic_error_pump_type_not_set">Pumptyp ej vald.</string>
     <string name="medtronic_error_pump_type_invalid">Pumptypen stöds inte.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pumpfrekvens stöds inte.</string>
     <string name="medtronic_error_rileylink_address_invalid">Riley Link adress felaktig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Pumptypen verkar inte vara samma som den inställda.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Basalprofiler är inte aktiverade på pumpen. Aktivera det i pumpens menyer.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Pumphistorik</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Du avbröt bolusen efter att kommandot skickats till pumpen. Detta stöds inte av Medtronicpumpar, så därför måste du avbryta på själva pumpen. Det kan man göra genom att pausa insulintillförseln tillfälligt och sedan starta den igen. Appen kommer att uppdatera bolusmängd vid nästa anslutning (inom 5 min).</string>
     <string name="medtronic_cmd_cant_read_tbr">Kunde inte hämta nuvarande temp basal.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Sätt neutrala temp basaler</string>
     <string name="set_neutral_temps_summary">Om aktiverad, kommer en eventuell temporär basal automatiskt avbrytas före utgången av varje timme. Denna metod kan förhindra att vissa pumpar piper/vibrerar.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min kvar)</string>
     <string name="invalid_history_data">Ogiltig pumpdata upptäckt. Öppna nytt ärende och bifoga loggar.</string>
     <string name="riley_statistics">RL-statistik</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Klickade Uppdatering</string>

@@ -3,14 +3,17 @@ package app.aaps.implementation.maintenance
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
+import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.storage.Storage
@@ -18,9 +21,7 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.implementation.R
-import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
@@ -34,7 +35,6 @@ import org.joda.time.format.DateTimeFormat
 import java.io.File
 import javax.inject.Inject
 import kotlin.math.abs
-import androidx.core.net.toUri
 
 @Suppress("SpellCheckingInspection")
 @Reusable
@@ -78,7 +78,7 @@ class FileListProviderImpl @Inject constructor(
                 }
             }
         } catch (_: SecurityException) {
-            ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
             return mutableListOf()
         }
 
@@ -105,7 +105,7 @@ class FileListProviderImpl @Inject constructor(
                     }
                 }
             } catch (_: SecurityException) {
-                ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
                 return mutableListOf()
             }
         }

@@ -68,12 +68,12 @@ class LoopActionViewModel @Inject constructor(
 
         val resultAvailable = lastRun != null &&
             (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&
-            lastRun.constraintsProcessed?.isChangeRequested == true
+            lastRun.constraintsProcessed?.isChangeRequested() == true
 
         val available = resultAvailable &&
             pump.isInitialized() &&
             profile != null &&
-            loop.runningMode == RM.Mode.OPEN_LOOP &&
+            loop.runningMode() == RM.Mode.OPEN_LOOP &&
             (loop as PluginBase).isEnabled()
 
         _uiState.update {

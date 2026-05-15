@@ -7,6 +7,8 @@ files:
     translation: /core/keys/src/main/res/values-%android_code%/strings.xml
   - source: /core/objects/src/main/res/values/strings.xml
     translation: /core/objects/src/main/res/values-%android_code%/strings.xml
+  - source: /core/ui/src/main/res/values/strings_scene_wizard.xml
+    translation: /core/ui/src/main/res/values-%android_code%/strings_scene_wizard.xml
   - source: /core/ui/src/main/res/values/protection.xml
     translation: /core/ui/src/main/res/values-%android_code%/protection.xml
   - source: /core/ui/src/main/res/values/strings.xml

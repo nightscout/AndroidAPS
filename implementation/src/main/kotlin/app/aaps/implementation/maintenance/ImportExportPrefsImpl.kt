@@ -3,6 +3,8 @@ package app.aaps.implementation.maintenance
 import android.content.Context
 import android.provider.Settings
 import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -38,6 +40,8 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDiaconnG8PumpLogReset
+import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -51,8 +55,8 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.utils.receivers.Inbox
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.cloud.CloudConstants
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
@@ -96,7 +100,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val context: Context,
-    private val dataWorkerStorage: DataWorkerStorage,
+    private val dataInbox: DataInbox,
     private val activePlugin: ActivePlugin,
     @ApplicationScope private val appScope: CoroutineScope,
     private val cloudStorageManager: CloudStorageManager,
@@ -368,7 +372,7 @@ class ImportExportPrefsImpl @Inject constructor(
         passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { password ->
             then(password)
         }, {
-                                        ToastUtils.warnToast(activity, rh.gs(canceledMsg))
+                                        rxBus.send(EventShowSnackbar(rh.gs(canceledMsg), EventShowSnackbar.Type.Warning))
                                     })
     }
 
@@ -379,12 +383,13 @@ class ImportExportPrefsImpl @Inject constructor(
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
         if (preferences.getIfExists(StringKey.ProtectionMasterPassword).isNullOrEmpty()) {
-            uiInteraction.showError(
-                context = activity,
-                title = rh.gs(wrongPwdTitle),
-                message = rh.gs(app.aaps.core.ui.R.string.master_password_missing),
-                positiveButton = app.aaps.core.keys.R.string.master_password,
-                ok = { passwordCheck.setPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword) }
+            rxBus.send(
+                EventShowDialog.Error(
+                    title = rh.gs(wrongPwdTitle),
+                    message = rh.gs(app.aaps.core.ui.R.string.master_password_missing),
+                    positiveButton = rh.gs(app.aaps.core.keys.R.string.master_password),
+                    onPositive = { passwordCheck.setPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword) }
+                )
             )
             exportPasswordDataStore.clearPasswordDataStore(context)
             return false
@@ -412,16 +417,19 @@ class ImportExportPrefsImpl @Inject constructor(
         exportPasswordDataStore.clearPasswordDataStore((context))
 
         // Ask for entering password and store when successfully entered
-        uiInteraction.showOkCancelDialog(
-            context = activity, title = rh.gs(app.aaps.core.ui.R.string.nav_export),
-            message = rh.gs(app.aaps.core.ui.R.string.export_to) + " " + fileToExport.name + "?",
-            secondMessage = rh.gs(app.aaps.core.ui.R.string.password_preferences_encrypt_prompt), ok = {
-                askForMasterPassIfNeeded(activity, app.aaps.core.ui.R.string.preferences_export_canceled)
-                { password ->
-                    then(exportPasswordDataStore.putPasswordToDataStore(context, password))
+        rxBus.send(
+            EventShowDialog.OkCancel(
+                title = rh.gs(app.aaps.core.ui.R.string.nav_export),
+                message = rh.gs(app.aaps.core.ui.R.string.export_to) + " " + fileToExport.name + "?",
+                secondMessage = rh.gs(app.aaps.core.ui.R.string.password_preferences_encrypt_prompt),
+                icon = Icons.AutoMirrored.Filled.Logout,
+                onOk = {
+                    askForMasterPassIfNeeded(activity, app.aaps.core.ui.R.string.preferences_export_canceled)
+                    { password ->
+                        then(exportPasswordDataStore.putPasswordToDataStore(context, password))
+                    }
                 }
-            },
-            icon = R.drawable.ic_header_export
+            )
         )
     }
 
@@ -482,7 +490,7 @@ class ImportExportPrefsImpl @Inject constructor(
         // Local export requires AAPS base directory
         val directoryUri = preferences.getIfExists(StringKey.AapsDirectoryUri)
         if (directoryUri.isNullOrEmpty()) {
-            ToastUtils.errorToast(activity, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
             return
         }
         exportToLocal(activity)
@@ -496,7 +504,7 @@ class ImportExportPrefsImpl @Inject constructor(
         // Check local directory first
         val directoryUri = preferences.getIfExists(StringKey.AapsDirectoryUri)
         if (directoryUri.isNullOrEmpty()) {
-            ToastUtils.errorToast(activity, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
             return
         }
 
@@ -504,7 +512,7 @@ class ImportExportPrefsImpl @Inject constructor(
         val newFile = prefFileList.newPreferenceFile()
 
         if (newFile == null) {
-            ToastUtils.errorToast(activity, rh.gs(R.string.exported_failed))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
             return
         }
 
@@ -522,7 +530,7 @@ class ImportExportPrefsImpl @Inject constructor(
         val newFile = prefFileList.newPreferenceFile()
 
         if (newFile == null) {
-            ToastUtils.errorToast(activity, rh.gs(R.string.exported_failed))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
             return
         }
 
@@ -540,7 +548,7 @@ class ImportExportPrefsImpl @Inject constructor(
         else
             rh.gs(R.string.exported_failed)
 
-        ToastUtils.okToast(activity, exportResultMessage)
+        rxBus.send(EventShowSnackbar(exportResultMessage, EventShowSnackbar.Type.Success))
 
         appScope.launch {
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
@@ -560,13 +568,13 @@ class ImportExportPrefsImpl @Inject constructor(
             val provider = cloudStorageManager.getActiveProvider()
             if (provider == null) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_PROVIDER")
-                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
+                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
                 return@launch
             }
 
             if (!provider.testConnection()) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CONN_FAIL")
-                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
+                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
                 return@launch
             }
 
@@ -574,7 +582,7 @@ class ImportExportPrefsImpl @Inject constructor(
             val tempDir = prefFileList.ensureTempDirExists()
             if (tempDir == null) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_TEMP_DIR")
-                ToastUtils.errorToast(activity, rh.gs(R.string.exported_failed))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
                 return@launch
             }
 
@@ -583,7 +591,7 @@ class ImportExportPrefsImpl @Inject constructor(
             val tempDoc = tempDir.createFile("application/json", exportFileName)
             if (tempDoc == null) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CREATE_TEMP_FAIL")
-                ToastUtils.errorToast(activity, rh.gs(R.string.exported_failed))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
                 return@launch
             }
 
@@ -604,20 +612,20 @@ class ImportExportPrefsImpl @Inject constructor(
                 val provider = cloudStorageManager.getActiveProvider()
                 if (provider == null) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_PROVIDER")
-                    ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
                     return@launch
                 }
 
                 if (!provider.testConnection()) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CONN_FAIL")
-                    ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
                     return@launch
                 }
 
                 val tempDir = prefFileList.ensureTempDirExists()
                 if (tempDir == null) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_TEMP_DIR")
-                    ToastUtils.errorToast(activity, rh.gs(R.string.export_to_cloud_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
                     return@launch
                 }
 
@@ -626,14 +634,14 @@ class ImportExportPrefsImpl @Inject constructor(
                 val tempDoc = tempDir.createFile("application/json", exportFileName)
                 if (tempDoc == null) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CREATE_TEMP_FAIL")
-                    ToastUtils.errorToast(activity, rh.gs(R.string.export_to_cloud_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
                     return@launch
                 }
 
                 val saved = savePreferences(tempDoc, password)
                 if (!saved) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_SAVE_PREFS_FAIL")
-                    ToastUtils.errorToast(activity, rh.gs(R.string.export_to_cloud_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
                     tempDoc.delete()
                     return@launch
                 }
@@ -641,7 +649,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 val bytes = activity.contentResolver.openInputStream(tempDoc.uri)?.use { it.readBytes() }
                 if (bytes == null) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_READ_TEMP_FAIL")
-                    ToastUtils.errorToast(activity, rh.gs(R.string.export_to_cloud_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
                     tempDoc.delete()
                     return@launch
                 }
@@ -650,7 +658,7 @@ class ImportExportPrefsImpl @Inject constructor(
                     provider.setSelectedFolderId(it)
                 }
 
-                ToastUtils.longInfoToast(context, rh.gs(R.string.uploading_to_cloud))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.uploading_to_cloud), EventShowSnackbar.Type.Info))
 
                 var uploadedFileId = provider.uploadFileToPath(
                     exportFileName, bytes, "application/json", CloudConstants.CLOUD_PATH_SETTINGS
@@ -665,7 +673,7 @@ class ImportExportPrefsImpl @Inject constructor(
                     rh.gs(R.string.export_to_cloud_failed)
                 }
 
-                ToastUtils.infoToast(activity, exportResultMessage)
+                rxBus.send(EventShowSnackbar(exportResultMessage, EventShowSnackbar.Type.Info))
 
                 persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                     therapyEvent = TE.asSettingsExport(error = exportResultMessage),
@@ -679,7 +687,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 tempDoc.delete()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_EXCEPTION", e)
-                ToastUtils.errorToast(activity, rh.gs(R.string.export_to_cloud_failed))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -990,6 +998,7 @@ class ImportExportPrefsImpl @Inject constructor(
         @Inject lateinit var persistenceLayer: PersistenceLayer
         @Inject lateinit var cloudStorageManager: CloudStorageManager
         @Inject lateinit var preferences: Preferences
+        @Inject lateinit var rxBus: RxBus
 
         override suspend fun doWorkAndLog(): Result {
             aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT doWorkAndLog started")
@@ -1031,13 +1040,13 @@ class ImportExportPrefsImpl @Inject constructor(
             var ret = Result.success()
             try {
                 saveCsv(newFile, userEntries)
-                ToastUtils.okToast(context, rh.gs(R.string.ue_exported))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.ue_exported), EventShowSnackbar.Type.Success))
             } catch (e: FileNotFoundException) {
-                ToastUtils.errorToast(context, rh.gs(R.string.filenotfound) + " " + newFile)
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.filenotfound) + " " + newFile, EventShowSnackbar.Type.Error))
                 aapsLogger.error(LTag.CORE, "Unhandled exception", e)
                 ret = Result.failure(workDataOf("Error" to "Error FileNotFoundException"))
             } catch (e: IOException) {
-                ToastUtils.errorToast(context, e.message)
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error", EventShowSnackbar.Type.Error))
                 aapsLogger.error(LTag.CORE, "Unhandled exception", e)
                 ret = Result.failure(workDataOf("Error" to "Error IOException"))
             }
@@ -1050,7 +1059,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 val provider = cloudStorageManager.getActiveProvider()
                 if (provider == null) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT_CLOUD no active provider")
-                    ToastUtils.longErrorToast(context, rh.gs(R.string.csv_upload_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.csv_upload_failed), EventShowSnackbar.Type.Error))
                     return Result.failure(workDataOf("Error" to "No active cloud provider"))
                 }
 
@@ -1063,7 +1072,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT_CLOUD folderId=$folderId")
                 folderId?.let { provider.setSelectedFolderId(it) }
 
-                ToastUtils.longInfoToast(context, rh.gs(R.string.uploading_to_cloud))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.uploading_to_cloud), EventShowSnackbar.Type.Info))
                 aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT_CLOUD uploading...")
 
                 var uploadedFileId = provider.uploadFileToPath(
@@ -1082,16 +1091,16 @@ class ImportExportPrefsImpl @Inject constructor(
 
                 if (uploadedFileId != null) {
                     aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT_CLOUD SUCCESS")
-                    ToastUtils.okToast(context, rh.gs(R.string.csv_uploaded_to_cloud) + "\n" + rh.gs(R.string.cloud_directory_path, CloudConstants.CLOUD_PATH_USER_ENTRIES), isShort = false)
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.csv_uploaded_to_cloud) + "\n" + rh.gs(R.string.cloud_directory_path, CloudConstants.CLOUD_PATH_USER_ENTRIES), EventShowSnackbar.Type.Success))
                     return Result.success()
                 } else {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT_CLOUD FAILED - uploadedFileId is null")
-                    ToastUtils.longErrorToast(context, rh.gs(R.string.csv_upload_failed))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.csv_upload_failed), EventShowSnackbar.Type.Error))
                     return Result.failure(workDataOf("Error" to "Cloud upload failed"))
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT_CLOUD EXCEPTION", e)
-                ToastUtils.longErrorToast(context, rh.gs(R.string.csv_upload_error))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.csv_upload_error), EventShowSnackbar.Type.Error))
                 return Result.failure(workDataOf("Error" to "Exception: ${e.message}"))
             }
         }
@@ -1105,20 +1114,14 @@ class ImportExportPrefsImpl @Inject constructor(
             } catch (_: IOException) {
                 throw PrefIOError(file.name ?: "UNKNOWN")
             } catch (_: SecurityException) {
-                ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
                 throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
             }
         }
     }
 
     override fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?) {
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            "export",
-            ExistingWorkPolicy.APPEND,
-            OneTimeWorkRequest.Builder(ApsResultExportWorker::class.java)
-                .setInputData(dataWorkerStorage.storeInputData(ApsResultExportWorker.ApsResultData(algorithm, input, output)))
-                .build()
-        )
+        dataInbox.putAndEnqueue(ApsExportInbox, ApsResultExportWorker.ApsResultData(algorithm, input, output))
     }
 
     class ApsResultExportWorker(
@@ -1129,33 +1132,40 @@ class ImportExportPrefsImpl @Inject constructor(
         @Inject lateinit var prefFileList: FileListProvider
         @Inject lateinit var storage: Storage
         @Inject lateinit var config: Config
-        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+        @Inject lateinit var dataInbox: DataInbox
 
         data class ApsResultData(val algorithm: String?, val input: JSONObject, val output: JSONObject?)
 
         override suspend fun doWorkAndLog(): Result {
             if (!config.isEngineeringMode()) return Result.success(workDataOf("Result" to "Export not enabled"))
-            val apsResultData = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as? ApsResultData?
-                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            val items = dataInbox.drain(ApsExportInbox)
+            if (items.isEmpty()) return Result.success(workDataOf("Result" to "no data"))
 
             prefFileList.ensureResultDirExists()
-            val newFile = prefFileList.newResultFile()
-            var ret = Result.success()
-            try {
-                val jsonObject = JSONObject().apply {
-                    put("algorithm", apsResultData.algorithm)
-                    put("input", apsResultData.input)
-                    put("output", apsResultData.output)
+            var hadFailure = false
+            for (apsResultData in items) {
+                val newFile = prefFileList.newResultFile()
+                try {
+                    val jsonObject = JSONObject().apply {
+                        put("algorithm", apsResultData.algorithm)
+                        put("input", apsResultData.input)
+                        put("output", apsResultData.output)
+                    }
+                    storage.putFileContents(newFile, jsonObject.toString())
+                } catch (e: FileNotFoundException) {
+                    aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                    hadFailure = true
+                } catch (e: IOException) {
+                    aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                    hadFailure = true
                 }
-                storage.putFileContents(newFile, jsonObject.toString())
-            } catch (e: FileNotFoundException) {
-                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
-                ret = Result.failure(workDataOf("Error" to "Error FileNotFoundException"))
-            } catch (e: IOException) {
-                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
-                ret = Result.failure(workDataOf("Error" to "Error IOException"))
             }
-            return ret
+            return if (hadFailure) Result.failure(workDataOf("Error" to "one or more exports failed")) else Result.success()
         }
     }
 }
+
+object ApsExportInbox : Inbox<ImportExportPrefsImpl.ApsResultExportWorker.ApsResultData>(
+    "aps-export",
+    ImportExportPrefsImpl.ApsResultExportWorker::class.java
+)

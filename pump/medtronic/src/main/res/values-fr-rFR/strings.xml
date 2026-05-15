@@ -19,14 +19,29 @@
     <string name="medtronic_pump_battery_nizn">NiZn (vue étendue)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vue Étendue)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Autre (non pris en charge)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A ou inférieur)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A ou inférieur)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (EU Fw. &lt;= 2.6A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batterie RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_invalid">Numéro de série invalide.</string>
     <string name="medtronic_error_pump_type_not_set">Type de pompe non défini.</string>
     <string name="medtronic_error_pump_type_invalid">Type de pompe non pris en charge.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Fréquence de pompe non pris en charge.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adresse RileyLink invalide.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Le type de pompe détecté n\'est pas le même que le type configuré.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Le réglage des profils de basal n\'est pas activé sur la pompe. Activez-le sur la pompe.</string>
@@ -43,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Historique de la pompe Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Vous avez annulé le Bolus, après avoir déjà été envoyé vers la pompe. Puisque la pompe Medtronic n\'accepte pas d\'annulation, vous devrez l\'annuler manuellement. Mettez la pompe en mode Suspendre et puis faites le Reprendre (si vous voulez encore annuler). L\'application va récupérer ces modifications à la prochaine mise à jour (en moins de 5 minutes).</string>
     <string name="medtronic_cmd_cant_read_tbr">Impossible de lire le DBT (TBR) actuel.</string>
@@ -75,7 +89,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
     <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
     <string name="invalid_history_data">Données invalides dans l\'historique de la pompe. Déclarez le problème (\"Issue\") sur Github avec vos fichiers logs.</string>
     <string name="riley_statistics">Stats RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Actualisation demandée</string>

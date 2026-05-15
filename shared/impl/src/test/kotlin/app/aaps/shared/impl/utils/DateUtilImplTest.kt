@@ -1499,8 +1499,5 @@ class DateUtilImplTest {
         override fun dpToPx(dp: Int): Int = dp
         override fun dpToPx(dp: Float): Int = dp.toInt()
         override fun shortTextMode(): Boolean = true
-        override fun gac(attributeId: Int): Int = 0
-        override fun gac(context: Context?, attributeId: Int): Int = 0
-        override fun getThemedCtx(context: Context): Context = context
     }
 }

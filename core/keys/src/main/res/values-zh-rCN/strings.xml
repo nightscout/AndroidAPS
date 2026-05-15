@@ -3,7 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">简单模式</string>
     <string name="pref_title_insulin_concentration">胰岛素浓度支持</string>
-    <string name="pref_summary_insulin_concentration">启用对不同的胰岛素浓度支持（U200、U300等）</string>
+    <string name="pref_summary_insulin_concentration">启用对不同的胰岛素浓度支持（U50、U200等）</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">保持屏幕常亮</string>
     <string name="pref_summary_keep_screen_on">阻止 Android 系统关闭手机屏幕。这将非常耗电。</string>
@@ -214,7 +214,6 @@
     <string name="pref_title_stale_data_threshold">失效数据阈值</string>
     <string name="pref_title_pump_unreachable_threshold">泵无法连接阈值</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">峰值时间</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">默认调节天数</string>
     <string name="autotune_default_tune_days_summary">Autotune 处理数据的默认天数（最多 30 天）</string>
@@ -253,7 +252,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -268,7 +266,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">语言</string>
@@ -357,15 +354,15 @@
     <string name="pref_title_max_basal">最大基础率</string>
     <string name="openapsma_max_basal_summary">这个值在 OpenAPS被称为最大基础率</string>
     <string name="pref_title_smb_max_iob">SMB 模式下的最大 IOB 上限</string>
-    <string name="openapssmb_max_iob_summary">该值在OpenAPS中称为最大 IOB\n如果当前IOB大于此值，则OpenAPS不会输注更多胰岛素</string>
+    <string name="openapssmb_max_iob_summary">该数值在 OpenAPS 中称为最大活性胰岛素（Max IOB）。\n若当前 IOB 超出此数值，OpenAPS 将不会输注更多胰岛素。该数值同时受患者类型影响。</string>
     <string name="pref_title_ama_max_iob">AMA 最大 IOB 上限</string>
-    <string name="openapsma_max_iob_summary">这个值在OpenAPS中被成为最大IOB\n这是APS单次可以输注的胰岛素的最大值[U]</string>
+    <string name="openapsma_max_iob_summary">该数值在 OpenAPS 中称为最大活性胰岛素（Max IOB）。\n这是 APS 单次可以输注的胰岛素的最大值[U]。该数值同时受患者类型影响。</string>
     <string name="pref_title_max_daily_multiplier">最大日基础率安全倍数</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">默认值：3 这是 OpenAPS 中一项关键的安全上限设置。作用是将你的基础率限制为最高基础率的 3 倍（当前示例为 3 倍）。你通常无需修改此值，但需要了解：这就是相关说明中提到的 “最大每日 3 倍、当前 4 倍” 安全上限机制。</string>
     <string name="pref_title_current_basal_multiplier">当前基础率安全倍数</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">默认值：4 这是 OpenAPS 另一项关键安全上限，也就是 “最大每日 3 倍、当前 4 倍” 中的后半部分。该设置表示：无论你在泵中设置了多高的基础率上限，实际基础率都不会超过当前基础率的该倍数。此设计用于防止用户在尚未完全理解算法逻辑前，因设置过高的基础率上限而陷入危险。同样，默认值为 4 倍；大多数人完全不需要调整此项。如果感觉触发了该安全限制，通常应优先调整其他参数，而非修改本项。</string>
     <string name="pref_title_bolus_snooze_divisor">大剂量延迟胰岛素作用时长除数</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">默认值：2\n大剂量延后（Bolus Snooze）会在进餐大剂量注射后生效，避免闭环系统在刚进食后因给出低临时基础率而抵消餐时胰岛素效果。此处默认值为 2；以作用时长 DIA 为 3 小时为例，大剂量延后会在 1.5 小时（3 小时 DIA ÷ 2） 内逐步失效。</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">默认值：2\n大剂量暂缓（Bolus snooze）会在你进行餐后大剂量注射后启动，避免刚进食后闭环系统因低血糖临时基础率而抵消餐时胰岛素效果。此处示例与默认值均为 2；若胰岛素作用时长（DIA）为 3 小时，则大剂量暂缓功能会在 1.5 小时内逐步退出（计算公式：3 小时 DIA ÷ 2）。</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA 5 分钟最小碳水影响</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB 5 分钟最小碳水影响</string>
     <string name="openapsama_min_5m_carb_impact_summary">默认值: 3.0  (AMA) 或者 8.0 (SMB)。这是默认的每5分钟碳水化合物吸收量。默认值为3毫克/dl/5 分钟。 当血糖的下降超过预期时, 或者不像预期的上升的那么多时，这个值就影响了活性碳水化合物的衰减速度, 以及在计算预测未来血糖时假设的碳水化合物吸收量。</string>
@@ -410,10 +407,6 @@
     <string name="pref_title_lgs_threshold">LGS 阈值</string>
     <string name="lgs_threshold_summary">血糖值低于此值时，胰岛素暂停使用。默认值使用标准目标模型。用户可以在 60mg/dl (3.3mmol/l) 和 100mg/dl (5.5mmol/l) 之间设置。低于 65/3.6 的值将使用默认模型</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">算法文档</string>
-    <string name="pref_title_otp_setup">身份验证器设置</string>
-    <string name="pref_title_quick_wizard_settings">快速向导设置</string>
-    <string name="pref_title_xdrip_info">xDrip+ 信息</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">可视化范围</string>
 </resources>

@@ -1,12 +1,15 @@
 package app.aaps.implementation.maintenance.data
 
-import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.Prefs
-import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
-import app.aaps.implementation.R
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 interface PrefsFormat {
@@ -22,13 +25,17 @@ interface PrefsFormat {
 }
 
 @Parcelize
-enum class PrefsStatusImpl(@DrawableRes override val icon: Int) : PrefsStatus {
+enum class PrefsStatusImpl : PrefsStatus {
 
-    OK(R.drawable.ic_meta_ok),
-    WARN(R.drawable.ic_meta_warning),
-    ERROR(R.drawable.ic_meta_error),
-    UNKNOWN(R.drawable.ic_meta_error),
-    DISABLED(R.drawable.ic_meta_error);
+    OK, WARN, ERROR, UNKNOWN, DISABLED;
+
+    @IgnoredOnParcel
+    override val icon: ImageVector
+        get() = when (this) {
+            OK                       -> Icons.Default.Check
+            WARN                     -> Icons.Default.Warning
+            ERROR, UNKNOWN, DISABLED -> Icons.Default.Error
+        }
 
     override val isOk: Boolean get() = this == OK
     override val isWarning: Boolean get() = this == WARN

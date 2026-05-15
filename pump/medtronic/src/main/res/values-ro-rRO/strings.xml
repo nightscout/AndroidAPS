@@ -42,7 +42,6 @@
     <string name="medtronic_error_serial_invalid">Număr serial invalid.</string>
     <string name="medtronic_error_pump_type_not_set">Tipul pompei nesetat.</string>
     <string name="medtronic_error_pump_type_invalid">Tip de pompă nesuportat.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frecvența pompei nesuportată.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adresa RileyLink invalidă.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Tipul de pompă detectat nu corespunde cu cel configurat.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Setările de profil/șablon bazale nu sunt activate în pompă. Vă rugăm să le activați din pompă.</string>
@@ -59,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Istoric pompă Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Ați anulat un bolus după ce a fost deja transmis către pompă. Deoarece pompa Medtronic nu permite o anulare de bolus, va trebui să faceți acest lucru în mod manual, din pompă. Puneți pompa în modul Suspend și apoi Repornire (dacă totuși doriți să anulați bolusul). Aplicația se va sincroniza automat cu pompa la următoarea contactare a acesteia (în mai puțin de 5 minute).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nu a putut fi citită RBT.</string>
@@ -91,8 +89,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
     <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
-    <string name="medtronic_tbr_remaining">%1$s (%2$d minute rămase)</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d minute rămase)</string>
     <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschide o sesizare nouă și trimite jurnalul de activitate.</string>
     <string name="riley_statistics">Statistici RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Reîmprospătare apăsată</string>

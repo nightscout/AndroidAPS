@@ -3,13 +3,16 @@ package app.aaps.implementation.maintenance.formats
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.maintenance.PrefMetadata
+import app.aaps.core.interfaces.maintenance.PrefMetadataMap
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.utils.toHex
 import app.aaps.implementation.R
@@ -17,8 +20,6 @@ import app.aaps.implementation.maintenance.PrefsMetadataKeyImpl
 import app.aaps.implementation.maintenance.data.PrefFileNotFoundError
 import app.aaps.implementation.maintenance.data.PrefFormatError
 import app.aaps.implementation.maintenance.data.PrefIOError
-import app.aaps.core.interfaces.maintenance.PrefMetadataMap
-import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.implementation.maintenance.data.PrefsFormat
 import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import org.json.JSONException
@@ -34,7 +35,8 @@ class EncryptedPrefsFormat @Inject constructor(
     private val rh: ResourceHelper,
     private val cryptoUtil: CryptoUtil,
     private val storage: Storage,
-    private val context: Context
+    private val context: Context,
+    private val rxBus: RxBus
 ) : PrefsFormat {
 
     @Inject lateinit var secureEncrypt: SecureEncrypt
@@ -59,7 +61,7 @@ class EncryptedPrefsFormat @Inject constructor(
                     false
                 }
             } catch (_: SecurityException) {
-                ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
                 false
             }
         } else false
@@ -140,7 +142,7 @@ class EncryptedPrefsFormat @Inject constructor(
         } catch (_: IOException) {
             throw PrefIOError(file.name ?: "UNKNOWN")
         } catch (_: SecurityException) {
-            ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
             throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
         }
     }

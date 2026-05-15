@@ -11,6 +11,8 @@
     <!--    DateUtil-->
     <string name="minago">%1$dm fa</string>
     <string name="secago">%1$ds fa</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minuti fa</string>
     <string name="hoursago">%1$.1fh fa</string>
     <string name="days_ago">%1$.1f giorni fa</string>
@@ -45,6 +47,8 @@
     <string name="unit_weeks">settimane</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dh %2$d m rimanenti</string>
+    <string name="time_remaining_m">%1$dm rimanenti</string>
     <string name="later_today">Più tardì oggi</string>
     <string name="tomorrow">Domani</string>
     <string name="today">Oggi</string>
@@ -95,8 +99,6 @@
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">L\'applicazione ha bisogno del permesso bluetooth per comunicare con il micro</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">Insulina</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">Sconosciuto</string>
     <string name="rapid_acting_oref">NovoRapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -105,7 +107,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Tempo del picco [min]</string>
-    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>

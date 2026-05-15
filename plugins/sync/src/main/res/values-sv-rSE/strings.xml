@@ -52,13 +52,11 @@
     <string name="no_watch_connected">(Ingen klocka ansluten)</string>
     <string name="pump_status">Pumpstatus</string>
     <string name="loop_status">Loop-status</string>
-    <string name="wizard_result">Kalkylator:\nInsulin: %1$.2fU\nKolhydrater: %2$dg</string>
     <string name="quick_wizard_not_available">Vald snabbknapp inte längre tillgänglig. Vänligen uppdatera vyn</string>
     <string name="quick_wizard_message">Snabbsteg: %1$s\nInsulin: %2$.2fU\nKolhydrater: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Olika enheter på klocka och telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Ogiltigt minimum BG!</string>
     <string name="wear_action_tempt_max_bg_error">Ogiltigt maximum BG!</string>
-    <string name="no_success">misslyckat - kontrollera telefonen</string>
     <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
     <string name="wear_general_settings">Generella inställningar</string>
     <string name="wear_custom_watchface_settings">Anpassade inställningar för urtavla</string>

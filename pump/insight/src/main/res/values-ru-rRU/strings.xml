@@ -16,10 +16,7 @@
     <string name="not_inserted">Не вставлено</string>
     <string name="tdd_bolus">Суммарный суточный болюс TDD</string>
     <string name="tdd_basal">Суммарный суточный Базал TDD</string>
-    <string name="tbr_formatter">%1$d%% за %2$d / %3$d мин</string>
     <string name="multiwave_bolus">Мульти-болюс</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
-    <string name="insight_last_bolus">Предыдущий болюс</string>
     <string name="searching_for_devices">Поиск устройств…</string>
     <string name="pairing_completed">Сопряжение выполнено</string>
     <string name="code_compare">Коды на этом устройстве и на вашей помпе совпадают?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Помпа остановлена</string>
     <string name="pump_started">Помпа запущена</string>
     <string name="release_software_version">Версия ПО</string>
-    <string name="ui_processor_software_version">Версия процессора UI</string>
-    <string name="pc_processor_software_version">Версия процессора ПК</string>
-    <string name="md_tel_processor_software_version">Версия ПО процессора MD тел</string>
-    <string name="safety_processor_software_version">Версия ПО процессора безопасности</string>
-    <string name="bt_info_page_version">Версия страницы информация BT</string>
     <string name="bluetooth_address">Адрес Bluetooth</string>
-    <string name="system_id_appendix">Аппендикс ID системы</string>
     <string name="manufacturing_date">Дата изготовления</string>
-    <string name="delete_pairing">Удалить сопряжение</string>
     <string name="log_site_changes">Журнал изменений места установки</string>
     <string name="log_reservoir_changes">Отслеживать замену резервуара</string>
     <string name="log_tube_changes">Журнал замены трубки катетера</string>
@@ -58,6 +48,5 @@
     <string name="max_recovery_duration">Макс продолжительность восстановления [s]</string>
     <string name="min_recovery_duration">Мин. продолжительность восстановления [s]</string>
     <string name="pump_alert">Оповещение помпы</string>
-    <string name="pairing_information">Информация о сопряжении</string>
     <string name="last_connection">%1$s (%2$s)</string>
 </resources>

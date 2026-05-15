@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Serial # μη έγκυρο.</string>
     <string name="medtronic_error_pump_type_not_set">Δεν ορίστηκε Τύπος Αντλίας.</string>
     <string name="medtronic_error_pump_type_invalid">Τύπος Αντλίας δεν υποστηρίζεται.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Συχνότητα Αντλίας δεν υποστηρίζεται.</string>
     <string name="medtronic_error_rileylink_address_invalid">Διεύθυνση RileyLink μη έγκυρη.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Ο τύπος αντλίας που ανιχνεύτηκε δεν είναι ο ίδιος με αυτόν που ορίστηκε.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Η ρύθμιση των βασικών προφίλ/μοτίβων δεν είναι ενεργοποιημένη στην αντλία. Ενεργοποιήστε την στην αντλία.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Ιστορικό Αντλίας Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Ακυρώσατε τον Bolus, αφού είχε ήδη σταλεί στην αντλία. Επειδή η αντλία Medtronic δεν υποστηρίζει ακύρωση, θα χρειαστεί να ακυρωθεί χειροκίνητα. Βάλτε την αντλία σε αναστολή λειτουργίας και μετά κάντε Συνέχιση (αν θέλετε να ακυρώσετε ακόμα). Η εφαρμογή θα πάρει τις αλλαγές, στην επόμενη ενημέρωση (σε λιγότερο από 5 λεπτά).</string>
     <string name="medtronic_cmd_cant_read_tbr">Αδυναμία ανάγνωσης τρέχοντος TBR.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Ορισμός ουδέτερου προσωρινού ρυθμού</string>
     <string name="set_neutral_temps_summary">Αν ενεργοποιηθεί, θα ακυρωθεί ο προσωρινός βασικός πριν από το τέλος κάθε ώρας. Αυτή η μέθοδος μπορεί να βοηθήσει στη διακοπή κάποιου ωριαίου μπιπ/δόνησης ορισμένων αντλιών.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d λεπτά απομένουν)</string>
     <string name="invalid_history_data">Ανιχνεύθηκαν μη έγκυρα δεδομένα ιστορικού αντλίας. Ανοίξτε νέο θέμα και αποστείλετε τα αρχεία καταγραφής.</string>
     <string name="riley_statistics">Στατιστικά RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Πατήθηκε η ανανέωση</string>

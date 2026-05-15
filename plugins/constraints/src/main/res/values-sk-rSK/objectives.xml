@@ -70,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Pri zadávaní sacharidov sú povolené iba gramy.</string>
     <string name="objectives_exam_learned_ecarbs">E-Carbs je náhrada za predĺžený bolus vo svete pumpy.</string>
     <string name="objectives_exam_learned_nsclient">Sledovanie a ovládanie na diaľku je možné, ale vzdialene nemusia byť dostupné všetky funkcionality.</string>
+    <string name="objectives_exam_learned_concentration1">Použitie inzulínu U200 s profilom 50% bude vyžadovať trvalý prepočet: pre externé bolusy perami a všetky štandardné reporty poskytované AAPS alebo NS budú chybné a bude ich nutné previesť na IU pre zdravotnícky tím.</string>
+    <string name="objectives_exam_learned_concentration2">Prechod z U200 s profilom 50% na U200 s funkciou koncentrácie inzulínu bude vyžadovať vytvorenie nového silnejšieho profilu, vypnutie DynISF na jeden týždeň a natrénovanie mozgu myslieť v medzinárodných jednotkách.</string>
+    <string name="objectives_exam_learned_concentration3">Koncentráciu inzulínu je možné meniť iba pri výmene inzulínu alebo Patchu. Ale predovšetkým, hlavne pri pumpách s hadičkou, nikdy nepoužívajte uživateľské rozhranie pumpy k podávaniu bolusov priamo z pumpy.</string>
     <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
     <string name="wronganswer">Nesprávna odpoveď!</string>
     <string name="unfinshed_button">Ďalšia nedokončená</string>

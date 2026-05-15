@@ -42,7 +42,6 @@
     <string name="medtronic_error_serial_invalid">Serienummer ikke gyldig.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpetype ikke definert.</string>
     <string name="medtronic_error_pump_type_invalid">Pumpetypen støttes ikke.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pumpefrekvensen støttes ikke.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adressen er ugyldig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Oppdaget pumpetype er forskjellig fra innstilt pumpetype.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Basal profil/program innstilling ikke aktivert. Aktiver denne på pumpen.</string>
@@ -59,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic pumpe historie</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Du kansellerte bolus, etter at den var satt på pumpen. Siden Medtronic pumper ikke støtter kansellering må dette gjøres manuelt. STOPP pumpen og velg GJENOPPTA (hvis du fortsatt ønsker å kansellere). Applikasjon vil lese inn endringen på neste pumpeavlesing (innen 5 minutter).</string>
     <string name="medtronic_cmd_cant_read_tbr">Kunne ikke lese gjeldende TBR.</string>
@@ -91,8 +89,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en midlertidig basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
-    <string name="medtronic_tbr_remaining">%1$s (%2$d min gjenstår)</string>
-    <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min gjenstår)</string>
     <string name="invalid_history_data">Ugyldige data for pumpehistorikken er oppdaget. Rapporter hendelsen til APPS og legg ved logg.</string>
     <string name="riley_statistics">RL statistikk</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Trykket på oppdater</string>

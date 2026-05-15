@@ -1,6 +1,7 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -15,18 +16,15 @@ class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelp
     private var labelsArray: Array<CharSequence> = emptyArray()
     private var valuesArray: Array<CharSequence> = emptyArray()
 
+    /**
+     * Manually supply labels + values. Only needed when the options are runtime-generated
+     * (e.g. age ranges with localized labels). For static list preferences, leave this
+     * unset — entries are resolved from [StringPreferenceKey.entries].
+     */
     fun option(labels: Array<CharSequence>, values: Array<CharSequence>): SWRadioButton {
         labelsArray = labels
         valuesArray = values
         return this
-    }
-
-    private fun labels(): Array<CharSequence> {
-        return labelsArray
-    }
-
-    private fun values(): Array<CharSequence> {
-        return valuesArray
     }
 
     fun preference(preference: StringPreferenceKey): SWRadioButton {
@@ -36,12 +34,20 @@ class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelp
 
     @Composable
     override fun Compose() {
-        val entries = LinkedHashMap<String, String>()
-        for (i in valuesArray.indices) {
-            entries[valuesArray[i].toString()] = labelsArray[i].toString()
+        val key = preference as StringPreferenceKey
+        val entries = if (labelsArray.isNotEmpty()) {
+            // Runtime-supplied options.
+            LinkedHashMap<String, String>().apply {
+                for (i in valuesArray.indices) {
+                    put(valuesArray[i].toString(), labelsArray[i].toString())
+                }
+            }
+        } else {
+            // Static options declared on the StringPreferenceKey.
+            key.entries.mapValues { (_, resId) -> stringResource(resId) }
         }
         InlineStringListPreferenceItem(
-            stringKey = preference as StringPreferenceKey,
+            stringKey = key,
             titleResId = label ?: 0,
             entries = entries
         )

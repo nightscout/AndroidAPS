@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
 
     private lateinit var diaconnG8Pump: DiaconnG8Pump
-    private val bolusProgressData = BolusProgressData()
+    private val bolusProgressData by lazy { BolusProgressData(ch, rh) }
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -52,7 +52,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(5.0)
         assertThat(diaconnG8Pump.bolusDone).isTrue()
         assertThat(diaconnG8Pump.bolusStopped).isFalse()
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(5.0)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isEqualTo(5.0)
     }
 
     @Test
@@ -73,7 +73,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(4.5)
         assertThat(diaconnG8Pump.bolusDone).isTrue()
         assertThat(diaconnG8Pump.bolusStopped).isTrue()
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(4.5)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isEqualTo(4.5)
     }
 
     @Test
@@ -92,7 +92,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         // Then
         assertThat(packet.failed).isFalse()
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(0.5)
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(0.5)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isEqualTo(0.5)
     }
 
     @Test
@@ -111,7 +111,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         // Then
         assertThat(packet.failed).isFalse()
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(15.0)
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(15.0)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isEqualTo(15.0)
     }
 
     @Test

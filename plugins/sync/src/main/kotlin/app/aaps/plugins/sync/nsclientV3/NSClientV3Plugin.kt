@@ -13,7 +13,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -85,6 +87,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
@@ -111,8 +114,7 @@ class NSClientV3Plugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val l: L,
     private val nsClientRepository: NSClientRepository,
-    private val uel: UserEntryLogger,
-    private val activePlugin: ActivePlugin,
+    private val uel: UserEntryLogger
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -199,6 +201,10 @@ class NSClientV3Plugin @Inject constructor(
             aapsLogger.debug(LTag.NSCLIENT, "Service is connected")
             val localBinder = service as NSClientV3Service.LocalBinder
             nsClientV3Service = localBinder.serviceInstance
+            // Covers the case where Android reuses an already-alive service on rebind:
+            // onCreate doesn't fire, but onServiceConnected does. The idempotency guard
+            // in initializeWebSockets makes this safe when both fire on a fresh bind.
+            nsClientV3Service?.initializeWebSockets("serviceConnected")
         }
     }
 
@@ -253,6 +259,8 @@ class NSClientV3Plugin @Inject constructor(
         preferences.observe(LongNonKey.LocalProfileLastChange).drop(1)
             .onEach { executeUpload("PROFILE_CHANGE", forceNew = true) }.launchIn(scope)
         persistenceLayer.observeAnyChange()
+            // HR/SC writes come from the watch; this plugin doesn't upload them — skip to avoid reconnect-flush storm.
+            .filter { types -> types.any { it != HR::class && it != SC::class } }
             .onEach { types -> executeUpload("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})", forceNew = false) }.launchIn(scope)
         rxBus.toFlow(EventProfileStoreChanged::class.java)
             .onEach { executeUpload("EventProfileStoreChanged", forceNew = false) }.launchIn(scope)
@@ -300,6 +308,7 @@ class NSClientV3Plugin @Inject constructor(
         handler = null
         scope.cancel()
         stopService()
+        WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
         super.onStop()
     }
 
@@ -315,7 +324,6 @@ class NSClientV3Plugin @Inject constructor(
                 logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
-        SystemClock.sleep(2000)
         if (preferences.get(BooleanKey.NsClient3UseWs)) {
             if (nsClientV3Service == null) startService()
             else nsClientV3Service?.initializeWebSockets("setClient")
@@ -331,6 +339,9 @@ class NSClientV3Plugin @Inject constructor(
 
     private fun stopService() {
         try {
+            // Tear down sockets synchronously before unbinding so a quick rebind
+            // (e.g. via restartOnChange) doesn't race the async service onDestroy.
+            nsClientV3Service?.shutdownWebsockets()
             if (nsClientV3Service != null) context.unbindService(serviceConnection)
         } catch (_: Exception) {
         }
@@ -348,6 +359,10 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
+        // Cancel any in-flight WorkManager job so a stuck worker can't keep
+        // workIsRunning() == true after unpause and silently block all uploads
+        // (every DB_CHANGED would otherwise just log "Already running").
+        if (newState) WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
         preferences.put(NsclientBooleanKey.NsPaused, newState)
     }
 

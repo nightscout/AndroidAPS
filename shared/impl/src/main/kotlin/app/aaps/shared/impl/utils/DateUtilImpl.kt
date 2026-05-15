@@ -218,6 +218,15 @@ class DateUtilImpl @Inject constructor(
         }
     }
 
+    override fun minOrSec(rh: ResourceHelper, durationMs: Long): String {
+        if (durationMs < 0) return ""
+        val duration = durationMs.milliseconds
+        return when {
+            duration.inWholeMinutes >= 2 -> rh.gs(R.string.min_plus, duration.inWholeMinutes.toInt())
+            else                         -> rh.gs(R.string.sec_plus, duration.inWholeSeconds.toInt())
+        }
+    }
+
     override fun minAgoShort(time: Long?): String {
         if (time == null) return ""
         val duration = (time - now()).milliseconds
@@ -285,6 +294,14 @@ class DateUtilImpl @Inject constructor(
     override fun untilString(timestamp: Long, rh: ResourceHelper): String {
         val durationMillis = timestamp - now()
         return timeFrameString(durationMillis, rh)
+    }
+
+    override fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String {
+        val duration = timeInMillis.milliseconds
+        val totalHours = duration.inWholeHours.toInt()
+        val remainingMinutes = (duration - totalHours.hours).inWholeMinutes.toInt()
+        return if (totalHours > 0) rh.gs(R.string.time_remaining_h_m, totalHours, remainingMinutes)
+        else rh.gs(R.string.time_remaining_m, remainingMinutes)
     }
 
     override fun now(): Long = clock.millis()

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Cloud storage authorization status colors (Dark theme) -->
-    <!-- Success/Authorized: A brighter green for dark backgrounds -->
-    <!-- Warning/Re-auth required: A brighter orange for dark backgrounds -->
-</resources>

@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
@@ -46,6 +47,7 @@ import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -74,6 +76,8 @@ import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.receivers.BTReceiver
@@ -146,6 +150,8 @@ class MainApp : Application(), HasAndroidInjector {
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
     @Inject lateinit var widgetUpdater: WidgetUpdater
+    @Inject lateinit var runningModeReconciler: RunningModeReconciler
+    @Inject lateinit var runningModeExpiryScheduler: RunningModeExpiryScheduler
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     private lateinit var insulinLabel: String
@@ -156,18 +162,40 @@ class MainApp : Application(), HasAndroidInjector {
     private lateinit var refreshWidget: Runnable
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    companion object {
-
-        /** Throttle splash progress updates to avoid excessive StateFlow emissions */
-        private const val PROGRESS_UPDATE_INTERVAL = 10
-    }
-
     override fun onCreate() {
         super.onCreate()
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")
         ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener.get())
+
+        // Background fallback for EventShowSnackbar: when no activity is STARTED
+        // (app in background / process alive but UI offscreen), promote the
+        // snackbar to a system Notification so the message is not lost.
+        // Visible activities host their own GlobalSnackbarHost that also
+        // subscribes; those win while UI is present.
+        appScope.launch {
+            rxBus.toFlow(EventShowSnackbar::class.java).collect { event ->
+                val uiVisible = ProcessLifecycleOwner.get().lifecycle.currentState
+                    .isAtLeast(Lifecycle.State.STARTED)
+                if (!uiVisible) {
+                    notificationManager.post(
+                        id = NotificationId.SNACKBAR_FALLBACK,
+                        text = event.message,
+                        // URGENT is reserved for pump/loop alarms that play alarm-stream
+                        // sounds and wake users. Generic snackbar errors — "failed to save
+                        // preference", etc. — route through NORMAL instead.
+                        level = when (event.type) {
+                            EventShowSnackbar.Type.Error   -> NotificationLevel.NORMAL
+                            EventShowSnackbar.Type.Warning -> NotificationLevel.NORMAL
+                            EventShowSnackbar.Type.Success -> NotificationLevel.INFO
+                            EventShowSnackbar.Type.Info    -> NotificationLevel.INFO
+                        },
+                        validMinutes = 30
+                    )
+                }
+            }
+        }
         // Configure LeakCanary with Firebase reporting
         // Memory leaks will be uploaded to Firebase Crashlytics via FabricPrivacy.logException
         configureLeakCanary(
@@ -186,6 +214,12 @@ class MainApp : Application(), HasAndroidInjector {
                 config.updateInitProgress(getString(R.string.initializing_plugins))
                 pluginStore.plugins = plugins
                 configBuilder.initialize()
+
+                // Running-mode reconciler + expiry scheduler. Start after plugins are registered:
+                // the reconciler's startup-drift check reads the active pump, which requires
+                // pluginStore.plugins to be populated. Both internally gated by config.APS.
+                runningModeReconciler.start()
+                runningModeExpiryScheduler.start()
 
                 // Data migrations (DB I/O)
                 dataMigrations()
@@ -226,7 +260,9 @@ class MainApp : Application(), HasAndroidInjector {
         handler.postDelayed(
             {
                 // log version
-                persistenceLayer.insertVersionChangeIfChanged(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)
+                appScope.launch {
+                    persistenceLayer.insertVersionChangeIfChanged(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)
+                }
                 // log app start
                 if (preferences.get(BooleanKey.NsClientLogAppStart))
                     appScope.launch {
@@ -262,7 +298,7 @@ class MainApp : Application(), HasAndroidInjector {
         aapsLogger.debug("doInit end")
     }
 
-    private fun setUserStats() {
+    private suspend fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
         val remote = config.REMOTE.lowercase(Locale.getDefault())
@@ -685,10 +721,9 @@ class MainApp : Application(), HasAndroidInjector {
 
     private suspend fun dataMigrations() {
         // Migrate to database 33 (ICfg)
-        // Grab default value first
-        var runningICfg = if (profileNameToDia.size == 0) // no migration, get running iCfg from running Profile
+        val runningICfg = if (profileNameToDia.isEmpty())
             profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
-        else {  // migration, create running iCfg from previous runningProfile dia and slected InsulinPlugin for peak
+        else {
             val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
                 profileNameToDia[profileName]
             }
@@ -699,70 +734,24 @@ class MainApp : Application(), HasAndroidInjector {
             }
         }
 
-        if (!localInsulinManager.insulinAlreadyExists(runningICfg)) { // Add running insulin in InsulinManager if missing
+        if (!localInsulinManager.insulinAlreadyExists(runningICfg))
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)
-        }
 
-        var totalMigrated = 0
+        val label = runningICfg.insulinLabel
+        val end   = runningICfg.insulinEndTime
+        val peak  = runningICfg.insulinPeakTime
+        val conc  = runningICfg.concentration
 
         config.updateInitProgress(rh.get().gs(R.string.migrating_profile_switches))
-        val profileSwitches = persistenceLayer.getProfileSwitches()
-        val unmigrated = profileSwitches.filter { it.iCfg.insulinEndTime == -1L }
-        if (unmigrated.isNotEmpty()) {
-            val total = unmigrated.size
-            val step = rh.get().gs(R.string.migrating_profile_switches)
-            config.updateInitProgress(step, 0, total)
-            unmigrated.forEachIndexed { index, ps ->
-                ps.iCfg.insulinLabel = runningICfg.insulinLabel
-                ps.iCfg.insulinEndTime = runningICfg.insulinEndTime
-                ps.iCfg.insulinPeakTime = runningICfg.insulinPeakTime
-                ps.iCfg.concentration = runningICfg.concentration
-                persistenceLayer.updateProfileSwitchNoLogging(ps)
-                if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
-                    config.updateInitProgress(step, index + 1, total)
-            }
-            totalMigrated += unmigrated.size
-        }
+        val migratedPs = repository.bulkMigrateProfileSwitchInsulinConfig(label, end, peak, conc)
 
         config.updateInitProgress(rh.get().gs(R.string.migrating_effective_profile_switches))
-        val effectiveProfileSwitches = persistenceLayer.getEffectiveProfileSwitches()
-        val unmigratedEps = effectiveProfileSwitches.filter { it.iCfg.insulinEndTime == -1L }
-        if (unmigratedEps.isNotEmpty()) {
-            val total = unmigratedEps.size
-            val step = rh.get().gs(R.string.migrating_effective_profile_switches)
-            config.updateInitProgress(step, 0, total)
-            unmigratedEps.forEachIndexed { index, eps ->
-                eps.iCfg.insulinLabel = runningICfg.insulinLabel
-                eps.iCfg.insulinEndTime = runningICfg.insulinEndTime
-                eps.iCfg.insulinPeakTime = runningICfg.insulinPeakTime
-                eps.iCfg.concentration = runningICfg.concentration
-                persistenceLayer.updateEffectiveProfileSwitchNoLogging(eps)
-                if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
-                    config.updateInitProgress(step, index + 1, total)
-            }
-            totalMigrated += unmigratedEps.size
-        }
+        val migratedEps = repository.bulkMigrateEffectiveProfileSwitchInsulinConfig(label, end, peak, conc)
 
         config.updateInitProgress(rh.get().gs(R.string.migrating_boluses))
-        val boluses = persistenceLayer.getBoluses()
-        val unmigratedBoluses = boluses.filter { it.iCfg.insulinEndTime == -1L }
-        if (unmigratedBoluses.isNotEmpty()) {
-            val total = unmigratedBoluses.size
-            val step = rh.get().gs(R.string.migrating_boluses)
-            config.updateInitProgress(step, 0, total)
-            unmigratedBoluses.forEachIndexed { index, bolus ->
-                bolus.iCfg.insulinLabel = runningICfg.insulinLabel
-                bolus.iCfg.insulinEndTime = runningICfg.insulinEndTime
-                bolus.iCfg.insulinPeakTime = runningICfg.insulinPeakTime
-                bolus.iCfg.concentration = runningICfg.concentration
-                persistenceLayer.updateBolusNoLogging(bolus)
-                if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
-                    config.updateInitProgress(step, index + 1, total)
-            }
-            totalMigrated += unmigratedBoluses.size
-        }
+        val migratedBoluses = repository.bulkMigrateBolusInsulinConfig(label, end, peak, conc)
 
-        // Log a single user entry for the entire migration
+        val totalMigrated = migratedPs + migratedEps + migratedBoluses
         if (totalMigrated > 0) {
             aapsLogger.debug(LTag.CORE, "Migration to DB 33 complete: $totalMigrated records updated")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(

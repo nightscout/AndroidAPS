@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.autotune.data
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.InsulinType
@@ -39,7 +40,7 @@ class ATProfile @Inject constructor(
 ) {
 
     lateinit var profile: ProfileSealed
-    lateinit var localInsulin: LocalInsulin
+    lateinit var iCfg: ICfg
     lateinit var circadianProfile: ProfileSealed
     private lateinit var pumpProfile: ProfileSealed
     var profileName: String = ""
@@ -63,9 +64,9 @@ class ATProfile @Inject constructor(
     private val avgIC: Double
         get() = if (profile.getIcsValues().size == 1) profile.getIcsValues()[0].value else Round.roundTo(averageProfileValue(profile.getIcsValues()), 0.01)
 
-    fun with(profile: Profile, localInsulin: LocalInsulin): ATProfile {
+    fun with(profile: Profile, iCfg: ICfg): ATProfile {
         this.profile = profile as ProfileSealed
-        this.localInsulin = localInsulin
+        this.iCfg = iCfg
 
         circadianProfile = profile
         isValid = profile.isValid
@@ -84,8 +85,8 @@ class ATProfile @Inject constructor(
             pumpProfileAvgIC = avgIC
             pumpProfileAvgISF = avgISF
         }
-        dia = localInsulin.dia
-        peak = localInsulin.peak
+        dia = iCfg.dia
+        peak = iCfg.peak
         return this
     }
 
@@ -122,7 +123,7 @@ class ATProfile @Inject constructor(
     fun profileToOrefJSON(): String {
         var jsonString = ""
         val json = JSONObject()
-        val insulinType = InsulinType.fromPeak(localInsulin.peak * 60000L)
+        val insulinType = InsulinType.fromPeak(iCfg.peak * 60000L)
         try {
             json.put("name", profileName)
             json.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
@@ -132,7 +133,7 @@ class ATProfile @Inject constructor(
             else if (insulinType == InsulinType.OREF_RAPID_ACTING)
                 json.put("curve", "rapid-acting")
             else {
-                val peakTime: Int = localInsulin.peak
+                val peakTime: Int = iCfg.peak
                 json.put("curve", if (peakTime > 50) "rapid-acting" else "ultra-rapid")
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", peakTime)

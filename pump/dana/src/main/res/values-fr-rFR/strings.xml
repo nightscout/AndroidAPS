@@ -92,6 +92,9 @@
     <string name="danars_password_title">Mot de passe pompe (v1 uniquement)</string>
     <string name="danar_password_title">Mot de passe pompe</string>
     <string name="danar_useextended_title">Utiliser les bolus étendus pour &gt; 200%</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Pompe sélectionnée</string>
     <string name="rs_loginsulinchange_title">Enreg. changement de réservoir</string>
     <string name="rs_loginsulinchange_summary">Ajouter un évènement \"Changement d\'Insuline\" dans careportal si détecté dans l\'historique</string>
@@ -101,4 +104,18 @@
     <string name="num1pin">1: (12 chiffres)</string>
     <string name="num2pin">2: (8 chiffres)</string>
     <string name="basal_bolus_step">Étape Basal/Bolus</string>
+    <string name="connecting_to_pump">Connexion à la pompe…</string>
+    <string name="pairing_successful">Appairage réussi !</string>
+    <string name="pairing_successful_message">Votre pompe est maintenant connectée et prête à l\'emploi.</string>
+    <string name="cancel_pairing_title">Annuler l\'appairage?</string>
+    <string name="cancel_pairing_message">Le processus d\'appairage sera annulé.</string>
+    <string name="done">Terminé</string>
+    <string name="open_bluetooth_settings">Ouvrir les paramètres Bluetooth</string>
+    <string name="enter_pump_password">Entrez le mot de passe de la pompe</string>
+    <string name="select_paired_device">Sélectionnez le périphérique jumelé</string>
+    <string name="no_paired_devices">Aucune Dana appairée trouvé. Associez votre pompe dans les paramètres Bluetooth Android.</string>
+    <string name="password_hint">Mot de passe à 4 chiffres (0000-9999)</string>
+    <string name="connecting_verifying">Connexion et vérification du mot de passe…</string>
+    <string name="password_ok">Mot de passe vérifié avec succès !</string>
+    <string name="password_wrong">Mot de passe incorrect. Revenez en arrière et corrigez-le.</string>
 </resources>

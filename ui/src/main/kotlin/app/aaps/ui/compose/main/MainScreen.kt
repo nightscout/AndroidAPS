@@ -3,21 +3,26 @@ package app.aaps.ui.compose.main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,22 +36,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.BolusProgressState
+import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.alertDialogs.AboutAlertDialog
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
-import app.aaps.ui.compose.automationSheet.AutomationBottomSheet
-import app.aaps.ui.compose.automationSheet.AutomationViewModel
 import app.aaps.ui.compose.maintenance.ImportSource
 import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
@@ -58,6 +64,8 @@ import app.aaps.ui.compose.overview.statusLights.StatusViewModel
 import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickLaunch.QuickLaunchToolbar
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
+import app.aaps.ui.compose.scenesSheet.ScenesBottomSheet
+import app.aaps.ui.compose.scenesSheet.ScenesViewModel
 import app.aaps.ui.compose.treatmentsSheet.TreatmentBottomSheet
 import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
 import app.aaps.ui.search.SearchIndexEntry
@@ -76,7 +84,7 @@ fun MainScreen(
     maintenanceViewModel: MaintenanceViewModel,
     statusViewModel: StatusViewModel,
     treatmentViewModel: TreatmentViewModel,
-    automationViewModel: AutomationViewModel,
+    scenesViewModel: ScenesViewModel,
     loopActionViewModel: app.aaps.ui.compose.loopSheet.LoopActionViewModel,
     // Search
     searchUiState: SearchUiState,
@@ -135,7 +143,8 @@ fun MainScreen(
     var showTreatmentSheet by remember { mutableStateOf(false) }
     var showAutomationSheet by remember { mutableStateOf(false) }
     var showLoopActionSheet by remember { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
+    val automationState by scenesViewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = LocalSnackbarHostState.current
 
     // Sync drawer state with ui state
     LaunchedEffect(uiState.isDrawerOpen) {
@@ -152,259 +161,317 @@ fun MainScreen(
         }
     }
 
-    CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                MainDrawer(
-                    versionName = mainViewModel.versionName,
-                    appIcon = mainViewModel.appIcon,
-                    onNavigate = { request ->
-                        scope.launch { drawerState.close() }
-                        onDrawerClosed()
-                        onNavigate(request)
-                    },
-                    isTreatmentsEnabled = uiState.isProfileLoaded
-                )
-            },
-            gesturesEnabled = true,
-            modifier = modifier
-        ) {
-            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                val density = LocalDensity.current
-                val previewMode = maxHeight < PREVIEW_MODE_MIN_HEIGHT
-                var chromeVisible by remember { mutableStateOf(false) }
-                val showChrome = !previewMode || chromeVisible
-                val interactionSource = remember { MutableInteractionSource() }
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            MainDrawer(
+                versionName = mainViewModel.versionName,
+                appIcon = mainViewModel.appIcon,
+                onNavigate = { request ->
+                    scope.launch { drawerState.close() }
+                    onDrawerClosed()
+                    onNavigate(request)
+                },
+                isTreatmentsEnabled = uiState.isProfileLoaded
+            )
+        },
+        gesturesEnabled = true,
+        modifier = modifier
+    ) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            val density = LocalDensity.current
+            val previewMode = maxHeight < PREVIEW_MODE_MIN_HEIGHT
+            var chromeVisible by remember { mutableStateOf(false) }
+            val showChrome = !previewMode || chromeVisible
+            val interactionSource = remember { MutableInteractionSource() }
 
-                // Measure actual bar heights for content padding in non-preview mode
-                var topBarHeightPx by remember { mutableIntStateOf(0) }
-                var bottomBarHeightPx by remember { mutableIntStateOf(0) }
+            // Measure actual bar heights for content padding in non-preview mode
+            var topBarHeightPx by remember { mutableIntStateOf(0) }
+            var bottomBarHeightPx by remember { mutableIntStateOf(0) }
 
-                // Auto-hide chrome after timeout, reset when leaving preview mode
-                LaunchedEffect(chromeVisible, previewMode) {
-                    if (!previewMode) {
-                        chromeVisible = false
-                        return@LaunchedEffect
-                    }
-                    if (chromeVisible) {
-                        delay(AUTO_HIDE_DELAY_MS)
-                        chromeVisible = false
-                    }
+            // Auto-hide chrome after timeout, reset when leaving preview mode
+            LaunchedEffect(chromeVisible, previewMode) {
+                if (!previewMode) {
+                    chromeVisible = false
+                    return@LaunchedEffect
+                }
+                if (chromeVisible) {
+                    delay(AUTO_HIDE_DELAY_MS)
+                    chromeVisible = false
+                }
+            }
+
+            // topBar/bottomBar are intentionally absent — chrome is rendered as
+            // overlays inside the content (see AnimatedVisibility blocks below) so
+            // it can hide in preview mode without reflowing layout. The status-bar
+            // and navigation-bar protection scrims rely on this: they read raw
+            // WindowInsets.statusBars / navigationBars, which would be consumed
+            // (returning zero height) if those Scaffold slots were populated.
+            Scaffold { scaffoldPadding ->
+                val hasToolbar = quickLaunchItems.isNotEmpty()
+
+                // Content padding: in preview mode use only system bars;
+                // in normal mode add measured bar heights
+                val contentPadding = if (previewMode) scaffoldPadding
+                else {
+                    val topBarHeight = with(density) { topBarHeightPx.toDp() }
+                    val bottomBarHeight = with(density) { bottomBarHeightPx.toDp() }
+                    PaddingValues(
+                        top = scaffoldPadding.calculateTopPadding() + topBarHeight,
+                        bottom = scaffoldPadding.calculateBottomPadding() + bottomBarHeight
+                    )
                 }
 
-                Scaffold(
-                    snackbarHost = { SnackbarHost(snackbarHostState) },
-                ) { scaffoldPadding ->
-                    val hasToolbar = quickLaunchItems.isNotEmpty()
+                val activeSceneState by mainViewModel.activeSceneState.collectAsStateWithLifecycle()
+                val sceneExpired by mainViewModel.sceneExpired.collectAsStateWithLifecycle()
+                Box(modifier = Modifier.fillMaxSize()) {
+                    // Main content
+                    OverviewScreen(
+                        profileName = uiState.profileName,
+                        profilePsId = uiState.profilePsId,
+                        isProfileModified = uiState.isProfileModified,
+                        profileProgress = uiState.profileProgress,
+                        tempTargetText = uiState.tempTargetText,
+                        tempTargetState = uiState.tempTargetState,
+                        tempTargetProgress = uiState.tempTargetProgress,
+                        tempTargetReason = uiState.tempTargetReason,
+                        tempTargetRecordId = uiState.tempTargetRecordId,
+                        runningMode = uiState.runningMode,
+                        runningModeText = uiState.runningModeText,
+                        runningModeProgress = uiState.runningModeProgress,
+                        runningModeRecordId = uiState.runningModeRecordId,
+                        tbrState = uiState.tbrState,
+                        smbEnabled = uiState.smbEnabled,
+                        isSimpleMode = uiState.isSimpleMode,
+                        calcProgress = calcProgress,
+                        graphViewModel = graphViewModel,
+                        manageViewModel = manageViewModel,
+                        statusViewModel = statusViewModel,
+                        statusLightsDef = statusLightsDef,
+                        onNavigate = onNavigate,
+                        onTbrChipClick = mainViewModel::showTbrInfo,
+                        notifications = notifications,
+                        onDismissNotification = onDismissNotification,
+                        onNotificationActionClick = onNotificationActionClick,
+                        autoShowNotificationSheet = autoShowNotificationSheet,
+                        onAutoShowConsumed = onAutoShowConsumed,
+                        activeSceneState = activeSceneState,
+                        sceneExpired = sceneExpired,
+                        onEndScene = { mainViewModel.requestSceneDeactivation() },
+                        onDismissScene = { mainViewModel.dismissExpiredScene() },
+                        formatDuration = mainViewModel::formatDuration,
+                        paddingValues = contentPadding,
+                        fabBottomOffset = if (hasToolbar && showChrome) 56.dp else 0.dp,
+                        bolusState = bolusState,
+                        pumpStatusText = pumpStatusText,
+                        queueStatusText = queueStatusText,
+                        isPumpCommunicating = isPumpCommunicating,
+                        onStopBolus = onStopBolus
+                    )
 
-                    // Content padding: in preview mode use only system bars;
-                    // in normal mode add measured bar heights
-                    val contentPadding = if (previewMode) scaffoldPadding
-                    else {
-                        val topBarHeight = with(density) { topBarHeightPx.toDp() }
-                        val bottomBarHeight = with(density) { bottomBarHeightPx.toDp() }
-                        PaddingValues(
-                            top = scaffoldPadding.calculateTopPadding() + topBarHeight,
-                            bottom = scaffoldPadding.calculateBottomPadding() + bottomBarHeight
+                    // Search results overlay
+                    if (searchUiState.isSearchActive) {
+                        SearchResults(
+                            results = searchUiState.results,
+                            wikiResults = searchUiState.wikiResults,
+                            isSearching = searchUiState.isSearching,
+                            isSearchingWiki = searchUiState.isSearchingWiki,
+                            wikiOffline = searchUiState.wikiOffline,
+                            onResultClick = onSearchResultClick,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(contentPadding)
                         )
                     }
 
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        // Main content
-                        OverviewScreen(
-                            profileName = uiState.profileName,
-                            isProfileModified = uiState.isProfileModified,
-                            profileProgress = uiState.profileProgress,
-                            tempTargetText = uiState.tempTargetText,
-                            tempTargetState = uiState.tempTargetState,
-                            tempTargetProgress = uiState.tempTargetProgress,
-                            tempTargetReason = uiState.tempTargetReason,
-                            runningMode = uiState.runningMode,
-                            runningModeText = uiState.runningModeText,
-                            runningModeProgress = uiState.runningModeProgress,
-                            isSimpleMode = uiState.isSimpleMode,
-                            calcProgress = calcProgress,
-                            graphViewModel = graphViewModel,
-                            manageViewModel = manageViewModel,
-                            statusViewModel = statusViewModel,
-                            statusLightsDef = statusLightsDef,
+                    // Version overlay
+                    VersionOverlay(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(contentPadding)
+                    )
+
+                    // Status bar protection scrim — keeps system icons legible
+                    // against the floating search bar / graph content
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .fillMaxWidth()
+                            .windowInsetsTopHeight(WindowInsets.statusBars)
+                            .background(MaterialTheme.colorScheme.surface)
+                    )
+
+                    // Navigation bar protection scrim
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                            .background(MaterialTheme.colorScheme.surface)
+                    )
+
+                    // Top bar overlay
+                    AnimatedVisibility(
+                        visible = showChrome,
+                        enter = slideInVertically { -it },
+                        exit = slideOutVertically { -it },
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = scaffoldPadding.calculateTopPadding())
+                    ) {
+                        MainTopBar(
+                            searchUiState = searchUiState,
+                            onMenuClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                    onMenuClick()
+                                }
+                            },
+                            onPreferencesClick = { onNavigate(NavigationRequest.Element(ElementType.SETTINGS)) },
+                            onSearchQueryChange = onSearchQueryChange,
+                            onSearchClear = onSearchClear,
+                            onSearchActiveChange = onSearchActiveChange,
+                            // Guard against transient 0 heights during AnimatedVisibility exit:
+                            // the resulting contentPadding invalidation can schedule a remeasure
+                            // on a node that's losing its owner — crashes in dispatchDraw.
+                            modifier = Modifier.onSizeChanged {
+                                if (it.height > 0 && it.height != topBarHeightPx) topBarHeightPx = it.height
+                            }
+                        )
+                    }
+
+                    // Bottom bar overlay
+                    AnimatedVisibility(
+                        visible = showChrome,
+                        enter = slideInVertically { it },
+                        exit = slideOutVertically { it },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = scaffoldPadding.calculateBottomPadding())
+                    ) {
+                        val loopActionState = loopActionViewModel.uiState.collectAsStateWithLifecycle().value
+                        MainNavigationBar(
+                            onManageClick = { manageSheetState.show() },
+                            onTreatmentClick = {
+                                treatmentViewModel.refreshState()
+                                showTreatmentSheet = true
+                            },
+                            quickWizardCount = uiState.quickWizardItems.size,
+                            onAutomationClick = {
+                                scenesViewModel.refreshState()
+                                showAutomationSheet = true
+                            },
+                            automationCount = automationState.items.size + automationState.sceneItems.size,
+                            pumpSetupPlugin = pumpSetupPlugin,
+                            bgSetupPlugin = bgSetupPlugin,
+                            bgQualityBadgeIcon = bgQualityBadgeIcon,
+                            bgQualityBadgeTint = bgQualityBadgeTint,
+                            bgQualityBadgeDescription = bgQualityBadgeDescription,
+                            objectivesSetupPlugin = objectivesSetupPlugin,
+                            objectivesProgressText = objectivesProgressText,
                             onNavigate = onNavigate,
-                            notifications = notifications,
-                            onDismissNotification = onDismissNotification,
-                            onNotificationActionClick = onNotificationActionClick,
-                            autoShowNotificationSheet = autoShowNotificationSheet,
-                            onAutoShowConsumed = onAutoShowConsumed,
-                            paddingValues = contentPadding,
-                            fabBottomOffset = if (hasToolbar && showChrome) 56.dp else 0.dp,
-                            bolusState = bolusState,
-                            pumpStatusText = pumpStatusText,
-                            queueStatusText = queueStatusText,
-                            isPumpCommunicating = isPumpCommunicating,
-                            onStopBolus = onStopBolus
+                            permissionsMissing = permissionsMissing,
+                            onPermissionsClick = onPermissionsClick,
+                            loopActionAvailable = loopActionState.actionAvailable,
+                            onLoopActionClick = { showLoopActionSheet = true },
+                            modifier = Modifier.onSizeChanged {
+                                if (it.height > 0 && it.height != bottomBarHeightPx) bottomBarHeightPx = it.height
+                            }
                         )
+                    }
 
-                        // Search results overlay
-                        if (searchUiState.isSearchActive) {
-                            SearchResults(
-                                results = searchUiState.results,
-                                wikiResults = searchUiState.wikiResults,
-                                isSearching = searchUiState.isSearching,
-                                isSearchingWiki = searchUiState.isSearchingWiki,
-                                wikiOffline = searchUiState.wikiOffline,
-                                onResultClick = onSearchResultClick,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(contentPadding)
+                    // Quick launch toolbar overlay
+                    AnimatedVisibility(
+                        visible = hasToolbar && showChrome,
+                        enter = slideInVertically { it },
+                        exit = slideOutVertically { it },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(
+                                bottom = scaffoldPadding.calculateBottomPadding() +
+                                    with(density) { bottomBarHeightPx.toDp() } + 8.dp
                             )
-                        }
-
-                        // Version overlay
-                        VersionOverlay(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(contentPadding)
+                    ) {
+                        QuickLaunchToolbar(
+                            items = quickLaunchItems,
+                            onActionClick = onQuickLaunchActionClick,
                         )
+                    }
 
-                        // Top bar overlay
-                        AnimatedVisibility(
-                            visible = showChrome,
-                            enter = slideInVertically { -it },
-                            exit = slideOutVertically { -it },
+                    // Tap overlay to restore chrome in preview mode (only when hidden)
+                    if (previewMode && !chromeVisible) {
+                        Box(
                             modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .padding(top = scaffoldPadding.calculateTopPadding())
-                        ) {
-                            MainTopBar(
-                                searchUiState = searchUiState,
-                                onMenuClick = {
-                                    scope.launch {
-                                        drawerState.open()
-                                        onMenuClick()
-                                    }
-                                },
-                                onPreferencesClick = { onNavigate(NavigationRequest.Element(ElementType.SETTINGS)) },
-                                onSearchQueryChange = onSearchQueryChange,
-                                onSearchClear = onSearchClear,
-                                onSearchActiveChange = onSearchActiveChange,
-                                modifier = Modifier.onSizeChanged { topBarHeightPx = it.height }
-                            )
-                        }
-
-                        // Bottom bar overlay
-                        AnimatedVisibility(
-                            visible = showChrome,
-                            enter = slideInVertically { it },
-                            exit = slideOutVertically { it },
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = scaffoldPadding.calculateBottomPadding())
-                        ) {
-                            val loopActionState = loopActionViewModel.uiState.collectAsStateWithLifecycle().value
-                            MainNavigationBar(
-                                onManageClick = { manageSheetState.show() },
-                                onTreatmentClick = {
-                                    treatmentViewModel.refreshState()
-                                    showTreatmentSheet = true
-                                },
-                                quickWizardCount = uiState.quickWizardItems.size,
-                                onAutomationClick = {
-                                    automationViewModel.refreshState()
-                                    showAutomationSheet = true
-                                },
-                                automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
-                                pumpSetupPlugin = pumpSetupPlugin,
-                                bgSetupPlugin = bgSetupPlugin,
-                                bgQualityBadgeIcon = bgQualityBadgeIcon,
-                                bgQualityBadgeTint = bgQualityBadgeTint,
-                                bgQualityBadgeDescription = bgQualityBadgeDescription,
-                                objectivesSetupPlugin = objectivesSetupPlugin,
-                                objectivesProgressText = objectivesProgressText,
-                                onNavigate = onNavigate,
-                                permissionsMissing = permissionsMissing,
-                                onPermissionsClick = onPermissionsClick,
-                                loopActionAvailable = loopActionState.actionAvailable,
-                                onLoopActionClick = { showLoopActionSheet = true },
-                                modifier = Modifier.onSizeChanged { bottomBarHeightPx = it.height }
-                            )
-                        }
-
-                        // Quick launch toolbar overlay
-                        AnimatedVisibility(
-                            visible = hasToolbar && showChrome,
-                            enter = slideInVertically { it },
-                            exit = slideOutVertically { it },
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(
-                                    bottom = scaffoldPadding.calculateBottomPadding() +
-                                        with(density) { bottomBarHeightPx.toDp() } + 8.dp
-                                )
-                        ) {
-                            QuickLaunchToolbar(
-                                items = quickLaunchItems,
-                                onActionClick = onQuickLaunchActionClick,
-                            )
-                        }
-
-                        // Tap overlay to restore chrome in preview mode (only when hidden)
-                        if (previewMode && !chromeVisible) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .clickable(
-                                        interactionSource = interactionSource,
-                                        indication = null
-                                    ) { chromeVisible = true }
-                            )
-                        }
+                                .fillMaxSize()
+                                .clickable(
+                                    interactionSource = interactionSource,
+                                    indication = null
+                                ) { chromeVisible = true }
+                        )
                     }
                 }
             }
         }
+    }
 
-        // Treatment bottom sheet
-        if (showTreatmentSheet) {
-            val treatmentState by treatmentViewModel.uiState.collectAsStateWithLifecycle()
-            TreatmentBottomSheet(
-                onDismiss = { showTreatmentSheet = false },
-                showCgm = treatmentState.showCgm,
-                showCalibration = treatmentState.showCalibration,
-                showTreatment = treatmentState.showTreatment,
-                showInsulin = treatmentState.showInsulin,
-                showCarbs = treatmentState.showCarbs,
-                showCalculator = treatmentState.showCalculator,
-                isDexcomSource = treatmentState.isDexcomSource,
-                showSettingsIcon = treatmentState.showSettingsIcon,
-                quickWizardItems = treatmentState.quickWizardItems,
-                onNavigate = onNavigate,
-                treatmentButtonsDef = treatmentButtonsDef,
+    // Treatment bottom sheet
+    if (showTreatmentSheet) {
+        val treatmentState by treatmentViewModel.uiState.collectAsStateWithLifecycle()
+        TreatmentBottomSheet(
+            onDismiss = { showTreatmentSheet = false },
+            showCgm = treatmentState.showCgm,
+            showCalibration = treatmentState.showCalibration,
+            showTreatment = treatmentState.showTreatment,
+            showInsulin = treatmentState.showInsulin,
+            showCarbs = treatmentState.showCarbs,
+            showCalculator = treatmentState.showCalculator,
+            isDexcomSource = treatmentState.isDexcomSource,
+            showSettingsIcon = treatmentState.showSettingsIcon,
+            quickWizardItems = treatmentState.quickWizardItems,
+            onNavigate = onNavigate,
+            treatmentButtonsDef = treatmentButtonsDef,
+        )
+    }
+
+    // Automation bottom sheet
+    if (showAutomationSheet) {
+        ScenesBottomSheet(
+            onDismiss = { showAutomationSheet = false },
+            automationItems = automationState.items,
+            onItemClick = { item -> mainViewModel.requestAutomationConfirmation(item.eventId) },
+            sceneItems = automationState.sceneItems,
+            onSceneClick = { sceneId -> mainViewModel.requestSceneConfirmation(sceneId) }
+        )
+    }
+
+    // Loop accept action bottom sheet
+    if (showLoopActionSheet) {
+        val loopState by loopActionViewModel.uiState.collectAsStateWithLifecycle()
+        app.aaps.ui.compose.loopSheet.LoopActionBottomSheet(
+            state = loopState,
+            onPerform = { mainViewModel.performLoopAccept() },
+            onDismiss = { showLoopActionSheet = false }
+        )
+    }
+
+    // Shared confirmation dialog (automation actions, TT presets, scene end — from toolbar or
+    // bottom sheets). When the confirmation carries a secondary action (e.g., scene chain skip),
+    // render a 3-button dialog; otherwise the standard 2-button OK/Cancel.
+    val actionConfirmation by mainViewModel.actionConfirmation.collectAsStateWithLifecycle()
+    actionConfirmation?.let { confirmation ->
+        val secondaryAction = confirmation.secondaryAction
+        val secondaryLabel = confirmation.secondaryLabel
+        if (secondaryAction != null && secondaryLabel != null) {
+            ThreeButtonDialog(
+                title = confirmation.title,
+                message = confirmation.message,
+                primaryLabel = confirmation.confirmLabel ?: stringResource(R.string.ok),
+                onPrimary = { mainViewModel.executeConfirmableAction(confirmation.onConfirmAction) },
+                secondaryLabel = secondaryLabel,
+                onSecondary = { mainViewModel.executeConfirmableAction(secondaryAction) },
+                onDismiss = { mainViewModel.dismissActionConfirmation() }
             )
-        }
-
-        // Automation bottom sheet
-        if (showAutomationSheet) {
-            val automationState by automationViewModel.uiState.collectAsStateWithLifecycle()
-            AutomationBottomSheet(
-                onDismiss = { showAutomationSheet = false },
-                automationItems = automationState.items,
-                onItemClick = { item -> mainViewModel.requestAutomationConfirmation(item.eventId) }
-            )
-        }
-
-        // Loop accept action bottom sheet
-        if (showLoopActionSheet) {
-            val loopState by loopActionViewModel.uiState.collectAsStateWithLifecycle()
-            app.aaps.ui.compose.loopSheet.LoopActionBottomSheet(
-                state = loopState,
-                onPerform = { mainViewModel.performLoopAccept() },
-                onDismiss = { showLoopActionSheet = false }
-            )
-        }
-
-        // Shared confirmation dialog (automation actions, TT presets — from toolbar or bottom sheets)
-        val actionConfirmation by mainViewModel.actionConfirmation.collectAsStateWithLifecycle()
-        actionConfirmation?.let { confirmation ->
+        } else {
             OkCancelDialog(
                 title = confirmation.title,
                 message = confirmation.message,
@@ -412,28 +479,28 @@ fun MainScreen(
                 onDismiss = { mainViewModel.dismissActionConfirmation() }
             )
         }
+    }
 
-        // Maintenance dialogs (sheets, confirmations, export chain)
-        MaintenanceDialogs(
-            maintenanceViewModel = maintenanceViewModel,
-            showMaintenanceSheet = uiState.showMaintenanceSheet,
-            onMaintenanceSheetDismiss = onMaintenanceSheetDismiss,
-            onDirectoryClick = onDirectoryClick,
-            onImportSettingsNavigate = onImportSettingsNavigate,
-            onRecreateActivity = onRecreateActivity,
-            onLaunchBrowser = onLaunchBrowser,
-            onBringToForeground = onBringToForeground,
-            onSnackbar = { snackbarHostState.showSnackbar(it) }
+    // Maintenance dialogs (sheets, confirmations, export chain)
+    MaintenanceDialogs(
+        maintenanceViewModel = maintenanceViewModel,
+        showMaintenanceSheet = uiState.showMaintenanceSheet,
+        onMaintenanceSheetDismiss = onMaintenanceSheetDismiss,
+        onDirectoryClick = onDirectoryClick,
+        onImportSettingsNavigate = onImportSettingsNavigate,
+        onRecreateActivity = onRecreateActivity,
+        onLaunchBrowser = onLaunchBrowser,
+        onBringToForeground = onBringToForeground,
+        onSnackbar = { snackbarHostState.showSnackbar(it) }
+    )
+
+    // About dialog
+    if (uiState.showAboutDialog && aboutDialogData != null) {
+        AboutAlertDialog(
+            data = aboutDialogData,
+            onDismiss = onAboutDialogDismiss
         )
-
-        // About dialog
-        if (uiState.showAboutDialog && aboutDialogData != null) {
-            AboutAlertDialog(
-                data = aboutDialogData,
-                onDismiss = onAboutDialogDismiss
-            )
-        }
-    } // CompositionLocalProvider
+    }
 }
 
 private val PREVIEW_MODE_MIN_HEIGHT: Dp = 500.dp

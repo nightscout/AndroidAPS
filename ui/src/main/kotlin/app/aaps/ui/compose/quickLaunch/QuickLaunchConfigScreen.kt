@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -95,22 +96,27 @@ fun QuickLauchConfigScreen(
         previousSelectedCount = state.selectedItems.size
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        AapsTopAppBar(
-            title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
-            navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
                 }
-            }
-        )
-
+            )
+        }
+    ) { paddingValues ->
         LazyColumn(
             state = lazyListState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
             // ── Selected actions ──
             item(key = "header_selected") {
@@ -204,6 +210,19 @@ fun QuickLauchConfigScreen(
                 item(key = "empty_qw") { EmptyHint(stringResource(R.string.quick_launch_no_quick_wizard)) }
             } else {
                 items(state.availableQuickWizardItems, key = { "avail_qw_${it.action.dynamicId}" }) { item ->
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
+                }
+            }
+
+            // ── Dynamic: Scenes ──
+            if (state.availableSceneItems.isNotEmpty()) {
+                item(key = "divider_scenes") {
+                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                }
+                item(key = "header_scenes") {
+                    SectionHeader(stringResource(app.aaps.core.ui.R.string.scenes))
+                }
+                items(state.availableSceneItems, key = { "avail_scene_${it.action.dynamicId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }

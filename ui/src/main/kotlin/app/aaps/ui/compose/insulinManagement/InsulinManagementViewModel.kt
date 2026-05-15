@@ -18,13 +18,13 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.ScreenMode
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -205,8 +205,7 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun discardAndProceed() {
-        val pending = uiState.value.pendingNavigation
-        when (pending) {
+        when (val pending = uiState.value.pendingNavigation) {
             is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
 
             is PendingNavigation.Back       -> {
@@ -434,12 +433,8 @@ class InsulinManagementViewModel @Inject constructor(
         return iCfg
     }
 
-    fun clearSnackbar() {
-        _uiState.update { it.copy(snackbarMessage = null) }
-    }
-
     private fun showSnackbar(message: String) {
-        _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(message)) }
+        rxBus.send(EventShowSnackbar(message, EventShowSnackbar.Type.Error))
     }
 
     /** Preset list for "Load peak from" chips — excludes FreePeak (not a real preset) */

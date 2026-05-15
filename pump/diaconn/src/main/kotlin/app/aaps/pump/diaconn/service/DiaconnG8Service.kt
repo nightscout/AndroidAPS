@@ -529,11 +529,8 @@ class DiaconnG8Service : DaggerService() {
         if (diaconnG8Pump.isReadyToBolus) {
             while (!diaconnG8Pump.bolusDone) {
                 if (diaconnG8Pump.isPumpVersionGe3_53) {
-                    val delivered = diaconnG8Pump.bolusingInjAmount
-                    val totalInsulin = bolusProgressData.state.value?.insulin ?: 0.0
-                    val percent = if (totalInsulin > 0) min(((delivered / totalInsulin) * 100).toInt(), 100) else 0
-                    val status = ch.bolusProgressString(PumpInsulin(delivered))
-                    bolusProgressData.updateProgress(percent, status, delivered)
+                    val delivered = PumpInsulin(diaconnG8Pump.bolusingInjAmount)
+                    bolusProgressData.updateProgress(delivered = delivered)
                 } else {
                     var progressPercent = 0
                     val waitTime = (expectedEnd - System.currentTimeMillis()) / 1000

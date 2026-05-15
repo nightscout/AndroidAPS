@@ -15,7 +15,7 @@
     <string name="approachingdailylimit">Sắp đạt giới hạn insulin hằng ngày</string>
     <string name="startingbolus">Đang tiêm bolus</string>
     <string name="waitingforestimatedbolusend">Đang chờ kết thúc liều bolus ước tính</string>
-    <string name="gettingbolusstatus">Đang cập nhật trạng thái liều Bolus</string>
+    <string name="gettingbolusstatus">Đang cập nhật trạng thái tiêm</string>
     <string name="stoppingtempbasal">Đang dừng liều nền tạm thời</string>
     <string name="settingtempbasal">Đang cài đặt liều nền tạm thời</string>
     <string name="settingextendedbolus">Đang cập nhật liều bolus kéo dài</string>
@@ -30,10 +30,8 @@
     <string name="insulinlimitviolation">Vi phạm giới hạn insulin</string>
     <string name="boluserrorcode">Yêu cầu: %1$.2fU Đã tiêm: %2$.2fU Mã lỗi: %3$s</string>
     <string name="selectedpump">Bơm đã chọn</string>
-    <string name="diaconn_g8_bluetooth_status">Trạng thái Bluetooth</string>
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
-    <string name="diaconn_g8_user_options">TÙY CHỌN NGƯỜI DÙNG</string>
     <string name="pairfirst">Hãy kết nối Bơm với điện thoại của bạn!</string>
     <string name="processinghistory">"Đang xử lý sự kiện "</string>
     <string name="diaconn_g8_history_tempbasal">Liều nền tạm thời</string>
@@ -61,14 +59,14 @@
     <string name="needinsullinreplace">Yêu cầu thay Insulin</string>
     <string name="diaconn_g8_loginsulinchange_title">Ghi lại thay đổi bình chứa</string>
     <string name="diaconn_g8_loginsulinchange_summary">Thêm sự kiện ‘Thay insulin’ vào careportal khi phát hiện trong lịch sử</string>
-    <string name="diaconn_g8_logcanulachange_title">Ghi lại thay đổi kim truyền</string>
-    <string name="diaconn_g8_logcanulachange_summary">Thêm sự kiện \"Thay đổi kim truyền\" vào careportal khi phát hiện trong lịch sử</string>
+    <string name="diaconn_g8_logcanulachange_title">Ghi lại thay kim</string>
+    <string name="diaconn_g8_logcanulachange_summary">Thêm sự kiện “Thay vị trí truyền” vào CarePortal khi được phát hiện trong lịch sử</string>
     <string name="diaconn_g8_logbatterychange_summary">Thêm sự kiện \"Thay pin\" vào careportal khi phát hiện trong lịch sử</string>
     <string name="diaconn_g8_logbatterychange_title">Ghi lại thay đổi Pin</string>
     <string name="diaconn_g8_logsyncinprogress">Đang đồng bộ nhật ký</string>
     <string name="diaconn_g8_loginsulinshorage">Thiếu insulin</string>
     <string name="diaconn_g8_logbatteryshorage">Thiếu pin</string>
-    <string name="diaconn_g8_logneedleprime">Mồi Needle: %1$.2fU</string>
+    <string name="diaconn_g8_logneedleprime">Mồi Kim: %1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Mồi Injecto: %1$.2fU</string>
     <string name="diaconn_g8_logtubeprime">Mồi sau thay Tube :%1$.2fU</string>
     <string name="diaconn_g8_resetfactoryreset">Đặt lại sau khi khôi phục cài đặt gốc</string>

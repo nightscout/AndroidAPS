@@ -2,6 +2,7 @@ import kotlin.math.min
 
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.compose.compiler)
     id("kotlin-parcelize")
     id("kotlinx-serialization")
     id("android-module-dependencies")
@@ -14,6 +15,10 @@ android {
     namespace = "app.aaps.core.interfaces"
     defaultConfig {
         minSdk = min(Versions.minSdk, Versions.wearMinSdk)
+    }
+
+    buildFeatures {
+        compose = true
     }
 }
 
@@ -36,7 +41,7 @@ dependencies {
     api(libs.org.apache.commons.lang3)
     api(libs.net.danlew.android.joda)
 
-    //RxBus
+    //RxBus / RxJava base
     api(libs.io.reactivex.rxjava3.rxkotlin)
 
     testImplementation(libs.io.reactivex.rxjava3.rxandroid)

@@ -14,6 +14,7 @@ import app.aaps.core.data.model.NE
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SC
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TE
@@ -25,7 +26,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APSResult
-import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -61,6 +61,12 @@ interface PersistenceLayer {
      * @return Flow that emits set of changed domain type KClasses (e.g. {BS::class, CA::class})
      */
     fun observeAnyChange(): Flow<Set<KClass<*>>>
+
+    /**
+     * Emits Unit once whenever all tables are wiped (clearDatabases).
+     * Observers that cache DB-derived state (e.g. status lights) should subscribe and refresh.
+     */
+    val databaseClearedFlow: Flow<Unit>
 
     // BS
     /**
@@ -150,11 +156,6 @@ interface PersistenceLayer {
      * @return List of inserted/updated records
      */
     suspend fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String? = null): TransactionResult<BS>
-
-    /**
-     * Update bolus record without creating UserEntry. For data migrations only.
-     */
-    suspend fun updateBolusNoLogging(bolus: BS)
 
     /**
      * Insert record
@@ -549,11 +550,6 @@ interface PersistenceLayer {
     suspend fun insertOrUpdateEffectiveProfileSwitch(effectiveProfileSwitch: EPS): TransactionResult<EPS>
 
     /**
-     * Update effective profile switch record without creating UserEntry. For data migrations only.
-     */
-    suspend fun updateEffectiveProfileSwitchNoLogging(effectiveProfileSwitch: EPS)
-
-    /**
      * Invalidate record with id
      *
      * @param id record id
@@ -658,11 +654,6 @@ interface PersistenceLayer {
     suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
 
     /**
-     * Update profile switch record without creating UserEntry. For data migrations only.
-     */
-    suspend fun updateProfileSwitchNoLogging(profileSwitch: PS)
-
-    /**
      * Invalidate record with id
      *
      * @param id record id
@@ -673,6 +664,18 @@ interface PersistenceLayer {
      * @return List of changed records
      */
     suspend fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
+
+    /**
+     * Shorten an existing ProfileSwitch so it ends at [timestamp]. Works on both
+     * temporary (duration > 0) and permanent (duration = 0) records.
+     *
+     * @param id ProfileSwitch row id
+     * @param timestamp time the record should end
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     */
+    suspend fun cancelProfileSwitch(id: Long, timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<PS>
 
     /**
      * Store records coming from NS to database
@@ -773,6 +776,18 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      */
     suspend fun cancelCurrentRunningMode(timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<RM>
+
+    /**
+     * Cut the active RunningMode identified by [id] so its window ends at [timestamp].
+     * Used by scene revert to end an indefinite RM created on activation. No-op when the
+     * record is missing, invalid, started after [timestamp], or already finished. Distinct
+     * from [cancelCurrentRunningMode] which targets the currently active row by composition
+     * (and is temp-only — preserves user-set permanent rows for callers like LoopPlugin).
+     *
+     * @param id record id
+     * @param timestamp end time (also UserEntry timestamp)
+     */
+    suspend fun cancelRunningMode(id: Long, timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<RM>
 
     /**
      * Insert or update new record in database
@@ -1244,6 +1259,16 @@ interface PersistenceLayer {
     suspend fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): TransactionResult<TE>
 
     /**
+     * Cut the active TherapyEvent identified by [id] so its window ends at [timestamp].
+     * Used by scene revert to end an indefinite TE created on activation. No-op when the
+     * record is missing, invalid, started after [timestamp], or already finished.
+     *
+     * @param id record id
+     * @param timestamp end time (also UserEntry timestamp)
+     */
+    suspend fun cancelTherapyEvent(id: Long, timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<TE>
+
+    /**
      * Invalidate records with notes containing string
      *
      * @param note string to search
@@ -1316,12 +1341,14 @@ interface PersistenceLayer {
     suspend fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR>
 
     /**
-     * Insert or update if exists record
+     * Insert or update multiple records in a single DB transaction. Emits one change event
+     * for the whole batch instead of one per row. Callers with a single row should pass
+     * `listOf(row)`.
      *
-     * @param heartRate record
+     * @param heartRates records
      * @return List of inserted/updated records
      */
-    suspend fun insertOrUpdateHeartRate(heartRate: HR): TransactionResult<HR>
+    suspend fun insertOrUpdateHeartRates(heartRates: List<HR>): TransactionResult<HR>
 
     // FD
     /**
@@ -1455,12 +1482,14 @@ interface PersistenceLayer {
     suspend fun getLastStepsCountFromTimeToTime(startTime: Long, endTime: Long): SC?
 
     /**
-     * Insert or update if exists record
+     * Insert or update multiple records in a single DB transaction. Emits one change event
+     * for the whole batch instead of one per row. Callers with a single row should pass
+     * `listOf(row)`.
      *
-     * @param stepsCount record
+     * @param stepsCounts records
      * @return List of inserted/updated records
      */
-    suspend fun insertOrUpdateStepsCount(stepsCount: SC): TransactionResult<SC>
+    suspend fun insertOrUpdateStepsCounts(stepsCounts: List<SC>): TransactionResult<SC>
 
     // VersionChange
 
@@ -1472,7 +1501,7 @@ interface PersistenceLayer {
      * @param gitRemote gitRemote (shortened)
      * @param commitHash commitHash
      */
-    fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable
+    suspend fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?)
 
     /**
      * Get list of db changed records in db since time
@@ -1534,6 +1563,17 @@ interface PersistenceLayer {
      */
     suspend fun insertOrUpdateApsResult(apsResult: APSResult): TransactionResult<APSResult>
 
+    /**
+     * Generic glucose lookup by (sourceSensor, pumpId).
+     * Intended for plugins that persist a source-specific hardware/event id in InterfaceIDs.pumpId.
+     */
+    suspend fun getGlucoseValueByPumpIdAndSource(source: SourceSensor, pumpId: Long): GV?
+
+    /**
+     * Generic glucose lookup by (sourceSensor, pumpId range).
+     * Caller owns any vendor-specific interpretation of pumpId semantics.
+     */
+    suspend fun getGlucoseValuesByPumpIdRange(source: SourceSensor, startPumpId: Long, endPumpId: Long): List<GV>
 }
 
 /**

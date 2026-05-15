@@ -26,8 +26,7 @@ sealed class SearchableItem {
     abstract val titleResId: Int
 
     /**
-     * Optional Compose ImageVector icon.
-     * Preferred over iconResId when available.
+     * Compose ImageVector icon.
      */
     open val icon: ImageVector? = null
 

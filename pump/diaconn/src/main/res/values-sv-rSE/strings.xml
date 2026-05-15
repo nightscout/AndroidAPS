@@ -11,11 +11,9 @@
     <string name="gettingpumpsettings">Hämtar pumpinställningar</string>
     <string name="gettingpumptime">Hämtar tid och datum i pumpen</string>
     <string name="largetimediff">Stor tidsskillnad:\nTiden i pumpen skiljer mer än 1,5 timme.\nVänligen justera tiden manuellt på pumpen och se till att det går att läsa historiken från pumpen utan oväntat beteende.\nOm möjligt, töm historiken i pumpen innan tidsomställning alternativt stäng av loopen i minst DIA timmar efter den senaste felaktiga historikloggen, men minst DIA timmar från nu.</string>
-    <string name="largetimedifftitle">Stor tidsskillnad</string>
     <string name="approachingdailylimit">Maximal daglig dos snart nådd</string>
     <string name="startingbolus">Påbörjar bolus</string>
     <string name="waitingforestimatedbolusend">Väntar på att bolus slutförs</string>
-    <string name="gettingbolusstatus">Hämtar status för bolus</string>
     <string name="stoppingtempbasal">Stoppar temp basal</string>
     <string name="settingtempbasal">Ställer in temp basal</string>
     <string name="settingextendedbolus">Ställer in förlängd bolus</string>
@@ -30,10 +28,8 @@
     <string name="insulinlimitviolation">Insulingräns nådd</string>
     <string name="boluserrorcode">Angivet: %1$.2f enheter. Levererat: %2$.2f enheter. Felkod: %3$s</string>
     <string name="selectedpump">Vald pump</string>
-    <string name="diaconn_g8_bluetooth_status">Bluetooth-status</string>
     <string name="bolus_step">Bolussteg</string>
     <string name="basal_step">Basalsteg</string>
-    <string name="diaconn_g8_user_options">ANVÄNDARALTERNATIV</string>
     <string name="pairfirst">Vänligen parkoppla pumpen med din telefon</string>
     <string name="processinghistory">"Behandlar "</string>
     <string name="diaconn_g8_history_tempbasal">Temp basal</string>

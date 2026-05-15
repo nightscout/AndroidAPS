@@ -16,10 +16,7 @@
     <string name="not_inserted">Nieje vložené</string>
     <string name="tdd_bolus">CDD bolusov</string>
     <string name="tdd_basal">CDD bazálov</string>
-    <string name="tbr_formatter">%1$d%% pre %2$d / %3$d min</string>
     <string name="multiwave_bolus">Duálny bolus</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U pre %3$d min</string>
-    <string name="insight_last_bolus">Posledný bolus</string>
     <string name="searching_for_devices">Vyhľadávam zariadenia...</string>
     <string name="pairing_completed">Párovanie dokončené</string>
     <string name="code_compare">Zhodujú sa kódy zobrazené na tomto zariadení a na pumpe?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Pumpa zastavená</string>
     <string name="pump_started">Pumpa spustená</string>
     <string name="release_software_version">Verzia softwaru</string>
-    <string name="ui_processor_software_version">Verzia softwaru UI procesora</string>
-    <string name="pc_processor_software_version">Verzia softwaru PC procesora</string>
-    <string name="md_tel_processor_software_version">Verzia softwaru MD tel procesora</string>
-    <string name="safety_processor_software_version">Verzia softwaru bezpečnostného procesora</string>
-    <string name="bt_info_page_version">Verzia stránky s BT informáciami</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
-    <string name="system_id_appendix">Dodatok k System ID</string>
     <string name="manufacturing_date">Dátum výroby</string>
-    <string name="delete_pairing">Zrušiť párovanie</string>
     <string name="log_site_changes">Zaznamenať výmenu kanyly</string>
     <string name="log_reservoir_changes">Zaznamenať výmenu zásobníka</string>
     <string name="log_tube_changes">Zaznamenať výmenu hadičky</string>
@@ -58,11 +48,8 @@
     <string name="max_recovery_duration">Max. doba trvania obnovenia [s]</string>
     <string name="min_recovery_duration">Min. doba trvania obnovenia [s]</string>
     <string name="pump_alert">Výstraha pumpy</string>
-    <string name="pairing_information">Informácie o párovaní</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">Odpárovať</string>
     <string name="reset_pairing">Reset informácií o párovaní?</string>
-    <string name="active_basal_rate">Aktívny bazál</string>
-    <string name="active_tbr">Aktívny dočasný bazál</string>
     <string name="reservoir_level">Stav zásobníka</string>
 </resources>

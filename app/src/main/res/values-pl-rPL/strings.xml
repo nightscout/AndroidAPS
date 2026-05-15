@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Zamknij menu</string>
     <string name="authorizationfailed">Autoryzacja nie powiodła się</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
     <string name="select">Wybierz</string>

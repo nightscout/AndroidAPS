@@ -30,10 +30,8 @@
     <string name="insulinlimitviolation">Violation de limite d\'insuline</string>
     <string name="boluserrorcode">Demandé : %1$.2fU Injecté : %2$.2fU code d’erreur : %3$s</string>
     <string name="selectedpump">Pompe sélectionnée</string>
-    <string name="diaconn_g8_bluetooth_status">État Bluetooth</string>
     <string name="bolus_step">Incrément Bolus</string>
     <string name="basal_step">Incrément Basal</string>
-    <string name="diaconn_g8_user_options">OPTIONS UTILISATEUR</string>
     <string name="pairfirst">Veuillez appairer votre pompe avec votre téléphone !</string>
     <string name="processinghistory">"Traitement d'événement "</string>
     <string name="diaconn_g8_history_tempbasal">Basal Temp.</string>
@@ -128,4 +126,14 @@
     <string name="diaconn_g8_errorcode_36">Arrêt de basal temp. rejeté quand une basal temp. n\'est pas en cours d\'exécution</string>
     <string name="diaconn_g8_cloudsend_summary">Envoyer les logs sur le Cloud Diaconn.</string>
     <string name="diaconn_g8_cloudsend_title">Synchro Diaconn Cloud</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Appairage réussi !</string>
+    <string name="diaconn_pairing_successful_message">Votre pompe est maintenant connectée et prête à l\'emploi.</string>
 </resources>

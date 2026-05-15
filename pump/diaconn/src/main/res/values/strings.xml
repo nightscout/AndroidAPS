@@ -10,11 +10,11 @@
     <string name="gettingpumpsettings">Getting pump settings</string>
     <string name="gettingpumptime">Getting pump time</string>
     <string name="largetimediff">Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
-    <string name="largetimedifftitle">Large time difference Title</string>
+    <string name="largetimedifftitle">Large time difference</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
     <string name="startingbolus">Starting bolus delivery</string>
     <string name="waitingforestimatedbolusend">Waiting for estimated bolus end</string>
-    <string name="gettingbolusstatus">Getting Bolus Status</string>
+    <string name="gettingbolusstatus">Getting bolus status</string>
     <string name="stoppingtempbasal">Stopping temp basal</string>
     <string name="settingtempbasal">Setting temp basal</string>
     <string name="settingextendedbolus">Setting extended bolus</string>
@@ -30,10 +30,8 @@
     <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
 
     <string name="selectedpump">Selected pump</string>
-    <string name="diaconn_g8_bluetooth_status">Bluetooth Status</string>
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
-    <string name="diaconn_g8_user_options">USER OPTIONS</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
     <string name="processinghistory">"Processing Event "</string>
     <string name="diaconn_g8_history_tempbasal">Temp Basal</string>

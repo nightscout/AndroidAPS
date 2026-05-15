@@ -163,9 +163,9 @@ class DanaRKoreanPlugin @Inject constructor(
         if (detailedBolusInfo.insulin > 0)
             connectionOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
-        result.success(connectionOK && abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep)
-            .bolusDelivered(delivered)
+        val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+        result.success(connectionOK && abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep)
+            .bolusDelivered(delivered.cU)
         if (!result.success) result.comment(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
@@ -178,7 +178,7 @@ class DanaRKoreanPlugin @Inject constructor(
         if (detailedBolusInfo.insulin > 0) runBlocking {
             pumpSync.syncBolusWithPumpId(
                 dateUtil.now(),
-                PumpInsulin(delivered),
+                delivered,
                 detailedBolusInfo.bolusType,
                 dateUtil.now(),
                 PumpType.DANA_R_KOREAN,

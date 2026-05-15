@@ -30,10 +30,8 @@
     <string name="insulinlimitviolation">Violazione limite insulina</string>
     <string name="boluserrorcode">Chiesto: %1$.2fU Erogato: %2$.2fU Codice errore: %3$s</string>
     <string name="selectedpump">Micro selezionato</string>
-    <string name="diaconn_g8_bluetooth_status">Stato bluetooth</string>
     <string name="bolus_step">Incremento bolo</string>
     <string name="basal_step">Incremento basale</string>
-    <string name="diaconn_g8_user_options">OPZIONI UTENTE</string>
     <string name="pairfirst">Associa il micro col tuo telefono!</string>
     <string name="processinghistory">"Elaborazione "</string>
     <string name="diaconn_g8_history_tempbasal">Basale temporanea</string>

@@ -44,7 +44,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">בזאלי זמני מופעל בפוד אבל AAPS אינו מודע לבזאלי זמני זה. יש לבטל את הבזאלי הזמני באופן ידני.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">סטטיסטיקת ריילילינק</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">קרא יומן פעימות</string>
     <string name="omnipod_eros_pod_management_pulse_log">יומן פעימות</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">יומן פעימות (מועתק ללוח ההעתקה)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

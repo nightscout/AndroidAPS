@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -52,7 +53,6 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
@@ -191,13 +191,6 @@ fun UserEntryScreen(
                     }
                 }
             }
-
-            // Error display
-            AapsSnackbarHost(
-                message = uiState.snackbarMessage,
-                onDismiss = { viewModel.clearSnackbar() },
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
         }
     }
 }
@@ -248,7 +241,8 @@ private fun UserEntryItem(
                     contentDescription = "${stringResource(app.aaps.core.ui.R.string.ue_source)}: ${userEntry.source}",
                     modifier = Modifier
                         .size(20.dp)
-                        .padding(end = 4.dp)
+                        .padding(end = 4.dp),
+                    colorFilter = ColorFilter.tint(userEntryPresentationHelper.iconColor(userEntry.source))
                 )
             }
 

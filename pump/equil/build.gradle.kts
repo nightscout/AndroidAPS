@@ -35,8 +35,8 @@ dependencies {
     implementation(libs.com.github.bumptech.glide.compose)
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.com.google.code.gson)
 
-    api(libs.androidx.room)
     api(libs.androidx.room.runtime)
     api(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)

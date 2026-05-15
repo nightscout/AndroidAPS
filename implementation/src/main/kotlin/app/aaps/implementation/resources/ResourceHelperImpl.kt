@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -15,15 +14,12 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.getThemeColor
 import app.aaps.core.ui.locale.LocaleHelper
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
@@ -126,23 +122,4 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
     }
 
     override fun shortTextMode(): Boolean = !gb(app.aaps.core.ui.R.bool.isTablet)
-
-    override fun gac(context: Context?, attributeId: Int): Int =
-        (ContextThemeWrapper(context ?: this.context, app.aaps.core.ui.R.style.AppTheme)).getThemeColor(attributeId)
-
-    override fun gac(attributeId: Int): Int =
-        ContextThemeWrapper(this.context, app.aaps.core.ui.R.style.AppTheme).getThemeColor(attributeId)
-
-    override fun getThemedCtx(context: Context): Context {
-        val res: Resources = context.resources
-        val configuration = Configuration(res.configuration)
-        val filter = res.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()
-
-        configuration.uiMode = when (AppCompatDelegate.getDefaultNightMode()) {
-            AppCompatDelegate.MODE_NIGHT_NO  -> Configuration.UI_MODE_NIGHT_NO or filter
-            AppCompatDelegate.MODE_NIGHT_YES -> Configuration.UI_MODE_NIGHT_YES or filter
-            else                             -> res.configuration.uiMode
-        }
-        return context.createConfigurationContext(configuration)
-    }
 }

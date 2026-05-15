@@ -72,6 +72,12 @@
     <string name="objectives_exam_learned_breadgrams">碳水化合物仅允许以克为单位输入。</string>
     <string name="objectives_exam_learned_ecarbs">扩展碳水化合物是胰岛素泵领域中方波大剂量功能的替代方案。</string>
     <string name="objectives_exam_learned_nsclient">远程监测和控制是可能的，但并非所有功能都必须是远程可用的。</string>
+    <string name="objectives_exam_learned_concentration1">使用 U200 胰岛素并搭配 50% 配置方案时，需要长期进行换算：
+使用笔进行外部大剂量注射时需要换算；
+AAPS 或 NS 生成的所有标准报表数据都会出错，必须换算为国际单位（IU）后才能提供给医疗团队。</string>
+    <string name="objectives_exam_learned_concentration2">从U200 + 50% 配置方案切换到U200 + 胰岛素浓度功能，需要创建一份新的更强效的配置方案、禁用 DynISF 一周，并让自己习惯以国际单位（IU）来计算剂量。</string>
+    <string name="objectives_exam_learned_concentration3">胰岛素浓度仅可在更换胰岛素或贴片时进行修改。
+但最重要的一点是 —— 尤其对于导管式胰岛素泵 ——切勿直接通过泵体操作界面推注大剂量。</string>
     <string name="answerdisabledto">禁止答题，直到： %1$s</string>
     <string name="wronganswer">错误答案！</string>
     <string name="unfinshed_button">下一个未完成的</string>

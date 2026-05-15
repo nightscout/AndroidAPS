@@ -1,9 +1,6 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
 import android.content.Context
-import android.text.util.Linkify
-import android.widget.CheckBox
-import android.widget.TextView
 import androidx.annotation.StringRes
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -47,15 +44,14 @@ abstract class Objective(
 
     var tasks: MutableList<Task> = ArrayList()
 
-    val isCompleted: Boolean
-        get() {
-            for (task in tasks) {
-                if (!task.shouldBeIgnored() && !task.isCompleted()) return false
-            }
-            return true
+    suspend fun isCompleted(): Boolean {
+        for (task in tasks) {
+            if (!task.shouldBeIgnored() && !task.isCompleted()) return false
         }
+        return true
+    }
 
-    fun isCompleted(trueTime: Long): Boolean {
+    suspend fun isCompleted(trueTime: Long): Boolean {
         for (task in tasks) {
             if (!task.shouldBeIgnored() && !task.isCompleted(trueTime)) return false
         }
@@ -72,12 +68,12 @@ abstract class Objective(
         var hints = ArrayList<Hint>()
         var learned = ArrayList<Learned>()
 
-        abstract fun isCompleted(): Boolean
+        abstract suspend fun isCompleted(): Boolean
 
-        open fun isCompleted(trueTime: Long): Boolean = isCompleted()
+        open suspend fun isCompleted(trueTime: Long): Boolean = isCompleted()
 
-        open val progress: String
-            get() = rh.gs(if (isCompleted()) R.string.completed_well_done else R.string.not_completed_yet)
+        open suspend fun progress(): String =
+            rh.gs(if (isCompleted()) R.string.completed_well_done else R.string.not_completed_yet)
 
         fun hint(hint: Hint): Task {
             hints.add(hint)
@@ -94,15 +90,15 @@ abstract class Objective(
 
     inner class MinimumDurationTask internal constructor(objective: Objective, private val minimumDuration: Long) : Task(objective, R.string.time_elapsed) {
 
-        override fun isCompleted(): Boolean =
+        override suspend fun isCompleted(): Boolean =
             objective.isStarted && System.currentTimeMillis() - objective.startedOn >= minimumDuration
 
-        override fun isCompleted(trueTime: Long): Boolean {
+        override suspend fun isCompleted(trueTime: Long): Boolean {
             return objective.isStarted && trueTime - objective.startedOn >= minimumDuration
         }
 
-        override val progress: String
-            get() = (getDurationText(System.currentTimeMillis() - objective.startedOn)
+        override suspend fun progress(): String =
+            (getDurationText(System.currentTimeMillis() - objective.startedOn)
                 + " / " + getDurationText(minimumDuration))
 
         private fun getDurationText(duration: Long): String {
@@ -129,7 +125,7 @@ abstract class Objective(
             answered = preferences.get(ObjectivesBooleanComposedKey.AnsweredUi, spIdentifier)
         }
 
-        override fun isCompleted(): Boolean = answered
+        override suspend fun isCompleted(): Boolean = answered
     }
 
     inner class ExamTask internal constructor(objective: Objective, @StringRes task: Int, @StringRes val question: Int, private val spIdentifier: String) : Task(objective, task) {
@@ -151,7 +147,7 @@ abstract class Objective(
             disabledTo = preferences.get(ObjectivesLongComposedKey.DisabledTo, spIdentifier)
         }
 
-        override fun isCompleted(): Boolean = answered
+        override suspend fun isCompleted(): Boolean = answered
 
         fun isEnabledAnswer(): Boolean = disabledTo < dateUtil.now()
 
@@ -161,34 +157,9 @@ abstract class Objective(
         }
     }
 
-    class Option internal constructor(@StringRes var option: Int, var isCorrect: Boolean) {
+    class Option internal constructor(@StringRes var option: Int, var isCorrect: Boolean)
 
-        private var cb: CheckBox? = null // TODO: change it, this will block releasing memory
-
-        fun generate(context: Context): CheckBox {
-            cb = CheckBox(context)
-            cb?.setText(option)
-            return cb!!
-        }
-
-        fun evaluate(): Boolean {
-            val selection = cb!!.isChecked
-            return if (selection && isCorrect) true else !selection && !isCorrect
-        }
-    }
-
-    inner class Hint internal constructor(@StringRes var hint: Int) {
-
-        fun generate(context: Context): TextView {
-            val textView = TextView(context)
-            textView.setText(hint)
-            textView.autoLinkMask = Linkify.WEB_URLS
-            textView.linksClickable = true
-            textView.setLinkTextColor(rh.gac(context, com.google.android.material.R.attr.colorSecondary))
-            Linkify.addLinks(textView, Linkify.WEB_URLS)
-            return textView
-        }
-    }
+    class Hint internal constructor(@StringRes var hint: Int)
 
     class Learned internal constructor(@StringRes var learned: Int)
 }

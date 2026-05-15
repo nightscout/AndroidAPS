@@ -51,7 +51,6 @@
     <string name="location_going_out">Når du forlader området ved navn</string>
     <string name="time_range">Tidsinterval</string>
     <string name="timerange_value">Tid er mellem%1$s og %2$s</string>
-    <string name="between">Mellem </string>
     <string name="add_short">TILFØJ</string>
     <string name="temptargetcompared">Midlertidig mål %1$s</string>
     <string name="btdevicecompared">Bluetooth-forbindelse til enheden %1$s %2$s</string>
@@ -78,8 +77,6 @@
     <string name="edit_short">REDIGER</string>
     <string name="preconditions">Forudsætninger:</string>
     <string name="user_action">Brugerhandling</string>
-    <string name="remove_selected_items">Fjern valgte emner</string>
-    <string name="count_selected">%1$d valgt</string>
     <string name="system_automation">System automatisering</string>
     <string name="run_automations">Kør automatisering</string>
     <string name="add_automation">Tilføj regel</string>

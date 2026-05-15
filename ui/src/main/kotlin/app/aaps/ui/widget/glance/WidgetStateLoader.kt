@@ -72,7 +72,7 @@ class WidgetStateLoader @Inject constructor(
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         val unavailable = rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
         val deltaText = glucoseStatus?.let { profileUtil.fromMgdlToSignedStringInUnits(it.delta) } ?: unavailable
-        val timeAgoText = dateUtil.minOrSecAgo(rh, lastBg?.timestamp)
+        val timeAgoText = dateUtil.minAgo(rh, lastBg?.timestamp)
 
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
@@ -152,7 +152,19 @@ class WidgetStateLoader @Inject constructor(
             rh.gs(app.aaps.core.ui.R.string.autosens_short, it.autosensResult.ratio * 100)
         } ?: "—"
 
-        val mode = loop.runningMode
+        val profile = profileFunction.getProfile()
+        val tbrIconResId = if (profile == null) R.drawable.ic_widget_no_tbr
+        else {
+            val basalData = iobCobCalculator.getBasalData(profile, dateUtil.now())
+            when {
+                !basalData.isTempBasalRunning                             -> R.drawable.ic_widget_no_tbr
+                abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01 -> R.drawable.ic_widget_no_tbr
+                basalData.tempBasalAbsolute > basalData.basal             -> R.drawable.ic_widget_tbr_high
+                else                                                      -> R.drawable.ic_widget_tbr_low
+            }
+        }
+
+        val mode = loop.runningMode()
         val runningModeText = rh.gs(
             when (mode) {
                 RM.Mode.OPEN_LOOP         -> app.aaps.core.ui.R.string.openloop
@@ -210,6 +222,7 @@ class WidgetStateLoader @Inject constructor(
             runningModeActive = runningModeActive,
             sensitivityIconResId = sensitivityIconResId,
             sensitivityText = sensitivityText,
+            tbrIconResId = tbrIconResId,
             backgroundColor = backgroundColor
         )
     }

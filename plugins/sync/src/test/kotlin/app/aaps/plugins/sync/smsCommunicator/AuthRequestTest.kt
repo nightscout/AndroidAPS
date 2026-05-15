@@ -12,6 +12,7 @@ import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -39,16 +40,16 @@ class AuthRequestTest : TestBase() {
         }.whenever(smsCommunicator).sendSMS(anyOrNull())
     }
 
-    @Test fun doTests() {
+    @Test fun doTests() = runTest {
         val requester = Sms("aNumber", "aText")
         val action: SmsAction = object : SmsAction(false) {
-            override fun run() {
+            override suspend fun run() {
                 actionCalled = true
             }
         }
 
         // Check if SMS requesting code is sent
-        var authRequest = AuthRequest(aapsLogger, smsCommunicator, rh, otp, dateUtil, commandQueue).with(requester, "Request text", "ABC", action)
+        var authRequest = AuthRequest(requester, "Request text", "ABC", action, aapsLogger, smsCommunicator, rh, otp, dateUtil, commandQueue)
         assertThat(sentSms!!.phoneNumber).isEqualTo("aNumber")
         assertThat(sentSms!!.text).isEqualTo("Request text")
 
@@ -60,7 +61,7 @@ class AuthRequestTest : TestBase() {
         assertThat(actionCalled).isFalse()
 
         // correct reply
-        authRequest = AuthRequest(aapsLogger, smsCommunicator, rh, otp, dateUtil, commandQueue).with(requester, "Request text", "ABC", action)
+        authRequest = AuthRequest(requester, "Request text", "ABC", action, aapsLogger, smsCommunicator, rh, otp, dateUtil, commandQueue)
         actionCalled = false
         whenever(otp.checkOTP(anyOrNull())).thenReturn(OneTimePasswordValidationResult.OK)
         authRequest.action("ABC")
@@ -73,9 +74,10 @@ class AuthRequestTest : TestBase() {
         // test timed out message
         val now: Long = 10000
         whenever(dateUtil.now()).thenReturn(now)
-        authRequest = AuthRequest(aapsLogger, smsCommunicator, rh, otp, dateUtil, commandQueue).with(requester, "Request text", "ABC", action)
+        authRequest = AuthRequest(requester, "Request text", "ABC", action, aapsLogger, smsCommunicator, rh, otp, dateUtil, commandQueue)
         actionCalled = false
-        whenever(dateUtil.now()).thenReturn(now + T.mins(Constants.SMS_CONFIRM_TIMEOUT).msecs() + 1)
+        // SMS_CONFIRM_TIMEOUT is already in milliseconds (5L * 60 * 1000); don't re-wrap in T.mins.
+        whenever(dateUtil.now()).thenReturn(now + Constants.SMS_CONFIRM_TIMEOUT + 1)
         authRequest.action("ABC")
         assertThat(actionCalled).isFalse()
     }

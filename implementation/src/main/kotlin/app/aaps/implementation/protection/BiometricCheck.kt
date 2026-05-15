@@ -19,10 +19,11 @@ import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.R
 import app.aaps.core.ui.extensions.runOnUiThread
-import app.aaps.core.ui.toast.ToastUtils
 
 object BiometricCheck {
 
@@ -31,7 +32,7 @@ object BiometricCheck {
      * All errors and the negative button trigger [onFallback], letting the caller
      * (e.g. ProtectionHost) show the unified auth dialog instead.
      */
-    fun biometricPromptSimple(activity: FragmentActivity, title: Int, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
+    fun biometricPromptSimple(activity: FragmentActivity, title: Int, rxBus: RxBus, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
         val executor = ContextCompat.getMainExecutor(activity)
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -42,7 +43,7 @@ object BiometricCheck {
                     ERROR_USER_CANCELED   -> onCancel?.run()
 
                     else                  -> {
-                        ToastUtils.errorToast(activity.baseContext, errString.toString())
+                        rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
                         onFallback?.run()
                     }
                 }
@@ -67,7 +68,7 @@ object BiometricCheck {
         }
     }
 
-    fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
+    fun biometricPrompt(activity: FragmentActivity, title: Int, rxBus: RxBus, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
         val executor = ContextCompat.getMainExecutor(activity)
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -81,7 +82,7 @@ object BiometricCheck {
                     ERROR_VENDOR,
                     ERROR_LOCKOUT_PERMANENT,
                     ERROR_USER_CANCELED        -> {
-                        ToastUtils.errorToast(activity.baseContext, errString.toString())
+                        rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
                         // fallback to master password
                         passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
@@ -90,7 +91,7 @@ object BiometricCheck {
                         cancel?.run()
 
                     ERROR_NO_DEVICE_CREDENTIAL -> {
-                        ToastUtils.errorToast(activity.baseContext, errString.toString())
+                        rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
                         // no pin set
                         // fallback to master password
                         passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })

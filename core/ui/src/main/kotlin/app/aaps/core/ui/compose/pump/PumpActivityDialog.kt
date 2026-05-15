@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.interfaces.pump.BolusProgressState
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 
@@ -227,7 +228,8 @@ private fun PreviewBolusInProgress() {
                 isPriming = false,
                 percent = 45,
                 status = "Delivering 1.80U",
-                delivered = 1.8,
+                wearStatus = "Delivering 1.80U",
+                delivered = PumpInsulin(1.8),
                 stopPressed = false,
                 stopDeliveryEnabled = true
             ),
@@ -249,7 +251,8 @@ private fun PreviewBolusStopPressed() {
                 isPriming = false,
                 percent = 45,
                 status = "Delivering 1.80U",
-                delivered = 1.8,
+                wearStatus = "Delivering 1.80U",
+                delivered = PumpInsulin(1.8),
                 stopPressed = true,
                 stopDeliveryEnabled = true
             ),
@@ -271,7 +274,8 @@ private fun PreviewBolusCompleted() {
                 isPriming = false,
                 percent = 100,
                 status = "Bolus 4.00U delivered successfully",
-                delivered = 4.0,
+                wearStatus = "Bolus 4.00U delivered successfully",
+                delivered = PumpInsulin(4.0),
                 stopPressed = false,
                 stopDeliveryEnabled = true
             ),
@@ -293,7 +297,8 @@ private fun PreviewBolusIndeterminate() {
                 isPriming = false,
                 percent = 0,
                 status = "",
-                delivered = 0.0,
+                wearStatus = "",
+                delivered = PumpInsulin(0.0),
                 stopPressed = false,
                 stopDeliveryEnabled = false
             ),

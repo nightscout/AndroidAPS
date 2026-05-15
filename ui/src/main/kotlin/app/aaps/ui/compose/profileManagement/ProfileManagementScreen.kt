@@ -28,6 +28,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,8 +55,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
@@ -135,22 +135,21 @@ fun ProfileManagementScreen(
     // Track current page for floating toolbar actions
     var currentPage by remember { mutableStateOf(uiState.currentProfileIndex) }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarEvent by viewModel.snackbarEvent.collectAsStateWithLifecycle()
+    LaunchedEffect(snackbarEvent) {
+        snackbarEvent?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearSnackbarEvent()
+        }
+    }
+
     AapsTheme {
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 AapsTopAppBar(
-                    title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = ElementType.PROFILE_MANAGEMENT.icon(),
-                                contentDescription = null,
-                                tint = ElementType.PROFILE_MANAGEMENT.color(),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.padding(start = 8.dp))
-                            Text(stringResource(ElementType.PROFILE_MANAGEMENT.labelResId()))
-                        }
-                    },
+                    title = { Text(stringResource(ElementType.PROFILE_MANAGEMENT.labelResId())) },
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
                             Icon(

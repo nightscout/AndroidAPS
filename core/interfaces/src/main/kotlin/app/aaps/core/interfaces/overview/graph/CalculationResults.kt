@@ -342,7 +342,8 @@ data class TempTargetDisplayData(
     val state: TempTargetState,          // NONE/ACTIVE/ADJUSTED for UI styling
     val timestamp: Long,                 // When TT started (for progress calculation)
     val duration: Long,                  // TT duration in ms (0 if not active)
-    val reason: TT.Reason? = null         // TT reason for icon coloring (null if no TT)
+    val reason: TT.Reason? = null,       // TT reason for icon coloring (null if no TT)
+    val recordId: Long = 0               // DB record ID (for scene override detection)
 )
 
 /**
@@ -353,8 +354,10 @@ data class ProfileDisplayData(
     val profileName: String,             // Profile name only (no remaining time)
     val isLoaded: Boolean,               // True if profile is loaded
     val isModified: Boolean,             // True if percentage/timeshift/duration modified
+    val percentage: Int = 100,           // Profile percentage (100 = no change)
     val timestamp: Long,                 // When profile switch started (for progress)
-    val duration: Long                   // Profile switch duration in ms (0 if permanent)
+    val duration: Long,                  // Profile switch duration in ms (0 if permanent)
+    val originalPsId: Long? = null       // PS id that created the current EPS (for scene tracking)
 )
 
 /**
@@ -364,7 +367,35 @@ data class ProfileDisplayData(
 data class RunningModeDisplayData(
     val mode: RM.Mode,                   // Current running mode
     val timestamp: Long,                 // When mode started (for progress calculation)
-    val duration: Long                   // Mode duration in ms (0 if permanent)
+    val duration: Long,                  // Mode duration in ms (0 if permanent)
+    val recordId: Long = 0               // DB record ID (for scene override detection)
+)
+
+/**
+ * Running temp-basal chip state classification.
+ */
+enum class TbrState {
+
+    /** No TBR running, or running TBR matches profile basal */
+    NONE,
+
+    /** TBR rate above profile basal */
+    HIGH,
+
+    /** TBR rate below profile basal */
+    LOW
+}
+
+/**
+ * Temp basal display data for overview chips.
+ * Stores raw data; ViewModel derives expiry on ticks.
+ * `timestamp`/`duration` describe the active TBR row (if any) so the ViewModel can
+ * detect `timestamp + duration` expiry the same way it does for TT/Profile/RM.
+ */
+data class TbrDisplayData(
+    val state: TbrState,
+    val timestamp: Long,                 // When TBR started (0 if none)
+    val duration: Long                   // TBR duration in ms (0 if none)
 )
 
 // ============================================================================

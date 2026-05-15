@@ -53,7 +53,6 @@
     <string name="location_going_out">Wanneer u het gebied met deze naam verlaat</string>
     <string name="time_range">Tijdsinterval</string>
     <string name="timerange_value">Tijd ligt tussen %1$s en %2$s</string>
-    <string name="between">Tussen </string>
     <string name="add_short">TOEV</string>
     <string name="temptargetcompared">Tijdelijk streefdoel %1$s</string>
     <string name="btdevicecompared">Bluetooth verbinding met apparaat %1$s %2$s</string>
@@ -94,8 +93,6 @@
     <string name="edit_short">EDIT</string>
     <string name="preconditions">Voorwaarden:</string>
     <string name="user_action">Gebruikersactie</string>
-    <string name="remove_selected_items">Geselecteerde items verwijderen</string>
-    <string name="count_selected">%1$d geselecteerd</string>
     <string name="system_automation">Systeem automatisering</string>
     <string name="run_automations">Automatisering uitvoeren</string>
     <string name="add_automation">Regel toevoegen</string>

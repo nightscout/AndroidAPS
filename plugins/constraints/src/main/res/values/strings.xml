@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
-    <string name="phone_checker" translatable="false">PhoneChecker</string>
-
     <!-- DST Helper -->
     <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
     <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
     <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
-    <string name="dst_loop_disabled_error">Daylight Saving Time (DST) change occurred less than 3 hours ago. Closed loop disabled temporarily, will automatically re-enable 3 hours after DST change</string>
 
     <!-- Storage constraint -->
     <string name="storage" translatable="false">Storage constraint</string>
@@ -35,7 +31,7 @@
     <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
 
-    <string name="safety" translatable="false">Safety</string>
+    <string name="safety">Safety</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
@@ -56,8 +52,6 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Learning program</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
-    <string name="objectives_next_button">Next</string>
-    <string name="objectives_previous_button">Prev</string>
     <string name="objectives_button_unfinish">Reset finished state</string>
     <string name="objectives_button_unstart">Reset started state</string>
 

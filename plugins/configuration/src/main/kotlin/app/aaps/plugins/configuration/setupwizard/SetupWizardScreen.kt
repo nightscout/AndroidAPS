@@ -51,6 +51,7 @@ fun SetupWizardScreen(
     onBack: () -> Unit,
     onImportSettings: () -> Unit,
     onPluginPreferences: (pluginId: String) -> Unit,
+    onPluginOpen: (pluginId: String) -> Unit,
     onSetMasterPassword: () -> Unit,
     onManageInsulin: () -> Unit,
     onManageProfile: () -> Unit,
@@ -66,6 +67,7 @@ fun SetupWizardScreen(
     DisposableEffect(Unit) {
         swDefinition.onImportSettings = onImportSettings
         swDefinition.onPluginPreferences = onPluginPreferences
+        swDefinition.onPluginOpen = onPluginOpen
         swDefinition.onSetMasterPassword = onSetMasterPassword
         swDefinition.onManageInsulin = onManageInsulin
         swDefinition.onManageProfile = onManageProfile
@@ -78,6 +80,7 @@ fun SetupWizardScreen(
         onDispose {
             swDefinition.onImportSettings = null
             swDefinition.onPluginPreferences = null
+            swDefinition.onPluginOpen = null
             swDefinition.onSetMasterPassword = null
             swDefinition.onManageInsulin = null
             swDefinition.onManageProfile = null
@@ -177,7 +180,7 @@ fun SetupWizardScreen(
                     title = { Text(currentScreen?.getHeaderCompose() ?: stringResource(app.aaps.core.ui.R.string.nav_setupwizard)) },
                     navigationIcon = {
                         IconButton(onClick = { showExitDialog = true }) {
-                            Icon(Icons.Default.Close, contentDescription = null)
+                            Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
                         }
                     }
                 )

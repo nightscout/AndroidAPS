@@ -45,7 +45,7 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         diaconnG8Plugin = DiaconnG8Plugin(
             aapsLogger, rh, preferences, commandQueue, rxBus, context, constraintChecker, diaconnG8Pump,
             pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, aapsSchedulers,
-            notificationManager, diaconnHistoryDatabase, pumpEnactResultProvider, BolusProgressData(), blePreCheck
+            notificationManager, diaconnHistoryDatabase, pumpEnactResultProvider, BolusProgressData(ch, rh), blePreCheck
         )
     }
 

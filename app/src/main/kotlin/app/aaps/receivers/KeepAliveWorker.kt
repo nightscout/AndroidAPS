@@ -17,6 +17,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -40,6 +41,7 @@ import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -127,6 +129,13 @@ class KeepAliveWorker(
             if (lastRun + T.mins(4).msecs() > dateUtil.now()) return Result.success(workDataOf("Error" to "Schedule broken. Ignoring"))
         }
 
+        // Gate the plugin-touching work behind app init — without this, a worker that fires
+        // after a reboot before MainApp's init scope has populated pluginStore.plugins crashes.
+        if (!config.awaitInitialized()) {
+            aapsLogger.debug(LTag.CORE, "KeepAlive: app not yet initialized, retrying")
+            return Result.retry()
+        }
+
         if (lastRun != 0L && dateUtil.now() - lastRun > T.mins(10).msecs()) {
             aapsLogger.error(LTag.CORE, "KeepAlive fail")
             fabricPrivacy.logCustom("KeepAliveFail")
@@ -140,6 +149,7 @@ class KeepAliveWorker(
         checkAPS()
         maintenance.deleteLogs(30)
         workerDbStatus()
+        workerActiveStatus()
         databaseCleanup()
 
         return Result.success()
@@ -159,15 +169,54 @@ class KeepAliveWorker(
     // When Worker DB grows too much, work operations become slow
     // Library is cleaning DB every 7 days which may not be sufficient for NSClient full sync
     private fun workerDbStatus() {
-        val workQuery = WorkQuery.Builder
-            .fromStates(listOf(WorkInfo.State.FAILED, WorkInfo.State.SUCCEEDED))
-            .build()
-
-        val workInfo: ListenableFuture<List<WorkInfo>> = workManager.getWorkInfos(workQuery)
-        aapsLogger.debug(LTag.CORE, "WorkManager size is ${workInfo.get().size}")
-        if (workInfo.get().size > 1000) {
+        val terminal = getWorkInfosSafe(listOf(WorkInfo.State.FAILED, WorkInfo.State.SUCCEEDED)) ?: return
+        aapsLogger.debug(LTag.CORE, "WorkManager size is ${terminal.size}")
+        if (terminal.size > 1000) {
             workManager.pruneWork()
             aapsLogger.debug(LTag.CORE, "WorkManager pruning ....")
+        }
+    }
+
+    // Report ENQUEUED/RUNNING/BLOCKED counts and the top worker classes by count, so a leaking
+    // chain is identifiable. Useful for the lead-up to a freeze; once WorkManager itself stalls,
+    // KeepAlive stops firing and this stops logging too.
+    private fun workerActiveStatus() {
+        val active = getWorkInfosSafe(listOf(WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING, WorkInfo.State.BLOCKED)) ?: return
+        val byState = active.groupingBy { it.state }.eachCount()
+        aapsLogger.debug(
+            LTag.CORE,
+            "WorkManager active: total=${active.size}" +
+                " enqueued=${byState[WorkInfo.State.ENQUEUED] ?: 0}" +
+                " running=${byState[WorkInfo.State.RUNNING] ?: 0}" +
+                " blocked=${byState[WorkInfo.State.BLOCKED] ?: 0}"
+        )
+        // WorkManager auto-adds the worker's fully-qualified class name as a tag; filter by '.'
+        // to skip user-added tags, then keep the simple name for readability.
+        val topTags = active.asSequence()
+            .flatMap { it.tags.asSequence() }
+            .filter { it.contains('.') }
+            .groupingBy { it.substringAfterLast('.') }
+            .eachCount()
+            .entries
+            .sortedByDescending { it.value }
+            .take(5)
+            .joinToString { "${it.key}=${it.value}" }
+        if (topTags.isNotEmpty()) aapsLogger.debug(LTag.CORE, "WorkManager active top: $topTags")
+    }
+
+    // Bounded blocking get: if WorkManager itself is wedged (the very thing we're diagnosing),
+    // an unbounded .get() would hang the KeepAliveWorker and take the diagnostic down with it.
+    private fun getWorkInfosSafe(states: List<WorkInfo.State>): List<WorkInfo>? {
+        val future: ListenableFuture<List<WorkInfo>> = workManager.getWorkInfos(WorkQuery.Builder.fromStates(states).build())
+        return try {
+            future.get(2, TimeUnit.SECONDS)
+        } catch (e: TimeoutException) {
+            aapsLogger.error(LTag.CORE, "WorkManager getWorkInfos timeout for $states")
+            future.cancel(true)
+            null
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.CORE, "WorkManager getWorkInfos failed for $states", e)
+            null
         }
     }
 
@@ -175,11 +224,11 @@ class KeepAliveWorker(
     // if there is no BG available, we have to upload anyway to have correct
     // IOB displayed in NS
     @VisibleForTesting
-    fun checkAPS() {
+    suspend fun checkAPS() {
         var shouldUploadStatus = false
         if (config.AAPSCLIENT) return
         if (config.PUMPCONTROL) shouldUploadStatus = true
-        else if (!loop.runningMode.isLoopRunning() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
+        else if (!loop.runningMode().isLoopRunning() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
         else if (activePlugin.activeAPS?.let { dateUtil.isOlderThan(it.lastAPSRun, 5) } == true) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
@@ -209,10 +258,11 @@ class KeepAliveWorker(
         // last read status attempt and the current time can be slightly over 5 minutes (for example,
         // 300041 milliseconds instead of exactly 300000). Add 30 extra seconds to allow for
         // plenty of tolerance.
+        val runningMode = loop.runningMode()
         if (lastReadStatus != 0L && (now - lastReadStatus).coerceIn(minimumValue = 0, maximumValue = null) <= T.secs(5 * 60 + 30).msecs()) {
-            localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loop.runningMode == RM.Mode.DISCONNECTED_PUMP)
+            localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, runningMode == RM.Mode.DISCONNECTED_PUMP)
         }
-        if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP) {
+        if (runningMode == RM.Mode.DISCONNECTED_PUMP) {
             // do nothing if pump is disconnected
         } else if (
             runningProfile == null ||

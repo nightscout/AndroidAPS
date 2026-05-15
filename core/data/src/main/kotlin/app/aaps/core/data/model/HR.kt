@@ -9,7 +9,7 @@ data class HR(
     var duration: Long,
     /** Milliseconds since the epoch. End of the sampling period, i.e. the value is
      *  sampled from timestamp-duration to timestamp. */
-    var timestamp: Long,
+    override var timestamp: Long,
     var beatsPerMinute: Double,
     /** Source device that measured the heart rate. */
     var device: String,
@@ -19,7 +19,7 @@ data class HR(
     var isValid: Boolean = true,
     var referenceId: Long? = null,
     var ids: IDs = IDs()
-) {
+) : TimeStamped {
 
     fun contentEqualsTo(other: HR): Boolean {
         return this === other || (

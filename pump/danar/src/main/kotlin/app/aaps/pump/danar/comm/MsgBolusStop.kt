@@ -17,10 +17,10 @@ class MsgBolusStop(
         danaPump.bolusStopped = true
         if (!danaPump.bolusStopForced) {
             val insulin = bolusProgressData.state.value?.insulin ?: 0.0
-            bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin), insulin)
+            bolusProgressData.updateProgress(percent = 100)
         } else {
             val currentPercent = bolusProgressData.state.value?.percent ?: 0
-            bolusProgressData.updateProgress(currentPercent, rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped), bolusProgressData.state.value?.delivered ?: 0.0)
+            bolusProgressData.updateProgress(currentPercent, rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped))
         }
     }
 }

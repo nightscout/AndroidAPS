@@ -31,10 +31,20 @@ fun ProfileChip(
     isModified: Boolean,
     progress: Float,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sceneManaged: Boolean = false,
+    isNoProfile: Boolean = false
 ) {
-    val containerColor = if (isModified) AapsTheme.generalColors.inProgress.copy(alpha = 0.2f) else Color.Transparent
-    val contentColor = if (isModified) AapsTheme.generalColors.inProgress else MaterialTheme.colorScheme.onSurfaceVariant
+    val containerColor = when {
+        isNoProfile -> MaterialTheme.colorScheme.errorContainer
+        isModified  -> AapsTheme.generalColors.inProgress.copy(alpha = 0.2f)
+        else        -> Color.Transparent
+    }
+    val contentColor = when {
+        isNoProfile -> MaterialTheme.colorScheme.onErrorContainer
+        isModified  -> AapsTheme.generalColors.inProgress
+        else        -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
     val haptic = LocalHapticFeedback.current
 
     Surface(
@@ -61,6 +71,9 @@ fun ProfileChip(
                     color = contentColor,
                     modifier = Modifier.padding(start = AapsSpacing.medium)
                 )
+                if (sceneManaged) {
+                    SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))
+                }
             }
             Box(
                 modifier = Modifier

@@ -15,6 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -23,7 +24,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun LargeClock(
     bgTimestamp: Long?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    maxFontSize: TextUnit = 56.sp
 ) {
     val dateUtil = LocalDateUtil.current
     var timeText by remember { mutableStateOf(dateUtil.timeString()) }
@@ -39,13 +41,14 @@ fun LargeClock(
         }
     }
 
-    LargeClockText(timeText = timeText, agoText = agoText, modifier = modifier)
+    LargeClockText(timeText = timeText, agoText = agoText, maxFontSize = maxFontSize, modifier = modifier)
 }
 
 @Composable
 private fun LargeClockText(
     timeText: String,
     agoText: String,
+    maxFontSize: TextUnit = 56.sp,
     modifier: Modifier = Modifier
 ) {
     BasicText(
@@ -57,7 +60,7 @@ private fun LargeClockText(
         ),
         autoSize = TextAutoSize.StepBased(
             minFontSize = 20.sp,
-            maxFontSize = 56.sp,
+            maxFontSize = maxFontSize,
             stepSize = 2.sp
         ),
         maxLines = 1,

@@ -26,8 +26,8 @@ class DetermineBasalAutoISF @Inject constructor(
     private val profileUtil: ProfileUtil
 ) {
 
-    private val consoleError = mutableListOf<String>()
-    private val consoleLog = mutableListOf<String>()
+    private var consoleError = mutableListOf<String>()
+    private var consoleLog = mutableListOf<String>()
 
     private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
 
@@ -151,8 +151,8 @@ class DetermineBasalAutoISF @Inject constructor(
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, autoIsfMode: Boolean, loop_wanted_smb: String, profile_percentage: Int, smb_ratio: Double,
         smb_max_range_extension: Double, iob_threshold_percent: Int, auto_isf_consoleError: MutableList<String>, auto_isf_consoleLog: MutableList<String>
     ): RT {
-        consoleError.clear()
-        consoleLog.clear()
+        consoleError = mutableListOf()
+        consoleLog = mutableListOf()
         var rT = RT(
             algorithm = APSResult.Algorithm.AUTO_ISF,
             runningDynamicIsf = autoIsfMode,

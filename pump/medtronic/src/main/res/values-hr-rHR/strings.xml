@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Greška serijskog broja.</string>
     <string name="medtronic_error_pump_type_not_set">Vrsta pumpe nije postavljena.</string>
     <string name="medtronic_error_pump_type_invalid">Vrsta pumpe nije podržana.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frekvencija pumpe nije podržana.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adresa nevažeća.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Otkrivena vrsta pumpe nije ista kao konfigurirana vrsta.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Postavka bazalnih profila/uzoraka nije omogućena na pumpi. Omogućite ga na pumpi.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Povijest Medtronic pumpe</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Otkazali ste bolus nakon što je već bio postavljen na Pumpi. Budući da Medtronic Pump ne podržava otkazivanje, morat ćete ga ručno otkazati. Stavite pumpu u način rada Suspend, a zatim izvršite Resume (ako još uvijek želite otkazati). Aplikacija će pokupiti promjene pri sljedećem ažuriranju (za manje od 5 minuta).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nije moguće pročitati trenutni TBR.</string>

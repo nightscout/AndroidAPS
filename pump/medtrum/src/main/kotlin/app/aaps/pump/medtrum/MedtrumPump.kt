@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -435,11 +436,7 @@ class MedtrumPump @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
         bolusProgressLastTimeStamp = dateUtil.now()
         _bolusAmountDelivered.value = amountDelivered
-        val state = bolusProgressData.state.value
-        val insulin = state?.insulin ?: 0.0
-        val percent = if (insulin > 0) ((amountDelivered / insulin) * 100).toInt().coerceAtMost(100) else 0
-        val status = state?.status ?: ""
-        bolusProgressData.updateProgress(percent, status, amountDelivered)
+        bolusProgressData.updateProgress(PumpInsulin(amountDelivered))
         bolusDone = bolusCompleted
     }
 

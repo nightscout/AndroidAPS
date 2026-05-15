@@ -26,12 +26,14 @@ class ActionSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAP
             StaticAction(
                 settingName = "wizard",
                 buttonText = resources.getString(R.string.menu_wizard_short),
+                settingLabel = resources.getString(R.string.menu_wizard),
                 iconRes = R.drawable.ic_calculator,
                 activityClass = WizardActivity::class.java.name,
             ),
             StaticAction(
                 settingName = "treatment",
                 buttonText = resources.getString(R.string.menu_treatment_short),
+                settingLabel = resources.getString(R.string.menu_treatment),
                 iconRes = R.drawable.ic_bolus_carbs,
                 activityClass = TreatmentActivity::class.java.name,
             ),
@@ -56,6 +58,7 @@ class ActionSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAP
             StaticAction(
                 settingName = "temp_target",
                 buttonText = resources.getString(R.string.menu_tempt),
+                settingLabel = resources.getString(R.string.menu_tempt_long),
                 iconRes = R.drawable.ic_temptarget_flat,
                 activityClass = TempTargetActivity::class.java.name,
             ),

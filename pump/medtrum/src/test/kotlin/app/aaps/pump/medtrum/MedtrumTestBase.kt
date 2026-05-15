@@ -19,7 +19,7 @@ open class MedtrumTestBase : TestBaseWithProfile() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
 
-    val bolusProgressData = BolusProgressData()
+    val bolusProgressData by lazy { BolusProgressData(ch, rh) }
     lateinit var medtrumPump: MedtrumPump
 
     @BeforeEach

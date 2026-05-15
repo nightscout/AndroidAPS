@@ -15,6 +15,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,6 +75,7 @@ open class TestModule {
     interface AppBindings {
 
         @Binds fun bindContext(mainApp: TestApplication): Context
+        @Binds @ApplicationContext fun bindApplicationContext(mainApp: TestApplication): Context
         @Binds fun bindInjector(mainApp: TestApplication): HasAndroidInjector
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 

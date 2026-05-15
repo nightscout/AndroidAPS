@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalAapsScale
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -38,14 +39,18 @@ import kotlin.math.sin
  * @param bgInfo Current BG info data, or null if no data available
  * @param timeAgoText Formatted "time ago" string (e.g., "2 min")
  * @param modifier Optional modifier for the composable
- * @param size Size of the circular BG display
+ * @param size Size of the circular BG display. Defaults to [AapsSpacing.bgCircleSize] scaled by
+ *   [LocalAapsScale] so the circle grows on tablets to match scaled typography. Pass an explicit
+ *   value only if you want to override the tablet-aware default.
+ * @param showTimeAgo Whether to render the small "time ago" line below the BG value.
  */
 @Composable
 fun BgInfoSection(
     bgInfo: BgInfoData?,
     timeAgoText: String,
     modifier: Modifier = Modifier,
-    size: Dp = AapsSpacing.bgCircleSize
+    size: Dp = AapsSpacing.bgCircleSize * LocalAapsScale.current,
+    showTimeAgo: Boolean = true
 ) {
     if (bgInfo == null) {
         // Show placeholder when no data
@@ -64,6 +69,7 @@ fun BgInfoSection(
 
     val bgColor = bgInfo.bgRange.toColor()
     val ringColor = bgColor.copy(alpha = 0.3f)
+    val ringStrokeWidth = AapsSpacing.bgRingStrokeWidth * LocalAapsScale.current
 
     // Build accessibility description: "BG 120, Flat, delta +2, 2 min ago"
     val a11yDescription = buildString {
@@ -82,7 +88,7 @@ fun BgInfoSection(
     ) {
         // Background ring + trend arc indicator
         Canvas(modifier = Modifier.size(size)) {
-            val strokeWidth = AapsSpacing.bgRingStrokeWidth.toPx()
+            val strokeWidth = ringStrokeWidth.toPx()
             val arcSize = Size(size.toPx() - strokeWidth, size.toPx() - strokeWidth)
             val topLeft = Offset(strokeWidth / 2, strokeWidth / 2)
 
@@ -171,11 +177,13 @@ fun BgInfoSection(
             )
 
             // Time ago below
-            Text(
-                text = timeAgoText,
-                style = AapsTheme.typography.bgTimeAgo,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (showTimeAgo) {
+                Text(
+                    text = timeAgoText,
+                    style = AapsTheme.typography.bgTimeAgo,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

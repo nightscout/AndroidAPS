@@ -42,7 +42,6 @@
     <string name="medtronic_error_serial_invalid">序列号无效。</string>
     <string name="medtronic_error_pump_type_not_set">未设置泵类型。</string>
     <string name="medtronic_error_pump_type_invalid">不支持该泵类型。</string>
-    <string name="medtronic_error_pump_frequency_invalid">不支持该泵类型。</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink 地址无效。</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">检测到的泵类型与配置的类型不同。</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">在泵上未启用 基础率配置文件/模式设置。 请在泵上启用。</string>
@@ -59,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">美敦力泵历史记录</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">大剂量在泵上设置之后，取消大剂量。由于 美敦力泵 不支持取消，因此您需要手动将其取消。 将泵置于暂停状态，然后执行恢复 (如果仍要取消)。 应用程序将在下次更新 ( 不到 5 分钟) 中提取更改。</string>
     <string name="medtronic_cmd_cant_read_tbr">无法读取当前 TBR。</string>
@@ -91,8 +89,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">设置中性临时基础率</string>
     <string name="set_neutral_temps_summary">如果启用，它将在每小时结束前取消临时基础率。 此方法可帮助阻止某些泵在一小时内进行蜂鸣/振动。</string>
-    <string name="medtronic_tbr_remaining">%1$s (剩余%2$d 分钟)</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 分钟剩余)</string>
     <string name="invalid_history_data">检测到无效的泵历史数据。打开新问题并提供日志。</string>
     <string name="riley_statistics">RileyLink状态</string>
     <string name="clicked_refresh" comment="26 characters max for translation">点击刷新</string>

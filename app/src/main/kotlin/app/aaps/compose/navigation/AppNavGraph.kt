@@ -10,11 +10,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +49,6 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposablePluginContent
-import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -65,6 +61,7 @@ import app.aaps.plugins.configuration.setupwizard.SetupWizardScreen
 import app.aaps.ui.compose.calibrationDialog.CalibrationDialogScreen
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogScreen
+import app.aaps.ui.compose.configuration.ConfigurationScreen
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.extendedBolusDialog.ExtendedBolusDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
@@ -72,7 +69,6 @@ import app.aaps.ui.compose.history.HistoryScreen
 import app.aaps.ui.compose.insulinDialog.InsulinDialogScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
-import app.aaps.ui.compose.main.MainViewModel
 import app.aaps.ui.compose.maintenance.ImportSettingsScreen
 import app.aaps.ui.compose.maintenance.ImportSource
 import app.aaps.ui.compose.maintenance.ImportViewModel
@@ -91,6 +87,8 @@ import app.aaps.ui.compose.quickWizard.QuickWizardManagementScreen
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeScreen
+import app.aaps.ui.compose.scenes.SceneListScreen
+import app.aaps.ui.compose.scenes.wizard.SceneWizardScreen
 import app.aaps.ui.compose.siteRotationDialog.SiteRotationManagementScreen
 import app.aaps.ui.compose.siteRotationDialog.SiteRotationSettingsScreen
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
@@ -125,7 +123,6 @@ fun NavHostController.safePopBackStack() {
 fun NavGraphBuilder.appNavGraph(
     navController: NavHostController,
     // ViewModels
-    mainViewModel: MainViewModel,
     insulinManagementViewModel: InsulinManagementViewModel,
     profileManagementViewModel: ProfileManagementViewModel,
     profileEditorViewModel: ProfileEditorViewModel,
@@ -380,6 +377,7 @@ fun NavGraphBuilder.appNavGraph(
         ImportSettingsScreen(
             viewModel = importViewModel,
             prefFileList = prefFileList,
+            rxBus = rxBus,
             onClose = { navController.safePopBackStack() }
         )
     }
@@ -404,7 +402,7 @@ fun NavGraphBuilder.appNavGraph(
             onNavigateBack = { navController.safePopBackStack() },
             onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
                 coroutineScope.launch {
-                    val success = profileManagementViewModel.activateProfile(
+                    profileManagementViewModel.activateProfile(
                         profileIndex = profileIndex,
                         durationMinutes = duration,
                         percentage = percentage,
@@ -414,9 +412,7 @@ fun NavGraphBuilder.appNavGraph(
                         timestamp = timestamp,
                         timeChanged = timeChanged
                     )
-                    if (success) {
-                        navController.popBackStack(AppRoute.Profile.route, inclusive = false)
-                    }
+                    navController.popBackStack(AppRoute.Profile.route, inclusive = false)
                 }
             }
         )
@@ -503,10 +499,51 @@ fun NavGraphBuilder.appNavGraph(
         )
     }
 
+    composable(AppRoute.SceneList.route) {
+        SceneListScreen(
+            onNavigateToWizard = {
+                navController.navigate(AppRoute.SceneWizard.createRoute())
+            },
+            onNavigateToEditor = { sceneId ->
+                navController.navigate(AppRoute.SceneWizard.createRoute(sceneId))
+            },
+            onNavigateBack = { navController.popBackStack() }
+        )
+    }
+
+    composable(AppRoute.SceneWizard.route) {
+        SceneWizardScreen(
+            onFinished = { navController.popBackStack() },
+            onCancel = { navController.popBackStack() }
+        )
+    }
+
     composable(AppRoute.Configuration.route) {
         val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
-        app.aaps.ui.compose.configuration.ConfigurationScreen(
+        ConfigurationScreen(
             categories = configState.categories,
+            hardwarePumpConfirmation = configState.hardwarePumpConfirmation,
+            onNavigateBack = { navController.safePopBackStack() },
+            onNavigateToCategory = { type ->
+                navController.navigate(AppRoute.PluginCategory.createRoute(type.ordinal))
+            },
+            onConfirmHardwarePump = {
+                configurationViewModel.confirmHardwarePumpSwitch()
+                onRefreshPermissions()
+            },
+            onDismissHardwarePump = { configurationViewModel.dismissHardwarePumpDialog() }
+        )
+    }
+
+    composable(
+        AppRoute.PluginCategory.route,
+        arguments = listOf(navArgument("typeOrdinal") { type = NavType.IntType })
+    ) { backStackEntry ->
+        val typeOrdinal = backStackEntry.arguments?.getInt("typeOrdinal") ?: return@composable
+        val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
+        val category = configState.categories.find { it.type.ordinal == typeOrdinal }
+        app.aaps.ui.compose.configuration.PluginCategoryScreen(
+            category = category,
             hardwarePumpConfirmation = configState.hardwarePumpConfirmation,
             onNavigateBack = { navController.safePopBackStack() },
             onNavigate = { request -> onNavigationRequest(request, navController) },
@@ -617,6 +654,7 @@ fun NavGraphBuilder.appNavGraph(
             onBack = { navController.safePopBackStack() },
             onImportSettings = { navController.navigate(AppRoute.ImportSettings.createRoute("LOCAL")) },
             onPluginPreferences = { pluginId -> navController.navigate(AppRoute.PluginPreferences.createRoute(pluginId)) },
+            onPluginOpen = { pluginId -> onNavigationRequest(NavigationRequest.Plugin(pluginId), navController) },
             onSetMasterPassword = { navController.navigate(AppRoute.PreferenceScreen.createRoute("protection", StringKey.ProtectionMasterPassword.key)) },
             onManageInsulin = { navController.navigate(AppRoute.InsulinManagement.createRoute()) },
             onManageProfile = { navController.navigate(AppRoute.Profile.createRoute()) },
@@ -678,34 +716,30 @@ private fun PluginContentRoute(
             )
         )
     }
-    val pluginSnackbarHostState = remember { SnackbarHostState() }
-    CompositionLocalProvider(LocalSnackbarHostState provides pluginSnackbarHostState) {
-        Scaffold(
-            snackbarHost = { SnackbarHost(pluginSnackbarHostState) },
-            topBar = {
-                AapsTopAppBar(
-                    title = { Text(toolbarConfig.title) },
-                    navigationIcon = { toolbarConfig.navigationIcon() },
-                    actions = { toolbarConfig.actions(this) }
-                )
-            }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                composeContent.Render(
-                    setToolbarConfig = { config -> toolbarConfig = config },
-                    onNavigateBack = { navController.safePopBackStack() },
-                    onSettings = {
-                        onNavigationRequest(
-                            NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
-                            navController
-                        )
-                    }
-                )
-            }
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(toolbarConfig.title) },
+                navigationIcon = { toolbarConfig.navigationIcon() },
+                actions = { toolbarConfig.actions(this) }
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            composeContent.Render(
+                setToolbarConfig = { config -> toolbarConfig = config },
+                onNavigateBack = { navController.safePopBackStack() },
+                onSettings = {
+                    onNavigationRequest(
+                        NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
+                        navController
+                    )
+                }
+            )
         }
     }
 }

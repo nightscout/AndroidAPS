@@ -7,6 +7,7 @@
     <!--    ProfileFunction-->
     <!--    APSResult-->
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
@@ -34,10 +35,10 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <!--    Preferences -->
     <!-- Navigation -->
@@ -47,7 +48,6 @@
     <!-- About -->
     <!--    Maintenance-->
     <!--    Weekday-->
-    <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
     <!-- ProfileEditor -->

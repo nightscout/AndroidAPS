@@ -45,7 +45,6 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo 스캔 시간 초과함</string>
     <string name="combov2_pairing_failed_due_to_error">오류로 인해 페어링 실패함: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">알 수 없는 이유로 페어링 중단됨</string>
-    <string name="combov2_pairing_invalid_pin_length">"유효하지 않은 페어링 PIN 길이: %1$d자리 숫자 필요함, %2$d자리임"</string>
     <string name="combov2_scanning_for_pump">펌프 스캔 중</string>
     <string name="combov2_establishing_bt_connection">블루투스 연결 설정 중 (시도 횟수. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">펌프와 동기화하기</string>
@@ -65,7 +64,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Basal 프로파일 설정</string>
     <string name="combov2_setting_tbr_cmddesc">%2$d분 동안 %1$d%% TBR 설정</string>
     <string name="combov2_cancelling_tbr">진행 중인 TBR 취소</string>
-    <string name="combov2_delivering_bolus_cmddesc">%1$.1f U bolus 주입 중</string>
     <string name="combov2_fetching_tdd_history_cmddesc">TDD 기록 가져오기</string>
     <string name="combov2_updating_pump_datetime_cmddesc">펌프 날짜시간 업데이트</string>
     <string name="combov2_updating_pump_status_cmddesc">펌프 상태 업데이트</string>

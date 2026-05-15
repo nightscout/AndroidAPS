@@ -8,10 +8,12 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
+import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
@@ -21,12 +23,12 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
+import app.aaps.core.ui.compose.pump.tickerFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,7 +54,8 @@ class StatusViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val preferences: Preferences,
     private val tddCalculator: TddCalculator,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(StatusUiState())
@@ -68,7 +71,11 @@ class StatusViewModel @Inject constructor(
             .onEach { refreshState() }.launchIn(viewModelScope)
         persistenceLayer.observeChanges(TE::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
+        persistenceLayer.databaseClearedFlow
+            .onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventPumpStatusChanged::class.java)
+            .onEach { refreshState() }.launchIn(viewModelScope)
+        rxBus.toFlow(EventNsClientStatusUpdated::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
         tickerFlow(60_000L)
             .onEach { refreshState() }.launchIn(viewModelScope)
@@ -145,12 +152,17 @@ class StatusViewModel @Inject constructor(
         val event = withContext(Dispatchers.IO) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)
         }
-        val pump = activePlugin.activePump
-        val reservoirLevel = pump.reservoirLevel.value.iU(insulin.iCfg.concentration)
+        // AAPSCLIENT: local activePump is VirtualPump with a stale hardcoded reservoir.
+        // The followed pump's real reservoir arrives via NS device status (already in display units).
+        val reservoirLevel = if (config.AAPSCLIENT) {
+            processedDeviceStatusData.pumpData?.reservoir ?: 0.0
+        } else {
+            activePlugin.activePump.reservoirLevel.value.iU(insulin.iCfg.concentration)
+        }
         val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
 
         val level: String? = if (reservoirLevel > 0) {
-            if (isPatchPump && reservoirLevel >= maxReading) {
+            if (!config.AAPSCLIENT && isPatchPump && reservoirLevel >= maxReading) {
                 "${decimalFormatter.to0Decimal(maxReading)}+ $insulinUnit"
             } else {
                 decimalFormatter.to0Decimal(reservoirLevel, insulinUnit)
@@ -167,7 +179,6 @@ class StatusViewModel @Inject constructor(
             levelPercent = -1f, // No progress bar - reservoir sizes vary by pump
             icon = IcPumpCartridge,
             compactAge = !isPatchPump, // Overview: insulin age hidden for patch pumps
-            expandedLevel = !config.AAPSCLIENT // Actions: AAPSCLIENT suppresses reservoir level
         )
     }
 
@@ -216,13 +227,9 @@ class StatusViewModel @Inject constructor(
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)
         } else null
 
-        // AAPSCLIENT: handler never calls handleLevel, so level value is suppressed
+        // AAPSCLIENT: followed pump's battery is shown in the NSClient status card,
+        // so suppress it here (no "n/a" placeholder cluttering the pill).
         val showLevel = !config.AAPSCLIENT && hasLevel
-        val level = if (showLevel) {
-            "${batteryLevelValue.toInt()}%"
-        } else {
-            rh.gs(R.string.value_unavailable_short)
-        }
 
         // Overview compact: pbLevel.visibility based on pump model only (Eros OR not Combo/Dash)
         val useBatteryLevel = pump.model() == PumpType.OMNIPOD_EROS
@@ -233,13 +240,13 @@ class StatusViewModel @Inject constructor(
             age = event?.let { formatAge(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
-            level = level,
+            level = if (showLevel) "${batteryLevelValue.toInt()}%" else null,
             levelStatus = if (showLevel) getLevelStatus(batteryLevelValue, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = if (showLevel) 1f - (batteryLevelValue.toFloat() / 100f) else -1f,
             icon = IcPumpBattery,
             compactAge = hasAge, // Overview: pbAge shown only if replaceable/logging
-            compactLevel = useBatteryLevel, // Overview: pbLevel visibility based on pump model only
-            expandedLevel = !config.AAPSCLIENT // Actions: AAPSCLIENT suppresses battery level
+            compactLevel = showLevel && useBatteryLevel, // hidden when no level value (e.g., AAPSCLIENT)
+            expandedLevel = showLevel
         )
     }
 

@@ -51,7 +51,6 @@
     <string name="location_going_out">Когато напуснете тази зона</string>
     <string name="time_range">Времеви диапазон</string>
     <string name="timerange_value">Часът е между %1$s и %2$s</string>
-    <string name="between">Между </string>
     <string name="add_short">ДОБ</string>
     <string name="temptargetcompared">Временна цел %1$s</string>
     <string name="btdevicecompared">Bluetooth връзка към устройство %1$s %2$s</string>
@@ -78,8 +77,6 @@
     <string name="edit_short">РЕД</string>
     <string name="preconditions">Предварителни условия:</string>
     <string name="user_action">Потребителско действие</string>
-    <string name="remove_selected_items">Премахнете избраните елементи</string>
-    <string name="count_selected">%1$d избрани</string>
     <string name="system_automation">Системна автомация</string>
     <string name="run_automations">Стартирай автомаций</string>
     <string name="add_automation">Добавяне на правило</string>

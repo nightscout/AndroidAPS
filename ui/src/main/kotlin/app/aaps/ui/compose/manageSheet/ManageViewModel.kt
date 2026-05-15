@@ -86,8 +86,9 @@ class ManageViewModel @Inject constructor(
             val pumpDescription = pump.pumpDescription
             val isInitialized = pump.isInitialized()
             val isSuspended = pump.isSuspended()
-            val isDisconnected = loop.runningMode == RM.Mode.DISCONNECTED_PUMP
-            loop.runningMode.isLoopRunning()
+            val runningMode = loop.runningMode()
+            val isDisconnected = runningMode == RM.Mode.DISCONNECTED_PUMP
+            runningMode.isLoopRunning()
 
             // Extended bolus visibility
             val showExtendedBolus: Boolean

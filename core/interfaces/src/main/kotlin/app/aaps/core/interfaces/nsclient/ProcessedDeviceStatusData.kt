@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.nsclient
 
-import android.text.Spanned
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.RT
 
@@ -54,17 +53,7 @@ interface ProcessedDeviceStatusData {
 
     var openAPSData: OpenAPSData
 
-    // test warning level // color
-    fun pumpStatus(nsSettingsStatus: NSSettingsStatus): Spanned
-    fun pumpStatusHtml(nsSettingsStatus: NSSettingsStatus): String
-    val extendedPumpStatusHtml: String
-    val extendedOpenApsStatusHtml: String
-    val openApsStatus: Spanned
-    val openApsStatusHtml: String
     val openApsTimestamp: Long
     fun getAPSResult(): APSResult?
     val uploaderStatus: String
-    val uploaderStatusSpanned: Spanned
-    val uploaderStatusHtml: String
-    val extendedUploaderStatusHtml: String
 }

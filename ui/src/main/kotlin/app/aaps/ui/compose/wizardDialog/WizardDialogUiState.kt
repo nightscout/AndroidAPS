@@ -85,7 +85,10 @@ data class WizardDialogUiState(
 
     // BG source info
     val hasBgData: Boolean = false,
-    val bgAgeMinutes: Int = 0
+    val bgAgeMinutes: Int = 0,
+
+    /** True when the entry must be recorded only (no pump delivery): pump unavailable, mode forbids bolus, or AAPSCLIENT. */
+    val forcedRecordOnly: Boolean = false
 )
 
 val WizardDialogUiState.isMgdl: Boolean
@@ -96,9 +99,3 @@ val WizardDialogUiState.bgRange: ClosedFloatingPointRange<Double>
 
 val WizardDialogUiState.bgStep: Double
     get() = if (isMgdl) 1.0 else 0.1
-
-val WizardDialogUiState.activeProfileName: String
-    get() = profileNames.getOrElse(selectedProfileIndex) { "Active" }
-
-val WizardDialogUiState.alarmEnabled: Boolean
-    get() = (carbs > 0 && carbTime > 0) || eCarbs > 0

@@ -7,6 +7,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -23,6 +24,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.PumpCommandGate
+import app.aaps.core.objects.runningMode.RunningModeGuard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -50,7 +53,9 @@ class TreatmentDialogViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
-    private val hardLimits: HardLimits
+    hardLimits: HardLimits,
+    private val runningModeGuard: RunningModeGuard,
+    private val loop: Loop
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TreatmentDialogUiState())
@@ -75,6 +80,11 @@ class TreatmentDialogViewModel @Inject constructor(
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val bolusStep = pump.pumpDescription.bolusStep
         val isAapsClient = config.AAPSCLIENT
+        // Conservative default: start in record-only mode and relax only after the async
+        // loop.runningMode() check below confirms the loop is actually running. Avoids
+        // letting a fast-tapping user submit a real-delivery flow that the guard would
+        // then reject; matches InsulinDialog's pattern.
+        val pumpInitialized = pump.isInitialized()
 
         _uiState.update {
             TreatmentDialogUiState(
@@ -83,19 +93,24 @@ class TreatmentDialogViewModel @Inject constructor(
                 maxInsulin = maxInsulin,
                 maxCarbs = maxCarbs,
                 bolusStep = bolusStep,
-                isAapsClient = isAapsClient
+                isAapsClient = isAapsClient,
+                forcedRecordOnly = true
             )
+        }
+        viewModelScope.launch {
+            val mode = loop.runningMode()
+            val cantDeliverBolus = PumpCommandGate.check(mode, PumpCommandGate.CommandKind.BOLUS) is PumpCommandGate.Decision.Reject
+            val forcedRecordOnly = cantDeliverBolus || !pumpInitialized || isAapsClient
+            _uiState.update { it.copy(forcedRecordOnly = forcedRecordOnly) }
         }
     }
 
     fun updateInsulin(value: Double) {
-        val clamped = value.coerceIn(0.0, uiState.value.maxInsulin)
-        _uiState.update { it.copy(insulin = clamped) }
+        _uiState.update { it.copy(insulin = value) }
     }
 
     fun updateCarbs(value: Int) {
-        val clamped = value.coerceIn(0, uiState.value.maxCarbs)
-        _uiState.update { it.copy(carbs = clamped) }
+        _uiState.update { it.copy(carbs = value) }
     }
 
     fun hasAction(): Boolean {
@@ -131,7 +146,7 @@ class TreatmentDialogViewModel @Inject constructor(
                 rh.gs(app.aaps.core.ui.R.string.bolus) + ": " +
                     decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, pumpDescription.bolusStep)
             )
-            if (state.isAapsClient) {
+            if (state.forcedRecordOnly) {
                 lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
             }
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
@@ -166,7 +181,7 @@ class TreatmentDialogViewModel @Inject constructor(
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(
             ConstraintObject(carbs, aapsLogger)
         ).value()
-        val recordOnlyChecked = state.isAapsClient
+        val recordOnlyChecked = state.forcedRecordOnly
         val iCfg = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg
 
         val action = when {
@@ -208,6 +223,7 @@ class TreatmentDialogViewModel @Inject constructor(
             }
         } else {
             if (detailedBolusInfo.insulin > 0) {
+                if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
                 uel.log(
                     action = action,
                     source = Sources.TreatmentDialog,

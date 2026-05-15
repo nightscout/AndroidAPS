@@ -45,6 +45,8 @@
     <string name="unit_weeks">uker</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dt %2$dm gjenstår</string>
+    <string name="time_remaining_m">%1$dm gjenstår</string>
     <string name="later_today">Senere i dag</string>
     <string name="tomorrow">I morgen</string>
     <string name="today">Idag</string>
@@ -95,8 +97,6 @@
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Appen trenger Bluetooth-tillatelse for å kommunisere med pumpen</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">Insulin</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">Ukjent</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -105,7 +105,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Topptid [min]</string>
-    <string name="insulin_oref_peak">IOB-kurvens topptid</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>

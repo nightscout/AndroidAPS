@@ -75,6 +75,7 @@ class CmdHistoryGet(
         //a5e207590501 17070e100f161100000000007d0204080000
         //ae6ae9100501 17070e100f16 1100000000007d0204080000
         battery = data[12].toInt() and 0xff
+        equilManager.setBattery(battery)
         medicine = data[13].toInt() and 0xff
         rate = Utils.bytesToInt(data[15], data[14])
         //largeRate = Utils.bytesToInt(data[17], data[16])

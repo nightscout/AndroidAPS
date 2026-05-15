@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Fechar a navegação</string>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="identification_not_set">Identificação não definida no modo desenvolvimento</string>
 </resources>

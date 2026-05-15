@@ -64,7 +64,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assumeAES256isSupported(cryptoUtil)
@@ -84,7 +84,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @Test
     fun preferenceSavingTest() {
         val storage = SingleStringStorage("")
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
         encryptedFormat.secureEncrypt = SecureEncryptImpl(aapsLogger, cryptoUtil)
         val prefs = Prefs(
             mapOf(
@@ -102,7 +102,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @Test
     fun importExportStabilityTest() {
         val storage = SingleStringStorage("")
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
         encryptedFormat.secureEncrypt = SecureEncryptImpl(aapsLogger, cryptoUtil)
         val prefsIn = Prefs(
             mapOf(
@@ -144,7 +144,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "it-is-NOT-right-secret")
 
         assertThat(prefs.values).isEmpty()
@@ -171,7 +171,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assumeAES256isSupported(cryptoUtil)
@@ -198,7 +198,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assertThat(prefs.values).isEmpty()
@@ -213,7 +213,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assertThat(prefs.values).isEmpty()
@@ -226,7 +226,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             val frozenPrefs = "whatever man, i duno care"
 
             val storage = SingleStringStorage(frozenPrefs)
-            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
             encryptedFormat.loadPreferences(frozenPrefs, "sikret")
         }
     }
@@ -247,7 +247,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
                 "}"
 
             val storage = SingleStringStorage(frozenPrefs)
-            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
+            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
             encryptedFormat.loadPreferences(frozenPrefs, "sikret")
         }
     }

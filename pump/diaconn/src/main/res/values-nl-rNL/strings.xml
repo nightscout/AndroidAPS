@@ -11,11 +11,9 @@
     <string name="gettingpumpsettings">Pomp instellingen aan het ophalen</string>
     <string name="gettingpumptime">Pomp tijd aan het ophalen</string>
     <string name="largetimediff">Groot tijdsverschil:\nTijd in de pomp staat meer dan 1,5 uur uit.\nPas de tijd handmatig aan op de pomp en zorg ervoor dat het lezen van geschiedenis uit de pomp geen onverwacht gedrag veroorzaakt.\nindien mogelijk verwijder de geschiedenis van de pomp voordat je de tijd wijzigt of schakel de closed loop uit voor een DIA na het laatste verkeerde geschiedenis-invoer, maar vanaf nu minimaal één DIA.</string>
-    <string name="largetimedifftitle">Kenmerk groot tijdverschil</string>
     <string name="approachingdailylimit">Insuline daglimiet aan het benaderen</string>
     <string name="startingbolus">Bolus toediening gestart</string>
     <string name="waitingforestimatedbolusend">Wachten op het geschatte bolus einde</string>
-    <string name="gettingbolusstatus">Bolus status aan het ophalen</string>
     <string name="stoppingtempbasal">Stoppen van tijdelijk basaal</string>
     <string name="settingtempbasal">Instellen tijdelijk basaal</string>
     <string name="settingextendedbolus">Instellen van vertraagde bolus</string>
@@ -30,10 +28,8 @@
     <string name="insulinlimitviolation">Insuline limiet overschrijding</string>
     <string name="boluserrorcode">Gevraagd: %1$.2fE Toegediend: %2$.2fE Error code: %3$s</string>
     <string name="selectedpump">Geselecteerde pomp</string>
-    <string name="diaconn_g8_bluetooth_status">Bluetooth Status</string>
     <string name="bolus_step">Bolus Stap</string>
     <string name="basal_step">Basaal Stap</string>
-    <string name="diaconn_g8_user_options">GEBRUIKER OPTIES</string>
     <string name="pairfirst">A.u.b. de pomp koppelen met je telefoon!</string>
     <string name="processinghistory">"Gebeurtenis wordt uitgevoerd "</string>
     <string name="diaconn_g8_history_tempbasal">Tijdelijk basaal</string>

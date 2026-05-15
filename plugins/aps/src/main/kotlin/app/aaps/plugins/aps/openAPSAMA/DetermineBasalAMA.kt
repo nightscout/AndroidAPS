@@ -23,8 +23,8 @@ class DetermineBasalAMA @Inject constructor(
     private val profileUtil: ProfileUtil
 ) {
 
-    private val consoleError = mutableListOf<String>()
-    private val consoleLog = mutableListOf<String>()
+    private var consoleError = mutableListOf<String>()
+    private var consoleLog = mutableListOf<String>()
 
     private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
     private fun Double.toFixed3(): String = DecimalFormat("0.000#").format(round(this, 3))
@@ -105,8 +105,8 @@ class DetermineBasalAMA @Inject constructor(
     fun determine_basal(
         glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: AutosensResult, meal_data: MealData, currentTime: Long
     ): RT {
-        consoleError.clear()
-        consoleLog.clear()
+        consoleError = mutableListOf()
+        consoleLog = mutableListOf()
         var rT = RT(
             algorithm = APSResult.Algorithm.AMA,
             runningDynamicIsf = false,

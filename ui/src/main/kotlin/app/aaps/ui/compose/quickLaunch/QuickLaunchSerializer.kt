@@ -65,6 +65,7 @@ object QuickLaunchSerializer {
             durationMinutes = obj.optInt(KEY_DUR, 0)
         ) else null
 
+        "scene"        -> if (id.isNotEmpty()) QuickLaunchAction.SceneAction(id) else null
         "plugin"       -> if (id.isNotEmpty()) QuickLaunchAction.PluginAction(id) else null
         else           -> QuickLaunchAction.fromTypeId(type)
     }

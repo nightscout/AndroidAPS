@@ -39,13 +39,14 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
 3. Zkuste znovu spárovat</string>
     <string name="combov2_enter_pin">Vložte PIN</string>
     <string name="combov2_cancel_pairing">Zrušit párování</string>
+    <string name="combov2_confirm_cancel_pairing_message">Opravdu chcete zrušit párování?</string>
+    <string name="combov2_confirm_unpair_message">Opravdu chcete odpárovat pumpu?</string>
     <string name="combov2_pin_hint">10místný PIN</string>
     <string name="combov2_pairing_finished_successfully">Úspěšně spárováno s Combo</string>
     <string name="combov2_pairing_cancelled">Párování s Combo zrušeno uživatelem</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Časový limit pro vyhledávání Combo dosažen</string>
     <string name="combov2_pairing_failed_due_to_error">Párování se nezdařilo z důvodu chyby: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Párování přerušeno z neznámých důvodů</string>
-    <string name="combov2_pairing_invalid_pin_length">"Neplatná délka PINu párování: potřeba %1$d číslic, zadáno %2$d"</string>
     <string name="combov2_scanning_for_pump">Vyhledávání pumpy</string>
     <string name="combov2_establishing_bt_connection">Navazování připojení Bluetooth (pokus č. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Provádím navazování spojení s pumpou</string>
@@ -65,7 +66,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Nastavení bazálního profilu</string>
     <string name="combov2_setting_tbr_cmddesc">Nastavení %1$d%% dočasného bazálu na %2$d minut</string>
     <string name="combov2_cancelling_tbr">Zrušení probíhajícího dočasného bazálu</string>
-    <string name="combov2_delivering_bolus_cmddesc">Podávání %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Načítám CDD historii</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualizace data a času v pumpě</string>
     <string name="combov2_updating_pump_status_cmddesc">Nahrávám stav pumpy</string>
@@ -89,6 +89,9 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (zbývá méně než 1 min)</string>
     <string name="combov2_load_tdds_cancelled">Načítání CDD zrušeno</string>
     <string name="combov2_retrieving_tdds_failed">Načítání CDD selhalo</string>
+    <string name="combov2_battery_empty">Zcela vybitá</string>
+    <string name="combov2_battery_low">Vybitá</string>
+    <string name="combov2_battery_full">Plně nabitá</string>
     <string name="combov2_battery_low_warning">Slabá baterie v pumpě</string>
     <string name="combov2_reservoir_low_warning">V zásobníku je málo inzulínu</string>
     <string name="combov2_setting_tbr_succeeded">Nastavení dočasného bazálu bylo úspěšné</string>

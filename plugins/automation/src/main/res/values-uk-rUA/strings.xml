@@ -2,8 +2,6 @@
 <resources>
     <string name="automation">Автоматизація</string>
     <string name="delta">Дельта</string>
-    <string name="remove_selected_items">Видалити вибрані елементи</string>
-    <string name="count_selected">%1$d обрано</string>
     <!--    Reminders-->
     <!--    Autotune-->
     <string name="autotune_run">Запустити Автотюн</string>

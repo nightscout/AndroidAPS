@@ -82,6 +82,7 @@ class SWDefinition @Inject constructor(
 
     var onImportSettings: (() -> Unit)? = null
     var onPluginPreferences: ((pluginId: String) -> Unit)? = null
+    var onPluginOpen: ((pluginId: String) -> Unit)? = null
     var onSetMasterPassword: (() -> Unit)? = null
     var onManageInsulin: (() -> Unit)? = null
     var onManageProfile: (() -> Unit)? = null
@@ -98,6 +99,7 @@ class SWDefinition @Inject constructor(
         swPluginProvider.get()
             .option(pType, description)
             .onPreferences { pluginId -> onPluginPreferences?.invoke(pluginId) }
+            .onOpenPlugin { pluginId -> onPluginOpen?.invoke(pluginId) }
 
     fun getScreens(): List<SWScreen> {
         if (screens.isEmpty()) {
@@ -145,7 +147,6 @@ class SWDefinition @Inject constructor(
             .add(swInfoTextProvider.get().label(R.string.setupwizard_units_prompt))
             .add(
                 swRadioButtonProvider.get()
-                    .option(uiInteraction.unitsEntries, uiInteraction.unitsValues)
                     .preference(StringKey.GeneralUnits)
             )
             .validator { preferences.get(StringKey.GeneralUnits).isNotEmpty() }

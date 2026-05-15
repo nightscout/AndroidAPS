@@ -194,6 +194,12 @@ open class TestBaseWithProfile : TestBase() {
         whenever(rh.gs(R.string.ok)).thenReturn("OK")
         whenever(rh.gs(R.string.error)).thenReturn("Error")
 
+        // Default ConcentrationHelper stubs so BolusProgressData.updateProgress() doesn't NPE
+        // when pump tests trigger progress updates with a mocked ch.
+        whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("")
+        whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Double>(), any<Boolean>())).thenReturn("")
+        whenever(ch.fromPump(any<PumpInsulin>(), any<Boolean>())).thenAnswer { it.getArgument<PumpInsulin>(0).cU }
+
         doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Int?>(1)

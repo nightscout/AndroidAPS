@@ -32,18 +32,11 @@
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="readstatus">Læs status</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Anmod</string>
-    <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Hvilken pumpe vil du gerne bruge med AAPS?</string>
     <string name="configbuilder_aps_description">Hvilken APS algoritme skal foretage terapi justeringer?</string>
-    <string name="configbuilder_general_description">Disse er nogle generelle tilføjelser, som du måske kan finde nyttige.</string>
-    <string name="configbuilder_constraints_description">Hvilke begrænsninger er anvendt?</string>
-    <string name="configbuilder_loop_description">Brug dette til at aktivere AAPS\' loop integration.</string>
-    <string name="configbuilder_insulin_description">Hvilken type insulin bruger du?</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
-    <string name="configbuilder_smoothing_description">Vælg udjævningsalgoritme</string>
     <string name="configbuilder_sensitivity_description">Hvilken følsomhedsalgoritme skal anvendes?</string>
     <string name="allow_hardware_pump_text">Bemærk: Hvis du aktiverer og opretter forbindelse til en hardwarepumpe, vil AndroidAPS kopiere de basale indstillinger fra profilen til pumpen og overskrive den eksisterende basal rate lagret på pumpen. Sørg for, at du har den korrekte basal indstilling i AndroidAPS. Hvis du ikke er sikker på eller ikke ønsker at overskrive de basale indstillinger på din pumpe, tryk på annuller og gentag skift til pumpen på et senere tidspunkt.</string>
     <string name="nsclient_version_does_not_match">AAPSClient version matcher ikke AAPS version. Opdater venligst.</string>

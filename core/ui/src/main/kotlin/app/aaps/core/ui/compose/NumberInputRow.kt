@@ -1,12 +1,9 @@
 package app.aaps.core.ui.compose
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,10 +15,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,28 +28,19 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 import app.aaps.core.keys.R as KeysR
 
 /**
- * Composable that displays a numeric input with label, current value, and optional slider or direct text input.
+ * Composable that displays a numeric input as a TextField with +/- icon buttons.
  *
- * **Slider layout** (`useSlider = true`):
- * ```
- * Label                    2h 10m
- * ──────○────────────────
- * ```
- *
- * **Direct input layout** (`useSlider = false`, default):
  * ```
  * Label                    2h 10m       ← only when formatted differs from raw (e.g., duration)
  * ┌─────────────────────────────┐
@@ -63,9 +53,7 @@ import app.aaps.core.keys.R as KeysR
  * @param value Current numeric value
  * @param onValueChange Callback invoked when value changes, receives new value as Double
  * @param valueRange The range of values the input can represent
- * @param step Step increment for +/- buttons and slider
- * @param useSlider When true, uses the slider layout; when false (default), uses direct text input
- * @param controlPoints Pairs of (position [0-1], value) to create a non-linear slider (slider mode only)
+ * @param step Step increment for +/- buttons
  * @param unitLabelResId Resource ID for unit label (e.g., R.string.units_min, R.string.units_percent)
  * @param unitLabel Resolved unit label string (used when unitLabelResId is 0)
  * @param valueFormatResId Resource ID for formatting value with unit (e.g., "%1$.1f U")
@@ -83,8 +71,6 @@ fun NumberInputRow(
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double,
     modifier: Modifier = Modifier,
-    useSlider: Boolean = false,
-    controlPoints: List<Pair<Double, Double>>? = null,
     unitLabelResId: Int = 0,
     unitLabel: String = "",
     valueFormatResId: Int? = null,
@@ -92,172 +78,31 @@ fun NumberInputRow(
     valueFormat: DecimalFormat? = null,
     decimalPlaces: Int = 0,
     enabled: Boolean = true,
-    onTextChange: ((String) -> Unit)? = null,
+    compact: Boolean = false,
 ) {
     val effectiveValueFormat = valueFormat ?: remember(decimalPlaces) {
         if (decimalPlaces == 0) DecimalFormat("0")
         else DecimalFormat("0.${"0".repeat(decimalPlaces)}")
     }
-
-    if (useSlider) {
-        SliderNumberInputRow(
-            labelResId = labelResId,
-            value = value,
-            onValueChange = onValueChange,
-            valueRange = valueRange,
-            step = step,
-            controlPoints = controlPoints,
-            unitLabelResId = unitLabelResId,
-            unitLabel = unitLabel,
-            valueFormatResId = valueFormatResId,
-            formatAsInt = formatAsInt,
-            valueFormat = effectiveValueFormat,
-            enabled = enabled,
-            modifier = modifier
-        )
-    } else {
-        DirectNumberInputRow(
-            labelResId = labelResId,
-            value = value,
-            onValueChange = onValueChange,
-            valueRange = valueRange,
-            step = step,
-            unitLabelResId = unitLabelResId,
-            unitLabel = unitLabel,
-            valueFormatResId = valueFormatResId,
-            formatAsInt = formatAsInt,
-            valueFormat = effectiveValueFormat,
-            enabled = enabled,
-            onTextChange = onTextChange,
-            modifier = modifier
-        )
-    }
-}
-
-/**
- * Original slider-based layout: label + value on top, slider with +/- buttons below.
- */
-@Composable
-private fun SliderNumberInputRow(
-    labelResId: Int,
-    value: Double,
-    onValueChange: (Double) -> Unit,
-    valueRange: ClosedFloatingPointRange<Double>,
-    step: Double,
-    controlPoints: List<Pair<Double, Double>>?,
-    unitLabelResId: Int,
-    unitLabel: String,
-    valueFormatResId: Int?,
-    formatAsInt: Boolean,
-    valueFormat: DecimalFormat,
-    enabled: Boolean,
-    modifier: Modifier
-) {
-    var showDialog by remember { mutableStateOf(false) }
-    val label = stringResource(labelResId)
-
-    val resolvedUnitLabel = when {
-        unitLabelResId != 0    -> stringResource(unitLabelResId)
-        unitLabel.isNotEmpty() -> unitLabel
-        else                   -> ""
-    }
-
-    val displayText = formatSliderDisplayValue(
-        value = value,
-        unitLabelResId = unitLabelResId,
-        valueFormatResId = valueFormatResId,
-        formatAsInt = formatAsInt,
-        valueFormat = valueFormat,
-        unitLabel = unitLabel
-    )
-
-    val contentAlpha = if (enabled) 1f else 0.38f
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha)
-            )
-            Text(
-                text = displayText,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = contentAlpha),
-                modifier = if (enabled) Modifier.clickable { showDialog = true } else Modifier
-            )
-        }
-        Spacer(modifier = Modifier.height(4.dp))
-        SliderWithButtons(
-            value = value,
-            onValueChange = onValueChange,
-            valueRange = valueRange,
-            step = step,
-            controlPoints = controlPoints,
-            enabled = enabled,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-
-    if (showDialog && enabled) {
-        ValueInputDialog(
-            currentValue = value,
-            valueRange = valueRange,
-            step = step,
-            label = label,
-            unitLabel = resolvedUnitLabel,
-            unitLabelResId = unitLabelResId,
-            valueFormat = valueFormat,
-            onValueConfirm = onValueChange,
-            onDismiss = { showDialog = false }
-        )
-    }
-}
-
-/**
- * Direct text input layout: OutlinedTextField with +/- icon buttons inside,
- * optional formatted display above (when different from raw value),
- * and range or error as supporting text.
- */
-@Composable
-private fun DirectNumberInputRow(
-    labelResId: Int,
-    value: Double,
-    onValueChange: (Double) -> Unit,
-    valueRange: ClosedFloatingPointRange<Double>,
-    step: Double,
-    unitLabelResId: Int,
-    unitLabel: String,
-    valueFormatResId: Int?,
-    formatAsInt: Boolean,
-    valueFormat: DecimalFormat,
-    enabled: Boolean,
-    onTextChange: ((String) -> Unit)?,
-    modifier: Modifier
-) {
     val focusManager = LocalFocusManager.current
-    val label = stringResource(labelResId)
+    val label = if (labelResId != 0) stringResource(labelResId) else ""
     // Track whether the field is focused for editing
     var isFocused by remember { mutableStateOf(false) }
     var textFieldValue by remember {
-        mutableStateOf(TextFieldValue(if (value == 0.0) "" else valueFormat.format(value)))
+        mutableStateOf(TextFieldValue(if (value == 0.0) "" else effectiveValueFormat.format(value)))
     }
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    // Sync text field when value changes externally (e.g., +/- buttons) and not focused
+    // Sync text field when value changes externally (e.g., +/- buttons, quick-add buttons,
+    // ViewModel updates). Skip only when the field's current text already parses to `value` —
+    // that preserves mid-entry states like "2." which would otherwise be clobbered to "2".
     LaunchedEffect(value) {
-        if (!isFocused) {
-            val text = if (value == 0.0) "" else valueFormat.format(value)
-            textFieldValue = TextFieldValue(text)
+        val parsed = textFieldValue.text.trim().replace(",", ".").toDoubleOrNull()
+        val emptyMatches = textFieldValue.text.isEmpty() && value == 0.0
+        if (parsed != value && !emptyMatches) {
+            val text = if (value == 0.0) "" else effectiveValueFormat.format(value)
+            textFieldValue = TextFieldValue(text, selection = TextRange(text.length))
             isError = false
         }
     }
@@ -268,16 +113,16 @@ private fun DirectNumberInputRow(
         unitLabelResId = unitLabelResId,
         valueFormatResId = valueFormatResId,
         formatAsInt = formatAsInt,
-        valueFormat = valueFormat,
+        valueFormat = effectiveValueFormat,
         unitLabel = unitLabel
     )
     // Only show formatted display when it differs meaningfully from the raw number
-    val rawDisplay = valueFormat.format(value)
+    val rawDisplay = effectiveValueFormat.format(value)
     val showFormattedDisplay = formattedDisplay != rawDisplay &&
         formattedDisplay != "$rawDisplay $unitLabel".trim()
 
     // Range text
-    val rangeText = "${valueFormat.format(valueRange.start)} — ${valueFormat.format(valueRange.endInclusive)}"
+    val rangeText = "${effectiveValueFormat.format(valueRange.start)} — ${effectiveValueFormat.format(valueRange.endInclusive)}"
 
     // Pre-resolve error strings for use in non-composable validateAndCommit
     val errorInvalidNumber = stringResource(R.string.invalid_number)
@@ -289,14 +134,38 @@ private fun DirectNumberInputRow(
             isError = true
             errorMessage = errorInvalidNumber
         } else {
+            val coerced = parsed.coerceIn(valueRange)
             isError = false
-            onValueChange(parsed.coerceIn(valueRange))
+            // Sync the field text when we coerce (e.g. user left an out-of-range value),
+            // so what's published and what's displayed agree.
+            val newText = if (coerced == 0.0) "" else effectiveValueFormat.format(coerced)
+            if (newText != textFieldValue.text) {
+                textFieldValue = TextFieldValue(newText)
+            }
+            onValueChange(coerced)
+        }
+    }
+
+    // Flush pending text when leaving composition (e.g., user presses back without
+    // tapping Done or shifting focus first — onFocusChanged might never fire).
+    val latestTextProvider by rememberUpdatedState({ textFieldValue.text })
+    val latestIsFocused by rememberUpdatedState(isFocused)
+    DisposableEffect(Unit) {
+        onDispose {
+            if (latestIsFocused) validateAndCommit(latestTextProvider())
         }
     }
 
     fun stepValue(direction: Int) {
-        val newValue = roundToStep(value + direction * step, step)
+        // Use the parsed text value when present so unflushed typing isn't overwritten by a
+        // stale `value` prop (the parent may not have recomposed yet after the last keystroke).
+        val cleaned = textFieldValue.text.trim().replace(",", ".")
+        val currentValue = cleaned.toDoubleOrNull()?.coerceIn(valueRange) ?: value
+        val newValue = roundToStep(currentValue + direction * step, step)
             .coerceIn(valueRange)
+        val text = if (newValue == 0.0) "" else effectiveValueFormat.format(newValue)
+        textFieldValue = TextFieldValue(text)
+        isError = false
         onValueChange(newValue)
     }
 
@@ -317,10 +186,28 @@ private fun DirectNumberInputRow(
                 value = textFieldValue,
                 onValueChange = { newValue ->
                     textFieldValue = newValue
-                    if (isError) isError = false
-                    onTextChange?.invoke(newValue.text)
+                    val cleaned = newValue.text.trim().replace(",", ".")
+                    when {
+                        cleaned.isEmpty()                  -> {
+                            // Defer publishing until focus loss — avoids a transient 0 while the
+                            // user is mid-deletion and about to retype.
+                            isError = false
+                        }
+                        cleaned.toDoubleOrNull() == null   -> {
+                            isError = true
+                            errorMessage = errorInvalidNumber
+                        }
+                        cleaned.toDouble() !in valueRange  -> {
+                            isError = true
+                            errorMessage = rangeText
+                        }
+                        else                               -> {
+                            isError = false
+                            onValueChange(cleaned.toDouble())
+                        }
+                    }
                 },
-                label = { Text(label) },
+                label = if (label.isNotEmpty()) ({ Text(label) }) else null,
                 singleLine = true,
                 enabled = enabled,
                 isError = isError,
@@ -354,23 +241,26 @@ private fun DirectNumberInputRow(
                         isFocused = focusState.isFocused
                     }
             )
-            // Range and formatted display
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = if (isError) errorMessage else rangeText,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (isError) MaterialTheme.colorScheme.error
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                if (showFormattedDisplay && !isError) {
+            // Range and formatted display — hidden in compact mode (e.g., when nested in a row).
+            // Errors still surface so the user isn't stuck.
+            if (!compact || isError) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
-                        text = formattedDisplay,
+                        text = if (isError) errorMessage else rangeText,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
+                        color = if (isError) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    if (showFormattedDisplay && !isError) {
+                        Text(
+                            text = formattedDisplay,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
         }
@@ -451,21 +341,6 @@ private fun NumberInputRowPercentPreview() {
             valueRange = 10.0..200.0,
             step = 5.0,
             unitLabelResId = KeysR.string.units_percent
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun NumberInputRowSliderPreview() {
-    MaterialTheme {
-        NumberInputRow(
-            labelResId = R.string.carbs,
-            value = 20.0,
-            onValueChange = {},
-            valueRange = 0.0..100.0,
-            step = 1.0,
-            useSlider = true
         )
     }
 }

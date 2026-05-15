@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_watchface_circle">AAPS (Vòng tròn)</string>
-    <string name="label_watchface_digital_style">AAPS (Kỹ thuật số)</string>
-    <string name="label_watchface_custom">AAPS (Tùy chỉnh)</string>
-    <string name="label_actions_tile">AAPS(Actions)</string>
-    <string name="label_temp_target_tile">AAPS (Mục tiêu tạm thời)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
-    <string name="label_user_action_tile">AAPS(User Action)</string>
-    <string name="label_warning_sync">Không có dữ liệu!</string>
-    <string name="label_warning_old">Dữ liệu cũ!</string>
-    <string name="label_warning_since">Từ %1$s</string>
-    <string name="label_warning_sync_aaps">Đồng bộ với AAPS!</string>
+    <string name="label_watchface_circle">AAPS(Vòng tròn)</string>
+    <string name="label_watchface_digital_style">AAPS(Kỹ thuật số)</string>
+    <string name="label_watchface_custom">AAPS(Tùy chỉnh)</string>
+    <string name="label_actions_tile">Hành động</string>
+    <string name="label_temp_target_tile">Mục tiêu tạm thời</string>
+    <string name="label_quick_wizard_tile">Hướng dẫn nhanh</string>
+    <string name="label_user_action_tile">Thao tác người dùng</string>
+    <string name="label_scene_tile">Ngữ cảnh</string>
     <string name="msg_warning_sync">Không nhận được dữ liệu kể từ %1$s! Kiểm tra xem AAPS trên điện thoại có gửi dữ liệu cho đồng hồ hay không</string>
     <string name="msg_warning_old">Dữ liệu AAPS đã cũ %1$s! Kiểm tra cảm biến, xDrip+, NS, cấu hình AAPS hoặc nguyên nhân khác!</string>
     <string name="pref_vibrate_on_bolus">Rung khi bolus</string>
@@ -18,6 +15,7 @@
     <string name="pref_display_settings">Hiển thị</string>
     <string name="pref_graph_settings">Đồ thị</string>
     <string name="pref_interface_settings">Giao diện</string>
+    <string name="pref_tile_settings">Ô gạch</string>
     <string name="pref_others_settings">Khác</string>
     <string name="pref_complication_settings">Ô hiển thị</string>
     <string name="pref_show_date">Hiển thị ngày</string>
@@ -68,6 +66,7 @@
     <string name="pref_moreWatchfaceSettings">Thêm cài đặt mặt đồng hồ</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Hãy xem lại phần cài đặt mặt đồng hồ.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Mục tiêu tạm thời</string>
     <string name="menu_wizard">Calculator</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Treatment</string>
@@ -77,22 +76,23 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Cài đặt</string>
     <string name="menu_status">Trạng thái</string>
+    <string name="menu_bg_graph">Biểu đồ BG</string>
     <string name="menu_resync">Đồng bộ lại</string>
     <string name="menu_prime_fill">Prime/Fill</string>
     <string name="menu_none">Không</string>
     <string name="menu_default">Mặc định</string>
     <string name="menu_menu">Danh Mục</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Thời lượng [phút]</string>
     <string name="action_tempt_confirmation">Mục tiêu tạm thời được yêu cầu</string>
-    <string name="action_quick_wizard_confirmation">Yêu cầu Quick Wizard</string>
+    <string name="action_quick_wizard_confirmation">Yêu cầu hướng dẫn nhanh</string>
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
+    <string name="action_scene_confirmation">Kích hoạt ngữ cảnh</string>
+    <string name="scene_stop">DỪNG</string>
     <string name="action_treatment_confirmation">Yêu cầu xử lý</string>
     <string name="action_bolus_confirmation">Bolus được yêu cầu</string>
     <string name="action_wizard_confirmation">Yêu cầu tính toán</string>
     <string name="action_fill_confirmation">Yêu cầu nạp insulin</string>
     <string name="action_ecarb_confirmation">Lượng carb cần nạp</string>
-    <string name="action_profile_switch_confirmation">Yêu cầu chuyển đổi Hồ sơ</string>
+    <string name="action_profile_switch_confirmation">Yêu cầu chuyển đổi Cấu hình</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Mục tiêu [%s]</string>
     <string name="action_low_unit" comment="In temp target menu, lower value from range">Thấp[%s]</string>
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Cao[%s]</string>
@@ -101,8 +101,6 @@
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Phần trăm\n[%]</string>
     <string name="action_start_minutes">Bắt đầu\n[phút]</string>
-    <string name="action_start_minutes_format">%1$d phút</string>
-    <string name="action_duration_h">Thời lượng [giờ]</string>
     <string name="action_duration_hours">Thời lượng\n[giờ]</string>
     <string name="action_duration_hours_format">%1$d giờ</string>
     <string name="action_duration_hours_minutes_format">%1$d g %2$d phút</string>
@@ -124,9 +122,9 @@
     <string name="bolus_progress">Tiêm liều Bolus</string>
     <string name="press_to_cancel">nhấn để hủy</string>
     <string name="cancel_bolus">HỦY LIỀU BOLUS</string>
-    <string name="status_pump">Pump</string>
+    <string name="status_pump">Bơm Insulin</string>
     <string name="status_loop">Vòng lặp</string>
-    <string name="status_profile_switch">Chuyển Hồ sơ</string>
+    <string name="status_profile_switch">Chuyển cấu hình</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>
@@ -151,7 +149,6 @@
     <string name="color_name_gray">xám</string>
     <string name="color_name_bluegray">xanh xám</string>
     <string name="color_name_white">trắng</string>
-    <string name="color_name_black">đen</string>
     <string name="color_name_multicolor">nhiều màu</string>
     <string name="pref_simplify_ui">Giao diện đơn giản</string>
     <string name="pref_vibrate_hourly">Rung báo theo giờ</string>
@@ -184,8 +181,6 @@
     <string name="tile_no_config">Không có cấu hình</string>
     <string name="wear_control_not_enabled">Điều khiển thiết bị đeo tắt</string>
     <string name="wear_control_no_data">Không có dữ liệu</string>
-    <string name="increment">tăng dần</string>
-    <string name="decrement">giảm dần</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -198,10 +193,9 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">old</string>
-    <string name="old_warning">!old!</string>
     <string name="error">Lỗi</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="pref_heartRateSmoothing">Làm mượt HR</string>
@@ -221,6 +215,7 @@
     <string name="complication_full_status">Toàn bộ trạng thái</string>
     <string name="complication_full_status_flipped">Toàn bộ trạng thái (lật)</string>
     <string name="complication_blood_glucose">Đường máu</string>
+    <string name="complication_blood_glucose_large">Đường huyết (lớn)</string>
     <string name="complication_blood_glucose_ext1">Đường huyết Ext1</string>
     <string name="complication_blood_glucose_ext2">Đường huyết Ext2</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
@@ -229,6 +224,7 @@
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Tỷ lệ liều nền</string>
     <string name="complication_br_tt">BR &amp; Mục tiêu</string>
+    <string name="complication_target">Mục tiêu</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">Biểu tượng CoB</string>
     <string name="complication_cob_detailed">Chi tiết CoB</string>
@@ -236,7 +232,13 @@
     <string name="complication_iob_detailed">Chi tiết IoB</string>
     <string name="complication_uploader_phone_battery">Pin thiết bị gửi dữ liệu / Điện thoại</string>
     <string name="status_running_mode">Chế độ thể dục</string>
-    <string name="label_running_mode_title">AAPS(Chế độ thể dục)</string>
+    <string name="label_running_mode_title">Chế độ thể dục</string>
+    <string name="label_bg_graph_tile">Biểu đồ BG</string>
+    <string name="tile_tap_action">Hoạt động khi chạm</string>
+    <string name="tile_graph_time_range">Khoảng thời gian</string>
+    <string name="tile_tap_bg_graph">Biểu đồ đường huyết</string>
+    <string name="tile_tap_main_menu">Menu chính</string>
+    <string name="tile_tap_loop_status">Trạng thái vòng lặp</string>
     <string name="action_running_mode_selected">Đã yêu cầu chế độ thể dục</string>
     <string name="title_activity_disconnect_pump">Ngắt kết nối bơm</string>
     <string name="title_activity_suspend_loop">Tạm dừng vòng lặp</string>
@@ -256,7 +258,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Nhấn để mở rộng chi tiết tính toán</string>
     <string name="wizard_confirmation_sent">Gửi</string>
     <string name="tile_settings">Cài đặt Tile</string>
     <string name="loop_status_error">Không tải được trạng thái</string>
@@ -290,6 +291,7 @@
     <string name="loop_status_temp_target">Mục tiêu tạm thời</string>
     <string name="loop_status_target_range">Phạm vi</string>
     <string name="loop_status_target">Mục tiêu</string>
+    <string name="loop_status_adjusted_target">Mục tiêu đã điều chỉnh</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
     <string name="loop_status_refresh">Làm mới</string>
     <string name="confirm">Xác nhận</string>

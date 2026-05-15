@@ -52,13 +52,11 @@
     <string name="no_watch_connected">(Intet ur forbundet)</string>
     <string name="pump_status">Pumpestatus</string>
     <string name="loop_status">Loop status</string>
-    <string name="wizard_result">Guide:\nInsulin: %1$.2fE\nKH: %2$dg</string>
     <string name="quick_wizard_not_available">Valgt guide er ikke længere tilgængeligt. Opdater venligst din widget</string>
     <string name="quick_wizard_message">Hurtigguide: %1$s\nInsulin: %2$.2fE\nKH: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Forskellige enheder brugt på ur og telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS udenfor området!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BS udenfor området!</string>
-    <string name="no_success">mislykkedes - tjek venligst telefonen</string>
     <string name="wear_wizard_settings_summary">Beregninger inkluderet i guide resultatet:</string>
     <string name="wear_general_settings">Generelle indstillinger</string>
     <string name="wear_custom_watchface_settings">Brugerdefinerede Urskiveindstillinger</string>

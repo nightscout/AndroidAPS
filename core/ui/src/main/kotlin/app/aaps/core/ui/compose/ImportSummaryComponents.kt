@@ -20,11 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 
 /**
  * A single metadata summary item row with status icon, category icon, and formatted text.
@@ -34,8 +35,8 @@ import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 fun ImportSummaryItem(
     metaKey: PrefsMetadataKey,
     metaEntry: PrefMetadata,
-    modifier: Modifier = Modifier,
-    onSnackbarMessage: (SnackbarMessage) -> Unit = {}
+    rxBus: RxBus,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val colors = AapsTheme.generalColors
@@ -55,19 +56,19 @@ fun ImportSummaryItem(
                 } else {
                     context.getString(metaKey.label)
                 }
-                val snackbarMessage = when {
-                    metaEntry.status.isWarning -> SnackbarMessage.Warning(msg)
-                    metaEntry.status.isError   -> SnackbarMessage.Error(msg)
-                    else                       -> SnackbarMessage.Info(msg)
+                val type = when {
+                    metaEntry.status.isWarning -> EventShowSnackbar.Type.Warning
+                    metaEntry.status.isError   -> EventShowSnackbar.Type.Error
+                    else                       -> EventShowSnackbar.Type.Info
                 }
-                onSnackbarMessage(snackbarMessage)
+                rxBus.send(EventShowSnackbar(msg, type))
             }
             .padding(vertical = 4.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
         Icon(
-            painter = painterResource(id = metaEntry.status.icon),
+            imageVector = metaEntry.status.icon,
             contentDescription = null,
             modifier = Modifier.size(20.dp),
             tint = when {
@@ -81,7 +82,7 @@ fun ImportSummaryItem(
         Spacer(modifier = Modifier.width(4.dp))
 
         Icon(
-            painter = painterResource(id = metaKey.icon),
+            imageVector = metaKey.icon,
             contentDescription = null,
             modifier = Modifier.size(20.dp),
             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)

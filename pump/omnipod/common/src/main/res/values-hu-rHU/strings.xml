@@ -4,7 +4,6 @@
     <!-- Omnipod - Error -->
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f E</string>
     <string name="omnipod_common_overview_firmware_version">Firmware verzió</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_exit_confirmation_title">Kilép</string>

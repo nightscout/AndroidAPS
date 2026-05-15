@@ -38,6 +38,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
+import app.aaps.core.objects.extensions.put
+import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.ui.compose.icons.IcPluginOpenAPS
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -271,7 +273,7 @@ class OpenAPSAMAPlugin @Inject constructor(
 
     override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? = glucoseStatusCalculatorSMB.getGlucoseStatusData(allowOldData)
 
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
             val maxIobPref: Double = preferences.get(DoubleKey.ApsAmaMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
@@ -310,9 +312,15 @@ class OpenAPSAMAPlugin @Inject constructor(
         return value
     }
 
-    // Needed only for dynamic ISF so far
-    override fun configuration(): JsonObject = JsonObject(emptyMap())
-    override fun applyConfiguration(configuration: JsonObject) {}
+    // AMA never delivers SMBs — advertise that explicitly so AAPSClient can hide the SMB indicator
+    // even when the user's local default for ApsUseSmb is true.
+    override fun configuration(): JsonObject =
+        JsonObject(emptyMap())
+            .put(BooleanKey.ApsUseSmb, false)
+
+    override fun applyConfiguration(configuration: JsonObject) {
+        configuration.store(BooleanKey.ApsUseSmb, preferences)
+    }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "openapsma_settings",

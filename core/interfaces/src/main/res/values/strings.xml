@@ -14,6 +14,8 @@
     <!--    DateUtil-->
     <string name="minago">%1$dm ago</string>
     <string name="secago">%1$ds ago</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minutes ago</string>
     <string name="hoursago">%1$.1fh ago</string>
     <string name="days_ago">%1$.1f days ago</string>
@@ -48,6 +50,8 @@
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dh %2$dm remaining</string>
+    <string name="time_remaining_m">%1$dm remaining</string>
     <string name="later_today">Later today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
@@ -103,8 +107,6 @@
     <string name="permission_bluetooth_description">Application needs bluetooth permission to communicate with pump</string>
 
     <!-- Insulin -->
-    <string name="insulin_plugin">Insulin</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">Unknown</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -113,7 +115,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
-    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
 
     <!-- Concentration -->
     <string name="u10">U10</string>

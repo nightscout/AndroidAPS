@@ -17,10 +17,10 @@ import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.automation.events.EventLocationChange
 import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
@@ -87,13 +87,28 @@ class LocationService : DaggerService() {
             return START_NOT_STICKY
         }
         aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
-        startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        // Even with permissions granted, the system can still reject the FGS-location promotion
+        // if the app left foreground between startForegroundService() and this onStartCommand
+        // delivery and ACCESS_BACKGROUND_LOCATION was revoked in the meantime. Catch the
+        // SecurityException so a permission/state race doesn't crash the process.
+        try {
+            startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        } catch (e: SecurityException) {
+            aapsLogger.error(LTag.LOCATION, "FGS-location start denied by system, stopping", e)
+            stopSelf()
+            return START_NOT_STICKY
+        }
         return START_STICKY
     }
 
-    private fun hasLocationPermission(): Boolean =
-        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    private fun hasLocationPermission(): Boolean {
+        val hasFineOrCoarse =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasBackground =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return hasFineOrCoarse && hasBackground
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -130,7 +145,7 @@ class LocationService : DaggerService() {
                 }
             }
         } else {
-            ToastUtils.errorToast(this, getString(app.aaps.core.ui.R.string.location_permission_not_granted))
+            rxBus.send(EventShowSnackbar(getString(app.aaps.core.ui.R.string.location_permission_not_granted), EventShowSnackbar.Type.Error))
         }
 
         disposable += rxBus

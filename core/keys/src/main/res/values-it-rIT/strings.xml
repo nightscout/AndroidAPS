@@ -3,7 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Modalità semplice</string>
     <string name="pref_title_insulin_concentration">Supporto della concentrazione di insulina</string>
-    <string name="pref_summary_insulin_concentration">Abilita il supporto per diverse concentrazioni di insulina (U200, U300, ecc.)</string>
+    <string name="pref_summary_insulin_concentration">Abilita il supporto per diverse concentrazioni di insulina (U50, U200, ecc.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Mantieni lo schermo acceso</string>
     <string name="pref_summary_keep_screen_on">Evita che Android spenga lo schermo. Consumerà molta energia quando non è collegato alla presa di corrente.</string>
@@ -214,7 +214,6 @@
     <string name="pref_title_stale_data_threshold">Soglia dati non aggiornati</string>
     <string name="pref_title_pump_unreachable_threshold">Soglia micro irraggiungibile</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Tempo picco</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Giorni di regolazione predefiniti</string>
     <string name="autotune_default_tune_days_summary">Numero predefinito di giorni di dati da elaborare da Autotune (fino a 30)</string>
@@ -253,7 +252,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -268,7 +266,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">Lingua</string>
@@ -357,9 +354,9 @@
     <string name="pref_title_max_basal">Velocità basale massima</string>
     <string name="openapsma_max_basal_summary">Questo valore è chiamato max basale nel contesto OpenAPS</string>
     <string name="pref_title_smb_max_iob">IOB massimo per SMB</string>
-    <string name="openapssmb_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se l\'IOB corrente è maggiore di questo valore</string>
+    <string name="openapssmb_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se l\'IOB corrente è maggiore di questo valore.</string>
     <string name="pref_title_ama_max_iob">IOB massimo per AMA</string>
-    <string name="openapsma_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
+    <string name="openapsma_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea. Questo valore dipende anche dal tipo di paziente. </string>
     <string name="pref_title_max_daily_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valore predefinito: 3 Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare la tua basale ad un valore pari alla tua velocità basale massima moltiplicata per 3. Probabilmente non avrai bisogno di cambiare questo valore ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
     <string name="pref_title_current_basal_multiplier">Moltiplicatore di sicurezza della basale corrente</string>
@@ -376,11 +373,11 @@
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Valore predefinito: 0.7\nUn altro limite di sicurezza di autosens, imposta un blocco a quanto in basso autosens può regolare le basali e a quanto in alto può regolare ISF e target glicemici.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
-    <string name="openapsama_autosens_max_summary">Valore predefinito: 1.2\n Questo è un valore di moltiplicatore per autosens (e presto autotune) per impostare un limite massimo del 20% su quanto in alto può essere il rapporto di autosens, che a sua volta determina quanto in alto autosens possibile regolare basai, quanto in basso può regolare ISF e quanto in basso è possibile impostare il target di BG.</string>
+    <string name="openapsama_autosens_max_summary">Valore predefinito: 1.2\nQuesto è un moltiplicatore di sicurezza per autosens (e presto autotune) per impostare un limite massimo del 20%% (col valore predefinito) su quanto alto può essere il rapporto di autosens, che a sua volta determina quanto in alto autosens può regolare le basali, quanto in basso può regolare ISF e quanto in basso può impostare il target glicemico.</string>
     <string name="pref_title_autoisf_min">AutoISF min</string>
-    <string name="openapsama_autoISF_min_summary">Simile a autosens_min questo definisce quanto debole ISF possa diventare.\n\nIl valore predefinito 1.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_autoISF_min_summary">Similmente a autosens_min questo definisce quanto debole ISF possa diventare.\n\nIl valore predefinito 1.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_autoisf_max">AutoISF max</string>
-    <string name="openapsama_autoISF_max_summary">Simile a autosens_max questo definisce quanto forte ISF può diventare.\n\nIl valore predefinito 1.0 disattiva in modo efficace questo effetto.\n\nATTENZIONE: Fai molta attenzione quando usi valori superiori a 2,5</string>
+    <string name="openapsama_autoISF_max_summary">Similmente a autosens_max questo definisce quanto forte ISF può diventare.\n\nIl valore predefinito 1.0 disattiva in modo efficace questo effetto.\n\nATTENZIONE: Fai molta attenzione quando usi valori superiori a 2,5</string>
     <string name="pref_title_bg_accel_weight">Accelerazione glicemia Peso ISF</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">Questo è il peso applicato mentre il glucosio accelera e che rafforza ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_bg_brake_weight">BG freno ISF peso</string>
@@ -410,10 +407,6 @@
     <string name="pref_title_lgs_threshold">Soglia LGS</string>
     <string name="lgs_threshold_summary">Glicemia sotto la quale l\'erogazione d\'insulina è sospesa. Il valore predefinito utilizza il modello target standard. L\'utente può impostare un valore compreso tra 60 mg/dl (3.3mmol/l) e 100mg/dl (5.5mmol/l). Con valori inferiori a 65 mg/dl (3.6mmol/l) viene usato il modello predefinito</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Documentazione dell\'algoritmo</string>
-    <string name="pref_title_otp_setup">Configurazione dell\'autenticatore</string>
-    <string name="pref_title_quick_wizard_settings">Impostazioni della procedura guidata</string>
-    <string name="pref_title_xdrip_info">xDrip+ info</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
 </resources>

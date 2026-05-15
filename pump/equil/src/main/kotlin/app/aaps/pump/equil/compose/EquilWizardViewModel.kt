@@ -9,21 +9,25 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ProfileGateStepHost
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.equil.EquilConst
@@ -82,11 +86,12 @@ class EquilWizardViewModel @Inject constructor(
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val constraintsChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
+    private val localProfileManager: LocalProfileManager,
     private val rxBus: RxBus,
     private val insulinManager: InsulinManager,
     private val bleTransport: EquilBleTransport,
     private val hardLimits: HardLimits
-) : ViewModel(), SiteLocationStepHost {
+) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     // region State
 
@@ -156,6 +161,13 @@ class EquilWizardViewModel @Inject constructor(
     val showInsulinStep: Boolean
         get() = _availableInsulins.value.size > 1
 
+    // Profile gate state (for PROFILE_GATE step) — implements ProfileGateStepHost
+    private val _availableProfiles = MutableStateFlow<List<String>>(emptyList())
+    override val availableProfiles: StateFlow<List<String>> = _availableProfiles.asStateFlow()
+
+    private val _selectedProfile = MutableStateFlow<String?>(null)
+    override val selectedProfile: StateFlow<String?> = _selectedProfile.asStateFlow()
+
     val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
 
@@ -192,11 +204,16 @@ class EquilWizardViewModel @Inject constructor(
     private var workflowSteps: List<EquilWizardStep> = emptyList()
 
     fun initializeWorkflow(workflow: EquilWorkflow) {
+        // Synchronously clear step state so a reopened wizard never flashes the previous
+        // session's last step while the async PS lookup below is still running.
+        _wizardStep.value = null
+        workflowSteps = emptyList()
+        _totalSteps.value = 0
+        _currentStepIndex.value = 0
+
         _workflow.value = workflow
         loadInsulins()
         val siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump)
-        workflowSteps = workflow.steps(siteRotationEnabled, insulinSelectionEnabled = showInsulinStep)
-        _totalSteps.value = workflowSteps.size
         _errorMessage.value = null
         _isLoading.value = false
         _fillComplete.value = false
@@ -213,11 +230,62 @@ class EquilWizardViewModel @Inject constructor(
             siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
                 System.currentTimeMillis() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+
+            // PS lookup is async; resolve it before building the page list so PROFILE_GATE
+            // is included only when needed and only on the PAIR workflow.
+            val needsProfileGate = workflow == EquilWorkflow.PAIR && profileFunction.getRequestedProfile() == null
+            if (needsProfileGate) loadAvailableProfiles()
+            workflowSteps = workflow.steps(siteRotationEnabled, insulinSelectionEnabled = showInsulinStep, needsProfileGate = needsProfileGate)
+            _totalSteps.value = workflowSteps.size
+            moveStep(workflowSteps.first())
         }
-        // Note: cache loads async but site location step is never the first step,
-        // so the data will be available by the time the user reaches it.
-        moveStep(workflowSteps.first())
     }
+
+    // region ProfileGateStepHost
+
+    private fun loadAvailableProfiles() {
+        val names = localProfileManager.profiles.map { it.name }
+        _availableProfiles.value = names
+        if (_selectedProfile.value !in names) {
+            _selectedProfile.value = names.getOrNull(localProfileManager.currentProfileIndex) ?: names.firstOrNull()
+        }
+    }
+
+    override fun selectProfile(name: String) {
+        _selectedProfile.value = name
+    }
+
+    override fun activateSelectedProfile() {
+        val name = _selectedProfile.value ?: return
+        val store = localProfileManager.profile ?: return
+        val iCfg = insulinManager.insulins.firstOrNull() ?: return
+        viewModelScope.launch {
+            val result = profileFunction.createProfileSwitch(
+                profileStore = store,
+                profileName = name,
+                durationInMinutes = 0,
+                percentage = 100,
+                timeShiftInHours = 0,
+                timestamp = System.currentTimeMillis(),
+                action = Action.PROFILE_SWITCH,
+                source = Sources.Equil,
+                note = null,
+                listValues = listOf(ValueWithUnit.SimpleString(name)),
+                iCfg = iCfg
+            )
+            if (result == null) {
+                aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
+            } else {
+                moveToNextStep(EquilWizardStep.PROFILE_GATE)
+            }
+        }
+    }
+
+    override fun cancelGate() {
+        viewModelScope.launch { _events.emit(EquilWizardEvent.Finish) }
+    }
+
+    // endregion
 
     /** Move to the step that follows [currentStep] in the workflow. */
     fun moveToNextStep(currentStep: EquilWizardStep) {
@@ -270,6 +338,7 @@ class EquilWizardViewModel @Inject constructor(
 
     val canGoBack: StateFlow<Boolean> = _wizardStep.mapState { step ->
         step in listOf(
+            EquilWizardStep.PROFILE_GATE,
             EquilWizardStep.ASSEMBLE,
             EquilWizardStep.CHANGE_INSULIN,
             EquilWizardStep.UNPAIR_DETACH
@@ -642,7 +711,7 @@ class EquilWizardViewModel @Inject constructor(
 
     private fun setProfile() {
         viewModelScope.launch {
-            val profile = profileFunction.getProfile()
+            val profile = pumpSync.expectedPumpState().profile
             if (profile == null) {
                 setTime()
                 return@launch

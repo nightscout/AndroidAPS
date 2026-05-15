@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Potvrzení</string>
     <!--    Events-->
     <string name="bolus_delivering">Podávání %1$.2fU</string>
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU podáno</string>
@@ -10,6 +11,8 @@
     <!--    DateUtil-->
     <string name="minago">před %1$dm</string>
     <string name="secago">před %1$ds</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">před %1$d minutamí</string>
     <string name="hoursago">před %1$.1fh</string>
     <string name="days_ago">Před %1$.1f dny</string>
@@ -50,6 +53,8 @@
     <string name="unit_weeks">týdnů</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">Zbývá %1$dh %2$dm</string>
+    <string name="time_remaining_m">Zbývá %1$dhm</string>
     <string name="later_today">Později během dneška</string>
     <string name="tomorrow">Zítra</string>
     <string name="today">Dnes</string>
@@ -97,6 +102,23 @@
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Navždy</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Aplikace potřebuje oprávnění Bluetooth pro komunikaci s pumpou</string>
     <!-- Insulin -->
+    <string name="unknown">Neznámé</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Čas vrcholu [min]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
 </resources>

@@ -19,6 +19,8 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.core.interfaces.tempTargets.toTTPresets
+import app.aaps.ui.compose.scenes.SceneIcons
+import app.aaps.ui.compose.scenes.SceneRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,6 +36,7 @@ class QuickLaunchResolver @Inject constructor(
     private val automation: Automation,
     private val activePlugin: ActivePlugin,
     private val localProfileManager: LocalProfileManager,
+    private val sceneRepository: SceneRepository,
     private val rh: ResourceHelper,
     private val elementAvailability: ElementAvailability
 ) {
@@ -62,6 +65,10 @@ class QuickLaunchResolver @Inject constructor(
             }
         } ?: action.elementType.icon()
 
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)
+            ?.let { SceneIcons.fromKey(it.icon).icon }
+            ?: action.elementType.icon()
+
         else                                   -> action.elementType?.icon() ?: Icons.Default.Extension
     }
 
@@ -83,6 +90,8 @@ class QuickLaunchResolver @Inject constructor(
             profileList?.any { it.toString() == action.profileName } == true
         }
 
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)?.isEnabled == true
+
         is QuickLaunchAction.PluginAction      -> {
             val plugin = findPlugin(action.className)
             plugin != null && plugin.isEnabled(plugin.pluginDescription.mainType) && plugin.hasComposeContent()
@@ -102,6 +111,7 @@ class QuickLaunchResolver @Inject constructor(
         }
 
         is QuickLaunchAction.ProfileAction     -> buildProfileLabel(action)
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)?.name ?: "?"
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)?.let { rh.gs(it.pluginDescription.pluginName) } ?: "?"
 
         else                                   -> {
@@ -143,6 +153,11 @@ class QuickLaunchResolver @Inject constructor(
         }
 
         is QuickLaunchAction.ProfileAction     -> null // label already shows profile name + params
+        is QuickLaunchAction.SceneAction       -> {
+            val scene = sceneRepository.getScene(action.sceneId)
+            scene?.let { "${it.actions.size} actions" }
+        }
+
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)
             ?.pluginDescription?.description?.takeIf { it != -1 }?.let { rh.gs(it) }
 

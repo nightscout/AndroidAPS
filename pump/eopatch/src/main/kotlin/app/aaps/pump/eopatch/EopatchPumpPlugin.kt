@@ -340,19 +340,15 @@ class EopatchPumpPlugin @Inject constructor(
                 .subscribe({ result.onNext(it.isSuccess) }, { result.onNext(false) })
         )
 
-        val isPriming = bolusProgressData.state.value?.isPriming ?: false
-        val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
         do {
             SystemClock.sleep(100)
             if (patchManagerExecutor.patchConnectionState.isConnected) {
-                val delivering = preferenceManager.bolusCurrent.nowBolus.injected.toDouble()
-                val pumpInsulin = PumpInsulin(delivering)
-                val percent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
-                bolusProgressData.updateProgress(percent, ch.bolusProgressString(pumpInsulin, isPriming), delivering)
+                val delivered = PumpInsulin(preferenceManager.bolusCurrent.nowBolus.injected.toDouble())
+                bolusProgressData.updateProgress(delivered = delivered)
             }
         } while (!preferenceManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
-        bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), detailedBolusInfo.insulin)
+        bolusProgressData.updateProgress(100)
 
         detailedBolusInfo.insulin = preferenceManager.bolusCurrent.nowBolus.injected.toDouble()
         patchManager.addBolusToHistory(detailedBolusInfo)

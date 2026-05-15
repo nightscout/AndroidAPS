@@ -45,7 +45,6 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo Времето за сканиране е изтекло</string>
     <string name="combov2_pairing_failed_due_to_error">Сдвояването неуспешно, поради грешка: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Сдвояването е прекъснато по неизвестни причини</string>
-    <string name="combov2_pairing_invalid_pin_length">"Невалидна дължина на ПИН за сдвояване: нужни %1$d цифри, въведени %2$d"</string>
     <string name="combov2_scanning_for_pump">Сканиране за помпа</string>
     <string name="combov2_establishing_bt_connection">Установява се Bluetooth връзка (опит № %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Извършване на синхронизация с помпа</string>
@@ -65,7 +64,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Настройва базалният профил</string>
     <string name="combov2_setting_tbr_cmddesc">Задава се %1$d%% Временен базал за %2$d минути</string>
     <string name="combov2_cancelling_tbr">Отмяната продължителността на Временния базал</string>
-    <string name="combov2_delivering_bolus_cmddesc">Доставяне на %1$.1f Е болус</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Извличане на TDD(Обща дневна доза) история</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Актуализиране времето на помпата</string>
     <string name="combov2_updating_pump_status_cmddesc">Актуализиране състоянието на помпата</string>

@@ -48,7 +48,6 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo tidsgrense for sammenkobling ble nådd</string>
     <string name="combov2_pairing_failed_due_to_error">Sammenkobling mislyktes på grunn av feil: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Sammenkobling avbrutt av ukjente årsaker</string>
-    <string name="combov2_pairing_invalid_pin_length">"Ugyldig lengde på PIN: trenger %1$d siffer, fikk %2$d"</string>
     <string name="combov2_scanning_for_pump">Søker etter pumpen</string>
     <string name="combov2_establishing_bt_connection">Oppretter Bluetooth-tilkobling (forsøk nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Utfører sammenkobling med pumpe</string>
@@ -68,7 +67,6 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_setting_basal_profile_cmddesc">Setter basal profil</string>
     <string name="combov2_setting_tbr_cmddesc">Setter %1$d%% TBR i %2$d minutter</string>
     <string name="combov2_cancelling_tbr">Kansellerer pågående TBR</string>
-    <string name="combov2_delivering_bolus_cmddesc">Leverer bolus %1$.1f E</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Henter TDD historikk</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Oppdaterer dato/klokkeslett i pumpen</string>
     <string name="combov2_updating_pump_status_cmddesc">Oppdaterer pumpestatus</string>

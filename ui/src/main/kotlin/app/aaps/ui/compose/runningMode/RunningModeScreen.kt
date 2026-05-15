@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
+import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.R
 import app.aaps.ui.compose.overview.chips.toColor
@@ -70,22 +70,11 @@ fun RunningModeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = state.currentMode.toIcon(),
-                            contentDescription = null,
-                            tint = state.currentMode.toColor(),
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(start = 8.dp))
-                        Text(state.currentModeText.ifEmpty { stringResource(app.aaps.core.ui.R.string.running_mode) })
-                    }
-                },
+            AapsTopAppBar(
+                title = { Text(state.currentModeText.ifEmpty { stringResource(app.aaps.core.ui.R.string.running_mode) }) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
                     }
                 }
             )
@@ -106,6 +95,23 @@ fun RunningModeScreen(
                         text = state.reasons!!,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            // No valid profile — show explanation instead of empty screen
+            if (!state.isLoading && state.allowedNextModes.isEmpty()) {
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                ) {
+                    Text(
+                        text = stringResource(app.aaps.core.ui.R.string.no_profile_set),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.padding(12.dp)
                     )
                 }
             }
@@ -142,11 +148,11 @@ fun RunningModeScreen(
                 )
             }
 
-            // Pump Disconnect Section (only in APS mode)
-            val showPumpSection = state.isApsMode && (
+            // Pump Disconnect Section. Available on follower (AAPSCLIENT) too — the mode write
+            // propagates via NS sync to the main phone whose reconciler enacts it on the pump.
+            val showPumpSection =
                 state.allowedNextModes.contains(RM.Mode.DISCONNECTED_PUMP) ||
                     (state.allowedNextModes.contains(RM.Mode.RESUME) && state.currentMode == RM.Mode.DISCONNECTED_PUMP)
-                )
             if (showPumpSection) {
                 PumpDisconnectSection(
                     currentMode = state.currentMode,
@@ -244,7 +250,7 @@ private fun LoopControlSection(
             if (allowedModes.contains(RM.Mode.DISABLED_LOOP)) {
                 CompactButton(
                     disableLoopText, RM.Mode.DISABLED_LOOP,
-                    { onAction(PendingRunningModeAction(RM.Mode.DISABLED_LOOP, Action.LOOP_DISABLED, Int.MAX_VALUE, disableLoopText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.DISABLED_LOOP, Action.LOOP_DISABLED, 0, disableLoopText)) },
                     Modifier.weight(1f)
                 )
             }

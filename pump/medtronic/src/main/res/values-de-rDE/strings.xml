@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Seriennummer ungültig.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpenart nicht angegeben.</string>
     <string name="medtronic_error_pump_type_invalid">Pumptyp nicht unterstützt.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pumpen-Frequenz nicht unterstützt.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Adresse ungültig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Erkannter Pumpentyp entspricht nicht dem eingestellen Pumpentyp.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Einstellung für Basalprofile/-muster ist auf der Pumpe nicht aktiviert. Aktiviere es auf der Pumpe.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic Pumpenverlauf</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Du hast den Bolus abgebrochen nachdem er bereits an die Pumpe übermittelt war. Da Medtronic-Pumpen den Abbrechen-Befehl nicht unterstützen, musst du den Bolus manuell abbrechen. Versetze die Pumpe in den Suspend-Modus und gehe dann auf Fortsetzen (wenn Du den Bolus nach wie vor abbrechen möchtest). Die App wird die Änderungen beim nächsten Update (weniger als 5 Minuten) anzeigen.</string>
     <string name="medtronic_cmd_cant_read_tbr">Aktuelle TBR konnte nicht gelesen werden.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Neutrale TBR setzen</string>
     <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d Minuten verbleibend)</string>
     <string name="invalid_history_data">Ungültige Pumpenhistorie erkannt. Eröffne ein neues Ticket (issue) und füge Logs bei.</string>
     <string name="riley_statistics">RL Statistik</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Aktualisieren geklickt</string>

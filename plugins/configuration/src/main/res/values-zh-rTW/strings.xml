@@ -31,25 +31,19 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">請在下方配置您的RileyLink。選擇RileyLink後，一旦RileyLink狀態顯示為“已連線”，即可繼續設置。這可能需要一分鐘。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b> 您可以在幫浦設置完成後繼續設置。\n</string>
     <string name="startobjective">開始您的第一個目標</string>
+    <string name="open_objectives">開啟目標</string>
     <string name="setupwizard_permissions">權限</string>
     <string name="setupwizard_profile_info">使用你的基礎率、胰島素-碳水比 (IC)、胰島素敏感度 (ISF) 與目標值建立一個設定檔。之後可以新增多個設定檔。</string>
     <string name="setupwizard_permissions_info">AAPS 需要儲存空間存取與其他權限才能正常運作。請在下方授予所需權限。</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink狀態：</string>
     <string name="readstatus">讀取狀態</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">請求</string>
-    <string name="error_asking_for_permissions">請求權限時出錯</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">您想用AAPS使用哪個幫浦？</string>
     <string name="configbuilder_aps_description">哪個APS算法應進行療法調整？</string>
-    <string name="configbuilder_general_description">這些是一些您可能覺得有用的一般外掛。</string>
     <string name="configbuilder_sync_description">資料上傳、同步與通訊外掛。</string>
-    <string name="configbuilder_constraints_description">哪些約束條件應用？</string>
-    <string name="configbuilder_loop_description">使用此功能啟用AAPS的循環集成。</string>
-    <string name="configbuilder_insulin_description">您正在使用哪種類型的胰島素？</string>
     <string name="configbuilder_bgsource_description">AAPS應從哪裡獲取資料？</string>
-    <string name="configbuilder_smoothing_description">選擇平滑算法</string>
     <string name="configbuilder_sensitivity_description">應使用哪個敏感度算法？</string>
     <string name="allow_hardware_pump_text">注意：如果您啟用並連線到硬體幫浦，AAPS將從檔案中複製基礎設置到幫浦，覆蓋幫浦上存儲的現有基礎率。請確保您在AAPS中具有正確的基礎設置。如果您不確定或不想覆蓋幫浦上的基礎設置，請按取消並在稍後重複切換到幫浦。</string>
     <string name="nsclient_version_does_not_match">AAPSClient 版本與 AAPS 版本不一致，請更新為一致版本。</string>

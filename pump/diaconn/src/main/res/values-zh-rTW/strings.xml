@@ -15,7 +15,7 @@
     <string name="approachingdailylimit">接近每日胰島素限制</string>
     <string name="startingbolus">開始注射</string>
     <string name="waitingforestimatedbolusend">等待預估的注射結束</string>
-    <string name="gettingbolusstatus">獲取注射狀態</string>
+    <string name="gettingbolusstatus">正在取得注射狀態</string>
     <string name="stoppingtempbasal">停止臨時基礎速率</string>
     <string name="settingtempbasal">設置臨時基礎速率</string>
     <string name="settingextendedbolus">設置延長注射</string>
@@ -30,10 +30,8 @@
     <string name="insulinlimitviolation">胰島素限制違規</string>
     <string name="boluserrorcode">請求: %1$.2fU 輸送: %2$.2fU 錯誤碼: %3$s</string>
     <string name="selectedpump">選擇的幫浦</string>
-    <string name="diaconn_g8_bluetooth_status">藍牙狀態</string>
     <string name="bolus_step">注射步進</string>
     <string name="basal_step">基礎步進</string>
-    <string name="diaconn_g8_user_options">用戶選項</string>
     <string name="pairfirst">請先將幫浦與手機配對！</string>
     <string name="processinghistory">"處理事件"</string>
     <string name="diaconn_g8_history_tempbasal">臨時基礎速率</string>

@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">השתקת התראות</string>
     <string name="omnipod_common_overview_pod_status">סטטוס הפוד</string>
     <string name="omnipod_common_overview_total_delivered">סה\"כ שהוזרק</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f יח\'</string>
     <string name="omnipod_common_overview_pod_unique_id">מזהה ייחודי</string>
     <string name="omnipod_common_overview_lot_number">מספר LOT</string>
     <string name="omnipod_common_overview_pod_sequence_number">מספר רצף</string>

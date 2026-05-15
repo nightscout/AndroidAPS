@@ -170,10 +170,10 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testIsConnected() {
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+    fun testIsConnected() = runTest {
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
         assertEquals(true, loopHub.isConnected)
-        verify(loop, times(1)).runningMode
+        verify(loop, times(1)).runningMode()
     }
 
     private fun effectiveProfileSwitch(duration: Long) = EPS(
@@ -255,11 +255,11 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testDisconnectPump() {
+    fun testDisconnectPump() = runTest {
         val profile = mock<EffectiveProfile>()
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
+        whenever(profileFunction.getProfile()).thenReturn(profile)
         loopHub.disconnectPump(23)
-        runBlocking { verify(profileFunction).getProfile() }
+        verify(profileFunction).getProfile()
         verify(loop).handleRunningModeChange(
             durationInMinutes = 23, profile = profile, newRM = RM.Mode.DISCONNECTED_PUMP, action = Action.DISCONNECT,
             source = Sources.Garmin, listValues = listOf(ValueWithUnit.Minute(23))
@@ -318,13 +318,13 @@ class LoopHubTest : TestBase() {
             beatsPerMinute = 101.0,
             device = "Test Device"
         )
-        whenever(persistenceLayer.insertOrUpdateHeartRate(hr)).thenReturn(
+        whenever(persistenceLayer.insertOrUpdateHeartRates(listOf(hr))).thenReturn(
             PersistenceLayer.TransactionResult()
         )
         loopHub.storeHeartRate(
             samplingStart, samplingEnd, 101, "Test Device"
         )
         kotlinx.coroutines.delay(100) // Give time for GlobalScope.launch to complete
-        verify(persistenceLayer).insertOrUpdateHeartRate(hr)
+        verify(persistenceLayer).insertOrUpdateHeartRates(listOf(hr))
     }
 }

@@ -15,7 +15,6 @@
     <string name="pump_state_label">Pumpenstatus</string>
     <string name="active_alarms_label">Aktive Alarme</string>
     <string name="basal_type_label">Basaltyp</string>
-    <string name="basal_rate_label">Basalrate</string>
     <string name="pump_type_label">Pumpentyp</string>
     <string name="fw_version_label">FW-Version</string>
     <string name="patch_no_label">Patch Nr.</string>
@@ -44,6 +43,7 @@
     <string name="alarm_battery_out">Akku leer</string>
     <string name="alarm_no_calibration">Keine Kalibrierung</string>
     <string name="pump_time_update_failed">Fehler beim Aktualisieren der Pumpen-Zeitzone, stelle Benachrichtigung ab und aktualisiere manuell.</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Erneut versuchen</string>
     <string name="step_prepare_patch">Pod aktivieren</string>
@@ -59,7 +59,6 @@
     <string name="step_deactivate_complete">Patch deaktiviert</string>
     <string name="step_retry_activation">Aktivierung wird ausgeführt</string>
     <string name="unexpected_state">Unerwarteter Zustand: %1$s</string>
-    <string name="no_profile_selected">Kein Profil ausgewählt. Bitte wählen Sie ein Profil und versuchen Sie es erneut.</string>
     <string name="patch_begin_activation">Kein aktiver Patch. Drücken Sie <b>Weiter</b> um den Aktivierungsprozess zu starten.</string>
     <string name="patch_not_active_note">Die Pumpenbasis darf erst im nächsten Schritt mit dem Pflaster verbunden werden!</string>
     <string name="connect_pump_base">Verbinde die Pumpenbasis mit einem neuen Patch, entferne die Restluft, fülle das Insulin und drücke dann <b>Next</b>.</string>
@@ -67,12 +66,10 @@
     <string name="do_not_attach_to_body">Den Patch noch nicht an den Körper anhängen.</string>
     <string name="half_press_needle">Nadelknopf halb durchdrücken. Drücke dann <b>Weiter</b> um das Füllen zu starten.</string>
     <string name="wait_for_priming">Bitte warten Sie, bis das Füllen abgeschlossen ist.</string>
-    <string name="priming_error">Fehler beim Füllen; drücke <b>Erneut</b> um es erneut zu versuchen.</string>
     <string name="press_next">Drücke <b>Nächste</b> um fortzufahren.</string>
     <string name="press_next_to_start_activation">Drücken <b>Nächste</b> um die Aktivierung zu starten.</string>
     <string name="remove_safety_lock">Entferne den Sicherheitsverschluss. Befestige die Pumpe an Deinem Körper. Drücke dann die Nadel-Taste.</string>
     <string name="activating_pump">Pumpe wird aktiviert und die Anfangs-Basalrate wird festgelegt. Bitte warten.</string>
-    <string name="activating_error">Fehler beim Füllen; drücke <b>Erneut</b> um es erneut zu versuchen.</string>
     <string name="activating_complete">Neuer Patch aktiviert. %.2f Einheiten übrig.</string>
     <string name="press_OK_to_return">Drücke <b>OK</b> um zum Hauptbildschirm zurückzukehren.</string>
     <string name="deactivate_sure">Bist Du sicher, dass Du den aktuellen Patch deaktivieren möchtest?</string>
@@ -88,8 +85,6 @@
     <string name="press_retry_or_discard">Drücke <b>Nächste</b> um die Aktivierung fortzusetzen oder <b> verwerfen</b>, um den Aktivierungsstatus zurückzusetzen.</string>
     <string name="reading_activation_status">Bitte warten, auslesen des Aktivierungsstatus der Pumpe.</string>
     <!-- settings-->
-    <string name="sn_input_title">Seriennummer</string>
-    <string name="sn_input_invalid">Ungültige Seriennummer!</string>
     <string name="alarm_setting_title">Alarm Einstellungen</string>
     <string name="alarm_setting_summary">Wählen Sie Ihre bevorzugten Pumpen-Alarmeinstellungen.</string>
     <string name="patch_expiration_title">Patch Ablaufdatum</string>

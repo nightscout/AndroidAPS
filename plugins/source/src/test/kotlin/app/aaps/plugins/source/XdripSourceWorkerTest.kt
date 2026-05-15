@@ -10,7 +10,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.test.runTest
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -30,7 +31,7 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var xdripSourcePlugin: XdripSourcePlugin
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
-    @Mock lateinit var dataWorkerStorage: DataWorkerStorage
+    @Mock lateinit var dataInbox: DataInbox
 
     init {
         addInjector { injector ->
@@ -38,7 +39,7 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
                 injector.aapsLogger = aapsLogger
                 injector.xdripSourcePlugin = xdripSourcePlugin
                 injector.persistenceLayer = persistenceLayer
-                injector.dataWorkerStorage = dataWorkerStorage
+                injector.dataInbox = dataInbox
                 injector.dateUtil = dateUtil
                 injector.preferences = preferences
             }
@@ -47,7 +48,7 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setupMock() {
-        whenever(workerParameters.inputData).thenReturn(workDataOf(DataWorkerStorage.STORE_KEY to 1L))
+        whenever(workerParameters.inputData).thenReturn(workDataOf())
         worker = XdripSourcePlugin.XdripSourceWorker(context, workerParameters)
     }
 
@@ -78,7 +79,7 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
                 putDouble(Intents.EXTRA_RAW, 150.0)
                 putString(Intents.EXTRA_BG_SLOPE_NAME, "FortyFiveDown")
             }
-            whenever(dataWorkerStorage.pickupBundle(any())).thenReturn(bundle)
+            whenever(dataInbox.drain(eq(XdripInbox))).thenReturn(listOf(bundle))
 
             val result = worker.doWork()
 
@@ -96,30 +97,32 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `When bundle is missing then return failure`() {
+    fun `When inbox is empty then return success with no-data marker`() {
         runTest {
             whenever(xdripSourcePlugin.isEnabled()).thenReturn(true)
-            whenever(dataWorkerStorage.pickupBundle(1L)).thenReturn(null)
+            whenever(dataInbox.drain(eq(XdripInbox))).thenReturn(emptyList())
 
             val result = worker.doWork()
 
-            Assertions.assertEquals(ListenableWorker.Result.failure(workDataOf("Error" to "missing input data")), result)
+            Assertions.assertEquals(ListenableWorker.Result.success(workDataOf("Result" to "no data")), result)
+            verify(persistenceLayer, never()).insertCgmSourceData(any(), any(), any(), any())
         }
     }
 
     @Test
-    fun `When glucoseValues are missing then return failure`() {
+    fun `When glucoseValues are missing the bundle is skipped`() {
         runTest {
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             whenever(xdripSourcePlugin.isEnabled()).thenReturn(true)
             val bundle = BundleMock.mocked().apply {
                 putString("sensorType", "G6")
             }
-            whenever(dataWorkerStorage.pickupBundle(any())).thenReturn(bundle)
+            whenever(dataInbox.drain(eq(XdripInbox))).thenReturn(listOf(bundle))
 
             val result = worker.doWork()
 
-            Assertions.assertEquals(ListenableWorker.Result.failure(workDataOf("Error" to "missing glucoseValue")), result)
+            // Batch returns success even when some bundles are skipped; verify no insert happened.
+            Assertions.assertEquals(ListenableWorker.Result.success(), result)
+            verify(persistenceLayer, never()).insertCgmSourceData(any(), any(), any(), any())
         }
     }
 }

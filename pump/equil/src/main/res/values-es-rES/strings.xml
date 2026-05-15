@@ -7,7 +7,7 @@
     <string name="equil_dressing_onkey_msg">Desplazamiento automático del émbolo hasta el fondo del depósito. Se detendrá automáticamente al llegar al fondo. Haga clic en \"Detener\" para interrumpir si es necesario.</string>
     <string name="equil_hint_dressing">Esta operación detendrá la infusión de insulina y hará que el émbolo de la bomba se retraiga hasta el fondo</string>
     <string name="equil_insulin_reservoir">Reservorio de insulina</string>
-    <string name="equil_mode">Modo en ejecución</string>
+    <string name="equil_mode">Modo de funcionamiento</string>
     <string name="equil_mode_running">Funcionando</string>
     <string name="equil_mode_stopped">Detenido</string>
     <string name="equil_mode_suspended">Suspendido</string>
@@ -21,14 +21,12 @@
     <string name="equil_title_attach">Acoplar la bomba</string>
     <string name="equil_title_air">Cebado de la cánula</string>
     <string name="equil_title_unpair_detach">Desacoplar la bomba</string>
-    <string name="equil_title_unpair_confirm">Confirmar desvinculación</string>
     <string name="equil_title_history_events">Historial de eventos</string>
     <string name="equil_tone">Tono de alerta</string>
     <string name="equil_tone_mode_mute">Silenciar</string>
     <string name="equil_tone_mode_shake">Sólo vibrar</string>
     <string name="equil_tone_mode_tone">Sólo sonido</string>
     <string name="equil_tone_mode_tone_and_shake">Vibración y sonido</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">¡Esta operación detendrá la infusión de insulina y retraerá el émbolo de la bomba hasta el fondo! ¡Además, eliminará el estado de vinculación!</string>
     <string name="equil_ble_config_confirmation_title">Emparejar bomba parche Equil</string>
     <string name="equil_error">Error de conexión</string>
@@ -115,7 +113,6 @@
     <string name="equil_history_item18">Infusión anormal detenida</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspender</string>
     <string name="equil_common_overview_button_resume_delivery">Reanudar la entrega</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Hace un momento</string>
     <string name="equil_common_less_than_a_minute_ago">Hace menos de un minuto</string>
     <string name="equil_common_time_ago">%1$s ago</string>

@@ -45,7 +45,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Stare RileyLink</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetați dispozitivull RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Citiți Jurnal Puls</string>
     <string name="omnipod_eros_pod_management_pulse_log">Jurnal Puls</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Jurnal Puls (copiat în clipboard)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairingtimedout">Conectare nereușită</string>
+    <string name="danars_pairingtimedout">Asocierea a expirat</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Integrare pentru pompele DANA Diabecare RS și Dana-i</string>
     <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
-    <string name="commanderror">Eroare de comandă</string>
-    <string name="speederror">Eroare de viteză</string>
-    <string name="insulinlimitviolation">Încălcare a limitării cantităţii de insulină</string>
-    <string name="boluserrorcode">Solicitat: %1$.2fU Livrat: %2$.2fU Cod eroare: %3$s</string>
+    <string name="commanderror">Eroare comandă</string>
+    <string name="speederror">Eroare viteză</string>
+    <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
+    <string name="boluserrorcode">Solicitat: %1$.2fU Administrat: %2$.2fU Cod eroare: %3$s</string>
     <string name="danar_valuenotsetproperly">Valoare setată incorect</string>
     <string name="danar_setbasalstep001">Setare pas bazală la 0.01 U/h</string>
     <string name="resetpairing">Resetați informațiile de împerechere?</string>
@@ -16,7 +16,7 @@
     <string name="processinghistory">Se procesează activitatea</string>
     <string name="danar_enableextendedbolus">Activați bolusuri extinse în pompă</string>
     <string name="overview_bolusprogress_stoped">Oprit</string>
-    <string name="unsupportedfirmware">Soft pompă incompatibil</string>
+    <string name="unsupportedfirmware">Firmware pompă incompatibil</string>
     <string name="pumperror">Eroare a pompei</string>
     <string name="lowbattery">Baterie aproape descărcată</string>
     <string name="basalcompare">Se livrează mai puțin decât rata bazală curentă</string>
@@ -41,7 +41,7 @@
     <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nPotriviți manual ora din pompă și asigurați-vă că sincronizarea cu datele istorice din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
     <string name="pairfirst">Vă rog să asociați pompa la telefon!</string>
     <string name="approachingdailylimit">Se apropie limita zilnică de insulină</string>
-    <string name="startingbolus">Pornire livrare bolus</string>
+    <string name="startingbolus">Pornire administrare bolus</string>
     <string name="waitingforestimatedbolusend">Se așteaptă terminarea bolusării. Mai sunt %1$d secunde.</string>
     <string name="stoppingtempbasal">Se oprește bazala temporară</string>
     <string name="settingextendedbolus">Se pornește bolusul extins</string>
@@ -56,17 +56,17 @@
     <string name="danar_history_carbohydrates">Carbohidrați</string>
     <string name="danar_history_dailyinsulin">Insulină zilnică</string>
     <string name="danar_history_glucose">Glicemie</string>
-    <string name="danar_history_refill">Reumplere</string>
-    <string name="danar_history_syspend">Suspendare</string>
-    <string name="danar_history_prime">Amorsare</string>
+    <string name="danar_history_refill">Reumpleți</string>
+    <string name="danar_history_syspend">Suspendați</string>
+    <string name="danar_history_prime">Amorsați</string>
     <string name="danar_user_options">Opțiunile utilizatorului</string>
-    <string name="danar_time_display">Formatul de afișare a timpului</string>
+    <string name="danar_time_display">Formatul de afișare timp</string>
     <string name="danar_button_scroll">Buton derulare</string>
     <string name="danar_beep">Sunet la apăsarea butonului</string>
     <string name="danar_pump_alarm_sound">Sunet</string>
     <string name="danar_pump_alarm_vibrate">Vibrație</string>
     <string name="danar_pump_alarm_both">Ambele</string>
-    <string name="danar_screen_timeout">Timp stingere ecran [secunde]</string>
+    <string name="danar_screen_timeout">Timp activare LCD [secunde]</string>
     <string name="danar_backlight">Timp lumină de fundal [secunde]</string>
     <string name="danar_glucose_units">Unități glicemie</string>
     <string name="danar_shutdown">Oprire [ore]</string>

@@ -545,7 +545,7 @@
 
             <meta-data
                 android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
-                android:value="tile_configuration_activity" />
+                android:value="tile_settings_actions" />
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/action_tile_preview" />
@@ -562,7 +562,7 @@
 
             <meta-data
                 android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
-                android:value="tile_configuration_tempt" />
+                android:value="tile_settings_tempt" />
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/temp_target_tile_preview" />
@@ -597,6 +597,20 @@
         </service>
 
         <service
+            android:name=".tile.SceneTileService"
+            android:exported="true"
+            android:label="@string/label_scene_tile"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/user_action_tiles" />
+        </service>
+
+        <service
             android:name=".tile.RunningModeTileService"
             android:exported="true"
             android:label="@string/label_running_mode_title"
@@ -608,6 +622,23 @@
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/running_mode_tile" />
+        </service>
+
+        <service
+            android:name=".tile.BgGraphTileService"
+            android:exported="true"
+            android:label="@string/label_bg_graph_tile"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
+                android:value="tile_settings_bg_graph" />
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/bg_graph_tile" />
         </service>
 
         <!-- Transparent activity to handle complication taps reliably on Android 12+ -->
@@ -659,16 +690,20 @@
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.LoopStatusActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.BgGraphActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
             android:exported="true"
             android:label="@string/menu_settings"
+            android:theme="@style/WearAppCompatDark" />
+        <activity
+            android:name=".interaction.menus.TileMenuActivity"
+            android:exported="false"
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TreatmentActivity"
@@ -734,16 +769,33 @@
         </activity>
 
         <activity
-            android:name=".interaction.TileConfigurationActivity"
-            android:theme="@style/TileConfigTheme"
+            android:name=".tile.ActionsTileSettingsActivity"
+            android:theme="@style/WearAppCompatDark"
             android:exported="true">
             <intent-filter>
-                <action android:name="tile_configuration_activity" />
+                <action android:name="tile_settings_actions" />
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".tile.TempTargetTileSettingsActivity"
+            android:theme="@style/WearAppCompatDark"
+            android:exported="true">
             <intent-filter>
-                <action android:name="tile_configuration_tempt" />
+                <action android:name="tile_settings_tempt" />
+                <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".tile.BgGraphTileSettingsActivity"
+            android:theme="@style/WearAppCompatDark"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="tile_settings_bg_graph" />
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

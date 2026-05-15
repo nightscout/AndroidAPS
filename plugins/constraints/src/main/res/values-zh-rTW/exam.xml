@@ -196,4 +196,20 @@
     <string name="other_medication_label">其他藥物。請閱讀以下聲明並勾選框以接受聲明。</string>
     <string name="other_medication_text">AAPS會降低基礎速率或暫停胰島素輸送以提高血糖。SGLT2抑制劑類藥物（格列佛寧）可以防止血糖上升，從而可能導致危險的胰島素缺乏，引起DKA。
 \n常見的品牌名有：Invokana®、Forxiga®、Jardiance®、Steglatro®、Suglat®、Apleway®、Deberza®、Synjardy®、Vokanamet®、Xigduo®。\n\n我在此承諾，在使用AAPS時不會服用此類藥物，或在使用此類藥物之前停用循環。</string>
+    <string name="concentration_feature_label">胰島素濃度管理</string>
+    <string name="u200_with_profile">在 AAPS 支援胰島素濃度之前，用戶會將設定檔設為 50% 以把所有數值減半來使用 U200。於該設定下，哪些敘述是正確的？</string>
+    <string name="u200_with_profile_reports">我在 AAPS 內部資料庫與 NS 報表中的資料會變得不正確，所有數值（注射量、基礎率、TDD）都應乘以 2 才能看到真實狀態，特別是提供給醫師與醫療團隊時。</string>
+    <string name="u200_with_profile_pens">若我使用 U200 胰島素筆進行外部注射，我不必在 AAPS 與胰島素筆之間進行任何換算。</string>
+    <string name="u200_with_profile_pens2">無論使用 U100 或 U200 的胰島素筆來進行外部注射，我都必須在每次外部注射時，將 AAPS 計算的劑量與我在筆上選擇的劑量互相換算。</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">你一直以 50% 的設定檔搭配 U200 作為權宜做法，現在想切換到新的胰島素濃度功能。哪些敘述是正確的？</string>
+    <string name="switch_u200_profile_any_time">我可以隨時切換，因為我的幫浦裡已經是正確的 U200 胰島素。</string>
+    <string name="switch_u200_profile_ps">我必須準備一個更強的設定檔（相較目前預設設定檔為 200%），並在下一次更換貼片／儲藥槽且選擇 U200 胰島素時，同步這個新設定檔。</string>
+    <string name="switch_u200_profile_dynisf">我必須將 DynISF 功能停用至少一週，使 TDD 與以國際單位計算的實際 TDD 值完全一致。</string>
+    <string name="switch_u200_profile_mental">切換之後的數週內，我需要特別小心，讓自己逐漸習慣以國際單位來思考注射量、基礎率與 TDD。</string>
+    <string name="switch_u100_u200">你目前使用 U100，並計劃透過新的胰島素濃度功能切換到其他濃度。我該怎麼做？</string>
+    <string name="switch_u100_u200_profile">我必須修改我的設定檔。</string>
+    <string name="switch_u100_u200_tube">我絕對不應該使用幫浦（管路型幫浦）的裝置介面來進行注射。</string>
+    <string name="switch_u100_u200_pen">即使切換之後，我仍需在 AAPS 與使用胰島素筆進行的外部注射之間進行換算。</string>
+    <string name="switch_u100_u200_change">只有在更換儲藥槽中的胰島素或更換貼片／Pod 時，才能切換胰島素濃度。</string>
 </resources>

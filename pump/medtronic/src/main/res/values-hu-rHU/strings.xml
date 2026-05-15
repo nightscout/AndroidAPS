@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Sorozatszám hibás.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpa típusa hiányzik.</string>
     <string name="medtronic_error_pump_type_invalid">Pumpa típusa nem támogatott.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pumpa frekvencia nem támogatott.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink címe hibás.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Csatlakoztatott pumpa típusa eltér a beállított típustól.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Bázis profilok/sémák beállítás nincs engedélyezve a pumpán. Engedélyezze a pumpán.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic pumpa előzmények</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">A bólus a pumpára való elküldés után lett törölve. Mivel a Medtronic pumpa nem támogatja a törlést, ezért manuálisan kell törölni. Felfüggesztett módba kell állítani a pumpát, majd utána újraindítani (ha továbbra is meg akarja szakítani). Az alkalmazás a következő frissítéskor (kevesebb, mint 5 percen belül) veszi át a változásokat.</string>
     <string name="medtronic_cmd_cant_read_tbr">Jelenlegi ÁB lekérése nem sikerült.</string>
@@ -74,5 +72,4 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Semleges átmeneti bázis beállítása</string>
     <string name="set_neutral_temps_summary">Ha be van kapcsolva, akkor minden óra végén törli az átmeneti bázist. Ez a módszer segíthet elkerülni bizonyos pumpákon az óránkénti hangjelzést/rezgést.</string>
-    <string name="mdt_tbr_remaining">%1$.1f E/ó (%2$d perc van hátra)</string>
 </resources>

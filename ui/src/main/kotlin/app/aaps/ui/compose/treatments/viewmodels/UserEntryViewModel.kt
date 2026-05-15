@@ -11,10 +11,11 @@ import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.USER_ENTRY_FILTERED_DAYS
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.USER_ENTRY_UNFILTERED_DAYS
@@ -37,7 +38,8 @@ class UserEntryViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UserEntryUiState())
@@ -73,18 +75,13 @@ class UserEntryViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         userEntries = userEntries,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load user entries", e)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading user entries")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading user entries", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -99,13 +96,6 @@ class UserEntryViewModel @Inject constructor(
             .debounce(1000L) // 1 second debounce
             .onEach { loadData() }
             .launchIn(viewModelScope)
-    }
-
-    /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -142,6 +132,5 @@ class UserEntryViewModel @Inject constructor(
 data class UserEntryUiState(
     val userEntries: List<UE> = emptyList(),
     val isLoading: Boolean = true,
-    val showLoop: Boolean = false,
-    val snackbarMessage: SnackbarMessage? = null
+    val showLoop: Boolean = false
 )

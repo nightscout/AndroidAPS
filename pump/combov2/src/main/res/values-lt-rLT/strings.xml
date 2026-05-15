@@ -45,7 +45,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo skanavimo laikas baigėsi</string>
     <string name="combov2_pairing_failed_due_to_error">Susiejimas nepavyko dėl klaidos: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Susiejimas nutrūko dėl nežinomos priežasties</string>
-    <string name="combov2_pairing_invalid_pin_length">"Neteisingas PIN ilgis: reikia %1$d skaitmenų, yra %2$d"</string>
     <string name="combov2_scanning_for_pump">Ieškoma ryšio su pompa</string>
     <string name="combov2_establishing_bt_connection">Nustatomas Bluetooth ryšys (bandymo nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Užmezgamas ryšys su pompa</string>
@@ -65,7 +64,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Nustatyti bazės profilį</string>
     <string name="combov2_setting_tbr_cmddesc">Nustatoma %1$d%% laikina bazė %2$d min.</string>
     <string name="combov2_cancelling_tbr">Atšaukiama dabartinė laikina bazė</string>
-    <string name="combov2_delivering_bolus_cmddesc">Leidžiama %1$.1f v</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Įkeliama BPD istorija</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Atnaujinamas laikas ir data pompoje</string>
     <string name="combov2_updating_pump_status_cmddesc">Gaunamas pompos statusas</string>

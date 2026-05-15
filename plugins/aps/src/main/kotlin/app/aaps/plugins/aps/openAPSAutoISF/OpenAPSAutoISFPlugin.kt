@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
-import app.aaps.core.interfaces.aps.GlucoseStatusAutoIsf
 import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
@@ -158,7 +157,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             val variableSens = it.variableSens ?: return@forEach
             val timestamp = it.date
             val key = timestamp - timestamp % T.mins(minutesClass).msecs() + glucose.toLong()
-            if (variableSens > 0) autoIsfCache.put(key, variableSens)
+            if (variableSens > 0) synchronized(autoIsfCache) { autoIsfCache.put(key, variableSens) }
             count++
         }
         aapsLogger.debug(LTag.APS, "Loaded $count variable sensitivity values from database")
@@ -185,10 +184,12 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         var count = 0
         var sum = 0.0
         val start = timestamp - T.hours(24).msecs()
-        autoIsfCache.forEach { key, value ->
-            if (key in start..timestamp) {
-                count++
-                sum += value
+        synchronized(autoIsfCache) {
+            autoIsfCache.forEach { key, value ->
+                if (key in start..timestamp) {
+                    count++
+                    sum += value
+                }
             }
         }
         val sensitivity = if (count == 0) null else sum / count
@@ -230,8 +231,10 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         if (sensitivity > 0) {
             // can default to 0, e.g. for the first 2-3 loops in a virgin setup
             aapsLogger.debug("calculateVariableIsf CALC ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
-            autoIsfCache.put(key, sensitivity)
-            if (autoIsfCache.size() > 1000) autoIsfCache.clear()
+            synchronized(autoIsfCache) {
+                autoIsfCache.put(key, sensitivity)
+                if (autoIsfCache.size() > 1000) autoIsfCache.clear()
+            }
         }
         // this return is mandatory, otherwise it messed up the AutoISF algo.
         return Pair("OFF", null)
@@ -468,7 +471,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return value
     }
 
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
             val maxIobPref = preferences.get(DoubleKey.ApsSmbMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
@@ -501,7 +504,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return absoluteRate
     }
 
-    override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+    override suspend fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = preferences.get(BooleanKey.ApsUseSmb)
         if (!enabled) value.set(false, rh.gs(R.string.smb_disabled_in_preferences), this)
         return value
@@ -523,11 +526,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         JsonObject(emptyMap())
             .put(BooleanKey.ApsUseDynamicSensitivity, preferences)
             .put(IntKey.ApsDynIsfAdjustmentFactor, preferences)
+            .put(BooleanKey.ApsUseSmb, preferences)
 
     override fun applyConfiguration(configuration: JsonObject) {
         configuration
             .store(BooleanKey.ApsUseDynamicSensitivity, preferences)
             .store(IntKey.ApsDynIsfAdjustmentFactor, preferences)
+            .store(BooleanKey.ApsUseSmb, preferences)
     }
 
     // Rounds value to 'digits' decimal places
@@ -546,7 +551,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     suspend fun autoISF(profile: Profile): Double {
         val sens = profile.getProfileIsfMgdl()
-        val glucose_status = glucoseStatusProvider.glucoseStatusData as GlucoseStatusAutoIsf?
+        val glucose_status = glucoseStatusCalculatorAutoIsf.getGlucoseStatusData(allowOldData = false)
 
         val high_temptarget_raises_sensitivity = exerciseMode || highTemptargetRaisesSensitivity
         var target_bg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])

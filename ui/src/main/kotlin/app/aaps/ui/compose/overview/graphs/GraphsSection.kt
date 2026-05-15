@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -107,7 +108,9 @@ fun GraphsSection(
     )
     val bgZoomState = rememberVicoZoomState(
         zoomEnabled = true,
-        initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES)
+        initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES),
+        minZoom = Zoom.x(Constants.GRAPH_TIME_RANGE_HOURS * 60.0),
+        maxZoom = Zoom.x(MIN_GRAPH_ZOOM_MINUTES)
     )
 
     // Pre-allocate secondary graph scroll/zoom states (up to MAX_SECONDARY_GRAPHS)
@@ -201,6 +204,12 @@ fun GraphsSection(
         val newTimestamp = bgInfoState.bgInfo?.timestamp ?: return@LaunchedEffect
         val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         if (lastBgTimestamp != 0L && newTimestamp > lastBgTimestamp) {
+            // Skip auto-scroll while user is interacting with the graph
+            val sinceInteraction = System.currentTimeMillis() - graphViewModel.lastInteractionMs
+            if (sinceInteraction < INTERACTION_GRACE_MS) {
+                lastBgTimestamp = newTimestamp
+                return@LaunchedEffect
+            }
             val timeRange = derivedTimeRange
             if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
                 // Scroll so "now + 2h" is at the right edge of viewport

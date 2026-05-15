@@ -121,10 +121,10 @@ class DanaRSServiceIntegrationTest : TestBase() {
     @Mock lateinit var pumpEnactResult: PumpEnactResult
     @Mock lateinit var profileUtil: ProfileUtil
     @Mock lateinit var pumpWithConcentration: PumpWithConcentration
-    @Mock lateinit var concentrationHelper: ConcentrationHelper
+    @Mock lateinit var ch: ConcentrationHelper
     @Mock lateinit var profile: Profile
 
-    private val bolusProgressData = BolusProgressData()
+    private val bolusProgressData by lazy { BolusProgressData(ch, rh) }
     private lateinit var danaPump: DanaPump
     private lateinit var bleEncryption: BleEncryption
     private lateinit var emulatorTransport: EmulatorBleTransport
@@ -174,8 +174,8 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
 
         // Wire up message hash table for bolus notification packets
-        val deliveryRatePacket = DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, concentrationHelper, bolusProgressData, danaPump)
-        val deliveryCompletePacket = DanaRSPacketNotifyDeliveryComplete(aapsLogger, concentrationHelper, bolusProgressData, danaPump)
+        val deliveryRatePacket = DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, ch, bolusProgressData, danaPump)
+        val deliveryCompletePacket = DanaRSPacketNotifyDeliveryComplete(aapsLogger, ch, bolusProgressData, danaPump)
         whenever(danaRSMessageHashTable.findMessage(deliveryRatePacket.command)).thenReturn(deliveryRatePacket)
         whenever(danaRSMessageHashTable.findMessage(deliveryCompletePacket.command)).thenReturn(deliveryCompletePacket)
 

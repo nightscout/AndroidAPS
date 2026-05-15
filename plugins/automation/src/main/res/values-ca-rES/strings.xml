@@ -51,7 +51,6 @@
     <string name="location_going_out">Quan deixeu l\'àrea anomenada</string>
     <string name="time_range">Interval de temps</string>
     <string name="timerange_value">Temps entre %1$s i %2$s</string>
-    <string name="between">Entre </string>
     <string name="add_short">AFEGR</string>
     <string name="temptargetcompared">Objectiu temporal %1$s</string>
     <string name="btdevicecompared">Connexió Bluetooth a dispositiu %1$s %2$s</string>

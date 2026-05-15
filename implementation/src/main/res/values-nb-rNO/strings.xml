@@ -3,26 +3,11 @@
     <string name="executing_right_now">Kommandoen utføres akkurat nå</string>
     <string name="basal_value_below_minimum">Basalverdi under minimum. Profilen settes ikke!</string>
     <!--       Stats -->
-    <string name="veryLow" comment="below 3.1">Veldig lavt</string>
-    <string name="low" comment="3.1-3.9">Lavt</string>
-    <string name="high" comment="10.0-13.9">Høyt</string>
-    <string name="veryHigh" comment="above 13.9">Veldig høyt</string>
-    <string name="below" comment="below &quot;in range&quot;">Under</string>
-    <string name="in_range">I målområdet</string>
-    <string name="above" comment="above &quot;in range&quot;">Over</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="detailed_14_days">Detaljert 14 dager</string>
-    <string name="day_tir">Dag TIR</string>
-    <string name="night_tir">Natt TIR</string>
     <string name="carbs_short" comment="max 6 characters">Karbo</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">Sist tilkoblet: %1$d min siden</string>
-    <string name="short_status_alert">Varsel: %1$s</string>
     <string name="short_status_last_bolus">Siste bolus: %1$s E @%2$s</string>
     <string name="short_status_temp_basal">Midl. basal: %1$s</string>
-    <string name="short_status_extended">Utv: %1$s</string>
-    <string name="short_status_reservoir">Reserv: %1$d E</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpen er ikke initialisert</string>
     <!--    Permissions-->
@@ -40,7 +25,6 @@
     <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
     <string name="concentration_etbr_format">F %1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_delivered_format">%1$s/%2$s</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f\u00a0CU/t</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/t</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Innstillinger ble eksportert til skylagring</string>

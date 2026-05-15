@@ -45,7 +45,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Osiągnięto limit czasu skanowania Combo</string>
     <string name="combov2_pairing_failed_due_to_error">Parowanie nie powiodło się z powodu błędu: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Parowanie przerwane z nieznanych powodów</string>
-    <string name="combov2_pairing_invalid_pin_length">"Nieprawidłowa długość PIN-u parowania: zamiast %1$d cyfr otrzymano %2$d"</string>
     <string name="combov2_scanning_for_pump">Skanowanie w poszukiwaniu pompy</string>
     <string name="combov2_establishing_bt_connection">Ustanawienie połączenia Bluetooth (próba #%1$d)</string>
     <string name="combov2_pairing_performing_handshake">Zestawianie połączenia z pompą</string>
@@ -65,7 +64,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Wczytuje profil bazowy</string>
     <string name="combov2_setting_tbr_cmddesc">Ustawianie %1$d%% TBR na %2$d minut</string>
     <string name="combov2_cancelling_tbr">Anulowanie trwającej TBR</string>
-    <string name="combov2_delivering_bolus_cmddesc">Dostarczanie bolusa %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Pobieranie historii TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualizowanie daty pompy</string>
     <string name="combov2_updating_pump_status_cmddesc">Aktualizowanie statusu pompy</string>

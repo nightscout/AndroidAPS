@@ -45,7 +45,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink 状态</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">重置 RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">读取Pulse日志</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse 日志</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse 日志(复制到剪贴板)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

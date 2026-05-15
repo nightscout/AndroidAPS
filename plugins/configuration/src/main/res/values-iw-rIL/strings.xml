@@ -32,18 +32,11 @@
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
     <string name="readstatus">קרא סטטוס</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">בקשה</string>
-    <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
     <string name="configbuilder_aps_description">איזה אלגוריתם של APS יבצע התאמות טיפול?</string>
-    <string name="configbuilder_general_description">מס\' תוספים כלליים שעשויים להיות יעילים.</string>
-    <string name="configbuilder_constraints_description">אילו מגבלות פעילות?</string>
-    <string name="configbuilder_loop_description">השתמשו באפשרות זו כדי להפעיל את לולאת AndroidAPS.</string>
-    <string name="configbuilder_insulin_description">באיזה סוג של אינסולין אתה משתמש?</string>
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
-    <string name="configbuilder_smoothing_description">בחרו אלגוריתם החלקה</string>
     <string name="configbuilder_sensitivity_description">באיזה אלגוריתם זיהוי רגישות להשתמש?</string>
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
     <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>

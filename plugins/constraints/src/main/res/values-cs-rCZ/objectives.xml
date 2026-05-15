@@ -38,8 +38,12 @@
     <string name="objectives_usage_objective">Naučte se, jak ovládat AAPS</string>
     <string name="objectives_usage_gate">Provádějte v AAPS různé akce</string>
     <string name="objectives_usage_learned">Naučili jste se základům AAPS. Hlavní ovládací prvky jsou na obrazovce Přehled, přístupné kliknutím nebo dlouhým kliknutím, více ovládacích prvků je na obrazovce Akce. Měli byste vědět, jak umístit obrazovku pluginu do horního menu, nebo ji nechat zobrazit v levém horním seznamu povolených pluginů.</string>
+    <string name="objectives_useprofileswitch">Nastavte profil 90 % na 10 min</string>
+    <string name="objectives_usedisconnectpump">Simulujte sprchování. Odpojte pumpu na 1 h</string>
     <string name="objectives_usereconnectpump">... a stejným způsobem ji znovu připojte</string>
+    <string name="objectives_usetemptarget">Vytvořte vlastní dočasný cíl s trváním 10 min</string>
     <string name="objectives_useloop">Zobrazte obsah modulu Smyčka</string>
+    <string name="objectives_usescale">Použijte posouvání nebo přiblížení na grafu glykémie</string>
     <string name="objectives_exam_objective">Prokažte své znalosti</string>
     <string name="objectives_exam_gate">Prostudujte otázky. Na každou otázku jste dostali čtyři možné odpovědi. Může existovat více než jedna správná odpověď. Zatrhněte prosím všechny odpovědi, které jsou správné, a potvrďte volbou ZKONTROLOVAT.</string>
     <string name="objectives_exam_learned_prerequisites">Nemusíte být vývojář, ale potřebujete NS pro splnění cílů, kompatibilní pumpu a počítač k prvnímu sestavení AAPS a pro každou aktualizaci.</string>
@@ -66,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Pro zadávání sacharidů jsou povoleny pouze gramy.</string>
     <string name="objectives_exam_learned_ecarbs">E-sacharidy je náhrada prodlouženého bolusu ve světě pump.</string>
     <string name="objectives_exam_learned_nsclient">Vzdálené monitorování a ovládání je možné, ale ne všechny funkce musí být k dispozici na dálku.</string>
+    <string name="objectives_exam_learned_concentration1">Použití inzulínu U200 s profilem 50 % bude vyžadovat trvalý přepočet: pro externí bolusy pery a všechny standardní reporty poskytované AAPS nebo NS budou chybné a bude je nutné převést na IU pro zdravotnický tým.</string>
+    <string name="objectives_exam_learned_concentration2">Přechod z U200 s profilem 50 % na U200 s funkcí koncentrace inzulínu bude vyžadovat vytvoření nového silnějšího profilu, vypnutí DynISF na jeden týden a natrénování mozku myslet v mezinárodních jednotkách.</string>
+    <string name="objectives_exam_learned_concentration3">Koncentraci inzulínu lze změnit pouze při výměně inzulínu nebo patche. Ale především, zvláště u pump s hadičkou, nikdy nepoužívejte uživatelské rozhraní pumpy k podávání bolusů přímo z pumpy.</string>
     <string name="answerdisabledto">Odpovídání zakázáno do: %1$s</string>
     <string name="wronganswer">Špatná odpověď!</string>
     <string name="unfinshed_button">Další nedokončená</string>
@@ -80,4 +87,14 @@
     <string name="requirementnotmet">Požadavky cíle nejsou splněny</string>
     <string name="what_i_ve_learned">Co jsem se naučil:</string>
     <string name="verify_master_password">Ověřte, zda znáte hlavní heslo</string>
+    <string name="objectives_collapse">Méně</string>
+    <string name="objectives_expand">Více</string>
+    <string name="objectives_no_learned">Pro tento cíl nejsou zaznamenány žádné lekce.</string>
+    <string name="objectives_open_exam">Otevřít zkoušku</string>
+    <string name="objectives_exam_question_progress">Otázka %1$d z %2$d</string>
+    <string name="objectives_exam_reset">Resetovat</string>
+    <string name="objectives_exam_previous">Předchozí</string>
+    <string name="objectives_exam_next">Další</string>
+    <string name="objectives_exam_next_unanswered">Další nezodpovězená</string>
+    <string name="objectives_show_hint">Nápověda</string>
 </resources>

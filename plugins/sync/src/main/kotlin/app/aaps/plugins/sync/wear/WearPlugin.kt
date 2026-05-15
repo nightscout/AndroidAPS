@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Watch
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -14,9 +17,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.data.model.TT
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
@@ -74,6 +75,7 @@ class WearPlugin @Inject constructor(
     private val config: Config,
     private val bolusProgressData: BolusProgressData,
     private val persistenceLayer: PersistenceLayer,
+    private val scenes: SceneAutomationApi,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -118,7 +120,7 @@ class WearPlugin @Inject constructor(
                 if (isEnabled()) {
                     if (state != null) {
                         if (!state.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
-                            rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.status)))
+                            rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.wearStatus)))
                         }
                     } else {
                         // Bolus ended — send 100% to clear wear display
@@ -159,6 +161,15 @@ class WearPlugin @Inject constructor(
             .drop(1) // Skip initial emission on collection start
             .debounce(2_000L)
             .onEach { dataHandlerMobile.resendData("TempTargetChange") }
+            .launchIn(newScope)
+        // Refresh wear scene tile whenever the scene list changes (add / update / delete)
+        scenes.scenesFlow
+            .drop(1) // Skip initial replay on subscribe
+            .onEach { dataHandlerMobile.sendScenes() }
+            .launchIn(newScope)
+        // Push active-scene flag to wear so the tile can swap between scene list and STOP button
+        scenes.activeFlow
+            .onEach { dataHandlerMobile.sendActiveSceneState(it) }
             .launchIn(newScope)
         disposable += rxBus
             .toObservable(EventWearUpdateTiles::class.java)

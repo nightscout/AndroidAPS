@@ -15,6 +15,6 @@ class MsgBolusProgressTest : DanaRTestBase() {
         val array = ByteArray(100)
         putIntToArray(array, 0, 2 * 100)
         packet.handleMessage(array)
-        Assertions.assertEquals(1.0, bolusProgressData.state.value?.delivered ?: 0.0, 0.0)
+        Assertions.assertEquals(1.0, bolusProgressData.state.value?.delivered?.cU ?: 0.0, 0.0)
     }
 }

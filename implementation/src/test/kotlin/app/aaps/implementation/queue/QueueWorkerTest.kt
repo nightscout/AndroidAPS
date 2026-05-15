@@ -39,7 +39,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var workManager: WorkManager
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
-    private val bolusProgressData = BolusProgressData()
+    private val bolusProgressData by lazy { BolusProgressData(ch, rh) }
 
     init {
         addInjector {
@@ -70,7 +70,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, rh, constraintChecker,
-            profileFunction, activePlugin, context, config, dateUtil, fabricPrivacy,
+            profileFunction, activePlugin, config, dateUtil, fabricPrivacy,
             uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope, bolusProgressData
         )
 

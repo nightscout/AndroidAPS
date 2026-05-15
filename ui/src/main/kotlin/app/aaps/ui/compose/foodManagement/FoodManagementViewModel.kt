@@ -44,7 +44,7 @@ class FoodManagementViewModel @Inject constructor(
                     && (s.filterSubCategory == null || food.subCategory == s.filterSubCategory)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     /** Derived: subcategories available for the currently selected category filter */
     val filteredSubCategories: StateFlow<List<String>> = uiState
@@ -54,7 +54,7 @@ class FoodManagementViewModel @Inject constructor(
             val relevant = if (cat != null) foods.filter { it.category == cat } else foods
             relevant.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {
         loadData()

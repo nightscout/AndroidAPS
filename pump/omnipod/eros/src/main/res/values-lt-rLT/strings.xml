@@ -43,7 +43,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod veikia laikina bazė, bet AAPS neinformuota apie šią laikiną bazę. Atšaukite laikiną bazę rankiniu būdu.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink statistika</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Skaityti Pulse žurnalą</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse žurnalas</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse žurnalas (nukopijuotas į mainų sritį)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

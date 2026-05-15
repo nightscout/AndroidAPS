@@ -70,7 +70,7 @@
     <string name="danar_backlight">Thời gian đèn nền sáng [giây]</string>
     <string name="danar_glucose_units">Đơn vị đường huyết</string>
     <string name="danar_shutdown">Tắt máy [giờ]</string>
-    <string name="danar_low_reservoir">Sắp hết Insulin [u]</string>
+    <string name="danar_low_reservoir">Sắp hết Insulin [Units]</string>
     <string name="danar_save_user_options">Lưu tùy chọn vào bơm</string>
     <string name="description_pump_dana_r">Tích hợp bơm insulin DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Tích hợp bơm DANA Diabecare R (bản nội địa)</string>
@@ -83,7 +83,7 @@
     <string name="pumpdrivercorrected">Trình điều khiển bơm đã được sửa</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Tắt chế độ EasyUI trên bơm</string>
-    <string name="profile_set_failed">Cài đặt Hồ sơ liều nền thất bại</string>
+    <string name="profile_set_failed">Cài đặt Cấu hình liều nền thất bại</string>
     <string name="danar_pump_settings">Cài đặt bơm Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
@@ -98,8 +98,8 @@
     <string name="selectedpump">Bơm đã chọn</string>
     <string name="rs_loginsulinchange_title">Ghi lại thay đổi bình chứa</string>
     <string name="rs_loginsulinchange_summary">Thêm sự kiện \"Thay đổi insulin\" vào careportal khi phát hiện trong lịch sử</string>
-    <string name="rs_logcanulachange_title">Ghi lại thay đổi kim truyền</string>
-    <string name="rs_logcanulachange_summary">Thêm sự kiện \"Thay đổi kim truyền\" vào careportal khi phát hiện trong lịch sử</string>
+    <string name="rs_logcanulachange_title">Ghi lại thay đổi kim luồn</string>
+    <string name="rs_logcanulachange_summary">Thêm sự kiện “Thay vị trí truyền” vào CarePortal khi được phát hiện trong lịch sử</string>
     <string name="press_ok_on_the_pump">Nhấn OK trên Bơm\nvà nhập 2 số hiển thị\nGiữ màn hình bơm luôn BẬT bằng cách nhấn nút trừ cho đến khi bạn nhập xong mã.</string>
     <string name="num1pin">1: (12 chữ số)</string>
     <string name="num2pin">2: (8 chữ số)</string>

@@ -51,7 +51,6 @@
     <string name="location_going_out">Όταν φεύγετε από την περιοχή που ονομάζεται</string>
     <string name="time_range">Εύρος χρόνου</string>
     <string name="timerange_value">Ο χρόνος είναι μεταξύ %1$s και %2$s</string>
-    <string name="between">Ανάμεσα </string>
     <string name="add_short">Προσθ</string>
     <string name="temptargetcompared">Προσ. στόχος %1$s</string>
     <string name="btdevicecompared">Σύνδεση Bluetooth στη συσκευή %1$s %2$s</string>
@@ -78,8 +77,6 @@
     <string name="edit_short">Επεξεργασία</string>
     <string name="preconditions">Προϋποθέσεις:</string>
     <string name="user_action">Ενέργεια χρήστη</string>
-    <string name="remove_selected_items">Αφαίρεση επιλεγμένων στοιχείων</string>
-    <string name="count_selected">Επιλέχθηκαν %1$d</string>
     <string name="system_automation">Αυτοματισμός συστήματος</string>
     <string name="run_automations">Εκτέλεση αυτοματισμών</string>
     <string name="add_automation">Προσθήκη κανόνα</string>

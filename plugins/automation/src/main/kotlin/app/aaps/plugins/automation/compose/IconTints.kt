@@ -30,4 +30,5 @@ object IconTint {
     val Smb = Color(0xFF66BB6A)
     val Autotune = Color(0xFFE19701)
     val Stop = Color(0xFFE93057)
+    val Scene = Color(0xFF8E24AA)
 }

@@ -10,20 +10,20 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.PairingStep
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.scanForActivity
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.dana.DanaPump
@@ -83,6 +83,7 @@ class BLEComm @Inject constructor(
 
     @Volatile var isConnected = false
     var isConnecting = false
+
     /** Timeout for waiting for pump reply in [sendMessage]. Default 5 s; tests may lower this. */
     var messageTimeoutMs: Long = 5000L
     private var encryptedDataRead = false
@@ -96,7 +97,7 @@ class BLEComm @Inject constructor(
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
+            rxBus.send(EventShowSnackbar(context.getString(app.aaps.core.ui.R.string.need_connect_permission), EventShowSnackbar.Type.Error))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }
@@ -162,7 +163,7 @@ class BLEComm @Inject constructor(
             // assume pairing keys are invalid
             val lastClearRequest = preferences.get(DanaLongKey.LastClearKeyRequest)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
-                ToastUtils.errorToast(context, R.string.invalidpairing)
+                rxBus.send(EventShowSnackbar(rh.gs(R.string.invalidpairing), EventShowSnackbar.Type.Error))
                 danaRSPlugin.changePump()
                 connectAddress?.let { bleTransport.adapter.removeBond(it) }
             } else if (lastClearRequest == 0L) {

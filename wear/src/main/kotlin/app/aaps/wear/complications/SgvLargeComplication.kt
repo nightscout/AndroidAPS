@@ -52,7 +52,9 @@ class SgvLargeComplication : ModernBaseComplicationProviderService() {
     ): ShortTextComplicationData {
         val titleText = TimeDifferenceComplicationText.Builder(
             style = TimeDifferenceStyle.SHORT_SINGLE_UNIT,
-            countUpTimeReference = CountUpTimeReference(Instant.ofEpochMilli(bgData.timeStamp))
+            // SHORT_SINGLE_UNIT rounds to nearest; adding 30_000ms makes it round down instead,
+            // matching CWF, AAPS overview, and BgGraphActivity
+            countUpTimeReference = CountUpTimeReference(Instant.ofEpochMilli(bgData.timeStamp + 30_000L))
         )
             .setMinimumTimeUnit(TimeUnit.MINUTES)
             .setText("^1 ${bgData.slopeArrow}\uFE0E")

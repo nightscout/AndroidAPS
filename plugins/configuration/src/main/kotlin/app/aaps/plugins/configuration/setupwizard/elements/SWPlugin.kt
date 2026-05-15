@@ -22,8 +22,9 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.compose.ConfigPluginItem
+import app.aaps.core.ui.compose.ConfigPluginCard
 import app.aaps.core.ui.compose.ConfigPluginUiModel
+import app.aaps.core.ui.compose.SelectionMode
 import javax.inject.Inject
 
 class SWPlugin @Inject constructor(
@@ -35,6 +36,7 @@ class SWPlugin @Inject constructor(
     private var pType: PluginType? = null
     @StringRes private var pluginDescription = 0
     private var onPreferencesNavigate: ((pluginId: String) -> Unit)? = null
+    private var onOpenPluginNavigate: ((pluginId: String) -> Unit)? = null
 
     fun option(pType: PluginType, @StringRes pluginDescription: Int): SWPlugin {
         this.pType = pType
@@ -44,6 +46,11 @@ class SWPlugin @Inject constructor(
 
     fun onPreferences(navigate: (pluginId: String) -> Unit): SWPlugin {
         this.onPreferencesNavigate = navigate
+        return this
+    }
+
+    fun onOpenPlugin(navigate: (pluginId: String) -> Unit): SWPlugin {
+        this.onOpenPluginNavigate = navigate
         return this
     }
 
@@ -59,6 +66,9 @@ class SWPlugin @Inject constructor(
             Text(text = stringResource(pluginDescription))
         }
 
+        val selectionMode =
+            if (isMultiSelect(pType)) SelectionMode.MULTI_SELECT else SelectionMode.SINGLE_SELECT
+
         Column(modifier = Modifier.fillMaxWidth()) {
             plugins.forEach { plugin ->
                 val pluginEnabled = remember(refreshTick) { plugin.isEnabled(pType) }
@@ -69,24 +79,26 @@ class SWPlugin @Inject constructor(
                     composeIcon = plugin.pluginDescription.icon,
                     isEnabled = pluginEnabled,
                     canToggle = !plugin.pluginDescription.alwaysEnabled && (!pluginEnabled || isMultiSelect(pType)),
-                    showPreferences = plugin.hasPreferences() && pluginEnabled
+                    showPreferences = plugin.hasPreferences() && pluginEnabled,
+                    hasContent = plugin.hasComposeContent()
                 )
-                ConfigPluginItem(
+                ConfigPluginCard(
                     plugin = model,
-                    onPluginClick = { },
-                    onEnableToggle = { enabled ->
-                        val message = configBuilder.requestPluginSwitch(plugin, enabled, pType)
+                    selectionMode = selectionMode,
+                    onCardClick = {
+                        val message = configBuilder.requestPluginSwitch(plugin, !pluginEnabled, pType)
                         if (message != null) {
                             confirmationMessage = message
                             pendingAction = {
-                                configBuilder.confirmPumpPluginSwitch(plugin, enabled, pType)
+                                configBuilder.confirmPumpPluginSwitch(plugin, !pluginEnabled, pType)
                                 refreshTick++
                             }
                         } else {
                             refreshTick++
                         }
                     },
-                    onPreferencesClick = { onPreferencesNavigate?.invoke(plugin.javaClass.simpleName) }
+                    onSettingsClick = { onPreferencesNavigate?.invoke(plugin.javaClass.simpleName) },
+                    onOpenPluginClick = { onOpenPluginNavigate?.invoke(plugin.javaClass.simpleName) }
                 )
             }
         }

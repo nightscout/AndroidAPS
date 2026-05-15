@@ -47,7 +47,6 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo 扫描超时</string>
     <string name="combov2_pairing_failed_due_to_error">配对失败: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">配对因未知原因中止</string>
-    <string name="combov2_pairing_invalid_pin_length">"无效配对的 PIN 长度：需要 %1$d 数字，得到 %2$d"</string>
     <string name="combov2_scanning_for_pump">正在扫描泵</string>
     <string name="combov2_establishing_bt_connection">建立蓝牙连接（尝试次数：%1$d）</string>
     <string name="combov2_pairing_performing_handshake">与泵握手</string>
@@ -67,7 +66,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">设置基础率配置文件</string>
     <string name="combov2_setting_tbr_cmddesc">设置临时基础率 %1$d%% 持续时间%2$d 分钟</string>
     <string name="combov2_cancelling_tbr">取消正在进行的临时基础率</string>
-    <string name="combov2_delivering_bolus_cmddesc">正在输注 %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">获取 TDD 历史记录</string>
     <string name="combov2_updating_pump_datetime_cmddesc">正在更新泵时间</string>
     <string name="combov2_updating_pump_status_cmddesc">更新泵状态</string>

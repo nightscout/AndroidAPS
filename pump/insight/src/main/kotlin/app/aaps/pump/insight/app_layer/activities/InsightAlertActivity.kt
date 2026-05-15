@@ -7,12 +7,23 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.pump.insight.InsightAlertService
-import app.aaps.pump.insight.R
 import app.aaps.pump.insight.compose.InsightAlertScreen
 import app.aaps.pump.insight.compose.InsightAlertUiState
 import app.aaps.pump.insight.descriptors.Alert
@@ -23,11 +34,12 @@ import javax.inject.Inject
 class InsightAlertActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var alertUtils: AlertUtils
+    @Inject lateinit var rxBus: RxBus
     private var alertService: InsightAlertService? = null
 
     private var state by mutableStateOf(
         InsightAlertUiState(
-            iconRes = R.drawable.ic_error,
+            icon = Icons.Default.Error,
             errorCode = "",
             title = "",
             description = null,
@@ -54,17 +66,27 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            InsightAlertScreen(
-                state = state,
-                onMute = {
-                    state = state.copy(muteEnabled = false)
-                    alertService?.mute()
-                },
-                onConfirm = {
-                    state = state.copy(muteEnabled = false, confirmEnabled = false)
-                    alertService?.confirm()
+            val snackbarHostState = remember { SnackbarHostState() }
+            CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    InsightAlertScreen(
+                        state = state,
+                        onMute = {
+                            state = state.copy(muteEnabled = false)
+                            alertService?.mute()
+                        },
+                        onConfirm = {
+                            state = state.copy(muteEnabled = false, confirmEnabled = false)
+                            alertService?.confirm()
+                        }
+                    )
+                    GlobalSnackbarHost(
+                        rxBus = rxBus,
+                        hostState = snackbarHostState,
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    )
                 }
-            )
+            }
         }
         bindService(Intent(this, InsightAlertService::class.java), serviceConnection, BIND_AUTO_CREATE)
         setFinishOnTouchOutside(false)
@@ -80,12 +102,12 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
     }
 
     private fun update(alert: Alert) {
-        val iconRes = alert.alertCategory?.let { alertUtils.getAlertIcon(it) } ?: R.drawable.ic_error
+        val icon = alert.alertCategory?.let { alertUtils.getAlertIcon(it) } ?: Icons.Default.Error
         val errorCode = alert.alertType?.let { alertUtils.getAlertCode(it) } ?: ""
         val title = alert.alertType?.let { alertUtils.getAlertTitle(it) } ?: ""
         val description = alertUtils.getAlertDescription(alert)?.let { HtmlHelper.fromHtml(it) }
         state = InsightAlertUiState(
-            iconRes = iconRes,
+            icon = icon,
             errorCode = errorCode,
             title = title,
             description = description,

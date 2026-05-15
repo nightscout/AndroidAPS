@@ -16,7 +16,6 @@
     <string name="pump_state_label">Pumpstatus</string>
     <string name="active_alarms_label">Aktiva larm</string>
     <string name="basal_type_label">Basaltyp</string>
-    <string name="basal_rate_label">Basaldos</string>
     <string name="pump_type_label">Pumptyp</string>
     <string name="fw_version_label">FW-version</string>
     <string name="patch_no_label">Patch-nr</string>
@@ -45,6 +44,7 @@
     <string name="alarm_battery_out">Batteri urladdat</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
     <string name="pump_time_update_failed">Det gick inte att uppdatera pumpens tidszon, bekräfta meddelande och uppdatera manuellt.</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Försök igen</string>
     <string name="step_prepare_patch">Aktivera Pod</string>
@@ -60,7 +60,6 @@
     <string name="step_deactivate_complete">Podden inaktiverad</string>
     <string name="step_retry_activation">Aktivering pågår</string>
     <string name="unexpected_state">Oväntat tillstånd: %1$s</string>
-    <string name="no_profile_selected">Ingen profil vald. Välj en profil och försök igen.</string>
     <string name="patch_begin_activation">Ingen aktiv pod. Tryck på <b>Nästa</b> för att påbörja aktiveringsprocessen.</string>
     <string name="patch_not_active_note">Pumpbas bör inte anslutas till podden förrän nästa steg!</string>
     <string name="connect_pump_base">Anslut pumpbasen till en ny pod, ta bort kvarvarande luft och fyll med insulin, tryck sedan på <b>Nästa</b>.</string>
@@ -68,12 +67,10 @@
     <string name="do_not_attach_to_body">Fäst inte podden på kroppen ännu.</string>
     <string name="half_press_needle">Halvtryck på nålknappen. Tryck sedan på <b>Nästa</b> för att börja prima.</string>
     <string name="wait_for_priming">Vänta på att förfyllning ska slutföras.</string>
-    <string name="priming_error">Det gick inte att förfylla, tryck på <b>Försök igen</b> för att försöka igen.</string>
     <string name="press_next">Tryck på <b>Nästa</b> för att fortsätta.</string>
     <string name="press_next_to_start_activation">Tryck på <b>Nästa</b> för att starta aktivering.</string>
     <string name="remove_safety_lock">Ta bort säkerhetslåset. Fäst pumpen på kroppen. Tryck på nålknappen.</string>
     <string name="activating_pump">Aktiverar pump och ställer in basaldos. Vänligen vänta.</string>
-    <string name="activating_error">Det gick inte att aktivera, tryck på <b>Försök igen</b> för att försöka igen.</string>
     <string name="activating_complete">Ny pod aktiverad. %.2f enheter återstår.</string>
     <string name="press_OK_to_return">Tryck på <b>OK</b> för att återgå till huvudskärmen.</string>
     <string name="deactivate_sure">Är du säker på att du vill inaktivera nuvarande pod?</string>
@@ -89,8 +86,6 @@
     <string name="press_retry_or_discard">Tryck på <b>Nästa</b> för att återuppta aktiveringen eller <b>Kassera</b> för att återställa aktiveringsstatus.</string>
     <string name="reading_activation_status">Vänligen vänta, läser aktiveringsstatus från pump.</string>
     <!-- settings-->
-    <string name="sn_input_title">Serienummer</string>
-    <string name="sn_input_invalid">Ogiltigt serienummer!</string>
     <string name="alarm_setting_title">Larminställningar</string>
     <string name="alarm_setting_summary">Ställ in dina föredragna larminställningar för pumpen.</string>
     <string name="patch_expiration_title">Poddens utgångsdatum</string>

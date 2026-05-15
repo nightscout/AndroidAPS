@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Vincolo bolo applicato</string>
     <string name="carbs_constraint_applied">Vincolo CHO applicato</string>
+    <string name="no_temp_basal_running">Nessuna basale temporanea in esecuzione</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Avvia TT Attività fisica</string>
     <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
     <string name="start_hypo_tt">Avvia TT Ipoglicemia</string>
     <string name="time_offset">Offset</string>
-    <string name="remind_to_bolus_later">Ricorda di fare il bolo</string>
-    <string name="a11y_carb_reminder">Imposta il promemoria all\'ora dei carboidrati</string>
     <!--    Widget-->
     <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">Grafico di glicemia AAPS</string>
+    <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compatto)</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor attività</string>
     <string name="time_range">Intervallo di tempo</string>
@@ -33,8 +33,6 @@
     <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="do_you_want_recalculate_tdd_stats">Vuoi ricalcolare le statistiche TDD?</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
-    <string name="invalid_age">Inserimento età non valido</string>
-    <string name="invalid_weight">Inserimento peso non valido</string>
     <string name="age">Età</string>
     <string name="weight_label">Peso</string>
     <string name="glucose_type">Tipo glicemia</string>
@@ -42,13 +40,7 @@
     <string name="bg_meter">Glucometro</string>
     <string name="bg_sensor">Sensore</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Totale</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">Davanti</string>
-    <string name="site_back">Dietro</string>
     <string name="site_man">Uomo</string>
     <string name="site_woman">Donna</string>
     <string name="site_child">Bambino</string>
@@ -56,14 +48,12 @@
     <string name="user_profile_description">La descrizione del profilo utente viene utilizzata per mostrare i siti più frequenti disponibili per un uomo, una donna o un bambino</string>
     <string name="site_management">Profilo Di Gestione Sito</string>
     <string name="site_management_description">Imposta qui se vuoi gestire il sito del micro, il sito del CGM o entrambi. Questa impostazione verrà utilizzata per inviare automaticamente la finestra di gestione del sito su ogni nuovo inserimento rilevato</string>
-    <string name="record_site_change">Registra Posizione Sito</string>
     <string name="update_site_change">Aggiorna Posizione Sito</string>
     <string name="edit_site">Modifica</string>
     <string name="record_site_location">Posizione Del Sito: %1$s</string>
     <string name="record_site_arrow">Freccia Del Sito: %1$s</string>
     <string name="record_site_note">Note: %1$s</string>
     <string name="delete_site_note">Nota eliminata</string>
-    <string name="site_filter_info">Selezionare il tipo di evento Terapia che si desidera visualizzare: Cambio Cannula e/o Cambio Sensore</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
@@ -71,16 +61,83 @@
     <string name="fill_prime_amount">Quantità inizializzazione</string>
     <string name="fill_pump_units_note">La quantità iniziale è nelle unità del micro</string>
     <string name="fill_insulin_change">Cambia insulina a: %1$s (verrà applicato lo switch del profilo)</string>
-    <string name="fill_current_insulin">Insulina corrente</string>
-    <string name="fill_change_insulin">Cambia insulina</string>
-    <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Non fare il bolo, solo registrazione</string>
+    <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Attività</string>
+    <string name="scene_cat_health">Salute</string>
+    <string name="scene_cat_food">Cibo</string>
+    <string name="scene_cat_sleep">Sonno</string>
+    <string name="scene_cat_dailylife">Vita quotidiana</string>
+    <string name="scene_cat_wellness">Benessere</string>
+    <string name="scene_cat_general">Generale</string>
+    <string name="aaps_tt_high_icon_label">Target Temporaneo</string>
+    <string name="aaps_tt_activity_icon_label">Attività TT</string>
+    <string name="aaps_tt_eating_icon_label">TT Pasto a breve</string>
+    <string name="aaps_tt_hypo_icon_label">TT Ipoglicemia</string>
+    <string name="aaps_tt_manual_icon_label">TT Manuale</string>
+    <string name="aaps_profile_icon_label">Profilo</string>
+    <string name="aaps_loop_icon_label">Loop</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolo</string>
+    <string name="aaps_carbs_icon_label">Carboidrati</string>
+    <string name="aaps_tbr_icon_label">Basale temporanea</string>
+    <string name="aaps_activity_icon_label">Esercizio</string>
+    <string name="aaps_note_icon_label">Nota</string>
+    <string name="aaps_automation_icon_label">Automazione</string>
+    <string name="aaps_calibration_icon_label">Calibrazione</string>
+    <string name="exercise_icon_label">Esegui</string>
+    <string name="fitness_icon_label">Allenamento</string>
+    <string name="swim_icon_label">Nuoto</string>
+    <string name="hiking_icon_label">Escursionismo</string>
+    <string name="bike_icon_label">Bicicletta</string>
+    <string name="skateboard_icon_label">Skateboard</string>
+    <string name="tennis_icon_label">Tennis</string>
+    <string name="soccer_icon_label">Calcio</string>
+    <string name="baseball_icon_label">Rugby</string>
+    <string name="basketball_icon_label">Pallamano</string>
+    <string name="volleyball_icon_label">Ginnastica</string>
+    <string name="golf_icon_label">Golf</string>
+    <string name="scubadiving_icon_label">Immersione subacquea</string>
+    <string name="rowing_icon_label">Canottaggio</string>
+    <string name="surfing_icon_label">Surf</string>
+    <string name="hospital_icon_label">Ospedale</string>
+    <string name="medication_icon_label">Farmaco</string>
+    <string name="monitor_heart_icon_label">Monitor</string>
+    <string name="thermostat_icon_label">Termostato</string>
+    <string name="blood_type_icon_label">Sangue</string>
+    <string name="health_safety_icon_label">Salute</string>
+    <string name="healing_icon_label">Guarigione</string>
+    <string name="meal_icon_label">Ristorante</string>
+    <string name="cafe_icon_label">Caffè</string>
+    <string name="lunch_icon_label">Pranzo</string>
+    <string name="bakery_icon_label">Prodotti da forno</string>
+    <string name="sleep_icon_label">Sonno</string>
+    <string name="night_icon_label">Notte</string>
+    <string name="nights_stay_icon_label">Notti di soggiorno</string>
+    <string name="hotel_icon_label">Hotel</string>
+    <string name="seat_flat_icon_label">Riposo</string>
+    <string name="work_icon_label">Lavoro</string>
+    <string name="school_icon_label">Scuola</string>
+    <string name="home_icon_label">Casa</string>
+    <string name="car_icon_label">Guida</string>
+    <string name="flight_icon_label">Volo</string>
+    <string name="shopping_icon_label">Shopping</string>
+    <string name="relax_icon_label">Meditazione</string>
+    <string name="spa_icon_label">Spa</string>
+    <string name="heart_icon_label">Cuore</string>
+    <string name="psychology_icon_label">Mente</string>
+    <string name="star_icon_label">Stella</string>
+    <string name="speed_icon_label">Velocità</string>
+    <string name="alarm_icon_label">Allarme</string>
+    <string name="event_icon_label">Evento</string>
+    <string name="flag_icon_label">Segnalino</string>
+    <string name="bookmark_icon_label">Preferito</string>
+    <string name="label_icon_label">Etichetta</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Nome Insulina Mancante</string>
     <string name="insulin_name_exists">Il nome dell\'insulina %1$s esiste già, seleziona un nuovo nome</string>
     <string name="a11y_add_new_insulin">Aggiungi nuova insulina</string>
     <string name="a11y_delete_current_insulin">Elimina insulina corrente</string>
-    <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
     <string name="activate_insulin_no_profile">Nessun profilo attivo trovato</string>
     <string name="activate_insulin_new_insulin">Nuova insulina: %1$s</string>
     <string name="activate_insulin_remaining">Rimanente: %1$d min</string>
@@ -111,45 +168,25 @@
     <string name="duration3h">3 ore</string>
     <string name="duration10h">10 ore</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">risultato corretto con %</string>
-    <string name="a11_correction_units">risultato corretto con unità</string>
-    <string name="two_hours">2h</string>
-    <string name="result_insulin_carbs">Risultato: %1$s %2$s</string>
     <string name="missing_carbs">Mancanti %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% carboidrati immediati, senza carboidrati estesi</string>
     <string name="wizard_carbs_type_desc">Carboidrati ridotti di %1$d%%, aggiunto eCarbs %2$d%% ritardato %3$dmin per %4$dh</string>
     <string name="wizard_include_info">Tocca per includere/escludere dal calcolo:\n• BG — glucosio nel sangue (ON all\'inizio)\n• TT — obiettivo temporaneo (ON all\'inizio)\n• Tendenza — Tendenza glicemica (ultima condizione ricordata)\n• IOB — insulina a bordo (ON all\'inizio)\n• COB — carboidrati a bordo (ultimo stato ricordato)</string>
-    <string name="wizard_bg_age">Età Glicemia: %1$d min</string>
-    <string name="a11y_current_bg">glicemia corrente</string>
-    <string name="carb_time_label">Offset CHO</string>
-    <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
-    <string name="show_calculation">Mostra calcolo</string>
     <!-- Treatments -->
     <string name="no_records_available">Nessun record disponibile</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">CHO:</string>
-    <string name="tempbasals_netratio_label_string">Rapporto:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="meal_bolus">Pasto</string>
-    <string name="prime">Caricamento</string>
     <string name="carbs_and_bolus">CHO e boli</string>
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="careportal_remove_started_events">Rimuovi le voci \"AAPS avviato\"</string>
-    <string name="hide_loop">Nascondi loop</string>
-    <string name="show_loop">Mostra loop</string>
     <string name="user_entry">Inserimento utente</string>
     <string name="clone_label">Clona</string>
     <string name="add_new_profile">Aggiungi nuovo profilo</string>
-    <string name="show_profile">Mostra profilo</string>
     <string name="edit_label">Modifica</string>
-    <string name="edit_profile">Modifica profilo</string>
     <string name="activate_label">Attiva</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="remove_label">Rimuovi</string>
     <string name="active_profile_indicator">ATTIVO</string>
-    <string name="remaining_time_label">Rimanenza</string>
     <string name="confirm_remove_profile">Rimuovere profilo \"%1$s\"?</string>
     <string name="confirm_clone_profile">Clonare profilo \"%1$s\"?</string>
     <string name="tbr_type_flag_extended">E</string>
@@ -174,19 +211,18 @@
     <string name="format_with_tdd_and_pct">Età: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Età: %1$d Peso: %2$.0f kg</string>
     <string name="dpv_default_profile">Profilo DPV predefinito</string>
-    <string name="invalid_pct">Inserimento % non valido</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Velocità basale</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">solo su smartwatch</string>
-    <string name="a11y_only_on_phone">solo su telefono</string>
     <string name="overview_edit_quickwizard_button_text">Testo del pulsante</string>
     <string name="quick_wizard_mode_wizard">Procedura guidata</string>
     <string name="quick_wizard_mode_insulin">Insulina</string>
     <string name="quick_wizard_mode_carbs">Carboidrati</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
-    <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
+    <!--    History browser-->
+    <string name="history_now">Adesso</string>
+    <string name="a11y_history_previous_window">Finestra precedente</string>
+    <string name="a11y_history_next_window">Finestra successiva</string>
     <string name="additional_ecarbs">Aggiungi eCarbs</string>
     <string name="calculator_options">Opzioni Calcolatore</string>
     <string name="use_bg">Usa Glicemia</string>
@@ -240,7 +276,6 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Azioni selezionate</string>
-    <string name="quick_launch_available_actions">Azioni disponibili</string>
     <string name="quick_launch_no_dynamic_items">Nessun elemento disponibile</string>
     <string name="quick_launch_category_treatment">Trattamento</string>
     <string name="quick_launch_category_care">Care Portal</string>
@@ -254,14 +289,16 @@
     <string name="quick_launch_no_tt_presets">Aggiungi preset Temp Target per usarli qui</string>
     <string name="quick_launch_no_profiles">Crea profili in Profilo Locale per usarli qui</string>
     <string name="quick_launch_edit_profile_preset">Modifica preimpostazione profilo</string>
-    <string name="quick_launch_profile_percentage">Percentuale</string>
-    <string name="quick_launch_profile_duration">Durata</string>
     <string name="quick_launch_profile_permanent">Permanente</string>
-    <string name="quick_launch_profile_confirm">Profilo Autotune %1$s?</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Seleziona Freccia</string>
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Accetta nuova basale temporanea:</string>
     <string name="loop_accept_perform">Esegui</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Disabilitato</string>
+    <string name="widget_rm_suspended">Sospeso</string>
+    <string name="widget_rm_resume">Riprendi</string>
 </resources>

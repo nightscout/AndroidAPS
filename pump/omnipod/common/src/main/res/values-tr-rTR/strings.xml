@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Alarmları Sustur</string>
     <string name="omnipod_common_overview_pod_status">Pod Durumu</string>
     <string name="omnipod_common_overview_total_delivered">Toplam İletilen</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f Ü</string>
     <string name="omnipod_common_overview_pod_unique_id">Özgün kimlik</string>
     <string name="omnipod_common_overview_lot_number">Parti Numarası</string>
     <string name="omnipod_common_overview_pod_sequence_number">Sıra Numarası</string>

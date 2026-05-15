@@ -32,13 +32,16 @@ fun RM.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject {
         .put("durationInMilliseconds", reportedDuration)
         .put("originalDuration", duration)
         .put("mode", mode.name)
+        .put("autoForced", autoForced)
         .also {
+            if (reasons != null) it.put("reasons", reasons)
             if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
             if (ids.pumpType != null) it.put("pumpType", ids.pumpType!!.name)
             if (ids.pumpSerial != null) it.put("pumpSerial", ids.pumpSerial)
             if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }
 }
+
 /* NS PS
 {
     "enteredBy": "undefined",
@@ -68,13 +71,17 @@ fun RM.Companion.fromJson(jsonObject: JSONObject): RM? {
     val pumpType = PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
     val mode = RM.Mode.fromString(JsonHelper.safeGetString(jsonObject, "mode", DEFAULT_MODE.name))
+    val autoForced = JsonHelper.safeGetBoolean(jsonObject, "autoForced", false)
+    val reasons = JsonHelper.safeGetStringAllowNull(jsonObject, "reasons", null)
 
 
     return RM(
         timestamp = timestamp,
         duration = originalDuration ?: durationInMilliseconds ?: T.mins(duration).msecs(),
         isValid = isValid,
-        mode = mode
+        mode = mode,
+        autoForced = autoForced,
+        reasons = reasons
     ).also {
         it.ids.nightscoutId = id
         it.ids.pumpId = pumpId

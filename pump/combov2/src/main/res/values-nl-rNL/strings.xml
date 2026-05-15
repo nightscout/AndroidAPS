@@ -46,7 +46,6 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo scan timeout bereikt</string>
     <string name="combov2_pairing_failed_due_to_error">Koppelen mislukt door de fout: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Koppelen afgebroken om onbekende redenen</string>
-    <string name="combov2_pairing_invalid_pin_length">"Ongeldige lengte van koppel-PIN: %1$d cijfers nodig, kreeg %2$d"</string>
     <string name="combov2_scanning_for_pump">Zoeken naar pomp</string>
     <string name="combov2_establishing_bt_connection">Bluetooth verbinding tot stand brengen (poging nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Handdruk met pomp uitvoeren</string>
@@ -66,7 +65,6 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_setting_basal_profile_cmddesc">Instellen van basaal profiel</string>
     <string name="combov2_setting_tbr_cmddesc">Instellen %1$d%% TBR voor %2$d minuten</string>
     <string name="combov2_cancelling_tbr">Annuleren actieve TBR</string>
-    <string name="combov2_delivering_bolus_cmddesc">%1$.1f E worden toegediend</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Ophalen TDD-geschiedenis</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Updaten pomp datum/tijd</string>
     <string name="combov2_updating_pump_status_cmddesc">Pompstatus bijwerken</string>

@@ -13,13 +13,13 @@
     <string name="patch_not_active">Patch non activé</string>
     <string name="pump_setting_failed">La configuration des paramètres de la pompe a échoué!</string>
     <string name="pump_sync_error">Erreur lors de la synchronisation de l\'historique de la pompe, un enregistrement a été ignoré. Vérifiez l\'onglet de traitement pour vérifier si le bolus est correctement synchronisé. Mettez en veille et si l\'erreur continue d\'apparaître, changer le patch ou la pompe.</string>
+    <string name="patch_reset_after_primed_error">Le Patch a été réinitialisé après l\'amorçage ! Supprimez le Patch et démarrez un nouveau Patch.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Dernière connexion</string>
     <string name="active_bolus_label">Bolus actif</string>
     <string name="pump_state_label">État de la pompe</string>
     <string name="active_alarms_label">Alarmes actives</string>
     <string name="basal_type_label">Type de Basale</string>
-    <string name="basal_rate_label">Débit de Basal</string>
     <string name="pump_type_label">Type de pompe</string>
     <string name="fw_version_label">Version du FW</string>
     <string name="patch_no_label">N° du Patch</string>
@@ -50,10 +50,12 @@
     <string name="alarm_no_calibration">Absence d\'étalonnage</string>
     <string name="pump_time_update_failed">Impossible de mettre à jour le fuseau horaire de la pompe, mettre en veille le message et rafraîchir manuellement.</string>
     <string name="bolus_error">Erreur de bolus</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Réessayer</string>
     <string name="step_prepare_patch">Activer le Patch</string>
     <string name="step_prepare_patch_connect">Connecter et remplir</string>
+    <string name="step_select_insulin">Sélectionner l\'insuline</string>
     <string name="step_prime">Amorcer</string>
     <string name="step_priming">Amorçage</string>
     <string name="step_priming_complete">Amorçage terminé</string>
@@ -63,9 +65,9 @@
     <string name="step_deactivate">Désactiver le Patch</string>
     <string name="step_deactivating">Désactivation en cours...</string>
     <string name="step_deactivate_complete">Patch désactivé</string>
+    <string name="unpair_confirm_message">Cela effacera le numéro de série de la pompe stockée et la déconnectera. Activez un nouveau patch pour rechercher une pompe.</string>
     <string name="step_retry_activation">Activation en cours</string>
     <string name="unexpected_state">État inattendu : %1$s</string>
-    <string name="no_profile_selected">Aucun profil sélectionné. Veuillez sélectionner un profil et réessayez.</string>
     <string name="patch_begin_activation">Aucun Patch actif. Appuyez sur <b>Suivant</b> pour commencer le processus d\'activation.</string>
     <string name="patch_not_active_note">La base de la pompe ne doit pas être connectée au Patch avant l\'étape suivante !</string>
     <string name="connect_pump_base">Connectez la base de la pompe à un nouveau Patch, retirez l\'air résiduel et remplissez avec de l\'insuline, puis appuyez sur <b>Suivant</b>.</string>
@@ -74,12 +76,10 @@
     <string name="do_not_attach_to_body">Ne fixez pas encore le Patch sur le corps.</string>
     <string name="half_press_needle">Appuyez à mi-course sur le bouton de l\'aiguille. Puis appuyez sur <b>Suivant</b> pour démarrer l\'amorçage.</string>
     <string name="wait_for_priming">Merci de patienter jusqu\'à la fin de l\'amorçage.</string>
-    <string name="priming_error">Échec d\'amorçage, appuyez sur <b>Réessayez</b> pour éssayer à nouveau.</string>
     <string name="press_next">Appuyez sur <b>Suivant</b> pour continuer.</string>
     <string name="press_next_to_start_activation">Appuyez sur <b>Suivant</b> pour démarrer l\'activation.</string>
     <string name="remove_safety_lock">Retirez le verrou de sécurité. Fixez la pompe au corps. Appuyez sur le bouton de l\'aiguille.</string>
     <string name="activating_pump">Activation de la pompe et du débit de base initial. Veuillez patienter.</string>
-    <string name="activating_error">Échec de l\'activation, appuyez sur <b>Réessayez</b> pour éssayer à nouveau.</string>
     <string name="activating_complete">Nouveau Patch activé. %.2f Unités restantes.</string>
     <string name="can_export_settings">Vous pouvez exporter les paramètres pour pouvoir récupérer cette session de patch plus tard.</string>
     <string name="press_OK_to_return">Appuyez sur <b>OK</b> pour revenir à l\'écran principal.</string>
@@ -94,13 +94,18 @@
     <string name="press_next_or_OK">Appuyez sur <b>OK</b> pour revenir à l\'écran principal. Appuyez sur <b>Suivant</b> pour démarrer l\'activation du nouveau Patch.</string>
     <string name="activation_in_progress">Oups ! Quelque chose s\'est mal passé, il semble qu\'il y ait déjà une activation en cours.</string>
     <string name="press_retry_or_discard">Appuyez sur <b>Suivant</b> pour reprendre l\'activation ou <b>Supprimer</b> pour réinitialiser l\'état d\'activation.</string>
-    <string name="retry_activation_filled_error">L\'activation ne peut pas être reprise. L\'état de la pompe a été perdu. NE PAS réamorcer car le pod peut être déjà placé. Veuillez annuler le pod et démarrer une nouvelle activation.</string>
     <string name="reading_activation_status">Veuillez patienter, lecture de l\'état d\'activation de la pompe.</string>
     <!-- settings-->
-    <string name="sn_input_title">Numéro de série</string>
-    <string name="sn_input_invalid">Numéro de série invalide !</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
+    <string name="alarm_setting_light_vibrate_beep">Lumière, vibreur et bip</string>
+    <string name="alarm_setting_light_vibrate">Lumière et vibreur</string>
+    <string name="alarm_setting_light_beep">Lumière et bip</string>
+    <string name="alarm_setting_light">Lumière</string>
+    <string name="alarm_setting_vibrate_beep">Vibreur et bip</string>
+    <string name="alarm_setting_vibrate">Vibreur</string>
+    <string name="alarm_setting_beep">Bip</string>
+    <string name="alarm_setting_silent">Silencieux</string>
     <string name="pump_warning_notification_title">Notification sur l\'alerte pompe</string>
     <string name="pump_warning_notification_summary">Afficher une notification sur les avertissements non critiques de la pompe : pile faible, réservoir faible (20 unités) et expire bientôt. Il est recommandé de laisser activé lorsque les alarmes de la pompe sont réglées sur silencieux.</string>
     <string name="pump_warning_expiry_hour_title">Avertissement d\'expiration de la pompe [hours]</string>

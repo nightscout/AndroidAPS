@@ -13,13 +13,13 @@
     <string name="patch_not_active">贴片未激活</string>
     <string name="pump_setting_failed">将用户设置同步到泵时失败！</string>
     <string name="pump_sync_error">同步泵历史记录时出错，一条记录被跳过。请检查“治疗”选项卡，确认推注剂量是否已正确同步。请暂停，如果错误持续出现，请更换贴片或泵底座。</string>
+    <string name="patch_reset_after_primed_error">启动后检测到贴片重置！移除该贴片并开始新的贴片。</string>
     <!-- overview fragment -->
     <string name="last_connection_label">上次连接</string>
     <string name="active_bolus_label">活性大剂量</string>
     <string name="pump_state_label">泵状态</string>
     <string name="active_alarms_label">活动提醒</string>
     <string name="basal_type_label">基础率类型</string>
-    <string name="basal_rate_label">基础率</string>
     <string name="pump_type_label">泵类型</string>
     <string name="fw_version_label">固件版本</string>
     <string name="patch_no_label">贴片编号</string>
@@ -50,6 +50,15 @@
     <string name="alarm_no_calibration">无需校准</string>
     <string name="pump_time_update_failed">无法手动更新泵时区、暂停消息和刷新。</string>
     <string name="bolus_error">推注错误</string>
+    <!-- Status strings -->
+    <string name="status_idle">空闲</string>
+    <string name="status_filled">填充</string>
+    <string name="status_priming">充盈中</string>
+    <string name="status_primed">已充盈</string>
+    <string name="status_ejecting">正在弹出</string>
+    <string name="status_ejected">已弹出</string>
+    <string name="status_active">已激活</string>
+    <string name="status_stopped">已停止</string>
     <!-- wizard-->
     <string name="retry">重试</string>
     <string name="step_prepare_patch">激活储药贴</string>
@@ -64,9 +73,9 @@
     <string name="step_deactivate">停用贴片</string>
     <string name="step_deactivating">停用中...</string>
     <string name="step_deactivate_complete">贴片已停用</string>
+    <string name="unpair_confirm_message">这将清除保存的泵序列号并断开连接。请启动一个新的贴片来扫描泵。</string>
     <string name="step_retry_activation">正在激活</string>
     <string name="unexpected_state">意外状态：%1$s</string>
-    <string name="no_profile_selected">未选择配置。请选择一个配置资料并重试。</string>
     <string name="patch_begin_activation">无有效贴片。按<b>下一步</b>开始激活过程。</string>
     <string name="patch_not_active_note">在下一步之前，泵库不应连接到贴片！</string>
     <string name="connect_pump_base">将泵底座连接到新的贴片，排出残留空气并注入胰岛素，然后按<b>下一步</b>。</string>
@@ -75,12 +84,10 @@
     <string name="do_not_attach_to_body">请勿将贴片贴到身体上。</string>
     <string name="half_press_needle">半按针头按钮。然后点击<b>下一步</b>开始充盈。</string>
     <string name="wait_for_priming">请等待充盈完成。</string>
-    <string name="priming_error">启动失败，请按<b>重试</b>再试一次。</string>
     <string name="press_next">按<b>下一步</b>继续。</string>
     <string name="press_next_to_start_activation">按<b>下一步</b>开始激活。</string>
     <string name="remove_safety_lock">取下安全锁。将泵安装到机身上。按下针头按钮。</string>
     <string name="activating_pump">正在启动泵并设置初始基础速率。请等待。</string>
-    <string name="activating_error">激活失败，请按<b>重试</b>再试一次。</string>
     <string name="activating_complete">新贴片已激活。剩余 %.2f 单位。</string>
     <string name="can_export_settings">您可以导出设置以便稍后恢复此修补会话。</string>
     <string name="press_OK_to_return">按<b>OK</b>返回主屏幕。</string>
@@ -95,12 +102,8 @@
     <string name="press_next_or_OK">按<b>OK</b>返回主屏幕。按<b>Next</b>开始激活新贴片。</string>
     <string name="activation_in_progress">哎呀！出错了，似乎已有一个激活正在进行中。</string>
     <string name="press_retry_or_discard">按<b>下一步</b>恢复激活或按<b>放弃</b>重置激活状态。</string>
-    <string name="retry_activation_filled_error">无法继续注册。 泵状态已遗失。请勿重新预充，因为贴片可能已经插入。请丢弃该贴片并重新开始注册流程。</string>
     <string name="reading_activation_status">请等待，正在读取泵的激活状态。</string>
     <!-- settings-->
-    <string name="sn_input_title">序列号</string>
-    <string name="sn_input_invalid">序列号无效！</string>
-    <string name="change_sn">更改</string>
     <string name="alarm_setting_title">报警设置</string>
     <string name="alarm_setting_summary">选择您喜欢的泵提醒设置。</string>
     <string name="alarm_setting_light_vibrate_beep">灯光、振动和蜂鸣声</string>

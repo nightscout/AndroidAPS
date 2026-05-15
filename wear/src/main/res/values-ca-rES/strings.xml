@@ -2,10 +2,6 @@
 <resources>
     <string name="label_watchface_circle">AAPS(Cercle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
-    <string name="label_warning_sync">Cap dada!</string>
-    <string name="label_warning_old">Dades antigues!</string>
-    <string name="label_warning_since">Des de: %1$s</string>
-    <string name="label_warning_sync_aaps">Sincro amb APPS!</string>
     <string name="msg_warning_sync">Cap dada rebuda des de %1$s! Comproveu si AAPS al telèfon envia dades al rellotge</string>
     <string name="msg_warning_old">Les dades d\'AAPS son antigues de %1$s! Comproveu el vostre sensor, xDrip+, NS, la configuració AAPS, etc!</string>
     <string name="pref_vibrate_on_bolus">Vibrar durant bolus</string>
@@ -55,7 +51,6 @@
     <string name="menu_default">Per defecte</string>
     <string name="menu_menu">Menú</string>
     <string name="action_carbs">Carbs</string>
-    <string name="action_duration_h">Durada [h]</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Predefinit 1</string>
     <string name="action_preset_2">Predefinit 2</string>
@@ -92,7 +87,6 @@
     <string name="color_name_gray">gris</string>
     <string name="color_name_bluegray">blau grisós</string>
     <string name="color_name_white">blanc</string>
-    <string name="color_name_black">negre</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Simplificar la interfície</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>

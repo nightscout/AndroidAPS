@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">大剂量约束条件应用了</string>
     <string name="carbs_constraint_applied">碳水化合物约束条件应用了</string>
+    <string name="no_temp_basal_running">无临时基础率运行中</string>
     <string name="temp_target_short">临时目标</string>
     <string name="start_activity_tt">开始运动临时目标</string>
     <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
     <string name="start_hypo_tt">开始低的临时目标</string>
     <string name="time_offset">时区偏移</string>
-    <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
-    <string name="a11y_carb_reminder">将提醒设置碳水时间</string>
     <!--    Widget-->
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小部件</string>
+    <string name="widget_bg_graph_description">AAPS 血糖图表</string>
+    <string name="widget_compact_bg_description">AAPS 血糖 + IOB+COB（紧凑）</string>
     <!--     Activities-->
     <string name="activity_monitor">活动监视器</string>
     <string name="time_range">时间范围</string>
@@ -33,8 +33,6 @@
     <string name="do_you_want_reset_stats">您想要重置所有的统计信息吗？</string>
     <string name="do_you_want_recalculate_tdd_stats">您想重新计算 TDD每日总剂量统计数据吗？</string>
     <string name="calculation_in_progress">正在进行计算</string>
-    <string name="invalid_age">输入的年龄无效</string>
-    <string name="invalid_weight">输入的权重无效</string>
     <string name="age">年龄</string>
     <string name="weight_label">重量</string>
     <string name="glucose_type">血糖类型</string>
@@ -42,13 +40,7 @@
     <string name="bg_meter">血糖仪</string>
     <string name="bg_sensor">传感器</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">总计</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">前面</string>
-    <string name="site_back">后面</string>
     <string name="site_man">男性</string>
     <string name="site_woman">女性</string>
     <string name="site_child">儿童</string>
@@ -56,14 +48,12 @@
     <string name="user_profile_description">用户信息描述用于显示男性、女性或儿童最常用的部位</string>
     <string name="site_management">部位管理配置</string>
     <string name="site_management_description">在这里设置是否管理输注部位、CGM 传感器部位，或两者同时管理。该设置将用于在每次检测到新记录时，自动弹出部位更换提醒对话框</string>
-    <string name="record_site_change">记录部位位置</string>
     <string name="update_site_change">更新部位位置</string>
     <string name="edit_site">编辑</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">部位箭头: %1$s</string>
     <string name="record_site_note">备注： %1$s</string>
     <string name="delete_site_note">备注已删除</string>
-    <string name="site_filter_info">选择要查看的治疗事件类型：管路更换和/或传感器更换</string>
     <!-- FillDialog -->
     <string name="fill_warning">请确保数量和输液器里的药量匹配</string>
     <string name="record_pump_site_change">记录泵管路更换</string>
@@ -71,16 +61,83 @@
     <string name="fill_prime_amount">预注剂量</string>
     <string name="fill_pump_units_note">预注剂量以泵单位表示</string>
     <string name="fill_insulin_change">将胰岛素切换为：%1$s（将套用配置切换）</string>
-    <string name="fill_current_insulin">当前胰岛素</string>
-    <string name="fill_change_insulin">更换胰岛素</string>
-    <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
+    <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">活动</string>
+    <string name="scene_cat_health">健康</string>
+    <string name="scene_cat_food">食物</string>
+    <string name="scene_cat_sleep">睡眠</string>
+    <string name="scene_cat_dailylife">日常生活</string>
+    <string name="scene_cat_wellness">健康状态</string>
+    <string name="scene_cat_general">通用</string>
+    <string name="aaps_tt_high_icon_label">临时目标</string>
+    <string name="aaps_tt_activity_icon_label">临时目标 - 活动</string>
+    <string name="aaps_tt_eating_icon_label">临时目标 - 即将进餐</string>
+    <string name="aaps_tt_hypo_icon_label">临时目标 - 低血糖</string>
+    <string name="aaps_tt_manual_icon_label">临时目标 - 手动</string>
+    <string name="aaps_profile_icon_label">配置文件</string>
+    <string name="aaps_loop_icon_label">闭环</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">大剂量</string>
+    <string name="aaps_carbs_icon_label">碳水化合物</string>
+    <string name="aaps_tbr_icon_label">临时基础率</string>
+    <string name="aaps_activity_icon_label">运动</string>
+    <string name="aaps_note_icon_label">备注</string>
+    <string name="aaps_automation_icon_label">自动化</string>
+    <string name="aaps_calibration_icon_label">校准</string>
+    <string name="exercise_icon_label">运行</string>
+    <string name="fitness_icon_label">健身</string>
+    <string name="swim_icon_label">游泳</string>
+    <string name="hiking_icon_label">徒步</string>
+    <string name="bike_icon_label">骑行</string>
+    <string name="skateboard_icon_label">滑板</string>
+    <string name="tennis_icon_label">网球</string>
+    <string name="soccer_icon_label">足球</string>
+    <string name="baseball_icon_label">橄榄球</string>
+    <string name="basketball_icon_label">手球</string>
+    <string name="volleyball_icon_label">体操</string>
+    <string name="golf_icon_label">高尔夫</string>
+    <string name="scubadiving_icon_label">水肺潜水</string>
+    <string name="rowing_icon_label">划船</string>
+    <string name="surfing_icon_label">冲浪</string>
+    <string name="hospital_icon_label">医院</string>
+    <string name="medication_icon_label">药物</string>
+    <string name="monitor_heart_icon_label">监测</string>
+    <string name="thermostat_icon_label">恒温</string>
+    <string name="blood_type_icon_label">血型</string>
+    <string name="health_safety_icon_label">健康状况</string>
+    <string name="healing_icon_label">治疗</string>
+    <string name="meal_icon_label">餐厅</string>
+    <string name="cafe_icon_label">咖啡</string>
+    <string name="lunch_icon_label">午餐</string>
+    <string name="bakery_icon_label">面包店</string>
+    <string name="sleep_icon_label">睡眠</string>
+    <string name="night_icon_label">夜间</string>
+    <string name="nights_stay_icon_label">留宿</string>
+    <string name="hotel_icon_label">酒店</string>
+    <string name="seat_flat_icon_label">休息</string>
+    <string name="work_icon_label">工作</string>
+    <string name="school_icon_label">学校</string>
+    <string name="home_icon_label">家</string>
+    <string name="car_icon_label">驾驶</string>
+    <string name="flight_icon_label">飞行</string>
+    <string name="shopping_icon_label">购物</string>
+    <string name="relax_icon_label">冥想</string>
+    <string name="spa_icon_label">SPA</string>
+    <string name="heart_icon_label">心率</string>
+    <string name="psychology_icon_label">心理</string>
+    <string name="star_icon_label">星标</string>
+    <string name="speed_icon_label">速度</string>
+    <string name="alarm_icon_label">警报</string>
+    <string name="event_icon_label">事件</string>
+    <string name="flag_icon_label">标记</string>
+    <string name="bookmark_icon_label">收藏</string>
+    <string name="label_icon_label">标签</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">缺少胰岛素名称</string>
     <string name="insulin_name_exists">胰岛素名称 %1$s 已存在，请选择新的名称</string>
     <string name="a11y_add_new_insulin">新增胰岛素</string>
     <string name="a11y_delete_current_insulin">删除当前的胰岛素</string>
-    <string name="save_or_reset_changes_first">先保存或重置当前更改</string>
     <string name="activate_insulin_no_profile">未找到生效的配置文件</string>
     <string name="activate_insulin_new_insulin">新的胰岛素：%1$s</string>
     <string name="activate_insulin_remaining">剩余： %1$d 分钟</string>
@@ -111,45 +168,25 @@
     <string name="duration3h">3 小时</string>
     <string name="duration10h">10 小时</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">校正结果使用%</string>
-    <string name="a11_correction_units">校正结果使用单位</string>
-    <string name="two_hours">2小时</string>
-    <string name="result_insulin_carbs">结果: %1$s %2$s</string>
     <string name="missing_carbs">缺少 %1$d 克</string>
     <string name="wizard_carbs_type_bread_desc">100% 即时碳水，无扩展碳水</string>
     <string name="wizard_carbs_type_desc">碳水减少了 %1$d%%，添加了eCarbs %2$d%%，延迟了 %3$d 分钟，持续 %4$d 小时</string>
     <string name="wizard_include_info">轻触以在计算中包含/排除：\n•血糖—血糖（起始为开启）\n•临时目标—临时目标（起始为开启）\n•趋势—血糖趋势（会记住上次状态）\n•IOB—活性胰岛素（起始为开启）\n•COB—活性碳水化合物（会记住上次状态）</string>
-    <string name="wizard_bg_age">血糖时间： %1$d 分钟</string>
-    <string name="a11y_current_bg">当前血糖</string>
-    <string name="carb_time_label">碳水时间</string>
-    <string name="a11y_set_carb_timer">设置碳水计时器提醒</string>
-    <string name="show_calculation">显示计算</string>
     <!-- Treatments -->
     <string name="no_records_available">当前暂无记录</string>
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
-    <string name="treatments_carbs_label_string">碳水化合物:</string>
-    <string name="tempbasals_netratio_label_string">比率：</string>
-    <string name="tempbasals_iob_label_string">IOB活性胰岛素:</string>
-    <string name="treatments_wizard_correction_label">矫正值</string>
-    <string name="meal_bolus">饮食</string>
-    <string name="prime">充盈</string>
     <string name="carbs_and_bolus">碳水与大剂量</string>
     <string name="show_invalidated">显示无效项</string>
     <string name="hide_invalidated">隐藏失效项</string>
     <string name="careportal_remove_started_events">删除 AAPS 启动的条目</string>
-    <string name="hide_loop">隐藏闭环</string>
-    <string name="show_loop">显示闭环</string>
     <string name="user_entry">用户条目</string>
     <string name="clone_label">克隆</string>
     <string name="add_new_profile">添加新配置文件</string>
-    <string name="show_profile">显示配置文件</string>
     <string name="edit_label">编辑</string>
-    <string name="edit_profile">编辑配置文件</string>
     <string name="activate_label">激活</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="remove_label">删除</string>
     <string name="active_profile_indicator">激活</string>
-    <string name="remaining_time_label">剩余</string>
     <string name="confirm_remove_profile">删除配置文件 %1$s 吗？</string>
     <string name="confirm_clone_profile">克隆配置文件 \"%1$s\"？</string>
     <string name="tbr_type_flag_extended">E</string>
@@ -174,19 +211,18 @@
     <string name="format_with_tdd_and_pct">年龄: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">年龄: %1$d 体重: %2$.0f 千克</string>
     <string name="dpv_default_profile">DPV默认个人配置</string>
-    <string name="invalid_pct">输入的百分比无效</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">基础率</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">仅在手表</string>
-    <string name="a11y_only_on_phone">仅在手机</string>
     <string name="overview_edit_quickwizard_button_text">按钮文本</string>
     <string name="quick_wizard_mode_wizard">向导</string>
     <string name="quick_wizard_mode_insulin">胰岛素</string>
     <string name="quick_wizard_mode_carbs">碳水化合物</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">仅限正IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超级大剂量Superbolus</string>
-    <string name="a11y_drag_and_drop_handle">拖放操作</string>
+    <!--    History browser-->
+    <string name="history_now">当前</string>
+    <string name="a11y_history_previous_window">上一窗口</string>
+    <string name="a11y_history_next_window">下一窗口</string>
     <string name="additional_ecarbs">添加 eCarbs 扩展碳水</string>
     <string name="calculator_options">计算器选项</string>
     <string name="use_bg">使用 血糖</string>
@@ -240,7 +276,6 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">已选操作</string>
-    <string name="quick_launch_available_actions">可用操作</string>
     <string name="quick_launch_no_dynamic_items">无可用项目</string>
     <string name="quick_launch_category_treatment">治疗</string>
     <string name="quick_launch_category_care">关怀入口</string>
@@ -254,14 +289,16 @@
     <string name="quick_launch_no_tt_presets">添加临时目标预设以便在此使用</string>
     <string name="quick_launch_no_profiles">在本地配置中创建配置文件以便在此使用</string>
     <string name="quick_launch_edit_profile_preset">编辑配置文件</string>
-    <string name="quick_launch_profile_percentage">百分比</string>
-    <string name="quick_launch_profile_duration">持续时间</string>
     <string name="quick_launch_profile_permanent">永久</string>
-    <string name="quick_launch_profile_confirm">激活配置文件 %1$s ？</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d 分</string>
     <string name="select_arrow">选择箭头</string>
     <string name="loop_accept_nav_label">闭环</string>
     <string name="loop_accept_set_basal_question">接受新的临时基础率：</string>
     <string name="loop_accept_perform">执行</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">已禁用</string>
+    <string name="widget_rm_suspended">已暂停</string>
+    <string name="widget_rm_resume">恢复</string>
 </resources>
