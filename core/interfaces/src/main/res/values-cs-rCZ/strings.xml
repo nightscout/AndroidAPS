@@ -11,6 +11,8 @@
     <!--    DateUtil-->
     <string name="minago">před %1$dm</string>
     <string name="secago">před %1$ds</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">před %1$d minutamí</string>
     <string name="hoursago">před %1$.1fh</string>
     <string name="days_ago">Před %1$.1f dny</string>
