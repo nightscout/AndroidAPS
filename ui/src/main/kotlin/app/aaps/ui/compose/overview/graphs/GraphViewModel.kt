@@ -214,7 +214,7 @@ class GraphViewModel @AssistedInject constructor(
     ) { bgInfo, _ ->
         BgInfoUiState(
             bgInfo = bgInfo,
-            timeAgoText = dateUtil.minOrSecAgo(rh, bgInfo?.timestamp)
+            timeAgoText = dateUtil.minAgo(rh, bgInfo?.timestamp)
         )
     }.stateIn(
         scope = viewModelScope,

@@ -978,8 +978,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 clockSuggested + T.mins(preferences.get(IntKey.NsClientAlarmStaleData).toLong()).msecs() < now       -> AapsClientLevel.WARN
                 else                                                                                                 -> AapsClientLevel.INFO
             }
-            // Match original format: "2 min ago"
-            val value = dateUtil.minOrSecAgo(rh, clockSuggested)
+            val value = dateUtil.minAgo(rh, clockSuggested)
             val clockEnacted = processedDeviceStatusData.openAPSData.clockEnacted
             val enacted = processedDeviceStatusData.openAPSData.enacted
             val sameCycle = enacted != null && clockSuggested - clockEnacted <= 60_000L
