@@ -114,9 +114,9 @@ class DateUtilImpl @Inject constructor(
         val startOfTodayMillis = beginOfDay(nowMillis)
         return if (mills < nowMillis) { // Past
             when {
-                mills > startOfTodayMillis                                  -> rh.gs(R.string.today)
-                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> rh.gs(R.string.yesterday)
-                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> dayAgo(mills, rh, true)
+                mills > startOfTodayMillis                                  -> "${rh.gs(R.string.today)} - ${dateString(mills)}"
+                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> "${rh.gs(R.string.yesterday)} - ${dateString(mills)}"
+                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> "${dayAgo(mills, rh, true)} - ${dateString(mills)}"
                 else                                                        -> dateString(mills)
             }
         } else { // Future
