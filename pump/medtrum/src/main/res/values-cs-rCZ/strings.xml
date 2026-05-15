@@ -51,6 +51,14 @@
     <string name="pump_time_update_failed">Nepodařilo se aktualizovat časové pásmo pumpy, odložit zprávu a aktualizovat ručně.</string>
     <string name="bolus_error">Chyba bolusu</string>
     <!-- Status strings -->
+    <string name="status_idle">Nečinný</string>
+    <string name="status_filled">Naplněno</string>
+    <string name="status_priming">Plnění</string>
+    <string name="status_primed">Naplněný</string>
+    <string name="status_ejecting">Vysouvání</string>
+    <string name="status_ejected">Vysunuto</string>
+    <string name="status_active">Aktivní</string>
+    <string name="status_stopped">Zastaveno</string>
     <!-- wizard-->
     <string name="retry">Opakovat</string>
     <string name="step_prepare_patch">Aktivovat Patch</string>
@@ -65,6 +73,7 @@
     <string name="step_deactivate">Deaktivovat Patch</string>
     <string name="step_deactivating">Deaktivace...</string>
     <string name="step_deactivate_complete">Patch deaktivován</string>
+    <string name="unpair_confirm_message">Toto vymaže uložené sériové číslo pumpy a odpojí. Aktivujte nový pod pro vyhledání pumpy.</string>
     <string name="step_retry_activation">Aktivace probíhá</string>
     <string name="unexpected_state">Neočekávaný stav: %1$s</string>
     <string name="patch_begin_activation">Žádný aktivní Patch. Stiskněte <b>Další</b> pro zahájení aktivačního procesu.</string>

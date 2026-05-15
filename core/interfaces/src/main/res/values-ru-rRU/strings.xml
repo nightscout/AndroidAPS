@@ -93,7 +93,6 @@
     <string name="wear_default_watchface">Циферблат по умолчанию</string>
     <string name="wear_more_watchfaces">Еще циферблаты</string>
     <string name="temp_basal_absolute_rate">%1$.2f ед/ч @%2$s %3$d/%4$d\'</string>
-    <string name="temp_basal_percent_rate">%1$.2f % @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f ед/ч @%2$s %3$d/%4$d мин</string>
     <string name="forever">Навсегда</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
