@@ -282,7 +282,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                             app.aaps.core.interfaces.R.string.bolus_delivered_successfully,
                             detailedInfo.insulin.toFloat()
                         ),
-                        detailedInfo.insulin
+                        PumpInsulin(detailedInfo.insulin)
                     )
                     runBlocking {
                         pumpSync.syncBolusWithPumpId(
@@ -302,7 +302,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                     bolusProgressData.updateProgress(
                         percent,
                         rh.gs(app.aaps.core.interfaces.R.string.bolus_delivering, delivering),
-                        delivering
+                        PumpInsulin(delivering)
                     )
                 }
             } else {
@@ -396,7 +396,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                                     app.aaps.core.interfaces.R.string.bolus_delivered_successfully,
                                     cancelResult.infusedAmount.toFloat()
                                 ),
-                                cancelResult.infusedAmount
+                                PumpInsulin(cancelResult.infusedAmount)
                             )
                             runBlocking {
                                 pumpSync.syncBolusWithPumpId(

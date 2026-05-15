@@ -269,6 +269,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Wear                -> ElementType.AAPS.color()
         Sources.WizardDialog        -> ElementType.BOLUS_WIZARD.color()
         Sources.Xdrip               -> ElementType.CGM_XDRIP.color()
+        Sources.Carelevo            -> ElementType.PUMP.color()
     }
 
     override fun listToPresentationString(list: List<ValueWithUnit>) =

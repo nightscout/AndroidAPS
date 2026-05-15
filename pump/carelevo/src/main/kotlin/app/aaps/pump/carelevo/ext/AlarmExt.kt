@@ -2,49 +2,6 @@ package app.aaps.pump.carelevo.ext
 
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.domain.type.AlarmCause
-import app.aaps.pump.carelevo.domain.type.AlarmType
-
-fun AlarmType.transformToContentsResources(
-    callback: (labelRes: Int, labelColorAttrRes: Int, labelContainerColorAttrRes: Int, iconRes: Int) -> Unit
-) {
-    when (this) {
-        AlarmType.WARNING      -> {
-            callback(
-                R.string.alarm_feat_label_warning,
-                app.aaps.core.ui.R.color.colorLightGray,
-                app.aaps.core.ui.R.color.toastError,
-                app.aaps.core.ui.R.drawable.ic_toast_error
-            )
-        }
-
-        AlarmType.ALERT        -> {
-            callback(
-                R.string.alarm_feat_label_alert,
-                app.aaps.core.ui.R.color.colorLightGray,
-                app.aaps.core.ui.R.color.toastWarn,
-                app.aaps.core.ui.R.drawable.ic_toast_warn
-            )
-        }
-
-        AlarmType.NOTICE       -> {
-            callback(
-                R.string.alarm_feat_label_notice,
-                app.aaps.core.ui.R.color.colorLightGray,
-                app.aaps.core.ui.R.color.cobAlert,
-                app.aaps.core.ui.R.drawable.ic_toast_info
-            )
-        }
-
-        AlarmType.UNKNOWN_TYPE -> {
-            callback(
-                R.string.alarm_feat_label_unknown,
-                app.aaps.core.ui.R.color.colorLightGray,
-                app.aaps.core.ui.R.color.toastError,
-                app.aaps.core.ui.R.drawable.ic_toast_error
-            )
-        }
-    }
-}
 
 fun AlarmCause.transformStringResources(): Triple<Int, Int?, Int> {
     return when (this) {
