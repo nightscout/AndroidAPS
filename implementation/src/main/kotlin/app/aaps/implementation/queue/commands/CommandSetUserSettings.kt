@@ -30,7 +30,7 @@ class CommandSetUserSettings(
 
     override val commandType: Command.CommandType = Command.CommandType.SET_USER_SETTINGS
 
-    override fun execute() {
+    override suspend fun execute() {
         val pump = activePlugin.activePumpInternal
         if (pump is Dana) {
             val r = pump.setUserOptions()

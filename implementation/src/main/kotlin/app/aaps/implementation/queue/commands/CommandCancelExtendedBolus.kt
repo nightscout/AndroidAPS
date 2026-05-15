@@ -27,7 +27,7 @@ class CommandCancelExtendedBolus(
 
     override val commandType: Command.CommandType = Command.CommandType.EXTENDEDBOLUS
 
-    override fun execute() {
+    override suspend fun execute() {
         val r = activePlugin.activePump.cancelExtendedBolus()
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()

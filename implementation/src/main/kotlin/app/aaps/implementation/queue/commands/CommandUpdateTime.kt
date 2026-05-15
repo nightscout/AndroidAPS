@@ -28,7 +28,7 @@ class CommandUpdateTime(
 
     override val commandType: Command.CommandType = Command.CommandType.UPDATE_TIME
 
-    override fun execute() {
+    override suspend fun execute() {
         val pump = activePlugin.activePumpInternal
 
         if (pump is Medtrum) {

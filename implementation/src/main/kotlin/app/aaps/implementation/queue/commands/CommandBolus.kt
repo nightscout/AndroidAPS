@@ -35,7 +35,7 @@ class CommandBolus(
         this.commandType = type
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         if (r.success) carbsRunnable.run()
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
