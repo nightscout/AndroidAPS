@@ -646,7 +646,6 @@
     <string name="basal">Rate bazale</string>
     <string name="basalpct">Bazală %</string>
     <string name="sensitivity">Sensibilitate</string>
-    <string name="isf_for_carbs">ISF pentru Calculator și Absorbția Carbohidraților: %1$.1f</string>
     <string name="autosens_long">Valoare Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens în algoritm: %.0f%%</string>
