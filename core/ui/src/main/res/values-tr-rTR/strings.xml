@@ -374,7 +374,6 @@
     <string name="basal">Bazal</string>
     <string name="basalpct">Bazal %</string>
     <string name="sensitivity">Duyarlılık</string>
-    <string name="isf_for_carbs">Hesap makinesi ve Karb. emilimi için İDF: %1$.1f</string>
     <string name="autosens_long">Otoduyarlılık değeri: %.0f%%</string>
     <string name="algorithm_long">Algoritmadaki otoduyarlılık: %.0f%%</string>
     <!-- Autotune -->
