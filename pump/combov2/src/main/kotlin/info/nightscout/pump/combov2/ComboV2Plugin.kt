@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -119,7 +118,6 @@ class ComboV2Plugin @Inject constructor(
     sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val config: Config,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,

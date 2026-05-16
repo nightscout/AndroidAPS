@@ -476,15 +476,17 @@ class WizardDialogViewModel @Inject constructor(
 
     fun executeBolusAdvisor() {
         val state = uiState.value
-        wizard?.executeBolusAdvisor(
-            onError = { comment ->
-                _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
-            },
-            eCarbsGrams = state.eCarbs,
-            eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-            eCarbsDurationHours = state.eCarbsDurationHours,
-            forcedRecordOnly = state.forcedRecordOnly
-        )
+        viewModelScope.launch {
+            wizard?.executeBolusAdvisor(
+                onError = { comment ->
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
+                },
+                eCarbsGrams = state.eCarbs,
+                eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
+                eCarbsDurationHours = state.eCarbsDurationHours,
+                forcedRecordOnly = state.forcedRecordOnly
+            )
+        }
     }
 
     fun savePreferences() {

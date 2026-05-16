@@ -802,7 +802,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun processEXTENDED(divided: Array<String>, receivedSms: Sms) {
+    private suspend fun processEXTENDED(divided: Array<String>, receivedSms: Sms) {
         if (divided[1].uppercase(Locale.getDefault()) == "CANCEL" || divided[1].uppercase(Locale.getDefault()) == "STOP") {
             val passCode = generatePassCode()
             val reply = rh.gs(R.string.smscommunicator_extended_stop_reply_with_code, passCode)
@@ -855,7 +855,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
+    private suspend fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
         var bolus = SafeParse.stringToDouble(divided[1])
         val isMeal = divided.size > 2 && divided[2].equals("MEAL", ignoreCase = true)
         bolus = constraintChecker.applyBolusConstraints(ConstraintObject(bolus, aapsLogger)).value()

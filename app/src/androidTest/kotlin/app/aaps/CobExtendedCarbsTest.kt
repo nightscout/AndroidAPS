@@ -36,6 +36,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import org.json.JSONObject
 import org.junit.After
@@ -93,7 +94,7 @@ class CobExtendedCarbsTest @Inject constructor() {
 
     // ==================== Helpers ====================
 
-    private fun setupEnvironment() = runBlocking {
+    private fun setupEnvironment() = runTest {
         rxHelper.listen(EventAutosensCalculationFinished::class.java)
         l.findByName(LTag.EVENTS.name).enabled = true
         assertThat(config.APS).isTrue()
@@ -234,7 +235,7 @@ class CobExtendedCarbsTest @Inject constructor() {
         )
         persistenceLayer.insertCgmSourceData(Sources.Random, newBg, emptyList(), null)
         assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
-        Thread.sleep(2000)
+        delay(2000)
     }
 
     /** Collect COB values from all autosens data buckets, ordered by time */
@@ -307,7 +308,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     // ==================== COB never exceeds total carbs (issue #4596) ====================
 
     @Test
-    fun extendedCarbs35gOver2h_cobBounded() = runBlocking {
+    fun extendedCarbs35gOver2h_cobBounded() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -319,7 +320,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun extendedCarbs50gOver3h_cobBounded() = runBlocking {
+    fun extendedCarbs50gOver3h_cobBounded() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -331,7 +332,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun instantCarbs20g_cobBounded() = runBlocking {
+    fun instantCarbs20g_cobBounded() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -343,7 +344,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun mixedInstantAndExtended_cobBounded() = runBlocking {
+    fun mixedInstantAndExtended_cobBounded() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -356,7 +357,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun twoExtendedEntries_cobBounded() = runBlocking {
+    fun twoExtendedEntries_cobBounded() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -371,7 +372,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     // ==================== COB decreases over time ====================
 
     @Test
-    fun extendedCarbs_cobDecreases() = runBlocking {
+    fun extendedCarbs_cobDecreases() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -384,7 +385,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun instantCarbs_cobDecreases() = runBlocking {
+    fun instantCarbs_cobDecreases() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -397,7 +398,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun mixedCarbs_cobDecreases() = runBlocking {
+    fun mixedCarbs_cobDecreases() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -413,7 +414,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     // ==================== COB reaches zero after absorption ====================
 
     @Test
-    fun extendedCarbs_cobReachesZero() = runBlocking {
+    fun extendedCarbs_cobReachesZero() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -435,7 +436,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun instantCarbs_cobReachesZero() = runBlocking {
+    fun instantCarbs_cobReachesZero() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -458,7 +459,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     // ==================== Rising BG accelerates absorption ====================
 
     @Test
-    fun risingBg_extendedCarbs_cobBoundedAndDecreases() = runBlocking {
+    fun risingBg_extendedCarbs_cobBoundedAndDecreases() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -478,7 +479,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun risingBg_instantCarbs_cobBoundedAndDecreases() = runBlocking {
+    fun risingBg_instantCarbs_cobBoundedAndDecreases() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 
@@ -498,7 +499,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     @Test
-    fun risingBg_extendedCarbs_cobReachesZero() = runBlocking {
+    fun risingBg_extendedCarbs_cobReachesZero() = runTest {
         setupEnvironment()
         val now = dateUtil.now()
 

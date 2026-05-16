@@ -853,7 +853,7 @@ class BolusWizard @Inject constructor(
      * Execute bolus advisor flow (correction-only bolus, no carbs, eat reminder).
      * No UI dependency — errors reported via [onError] callback.
      */
-    fun executeBolusAdvisor(onError: (String) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
+    suspend fun executeBolusAdvisor(onError: (String) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return

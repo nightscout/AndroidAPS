@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.ui.R
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,12 +33,8 @@ class RunningModeGuard @Inject constructor(
      * Use this in callers that render their own error channel (SMS reply text, Wear response,
      * Garmin callback, etc.).
      */
-    fun rejectionMessage(kind: PumpCommandGate.CommandKind): String? {
-        // TODO: Loop.runningMode() is now suspend; this guard is invoked from many synchronous
-        // entry points (Compose ViewModels' non-suspend handlers, BolusWizard.confirmAndExecute,
-        // SmsCommunicator, Wear DataHandlerMobile). The underlying call is a fast persistence read.
-        // Localizing runBlocking here avoids cascading suspend through dozens of call sites.
-        val mode = runBlocking { loop.runningMode() }
+    suspend fun rejectionMessage(kind: PumpCommandGate.CommandKind): String? {
+        val mode = loop.runningMode()
         val decision = PumpCommandGate.check(mode, kind)
         return (decision as? PumpCommandGate.Decision.Reject)?.let { rh.gs(it.reason.toStringRes()) }
     }
@@ -52,7 +47,7 @@ class RunningModeGuard @Inject constructor(
      * commandQueue.bolus(...)
      * ```
      */
-    fun checkWithSnackbar(kind: PumpCommandGate.CommandKind): Boolean {
+    suspend fun checkWithSnackbar(kind: PumpCommandGate.CommandKind): Boolean {
         val msg = rejectionMessage(kind) ?: return false
         rxBus.send(EventShowSnackbar(msg, EventShowSnackbar.Type.Warning))
         return true

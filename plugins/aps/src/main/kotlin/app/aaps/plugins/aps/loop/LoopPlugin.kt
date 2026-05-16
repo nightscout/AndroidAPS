@@ -89,7 +89,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -624,20 +624,22 @@ class LoopPlugin @Inject constructor(
                                     resultAfterConstraints.deliverAt = lastRun.lastTBREnact
                                     rxBus.send(EventLoopUpdateGui())
                                     if (resultAfterConstraints.isBolusRequested)
-                                        applySMBRequest(resultAfterConstraints, object : Callback() {
-                                            override fun run() {
-                                                // Callback is only called if a bolus was actually requested
-                                                if (result.enacted || result.success) {
-                                                    lastRun.smbSetByPump = result
-                                                    lastRun.lastSMBRequest = lastRun.lastAPSRun
-                                                    lastRun.lastSMBEnact = dateUtil.now()
-                                                    scheduleBuildAndStoreDeviceStatus("applySMBRequest")
-                                                } else {
-                                                    handler?.postDelayed({ runBlocking { invoke("tempBasalFallback", allowNotification, true) } }, 1000)
+                                        appScope.launch {
+                                            applySMBRequest(resultAfterConstraints, object : Callback() {
+                                                override fun run() {
+                                                    // Callback is only called if a bolus was actually requested
+                                                    if (result.enacted || result.success) {
+                                                        lastRun.smbSetByPump = result
+                                                        lastRun.lastSMBRequest = lastRun.lastAPSRun
+                                                        lastRun.lastSMBEnact = dateUtil.now()
+                                                        scheduleBuildAndStoreDeviceStatus("applySMBRequest")
+                                                    } else {
+                                                        handler?.postDelayed({ appScope.launch { invoke("tempBasalFallback", allowNotification, true) } }, 1000)
+                                                    }
+                                                    rxBus.send(EventLoopUpdateGui())
                                                 }
-                                                rxBus.send(EventLoopUpdateGui())
-                                            }
-                                        })
+                                            })
+                                        }
                                     else {
                                         aapsLogger.debug(LTag.APS, "No SMB requested")
                                         scheduleBuildAndStoreDeviceStatus("applyTBRRequest")
@@ -852,9 +854,9 @@ class LoopPlugin @Inject constructor(
         }
     }
 
-    private fun applySMBRequest(request: APSResult, callback: Callback?) {
+    private suspend fun applySMBRequest(request: APSResult, callback: Callback?) {
         val pump = activePlugin.activePump
-        val lastBolusTime = runBlocking { persistenceLayer.getNewestBolus() }?.timestamp ?: 0L
+        val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
             callback?.result(
@@ -869,7 +871,7 @@ class LoopPlugin @Inject constructor(
             callback?.result(pumpEnactResultProvider.get().comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
             return
         }
-        if (runBlocking { runningMode() }.pausesLoopExecution()) {
+        if (runningMode().pausesLoopExecution()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
             callback?.result(pumpEnactResultProvider.get().comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
@@ -878,7 +880,7 @@ class LoopPlugin @Inject constructor(
 
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
-        detailedBolusInfo.lastKnownBolusTime = runBlocking { persistenceLayer.getNewestBolus() }?.timestamp ?: 0L
+        detailedBolusInfo.lastKnownBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
         detailedBolusInfo.bolusType = BS.Type.SMB
@@ -934,7 +936,7 @@ class LoopPlugin @Inject constructor(
         class UpdateRunnable : Runnable {
 
             override fun run() {
-                runBlocking { buildAndStoreDeviceStatus(reason) }
+                appScope.launch { buildAndStoreDeviceStatus(reason) }
                 task = null
             }
         }

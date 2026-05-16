@@ -49,7 +49,10 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.await
+import kotlinx.coroutines.rx3.rxSingle
 import javax.inject.Inject
 import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -96,15 +99,15 @@ class DashOmnipodWizardViewModel @Inject constructor(
     override val showSiteLocationStep: Boolean
         get() = preferences.get(BooleanKey.SiteRotationManagePump)
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
 
     private suspend fun loadSiteRotationEntriesInternal() {
-        siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+        _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
             System.currentTimeMillis() - T.days(45).msecs(), false
         ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
     }
@@ -172,37 +175,25 @@ class DashOmnipodWizardViewModel @Inject constructor(
                 )
         }
 
-    override fun doInsertCannula(): Single<PumpEnactResult> = Single.create { source ->
-        viewModelScope.launch(Dispatchers.IO) {
-            val profile = pumpSync.expectedPumpState().profile
-            if (profile == null) {
-                source.onError(IllegalStateException("No profile set"))
-                return@launch
-            }
-            val basalProgram = mapProfileToBasalProgram(profile)
-            logger.debug(
-                LTag.PUMPCOMM,
-                "Mapped profile to basal program. profile={}, basalProgram={}",
-                profile,
-                basalProgram
-            )
-            val expirationReminderEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationReminder)
-            val expirationReminderHours = preferences.get(OmnipodIntPreferenceKey.ExpirationReminderHours)
+    override fun doInsertCannula(): Single<PumpEnactResult> = rxSingle(Dispatchers.IO) {
+        val profile = pumpSync.expectedPumpState().profile
+            ?: throw IllegalStateException("No profile set")
+        val basalProgram = mapProfileToBasalProgram(profile)
+        logger.debug(
+            LTag.PUMPCOMM,
+            "Mapped profile to basal program. profile={}, basalProgram={}",
+            profile,
+            basalProgram
+        )
+        val expirationReminderEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationReminder)
+        val expirationReminderHours = preferences.get(OmnipodIntPreferenceKey.ExpirationReminderHours)
+        val expirationReminderHoursBeforeShutdown = if (expirationReminderEnabled) expirationReminderHours.toLong() else null
+        val expirationAlarmEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationAlarm)
+        val expirationAlarmHours = preferences.get(OmnipodIntPreferenceKey.ExpirationAlarmHours)
+        val expirationAlarmHoursBeforeShutdown = if (expirationAlarmEnabled) expirationAlarmHours.toLong() else null
 
-            val expirationReminderHoursBeforeShutdown = if (expirationReminderEnabled)
-                expirationReminderHours.toLong()
-            else
-                null
-
-            val expirationAlarmEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationAlarm)
-            val expirationAlarmHours = preferences.get(OmnipodIntPreferenceKey.ExpirationAlarmHours)
-
-            val expirationAlarmHoursBeforeShutdown = if (expirationAlarmEnabled)
-                expirationAlarmHours.toLong()
-            else
-                null
-
-            disposable += omnipodManager.activatePodPart2(basalProgram, expirationReminderHoursBeforeShutdown, expirationAlarmHoursBeforeShutdown)
+        try {
+            omnipodManager.activatePodPart2(basalProgram, expirationReminderHoursBeforeShutdown, expirationAlarmHoursBeforeShutdown)
                 .ignoreElements()
                 .andThen(podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationReminderHours, expirationAlarmEnabled, expirationAlarmHours))
                 .andThen(
@@ -214,40 +205,34 @@ class DashOmnipodWizardViewModel @Inject constructor(
                         resolvedAt = System.currentTimeMillis(),
                     ).ignoreElement()
                 )
-                .subscribeBy(
-                    onError = { throwable ->
-                        logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-                        source.onSuccess(pumpEnactResultProvider.get().success(false).comment(I8n.textFromException(throwable, rh)))
-                    },
-                    onComplete = {
-                        logger.debug("Pod activation part 2 completed")
-                        podStateManager.basalProgram = basalProgram
-                        viewModelScope.launch {
-                            pumpSync.syncStopTemporaryBasalWithPumpId(
-                                timestamp = System.currentTimeMillis(),
-                                endPumpId = System.currentTimeMillis(),
-                                pumpType = PumpType.OMNIPOD_DASH,
-                                pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR
-                            )
-                            pumpSync.connectNewPump()
-                            pumpSync.insertTherapyEventIfNewWithTimestamp(
-                                timestamp = System.currentTimeMillis(),
-                                type = TE.Type.CANNULA_CHANGE,
-                                pumpType = PumpType.OMNIPOD_DASH,
-                                pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
-                            )
-                            pumpSync.insertTherapyEventIfNewWithTimestamp(
-                                timestamp = System.currentTimeMillis(),
-                                type = TE.Type.INSULIN_CHANGE,
-                                pumpType = PumpType.OMNIPOD_DASH,
-                                pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
-                            )
-                            notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
-                            fabricPrivacy.logCustom("OmnipodDashPodActivated")
-                            source.onSuccess(pumpEnactResultProvider.get().success(true))
-                        }
-                    }
-                )
+                .await()
+            logger.debug("Pod activation part 2 completed")
+            podStateManager.basalProgram = basalProgram
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                timestamp = System.currentTimeMillis(),
+                endPumpId = System.currentTimeMillis(),
+                pumpType = PumpType.OMNIPOD_DASH,
+                pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR
+            )
+            pumpSync.connectNewPump()
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                timestamp = System.currentTimeMillis(),
+                type = TE.Type.CANNULA_CHANGE,
+                pumpType = PumpType.OMNIPOD_DASH,
+                pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+            )
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                timestamp = System.currentTimeMillis(),
+                type = TE.Type.INSULIN_CHANGE,
+                pumpType = PumpType.OMNIPOD_DASH,
+                pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+            )
+            notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
+            fabricPrivacy.logCustom("OmnipodDashPodActivated")
+            pumpEnactResultProvider.get().success(true)
+        } catch (throwable: Throwable) {
+            logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
+            pumpEnactResultProvider.get().success(false).comment(I8n.textFromException(throwable, rh))
         }
     }
 

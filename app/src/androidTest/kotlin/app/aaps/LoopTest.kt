@@ -32,6 +32,7 @@ import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
@@ -78,7 +79,7 @@ class LoopTest @Inject constructor() {
     }
 
     @Test
-    fun loopTest() = runBlocking {
+    fun loopTest() = runTest {
         @SuppressLint("CheckResult")
         persistenceLayer.insertOrUpdateRunningMode(
             runningMode = RM(

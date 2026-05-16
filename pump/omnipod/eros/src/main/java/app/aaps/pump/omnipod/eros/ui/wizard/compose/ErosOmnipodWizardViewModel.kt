@@ -31,7 +31,9 @@ import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.rxSingle
 import javax.inject.Inject
 import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -74,15 +76,15 @@ class ErosOmnipodWizardViewModel @Inject constructor(
     override val showSiteLocationStep: Boolean
         get() = preferences.get(BooleanKey.SiteRotationManagePump)
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
 
     private suspend fun loadSiteRotationEntriesInternal() {
-        siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+        _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
             System.currentTimeMillis() - T.days(45).msecs(), false
         ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
     }
@@ -117,10 +119,8 @@ class ErosOmnipodWizardViewModel @Inject constructor(
     override fun doInitializePod(): Single<PumpEnactResult> =
         Single.fromCallable { aapsOmnipodManager.initializePod() }
 
-    override fun doInsertCannula(): Single<PumpEnactResult> = Single.create { source ->
-        viewModelScope.launch(Dispatchers.IO) {
-            source.onSuccess(aapsOmnipodManager.insertCannula(pumpSync.expectedPumpState().profile))
-        }
+    override fun doInsertCannula(): Single<PumpEnactResult> = rxSingle(Dispatchers.IO) {
+        aapsOmnipodManager.insertCannula(pumpSync.expectedPumpState().profile)
     }
 
     override fun doDeactivatePod(): Single<PumpEnactResult> =

@@ -126,6 +126,10 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
+        viewModelScope.launch { confirmAndSaveSuspend() }
+    }
+
+    private suspend fun confirmAndSaveSuspend() {
         val state = confirmedState ?: return
         val durationInMinutes = state.durationMinutes.toInt()
 

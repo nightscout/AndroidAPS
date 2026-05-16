@@ -44,7 +44,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -311,19 +310,17 @@ class DanaRKoreanPlugin @Inject constructor(
 
     override fun model(): PumpType = PumpType.DANA_R_KOREAN
 
-    private fun cancelRealTempBasal(): PumpEnactResult {
+    private suspend fun cancelRealTempBasal(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
-                runBlocking {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        dateUtil.now(),
-                        dateUtil.now(),
-                        pumpDescription.pumpType,
-                        serialNumber()
-                    )
-                }
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                    dateUtil.now(),
+                    dateUtil.now(),
+                    pumpDescription.pumpType,
+                    serialNumber()
+                )
                 result.success(true).enacted(true).isTempCancel(true)
             } else result.success(false).enacted(false).isTempCancel(true)
         } else {
