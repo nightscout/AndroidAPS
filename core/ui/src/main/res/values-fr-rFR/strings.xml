@@ -640,7 +640,6 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilité</string>
-    <string name="isf_for_carbs">SI pour l\'Assistant et le calcul GA: %1$.1f</string>
     <string name="autosens_long">Valeur Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens dans l\'algorithme: %.0f%%</string>
