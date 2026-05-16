@@ -44,7 +44,7 @@ interface CommandQueue {
     fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
     fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean
     fun spannedStatus(): Spanned
-    fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean
+    suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean
 
     /**
      * Suspend overloads for every callback-based command. Each bridges to the existing callback

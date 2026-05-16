@@ -34,6 +34,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
 
+    implementation(libs.kotlinx.coroutines.rx3)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.work.testing)
 

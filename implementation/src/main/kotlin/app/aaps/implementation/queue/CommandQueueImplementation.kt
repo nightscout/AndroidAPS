@@ -1,6 +1,5 @@
 package app.aaps.implementation.queue
 
-import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
@@ -127,10 +126,10 @@ class CommandQueueImplementation @Inject constructor(
         workManager.cancelUniqueWork(jobName.name)
     }
 
-    private fun onProfileChanged() {
+    private suspend fun onProfileChanged() {
         if (config.AAPSCLIENT) return // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
         aapsLogger.debug(LTag.PROFILE, "onProfileChanged")
-        runBlocking { profileFunction.getRequestedProfile() }?.let {
+        profileFunction.getRequestedProfile()?.let {
             setProfile(ProfileSealed.PS(it, activePlugin), it.ids.nightscoutId != null, object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -515,13 +514,13 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    fun setProfile(profile: EffectiveProfile, hasNsId: Boolean, callback: Callback?): Boolean {
+    suspend fun setProfile(profile: EffectiveProfile, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
             callback?.result(pumpEnactResultProvider.get().success(true).enacted(false))?.run()
             return false
         }
-        if (isThisProfileSet(profile) && runBlocking { persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) } != null) {
+        if (isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
             callback?.result(pumpEnactResultProvider.get().success(true).enacted(false))?.run()
             return false
@@ -731,11 +730,11 @@ class CommandQueueImplementation @Inject constructor(
         return HtmlHelper.fromHtml(s)
     }
 
-    override fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
-        val runningProfile = runBlocking { profileFunction.getProfile() } ?: return false
+    override suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
+        val runningProfile = profileFunction.getProfile() ?: return false
         val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
         if (!result) {
-            aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${runBlocking { profileFunction.getProfile() }}")
+            aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
             aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")
         }
         return result

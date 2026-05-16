@@ -13,6 +13,7 @@ import app.aaps.pump.eopatch.vo.PatchState
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -62,7 +63,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `deliverTreatment should require insulin greater than 0`() = runBlocking<Unit> {
+    fun `deliverTreatment should require insulin greater than 0`() = runBlocking {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = 0.0
         detailedBolusInfo.carbs = 0.0
@@ -77,7 +78,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `deliverTreatment should require carbs equal to 0`() = runBlocking<Unit> {
+    fun `deliverTreatment should require carbs equal to 0`() = runBlocking {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = 5.0
         detailedBolusInfo.carbs = 10.0 // Not allowed
@@ -157,7 +158,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `loadTDDs should return empty result`() = runBlocking {
+    fun `loadTDDs should return empty result`() = runTest {
         val result = plugin.loadTDDs()
 
         assertThat(result).isNotNull()
@@ -198,7 +199,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `getPumpStatus should update last data time when activated`() = runBlocking {
+    fun `getPumpStatus should update last data time when activated`() = runTest {
         whenever(patchManagerExecutor.updateConnection()).thenReturn(Single.just(mock<PatchState>()))
 
         val beforeTime = System.currentTimeMillis()
@@ -209,7 +210,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `getPumpStatus should do nothing when not activated`() = runBlocking {
+    fun `getPumpStatus should do nothing when not activated`() = runTest {
         patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
 
         plugin.getPumpStatus("test")

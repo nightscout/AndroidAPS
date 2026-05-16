@@ -58,6 +58,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.rx3.rxCompletable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -83,10 +84,7 @@ class WearPlugin @Inject constructor(
         .pluginName(app.aaps.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
         .description(R.string.description_wear)
-        .composeContent { plugin ->
-            WearComposeContent(
-            )
-        },
+        .composeContent { WearComposeContent() },
     aapsLogger = aapsLogger, rh = rh, preferences = preferences
 ) {
 
@@ -151,11 +149,21 @@ class WearPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ dataHandlerMobile.resendData("EventAutosensCalculationFinished") }, fabricPrivacy::logException)
+            .concatMapCompletable {
+                rxCompletable { dataHandlerMobile.resendData("EventAutosensCalculationFinished") }
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
+            }
+            .subscribe()
         disposable += rxBus
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ dataHandlerMobile.resendData("EventLoopUpdateGui") }, fabricPrivacy::logException)
+            .concatMapCompletable {
+                rxCompletable { dataHandlerMobile.resendData("EventLoopUpdateGui") }
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
+            }
+            .subscribe()
         // Push status to watch quickly when a TT changes, without waiting for the loop's 10s debounce
         persistenceLayer.observeChanges<TT>()
             .drop(1) // Skip initial emission on collection start
@@ -174,7 +182,12 @@ class WearPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventWearUpdateTiles::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ dataHandlerMobile.sendUserActions() }, fabricPrivacy::logException)
+            .concatMapCompletable {
+                rxCompletable { dataHandlerMobile.sendUserActions() }
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
+            }
+            .subscribe({})
         disposable += rxBus
             .toObservable(EventWearUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)

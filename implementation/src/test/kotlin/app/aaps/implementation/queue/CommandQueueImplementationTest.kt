@@ -535,7 +535,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun isProfileSetCommandInQueue() {
+    fun isProfileSetCommandInQueue() = runTest {
         // given
         assertThat(commandQueue.size()).isEqualTo(0)
 
@@ -763,7 +763,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun `working mode allows all commands`() = runTest {
         stubActiveMode(app.aaps.core.data.model.RM.Mode.CLOSED_LOOP)
         assertThat(commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)).isTrue()
-        assertThat(commandQueue.cancelTempBasal(true, false, null)).isTrue()
+        assertThat(commandQueue.cancelTempBasal(enforceNew = true, autoForced = false, callback = null)).isTrue()
     }
 
     private suspend fun stubActiveMode(mode: app.aaps.core.data.model.RM.Mode) {

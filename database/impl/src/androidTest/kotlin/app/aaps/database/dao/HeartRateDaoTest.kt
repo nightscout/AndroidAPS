@@ -11,7 +11,7 @@ import app.aaps.database.AppDatabase
 import app.aaps.database.di.DatabaseModule
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.TABLE_HEART_RATE
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -91,43 +91,39 @@ class HeartRateDaoTest {
     }
 
     @Test
-    fun getFromTime() {
-        runBlocking {
-            createDatabase().also { db ->
-                val dao = db.heartRateDao
-                val timestamp = System.currentTimeMillis()
-                val hr1 = createHeartRate(timestamp = timestamp, beatsPerMinute = 80.0)
-                val hr2 = createHeartRate(timestamp = timestamp + 1, beatsPerMinute = 150.0)
-                dao.insertNewEntry(hr1)
-                dao.insertNewEntry(hr2)
+    fun getFromTime() = runTest {
+        createDatabase().also { db ->
+            val dao = db.heartRateDao
+            val timestamp = System.currentTimeMillis()
+            val hr1 = createHeartRate(timestamp = timestamp, beatsPerMinute = 80.0)
+            val hr2 = createHeartRate(timestamp = timestamp + 1, beatsPerMinute = 150.0)
+            dao.insertNewEntry(hr1)
+            dao.insertNewEntry(hr2)
 
-                Assert.assertEquals(listOf(hr1, hr2), dao.getFromTime(timestamp))
-                Assert.assertEquals(listOf(hr2), dao.getFromTime(timestamp + 1))
-                Assert.assertTrue(dao.getFromTime(timestamp + 2).isEmpty())
-                db.close()
-            }
+            Assert.assertEquals(listOf(hr1, hr2), dao.getFromTime(timestamp))
+            Assert.assertEquals(listOf(hr2), dao.getFromTime(timestamp + 1))
+            Assert.assertTrue(dao.getFromTime(timestamp + 2).isEmpty())
+            db.close()
         }
     }
 
     @Test
-    fun getFromTimeToTime() {
-        runBlocking {
-            createDatabase().also { db ->
-                val dao = db.heartRateDao
-                val timestamp = System.currentTimeMillis()
-                val hr1 = createHeartRate(timestamp = timestamp, beatsPerMinute = 80.0)
-                val hr2 = createHeartRate(timestamp = timestamp + 1, beatsPerMinute = 150.0)
-                val hr3 = createHeartRate(timestamp = timestamp + 2, beatsPerMinute = 160.0)
-                dao.insertNewEntry(hr1)
-                dao.insertNewEntry(hr2)
-                dao.insertNewEntry(hr3)
+    fun getFromTimeToTime() = runTest {
+        createDatabase().also { db ->
+            val dao = db.heartRateDao
+            val timestamp = System.currentTimeMillis()
+            val hr1 = createHeartRate(timestamp = timestamp, beatsPerMinute = 80.0)
+            val hr2 = createHeartRate(timestamp = timestamp + 1, beatsPerMinute = 150.0)
+            val hr3 = createHeartRate(timestamp = timestamp + 2, beatsPerMinute = 160.0)
+            dao.insertNewEntry(hr1)
+            dao.insertNewEntry(hr2)
+            dao.insertNewEntry(hr3)
 
-                Assert.assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2))
-                Assert.assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1))
-                Assert.assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1))
-                Assert.assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).isEmpty())
-                db.close()
-            }
+            Assert.assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2))
+            Assert.assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1))
+            Assert.assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1))
+            Assert.assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).isEmpty())
+            db.close()
         }
     }
 
