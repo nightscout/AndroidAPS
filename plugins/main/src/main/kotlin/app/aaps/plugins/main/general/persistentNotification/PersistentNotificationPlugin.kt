@@ -228,7 +228,6 @@ class PersistentNotificationPlugin @Inject constructor(
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
         builder.setSmallIcon(iconsProvider.getNotificationIcon())
-        builder.setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
         builder.setContentTitle(line1)
         if (line2 != null) builder.setContentText(line2)
         if (line3 != null) builder.setSubText(line3)
@@ -236,6 +235,7 @@ class PersistentNotificationPlugin @Inject constructor(
         if (unreadConversationBuilder != null) {
             builder.extend(
                 NotificationCompat.CarExtender()
+                    .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
                     .setUnreadConversation(unreadConversationBuilder.build())
             )
         }
