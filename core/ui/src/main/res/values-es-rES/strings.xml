@@ -646,6 +646,10 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilidad</string>
+    <string name="isf_for_carbs">ISF promedio para la calculadora y la absorción de carbohidratos: %1$.1f</string>
+    <string name="isf_profile">ISF del perfil: %1$.1f</string>
+    <string name="isf_variable">ISF variable: %1$.1f</string>
+    <string name="isf_effective">ISF efectivo: %1$.1f</string>
     <string name="autosens_long">Valor de Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens en algoritmo: %.0f%%</string>
