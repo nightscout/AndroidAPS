@@ -186,8 +186,8 @@ class DataHandlerMobile @Inject constructor(
                     loop.acceptChangeRequest()
                     (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -198,8 +198,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ResendData received from ${it.sourceNodeId}")
                     resendData(it.from)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -218,8 +218,8 @@ class DataHandlerMobile @Inject constructor(
                         )
                     )
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -238,8 +238,8 @@ class DataHandlerMobile @Inject constructor(
                         )
                     )
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -258,8 +258,8 @@ class DataHandlerMobile @Inject constructor(
                         )
                     )
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
 
@@ -271,8 +271,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "RunningModeRequest received from ${it.sourceNodeId}")
                     handleAvailableRunningModes()
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -290,8 +290,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "RunningModeConfirmed received from ${it.sourceNodeId}")
                     handleRunningModeConfirmed(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -302,8 +302,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionTddStatus received from ${it.sourceNodeId}")
                     handleTddStatus()
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -314,8 +314,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionProfileSwitchSendInitialData received $it from ${it.sourceNodeId}")
                     handleProfileSwitchSendInitialData()
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -326,8 +326,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionProfileSwitchPreCheck received $it from ${it.sourceNodeId}")
                     handleProfileSwitchPreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -338,8 +338,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionProfileSwitchConfirmed received $it from ${it.sourceNodeId}")
                     doProfileSwitch(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -357,8 +357,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionTempTargetConfirmed received $it from ${it.sourceNodeId}")
                     doTempTarget(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -369,8 +369,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionBolusPreCheck received $it from ${it.sourceNodeId}")
                     handleBolusPreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -381,8 +381,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionBolusConfirmed received $it from ${it.sourceNodeId}")
                     doBolus(it.insulin, it.carbs, null, 0, null)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -400,8 +400,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionECarbsConfirmed received $it from ${it.sourceNodeId}")
                     doECarbs(it.carbs, it.carbsTime, it.duration)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -412,8 +412,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionFillPresetPreCheck received $it from ${it.sourceNodeId}")
                     handleFillPresetPreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -424,8 +424,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionFillPreCheck received $it from ${it.sourceNodeId}")
                     handleFillPreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -441,8 +441,8 @@ class DataHandlerMobile @Inject constructor(
                     } else
                         doFillBolus(it.insulin)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -453,8 +453,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionQuickWizardPreCheck received $it from ${it.sourceNodeId}")
                     handleQuickWizardPreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -465,8 +465,8 @@ class DataHandlerMobile @Inject constructor(
                     aapsLogger.debug(LTag.WEAR, "ActionWizardPreCheck received $it from ${it.sourceNodeId}")
                     handleWizardPreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -509,8 +509,8 @@ class DataHandlerMobile @Inject constructor(
                     quickWizardEntry?.markAsUsed()
                     sendQuickWizardToWear()
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -522,8 +522,8 @@ class DataHandlerMobile @Inject constructor(
                     if (!config.appInitialized) return@rxCompletable
                     handleUserActionPreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -535,8 +535,8 @@ class DataHandlerMobile @Inject constructor(
                     if (!config.appInitialized) return@rxCompletable
                     handleUserActionConfirmed(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -548,8 +548,8 @@ class DataHandlerMobile @Inject constructor(
                     if (!config.appInitialized) return@rxCompletable
                     handleScenePreCheck(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -561,8 +561,8 @@ class DataHandlerMobile @Inject constructor(
                     if (!config.appInitialized) return@rxCompletable
                     handleSceneConfirmed(it)
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -574,8 +574,8 @@ class DataHandlerMobile @Inject constructor(
                     if (!config.appInitialized) return@rxCompletable
                     scenes.stopActiveScene()
                 }
-                .doOnError(fabricPrivacy::logException)
-                .onErrorComplete()
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
             }
             .subscribe()
         disposable += rxBus
@@ -1646,7 +1646,7 @@ class DataHandlerMobile @Inject constructor(
             title = name
         )
 
-    suspend fun sendScenes() {
+    fun sendScenes() {
         val now = System.currentTimeMillis()
         val enabled = scenes.getScenes().filter { it.isEnabled }
         rxBus.send(

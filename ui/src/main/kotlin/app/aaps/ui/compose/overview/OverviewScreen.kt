@@ -31,6 +31,7 @@ import app.aaps.ui.compose.main.TempTargetChipState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.notificationsSheet.NotificationBottomSheet
 import app.aaps.ui.compose.notificationsSheet.NotificationFab
+import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
 
@@ -56,6 +57,7 @@ fun OverviewScreen(
     isSimpleMode: Boolean,
     calcProgress: Int,
     graphViewModel: GraphViewModel,
+    chipsViewModel: ChipsViewModel,
     manageViewModel: ManageViewModel,
     statusViewModel: StatusViewModel,
     statusLightsDef: PreferenceSubScreenDef,
@@ -125,6 +127,7 @@ fun OverviewScreen(
                 isSimpleMode = isSimpleMode,
                 calcProgress = calcProgress,
                 graphViewModel = graphViewModel,
+                chipsViewModel = chipsViewModel,
                 manageViewModel = manageViewModel,
                 statusViewModel = statusViewModel,
                 statusLightsDef = statusLightsDef,
@@ -158,6 +161,7 @@ fun OverviewScreen(
                     isSimpleMode = isSimpleMode,
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,
+                    chipsViewModel = chipsViewModel,
                     manageViewModel = manageViewModel,
                     statusViewModel = statusViewModel,
                     statusLightsDef = statusLightsDef,
@@ -190,6 +194,7 @@ fun OverviewScreen(
                     isSimpleMode = isSimpleMode,
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,
+                    chipsViewModel = chipsViewModel,
                     manageViewModel = manageViewModel,
                     statusViewModel = statusViewModel,
                     statusLightsDef = statusLightsDef,
