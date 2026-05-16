@@ -57,8 +57,6 @@ class StatsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(StatsUiState())
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
 
-    /** Cached daily TDD entries sorted by timestamp descending (newest first) for cycle computation */
-    private var cachedDailyTdds: List<TDD> = emptyList()
     private var cycleLoadJob: kotlinx.coroutines.Job? = null
 
     init {
@@ -155,7 +153,7 @@ class StatsViewModel @Inject constructor(
 
     fun toggleTddCycleExpanded() {
         val wasExpanded = uiState.value.tddCycleExpanded
-        if (!wasExpanded && cachedDailyTdds.isEmpty()) {
+        if (!wasExpanded && uiState.value.tddCycleEntries.isEmpty()) {
             // Atomic: set expanded + loading in single update so AnimatedVisibility sees loading immediately
             _uiState.update { it.copy(tddCycleExpanded = true, tddCycleLoading = true, tddCycleProgress = 0f) }
             loadCyclePatternData()
@@ -168,9 +166,10 @@ class StatsViewModel @Inject constructor(
         preferences.put(IntNonKey.TddCycleOffset, offset)
         _uiState.update { it.copy(tddCycleOffset = offset) }
         // Recompute cycles from cached data (no DB refetch)
+        val entries = uiState.value.tddCycleEntries
         viewModelScope.launch {
             val data = withContext(Dispatchers.Default) {
-                computeCycleData(cachedDailyTdds, offset)
+                computeCycleData(entries, offset)
             }
             _uiState.update { it.copy(tddCyclePatternData = data) }
         }
@@ -223,9 +222,9 @@ class StatsViewModel @Inject constructor(
 
     private fun updateCycleGraph(tddList: MutableList<TDD>) {
         tddList.sortByDescending { it.timestamp }
-        cachedDailyTdds = tddList.toList()
-        val data = computeCycleData(cachedDailyTdds, uiState.value.tddCycleOffset)
-        _uiState.update { it.copy(tddCyclePatternData = data) }
+        val entries = tddList.toList()
+        val data = computeCycleData(entries, uiState.value.tddCycleOffset)
+        _uiState.update { it.copy(tddCycleEntries = entries, tddCyclePatternData = data) }
     }
 
     private fun computeCycleData(dailyTdds: List<TDD>, offset: Int): TddCyclePatternData? {
@@ -316,6 +315,7 @@ data class StatsUiState(
     val tirStatsData: TirStatsData? = null,
     val dexcomTirData: DexcomTIR? = null,
     val activityStatsData: List<ActivityStats>? = null,
+    val tddCycleEntries: List<TDD> = emptyList(),
     val tddCyclePatternData: TddCyclePatternData? = null,
     val tddLoading: Boolean = true,
     val tirLoading: Boolean = true,

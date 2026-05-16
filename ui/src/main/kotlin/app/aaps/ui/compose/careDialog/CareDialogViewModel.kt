@@ -78,22 +78,20 @@ class CareDialogViewModel @Inject constructor(
         }
     }
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
-
     private fun loadLastSensorLocation() {
         viewModelScope.launch {
             try {
                 val allEntries = persistenceLayer.getTherapyEventDataFromTime(
                     dateUtil.now() - T.days(45).msecs(), false
                 ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
-                siteRotationEntriesCache = allEntries
                 val lastEntry = allEntries
                     .filter { it.type == TE.Type.SENSOR_CHANGE && it.location != null && it.location != TE.Location.NONE }
                     .maxByOrNull { it.timestamp }
-                if (lastEntry != null) {
-                    _uiState.update {
-                        it.copy(lastSiteLocationString = translator.translate(lastEntry.location))
-                    }
+                _uiState.update {
+                    it.copy(
+                        siteRotationEntries = allEntries,
+                        lastSiteLocationString = if (lastEntry != null) translator.translate(lastEntry.location) else it.lastSiteLocationString
+                    )
                 }
             } catch (_: Exception) {
                 // ignore
@@ -116,7 +114,7 @@ class CareDialogViewModel @Inject constructor(
 
     fun bodyType(): BodyType = BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    fun siteRotationEntries(): List<TE> = uiState.value.siteRotationEntries
 
     fun updateMeterType(meterType: TE.MeterType) {
         _uiState.update { it.copy(meterType = meterType) }

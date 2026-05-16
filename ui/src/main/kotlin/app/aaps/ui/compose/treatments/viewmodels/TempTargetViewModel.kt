@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -79,9 +78,11 @@ class TempTargetViewModel @Inject constructor(
                     persistenceLayer.getTemporaryTargetDataFromTime(now - millsToThePast, false)
                 }
 
+                val activeTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
                 _uiState.update {
                     it.copy(
                         tempTargets = tempTargets,
+                        activeTarget = activeTarget,
                         isLoading = false
                     )
                 }
@@ -154,9 +155,7 @@ class TempTargetViewModel @Inject constructor(
     /**
      * Get currently active temporary target
      */
-    fun getActiveTarget(): TT? {
-        return runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
-    }
+    fun getActiveTarget(): TT? = uiState.value.activeTarget
 
     /**
      * Prepare delete confirmation message
@@ -234,6 +233,7 @@ class TempTargetViewModel @Inject constructor(
 @Immutable
 data class TempTargetUiState(
     val tempTargets: List<TT> = emptyList(),
+    val activeTarget: TT? = null,
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,

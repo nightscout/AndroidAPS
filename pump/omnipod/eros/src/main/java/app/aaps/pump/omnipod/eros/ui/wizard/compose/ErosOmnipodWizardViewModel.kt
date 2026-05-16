@@ -30,8 +30,8 @@ import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -117,8 +117,11 @@ class ErosOmnipodWizardViewModel @Inject constructor(
     override fun doInitializePod(): Single<PumpEnactResult> =
         Single.fromCallable { aapsOmnipodManager.initializePod() }
 
-    override fun doInsertCannula(): Single<PumpEnactResult> =
-        Single.fromCallable { aapsOmnipodManager.insertCannula(runBlocking { pumpSync.expectedPumpState() }.profile) }
+    override fun doInsertCannula(): Single<PumpEnactResult> = Single.create { source ->
+        viewModelScope.launch(Dispatchers.IO) {
+            source.onSuccess(aapsOmnipodManager.insertCannula(pumpSync.expectedPumpState().profile))
+        }
+    }
 
     override fun doDeactivatePod(): Single<PumpEnactResult> =
         Single.create { source ->

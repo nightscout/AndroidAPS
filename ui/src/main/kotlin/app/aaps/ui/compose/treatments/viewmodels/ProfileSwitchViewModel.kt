@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 /**
@@ -88,9 +87,11 @@ class ProfileSwitchViewModel @Inject constructor(
                     eps.map { ProfileSealed.EPS(value = it, activePlugin = null) })
                     .sortedByDescending { it.timestamp }
 
+                val activeEps = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
                 _uiState.update {
                     it.copy(
                         profileSwitches = profileSwitches,
+                        activeProfile = activeEps?.let { eps -> ProfileSealed.EPS(value = eps, activePlugin = null) },
                         isLoading = false
                     )
                 }
@@ -166,10 +167,7 @@ class ProfileSwitchViewModel @Inject constructor(
     /**
      * Get currently active effective profile switch
      */
-    fun getActiveProfile(): ProfileSealed? {
-        val eps = runBlocking { persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) }
-        return eps?.let { ProfileSealed.EPS(value = it, activePlugin = null) }
-    }
+    fun getActiveProfile(): ProfileSealed? = uiState.value.activeProfile
 
     /**
      * Prepare delete confirmation message
@@ -245,6 +243,7 @@ class ProfileSwitchViewModel @Inject constructor(
 @Immutable
 data class ProfileSwitchUiState(
     val profileSwitches: List<ProfileSealed> = emptyList(),
+    val activeProfile: ProfileSealed? = null,
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,

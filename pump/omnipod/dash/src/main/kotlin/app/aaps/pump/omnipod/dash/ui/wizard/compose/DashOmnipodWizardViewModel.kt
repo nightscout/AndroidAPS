@@ -48,8 +48,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -173,10 +173,12 @@ class DashOmnipodWizardViewModel @Inject constructor(
         }
 
     override fun doInsertCannula(): Single<PumpEnactResult> = Single.create { source ->
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
-        if (profile == null) {
-            source.onError(IllegalStateException("No profile set"))
-        } else {
+        viewModelScope.launch(Dispatchers.IO) {
+            val profile = pumpSync.expectedPumpState().profile
+            if (profile == null) {
+                source.onError(IllegalStateException("No profile set"))
+                return@launch
+            }
             val basalProgram = mapProfileToBasalProgram(profile)
             logger.debug(
                 LTag.PUMPCOMM,
@@ -220,19 +222,14 @@ class DashOmnipodWizardViewModel @Inject constructor(
                     onComplete = {
                         logger.debug("Pod activation part 2 completed")
                         podStateManager.basalProgram = basalProgram
-
-                        runBlocking {
+                        viewModelScope.launch {
                             pumpSync.syncStopTemporaryBasalWithPumpId(
                                 timestamp = System.currentTimeMillis(),
                                 endPumpId = System.currentTimeMillis(),
                                 pumpType = PumpType.OMNIPOD_DASH,
                                 pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR
                             )
-                        }
-
-                        pumpSync.connectNewPump()
-
-                        runBlocking {
+                            pumpSync.connectNewPump()
                             pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = System.currentTimeMillis(),
                                 type = TE.Type.CANNULA_CHANGE,
@@ -245,10 +242,10 @@ class DashOmnipodWizardViewModel @Inject constructor(
                                 pumpType = PumpType.OMNIPOD_DASH,
                                 pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                             )
+                            notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
+                            fabricPrivacy.logCustom("OmnipodDashPodActivated")
+                            source.onSuccess(pumpEnactResultProvider.get().success(true))
                         }
-                        notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
-                        fabricPrivacy.logCustom("OmnipodDashPodActivated")
-                        source.onSuccess(pumpEnactResultProvider.get().success(true))
                     }
                 )
         }

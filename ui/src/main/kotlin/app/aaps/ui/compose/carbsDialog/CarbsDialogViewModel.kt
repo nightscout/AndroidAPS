@@ -25,11 +25,11 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
-import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -45,7 +45,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -57,7 +56,7 @@ class CarbsDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val profileUtil: ProfileUtil,
     private val iobCobCalculator: IobCobCalculator,
-    glucoseStatusProvider: GlucoseStatusProvider,
+    private val glucoseStatusProvider: GlucoseStatusProvider,
     private val uel: UserEntryLogger,
     private val automation: Automation,
     private val commandQueue: CommandQueue,
@@ -86,6 +85,10 @@ class CarbsDialogViewModel @Inject constructor(
     val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     init {
+        viewModelScope.launch { initialize() }
+    }
+
+    private suspend fun initialize() {
         val now = dateUtil.now()
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val units = profileUtil.units
@@ -131,14 +134,14 @@ class CarbsDialogViewModel @Inject constructor(
         }
     }
 
-    private fun detectAutoHypo(now: Long): Boolean {
+    private suspend fun detectAutoHypo(now: Long): Boolean {
         val bgReading = iobCobCalculator.ads.actualBg() ?: return false
         if (bgReading.recalculated >= 72) return false
 
         val hypoTTDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
 
         val activeTT = try {
-            runBlocking { persistenceLayer.getTemporaryTargetActiveAt(now) }
+            persistenceLayer.getTemporaryTargetActiveAt(now)
         } catch (_: Exception) {
             null
         }

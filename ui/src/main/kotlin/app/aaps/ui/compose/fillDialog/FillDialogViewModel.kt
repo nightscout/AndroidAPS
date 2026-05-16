@@ -139,7 +139,6 @@ class FillDialogViewModel @Inject constructor(
                 val allEntries = persistenceLayer.getTherapyEventDataFromTime(
                     dateUtil.now() - app.aaps.core.data.time.T.days(45).msecs(), false
                 ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
-                siteRotationEntriesCache = allEntries
                 val lastEntry = allEntries
                     .filter { it.type == TE.Type.CANNULA_CHANGE && it.location != null && it.location != TE.Location.NONE }
                     .maxByOrNull { it.timestamp }
@@ -215,8 +214,6 @@ class FillDialogViewModel @Inject constructor(
     fun updateSiteArrow(arrow: TE.Arrow) {
         _uiState.update { it.copy(siteArrow = arrow) }
     }
-
-    private var siteRotationEntriesCache: List<TE> = emptyList()
 
     /**
      * A line in the confirmation summary.

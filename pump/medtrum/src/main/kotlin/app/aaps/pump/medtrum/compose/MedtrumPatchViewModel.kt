@@ -150,7 +150,7 @@ class MedtrumPatchViewModel @Inject constructor(
     private val _siteArrow = MutableStateFlow(TE.Arrow.NONE)
     override val siteArrow: StateFlow<TE.Arrow> = _siteArrow.asStateFlow()
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     // One-time events
     private val _events = MutableSharedFlow<PatchEvent>(extraBufferCapacity = 5)
@@ -359,7 +359,7 @@ class MedtrumPatchViewModel @Inject constructor(
         _canGoBack.value = true
         _siteLocation.value = TE.Location.NONE
         _siteArrow.value = TE.Arrow.NONE
-        siteRotationEntriesCache = emptyList()
+        _siteRotationEntries.value = emptyList()
         _scannedDevices.value = emptyList()
         scanJob?.cancel()
         scanJob = null
@@ -600,11 +600,11 @@ class MedtrumPatchViewModel @Inject constructor(
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
 
     private fun loadSiteRotationEntries() {
         scope.launch {
-            siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+            _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
                 System.currentTimeMillis() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
         }

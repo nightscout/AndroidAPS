@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -76,9 +75,11 @@ class RunningModeViewModel @Inject constructor(
                     persistenceLayer.getRunningModesFromTime(now - millsToThePast, false)
                 }
 
+                val activeMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
                 _uiState.update {
                     it.copy(
                         runningModes = runningModes,
+                        activeMode = activeMode,
                         isLoading = false
                     )
                 }
@@ -151,9 +152,7 @@ class RunningModeViewModel @Inject constructor(
     /**
      * Get currently active running mode
      */
-    fun getActiveMode(): RM {
-        return runBlocking { persistenceLayer.getRunningModeActiveAt(dateUtil.now()) }
-    }
+    fun getActiveMode(): RM? = uiState.value.activeMode
 
     /**
      * Prepare delete confirmation message
@@ -228,6 +227,7 @@ class RunningModeViewModel @Inject constructor(
 @Immutable
 data class RunningModeUiState(
     val runningModes: List<RM> = emptyList(),
+    val activeMode: RM? = null,
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,

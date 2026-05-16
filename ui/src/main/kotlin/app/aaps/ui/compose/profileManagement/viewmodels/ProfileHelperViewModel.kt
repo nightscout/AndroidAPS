@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.profileManagement.viewmodels
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,7 +30,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -57,8 +55,6 @@ class ProfileHelperViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileHelperUiState())
     val uiState: StateFlow<ProfileHelperUiState> = _uiState.asStateFlow()
 
-    private var cachedCurrentProfile: PureProfile? = null
-
     init {
         loadInitialData()
     }
@@ -67,7 +63,6 @@ class ProfileHelperViewModel @Inject constructor(
         viewModelScope.launch {
             val currentProfileName = profileFunction.getProfileName()
             val currentProfile = profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
-            cachedCurrentProfile = currentProfile
             val availableProfiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
             val profileSwitches = withContext(Dispatchers.IO) {
                 persistenceLayer.getEffectiveProfileSwitchesFromTime(
@@ -79,6 +74,7 @@ class ProfileHelperViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     currentProfileName = currentProfileName,
+                    currentProfile = currentProfile,
                     availableProfiles = availableProfiles,
                     profileSwitches = profileSwitches
                 )
@@ -124,7 +120,7 @@ class ProfileHelperViewModel @Inject constructor(
             when (profileType) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
-                ProfileType.CURRENT           -> cachedCurrentProfile
+                ProfileType.CURRENT           -> uiState.value.currentProfile
 
                 ProfileType.AVAILABLE_PROFILE -> {
                     val list = localProfileManager.profile?.getProfileList()
@@ -133,11 +129,8 @@ class ProfileHelperViewModel @Inject constructor(
                     else null
                 }
 
-                ProfileType.PROFILE_SWITCH    -> runBlocking {
-                    val switches = persistenceLayer.getEffectiveProfileSwitchesFromTime(
-                        dateUtil.now() - T.months(2).msecs(),
-                        true
-                    )
+                ProfileType.PROFILE_SWITCH    -> {
+                    val switches = uiState.value.profileSwitches
                     if (profileSwitchIndex < switches.size)
                         ProfileSealed.EPS(value = switches[profileSwitchIndex], activePlugin = null)
                             .convertToNonCustomizedProfile(dateUtil)
@@ -173,11 +166,8 @@ class ProfileHelperViewModel @Inject constructor(
                 if (list != null && profileIndex < list.size) list[profileIndex].toString() else ""
             }
 
-            ProfileType.PROFILE_SWITCH    -> runBlocking {
-                val switches = persistenceLayer.getEffectiveProfileSwitchesFromTime(
-                    dateUtil.now() - T.months(2).msecs(),
-                    true
-                )
+            ProfileType.PROFILE_SWITCH    -> {
+                val switches = uiState.value.profileSwitches
                 if (profileSwitchIndex < switches.size) switches[profileSwitchIndex].originalCustomizedName else ""
             }
         }
@@ -220,9 +210,10 @@ class ProfileHelperViewModel @Inject constructor(
 /**
  * UI state for ProfileHelperScreen
  */
-@Immutable
+@Stable
 data class ProfileHelperUiState(
     val currentProfileName: String = "",
+    val currentProfile: PureProfile? = null,
     val availableProfiles: List<CharSequence> = emptyList(),
     val profileSwitches: List<EPS> = emptyList(),
     val tddStatsData: TddStatsData? = null,

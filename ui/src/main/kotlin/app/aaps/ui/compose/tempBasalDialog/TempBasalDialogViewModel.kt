@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
@@ -38,7 +37,7 @@ import kotlin.math.abs
 class TempBasalDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
-    activePlugin: ActivePlugin,
+    private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val uel: UserEntryLogger,
     private val rh: ResourceHelper,
@@ -60,16 +59,20 @@ class TempBasalDialogViewModel @Inject constructor(
     )
     val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
-    private var cachedProfile: Profile? = null
-
     init {
+        viewModelScope.launch { initialize() }
+    }
+
+    private suspend fun initialize() {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val isPercentPump = pumpDescription.tempBasalStyle and PumpDescription.PERCENT == PumpDescription.PERCENT
+        val profile = profileFunction.getProfile()
+        val currentBasal = profile?.getBasal() ?: 0.0
 
         _uiState.update {
             TempBasalDialogUiState(
                 basalPercent = 100.0,
-                basalAbsolute = 0.0,
+                basalAbsolute = currentBasal,
                 durationMinutes = pumpDescription.tempDurationStep.toDouble(),
                 isPercentPump = isPercentPump,
                 maxTempPercent = pumpDescription.maxTempPercent.toDouble(),
@@ -78,13 +81,8 @@ class TempBasalDialogViewModel @Inject constructor(
                 tempAbsoluteStep = pumpDescription.tempAbsoluteStep,
                 tempDurationStep = pumpDescription.tempDurationStep.toDouble(),
                 tempMaxDuration = pumpDescription.tempMaxDuration.toDouble(),
+                profile = profile,
             )
-        }
-        viewModelScope.launch {
-            val profile = profileFunction.getProfile()
-            cachedProfile = profile
-            val currentBasal = profile?.getBasal() ?: 0.0
-            _uiState.update { it.copy(basalAbsolute = currentBasal) }
         }
     }
 
@@ -110,7 +108,7 @@ class TempBasalDialogViewModel @Inject constructor(
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
         confirmedState = state
-        val profile = cachedProfile ?: return emptyList()
+        val profile = uiState.value.profile ?: return emptyList()
         val lines = mutableListOf<String>()
         val durationInMinutes = state.durationMinutes.toInt()
 

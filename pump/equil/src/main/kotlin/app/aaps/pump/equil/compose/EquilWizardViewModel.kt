@@ -225,7 +225,7 @@ class EquilWizardViewModel @Inject constructor(
         autoFillActive = false
 
         viewModelScope.launch {
-            siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+            _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
                 System.currentTimeMillis() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
 
@@ -828,9 +828,9 @@ class EquilWizardViewModel @Inject constructor(
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(app.aaps.core.keys.IntKey.SiteRotationUserProfile))
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
-    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
 
     // endregion
 

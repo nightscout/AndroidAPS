@@ -109,8 +109,6 @@ class WearViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(WearUiState())
     val uiState: StateFlow<WearUiState> = _uiState.asStateFlow()
 
-    private var currentCwfData: CwfData? = null
-
     private val _toastEvent = MutableSharedFlow<String>()
     val toastEvent: SharedFlow<String> = _toastEvent.asSharedFlow()
 
@@ -127,7 +125,6 @@ class WearViewModel @Inject constructor(
         }
         viewModelScope.launch {
             wearPlugin.savedCustomWatchface.collect { cwfData ->
-                currentCwfData = cwfData
                 _uiState.update {
                     it.copy(
                         hasCustomWatchface = cwfData != null,
@@ -169,7 +166,7 @@ class WearViewModel @Inject constructor(
     }
 
     fun showCwfInfos() {
-        val cwfData = currentCwfData ?: return
+        val cwfData = wearPlugin.savedCustomWatchface.value ?: return
         val metadata = cwfData.metadata
         val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
 
