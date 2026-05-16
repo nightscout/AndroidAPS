@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -139,25 +138,17 @@ class EquilPumpPlugin @Inject constructor(
             .launchIn(newScope)
         preferences.observe(EquilIntPreferenceKey.EquilTone).drop(1).onEach {
             val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
-            commandQueue.customCommand(
-                CmdAlarmSet(mode, aapsLogger, preferences, equilManager),
-                object : Callback() {
-                    override fun run() {
-                        if (result.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
-                        else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
-                    }
-                })
+            val r = commandQueue.customCommand(CmdAlarmSet(mode, aapsLogger, preferences, equilManager))
+            if (r.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
+            else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
         }.launchIn(newScope)
         preferences.observe(DoubleKey.SafetyMaxBolus).drop(1).onEach {
             val profile = pumpSync.expectedPumpState().profile ?: return@onEach
-            commandQueue.customCommand(
-                CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
-                object : Callback() {
-                    override fun run() {
-                        if (result.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
-                        else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
-                    }
-                })
+            val r = commandQueue.customCommand(
+                CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager)
+            )
+            if (r.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
+            else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
         }.launchIn(newScope)
     }
 

@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpInsulin
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -38,6 +37,7 @@ import android.content.Context
 import app.aaps.core.interfaces.pump.PumpRate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -261,19 +261,15 @@ class EquilOverviewViewModel @Inject constructor(
         val runMode = equilManager.equilState?.runMode ?: return
         val targetMode = if (runMode == RunMode.RUN) RunMode.SUSPEND else RunMode.RUN
         _isModeChanging.value = true
-        commandQueue.customCommand(
-            CmdModelSet(targetMode.command, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isModeChanging.value = false
-                    aapsLogger.debug(LTag.PUMPCOMM, "toggleMode result: ${result.success}")
-                    if (result.success) {
-                        equilManager.equilState?.runMode = targetMode
-                        _refreshTrigger.value = System.currentTimeMillis()
-                    }
-                }
+        viewModelScope.launch {
+            val r = commandQueue.customCommand(CmdModelSet(targetMode.command, aapsLogger, preferences, equilManager))
+            _isModeChanging.value = false
+            aapsLogger.debug(LTag.PUMPCOMM, "toggleMode result: ${r.success}")
+            if (r.success) {
+                equilManager.equilState?.runMode = targetMode
+                _refreshTrigger.value = System.currentTimeMillis()
             }
-        )
+        }
     }
 
     private fun readableDuration(duration: Duration): String {
