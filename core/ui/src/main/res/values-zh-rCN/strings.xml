@@ -644,7 +644,6 @@
     <string name="basal">基础率</string>
     <string name="basalpct">基础率 %</string>
     <string name="sensitivity">灵敏度</string>
-    <string name="isf_for_carbs">ISF（胰岛素敏感系数）计算器和碳水化合物吸收率：%1$.1f</string>
     <string name="autosens_long">Autosens 自动敏感度值：%.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">算法中自动敏感度：%.0f%%</string>
