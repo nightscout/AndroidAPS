@@ -191,7 +191,7 @@ class DanaRSPlugin @Inject constructor(
         danaRSService?.stopConnecting()
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         danaRSService?.readPumpStatus()
         pumpDescription.basalStep = danaPump.basalStep
         pumpDescription.bolusStep = danaPump.bolusStep
@@ -247,7 +247,7 @@ class DanaRSPlugin @Inject constructor(
 
     override fun isBusy(): Boolean = false
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
@@ -290,8 +290,7 @@ class DanaRSPlugin @Inject constructor(
 
     override val baseBasalRate get() = PumpRate(danaPump.currentBasal)
 
-    @Synchronized
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -335,8 +334,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     // This is called from APS
-    @Synchronized
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0
         val doLowTemp = absoluteRate < baseBasalRate.cU
         val doHighTemp = absoluteRate > baseBasalRate.cU
@@ -409,8 +407,7 @@ class DanaRSPlugin @Inject constructor(
             .comment("Internal error")
     }
 
-    @Synchronized
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var percent = percent
         val result = pumpEnactResultProvider.get()
         if (percent < 0) {
@@ -479,8 +476,7 @@ class DanaRSPlugin @Inject constructor(
         return result
     }
 
-    @Synchronized
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
@@ -517,8 +513,7 @@ class DanaRSPlugin @Inject constructor(
         return result
     }
 
-    @Synchronized
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (danaPump.isTempBasalInProgress) {
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: Failed")
             danaRSService?.tempBasalStop()
@@ -537,7 +532,7 @@ class DanaRSPlugin @Inject constructor(
         }
     }
 
-    @Synchronized override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         if (danaPump.isExtendedInProgress) {
             danaRSService?.extendedBolusStop()
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: Failed")
@@ -566,7 +561,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
+    override suspend fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
     override fun canHandleDST(): Boolean = danaPump.usingUTC
     override fun clearPairing() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")

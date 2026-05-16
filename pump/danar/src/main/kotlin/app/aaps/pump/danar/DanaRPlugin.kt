@@ -155,7 +155,7 @@ class DanaRPlugin @Inject constructor(
         executionService?.finishHandshaking()
     }
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin == 0.0 || detailedBolusInfo.carbs > 0) {
             throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
         }
@@ -177,7 +177,7 @@ class DanaRPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         detailedBolusInfo.insulin = delivered.cU
         detailedBolusInfo.timestamp = System.currentTimeMillis()
-        if (detailedBolusInfo.insulin > 0) runBlocking {
+        if (detailedBolusInfo.insulin > 0)
             pumpSync.syncBolusWithPumpId(
                 detailedBolusInfo.timestamp,
                 PumpInsulin(detailedBolusInfo.insulin),
@@ -186,8 +186,7 @@ class DanaRPlugin @Inject constructor(
                 PumpType.DANA_R,
                 serialNumber()
             )
-        }
-        if (detailedBolusInfo.carbs > 0) runBlocking {
+        if (detailedBolusInfo.carbs > 0)
             pumpSync.syncCarbsWithTimestamp(
                 detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
                 detailedBolusInfo.carbs,
@@ -195,12 +194,11 @@ class DanaRPlugin @Inject constructor(
                 PumpType.DANA_R,
                 serialNumber()
             )
-        }
         return result
     }
 
     // This is called from APS
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         var result = pumpEnactResultProvider.get()
@@ -313,7 +311,7 @@ class DanaRPlugin @Inject constructor(
         return result
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (danaPump.isTempBasalInProgress) return cancelRealTempBasal()
         if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
             return cancelExtendedBolus()

@@ -17,7 +17,7 @@ interface PumpWithConcentration : Pump {
      *
      *  @param profile new profile
      */
-    fun setNewBasalProfile(profile: EffectiveProfile): PumpEnactResult
+    suspend fun setNewBasalProfile(profile: EffectiveProfile): PumpEnactResult
 
     /**
      * @param profile profile to check

@@ -59,7 +59,6 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
-import kotlin.math.min
 
 @Singleton
 open class VirtualPumpPlugin @Inject constructor(
@@ -169,7 +168,7 @@ open class VirtualPumpPlugin @Inject constructor(
         get() = config.AAPSCLIENT && fakeDataDetected
     override var fakeDataDetected = false
 
-    override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
+    override suspend fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
         return pumpEnactResultProvider.get()
     }
 
@@ -187,11 +186,11 @@ open class VirtualPumpPlugin @Inject constructor(
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun disconnect(reason: String) {}
     override fun stopConnecting() {}
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         _lastDataTime.value = System.currentTimeMillis()
     }
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         _lastDataTime.value = System.currentTimeMillis()
         notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
         // Do nothing here. we are using database profile
@@ -209,7 +208,7 @@ open class VirtualPumpPlugin @Inject constructor(
     override val baseBasalRate: PumpRate
         get() = PumpRate(runBlocking { pumpSync.expectedPumpState() }.profile?.getBasal() ?: 0.0)
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -246,16 +245,14 @@ open class VirtualPumpPlugin @Inject constructor(
                     )
                 }
             else
-                runBlocking {
-                    pumpSync.syncBolusWithPumpId(
-                        timestamp = detailedBolusInfo.timestamp,
-                        amount = PumpInsulin(detailedBolusInfo.insulin),
-                        type = detailedBolusInfo.bolusType,
-                        pumpId = dateUtil.now(),
-                        pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
-                        pumpSerial = serialNumber()
-                    )
-                }
+                pumpSync.syncBolusWithPumpId(
+                    timestamp = detailedBolusInfo.timestamp,
+                    amount = PumpInsulin(detailedBolusInfo.insulin),
+                    type = detailedBolusInfo.bolusType,
+                    pumpId = dateUtil.now(),
+                    pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
+                    pumpSerial = serialNumber()
+                )
         }
         if (detailedBolusInfo.insulin > 0) {
             _lastBolusTime.value = detailedBolusInfo.timestamp
@@ -265,7 +262,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun stopBolusDelivering() {}
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         result.success = true
         result.enacted = true
@@ -273,24 +270,22 @@ open class VirtualPumpPlugin @Inject constructor(
         result.absolute = absoluteRate
         result.duration = durationInMinutes
         result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
-        runBlocking {
-            pumpSync.syncTemporaryBasalWithPumpId(
-                timestamp = dateUtil.now(),
-                rate = PumpRate(absoluteRate),
-                duration = T.mins(durationInMinutes.toLong()).msecs(),
-                isAbsolute = true,
-                type = tbrType,
-                pumpId = dateUtil.now(),
-                pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
-                pumpSerial = serialNumber()
-            )
-        }
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = dateUtil.now(),
+            rate = PumpRate(absoluteRate),
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            isAbsolute = true,
+            type = tbrType,
+            pumpId = dateUtil.now(),
+            pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
+            pumpSerial = serialNumber()
+        )
         aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText(rh)}")
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         result.success = true
         result.enacted = true
@@ -299,24 +294,22 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isTempCancel = false
         result.duration = durationInMinutes
         result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
-        runBlocking {
-            pumpSync.syncTemporaryBasalWithPumpId(
-                timestamp = dateUtil.now(),
-                rate = PumpRate(percent.toDouble()),
-                duration = T.mins(durationInMinutes.toLong()).msecs(),
-                isAbsolute = false,
-                type = tbrType,
-                pumpId = dateUtil.now(),
-                pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
-                pumpSerial = serialNumber()
-            )
-        }
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = dateUtil.now(),
+            rate = PumpRate(percent.toDouble()),
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            isAbsolute = false,
+            type = tbrType,
+            pumpId = dateUtil.now(),
+            pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
+            pumpSerial = serialNumber()
+        )
         aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText(rh)}")
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         val result = cancelExtendedBolus()
         if (!result.success) return result
         result.success = true
@@ -325,54 +318,48 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isTempCancel = false
         result.duration = durationInMinutes
         result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
-        runBlocking {
-            pumpSync.syncExtendedBolusWithPumpId(
-                timestamp = dateUtil.now(),
-                rate = PumpRate(insulin),
-                duration = T.mins(durationInMinutes.toLong()).msecs(),
-                isEmulatingTB = false,
-                pumpId = dateUtil.now(),
-                pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
-                pumpSerial = serialNumber()
-            )
-        }
+        pumpSync.syncExtendedBolusWithPumpId(
+            timestamp = dateUtil.now(),
+            rate = PumpRate(insulin),
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            isEmulatingTB = false,
+            pumpId = dateUtil.now(),
+            pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
+            pumpSerial = serialNumber()
+        )
         aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText(rh)}")
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         result.success = true
         result.isTempCancel = true
         result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
-        if (runBlocking { pumpSync.expectedPumpState() }.temporaryBasal != null) {
+        if (pumpSync.expectedPumpState().temporaryBasal != null) {
             result.enacted = true
-            runBlocking {
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = dateUtil.now(),
-                    endPumpId = dateUtil.now(),
-                    pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
-                    pumpSerial = serialNumber()
-                )
-            }
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                timestamp = dateUtil.now(),
+                endPumpId = dateUtil.now(),
+                pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
+                pumpSerial = serialNumber()
+            )
             aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText(rh)}")
         }
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
-        if (runBlocking { pumpSync.expectedPumpState() }.extendedBolus != null) {
-            runBlocking {
-                pumpSync.syncStopExtendedBolusWithPumpId(
-                    timestamp = dateUtil.now(),
-                    endPumpId = dateUtil.now(),
-                    pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
-                    pumpSerial = serialNumber()
-                )
-            }
+        if (pumpSync.expectedPumpState().extendedBolus != null) {
+            pumpSync.syncStopExtendedBolusWithPumpId(
+                timestamp = dateUtil.now(),
+                endPumpId = dateUtil.now(),
+                pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
+                pumpSerial = serialNumber()
+            )
         }
         result.success = true
         result.enacted = true

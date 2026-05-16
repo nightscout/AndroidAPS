@@ -53,8 +53,8 @@ import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
-import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdDevicesGet
+import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
 import app.aaps.pump.equil.manager.customCommands.CmdModeAndHistoryGet
 import kotlinx.coroutines.CoroutineScope
@@ -173,10 +173,12 @@ class EquilPumpPlugin @Inject constructor(
         if (equilManager.equilState?.address.isNullOrEmpty()) return true
         return equilManager.equilState?.bluetoothConnectionState == BluetoothConnectionState.CONNECTED
     }
+
     override fun isConnecting(): Boolean {
         if (!equilManager.isActivationCompleted()) return false
         return equilManager.equilState?.bluetoothConnectionState == BluetoothConnectionState.CONNECTING
     }
+
     override fun isBusy(): Boolean = false
 
     override fun isHandshakeInProgress(): Boolean = false
@@ -191,14 +193,14 @@ class EquilPumpPlugin @Inject constructor(
         } else true
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         if (equilManager.isActivationCompleted()) {
             commandQueue.customCommand(CmdModeAndHistoryGet(), null)
             commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager), null)
         }
     }
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "setNewBasalProfile")
         val mode = equilManager.equilState?.runMode
         if (mode === RunMode.RUN || mode === RunMode.SUSPEND) {
@@ -227,7 +229,7 @@ class EquilPumpPlugin @Inject constructor(
     override val reservoirLevel: StateFlow<PumpInsulin> = equilManager.reservoirFlow.mapState(::PumpInsulin)
     override val batteryLevel: StateFlow<Int?> = equilManager.batteryFlow
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin == 0.0) {
             // bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
@@ -251,7 +253,7 @@ class EquilPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "stopBolusDelivering=====")
     }
 
-    override fun setTempBasalAbsolute(
+    override suspend fun setTempBasalAbsolute(
         absoluteRate: Double,
         durationInMinutes: Int,
         enforceNew: Boolean,
@@ -288,7 +290,7 @@ class EquilPumpPlugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal=====$enforceNew")
         if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
         val pumpEnactResult = equilManager.setTempBasal(0.0, 0, true)
@@ -325,10 +327,10 @@ class EquilPumpPlugin @Inject constructor(
 
     override fun stopConnecting() {}
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult =
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult =
         error("Pump doesn't support percent basal rate")
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "setExtendedBolus $insulin, $durationInMinutes")
         val pumpEnactResult = equilManager.setExtendedBolus(insulin, durationInMinutes, false)
         if (pumpEnactResult.success) {
@@ -340,12 +342,12 @@ class EquilPumpPlugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus")
         return equilManager.setExtendedBolus(0.0, 0, true)
     }
 
-    override fun loadTDDs(): PumpEnactResult {
+    override suspend fun loadTDDs(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "loadTDDs")
         return pumpEnactResultProvider.get().success(false).enacted(false)
     }

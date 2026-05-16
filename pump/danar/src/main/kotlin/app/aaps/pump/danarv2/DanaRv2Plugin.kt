@@ -144,7 +144,7 @@ class DanaRv2Plugin @Inject constructor(
     }
 
     // Pump interface
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin == 0.0 || detailedBolusInfo.carbs > 0) {
             throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
         }
@@ -182,7 +182,7 @@ class DanaRv2Plugin @Inject constructor(
     }
 
     // This is called from APS
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var result = pumpEnactResultProvider.get()
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0 && absoluteRate >= 0.10
         val doLowTemp = absoluteRate < baseBasalRate.cU || absoluteRate < 0.10
@@ -240,7 +240,7 @@ class DanaRv2Plugin @Inject constructor(
         return result
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var percentReq = percent
         val pump = danaPump
         val result = pumpEnactResultProvider.get()
@@ -286,7 +286,7 @@ class DanaRv2Plugin @Inject constructor(
         return result
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
@@ -298,7 +298,7 @@ class DanaRv2Plugin @Inject constructor(
         return result
     }
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         var insulinReq = insulin
         val pump = danaPump
         insulinReq = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulinReq, aapsLogger)).value()
@@ -335,7 +335,7 @@ class DanaRv2Plugin @Inject constructor(
         return result
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (danaPump.isExtendedInProgress) {
             executionService?.extendedBolusStop()
