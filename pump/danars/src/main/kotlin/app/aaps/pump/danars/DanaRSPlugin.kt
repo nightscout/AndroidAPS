@@ -455,7 +455,7 @@ class DanaRSPlugin @Inject constructor(
         return result
     }
 
-    @Synchronized private fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
+    private suspend fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         val connectionOK = danaRSService?.highTempBasal(percent) == true
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {

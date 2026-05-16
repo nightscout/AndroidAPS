@@ -88,8 +88,8 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     abstract fun messageHashTable(): MessageHashTableBase
 
     protected var lastApproachingDailyLimit: Long = 0
-    abstract fun updateBasalsInPump(profile: Profile): Boolean
-    abstract fun getPumpStatus()
+    abstract suspend fun updateBasalsInPump(profile: Profile): Boolean
+    abstract suspend fun getPumpStatus()
     abstract fun loadEvents(): PumpEnactResult?
     abstract fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean
     abstract fun highTempBasal(percent: Int, durationInMinutes: Int): Boolean // Rv2 only

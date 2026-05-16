@@ -46,7 +46,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -325,19 +324,17 @@ class DanaRPlugin @Inject constructor(
         return PumpType.DANA_R
     }
 
-    private fun cancelRealTempBasal(): PumpEnactResult {
+    private suspend fun cancelRealTempBasal(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
-                runBlocking {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        dateUtil.now(),
-                        dateUtil.now(),
-                        pumpDescription.pumpType,
-                        serialNumber()
-                    )
-                }
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                    dateUtil.now(),
+                    dateUtil.now(),
+                    pumpDescription.pumpType,
+                    serialNumber()
+                )
                 result.success(true).enacted(true).isTempCancel(true).comment(app.aaps.core.ui.R.string.ok)
             } else result.success(false).enacted(false).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {

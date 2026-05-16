@@ -59,7 +59,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializer
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -132,7 +131,7 @@ class EquilManager @Inject constructor(
         return result
     }
 
-    fun setTempBasal(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
+    suspend fun setTempBasal(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         try {
             val command = CmdTempBasalSet(insulin, time, aapsLogger, preferences, this)
@@ -145,14 +144,12 @@ class EquilManager @Inject constructor(
             if (command.cmdSuccess) {
                 val currentTime = System.currentTimeMillis()
                 if (cancel) {
-                    runBlocking {
-                        pumpSync.syncStopTemporaryBasalWithPumpId(
-                            currentTime,
-                            currentTime,
-                            PumpType.EQUIL,
-                            getSerialNumber()
-                        )
-                    }
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        currentTime,
+                        currentTime,
+                        PumpType.EQUIL,
+                        getSerialNumber()
+                    )
                     setTempBasal(null)
                 } else {
                     val tempBasalRecord =
@@ -161,18 +158,16 @@ class EquilManager @Inject constructor(
                             insulin, currentTime
                         )
                     setTempBasal(tempBasalRecord)
-                    runBlocking {
-                        pumpSync.syncTemporaryBasalWithPumpId(
-                            currentTime,
-                            PumpRate(insulin),
-                            time.toLong() * 60 * 1000,
-                            true,
-                            PumpSync.TemporaryBasalType.NORMAL,
-                            currentTime,
-                            PumpType.EQUIL,
-                            getSerialNumber()
-                        )
-                    }
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        currentTime,
+                        PumpRate(insulin),
+                        time.toLong() * 60 * 1000,
+                        true,
+                        PumpSync.TemporaryBasalType.NORMAL,
+                        currentTime,
+                        PumpType.EQUIL,
+                        getSerialNumber()
+                    )
                 }
                 command.resolvedResult = ResolvedResult.SUCCESS
             }
@@ -187,7 +182,7 @@ class EquilManager @Inject constructor(
         return result
     }
 
-    fun setExtendedBolus(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
+    suspend fun setExtendedBolus(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         try {
             val command = CmdExtendedBolusSet(insulin, time, cancel, aapsLogger, preferences, this)
@@ -202,26 +197,22 @@ class EquilManager @Inject constructor(
                 command.resolvedResult = ResolvedResult.SUCCESS
                 val currentTimeMillis = System.currentTimeMillis()
                 if (cancel) {
-                    runBlocking {
-                        pumpSync.syncStopExtendedBolusWithPumpId(
-                            currentTimeMillis,
-                            currentTimeMillis,
-                            PumpType.EQUIL,
-                            getSerialNumber()
-                        )
-                    }
+                    pumpSync.syncStopExtendedBolusWithPumpId(
+                        currentTimeMillis,
+                        currentTimeMillis,
+                        PumpType.EQUIL,
+                        getSerialNumber()
+                    )
                 } else {
-                    runBlocking {
-                        pumpSync.syncExtendedBolusWithPumpId(
-                            currentTimeMillis,
-                            PumpRate(insulin),
-                            time.toLong() * 60 * 1000,
-                            true,
-                            currentTimeMillis,
-                            PumpType.EQUIL,
-                            getSerialNumber()
-                        )
-                    }
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        currentTimeMillis,
+                        PumpRate(insulin),
+                        time.toLong() * 60 * 1000,
+                        true,
+                        currentTimeMillis,
+                        PumpType.EQUIL,
+                        getSerialNumber()
+                    )
                 }
 
                 result.enacted(true)
@@ -236,7 +227,7 @@ class EquilManager @Inject constructor(
         return result
     }
 
-    fun bolus(detailedBolusInfo: DetailedBolusInfo, bolusProfile: BolusProfile): PumpEnactResult {
+    suspend fun bolus(detailedBolusInfo: DetailedBolusInfo, bolusProfile: BolusProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         try {
             val command = CmdLargeBasalSet(detailedBolusInfo.insulin, aapsLogger, preferences, this)
@@ -272,16 +263,14 @@ class EquilManager @Inject constructor(
             if (result.success) {
                 command.resolvedResult = ResolvedResult.SUCCESS
                 val currentTime = System.currentTimeMillis()
-                runBlocking {
-                    pumpSync.syncBolusWithPumpId(
-                        currentTime,
-                        PumpInsulin(result.bolusDelivered),
-                        detailedBolusInfo.bolusType,
-                        detailedBolusInfo.timestamp,
-                        PumpType.EQUIL,
-                        getSerialNumber()
-                    )
-                }
+                pumpSync.syncBolusWithPumpId(
+                    currentTime,
+                    PumpInsulin(result.bolusDelivered),
+                    detailedBolusInfo.bolusType,
+                    detailedBolusInfo.timestamp,
+                    PumpType.EQUIL,
+                    getSerialNumber()
+                )
                 val equilBolusRecord = EquilBolusRecord(result.bolusDelivered, BolusType.SMB, currentTime)
                 setBolusRecord(equilBolusRecord)
             }

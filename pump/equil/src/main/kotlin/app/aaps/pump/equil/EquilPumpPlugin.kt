@@ -354,7 +354,7 @@ class EquilPumpPlugin @Inject constructor(
 
     override fun isBatteryChangeLoggingEnabled(): Boolean = false
 
-    private fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    private suspend fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "deliverBolus")
         bolusProfile.insulin = detailedBolusInfo.insulin
         return equilManager.bolus(detailedBolusInfo, bolusProfile)

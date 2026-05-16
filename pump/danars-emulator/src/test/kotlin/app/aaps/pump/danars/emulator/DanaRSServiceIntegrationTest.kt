@@ -80,6 +80,7 @@ import app.aaps.pump.danars.services.DanaRSService
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -156,8 +157,10 @@ class DanaRSServiceIntegrationTest : TestBase() {
         whenever(dateUtil.dateAndTimeAndSecondsString(any())).thenReturn("2026-01-01 12:00:00")
 
         // PumpSync returns empty expected state
-        val emptyState = PumpSync.PumpState(null, null, null, null, "")
-        runBlocking { whenever(pumpSync.expectedPumpState()).thenReturn(emptyState) }
+        runBlocking {
+            val emptyState = PumpSync.PumpState(null, null, null, null, "")
+            whenever(pumpSync.expectedPumpState()).thenReturn(emptyState)
+        }
 
         // PumpEnactResult
         whenever(pumpEnactResult.success(any())).thenReturn(pumpEnactResult)
@@ -287,7 +290,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== readPumpStatus ==========
 
     @Test
-    fun `readPumpStatus reads all pump data through emulator`() {
+    fun `readPumpStatus reads all pump data through emulator`() = runTest {
         val state = emulatorTransport.pumpState
         state.reservoirRemainingUnits = 123.0
         state.batteryRemaining = 75
@@ -318,7 +321,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     }
 
     @Test
-    fun `readPumpStatus with profile24 reads 24-hour CIR-CF`() {
+    fun `readPumpStatus with profile24 reads 24-hour CIR-CF`() = runTest {
         // hwModel >= 7 enables profile24
         emulatorTransport.pumpState.hwModel = 7
         emulatorTransport.pumpState.profile24 = true
@@ -345,7 +348,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== tempBasal ==========
 
     @Test
-    fun `tempBasal sets temporary basal on emulator`() {
+    fun `tempBasal sets temporary basal on emulator`() = runTest {
         // Not initialized so loadEvents returns early (avoids SystemClock.sleep hang in test)
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
         val tbr = mockPumpSyncWithTbr(rate = 150.0)
@@ -362,7 +365,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     }
 
     @Test
-    fun `tempBasal cancels existing temp basal before setting new one`() {
+    fun `tempBasal cancels existing temp basal before setting new one`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
         val tbr = mockPumpSyncWithTbr(rate = 200.0, duration = 7200_000)
 
@@ -382,7 +385,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== highTempBasal ==========
 
     @Test
-    fun `highTempBasal sets APS temporary basal`() {
+    fun `highTempBasal sets APS temporary basal`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
         val tbr = mockPumpSyncWithTbr(rate = 250.0)
 
@@ -399,7 +402,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== tempBasalStop ==========
 
     @Test
-    fun `tempBasalStop cancels running temp basal`() {
+    fun `tempBasalStop cancels running temp basal`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
         // PumpSync returns empty state (no active TBR) after cancel
         // (default emptyState from setup is already correct)
@@ -423,7 +426,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== extendedBolus ==========
 
     @Test
-    fun `extendedBolus sets extended bolus on emulator`() {
+    fun `extendedBolus sets extended bolus on emulator`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
         val eb = mockPumpSyncWithEb(amount = 2.0, duration = 7200_000)
 
@@ -443,7 +446,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== extendedBolusStop ==========
 
     @Test
-    fun `extendedBolusStop cancels extended bolus`() {
+    fun `extendedBolusStop cancels extended bolus`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
         // PumpSync returns empty state (no active EB) after cancel
 
@@ -515,7 +518,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== tempBasalShortDuration ==========
 
     @Test
-    fun `tempBasalShortDuration with 15 min sets APS temp basal`() {
+    fun `tempBasalShortDuration with 15 min sets APS temp basal`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(true)
 
         connectAndHandshake()
@@ -526,7 +529,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     }
 
     @Test
-    fun `tempBasalShortDuration with invalid duration returns false`() {
+    fun `tempBasalShortDuration with invalid duration returns false`() = runTest {
         val result = danaRSService.tempBasalShortDuration(130, 20)
         assertThat(result).isFalse()
     }
@@ -534,7 +537,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     // ========== updateBasalsInPump ==========
 
     @Test
-    fun `updateBasalsInPump sends basal profile to emulator`() {
+    fun `updateBasalsInPump sends basal profile to emulator`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
 
         // Set up profile with distinct basal rates per hour
@@ -554,7 +557,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     }
 
     @Test
-    fun `updateBasalsInPump syncs TBR and EB state from PumpSync`() {
+    fun `updateBasalsInPump syncs TBR and EB state from PumpSync`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
 
         // Set up PumpSync to return an active TBR and EB
@@ -569,7 +572,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
             pumpType = PumpType.DANA_RS, pumpSerial = "test"
         )
         val stateWithTbrAndEb = PumpSync.PumpState(tbr, eb, null, null, "test")
-        runBlocking { whenever(pumpSync.expectedPumpState()).thenReturn(stateWithTbrAndEb) }
+        whenever(pumpSync.expectedPumpState()).thenReturn(stateWithTbrAndEb)
 
         // Profile with flat basal
         for (hour in 0..23) {
@@ -588,11 +591,11 @@ class DanaRSServiceIntegrationTest : TestBase() {
         assertThat(danaPump.extendedBolusAmount).isWithin(0.01).of(2.0)
 
         // Verify pumpSync was queried
-        runBlocking { verify(pumpSync, atLeast(1)).expectedPumpState() }
+        verify(pumpSync, atLeast(1)).expectedPumpState()
     }
 
     @Test
-    fun `updateBasalsInPump with profile24 sends CIR-CF arrays`() {
+    fun `updateBasalsInPump with profile24 sends CIR-CF arrays`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
 
         // Enable profile24 on emulator (hwModel >= 7)
@@ -661,7 +664,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     }
 
     @Test
-    fun `tempBasal syncs state from PumpSync after setting`() {
+    fun `tempBasal syncs state from PumpSync after setting`() = runTest {
         whenever(danaRSPlugin.isInitialized()).thenReturn(false)
 
         // Set up PumpSync to return a TBR matching what we're about to set
@@ -672,7 +675,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
             id = 1L, pumpId = null, pumpType = PumpType.DANA_RS, pumpSerial = "test"
         )
         val stateWithTbr = PumpSync.PumpState(tbr, null, null, null, "test")
-        runBlocking { whenever(pumpSync.expectedPumpState()).thenReturn(stateWithTbr) }
+        whenever(pumpSync.expectedPumpState()).thenReturn(stateWithTbr)
 
         connectAndHandshake()
         val result = danaRSService.tempBasal(150, 1)
@@ -682,7 +685,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
         assertThat(danaPump.tempBasalStart).isEqualTo(tbr.timestamp)
         assertThat(danaPump.tempBasalDuration).isEqualTo(tbr.duration)
         assertThat(danaPump.tempBasalPercent).isEqualTo(150)
-        runBlocking { verify(pumpSync, atLeast(1)).expectedPumpState() }
+        verify(pumpSync, atLeast(1)).expectedPumpState()
     }
 
     @Test

@@ -54,7 +54,6 @@ import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -73,7 +72,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         mBinder = LocalBinder()
     }
 
-    override fun getPumpStatus() {
+    override suspend fun getPumpStatus() {
         try {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
             val statusMsg = MsgStatus(injector)
@@ -95,7 +94,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingextendedbolusstatus)))
             mSerialIOThread?.sendMessage(exStatusMsg)
             danaPump.lastConnection = System.currentTimeMillis()
-            val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+            val profile = pumpSync.expectedPumpState().profile
             val pump = activePlugin.activePump
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
@@ -159,14 +158,12 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
-                    runBlocking {
-                        pumpSync.insertAnnouncement(
-                            rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
-                            null,
-                            PumpType.DANA_R_KOREAN,
-                            danaRKoreanPlugin.serialNumber()
-                        )
-                    }
+                    pumpSync.insertAnnouncement(
+                        rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
+                        null,
+                        PumpType.DANA_R_KOREAN,
+                        danaRKoreanPlugin.serialNumber()
+                    )
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
@@ -329,7 +326,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         return pumpEnactResultProvider.get().success(true)
     }
 
-    override fun updateBasalsInPump(profile: Profile): Boolean {
+    override suspend fun updateBasalsInPump(profile: Profile): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.updatingbasalrates)))
         val basal = danaPump.buildDanaRProfileRecord(profile)

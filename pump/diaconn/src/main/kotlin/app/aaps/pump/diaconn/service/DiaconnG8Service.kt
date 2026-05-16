@@ -85,7 +85,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -190,7 +189,7 @@ class DiaconnG8Service : DaggerService() {
         bleCommonService.sendMessage(message, 5000)
     }
 
-    fun readPumpStatus() {
+    suspend fun readPumpStatus() {
         try {
             val pump = activePlugin.activePump
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
@@ -211,7 +210,7 @@ class DiaconnG8Service : DaggerService() {
 
             diaconnG8Pump.lastConnection = System.currentTimeMillis()
 
-            val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+            val profile = pumpSync.expectedPumpState().profile
             if (profile != null && abs(diaconnG8Pump.baseAmount - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
 
@@ -274,14 +273,12 @@ class DiaconnG8Service : DaggerService() {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
-                    runBlocking {
-                        pumpSync.insertAnnouncement(
-                            rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
-                            null,
-                            PumpType.DIACONN_G8,
-                            diaconnG8Pump.serialNo.toString()
-                        )
-                    }
+                    pumpSync.insertAnnouncement(
+                        rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
+                        null,
+                        PumpType.DIACONN_G8,
+                        diaconnG8Pump.serialNo.toString()
+                    )
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
@@ -767,7 +764,7 @@ class DiaconnG8Service : DaggerService() {
         return msgStop.success()
     }
 
-    fun updateBasalsInPump(profile: Profile): Boolean {
+    suspend fun updateBasalsInPump(profile: Profile): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.updatingbasalrates)))
         val basalList = diaconnG8Pump.buildDiaconnG8ProfileRecord(profile)
