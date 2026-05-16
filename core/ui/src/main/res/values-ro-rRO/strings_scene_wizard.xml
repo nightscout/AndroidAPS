@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Zi de boală</string>
     <string name="scene_wizard_sick_day_desc">Profilul mai puternic (150%) pentru a face față rezistenței crescute la insulină în timpul bolii.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Bolile, febra și hormonii de stres pot crește dramatic rezistența la insulină – uneori cu 50% sau mai mult. Un profil mai puternic (de exemplu 150%) recomandă algoritmului să furnizeze mai multă insulină pentru toate calculele - rate bazale, sugestii pentru bolus și factori de corecție. De asemenea, puteți adăuga o țintă temporară sau puteți ajusta modul de rulare în următorii pași. Monitorizați îndeaproape și ajustați pe măsură ce corpul se recuperează.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Zi de boală - Vărsături</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Profil redus cu Suspendare la glicemie scăzută – opusul zilei standard de boală în care nu se pot absorbi alimentele.</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Faza luteală</string>
     <string name="scene_wizard_luteal_phase_desc">Profilul crescut pentru a face față rezistenței la insulină dinaintea menstruației.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Multe femei prezintă rezistență crescută la insulină în timpul fazei luteale (aproximativ 1-2 săptămâni înainte de perioada lor). Aceasta se datorează creșterii nivelurilor de progesteron care reduc sensibilitatea la insulină. Efectul variază enorm de la un pacient la altul – unii observă o creştere de 10-30% a nevoilor de insulină, alții văd modificări minime. Începeți cu o creștere conservatoare (115%) și ajustați-vă pe baza propriilor modele de-a lungul mai multor cicluri. Urmărirea acesteia în CarePortal ajută la identificarea ritmului personal.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Vreme fierbinte</string>
     <string name="scene_wizard_hot_weather_desc">Profilul redus – căldura accelerează absorbția insulinei.</string>
