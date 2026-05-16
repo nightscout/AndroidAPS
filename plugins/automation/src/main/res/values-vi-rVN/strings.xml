@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation_short">Auto</string>
-    <string name="automation">Automation</string>
+    <string name="automation">Tự động</string>
     <string name="automation_description">Các tác vụ tự động do người dùng định nghĩa</string>
     <string name="automation_enabled">Đã bật</string>
     <string name="automation_read_only">Chỉ đọc</string>
