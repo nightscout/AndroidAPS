@@ -214,7 +214,7 @@ class GraphViewModel @AssistedInject constructor(
     ) { bgInfo, _ ->
         BgInfoUiState(
             bgInfo = bgInfo,
-            timeAgoText = dateUtil.minOrSecAgo(rh, bgInfo?.timestamp)
+            timeAgoText = dateUtil.minAgo(rh, bgInfo?.timestamp)
         )
     }.stateIn(
         scope = viewModelScope,
@@ -379,8 +379,12 @@ class GraphViewModel @AssistedInject constructor(
         aapsLogger.debug(LTag.UI, "GraphViewModel initialized - exposing independent series flows")
     }
 
+    @Volatile var lastInteractionMs: Long = 0L
+        private set
+
     fun onGraphInteraction() {
         preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
+        lastInteractionMs = System.currentTimeMillis()
     }
 
     override fun onCleared() {

@@ -120,7 +120,7 @@ class WearPlugin @Inject constructor(
                 if (isEnabled()) {
                     if (state != null) {
                         if (!state.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
-                            rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.status)))
+                            rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.wearStatus)))
                         }
                     } else {
                         // Bolus ended — send 100% to clear wear display

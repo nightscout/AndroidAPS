@@ -51,6 +51,8 @@
     <string name="unit_weeks">týždňov</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">Zostáva %1$dh %2$dm</string>
+    <string name="time_remaining_m">Zostáva %1$dm</string>
     <string name="later_today">Neskôr počas dňa</string>
     <string name="tomorrow">Zajtra</string>
     <string name="today">Dnes</string>

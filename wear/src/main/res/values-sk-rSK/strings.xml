@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">Dočasný cieľ</string>
     <string name="label_quick_wizard_tile">Rýchly sprievodca</string>
     <string name="label_user_action_tile">Akcia používateľa</string>
+    <string name="label_scene_tile">Scéna</string>
     <string name="msg_warning_sync">Žiadne dáta od %1$s! Skontroluj, či AAPS na telefóne posiela dáta na hodinky</string>
     <string name="msg_warning_old">AAPS dáta sú %1$s staré! Skontroluj tvoj senzor, xDrip+, NS, AAPS nastavenia atď.!</string>
     <string name="pref_vibrate_on_bolus">Zavibrovať pri boluse</string>
@@ -14,6 +15,7 @@
     <string name="pref_display_settings">Displej</string>
     <string name="pref_graph_settings">Graf</string>
     <string name="pref_interface_settings">Rozhranie</string>
+    <string name="pref_tile_settings">Dlaždice</string>
     <string name="pref_others_settings">Ostatné</string>
     <string name="pref_complication_settings">Komplikácia</string>
     <string name="pref_show_date">Zobraziť dátum</string>
@@ -64,6 +66,7 @@
     <string name="pref_moreWatchfaceSettings">Ďalšie nastavenia ciferníka</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Pozrite sa prosím do konfigurácie Watchface.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Dočasný cieľ</string>
     <string name="menu_wizard">Kalkulačka</string>
     <string name="menu_wizard_short">Kalk</string>
     <string name="menu_treatment">Ošetrenie</string>
@@ -82,6 +85,8 @@
     <string name="action_tempt_confirmation">Požadovaný dočasný cieľ</string>
     <string name="action_quick_wizard_confirmation">Požadovaný rýchly bolus</string>
     <string name="action_user_action_confirmation">Vyžaduje sa akcia používateľa</string>
+    <string name="action_scene_confirmation">Aktivovať scénu</string>
+    <string name="scene_stop">ZASTAVIŤ</string>
     <string name="action_treatment_confirmation">Požadované ošetrenie</string>
     <string name="action_bolus_confirmation">Požadovaný bolus</string>
     <string name="action_wizard_confirmation">Požadovaná kalkulačka</string>
@@ -229,6 +234,11 @@
     <string name="status_running_mode">Režim prevádzky</string>
     <string name="label_running_mode_title">Režim prevádzky</string>
     <string name="label_bg_graph_tile">Graf glykémie</string>
+    <string name="tile_tap_action">Akcia pri poklepaní</string>
+    <string name="tile_graph_time_range">Časový rozsah</string>
+    <string name="tile_tap_bg_graph">Graf glykémie</string>
+    <string name="tile_tap_main_menu">Hlavné menu</string>
+    <string name="tile_tap_loop_status">Stav okruhu</string>
     <string name="action_running_mode_selected">Požadovaný režim prevádzky</string>
     <string name="title_activity_disconnect_pump">Odpojiť pumpu</string>
     <string name="title_activity_suspend_loop">Pozastaviť uzavretý okruh</string>

@@ -1,12 +1,21 @@
 package app.aaps.pump.medtrum.compose
 
+import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
@@ -14,16 +23,13 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.StatusLevel
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.SwapHoriz
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
-import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
@@ -35,7 +41,7 @@ import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
-import android.content.Context
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -56,6 +62,7 @@ import app.aaps.core.ui.R as CoreUiR
 sealed class MedtrumOverviewEvent {
     data class StartPatchWorkflow(val startStep: PatchStep) : MedtrumOverviewEvent()
     data class ShowDialog(val title: String, val message: String) : MedtrumOverviewEvent()
+    data object ConfirmUnpair : MedtrumOverviewEvent()
 }
 
 @HiltViewModel
@@ -70,6 +77,8 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val medtrumPlugin: MedtrumPlugin,
     val medtrumPump: MedtrumPump,
     private val ch: ConcentrationHelper,
+    private val preferences: Preferences,
+    private val uel: UserEntryLogger,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -128,28 +137,33 @@ class MedtrumOverviewViewModel @Inject constructor(
     fun onClickChangePatch() {
         aapsLogger.debug(LTag.PUMP, "ChangePatch clicked!")
         viewModelScope.launch {
-            val profile = profileFunction.getProfile()
-            if (profile == null) {
-                _events.tryEmit(
-                    MedtrumOverviewEvent.ShowDialog(
-                        title = rh.gs(CoreUiR.string.message),
-                        message = rh.gs(R.string.no_profile_selected)
-                    )
-                )
-            } else {
-                val nextStep = when {
-                    medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                                                    ->
-                        PatchStep.PREPARE_PATCH
+            val nextStep = when {
+                medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                                                    ->
+                    PatchStep.PREPARE_PATCH
 
-                    medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMING && medtrumPump.patchPrimed) ->
-                        PatchStep.RETRY_ACTIVATION
+                medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMING && medtrumPump.patchPrimed) ->
+                    PatchStep.RETRY_ACTIVATION
 
-                    else                                                                                                                                ->
-                        PatchStep.START_DEACTIVATION
-                }
-                _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
+                else                                                                                                                                ->
+                    PatchStep.START_DEACTIVATION
             }
+            _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
         }
+    }
+
+    fun onUnpairClick() {
+        _events.tryEmit(MedtrumOverviewEvent.ConfirmUnpair)
+    }
+
+    fun performUnpair() {
+        aapsLogger.debug(LTag.PUMP, "performUnpair")
+        uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Medtrum)
+        medtrumPlugin.getService()?.disconnect("Unpair")
+        preferences.put(MedtrumStringNonKey.SnInput, "0")
+        medtrumPump.patchPrimed = false
+        medtrumPump.pumpState = MedtrumPumpState.NONE
+        medtrumPump.resetPatchParameters()
+        medtrumPump.loadUserSettingsFromSP()
     }
 
     private fun buildInitialState(): PumpOverviewUiState {
@@ -235,7 +249,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         // Medtrum-specific rows
         val specificRows = buildList {
             // Pump state
-            add(PumpInfoRow(label = rh.gs(R.string.pump_state_label), value = pumpState.toString()))
+            add(PumpInfoRow(label = rh.gs(R.string.pump_state_label), value = rh.gs(pumpState.label)))
             // tempBasal rate
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = ch.basalRateString(PumpRate(basalRate), true)))
             tempBasalRate?.let {
@@ -244,7 +258,7 @@ class MedtrumOverviewViewModel @Inject constructor(
                 // tempBasal rate
                 add(PumpInfoRow(label = rh.gs(CoreUiR.string.tempbasal_label), value = ch.basalTbrString(PumpRate(it), tempBasalStartTime, tempBasalDuration, basalType != BasalType.RELATIVE_TEMP)))
             }
-                // Active bolus
+            // Active bolus
             activeBolusText?.let {
                 add(PumpInfoRow(label = rh.gs(R.string.active_bolus_label), value = it))
             }
@@ -295,15 +309,29 @@ class MedtrumOverviewViewModel @Inject constructor(
             )
         )
 
+        val isPaired = medtrumPump.pumpSN != 0L
+
         // Management actions
-        val managementActions = listOf(
-            PumpAction(
-                label = rh.gs(R.string.change_patch_label),
-                icon = Icons.Filled.SwapHoriz,
-                category = ActionCategory.MANAGEMENT,
-                onClick = { onClickChangePatch() }
+        val managementActions = buildList {
+            add(
+                PumpAction(
+                    label = rh.gs(R.string.change_patch_label),
+                    icon = Icons.Filled.SwapHoriz,
+                    category = ActionCategory.MANAGEMENT,
+                    onClick = { onClickChangePatch() }
+                )
             )
-        )
+            if (isPaired) {
+                add(
+                    PumpAction(
+                        label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
+                        icon = Icons.Filled.Bluetooth,
+                        category = ActionCategory.MANAGEMENT,
+                        onClick = { onUnpairClick() }
+                    )
+                )
+            }
+        }
 
         return PumpOverviewUiState(
             statusBanner = statusBanner,

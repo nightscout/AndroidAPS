@@ -46,7 +46,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -155,7 +154,7 @@ class DanaRPlugin @Inject constructor(
         executionService?.finishHandshaking()
     }
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin == 0.0 || detailedBolusInfo.carbs > 0) {
             throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
         }
@@ -163,9 +162,9 @@ class DanaRPlugin @Inject constructor(
         var resultOK = false
         if (detailedBolusInfo.insulin > 0) resultOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
-        result.success(resultOK && (abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep || danaPump.bolusStopped))
-            .bolusDelivered(delivered)
+        val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+        result.success(resultOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped))
+            .bolusDelivered(delivered.cU)
         if (!result.success) result.comment(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
@@ -175,9 +174,9 @@ class DanaRPlugin @Inject constructor(
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-        detailedBolusInfo.insulin = delivered
+        detailedBolusInfo.insulin = delivered.cU
         detailedBolusInfo.timestamp = System.currentTimeMillis()
-        if (detailedBolusInfo.insulin > 0) runBlocking {
+        if (detailedBolusInfo.insulin > 0)
             pumpSync.syncBolusWithPumpId(
                 detailedBolusInfo.timestamp,
                 PumpInsulin(detailedBolusInfo.insulin),
@@ -186,8 +185,7 @@ class DanaRPlugin @Inject constructor(
                 PumpType.DANA_R,
                 serialNumber()
             )
-        }
-        if (detailedBolusInfo.carbs > 0) runBlocking {
+        if (detailedBolusInfo.carbs > 0)
             pumpSync.syncCarbsWithTimestamp(
                 detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
                 detailedBolusInfo.carbs,
@@ -195,12 +193,11 @@ class DanaRPlugin @Inject constructor(
                 PumpType.DANA_R,
                 serialNumber()
             )
-        }
         return result
     }
 
     // This is called from APS
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         var result = pumpEnactResultProvider.get()
@@ -313,7 +310,7 @@ class DanaRPlugin @Inject constructor(
         return result
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (danaPump.isTempBasalInProgress) return cancelRealTempBasal()
         if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
             return cancelExtendedBolus()
@@ -327,19 +324,17 @@ class DanaRPlugin @Inject constructor(
         return PumpType.DANA_R
     }
 
-    private fun cancelRealTempBasal(): PumpEnactResult {
+    private suspend fun cancelRealTempBasal(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
-                runBlocking {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        dateUtil.now(),
-                        dateUtil.now(),
-                        pumpDescription.pumpType,
-                        serialNumber()
-                    )
-                }
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                    dateUtil.now(),
+                    dateUtil.now(),
+                    pumpDescription.pumpType,
+                    serialNumber()
+                )
                 result.success(true).enacted(true).isTempCancel(true).comment(app.aaps.core.ui.R.string.ok)
             } else result.success(false).enacted(false).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {

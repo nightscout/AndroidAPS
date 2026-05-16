@@ -131,7 +131,6 @@ import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
-import app.aaps.ui.compose.scenesSheet.ScenesViewModel
 import app.aaps.ui.compose.careDialog.CareportalEventType
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
@@ -154,6 +153,7 @@ import app.aaps.ui.compose.profileManagement.viewmodels.ProfileManagementViewMod
 import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
+import app.aaps.ui.compose.scenesSheet.ScenesViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
@@ -711,7 +711,6 @@ class ComposeMainActivity : AppCompatActivity() {
 
             appNavGraph(
                 navController = navController,
-                mainViewModel = mainViewModel,
                 insulinManagementViewModel = insulinManagementViewModel,
                 profileManagementViewModel = profileManagementViewModel,
                 profileEditorViewModel = profileEditorViewModel,

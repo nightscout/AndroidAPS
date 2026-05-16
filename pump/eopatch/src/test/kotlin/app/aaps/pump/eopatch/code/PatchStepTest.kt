@@ -7,7 +7,7 @@ class PatchStepTest {
 
     @Test
     fun `should have expected number of steps`() {
-        assertThat(PatchStep.entries).hasSize(21)
+        assertThat(PatchStep.entries).hasSize(22)
     }
 
     @Test
@@ -18,6 +18,7 @@ class PatchStepTest {
             PatchStep.DISCARDED,
             PatchStep.DISCARDED_FOR_CHANGE,
             PatchStep.DISCARDED_FROM_ALARM,
+            PatchStep.PROFILE_GATE,
             PatchStep.WAKE_UP,
             PatchStep.CONNECT_NEW,
             PatchStep.SELECT_INSULIN,

@@ -487,10 +487,6 @@ fun DefaultProfileContent(
             labelResId = app.aaps.core.ui.R.string.tdd_total,
             value = tdd,
             onValueChange = onTddChange,
-            onTextChange = { text ->
-                val parsed = text.trim().replace(",", ".").toDoubleOrNull() ?: 0.0
-                onTddChange(parsed.coerceIn(0.0..200.0))
-            },
             valueRange = 0.0..200.0,
             step = 1.0,
             unitLabelResId = app.aaps.core.keys.R.string.units_insulin
@@ -499,10 +495,6 @@ fun DefaultProfileContent(
             labelResId = R.string.weight_label,
             value = weight,
             onValueChange = onWeightChange,
-            onTextChange = { text ->
-                val parsed = text.trim().replace(",", ".").toDoubleOrNull() ?: 0.0
-                onWeightChange(parsed.coerceIn(0.0..150.0))
-            },
             valueRange = 0.0..150.0,
             step = 1.0,
             unitLabelResId = app.aaps.core.keys.R.string.units_kg

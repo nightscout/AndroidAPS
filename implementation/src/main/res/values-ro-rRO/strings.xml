@@ -3,18 +3,6 @@
     <string name="executing_right_now">Se execută comanda chiar acum</string>
     <string name="basal_value_below_minimum">Valoarea bazalei este sub minimul permis. Profilul nu este setat!</string>
     <!--       Stats -->
-    <string name="veryLow" comment="below 3.1">Foarte scăzută</string>
-    <string name="low" comment="3.1-3.9">Scăzută</string>
-    <string name="high" comment="10.0-13.9">Mare</string>
-    <string name="veryHigh" comment="above 13.9">Foarte mare</string>
-    <string name="below" comment="below &quot;in range&quot;">Sub</string>
-    <string name="in_range">În țintă</string>
-    <string name="above" comment="above &quot;in range&quot;">Mai sus</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="std_deviation">DST: %1$s</string>
-    <string name="detailed_14_days">Detaliere 14 zile</string>
-    <string name="day_tir">TIR ziua</string>
-    <string name="night_tir">TIR noapte</string>
     <string name="carbs_short" comment="max 6 characters">Carbohidrați</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">UltimaConexiune: acum %1$d min</string>
@@ -49,7 +37,7 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportate %1$s în urmă</string>
     <string name="exported_at" comment="at placeholder we add export date">exportate la %1$s</string>
     <string name="exported_less_than_hour_ago">exportate acum mai puțin de o oră</string>
-    <string name="metadata_warning_different_flavour">Preferințele au fost create folosind o alta versiune de AAPS (%1$s) în timp ce versiunea curentă este: %2$s.\n\nCâteva setări pot lipsi sau pot fi invalide - după importare verificați și actualizați preferințele.</string>
+    <string name="metadata_warning_different_flavour">Preferințele au fost create cu o altă versiune de AAPS (%1$s) în timp ce versiunea curentă este: %2$s.\n\nCâteva setări pot lipsi sau pot fi invalide - după importare verificați și actualizați preferințele.</string>
     <string name="metadata_warning_different_device">Preferințele au fost create pe un dispozitiv diferit. Este în regulă să le importați de pe un alt telefon, dar asigurați-vă că preferințele importate sunt corecte!</string>
     <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
     <string name="metadata_warning_date_format">Format dată-oră invalid!</string>
@@ -84,7 +72,7 @@
     <string name="cloud_directory_path">Dosar Cloud: %1$s</string>
     <string name="google_drive_token_refresh_failed">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive</string>
     <string name="google_drive_token_refresh_error">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive: %1$s</string>
-    <string name="google_drive_connection_test_failed">Testul de conectare Google Drive a eșuat</string>
+    <string name="google_drive_connection_test_failed">Testul de conectare la Google Drive a eșuat</string>
     <string name="google_drive_connect_error">Nu s-a putut conecta la Google Drive: %1$s</string>
     <string name="google_drive_list_folders_failed">Eșuare afișare dosare Google Drive</string>
     <string name="google_drive_list_folders_error">Eroare la afișarea dosarelor: %1$s</string>

@@ -33,7 +33,7 @@ class SyncNsRunningModeTransactionTest {
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(null)
         whenever(runningModeDao.findByTimestamp(1000L)).thenReturn(null)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 
@@ -52,7 +52,7 @@ class SyncNsRunningModeTransactionTest {
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(null)
         whenever(runningModeDao.findByTimestamp(1000L)).thenReturn(existing)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 
@@ -69,7 +69,7 @@ class SyncNsRunningModeTransactionTest {
 
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 
@@ -86,7 +86,7 @@ class SyncNsRunningModeTransactionTest {
 
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 
@@ -103,7 +103,7 @@ class SyncNsRunningModeTransactionTest {
 
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 
@@ -120,7 +120,7 @@ class SyncNsRunningModeTransactionTest {
 
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 
@@ -131,15 +131,16 @@ class SyncNsRunningModeTransactionTest {
     }
 
     @Test
-    fun `skips duration update when current row is autoForced`() = runTest {
-        // autoForced (SUSPENDED_BY_PUMP / constraint-forced) rows are locally authoritative —
-        // remote NS clients must not be allowed to truncate them on round-trip.
+    fun `skips duration update when current row is autoForced and not nsClientMode`() = runTest {
+        // On the authoritative device (config.APS), autoForced (SUSPENDED_BY_PUMP /
+        // constraint-forced) rows are locally authoritative — remote NS clients must not be
+        // allowed to truncate them on round-trip.
         val runningMode = createRunningMode(id = 0, nsId = "ns-123", duration = 30_000L)
         val existing = createRunningMode(id = 1, nsId = "ns-123", duration = 60_000L, autoForced = true)
 
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 
@@ -149,13 +150,32 @@ class SyncNsRunningModeTransactionTest {
     }
 
     @Test
+    fun `accepts duration cut on autoForced row in nsClientMode`() = runTest {
+        // On a follower (AAPSCLIENT) there is no local authoritative state to protect —
+        // the master's SUSPENDED_BY_PUMP cut must be accepted, otherwise the suspended
+        // duration on the client is never cut when the pump returns to normal.
+        val runningMode = createRunningMode(id = 0, nsId = "ns-123", duration = 30_000L)
+        val existing = createRunningMode(id = 1, nsId = "ns-123", duration = 60_000L, autoForced = true)
+
+        whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = true)
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).hasSize(1)
+        assertThat(existing.duration).isEqualTo(30_000L)
+        verify(runningModeDao).updateExistingEntry(existing)
+    }
+
+    @Test
     fun `does not lengthen finite to permanent (incoming duration=0)`() = runTest {
         val runningMode = createRunningMode(id = 0, nsId = "ns-123", duration = 0L)
         val existing = createRunningMode(id = 1, nsId = "ns-123", duration = 60_000L)
 
         whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
 
-        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
 

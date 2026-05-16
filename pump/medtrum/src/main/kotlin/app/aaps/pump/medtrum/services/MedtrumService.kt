@@ -35,6 +35,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R
+import app.aaps.pump.medtrum.ble.MedtrumBleCallback
+import app.aaps.pump.medtrum.ble.MedtrumBleTransport
 import app.aaps.pump.medtrum.code.ConnectionState
 import app.aaps.pump.medtrum.comm.enums.AlarmState
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
@@ -80,7 +82,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.abs
 
-class MedtrumService : DaggerService(), BLECommCallback {
+class MedtrumService : DaggerService(), MedtrumBleCallback {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -96,7 +98,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var bleComm: BLEComm
+    @Inject lateinit var bleTransport: MedtrumBleTransport
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -130,7 +132,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     override fun onCreate() {
         super.onCreate()
-        bleComm.setCallback(this)
+        bleTransport.setMedtrumCallback(this)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
@@ -235,7 +237,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         return when (currentState) {
             is IdleState  -> {
                 medtrumPump.connectionState = ConnectionState.CONNECTING
-                bleComm.connect(from, medtrumPump.pumpSN)
+                bleTransport.connect(from, medtrumPump.pumpSN)
             }
 
             is ReadyState -> {
@@ -247,7 +249,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     aapsLogger.debug(LTag.PUMP, "connect: not connected, resetting state and trying to connect")
                     toState(IdleState())
                     medtrumPump.connectionState = ConnectionState.CONNECTING
-                    bleComm.connect(from, medtrumPump.pumpSN)
+                    bleTransport.connect(from, medtrumPump.pumpSN)
                 }
             }
 
@@ -263,9 +265,15 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun startActivate(): Boolean {
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile?.let { medtrumPump.buildMedtrumProfileArray(it) }
-        val packet = profile?.let { ActivatePacket(injector, it) }
-        return packet?.let { sendPacketAndGetResponse(it) } == true
+        val pumpProfile = runBlocking { pumpSync.expectedPumpState() }.profile ?: run {
+            aapsLogger.error(LTag.PUMP, "startActivate: no requested profile, cannot activate patch")
+            return false
+        }
+        val bytes = medtrumPump.buildMedtrumProfileArray(pumpProfile) ?: run {
+            aapsLogger.error(LTag.PUMP, "startActivate: failed to build basal byte array")
+            return false
+        }
+        return sendPacketAndGetResponse(ActivatePacket(injector, bytes))
     }
 
     fun deactivatePatch(): Boolean {
@@ -280,12 +288,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun stopConnecting() {
-        bleComm.disconnect("stopConnecting")
+        bleTransport.disconnect("stopConnecting")
     }
 
     fun disconnect(from: String) {
         medtrumPump.connectionState = ConnectionState.DISCONNECTING
-        bleComm.disconnect(from)
+        bleTransport.disconnect(from)
     }
 
     fun readPumpStatus() {
@@ -398,7 +406,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
             commandQueue.readStatus(rh.gs(R.string.bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
             medtrumPump.bolusDone = true
-            bolusProgressData.updateProgress(0, "", 0.0)
+            bolusProgressData.updateProgress(percent = 0, status = "")
             return false
         }
 
@@ -431,7 +439,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         waitForBolusProgress()
 
-        if (medtrumPump.bolusStopped && (bolusProgressData.state.value?.delivered ?: 0.0) == 0.0) {
+        if (medtrumPump.bolusStopped && (bolusProgressData.state.value?.delivered?.cU ?: 0.0) == 0.0) {
             // In this case we don't get a bolus end event, so need to remove all the stuff added previously
             val syncOk = runBlocking {
                 pumpSync.syncBolusWithTempId(
@@ -505,13 +513,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     disconnect("Communication stopped")
                 }
             } else {
-                val currentBolusAmount = bolusProgressData.state.value?.delivered ?: 0.0
-                if (currentBolusAmount != lastSentBolusAmount) {
-                    val insulin = bolusProgressData.state.value?.insulin ?: 0.0
-                    val percent = if (insulin > 0) ((currentBolusAmount / insulin) * 100).toInt().coerceAtMost(100) else 0
-                    val status = ch.bolusProgressString(PumpInsulin(currentBolusAmount))
-                    bolusProgressData.updateProgress(percent, status, currentBolusAmount)
-                    lastSentBolusAmount = currentBolusAmount
+                val currentBolusAmount = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+                if (currentBolusAmount.cU != lastSentBolusAmount) {
+                    bolusProgressData.updateProgress(currentBolusAmount)
+                    lastSentBolusAmount = currentBolusAmount.cU
                 }
             }
         }
@@ -534,7 +539,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun stopBolus() {
-        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ ${bolusProgressData.state.value?.delivered ?: 0.0}")
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ ${bolusProgressData.state.value?.delivered?.cU ?: 0.0}")
         medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_user)
         if (isConnected) {
             var success = sendPacketAndGetResponse(CancelBolusPacket(injector))
@@ -725,6 +730,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             MedtrumPumpState.ACTIVE_ALT           -> {
                 notificationManager.dismiss(NotificationId.PATCH_NOT_ACTIVE)
                 notificationManager.dismiss(NotificationId.PUMP_SUSPENDED)
+                medtrumPump.clearAlarmState()
             }
 
             MedtrumPumpState.LOW_BG_SUSPENDED,
@@ -840,29 +846,29 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
     }
 
-    /** BLECommCallbacks */
-    override fun onBLEConnected() {
-        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onBLEConnected")
+    /** MedtrumBleCallback */
+    override fun onConnected() {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onConnected")
         currentState.onConnected()
     }
 
-    override fun onBLEDisconnected() {
-        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onBLEDisconnected")
+    override fun onDisconnected() {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onDisconnected")
         currentState.onDisconnected()
     }
 
-    override fun onNotification(notification: ByteArray) {
-        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onNotification" + notification.contentToString())
-        NotificationPacket(injector).handleNotification(notification)
+    override fun onNotification(data: ByteArray) {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onNotification ${data.contentToString()}")
+        NotificationPacket(injector).handleNotification(data)
     }
 
-    override fun onIndication(indication: ByteArray) {
-        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onIndication" + indication.contentToString())
-        currentState.onIndication(indication)
+    override fun onIndication(data: ByteArray) {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onIndication ${data.contentToString()}")
+        currentState.onIndication(data)
     }
 
     override fun onSendMessageError(reason: String, isRetryAble: Boolean) {
-        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< error during send message $reason")
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onSendMessageError: $reason")
         currentState.onSendMessageError(reason, isRetryAble)
     }
 
@@ -894,7 +900,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (currentState is ReadyState) {
             toState(CommandState())
             mPacket = packet
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             result = currentState.waitForResponse(timeout)
             SystemClock.sleep(100)
         } else {
@@ -953,7 +959,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             // Retry 3 times
             if (sendRetryCounter < 3 && isRetryAble) {
                 sendRetryCounter++
-                mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+                mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             } else {
                 responseHandled = true
                 responseSuccess = false
@@ -981,7 +987,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached AuthState")
             mPacket = AuthorizePacket(injector)
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             scope.launch {
                 waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
@@ -1009,7 +1015,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached GetDeviceTypeState")
             mPacket = GetDeviceTypePacket(injector)
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             scope.launch {
                 waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
@@ -1041,7 +1047,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached GetTimeState")
             mPacket = GetTimePacket(injector)
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             scope.launch {
                 waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
@@ -1076,7 +1082,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SetTimeState")
             mPacket = SetTimePacket(injector)
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             scope.launch {
                 waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
@@ -1104,7 +1110,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SetTimeZoneState")
             mPacket = SetTimeZonePacket(injector)
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             scope.launch {
                 waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
@@ -1134,7 +1140,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SynchronizeState")
             mPacket = SynchronizePacket(injector)
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             scope.launch {
                 waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
@@ -1162,7 +1168,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SubscribeState")
             mPacket = SubscribePacket(injector)
-            mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            mPacket?.getRequest()?.let { bleTransport.sendMessage(it) }
             scope.launch {
                 waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }

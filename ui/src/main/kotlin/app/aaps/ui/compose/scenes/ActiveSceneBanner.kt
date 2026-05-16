@@ -118,7 +118,7 @@ internal fun ActiveSceneBannerContent(
                         )
                     } else if (remainingMs != null && remainingMs > 0 && totalMs > 0) {
                         Text(
-                            text = stringResource(R.string.scene_time_remaining, formatDuration(remainingMs)),
+                            text = formatDuration(remainingMs),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

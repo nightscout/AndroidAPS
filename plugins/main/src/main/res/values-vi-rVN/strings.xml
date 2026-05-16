@@ -5,7 +5,7 @@
     <string name="sensor_label">Cảm biến</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pin Bơm</string>
-    <string name="cannula">Kim truyền</string>
+    <string name="cannula">Kim luồn</string>
     <string name="patch_pump">Patch pump</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
@@ -15,4 +15,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Hiển thị thông báo liên tục với tóm tắt ngắn gọn về hoạt động của vòng lặp</string>
     <string name="old_data">DỮ LIỆU CŨ</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>

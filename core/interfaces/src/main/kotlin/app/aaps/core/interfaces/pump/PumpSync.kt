@@ -74,6 +74,8 @@ interface PumpSync {
      *  @return         data from database.
      *                  temporaryBasal (and extendedBolus) is null if there is no record in progress based on data in database
      *                  bolus is null when there is no record in database
+     *                  profile is the user-requested ProfileSwitch (PS) converted to PumpProfile, null if no PS exists.
+     *                  Pumps use this to know what to send during activation / setNewBasalProfile / RESUME_DELIVERY.
      */
     data class PumpState(val temporaryBasal: TemporaryBasal?, val extendedBolus: ExtendedBolus?, val bolus: Bolus?, val profile: PumpProfile?, val serialNumber: String) {
 

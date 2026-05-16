@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">No se leyó una tasa basal válida de la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
+    <string name="loop_disabled_by_user">Lazo deshabilitado por el usuario</string>
     <string name="event_type">Tipo de evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -48,10 +49,14 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="result">Resultado</string>
     <string name="settings">Ajustes</string>
+    <string name="open_plugin">Abrir complemento</string>
+    <string name="configbuilder_pick_one_hint">Elija uno. Solo puede haber uno activo a la vez</string>
+    <string name="configbuilder_pick_many_hint">Seleccione todas las opciones que correspondan</string>
+    <string name="configbuilder_no_selection_warning">No se ha seleccionado ningún complemento en esta categoría</string>
     <string name="simple_mode">Modo simple</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
-    <string name="no_compose_preferences">No hay preferencias de composición disponibles para este plugin</string>
+    <string name="no_compose_preferences">No hay preferencias disponibles para este complemento</string>
     <string name="plugin_no_preferences">El complemento no admite preferencias</string>
     <string name="confirm_password_hint">Confirmar la contraseña</string>
     <string name="confirm_pin_hint">Confirmar PIN</string>
@@ -100,7 +105,7 @@
     <string name="please_wait">Por favor, espere…</string>
     <string name="stop">Detener</string>
     <string name="stop_pressed">PARADA PULSADA</string>
-    <string name="carbs">Carbohidratos [g]</string>
+    <string name="carbs">Carbohidratos</string>
     <string name="invalid_profile">Perfil inválido</string>
     <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
     <string name="active"><![CDATA[<Activo>]]></string>
@@ -173,11 +178,12 @@
     <string name="a11y_high">alto</string>
     <string name="a11y_inrange">en rango</string>
     <string name="a11y_low">bajo</string>
-    <string name="average">Promedio</string>
-    <string name="tir">Tiempo en rango</string>
     <string name="remove_label">Eliminar</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="activate_insulin">Activar insulina</string>
+    <string name="pump_wizard_profile_gate_title">Perfil requerido</string>
+    <string name="pump_wizard_profile_gate_pick">Seleccione el perfil que se aplicará al activar</string>
+    <string name="pump_wizard_profile_gate_no_store">No hay ningún perfil definido. Abra la Gestión de perfiles para crear uno y, a continuación, inicie la activación de nuevo</string>
     <string name="reset">Restablecer</string>
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
@@ -264,6 +270,23 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina seleccionada: %1$s</string>
     <string name="record_insulin_hint">Si va a introducir insulina administrada con bolígrafo, seleccione el tipo de insulina correcto a continuación. La dosis es siempre en Unidades Internacionales.</string>
+    <!--       Stats -->
+    <string name="average">Promedio</string>
+    <string name="tir">Tiempo en rango</string>
+    <string name="below" comment="below &quot;in range&quot;">Bajo</string>
+    <string name="in_range">En rango</string>
+    <string name="veryLow" comment="below 3.1">Muy bajo</string>
+    <string name="low" comment="3.1-3.9">Bajo</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Muy alto</string>
+    <string name="above" comment="above &quot;in range&quot;">Por encima</string>
+    <string name="detailed_14_days">Datos detallados de 14 días</string>
+    <string name="day_tir">TIR del día</string>
+    <string name="night_tir">TIR nocturno</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
@@ -313,14 +336,14 @@
     <string name="scene_confirm_deactivate">¿Finalizar escena \"%1$s\" y revertir cambios?</string>
     <string name="scene_conflict_active_tt">El objetivo temporal activo será reemplazado</string>
     <string name="scene_conflict_active_profile">El cambio de perfil activo será reemplazado</string>
+    <string name="scene_conflict_active_running_mode">El modo de funcionamiento activo será reemplazado</string>
     <string name="scene_conflict_active_scene">La escena activa \"%1$s\" finalizará primero</string>
     <string name="scene_action_tt">Objetivo temporal: %1$s</string>
     <string name="scene_action_profile">Perfil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Habilitar SMB</string>
     <string name="scene_action_smb_off">Deshabilitar SMB</string>
-    <string name="scene_action_running_mode">Modo de lazo: %1$s</string>
+    <string name="scene_action_running_mode">Modo de funcionamiento: %1$s</string>
     <string name="scene_action_careportal">Registro: %1$s</string>
-    <string name="scene_time_remaining">%1$s restante</string>
     <string name="scene_management">Escenas</string>
     <string name="scene_management_desc">Crear, editar y gestionar escenas</string>
     <string name="scene_action_count">%1$d acciones</string>
@@ -340,6 +363,7 @@
     <string name="scene_editor_enabled">Habilitado</string>
     <string name="scene_editor_disabled">Deshabilitado</string>
     <string name="scene_summary">%1$d acciones, %2$s</string>
+    <string name="scene_duration_indefinite">Indefinido (finalización manual)</string>
     <string name="scene_some_actions_failed">Se produjeron errores en algunas acciones</string>
     <string name="scene_no_active">Sin escena activa</string>
     <string name="scene_some_reverts_failed">Se produjeron errores en algunas acciones de reversión</string>
@@ -347,10 +371,10 @@
     <string name="scene_no_actions">La escena no tiene acciones</string>
     <string name="scene_profile_not_found">No se encontró el perfil \"%1$s\"</string>
     <string name="scene_revert_tt">Cancelar objetivo temporal</string>
-    <string name="scene_revert_profile">Revertir perfil a %1$s %2$d%%</string>
+    <string name="scene_revert_profile">Revertir cambio de perfil</string>
     <string name="scene_revert_smb_on">Volver a habilitar SMB</string>
     <string name="scene_revert_smb_off">Deshabilitar SMB</string>
-    <string name="scene_revert_loop_mode">Cancelar anulación del modo de lazo</string>
+    <string name="scene_revert_loop_mode">Cancelar anulación de modo de funcionamiento</string>
     <string name="scene_careportal_no_revert">No se revertirán las entradas del portal de cuidados</string>
     <string name="careportal_sickness">Enfermedad</string>
     <string name="careportal_stress">Estrés</string>
@@ -791,7 +815,7 @@
     <string name="maintenance_export_csv_desc">Exportar historial de tratamientos como hoja de cálculo</string>
     <string name="maintenance_cleanup_db_desc">Eliminar entradas antiguas de la base de datos</string>
     <string name="maintenance_reset_aps_results_desc">Borrar resultados de algoritmos almacenados</string>
-    <string name="maintenance_reset_db_desc">Borrar todas las bases de datos y reiniciar</string>
+    <string name="maintenance_reset_db_desc">Borrar todas las bases de datos y recargar</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Seleccionar tipo de almacenamiento</string>
     <string name="clear_cloud_action">Restablecer ajustes</string>
@@ -809,8 +833,10 @@
     <string name="need_connect_permission">La aplicación necesita permisos de bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Emparejar</string>
     <string name="pump_unpair">Desemparejar</string>
+    <string name="pump_unpair_confirm_title">¿Desvincular bomba?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baja energía no soportado.</string>
@@ -975,6 +1001,7 @@
     <string name="database_cleanup">Limpieza de la base de datos</string>
     <string name="nav_resetdb">Restablecer bases de datos</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Buscar bomba</string>
     <string name="ble_scan_select_pump">Selecciona tu bomba de la lista de abajo</string>
     <string name="ble_scan_scanning">Buscando dispositivos…</string>
     <!-- Graph configuration -->

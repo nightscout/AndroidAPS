@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test
 class ReconcilerDecisionTest : TestBase() {
 
     private val working = listOf(
-        RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.CLOSED_LOOP_LGS,
-        RM.Mode.DISABLED_LOOP, RM.Mode.RESUME
+        RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.CLOSED_LOOP_LGS, RM.Mode.RESUME
     )
+    private val stopped = listOf(RM.Mode.DISABLED_LOOP, RM.Mode.SUSPENDED_BY_USER)
     private val zeroDelivery = listOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUPER_BOLUS)
-    private val suspendedNoTbr = listOf(RM.Mode.SUSPENDED_BY_USER, RM.Mode.SUSPENDED_BY_DST)
+    private val suspendedNoTbr = listOf(RM.Mode.SUSPENDED_BY_DST)
     private val pumpReported = listOf(RM.Mode.SUSPENDED_BY_PUMP)
 
     // --- Bucket classification ---
@@ -35,6 +35,13 @@ class ReconcilerDecisionTest : TestBase() {
     fun `suspended no tbr modes map to SuspendedNoTbr bucket`() {
         suspendedNoTbr.forEach {
             assertThat(ReconcilerDecision.bucketOf(it)).isEqualTo(ReconcilerDecision.Bucket.SuspendedNoTbr)
+        }
+    }
+
+    @Test
+    fun `stopped modes map to Stopped bucket`() {
+        stopped.forEach {
+            assertThat(ReconcilerDecision.bucketOf(it)).isEqualTo(ReconcilerDecision.Bucket.Stopped)
         }
     }
 
@@ -117,6 +124,38 @@ class ReconcilerDecisionTest : TestBase() {
         }
     }
 
+    // --- Entry to stopped (DISABLED_LOOP) ---
+
+    @Test
+    fun `working to stopped cancels TBR`() {
+        working.forEach { prev ->
+            stopped.forEach { next ->
+                assertThat(ReconcilerDecision.decide(prev, next))
+                    .isEqualTo(ReconcilerDecision.Action.CancelTbr)
+            }
+        }
+    }
+
+    @Test
+    fun `zero delivery to stopped cancels TBR`() {
+        zeroDelivery.forEach { prev ->
+            stopped.forEach { next ->
+                assertThat(ReconcilerDecision.decide(prev, next))
+                    .isEqualTo(ReconcilerDecision.Action.CancelTbr)
+            }
+        }
+    }
+
+    @Test
+    fun `suspended no tbr to stopped cancels TBR defensively`() {
+        suspendedNoTbr.forEach { prev ->
+            stopped.forEach { next ->
+                assertThat(ReconcilerDecision.decide(prev, next))
+                    .isEqualTo(ReconcilerDecision.Action.CancelTbr)
+            }
+        }
+    }
+
     // --- Exit from zero-delivery ---
 
     @Test
@@ -135,6 +174,19 @@ class ReconcilerDecisionTest : TestBase() {
     fun `suspended no tbr to working is no-op`() {
         // No TBR was set in suspended-no-tbr, so nothing to clean up.
         suspendedNoTbr.forEach { prev ->
+            working.forEach { next ->
+                assertThat(ReconcilerDecision.decide(prev, next))
+                    .isEqualTo(ReconcilerDecision.Action.NoOp)
+            }
+        }
+    }
+
+    // --- Exit from stopped to working: no-op ---
+
+    @Test
+    fun `stopped to working is no-op`() {
+        // Stopped already had its TBR canceled on entry; nothing to clean up on exit.
+        stopped.forEach { prev ->
             working.forEach { next ->
                 assertThat(ReconcilerDecision.decide(prev, next))
                     .isEqualTo(ReconcilerDecision.Action.NoOp)

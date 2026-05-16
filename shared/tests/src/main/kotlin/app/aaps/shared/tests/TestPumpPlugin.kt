@@ -54,11 +54,11 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     }
 
     override fun waitForDisconnectionInSeconds(): Int = 0
-    override fun getPumpStatus(reason: String) { /* not needed */
+    override suspend fun getPumpStatus(reason: String) { /* not needed */
     }
 
-    override fun setNewBasalProfile(profile: EffectiveProfile): PumpEnactResult = PumpEnactResultObject(rh)
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult = PumpEnactResultObject(rh)
+    override suspend fun setNewBasalProfile(profile: EffectiveProfile): PumpEnactResult = PumpEnactResultObject(rh)
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult = PumpEnactResultObject(rh)
     override fun isThisProfileSet(profile: EffectiveProfile): Boolean = isProfileSet
     override fun isThisProfileSet(profile: PumpProfile): Boolean = isProfileSet
     private val _lastBolusTime = MutableStateFlow<Long?>(null)
@@ -71,25 +71,25 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
     private val _batteryLevel = MutableStateFlow<Int?>(null)
     override val batteryLevel: StateFlow<Int?> = _batteryLevel
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(rh).success(true)
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(rh).success(true)
     override fun stopBolusDelivering() { /* not needed */
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
         PumpEnactResultObject(rh).success(true)
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
         PumpEnactResultObject(rh).success(true)
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult = PumpEnactResultObject(rh).success(true)
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = PumpEnactResultObject(rh).success(true)
-    override fun cancelExtendedBolus(): PumpEnactResult = PumpEnactResultObject(rh).success(true)
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult = PumpEnactResultObject(rh).success(true)
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = PumpEnactResultObject(rh).success(true)
+    override suspend fun cancelExtendedBolus(): PumpEnactResult = PumpEnactResultObject(rh).success(true)
     override fun manufacturer(): ManufacturerType = ManufacturerType.AAPS
     override fun model(): PumpType = PumpType.GENERIC_AAPS
     override fun serialNumber(): String = "1"
     override fun pumpSpecificShortStatus(veryShort: Boolean): String = "Virtual Pump"
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override fun loadTDDs(): PumpEnactResult = PumpEnactResultObject(rh).success(true)
+    override suspend fun loadTDDs(): PumpEnactResult = PumpEnactResultObject(rh).success(true)
     override fun canHandleDST(): Boolean = true
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) { /* not needed */
     }

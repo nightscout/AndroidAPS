@@ -13,17 +13,17 @@
     <string name="pref_title_show_carbs_button">Hiển thị nút Carbs</string>
     <string name="pref_title_show_cgm_button">Hiển thị nút CGM</string>
     <string name="pref_summary_show_cgm_button">Mở xDrip+ hoặc ứng dụng Dexcom (bạn có thể dùng nút quay lại để trở về AAPS).</string>
-    <string name="pref_title_show_calibration_button">Hiển thị nút Tính toán</string>
+    <string name="pref_title_show_calibration_button">Hiển thị nút hiệu chuẩn</string>
     <string name="pref_summary_show_calibration_button">Gửi hiệu chuẩn đến xDrip+ (hãy đảm bảo rằng tùy chọn \'Accept Calibrations\' đã được bật trong phần Cài đặt liên ứng dụng của xDrip+).</string>
     <string name="pref_title_show_notes_in_dialogs">Hiển thị ghi chú trong hộp thoại</string>
-    <string name="pref_title_use_bolus_advisor">Sử dụng trợ lý tính liều bolus</string>
-    <string name="pref_summary_use_bolus_advisor">Bật trợ lý bolus để hỗ trợ tính toán liều bolus khi đường huyết cao.</string>
+    <string name="pref_title_use_bolus_advisor">Tư vấn liều bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Bật tư vấn liều bolus để hỗ trợ tính toán liều bolus khi đường huyết cao.</string>
     <string name="pref_title_use_bolus_reminder">Nhắc tiêm liều bolus</string>
-    <string name="pref_summary_use_bolus_reminder">Bật thông báo nhắc bolus để giúp theo dõi việc tiêm insulin.</string>
+    <string name="pref_summary_use_bolus_reminder">Bật thông báo nhắc tiêm liều bolus để giúp theo dõi việc tiêm insulin.</string>
     <string name="pref_title_use_super_bolus">Sử dụng super bolus</string>
     <string name="pref_summary_use_super_bolus">Bật tính năng super bolus, sử dụng insulin từ liều nền để cung cấp ngay lập tức.</string>
     <!-- Pump preferences -->
-    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_title_bt_watchdog">Theo dõi Bluetooth</string>
     <string name="pref_summary_bt_watchdog">Tắt Bluetooth 1 giây khi không kết nối được bơm (khắc phục lỗi treo Bluetooth).</string>
     <!-- Alert preferences -->
     <string name="pref_title_alert_missed_bg_reading">Cảnh báo khi không có dữ liệu BG</string>
@@ -68,15 +68,15 @@
     <string name="pref_title_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp làm giảm độ nhạy</string>
     <string name="pref_summary_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp sẽ làm giảm độ nhạy insulin.</string>
     <string name="pref_title_aps_use_autoisf_weights">Bật AutoISF</string>
-    <string name="pref_summary_aps_use_autoisf_weights">Bật AutoISF để điều chỉnh ISF dựa trên hệ số (weight).</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Bật AutoISF để điều chỉnh ISF dựa trên hệ số</string>
     <string name="pref_title_aps_smb_on_even_target">Bật SMB khi ở mức mục tiêu</string>
     <string name="pref_summary_aps_smb_on_even_target">Cách kích hoạt SMB thay thế, luôn dựa trên giá trị đường huyết mục tiêu.</string>
     <!-- Maintenance preferences -->
     <string name="pref_title_maintenance_enable_fabric">Bật báo cáo lỗi Fabric</string>
-    <string name="pref_title_maintenance_enable_export_automation">Chấp nhận cập nhật hồ sơ từ Nightscout</string>
+    <string name="pref_title_maintenance_enable_export_automation">Bật xuất cài đặt tự động</string>
     <!-- Autotune preferences -->
-    <string name="pref_title_autotune_auto_switch_profile">Tự động chuyển hồ sơ</string>
-    <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang hồ sơ do Autotune tạo sau khi tính toán.</string>
+    <string name="pref_title_autotune_auto_switch_profile">Tự động chuyển cấu hình</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang cấu hình do Autotune tạo sau khi tính toán.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">Phân loại UAM như liều nền</string>
     <string name="pref_summary_autotune_categorize_uam_as_basal">Coi các bữa ăn không khai báo là nhu cầu insulin nền trong tính toán Autotune.</string>
     <string name="pref_title_autotune_tune_insulin_curve">Điều chỉnh đường cong insulin</string>
@@ -92,14 +92,14 @@
     <!-- NS Client preferences -->
     <string name="pref_title_ns_upload_data">Tải dữ liệu lên NS</string>
     <string name="pref_summary_ns_upload_data">Tải lên các dữ liệu điều trị, liều nền tạm thời và dữ liệu khác lên Nightscout.</string>
-    <string name="pref_title_ns_receive_cgm">Chấp nhận dữ liệu CGM từ NS</string>
+    <string name="pref_title_ns_receive_cgm">Nhận dữ liệu CGM từ NS</string>
     <string name="pref_summary_ns_receive_cgm">Chấp nhận dữ liệu CGM từ Nightscout.</string>
-    <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu Hồ sơ đã lưu</string>
-    <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho hồ sơ từ Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu cấu hình đã lưu</string>
+    <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho cấu hình từ Nightscout.</string>
     <string name="pref_title_ns_receive_temp_target">Nhận mục tiêu tạm thời từ NS</string>
     <string name="pref_summary_ns_receive_temp_target">Chấp nhận thay đổi mục tiêu tạm thời từ Nightscout.</string>
-    <string name="pref_title_ns_receive_profile_switch">Nhận chuyển đổi Hồ sơ từ NS</string>
-    <string name="pref_summary_ns_receive_profile_switch">Chấp nhận sự kiện chuyển hồ sơ từ Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Nhận chuyển đổi cấu hình từ NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Chấp nhận sự kiện chuyển cấu hình từ Nightscout.</string>
     <string name="pref_title_ns_receive_insulin">Nhận insulin từ NS</string>
     <string name="pref_summary_ns_receive_insulin">Chấp nhận dữ liệu tiêm insulin từ Nightscout.</string>
     <string name="pref_title_ns_receive_carbs">Nhận carbs từ NS</string>
@@ -156,20 +156,20 @@
     <string name="pref_title_carbs_button_increment_2">Nút carb tăng lần 2</string>
     <string name="pref_title_carbs_button_increment_3">Nút carb tăng lần 3</string>
     <string name="carb_increment_button_message">Số lượng carb sẽ được thêm khi nhấn nút</string>
-    <string name="pref_title_cage_warning">Ngưỡng cảnh báo tuổi của kim luồn</string>
-    <string name="pref_title_cage_critical">Ngưỡng nguy hiểm tuổi của cannula</string>
-    <string name="pref_title_iage_warning">Ngưỡng nguy hiểm tuổi của insulin</string>
-    <string name="pref_title_iage_critical">Ngưỡng nguy hiểm tuổi của insulin</string>
-    <string name="pref_title_sage_warning">Ngưỡng cảnh báo tuổi của cảm biến</string>
-    <string name="pref_title_sage_critical">Ngưỡng nguy hiểm tuổi của cảm biến</string>
+    <string name="pref_title_cage_warning">Ngưỡng cảnh báo thay kim luồn</string>
+    <string name="pref_title_cage_critical">Ngưỡng thay kim luồn - nguy cấp</string>
+    <string name="pref_title_iage_warning">Ngưỡng cảnh báo thay insulin</string>
+    <string name="pref_title_iage_critical">Ngưỡng thay insulin - nguy cấp</string>
+    <string name="pref_title_sage_warning">Ngưỡng cảnh báo thay cảm biến</string>
+    <string name="pref_title_sage_critical">Ngưỡng thay cảm biến - nguy cấp</string>
     <string name="pref_title_sbat_warning">Ngưỡng cảnh báo mức pin cảm biến</string>
-    <string name="pref_title_sbat_critical">Ngưỡng pin cảm biến mức nguy cấp</string>
-    <string name="pref_title_bage_warning">Ngưỡng cảnh báo pin bơm</string>
-    <string name="pref_title_bage_critical">Ngưỡng pin bơm mức nguy cấp</string>
+    <string name="pref_title_sbat_critical">Ngưỡng pin cảm biến - nguy cấp</string>
+    <string name="pref_title_bage_warning">Ngưỡng cảnh báo thay pin bơm</string>
+    <string name="pref_title_bage_critical">Ngưỡng thay pin bơm - nguy cấp</string>
     <string name="pref_title_res_warning">Ngưỡng cảnh báo bình chứa insulin</string>
-    <string name="pref_title_res_critical">Ngưỡng bình insulin nguy cấp</string>
+    <string name="pref_title_res_critical">Ngưỡng bình chứa insulin - nguy cấp</string>
     <string name="pref_title_batt_warning">Ngưỡng cảnh báo mức pin bơm</string>
-    <string name="pref_title_batt_critical">Ngưỡng pin bơm mức nguy cấp</string>
+    <string name="pref_title_batt_critical">Ngưỡng thay pin bơm mức - nguy cấp</string>
     <string name="pref_title_bolus_percentage">Phần trăm liều bolus</string>
     <string name="deliverpartofboluswizard">Áp dụng giá trị này cho hiệu chỉnh đường huyết và carb trong kết quả của bolus wizard\'s</string>
     <string name="pref_title_reset_bolus_percentage_time">Đặt lại thời gian áp dụng phần trăm bolus</string>
@@ -179,9 +179,9 @@
     <string name="pref_title_protection_type_application">Mức 0: Bảo vệ ứng dụng</string>
     <string name="pref_summary_protection_type_application">Khi khởi động ứng dụng. Độc lập với các mức khác</string>
     <string name="pref_title_protection_type_bolus">Mức 1: Bảo vệ liều bolus</string>
-    <string name="pref_summary_protection_type_bolus">Điều trị, kích hoạt hồ sơ. Yêu cầu Mức 2</string>
+    <string name="pref_summary_protection_type_bolus">Điều trị, kích hoạt cấu hình. Yêu cầu Mức 2</string>
     <string name="pref_title_protection_type_settings">Mức 2: Bảo vệ cài đặt</string>
-    <string name="pref_summary_protection_type_settings">Chỉnh sửa hồ sơ, cài đặt</string>
+    <string name="pref_summary_protection_type_settings">Chỉnh sửa cấu hình, tuỳ chọn</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <string name="noprotection">Không bảo mật</string>
     <string name="biometric">Sinh trắc học</string>
@@ -189,7 +189,7 @@
     <string name="custom_password">Mật khẩu tùy chọn</string>
     <string name="custom_pin">Mã PIN tùy chọn</string>
     <!-- IntKey: Safety preferences -->
-    <string name="pref_title_max_carbs">Lượng carb tối đa cho phép</string>
+    <string name="pref_title_max_carbs">Lượng carb tối đa</string>
     <!-- IntKey: Loop preferences -->
     <string name="pref_title_open_mode_min_change">Mức thay đổi tối thiểu trong chế độ mở</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Mở vòng lặp sẽ chỉ hiển thị yêu cầu thay đổi mới nếu thay đổi lớn hơn giá trị này theo %. Giá trị mặc định là 20%</string>
@@ -209,7 +209,7 @@
     <string name="pref_title_autosens_period">Khoảng thời gian Autosens</string>
     <string name="openapsama_autosens_period_summary">Số giờ trong quá khứ được dùng để phát hiện độ nhạy (không tính thời gian hấp thụ carb)</string>
     <!-- IntKey: Maintenance preferences -->
-    <string name="pref_title_logs_amount">Số lượng log cần gửi</string>
+    <string name="pref_title_logs_amount">Số lượng nhật ký cần gửi</string>
     <!-- IntKey: Alert preferences -->
     <string name="pref_title_stale_data_threshold">Ngưỡng dữ liệu lỗi thời</string>
     <string name="pref_title_pump_unreachable_threshold">Ngưỡng mất kết nối với bơm</string>
@@ -218,14 +218,14 @@
     <string name="pref_title_autotune_days">Ngày điều chỉnh mặc định</string>
     <string name="autotune_default_tune_days_summary">Số ngày dữ liệu mặc định được Autotune xử lý (tối đa 30)</string>
     <!-- IntKey: SMS preferences -->
-    <string name="pref_title_sms_remote_bolus_distance">Khoảng cách tối thiểu bolus từ xa</string>
+    <string name="pref_title_sms_remote_bolus_distance">Khoảng tối thiểu bolus từ xa</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Khoảng thời gian BG ngẫu nhiên</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Ngưỡng báo động dữ liệu lỗi thời</string>
     <string name="pref_title_urgent_alarm_stale_data">Ngưỡng báo động khẩn cấp cho dữ liệu lỗi thời</string>
     <!-- IntKey: Site rotation preferences -->
-    <string name="pref_title_site_rotation_profile">Hồ sơ luân phiên vị trí tiêm</string>
+    <string name="pref_title_site_rotation_profile">Cấu hình thay đổi vị trí tiêm</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Đơn vị</string>
     <string name="units_mgdl">mg/dl</string>
@@ -314,7 +314,7 @@
     <string name="pref_light_theme">Chủ đề sáng</string>
     <string name="pref_follow_system_theme">Sử dụng giao diện của thiết bị</string>
     <!-- StringKey: Safety preferences -->
-    <string name="pref_title_patient_age">Tuổi người dùng</string>
+    <string name="pref_title_patient_age">Độ tuổi người dùng</string>
     <!-- StringKey: Maintenance preferences -->
     <string name="maintenance_email">Người nhận email</string>
     <string name="pref_title_identification">Nhận diện báo cáo lỗi</string>
@@ -354,9 +354,9 @@
     <string name="pref_title_max_basal">Tỷ lệ liều nền tối đa</string>
     <string name="openapsma_max_basal_summary">Giá trị này được gọi là liều nền tối đa trong ngữ cảnh OpenAPS</string>
     <string name="pref_title_smb_max_iob">IOB tối đa cho SMB</string>
-    <string name="openapssmb_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB. \nOpenAPS sẽ không đưa thêm insulin nếu IOB hiện tại lớn hơn giá trị này</string>
+    <string name="openapssmb_max_iob_summary">Giá trị này được gọi là Max IOB trong ngữ cảnh OpenAPS.\nOpenAPS sẽ không bổ sung thêm insulin nếu IOB hiện tại lớn hơn giá trị này. Giá trị này cũng bị ảnh hưởng bởi loại bệnh nhân. 👍.</string>
     <string name="pref_title_ama_max_iob">IOB tối đa cho AMA</string>
-    <string name="openapsma_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB.\n Đây là lượng insulin tối đa [U] mà APS có thể đưa vào cùng một lúc.</string>
+    <string name="openapsma_max_iob_summary">Giá trị này được gọi là Max IOB trong ngữ cảnh OpenAPS.\nĐây là lượng insulin tối đa [U] mà APS có thể cung cấp trong một lần. Giá trị này cũng bị ảnh hưởng bởi loại bệnh nhân.</string>
     <string name="pref_title_max_daily_multiplier">Hệ số an toàn tối đa hằng ngày</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Giá trị mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Thiết lập này giới hạn liều nền tối đa ở mức gấp 3 lần tốc độ liều nền cao nhất của bạn (đối với người này). Bạn có thể sẽ không cần thay đổi giá trị này, nhưng nên biết rằng đây chính là điều được nhắc đến trong giới hạn an toàn “3x tối đa hằng ngày; 4x hiện tại”.</string>
     <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
@@ -378,16 +378,20 @@
     <string name="openapsama_autoISF_min_summary">Tương tự như autosens_tối thiểu, thiết lập này xác định ISF có thể trở nên yếu đến mức nào.\n\nGiá trị mặc định 1,0 sẽ thực tế vô hiệu hóa tác động này.</string>
     <string name="pref_title_autoisf_max">AutoISF tối đa</string>
     <string name="openapsama_autoISF_max_summary">Tương tự như autosens_max, thiết lập này xác định ISF có thể trở nên mạnh đến mức nào.\n\nGiá trị mặc định 1,0 sẽ thực tế vô hiệu hóa tác động này.\n\nCẢNH BÁO: Hãy cực kỳ cẩn thận khi sử dụng các giá trị lớn hơn 2,5</string>
+    <string name="pref_title_bg_accel_weight">Hệ số ISF khi BG tăng tốc (acce)</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết tăng nhanh, giúp tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
+    <string name="pref_title_bg_brake_weight">Hệ số ISF khi BG giảm tốc</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết giảm tốc, làm yếu ISF và từ đó có thể làm giảm lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
-    <string name="pref_title_low_bg_weight">Hệ số đường huyết thấp</string>
+    <string name="pref_title_low_bg_weight">Hệ số khi BG Thấp</string>
     <string name="openapsama_lower_ISFrange_weight_summary">Đây là hệ số được áp dụng khi đường huyết thấp hơn mục tiêu, làm yếu ISF và từ đó có thể làm giảm lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
-    <string name="pref_title_high_bg_weight">Hệ số đường huyết cao</string>
+    <string name="pref_title_high_bg_weight">Hệ số khi BG Cao (bg)</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Đây là hệ số được áp dụng khi đường huyết cao hơn mục tiêu, làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Phạm vi BG cho tỷ lệ SMB</string>
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Giá trị mặc định: 0. Tỷ lệ SMB tăng tuyến tính được ánh xạ trong khoảng đường huyết [target_bg, target_bg+bg_range].\nTại target_bg, tỷ lệ SMB là smb_delivery_ratio_min; tại target_bg+bg_range, tỷ lệ này là smb_delivery_ratio_max.\nVới giá trị 0, chế độ SMB tăng tuyến tính sẽ bị tắt và thay vào đó sử dụng smb_delivery_ratio cố định.</string>
+    <string name="pref_title_pp_weight">Hệ số ISF sau bữa ăn (pp)</string>
     <string name="openapsama_pp_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết đang tăng, làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
-    <string name="openapsama_dura_ISF_weight_summary">Đây là hệ số được áp dụng trong các giai đoạn đường huyết tăng cao kéo dài (plateau), làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
+    <string name="pref_title_dura_weight">Hệ số ISF theo thời gian tác dụng (dura)</string>
+    <string name="openapsama_dura_ISF_weight_summary">Đây là hệ số được áp dụng trong các giai đoạn đường huyết tăng cao kéo dài, làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
     <string name="pref_title_smb_delivery_ratio">Tỷ lệ phân phối SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Giá trị mặc định: 0,5. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định tỷ lệ insulin cần thiết có thể được bơm dưới dạng SMB. Mục đích là để ngăn tình trạng nguy hiểm khi có yêu cầu SMB được gửi đồng thời từ điện thoại của người chăm sóc. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
     <string name="pref_title_smb_delivery_ratio_min">Tỷ lệ SMB tối thiểu</string>

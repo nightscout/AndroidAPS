@@ -26,7 +26,7 @@ interface Command {
         CUSTOM_COMMAND
     }
 
-    fun execute()
+    suspend fun execute()
     fun status(): String
     fun log(): String
     fun cancel()

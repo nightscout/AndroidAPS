@@ -79,7 +79,6 @@ fun NumberInputRow(
     decimalPlaces: Int = 0,
     enabled: Boolean = true,
     compact: Boolean = false,
-    onTextChange: ((String) -> Unit)? = null,
 ) {
     val effectiveValueFormat = valueFormat ?: remember(decimalPlaces) {
         if (decimalPlaces == 0) DecimalFormat("0")
@@ -95,11 +94,15 @@ fun NumberInputRow(
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    // Sync text field when value changes externally (e.g., +/- buttons) and not focused
+    // Sync text field when value changes externally (e.g., +/- buttons, quick-add buttons,
+    // ViewModel updates). Skip only when the field's current text already parses to `value` —
+    // that preserves mid-entry states like "2." which would otherwise be clobbered to "2".
     LaunchedEffect(value) {
-        if (!isFocused) {
+        val parsed = textFieldValue.text.trim().replace(",", ".").toDoubleOrNull()
+        val emptyMatches = textFieldValue.text.isEmpty() && value == 0.0
+        if (parsed != value && !emptyMatches) {
             val text = if (value == 0.0) "" else effectiveValueFormat.format(value)
-            textFieldValue = TextFieldValue(text)
+            textFieldValue = TextFieldValue(text, selection = TextRange(text.length))
             isError = false
         }
     }
@@ -131,8 +134,15 @@ fun NumberInputRow(
             isError = true
             errorMessage = errorInvalidNumber
         } else {
+            val coerced = parsed.coerceIn(valueRange)
             isError = false
-            onValueChange(parsed.coerceIn(valueRange))
+            // Sync the field text when we coerce (e.g. user left an out-of-range value),
+            // so what's published and what's displayed agree.
+            val newText = if (coerced == 0.0) "" else effectiveValueFormat.format(coerced)
+            if (newText != textFieldValue.text) {
+                textFieldValue = TextFieldValue(newText)
+            }
+            onValueChange(coerced)
         }
     }
 
@@ -147,10 +157,12 @@ fun NumberInputRow(
     }
 
     fun stepValue(direction: Int) {
-        val newValue = roundToStep(value + direction * step, step)
+        // Use the parsed text value when present so unflushed typing isn't overwritten by a
+        // stale `value` prop (the parent may not have recomposed yet after the last keystroke).
+        val cleaned = textFieldValue.text.trim().replace(",", ".")
+        val currentValue = cleaned.toDoubleOrNull()?.coerceIn(valueRange) ?: value
+        val newValue = roundToStep(currentValue + direction * step, step)
             .coerceIn(valueRange)
-        // Update local text immediately so the field reflects the new value even if the
-        // parent tree skips recomposition and the `value` prop never flows back here.
         val text = if (newValue == 0.0) "" else effectiveValueFormat.format(newValue)
         textFieldValue = TextFieldValue(text)
         isError = false
@@ -174,8 +186,26 @@ fun NumberInputRow(
                 value = textFieldValue,
                 onValueChange = { newValue ->
                     textFieldValue = newValue
-                    if (isError) isError = false
-                    onTextChange?.invoke(newValue.text)
+                    val cleaned = newValue.text.trim().replace(",", ".")
+                    when {
+                        cleaned.isEmpty()                  -> {
+                            // Defer publishing until focus loss — avoids a transient 0 while the
+                            // user is mid-deletion and about to retype.
+                            isError = false
+                        }
+                        cleaned.toDoubleOrNull() == null   -> {
+                            isError = true
+                            errorMessage = errorInvalidNumber
+                        }
+                        cleaned.toDouble() !in valueRange  -> {
+                            isError = true
+                            errorMessage = rangeText
+                        }
+                        else                               -> {
+                            isError = false
+                            onValueChange(cleaned.toDouble())
+                        }
+                    }
                 },
                 label = if (label.isNotEmpty()) ({ Text(label) }) else null,
                 singleLine = true,

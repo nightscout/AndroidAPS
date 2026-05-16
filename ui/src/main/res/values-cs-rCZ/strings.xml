@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
+    <string name="no_temp_basal_running">Žádný dočasný bazál není spuštěn</string>
     <string name="temp_target_short">DC</string>
     <string name="start_activity_tt">Spustit dočasný cíl Aktivita</string>
     <string name="start_eating_soon_tt">Spustit dočasný cíl Před jídlem</string>
@@ -14,10 +15,16 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktivity</string>
     <string name="time_range">Časové rozmezí</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Glukózový pentagon (CGP) – 14 dní</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
     <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Průměr</string>
     <string name="cgp_reference">Zdravý člověk</string>
     <string name="cgp_patient">Pacient</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
     <string name="cgp_pgr_very_low">Velmi nízké riziko</string>
     <string name="cgp_pgr_low">Nízké riziko</string>
     <string name="cgp_pgr_moderate">Střední riziko</string>
@@ -55,6 +62,77 @@
     <string name="fill_pump_units_note">Množství na naplnění je v jednotkách pumpy</string>
     <string name="fill_insulin_change">Změnit inzulín na: %1$s (bude aplikováno přepnutí profilu)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Aktivita</string>
+    <string name="scene_cat_health">Zdraví</string>
+    <string name="scene_cat_food">Jídlo</string>
+    <string name="scene_cat_sleep">Spánek</string>
+    <string name="scene_cat_dailylife">Každodenní život</string>
+    <string name="scene_cat_wellness">Wellness</string>
+    <string name="scene_cat_general">Obecné</string>
+    <string name="aaps_tt_high_icon_label">Dočasný cíl</string>
+    <string name="aaps_tt_activity_icon_label">Aktivita</string>
+    <string name="aaps_tt_eating_icon_label">Před jídlem</string>
+    <string name="aaps_tt_hypo_icon_label">Hypo</string>
+    <string name="aaps_tt_manual_icon_label">Ručně</string>
+    <string name="aaps_profile_icon_label">Profil</string>
+    <string name="aaps_loop_icon_label">Smyčka</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolus</string>
+    <string name="aaps_carbs_icon_label">Sacharidy</string>
+    <string name="aaps_tbr_icon_label">Dočasný bazál</string>
+    <string name="aaps_activity_icon_label">Cvičení</string>
+    <string name="aaps_note_icon_label">Poznámka</string>
+    <string name="aaps_automation_icon_label">Automatizace</string>
+    <string name="aaps_calibration_icon_label">Kalibrace</string>
+    <string name="exercise_icon_label">Běh</string>
+    <string name="fitness_icon_label">Fitness</string>
+    <string name="swim_icon_label">Plavání</string>
+    <string name="hiking_icon_label">Turistika</string>
+    <string name="bike_icon_label">Kolo</string>
+    <string name="skateboard_icon_label">Skateboard</string>
+    <string name="tennis_icon_label">Tenis</string>
+    <string name="soccer_icon_label">Fotbal</string>
+    <string name="baseball_icon_label">Ragby</string>
+    <string name="basketball_icon_label">Házená</string>
+    <string name="volleyball_icon_label">Gymnastika</string>
+    <string name="golf_icon_label">Golf</string>
+    <string name="scubadiving_icon_label">Potápění</string>
+    <string name="rowing_icon_label">Veslování</string>
+    <string name="surfing_icon_label">Surfování</string>
+    <string name="hospital_icon_label">Nemocnice</string>
+    <string name="medication_icon_label">Léky</string>
+    <string name="monitor_heart_icon_label">Monitor</string>
+    <string name="thermostat_icon_label">Termostat</string>
+    <string name="blood_type_icon_label">Krev</string>
+    <string name="health_safety_icon_label">Zdraví</string>
+    <string name="healing_icon_label">Léčení</string>
+    <string name="meal_icon_label">Restaurace</string>
+    <string name="cafe_icon_label">Káva</string>
+    <string name="lunch_icon_label">Oběd</string>
+    <string name="bakery_icon_label">Pekařství</string>
+    <string name="sleep_icon_label">Spánek</string>
+    <string name="night_icon_label">Noc</string>
+    <string name="nights_stay_icon_label">Noci</string>
+    <string name="hotel_icon_label">Hotel</string>
+    <string name="seat_flat_icon_label">Odpočinek</string>
+    <string name="work_icon_label">Práce</string>
+    <string name="school_icon_label">Škola</string>
+    <string name="home_icon_label">Doma</string>
+    <string name="car_icon_label">Řízení</string>
+    <string name="flight_icon_label">Létání</string>
+    <string name="shopping_icon_label">Nakupování</string>
+    <string name="relax_icon_label">Meditace</string>
+    <string name="spa_icon_label">Lázně</string>
+    <string name="heart_icon_label">Srdce</string>
+    <string name="psychology_icon_label">Mysl</string>
+    <string name="star_icon_label">Hvězda</string>
+    <string name="speed_icon_label">Rychlost</string>
+    <string name="alarm_icon_label">Alarm</string>
+    <string name="event_icon_label">Událost</string>
+    <string name="flag_icon_label">Vlajka</string>
+    <string name="bookmark_icon_label">Záložka</string>
+    <string name="label_icon_label">Štítek</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Chybí název inzulínu</string>
     <string name="insulin_name_exists">Název inzulínu %1$s již existuje, vyberte nový název</string>
@@ -111,6 +189,10 @@
     <string name="active_profile_indicator">AKTIVNÍ</string>
     <string name="confirm_remove_profile">Odstranit profil \"%1$s\"?</string>
     <string name="confirm_clone_profile">Klonovat profil \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Typ profilu</string>
     <string name="profile_parameters">Parametry profilu</string>
@@ -196,6 +278,7 @@
     <string name="quick_launch_selected_actions">Vybrané akce</string>
     <string name="quick_launch_no_dynamic_items">Žádné položky k dispozici</string>
     <string name="quick_launch_category_treatment">Ošetření</string>
+    <string name="quick_launch_category_care">Péče</string>
     <string name="quick_launch_category_profile">Profil</string>
     <string name="quick_launch_category_temp_target">Přednastavení dočasných cílů</string>
     <string name="quick_launch_category_quick_wizard">Rychlé bolusy</string>
@@ -208,11 +291,13 @@
     <string name="quick_launch_edit_profile_preset">Upravit přednastavení profilu</string>
     <string name="quick_launch_profile_permanent">Trvalé</string>
     <string name="quick_launch_profile_confirm_pct">%1$d %%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Vybrat šipku</string>
     <string name="loop_accept_nav_label">Smyčka</string>
     <string name="loop_accept_set_basal_question">Přijmout nový dočasný bazál:</string>
     <string name="loop_accept_perform">Provést</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
     <string name="widget_rm_disabled">Zakázáno</string>
     <string name="widget_rm_suspended">Pozastaveno</string>
     <string name="widget_rm_resume">Obnovit</string>

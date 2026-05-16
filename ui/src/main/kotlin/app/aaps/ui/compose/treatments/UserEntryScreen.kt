@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -240,7 +241,8 @@ private fun UserEntryItem(
                     contentDescription = "${stringResource(app.aaps.core.ui.R.string.ue_source)}: ${userEntry.source}",
                     modifier = Modifier
                         .size(20.dp)
-                        .padding(end = 4.dp)
+                        .padding(end = 4.dp),
+                    colorFilter = ColorFilter.tint(userEntryPresentationHelper.iconColor(userEntry.source))
                 )
             }
 

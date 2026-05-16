@@ -6,12 +6,15 @@ package app.aaps.pump.omnipod.common.ui.wizard.compose
  */
 enum class OmnipodWizardStep {
 
+    // Pre-activation gate (shown only when no profile switch exists yet)
+    PROFILE_GATE,
+
     // Activation steps
     START_POD_ACTIVATION,
     SELECT_INSULIN,
     INITIALIZE_POD,
-    ATTACH_POD,
     SITE_LOCATION,
+    ATTACH_POD,
     INSERT_CANNULA,
     POD_ACTIVATED,
 

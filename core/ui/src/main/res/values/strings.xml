@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="loop_disabled_by_user">Loop disabled by user</string>
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -48,10 +49,14 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="result">Result</string>
     <string name="settings">Settings</string>
+    <string name="open_plugin">Open plugin</string>
+    <string name="configbuilder_pick_one_hint">Choose one. Only one can be active at a time.</string>
+    <string name="configbuilder_pick_many_hint">Choose any that apply.</string>
+    <string name="configbuilder_no_selection_warning">No plugin is selected in this category.</string>
     <string name="simple_mode">Simple mode</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
-    <string name="no_compose_preferences">No compose preferences available for this plugin</string>
+    <string name="no_compose_preferences">No preferences available for this plugin</string>
     <string name="plugin_no_preferences">Plugin does not support preferences</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="confirm_pin_hint">Confirm PIN</string>
@@ -178,6 +183,9 @@
     <string name="remove_label">Remove</string>
     <string name="activate_profile">Activate profile</string>
     <string name="activate_insulin">Activate insulin</string>
+    <string name="pump_wizard_profile_gate_title">Profile required</string>
+    <string name="pump_wizard_profile_gate_pick">Select the profile to apply on activation.</string>
+    <string name="pump_wizard_profile_gate_no_store">No profile defined. Open Profile Management to create one, then start activation again.</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
@@ -348,7 +356,6 @@
     <string name="scene_action_smb_off">Disable SMB</string>
     <string name="scene_action_running_mode">Running mode: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
-    <string name="scene_time_remaining">%1$s remaining</string>
     <string name="scene_management">Scenes</string>
     <string name="scene_management_desc">Create, edit, and manage scenes</string>
     <string name="scene_action_count">%1$d actions</string>
@@ -626,6 +633,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">No profile selected</string>
     <string name="missing_profile_name">Missing profile name</string>
+    <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
+    <string name="profile_activation_failed">Profile activation failed</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
     <string name="error_in_basal_values">Error in basal values</string>
@@ -850,7 +859,7 @@
     <string name="maintenance_export_csv_desc">Export treatment history as spreadsheet</string>
     <string name="maintenance_cleanup_db_desc">Remove old entries from database</string>
     <string name="maintenance_reset_aps_results_desc">Clear stored algorithm results</string>
-    <string name="maintenance_reset_db_desc">Erase all databases and restart</string>
+    <string name="maintenance_reset_db_desc">Erase all databases and reload</string>
 
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Select Storage Type</string>
@@ -873,8 +882,11 @@
 
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">User request</string>
+
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Pair</string>
     <string name="pump_unpair">Unpair</string>
+    <string name="pump_unpair_confirm_title">Unpair pump?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
 
     <!--    BlePreCheck-->
@@ -1058,6 +1070,7 @@
     <string name="nav_resetdb">Reset Databases</string>
 
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Find Pump</string>
     <string name="ble_scan_select_pump">Select your pump from the list below</string>
     <string name="ble_scan_scanning">Scanning for devices…</string>
 

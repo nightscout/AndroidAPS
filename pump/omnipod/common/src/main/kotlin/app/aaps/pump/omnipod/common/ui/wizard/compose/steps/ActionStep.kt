@@ -16,13 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActionState
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Shared action step composable for InitializePod and InsertCannula steps.
@@ -134,7 +134,7 @@ internal fun ActionStepContent(
             }
 
             is ActionState.Error     -> {
-                WizardErrorBanner(message = actionState.message)
+                ErrorBanner(message = actionState.message)
                 extraErrorContent()
             }
         }

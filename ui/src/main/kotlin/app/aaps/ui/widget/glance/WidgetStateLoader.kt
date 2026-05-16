@@ -74,7 +74,7 @@ class WidgetStateLoader @Inject constructor(
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         val unavailable = rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
         val deltaText = glucoseStatus?.let { profileUtil.fromMgdlToSignedStringInUnits(it.delta) } ?: unavailable
-        val timeAgoText = dateUtil.minOrSecAgo(rh, lastBg?.timestamp)
+        val timeAgoText = dateUtil.minAgo(rh, lastBg?.timestamp)
 
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()

@@ -240,8 +240,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun isConfigured(): Boolean = podStateManager.isUniqueIdSet
-
     override fun isInitialized(): Boolean {
         return podStateManager.isPodRunning
     }
@@ -317,7 +315,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         omnipodManager.disconnect(true)
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         aapsLogger.debug(LTag.PUMP, "getPumpStatus reason=$reason")
         if (reason != "REQUESTED BY USER" && !podStateManager.isActivationCompleted) {
             // prevent races on BLE when the pod is not activated
@@ -415,7 +413,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         Completable.complete()
     }
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
             return pumpEnactResultProvider.get().success(true).enacted(true)
         }
@@ -524,10 +522,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
             aapsLogger.info(LTag.PUMP, "Basal correction no longer appropriate")
             return pumpEnactResultProvider.get().success(true).enacted(false).comment("Basal correction no longer appropriate")
         }
-        
+
         // Set cooldown to prevent duplicate corrections
         podStateManager.lastBasalCorrectionTime = System.currentTimeMillis()
-        
+
         val requestedInsulinAmount = PodConstants.POD_PULSE_BOLUS_UNITS
 
         val availableInsulin = reservoirLevel.value.cU
@@ -644,7 +642,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -788,10 +786,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 continue
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
-            val insulin = bolusProgressData.state.value?.insulin ?: 0.0
-            val delivered = insulin * percent / 100.0
-            val status = rh.gs(CoreInterfacesR.string.bolus_delivering, delivered)
-            bolusProgressData.updateProgress(percent.toInt(), status, delivered)
+            bolusProgressData.updateProgress(percent = percent.toInt())
         }
 
         (1..BOLUS_RETRIES).forEach { tryNumber ->
@@ -820,8 +815,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
                 val delivered = requestedBolusAmount - remainingUnits
-                val status = rh.gs(CoreInterfacesR.string.bolus_delivering, delivered)
-                bolusProgressData.updateProgress(percent.toInt(), status, delivered)
+                rh.gs(CoreInterfacesR.string.bolus_delivering, delivered)
+                bolusProgressData.updateProgress(percent = percent.toInt())
 
                 val sleepSeconds = if (bolusCanceled)
                     BOLUS_RETRY_INTERVAL_MS
@@ -884,7 +879,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setTempBasalAbsolute(
+    override suspend fun setTempBasalAbsolute(
         absoluteRate: Double,
         durationInMinutes: Int,
         enforceNew: Boolean,
@@ -995,10 +990,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
         error("Pump doesn't support percent basal rate")
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         // TODO i18n
         return pumpEnactResultProvider.get().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
@@ -1013,9 +1008,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun hasBolusErrorBeepEnabled(): Boolean =
         preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification)
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (!podStateManager.tempBasalActive &&
-            runBlocking { pumpSync.expectedPumpState() }.temporaryBasal == null
+            pumpSync.expectedPumpState().temporaryBasal == null
         ) {
             // nothing to cancel
             return pumpEnactResultProvider.get().success(true).enacted(false)
@@ -1049,7 +1044,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .blockingGet()
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         // TODO i18n
         return pumpEnactResultProvider.get().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
@@ -1061,7 +1056,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun serialNumber(): String = podStateManager.uniqueId?.toString() ?: Constants.PUMP_SERIAL_FOR_FAKE_TBR
     override val isFakingTempsByExtendedBoluses: Boolean = false
 
-    override fun loadTDDs(): PumpEnactResult =
+    override suspend fun loadTDDs(): PumpEnactResult =
         pumpEnactResultProvider.get().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support TDD")
 

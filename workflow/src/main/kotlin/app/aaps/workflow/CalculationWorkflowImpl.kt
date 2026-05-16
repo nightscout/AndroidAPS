@@ -2,6 +2,7 @@ package app.aaps.workflow
 
 import android.content.Context
 import android.os.SystemClock
+import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -11,16 +12,12 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
-import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.utils.worker.then
-import app.aaps.workflow.iob.IobCobOref1Worker
-import app.aaps.workflow.iob.IobCobOrefWorker
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -30,8 +27,7 @@ class CalculationWorkflowImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
-    private val dataWorkerStorage: DataWorkerStorage,
-    private val activePlugin: ActivePlugin,
+    private val workflowChainData: WorkflowChainData,
     private val mainSignals: CalculationSignalsEmitter,
     // Lazy: breaks Dagger cycle OverviewDataCache → Loop → IobCobCalculator → CalculationWorkflow → OverviewDataCache.
     // Side methods that use mainCache run at runtime, never during construction.
@@ -39,6 +35,14 @@ class CalculationWorkflowImpl @Inject constructor(
 ) : CalculationWorkflow {
 
     private val mainCache: OverviewDataCache get() = mainCacheProvider.get()
+
+    // Held across slot-write + WM enqueue so both systems agree on which call won. Without this,
+    // two concurrent runCalculation/runOnReceivedPredictions threads can interleave so the slot
+    // ends up with gen N but WM ends up running work tagged gen N-1 (because REPLACE honors call
+    // order, not generation order). The worker's gen check then fails and the calculation is
+    // silently dropped. Lock is held only across the enqueue itself — microseconds, no real
+    // contention cost.
+    private val enqueueLock = Any()
 
     init {
         // Verify definition
@@ -49,11 +53,18 @@ class CalculationWorkflowImpl @Inject constructor(
 
     override fun stopCalculation(job: String, from: String) {
         aapsLogger.debug(LTag.WORKER, "Stopping calculation thread: $from")
-        WorkManager.getInstance(context).cancelUniqueWork(job)
-        val workStatus = WorkManager.getInstance(context).getWorkInfosForUniqueWork(job).get()
-        while (workStatus.isNotEmpty() && workStatus[0].state == WorkInfo.State.RUNNING)
-            SystemClock.sleep(100)
-        aapsLogger.debug(LTag.WORKER, "Calculation thread stopped: $from")
+        val workManager = WorkManager.getInstance(context)
+        workManager.cancelUniqueWork(job)
+        val deadline = System.currentTimeMillis() + STOP_WAIT_TIMEOUT_MS
+        while (System.currentTimeMillis() < deadline) {
+            val workStatus = workManager.getWorkInfosForUniqueWork(job).get()
+            if (workStatus.isEmpty() || workStatus[0].state != WorkInfo.State.RUNNING) {
+                aapsLogger.debug(LTag.WORKER, "Calculation thread stopped: $from")
+                return
+            }
+            SystemClock.sleep(STOP_WAIT_POLL_MS)
+        }
+        aapsLogger.warn(LTag.WORKER, "Calculation thread did not stop within ${STOP_WAIT_TIMEOUT_MS}ms: $from")
     }
 
     override fun runCalculation(
@@ -69,110 +80,84 @@ class CalculationWorkflowImpl @Inject constructor(
     ) {
         aapsLogger.debug(LTag.WORKER, "Starting calculation worker: $reason to ${dateUtil.dateAndTimeAndSecondsString(end)}")
 
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
-                job, ExistingWorkPolicy.REPLACE,
-                if (bgDataReload) OneTimeWorkRequest.Builder(LoadBgDataWorker::class.java).setInputData(dataWorkerStorage.storeInputData(LoadBgDataWorker.LoadBgData(iobCobCalculator, end))).build()
-                else OneTimeWorkRequest.Builder(DummyWorker::class.java).build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareBucketedDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBucketedDataWorker.PrepareBucketedData(iobCobCalculator, overviewData, cache)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareBgDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBgDataWorker.PrepareBgData(iobCobCalculator, overviewData, cache)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(signals, CalculationWorkflow.ProgressData.DRAW_BG)))
-                    .build()
-            )
-            .then(
-                if (activePlugin.activeSensitivity.isOref1)
-                    OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(iobCobCalculator, signals, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
+        val isMain = job == MAIN_CALCULATION
+        val prepare = PrepareGraphDataWorker.PrepareGraphData(
+            iobCobCalculator = iobCobCalculator,
+            overviewData = overviewData,
+            cache = cache,
+            signals = signals,
+            reason = reason,
+            end = end,
+            bgDataReload = bgDataReload,
+            limitDataToOldestAvailable = isMain,
+            triggeredByNewBG = triggeredByNewBG,
+            // HISTORY ends here, so emit DRAW_FINAL inline. MAIN delegates to PostCalculationWorker.
+            emitFinalProgress = !isMain
+        )
+        synchronized(enqueueLock) {
+            val generation = if (isMain) {
+                val post = PostCalculationWorker.PostCalculationData(
+                    overviewData = overviewData,
+                    cache = cache,
+                    signals = signals,
+                    triggeredByNewBG = triggeredByNewBG,
+                    runLoopAndWidgetPhase = true
+                )
+                workflowChainData.startMain(prepare, post)
+            } else {
+                workflowChainData.startHistory(prepare)
+            }
+
+            val jobData = dataForJob(job, generation)
+            WorkManager.getInstance(context)
+                .beginUniqueWork(
+                    job, ExistingWorkPolicy.REPLACE,
+                    OneTimeWorkRequest.Builder(PrepareGraphDataWorker::class.java)
+                        .setInputData(jobData)
                         .build()
-                else
-                    OneTimeWorkRequest.Builder(IobCobOrefWorker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(iobCobCalculator, signals, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
+                )
+                .then(
+                    runIf = isMain,
+                    OneTimeWorkRequest.Builder(PostCalculationWorker::class.java)
+                        .setInputData(jobData)
                         .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareIobAutosensGraphDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareIobAutosensGraphDataWorker.PrepareIobAutosensData(iobCobCalculator, overviewData, cache, signals)))
-                    .build()
-            )
-            .then(
-                runIf = job == MAIN_CALCULATION,
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(signals, CalculationWorkflow.ProgressData.DRAW_IOB)))
-                    .build()
-            )
-            .then(
-                runIf = job == MAIN_CALCULATION,
-                OneTimeWorkRequest.Builder(InvokeLoopWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(InvokeLoopWorker.InvokeLoopData(triggeredByNewBG)))
-                    .build()
-            )
-            .then(
-                runIf = job == MAIN_CALCULATION,
-                OneTimeWorkRequest.Builder(UpdateWidgetWorker::class.java).build()
-            )
-            .then(
-                runIf = job == MAIN_CALCULATION,
-                OneTimeWorkRequest.Builder(PreparePredictionsWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData, cache)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(signals, CalculationWorkflow.ProgressData.DRAW_FINAL)))
-                    .build()
-            )
-            .enqueue()
+                )
+                .enqueue()
+        }
     }
 
-    override fun runOnReceivedPredictions(
-        overviewData: OverviewData
-    ) {
+    override fun runOnReceivedPredictions(overviewData: OverviewData) {
         aapsLogger.debug(LTag.WORKER, "Starting updateReceivedPredictions worker")
 
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
+        synchronized(enqueueLock) {
+            val generation = workflowChainData.startPredictions(
+                PostCalculationWorker.PostCalculationData(
+                    overviewData = overviewData,
+                    cache = mainCache,
+                    signals = mainSignals,
+                    triggeredByNewBG = false,
+                    runLoopAndWidgetPhase = false
+                )
+            )
+
+            WorkManager.getInstance(context).enqueueUniqueWork(
                 UPDATE_PREDICTIONS, ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.Builder(PreparePredictionsWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData, mainCache)))
+                OneTimeWorkRequest.Builder(PostCalculationWorker::class.java)
+                    .setInputData(dataForJob(UPDATE_PREDICTIONS, generation))
                     .build()
             )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(mainSignals, CalculationWorkflow.ProgressData.DRAW_FINAL)))
-                    .build()
-            )
-            .enqueue()
+        }
     }
 
-    override fun runOnScaleChanged(iobCobCalculator: IobCobCalculator, overviewData: OverviewData) {
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
-                MAIN_CALCULATION, ExistingWorkPolicy.APPEND,
-                OneTimeWorkRequest.Builder(PrepareBucketedDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBucketedDataWorker.PrepareBucketedData(iobCobCalculator, overviewData, mainCache)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareBgDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBgDataWorker.PrepareBgData(iobCobCalculator, overviewData, mainCache)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(mainSignals, CalculationWorkflow.ProgressData.DRAW_FINAL)))
-                    .build()
-            )
-            .enqueue()
+    private fun dataForJob(job: String, generation: Long): Data =
+        Data.Builder()
+            .putString(WorkflowChainData.JOB_KEY, job)
+            .putLong(WorkflowChainData.GEN_KEY, generation)
+            .build()
+
+    companion object {
+
+        private const val STOP_WAIT_TIMEOUT_MS = 5_000L
+        private const val STOP_WAIT_POLL_MS = 100L
     }
 }

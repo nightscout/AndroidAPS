@@ -15,4 +15,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
     <string name="old_data">旧数据</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>

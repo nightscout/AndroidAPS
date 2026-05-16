@@ -72,6 +72,7 @@
     <string name="quick_wizard_message">Assistant : %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
     <string name="user_action_not_available">L\'action utilisateur %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
     <string name="scene_not_available">Le scénario %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Les commandes d\'insuline à distance sont désactivées en mode client</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution de la Cible Temp. ?</string>
     <string name="wear_action_tempt_unit_error">Différentes unités utilisées sur la montre et le téléphone!</string>
     <string name="wear_action_tempt_zero_message">Durée zéro min - Annuler l\'exécution de la Cible Temp. ?</string>
@@ -223,7 +224,7 @@
     <string name="smscommunicator_message_body">Message invalide</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Afin de basculer du mode Boucle vers AGB (Arrêt pour Glycémie Basse) répondre avec le code %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Afin de basculer en mode Boucle Fermée répondre avec le code %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Mode de boucle actuelle: %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Mode actif : %1$s</string>
     <string name="wrong_format">Format incorrect</string>
     <string name="sms_actual_bg">Gly :</string>
     <string name="sms_last_bg">Dernière Gly :</string>

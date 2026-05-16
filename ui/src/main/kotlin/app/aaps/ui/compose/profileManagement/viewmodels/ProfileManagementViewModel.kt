@@ -32,11 +32,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -80,6 +80,13 @@ class ProfileManagementViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ProfileManagementUiState())
     val uiState: StateFlow<ProfileManagementUiState> = _uiState.asStateFlow()
+
+    private val _snackbarEvent = MutableStateFlow<String?>(null)
+    val snackbarEvent: StateFlow<String?> = _snackbarEvent.asStateFlow()
+
+    fun clearSnackbarEvent() {
+        _snackbarEvent.value = null
+    }
 
     fun setScreenMode(mode: ScreenMode) {
         _uiState.update { it.copy(screenMode = mode) }
@@ -129,8 +136,9 @@ class ProfileManagementViewModel @Inject constructor(
                     } else null
                 }
 
-                // Build profile names list
-                val profileNames = profiles.map { it.name }
+                // Build profile names list from persisted store so they always match what can be activated
+                val profileNames = localProfileManager.profile?.getProfileList()?.map { it.toString() }
+                    ?: profiles.map { it.name }
 
                 // Calculate basal sum for each profile
                 val basalSums = profiles.mapIndexed { _, singleProfile ->
@@ -400,25 +408,9 @@ class ProfileManagementViewModel @Inject constructor(
             return false
         }
 
-        // Validate profile before activation
-        val pureProfile = profileStore.getSpecificProfile(profileName) ?: run {
+        profileStore.getSpecificProfile(profileName) ?: run {
             aapsLogger.error(LTag.UI, "Profile not found in store: $profileName")
-            return false
-        }
-
-        val profileSealed = ProfileSealed.Pure(pureProfile, activePlugin)
-        val validity = profileSealed.isValid(
-            rh.gs(R.string.careportal_profileswitch),
-            activePlugin.activePump,
-            config,
-            rh,
-            notificationManager,
-            hardLimits,
-            false
-        )
-
-        if (!validity.isValid) {
-            aapsLogger.error(LTag.UI, "Profile validation failed: ${validity.reasons}")
+            _snackbarEvent.value = rh.gs(R.string.profile_not_saved_activate)
             return false
         }
 
@@ -442,7 +434,10 @@ class ProfileManagementViewModel @Inject constructor(
             iCfg = profileFunction.getProfile()?.iCfg ?: insulin.iCfg
         )
 
-        if (success != null) {
+        if (success == null) {
+            aapsLogger.error(LTag.UI, "Profile activation failed (validation or DB write): $profileName")
+            _snackbarEvent.value = rh.gs(R.string.profile_activation_failed)
+        } else {
             // Track objectives progress
             if (percentage == 90 && durationMinutes == 10) {
                 preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)

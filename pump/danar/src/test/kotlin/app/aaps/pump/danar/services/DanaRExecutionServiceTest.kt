@@ -113,7 +113,7 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
         runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         `when`(profile.getBasal()).thenReturn(1.0)
 
-        val result = danaRExecutionService.updateBasalsInPump(profile)
+        val result = runBlocking { danaRExecutionService.updateBasalsInPump(profile) }
 
         assertThat(result).isFalse()
     }

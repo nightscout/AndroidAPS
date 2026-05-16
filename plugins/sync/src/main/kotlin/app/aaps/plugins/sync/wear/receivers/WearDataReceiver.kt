@@ -10,14 +10,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.utils.receivers.BundleLogger
-import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.DaggerBroadcastReceiver
 import javax.inject.Inject
 
 open class WearDataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
 

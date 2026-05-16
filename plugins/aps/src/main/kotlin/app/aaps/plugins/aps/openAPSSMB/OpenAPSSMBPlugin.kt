@@ -132,7 +132,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             val variableSens = it.variableSens ?: return@forEach
             val timestamp = it.date
             val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
-            if (variableSens > 0) dynIsfCache.put(key, variableSens)
+            if (variableSens > 0) synchronized(dynIsfCache) { dynIsfCache.put(key, variableSens) }
             count++
         }
         aapsLogger.debug(LTag.APS, "Loaded $count variable sensitivity values from database")
@@ -163,10 +163,12 @@ open class OpenAPSSMBPlugin @Inject constructor(
         var count = 0
         var sum = 0.0
         val start = timestamp - T.hours(24).msecs()
-        dynIsfCache.forEach { key, value ->
-            if (key in start..timestamp) {
-                count++
-                sum += value
+        synchronized(dynIsfCache) {
+            dynIsfCache.forEach { key, value ->
+                if (key in start..timestamp) {
+                    count++
+                    sum += value
+                }
             }
         }
         val sensitivity = if (count == 0) null else sum / count
@@ -207,7 +209,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         // Round down to 30 min and use it as a key for caching
         // Add BG to key as it affects calculation
         val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
-        val cached = dynIsfCache[key]
+        val cached = synchronized(dynIsfCache) { dynIsfCache[key] }
         if (cached != null && timestamp < dateUtil.now()) {
             //aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
             return Pair("HIT", cached)
@@ -217,8 +219,10 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (!dynIsfResult.tddPartsCalculated()) return Pair("TDD miss", null)
         // no cached result found, let's calculate the value
         //aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
-        dynIsfResult.variableSensitivity?.let { dynIsfCache.put(key, it) }
-        if (dynIsfCache.size() > 1000) dynIsfCache.clear()
+        synchronized(dynIsfCache) {
+            dynIsfResult.variableSensitivity?.let { dynIsfCache.put(key, it) }
+            if (dynIsfCache.size() > 1000) dynIsfCache.clear()
+        }
         return Pair("CALC", dynIsfResult.variableSensitivity)
     }
 
@@ -575,11 +579,13 @@ open class OpenAPSSMBPlugin @Inject constructor(
         JsonObject(emptyMap())
             .put(BooleanKey.ApsUseDynamicSensitivity, preferences)
             .put(IntKey.ApsDynIsfAdjustmentFactor, preferences)
+            .put(BooleanKey.ApsUseSmb, preferences)
 
     override fun applyConfiguration(configuration: JsonObject) {
         configuration
             .store(BooleanKey.ApsUseDynamicSensitivity, preferences)
             .store(IntKey.ApsDynIsfAdjustmentFactor, preferences)
+            .store(BooleanKey.ApsUseSmb, preferences)
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

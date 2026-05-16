@@ -131,7 +131,7 @@ class DanaRKoreanExecutionServiceTest : TestBaseWithProfile() {
         runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         `when`(profile.getBasal()).thenReturn(1.0)
 
-        val result = danaRKoreanExecutionService.updateBasalsInPump(profile)
+        val result = runBlocking { danaRKoreanExecutionService.updateBasalsInPump(profile) }
 
         assertThat(result).isFalse()
     }

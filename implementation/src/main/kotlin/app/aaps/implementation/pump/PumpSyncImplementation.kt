@@ -29,6 +29,7 @@ import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.implementation.extensions.toUeSource
 import javax.inject.Inject
@@ -142,7 +143,7 @@ class PumpSyncImplementation @Inject constructor(
                     amount = bolus.amount
                 )
             },
-            profile = profileFunction.getProfile()?.toPump(),
+            profile = profileFunction.getRequestedProfile()?.let { ProfileSealed.PS(it, activePlugin).toPump() },
             serialNumber = preferences.get(StringNonKey.ActivePumpSerialNumber)
         )
     }

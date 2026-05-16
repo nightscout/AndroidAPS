@@ -30,7 +30,7 @@ class CommandLoadHistory(
 
     override val commandType: Command.CommandType = Command.CommandType.LOAD_HISTORY
 
-    override fun execute() {
+    override suspend fun execute() {
         val pump = activePlugin.activePumpInternal
         if (pump is Dana) {
             val danaPump = pump as Dana

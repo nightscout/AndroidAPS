@@ -42,11 +42,11 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Vârf</string>
     <!--    Loop -->
-    <string name="smb_frequency_exceeded">S-a livrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
+    <string name="smb_frequency_exceeded">S-a administrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
     <string name="pump_not_initialized">Pompa nu este inițializată!</string>
-    <string name="loop_shortname">BUCL</string>
-    <string name="description_loop">Activare sau dezactivare a implementării declanșatoare pentru buclă.</string>
-    <string name="no_aps_selected">NU AȚI SELECTAT APS SAU NU EXISTĂ REZULTAT GENERAT</string>
+    <string name="loop_shortname">BUCLĂ</string>
+    <string name="description_loop">Activați sau dezactivați implementarea declanșatoare pentru buclă.</string>
+    <string name="no_aps_selected">REZULTAT NICIUN APS SELECTAT SAU FURNIZAT</string>
     <string name="ignore5m">Ignorați 5min</string>
     <string name="ignore15m">Ignorați 15min</string>
     <string name="ignore30m">Ignorați 30min</string>
@@ -63,7 +63,7 @@
     <string name="loop_smb_request_time_label">Timp solicitare SMB</string>
     <string name="loop_smb_execution_time_label">Timp de execuție SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB setat de pompă</string>
-    <string name="fallback_smb_no_tdd">Revenire la SMB. Nu există suficiente date TDD.</string>
+    <string name="fallback_smb_no_tdd">Revenire la SMB. Nu există suficiente date DZT.</string>
     <string name="fallback_to_isf_no_tdd">Revenire la sensibilitatea din profil. Nu sunt suficiente date. Motivul: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Ajutor pentru ajustarea potențială a profilului (ISF, ICR și ratele bazale)</string>
@@ -97,5 +97,5 @@
     <string name="pump_disconnected">Pompă deconectată</string>
     <!--    autoISF -->
     <string name="autoISF_settings_title">Setări AutoFSI</string>
-    <string name="smb_delivery_settings_title">Setări livrare SMB</string>
+    <string name="smb_delivery_settings_title">Setări administrare SMB</string>
 </resources>

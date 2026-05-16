@@ -107,7 +107,7 @@ class LoopTest @Inject constructor() {
         loop.invoke("test1", allowNotification = false)
         var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step1")
         assertThat(loopStatusEvent.first).isTrue()
-        assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Objective 1 not started")
+        assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Loop disabled by user")
 
         // So start objectives
         objectivesPlugin.objectives[0].startedOn = 1
@@ -173,7 +173,7 @@ class LoopTest @Inject constructor() {
         assertThat(persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null).inserted.size).isEqualTo(6)
 
         // GV insertion triggers calculation via observeChanges(GV) → scheduleHistoryDataChange (5s debounce)
-        // IobCobOref1Worker may exit early ("No bucketed data") so EventAutosensCalculationFinished
+        // The IOB/COB autosens phase may exit early ("No bucketed data") so EventAutosensCalculationFinished
         // is not guaranteed. Wait for EventAPSCalculationFinished which fires when loop runs.
         assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, maxSeconds = 60, comment = "step6").first).isTrue()
         Thread.sleep(5000)

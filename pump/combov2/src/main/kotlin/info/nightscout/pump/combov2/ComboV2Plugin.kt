@@ -752,32 +752,30 @@ class ComboV2Plugin @Inject constructor(
         disconnectInternal(forceDisconnect = true)
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Getting pump status; reason: $reason")
 
         lastComboAlert = null
 
-        runBlocking {
-            try {
-                executeCommand {
-                    pump?.updateStatus()
-                }
-
-                // We send this event here, and not in onStart(), to include
-                // the initial pump status update before emitting the event.
-                if (!initializationChangedEventSent) {
-                    rxBus.send(EventInitializationChanged())
-                    initializationChangedEventSent = true
-                }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (_: Exception) {
+        try {
+            executeCommand {
+                pump?.updateStatus()
             }
+
+            // We send this event here, and not in onStart(), to include
+            // the initial pump status update before emitting the event.
+            if (!initializationChangedEventSent) {
+                rxBus.send(EventInitializationChanged())
+                initializationChangedEventSent = true
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
         }
 
     }
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         if (!isInitialized()) {
             aapsLogger.error(LTag.PUMP, "Cannot set profile since driver is not initialized")
 
@@ -800,54 +798,52 @@ class ComboV2Plugin @Inject constructor(
         val requestedBasalProfile = profile.toComboCtlBasalProfile()
         aapsLogger.debug(LTag.PUMP, "Basal profile to set: $requestedBasalProfile")
 
-        runBlocking {
-            try {
-                executeCommand {
-                    if (acquiredPump.setBasalProfile(requestedBasalProfile)) {
-                        aapsLogger.debug(LTag.PUMP, "Basal profiles are different; new profile set")
-                        activeBasalProfile = requestedBasalProfile
-                        updateBaseBasalRateUI()
+        try {
+            executeCommand {
+                if (acquiredPump.setBasalProfile(requestedBasalProfile)) {
+                    aapsLogger.debug(LTag.PUMP, "Basal profiles are different; new profile set")
+                    activeBasalProfile = requestedBasalProfile
+                    updateBaseBasalRateUI()
 
-                        notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
-                    } else {
-                        aapsLogger.debug(LTag.PUMP, "Basal profiles are equal; did not have to set anything")
-                        // Treat this as if the command had been enacted. Setting a basal profile is
-                        // an idempotent operation, meaning that setting the exact same profile factors
-                        // twice in a row does not actually change anything. Therefore, we can just
-                        // completely skip such a redundant set basal profile operation and still get
-                        // the exact same result.
-                        // Furthermore, it is actually important to also set enacted to true in this case
-                        // because even though this _driver_ might know that the Combo uses this profile
-                        // already, _AAPS_ might not. A good example is when AAPS is set up the first time
-                        // and no profile has been activated. If in this case the profile happens to be
-                        // identical to what's already in the Combo, then enacted=false would cause errors,
-                        // because AAPS expects the driver to always enact the profile change in this case
-                        // (since it thinks that no profile is set yet).
-                    }
-
-                    pumpEnactResult.apply {
-                        success = true
-                        enacted = true
-                    }
+                    notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+                } else {
+                    aapsLogger.debug(LTag.PUMP, "Basal profiles are equal; did not have to set anything")
+                    // Treat this as if the command had been enacted. Setting a basal profile is
+                    // an idempotent operation, meaning that setting the exact same profile factors
+                    // twice in a row does not actually change anything. Therefore, we can just
+                    // completely skip such a redundant set basal profile operation and still get
+                    // the exact same result.
+                    // Furthermore, it is actually important to also set enacted to true in this case
+                    // because even though this _driver_ might know that the Combo uses this profile
+                    // already, _AAPS_ might not. A good example is when AAPS is set up the first time
+                    // and no profile has been activated. If in this case the profile happens to be
+                    // identical to what's already in the Combo, then enacted=false would cause errors,
+                    // because AAPS expects the driver to always enact the profile change in this case
+                    // (since it thinks that no profile is set yet).
                 }
-            } catch (e: CancellationException) {
-                // Cancellation is not an error, but it also means
-                // that the profile update was not enacted.
+
                 pumpEnactResult.apply {
                     success = true
-                    enacted = false
+                    enacted = true
                 }
-                throw e
-            } catch (e: Exception) {
-                aapsLogger.error("Exception thrown during basal profile update: $e")
+            }
+        } catch (e: CancellationException) {
+            // Cancellation is not an error, but it also means
+            // that the profile update was not enacted.
+            pumpEnactResult.apply {
+                success = true
+                enacted = false
+            }
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error("Exception thrown during basal profile update: $e")
 
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
+            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
 
-                pumpEnactResult.apply {
-                    success = false
-                    enacted = false
-                    comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
-                }
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
             }
         }
         return pumpEnactResult
@@ -931,7 +927,7 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -1059,18 +1055,15 @@ class ComboV2Plugin @Inject constructor(
 
         bolusJob = newBolusJob
 
-        // Do a blocking wait until the bolus coroutine completes or is cancelled.
         // AndroidAPS expects deliverTreatment() calls to block and to be cancellable
         // (via stopBolusDelivering()), so we run a separate bolus coroutine and
         // wait here until it is done.
-        runBlocking {
-            try {
-                aapsLogger.debug(LTag.PUMP, "Waiting for bolus coroutine to finish")
-                newBolusJob.join()
-                aapsLogger.debug(LTag.PUMP, "Bolus coroutine finished")
-            } catch (_: CancellationException) {
-                aapsLogger.debug(LTag.PUMP, "Bolus coroutine was cancelled")
-            }
+        try {
+            aapsLogger.debug(LTag.PUMP, "Waiting for bolus coroutine to finish")
+            newBolusJob.join()
+            aapsLogger.debug(LTag.PUMP, "Bolus coroutine finished")
+        } catch (_: CancellationException) {
+            aapsLogger.debug(LTag.PUMP, "Bolus coroutine was cancelled")
         }
 
         return pumpEnactResult
@@ -1085,7 +1078,7 @@ class ComboV2Plugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Bolus delivery stopped")
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = false
 
@@ -1136,7 +1129,7 @@ class ComboV2Plugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = true
 
@@ -1168,7 +1161,7 @@ class ComboV2Plugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = true
         pumpEnactResult.isTempCancel = enforceNew
@@ -1247,10 +1240,10 @@ class ComboV2Plugin @Inject constructor(
     // It is currently not known how to program an extended bolus into the Combo.
     // Until that is reverse engineered, inform callers that we can't handle this.
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
         createFailurePumpEnactResult(R.string.combov2_extended_bolus_not_supported)
 
-    override fun cancelExtendedBolus(): PumpEnactResult =
+    override suspend fun cancelExtendedBolus(): PumpEnactResult =
         createFailurePumpEnactResult(R.string.combov2_extended_bolus_not_supported)
 
     override fun updateExtendedJsonStatus(extendedStatus: JSONObject) {
@@ -1298,60 +1291,58 @@ class ComboV2Plugin @Inject constructor(
     override val isFakingTempsByExtendedBoluses = false
 
     @OptIn(ExperimentalTime::class)
-    override fun loadTDDs(): PumpEnactResult {
+    override suspend fun loadTDDs(): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         val acquiredPump = getAcquiredPump()
 
-        runBlocking {
-            try {
-                // Map key = timestamp; value = TDD
-                val tddMap = mutableMapOf<Long, Int>()
+        try {
+            // Map key = timestamp; value = TDD
+            val tddMap = mutableMapOf<Long, Int>()
 
-                executeCommand {
-                    val tddHistory = acquiredPump.fetchTDDHistory()
+            executeCommand {
+                val tddHistory = acquiredPump.fetchTDDHistory()
 
-                    tddHistory
-                        .filter { it.totalDailyAmount >= 1 }
-                        .forEach { tddHistoryEntry ->
-                            val timestamp = tddHistoryEntry.date.toEpochMilliseconds()
-                            tddMap[timestamp] = (tddMap[timestamp] ?: 0) + tddHistoryEntry.totalDailyAmount
-                        }
-                }
+                tddHistory
+                    .filter { it.totalDailyAmount >= 1 }
+                    .forEach { tddHistoryEntry ->
+                        val timestamp = tddHistoryEntry.date.toEpochMilliseconds()
+                        tddMap[timestamp] = (tddMap[timestamp] ?: 0) + tddHistoryEntry.totalDailyAmount
+                    }
+            }
 
-                for (tddEntry in tddMap) {
-                    val timestamp = tddEntry.key
-                    val totalDailyAmount = tddEntry.value
+            for (tddEntry in tddMap) {
+                val timestamp = tddEntry.key
+                val totalDailyAmount = tddEntry.value
 
-                    pumpSync.createOrUpdateTotalDailyDose(
-                        timestamp,
-                        bolusAmount = 0.0,
-                        basalAmount = 0.0,
-                        totalAmount = totalDailyAmount.cctlBasalToIU(),
-                        pumpId = null,
-                        pumpType = PumpType.ACCU_CHEK_COMBO,
-                        pumpSerial = serialNumber()
-                    )
-                }
+                pumpSync.createOrUpdateTotalDailyDose(
+                    timestamp,
+                    bolusAmount = 0.0,
+                    basalAmount = 0.0,
+                    totalAmount = totalDailyAmount.cctlBasalToIU(),
+                    pumpId = null,
+                    pumpType = PumpType.ACCU_CHEK_COMBO,
+                    pumpSerial = serialNumber()
+                )
+            }
 
-                pumpEnactResult.apply {
-                    success = true
-                    enacted = true
-                }
-            } catch (e: CancellationException) {
-                pumpEnactResult.apply {
-                    success = true
-                    enacted = false
-                    comment = rh.gs(R.string.combov2_load_tdds_cancelled)
-                }
-                throw e
-            } catch (e: Exception) {
-                aapsLogger.error("Exception thrown during TDD retrieval: $e")
+            pumpEnactResult.apply {
+                success = true
+                enacted = true
+            }
+        } catch (e: CancellationException) {
+            pumpEnactResult.apply {
+                success = true
+                enacted = false
+                comment = rh.gs(R.string.combov2_load_tdds_cancelled)
+            }
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error("Exception thrown during TDD retrieval: $e")
 
-                pumpEnactResult.apply {
-                    success = false
-                    enacted = false
-                    comment = rh.gs(R.string.combov2_retrieving_tdds_failed)
-                }
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(R.string.combov2_retrieving_tdds_failed)
             }
         }
 
@@ -2183,8 +2174,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     private fun reportFinishedBolus(status: String, id: Long, pumpEnactResult: PumpEnactResult, succeeded: Boolean) {
-        val totalInsulin = bolusProgressData.state.value?.insulin ?: 0.0
-        bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), totalInsulin)
+        bolusProgressData.updateProgress(100)
 
         pumpEnactResult.apply {
             success = succeeded

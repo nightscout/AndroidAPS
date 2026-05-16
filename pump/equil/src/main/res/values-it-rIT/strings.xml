@@ -21,7 +21,6 @@
     <string name="equil_title_attach">Collega pompa</string>
     <string name="equil_title_air">Riempi la cannula</string>
     <string name="equil_title_unpair_detach">Scollega pompa</string>
-    <string name="equil_title_unpair_confirm">Conferma disaccoppiamento</string>
     <string name="equil_title_history_events">Storico eventi</string>
     <string name="equil_tone">Tono di allerta</string>
     <string name="equil_tone_mode_mute">Muto</string>

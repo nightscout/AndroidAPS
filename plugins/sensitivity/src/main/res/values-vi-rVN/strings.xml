@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sensitivity_shortname">Độ nhạy (SENS)</string>
+    <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivity_oref1">Sensitivity Oref1</string>
     <string name="sensitivity_aaps">Sensitivity AAPS</string>
     <string name="sensitivity_weighted_average">Sensitivity WeightedAverage</string>

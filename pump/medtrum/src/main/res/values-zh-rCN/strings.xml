@@ -50,6 +50,15 @@
     <string name="alarm_no_calibration">无需校准</string>
     <string name="pump_time_update_failed">无法手动更新泵时区、暂停消息和刷新。</string>
     <string name="bolus_error">推注错误</string>
+    <!-- Status strings -->
+    <string name="status_idle">空闲</string>
+    <string name="status_filled">填充</string>
+    <string name="status_priming">充盈中</string>
+    <string name="status_primed">已充盈</string>
+    <string name="status_ejecting">正在弹出</string>
+    <string name="status_ejected">已弹出</string>
+    <string name="status_active">已激活</string>
+    <string name="status_stopped">已停止</string>
     <!-- wizard-->
     <string name="retry">重试</string>
     <string name="step_prepare_patch">激活储药贴</string>
@@ -64,9 +73,9 @@
     <string name="step_deactivate">停用贴片</string>
     <string name="step_deactivating">停用中...</string>
     <string name="step_deactivate_complete">贴片已停用</string>
+    <string name="unpair_confirm_message">这将清除保存的泵序列号并断开连接。请启动一个新的贴片来扫描泵。</string>
     <string name="step_retry_activation">正在激活</string>
     <string name="unexpected_state">意外状态：%1$s</string>
-    <string name="no_profile_selected">未选择配置。请选择一个配置资料并重试。</string>
     <string name="patch_begin_activation">无有效贴片。按<b>下一步</b>开始激活过程。</string>
     <string name="patch_not_active_note">在下一步之前，泵库不应连接到贴片！</string>
     <string name="connect_pump_base">将泵底座连接到新的贴片，排出残留空气并注入胰岛素，然后按<b>下一步</b>。</string>
@@ -95,9 +104,6 @@
     <string name="press_retry_or_discard">按<b>下一步</b>恢复激活或按<b>放弃</b>重置激活状态。</string>
     <string name="reading_activation_status">请等待，正在读取泵的激活状态。</string>
     <!-- settings-->
-    <string name="sn_input_title">序列号</string>
-    <string name="sn_input_invalid">序列号无效！</string>
-    <string name="change_sn">更改</string>
     <string name="alarm_setting_title">报警设置</string>
     <string name="alarm_setting_summary">选择您喜欢的泵提醒设置。</string>
     <string name="alarm_setting_light_vibrate_beep">灯光、振动和蜂鸣声</string>

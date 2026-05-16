@@ -33,8 +33,8 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.json.JSONObject
@@ -50,11 +50,11 @@ import javax.inject.Inject
  * - Room database (in-memory)
  * - AppRepository (expandCarbs + fromTo filter)
  * - PersistenceLayerImpl
- * - IobCobCalculator → IobCobOrefWorker (COB calculation)
+ * - IobCobCalculator → PrepareGraphDataWorker (COB calculation phase)
  * - AutosensDataObject (deductAbsorbedCarbs, removeOldCarbs, cloneCarbsList)
  * - fromCarbs() extension
  *
- * The fix (issue #4596): IobCobOrefWorker queries carbs with exclusive start
+ * The fix (issue #4596): the IOB/COB autosens pass queries carbs with exclusive start
  * (bgTime - 5min + 1ms) to prevent double-counting at window boundaries.
  */
 class CobExtendedCarbsTest @Inject constructor() {

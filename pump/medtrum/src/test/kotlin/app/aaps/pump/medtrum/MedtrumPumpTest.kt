@@ -129,7 +129,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         assertThat(medtrumPump.bolusDone).isEqualTo(bolusCompleted)
         assertThat(medtrumPump.bolusAmountDeliveredFlow.value).isWithin(0.01).of(amount)
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(amount)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isWithin(0.01).of(amount)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndTemporaryBasalInfoThenExpectNewData() {

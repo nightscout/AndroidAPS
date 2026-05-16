@@ -1,9 +1,13 @@
 package app.aaps.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -78,8 +82,8 @@ class ErrorActivity : DaggerAppCompatActivity() {
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-    private var status: String = ""
-    private var title: String = ""
+    private var status by mutableStateOf("")
+    private var title by mutableStateOf("")
     private var sound: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,6 +153,18 @@ class ErrorActivity : DaggerAppCompatActivity() {
                     listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                 )
             }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        status = intent.getStringExtra(AlarmSoundService.STATUS) ?: ""
+        title = intent.getStringExtra(AlarmSoundService.TITLE) ?: ""
+        sound = intent.getIntExtra(AlarmSoundService.SOUND_ID, app.aaps.core.ui.R.raw.error)
+        aapsLogger.debug("Error activity updated: $title - $status")
+        handler.removeCallbacksAndMessages(null)
+        stopAlarm("Update")
+        startAlarm()
     }
 
     override fun onDestroy() {

@@ -67,6 +67,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
@@ -514,7 +515,7 @@ class NSClientService : DaggerService() {
                         val foods = data.getJSONArray("food")
                         if (foods.length() > 0) nsClientRepository.addLog("◄ DATA", "received " + foods.length() + " foods")
                         nsIncomingDataProcessor.processFood(foods)
-                        storeDataForDb.storeFoodsToDb()
+                        storeDataForDb.requestStoreFoods()
                     }
                     if (data.has("mbgs")) {
                         val mbgArray = data.getJSONArray("mbgs")
@@ -535,7 +536,7 @@ class NSClientService : DaggerService() {
                         if (sgvs.length() > 0) {
                             nsClientRepository.addLog("◄ DATA", "received " + sgvs.length() + " sgvs")
                             nsIncomingDataProcessor.processSgvs(sgvs, false)
-                            storeDataForDb.storeGlucoseValuesToDb()
+                            storeDataForDb.requestStoreGlucoseValues()
                         }
                     }
                     nsClientRepository.addLog("◄ LAST", dateUtil.dateAndTimeString(latestDateInReceivedData))

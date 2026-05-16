@@ -28,7 +28,6 @@ import app.aaps.core.objects.profile.ProfileSealed
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -168,6 +167,16 @@ class ProfileFunctionImpl @Inject constructor(
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, iCfg: ICfg
     ): PS? {
         val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return null
+        val validity = ProfileSealed.PS(ps, activePlugin).isValid(
+            rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
+            activePlugin.activePump,
+            config,
+            rh,
+            notificationManager,
+            hardLimits,
+            false
+        )
+        if (!validity.isValid) return null
         val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
         return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
     }

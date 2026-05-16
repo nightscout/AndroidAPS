@@ -26,7 +26,6 @@ import app.aaps.core.ui.R
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.min
@@ -116,9 +115,9 @@ class LocalAlertUtilsImpl @Inject constructor(
         preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, nextPumpDisconnectedAlarm)
     }
 
-    override fun reportPumpStatusRead() {
+    override suspend fun reportPumpStatusRead() {
         val pump = activePlugin.activePump
-        val profile = runBlocking { profileFunction.getProfile() }
+        val profile = profileFunction.getProfile()
         if (profile != null) {
             val lastConnection = pump.lastDataTime.value
             val earliestAlarmTime = lastConnection + pumpUnreachableThreshold()
@@ -128,8 +127,8 @@ class LocalAlertUtilsImpl @Inject constructor(
         }
     }
 
-    override fun checkStaleBGAlert() = runBlocking {
-        val bgReading = persistenceLayer.getLastGlucoseValue() ?: return@runBlocking
+    override suspend fun checkStaleBGAlert() {
+        val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
         if (preferences.get(BooleanKey.AlertMissedBgReading)
             && bgReading.timestamp + missedReadingsThreshold() < dateUtil.now()
             && preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()

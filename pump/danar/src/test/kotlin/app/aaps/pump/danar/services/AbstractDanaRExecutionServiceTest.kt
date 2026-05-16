@@ -39,7 +39,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
                 injector.aapsLogger = aapsLogger
                 injector.rh = rh
                 injector.danaPump = danaPump
-                injector.bolusProgressData = BolusProgressData()
+                injector.bolusProgressData = BolusProgressData(ch, rh)
             }
         }
     }
@@ -49,8 +49,8 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
     inner class TestDanaRExecutionService : AbstractDanaRExecutionService() {
 
         override fun messageHashTable(): MessageHashTableBase = messageHashTable
-        override fun updateBasalsInPump(profile: Profile): Boolean = true
-        override fun getPumpStatus() {}
+        override suspend fun updateBasalsInPump(profile: Profile): Boolean = true
+        override suspend fun getPumpStatus() {}
         override fun loadEvents(): PumpEnactResult = pumpEnactResult
         override fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean = true
         override fun highTempBasal(percent: Int, durationInMinutes: Int): Boolean = false
@@ -81,7 +81,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.pumpSync = pumpSync
         testService.activePlugin = activePlugin
         testService.notificationManager = notificationManager
-        testService.bolusProgressData = BolusProgressData()
+        testService.bolusProgressData = BolusProgressData(ch, rh)
         testService.pumpEnactResultProvider = pumpEnactResultProvider
         testService.rfcommTransport = mock()
         testService.injector = injector

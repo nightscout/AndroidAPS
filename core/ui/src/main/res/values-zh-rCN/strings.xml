@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">从泵中无法读取有效的基础率</string>
     <string name="limiting_iob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="loop_disabled">按约束条件禁用循环</string>
+    <string name="loop_disabled_by_user">用户禁用闭环</string>
     <string name="event_type">事件类型</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -48,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">用户</string>
     <string name="result">结果</string>
     <string name="settings">设置</string>
+    <string name="open_plugin">打开插件</string>
+    <string name="configbuilder_pick_one_hint">请选择一个。一次只能激活一个。</string>
+    <string name="configbuilder_pick_many_hint">选择所有适用的项。</string>
+    <string name="configbuilder_no_selection_warning">此类别中未选择任何插件。</string>
     <string name="simple_mode">简单模式</string>
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
@@ -173,11 +178,12 @@
     <string name="a11y_high">高</string>
     <string name="a11y_inrange">在范围内</string>
     <string name="a11y_low">低</string>
-    <string name="average">平均</string>
-    <string name="tir">在目标范围的时间</string>
     <string name="remove_label">删除</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="activate_insulin">启用胰岛素</string>
+    <string name="pump_wizard_profile_gate_title">需要配置文件</string>
+    <string name="pump_wizard_profile_gate_pick">选择激活时应用的配置文件。</string>
+    <string name="pump_wizard_profile_gate_no_store">未定义任何配置文件。请打开配置文件管理创建一个，然后重新开始激活。</string>
     <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
@@ -264,6 +270,23 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">已选择的胰岛素：%1$s</string>
     <string name="record_insulin_hint">如果使用笔注射胰岛素，请从下方选择正确的胰岛素类型。剂量始终以国际单位表示。</string>
+    <!--       Stats -->
+    <string name="average">平均</string>
+    <string name="tir">在目标范围的时间</string>
+    <string name="below" comment="below &quot;in range&quot;">底部</string>
+    <string name="in_range">在范围内</string>
+    <string name="veryLow" comment="below 3.1">非常低</string>
+    <string name="low" comment="3.1-3.9">低</string>
+    <string name="high" comment="10.0-13.9">高</string>
+    <string name="veryHigh" comment="above 13.9">非常高</string>
+    <string name="above" comment="above &quot;in range&quot;">上方</string>
+    <string name="detailed_14_days">14天详细数据</string>
+    <string name="day_tir">白天TIR</string>
+    <string name="night_tir">夜晚TIR</string>
+    <string name="hba1c">糖化血红蛋白: </string>
+    <string name="std_deviation">标准差: %1$s</string>
+    <string name="seven_days_short">7天</string>
+    <string name="thirty_days_short">30天</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d 分钟</string>
@@ -313,14 +336,14 @@
     <string name="scene_confirm_deactivate">结束情景 \"%1$s\" 并恢复更改？</string>
     <string name="scene_conflict_active_tt">当前启用的临时目标将被替换</string>
     <string name="scene_conflict_active_profile">当前启用的配置切换将被替换</string>
+    <string name="scene_conflict_active_running_mode">当前运行模式将被替换</string>
     <string name="scene_conflict_active_scene">当前已激活的情景 \"%1$s\" 将先结束</string>
     <string name="scene_action_tt">临时目标：%1$s</string>
     <string name="scene_action_profile">配置文件：%1$s%2$d%%</string>
     <string name="scene_action_smb_on">启用微型大剂量</string>
     <string name="scene_action_smb_off">禁用微型大剂量</string>
-    <string name="scene_action_running_mode">闭环模式：%1$s</string>
+    <string name="scene_action_running_mode">运行模式：%1$s</string>
     <string name="scene_action_careportal">日志：%1$s</string>
-    <string name="scene_time_remaining">剩余%1$s</string>
     <string name="scene_management">情景</string>
     <string name="scene_management_desc">创建、编辑和管理情景</string>
     <string name="scene_action_count">%1$d 个动作</string>
@@ -340,6 +363,7 @@
     <string name="scene_editor_enabled">启用</string>
     <string name="scene_editor_disabled">禁用</string>
     <string name="scene_summary">%1$d 个动作，%2$s</string>
+    <string name="scene_duration_indefinite">无限时长（手动结束）</string>
     <string name="scene_some_actions_failed">部分操作执行失败</string>
     <string name="scene_no_active">当前无生效情景</string>
     <string name="scene_some_reverts_failed">部分还原操作执行失败</string>
@@ -347,10 +371,10 @@
     <string name="scene_no_actions">该情景未配置任何操作</string>
     <string name="scene_profile_not_found">未找到配置文件 \"%1$s\"</string>
     <string name="scene_revert_tt">取消临时目标</string>
-    <string name="scene_revert_profile">将配置档案还原至 %1$s%2$d%%</string>
+    <string name="scene_revert_profile">撤销配置更改</string>
     <string name="scene_revert_smb_on">重新启用微型大剂量</string>
     <string name="scene_revert_smb_off">禁用微型大剂量</string>
-    <string name="scene_revert_loop_mode">取消闭环模式覆盖</string>
+    <string name="scene_revert_loop_mode">取消运行模式强制覆盖</string>
     <string name="scene_careportal_no_revert">护理记录不会被还原</string>
     <string name="careportal_sickness">生病</string>
     <string name="careportal_stress">压力</string>
@@ -791,7 +815,7 @@
     <string name="maintenance_export_csv_desc">导出处理历史为电子表格</string>
     <string name="maintenance_cleanup_db_desc">从数据库中删除旧条目</string>
     <string name="maintenance_reset_aps_results_desc">清除已存储的算法结果</string>
-    <string name="maintenance_reset_db_desc">删除所有数据库并重启</string>
+    <string name="maintenance_reset_db_desc">删除所有数据库并重新加载</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">选择存储类型</string>
     <string name="clear_cloud_action">清除设置</string>
@@ -809,8 +833,10 @@
     <string name="need_connect_permission">应用程序需要蓝牙权限。</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">用户请求</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">配对</string>
     <string name="pump_unpair">取消配对</string>
+    <string name="pump_unpair_confirm_title">取消配对泵？</string>
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支持蓝牙低能量。</string>
@@ -972,6 +998,7 @@
     <string name="database_cleanup">数据库清理</string>
     <string name="nav_resetdb">重置数据库</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">查找泵</string>
     <string name="ble_scan_select_pump">从下面的列表中选择您的泵</string>
     <string name="ble_scan_scanning">正在扫描设备…</string>
     <!-- Graph configuration -->

@@ -98,7 +98,6 @@
     <string name="a11y_arrow_unknown">desconegut</string>
     <string name="a11y_high">alt</string>
     <string name="a11y_low">baix</string>
-    <string name="average">Mitja</string>
     <string name="activate_profile">Activar perfil</string>
     <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
     <string name="profile">Perfil</string>
@@ -134,6 +133,8 @@
     <string name="reason">Motiu</string>
     <string name="nochangerequested">Cap canvi sol·licitat</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Mitja</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
@@ -364,6 +365,7 @@
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">L\'aplicació necessita el permís del bluethoot</string>
     <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>

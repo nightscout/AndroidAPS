@@ -62,6 +62,20 @@ private const val SERIES_PRED_ZT = "pred_zt"
 /** All prediction series identifiers */
 private val PREDICTION_SERIES = listOf(SERIES_PRED_IOB, SERIES_PRED_COB, SERIES_PRED_ACOB, SERIES_PRED_UAM, SERIES_PRED_ZT)
 
+private fun interpolateBgAtTimestamp(timestamp: Long, sortedPoints: List<BgDataPoint>): Double {
+    if (sortedPoints.isEmpty()) return 0.0
+    val before = sortedPoints.lastOrNull { it.timestamp <= timestamp }
+    val after = sortedPoints.firstOrNull { it.timestamp > timestamp }
+    return when {
+        before == null -> after!!.value
+        after == null -> before.value
+        else -> {
+            val t = (timestamp - before.timestamp).toDouble() / (after.timestamp - before.timestamp).toDouble()
+            before.value + t * (after.value - before.value)
+        }
+    }
+}
+
 /**
  * BG Graph using Vico — dual-layer chart.
  *
@@ -183,7 +197,7 @@ fun BgGraphCompose(
                 // Prediction series - each type as a separate line
                 for (predSeries in PREDICTION_SERIES) {
                     val predPoints = seriesRegistry[predSeries]
-                    if (predPoints != null && predPoints.isNotEmpty()) {
+                    if (!predPoints.isNullOrEmpty()) {
                         val dataPoints = predPoints
                             .map { timestampToX(it.timestamp, minTimestamp) to it.value }
                             .sortedBy { it.first }
@@ -234,16 +248,18 @@ fun BgGraphCompose(
                 }
             }
 
-            // Block 4 → EPS layer (layer 3, end axis — Y-values normalized to basal coordinate space)
-            // EPS shares End axis with basal, so Y-values must fit within basalMaxY range.
-            // Place icons at 75% of chart height for 100% profile, scaled proportionally.
+            // Block 4 → EPS layer (layer 3, start axis — Y at interpolated BG value at switch timestamp)
             lineSeries {
                 if (currentEpsPoints.isNotEmpty()) {
-                    val epsBaseline = currentBasalData.maxBasal * 4.0 * 0.75 // 75% of basalMaxY
+                    val allBgPoints = (regularPoints + bucketedPoints).sortedBy { it.timestamp }
                     val pts = currentEpsPoints
-                        .map { timestampToX(it.timestamp, minTimestamp) to (it.originalPercentage / 100.0 * epsBaseline) }
+                        .mapNotNull { eps ->
+                            val bgY = interpolateBgAtTimestamp(eps.timestamp, allBgPoints)
+                            if (bgY > 0.0) timestampToX(eps.timestamp, minTimestamp) to bgY else null
+                        }
                         .sortedBy { it.first }
-                    series(x = pts.map { it.first }, y = pts.map { it.second })
+                    if (pts.isNotEmpty()) series(x = pts.map { it.first }, y = pts.map { it.second })
+                    else series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                 } else {
                     // Dummy series - invisible at y=0
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
@@ -469,7 +485,6 @@ fun BgGraphCompose(
     }
 
     // Basal Y-axis range: maxBasal * 4 so basal occupies ~25% of chart height
-    // EPS layer shares End axis with basal, so both must use the same Y-range (basalMaxY)
     val basalMaxY = remember(basalData.maxBasal) {
         if (basalData.maxBasal > 0.0) basalData.maxBasal * 4.0 else 1.0
     }
@@ -529,11 +544,11 @@ fun BgGraphCompose(
                 rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            // Layer 3: EPS (end axis — shares basalMaxY range, EPS Y-values normalized in rebuildChart)
+            // Layer 3: EPS (start axis — Y at interpolated BG value, same range as BG layer)
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(epsLines),
-                rangeProvider = endAxisRangeProvider,
-                verticalAxisPosition = Axis.Position.Vertical.End
+                rangeProvider = startAxisRangeProvider,
+                verticalAxisPosition = Axis.Position.Vertical.Start
             ),
             // Layer 4: Activity (start axis — shares BG Y-axis range, values normalized in rebuildChart)
             rememberLineCartesianLayer(

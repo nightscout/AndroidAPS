@@ -30,7 +30,7 @@
     <string name="status">Stare:</string>
     <string name="clear_log">Ștergeți istoricul</string>
     <string name="full_sync">Sincronizare completă</string>
-    <string name="full_sync_comment">Sincronizare completă? Poate dura multe ore şi până la final nu veţi vedea date noi în NS.</string>
+    <string name="full_sync_comment">Sincronizare completă? Poate dura multe ore şi până la final nu veți vedea date noi în NS.</string>
     <string name="ns_sync_options">Sincronizare</string>
     <string name="ns_alarm_options">Opțiuni alarmare</string>
     <!-- Tidepool -->
@@ -51,7 +51,7 @@
     <string name="disabled_loop">Buclă dezactivată</string>
     <string name="xdrip_not_installed">xDrip+ nu este instalat.</string>
     <string name="calibration_sent">Calibrare trimisă către xDrip+</string>
-    <string name="xdrip_local_broadcasts_summary">Trimiteți date despre glicemie și tratamente către xDrip+. Trebuie să fie selectată sursa de date \"Sincronizare xDrip+ Urmăritor\" și acceptarea datelor trebuie să fie activată în „Setări - Setări între aplicații - Acceptă Glicemie/Tratamente”</string>
+    <string name="xdrip_local_broadcasts_summary">Trimiteți date despre glicemie și tratamente către xDrip+. Trebuie să fie selectată sursa de date \"Sincronizare xDrip+ Urmăritor\" și acceptarea datelor trebuie să fie activată în \"Setări - Setări între aplicații - Acceptă Glicemie/Tratamente\"</string>
     <string name="xdrip_local_broadcasts_title">Activați transmisiuni spre xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Aplicații tip companion externe</string>
@@ -71,11 +71,13 @@
     <string name="quick_wizard_not_available">Asistentul rapid selectat nu mai este disponibil, vă rugăm să reîncărcați iconița</string>
     <string name="quick_wizard_message">Asistent calcul: %1$s\nInsulină: %2$.2fU\nCarbohidrați: %3$dg</string>
     <string name="user_action_not_available">Acțiunea utilizatorului selectat %1$s nu mai este disponibilă, vă rugăm să reîmprospătați iconița</string>
+    <string name="scene_not_available">Scena %1$s nu mai este disponibilă, vă rugăm să reîmprospătați iconița</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Comenzile de insulină de la distanță sunt dezactivate în modul client</string>
     <string name="wear_action_tempt_cancel_message">Anulați rularea Țintei Temporare?</string>
     <string name="wear_action_tempt_unit_error">Unități diferite folosite pe ceas și telefon!</string>
     <string name="wear_action_tempt_zero_message">Țintă Temporară Zero - anulați rularea Țintei Temporare?</string>
-    <string name="wear_action_tempt_min_bg_error">Min-BG în afara intervalului!</string>
-    <string name="wear_action_tempt_max_bg_error">Max-BG în afara intervalului!</string>
+    <string name="wear_action_tempt_min_bg_error">Glicemia minimă în afara limitelor!</string>
+    <string name="wear_action_tempt_max_bg_error">Glicemia maximă în afara limitelor!</string>
     <string name="wear_action_tempt_range_error">Interval invalid: Ținta inferioară (%1$s) nu poate fi mai mare decât Ținta superioară (%2$s)</string>
     <string name="wear_action_tempt_manual_range_message">Țintă Temporară\n\nMin: %1$s\nMax: %2$s\nDurata: %3$d min</string>
     <string name="wear_action_tempt_manual_message">Țintă Temporară\n\nȚintă: %1$s\nDurată: %2$d min</string>
@@ -86,7 +88,7 @@
     <string name="wear_custom_watchface">Cadran personalizat: %1$s</string>
     <string name="wear_load_watchface">Încărcați cadranul</string>
     <string name="wear_infos_watchface">Info cadran</string>
-    <string name="wear_export_watchface">Exportare șablon</string>
+    <string name="wear_export_watchface">Exportați șablonul</string>
     <string name="wear_new_custom_watchface_exported">Șablon ceas personalizat exportat</string>
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Retrimiteți toate datele</string>
@@ -127,10 +129,10 @@
     <string name="full_xdrip_sync_comment">Sincronizare completă? Poate dura ceva timp și până la finalizare nu vor exista date noi în xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Vă rugăm să încercați din nou.</string>
     <string name="wear_action_loop_state_invalid">Stare de buclă solicitată nevalidă</string>
-    <string name="wear_action_running_mode_title">MODUL DE RULARE</string>
+    <string name="wear_action_running_mode_title">MODUL DE FUNCȚIONARE</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nDurată: %2$d min</string>
     <string name="wear_action_loop_state_now_closed">Buclă închisă</string>
-    <string name="wear_action_loop_state_now_lgs">Suspendare la hipoglicemie</string>
+    <string name="wear_action_loop_state_now_lgs">Suspendare la glicemie scăzută</string>
     <string name="wear_action_loop_state_now_open">Buclă deschisă</string>
     <string name="wear_action_loop_state_now_suspended">Suspendați bucla</string>
     <string name="wear_action_loop_state_now_resumed">Reporniți bucla</string>
@@ -155,7 +157,7 @@
     <string name="smscommunicator_otp_reset_prompt">Sunteți sigur că doriți să resetați cheia de autentificare? Aceasta va anula toți autentificatorii configurați în prezent, și va trebui să le configurați din nou.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalați Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanați codul pentru configurarea codurilor OTP AAPS</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Testați parolă unică</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testați parola unică</string>
     <string name="smscommunicator_otp_reset_header">Resetați autentificatorii</string>
     <string name="smscommunicator_otp_install_info">Pe fiecare telefon urmăritor instalați o aplicație de tip Authenticator care suporta tokens RFC 6238 TOTP. Asemenea aplicații gratuite populare sunt:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Prin resetarea autentificatorului invalidați toți autentificatorii existenți. Va trebui să îi configurați din nou!</string>
@@ -170,7 +172,7 @@
     <string name="smscommunicator_temptarget_with_code">Pentru a seta Ținta Temporară %1$s răspundeți cu codul %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Pentru a anula Ținta Temporară răspundeți cu: %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">Pentru a dezactiva serviciul de la distanță SMS, trimiteți codul %1$s.\n\nȚineți minte că veți putea să îl reactivați în mod direct doar de pe telefonul principal AAPS.</string>
-    <string name="smscommunicator_stopped_sms">Serviciul la distanță SMS a fost oprit. Pentru a-l reactiva, utilizați AAPS pe telefonul inteligent principal.</string>
+    <string name="smscommunicator_stopped_sms">Serviciul de la distanță prin SMS a fost oprit. Pentru a-l reactiva, utilizați AAPS pe telefonul inteligent principal.</string>
     <string name="smscommunicator_calibration_reply_with_code">Pentru a trimite calibrarea %1$.2f răspundeți cu codul %2$s</string>
     <string name="smscommunicator_bolus_failed">Bolusul a eșuat. Verificați starea reală înainte de a trimite o altă comandă!</string>
     <string name="smscommunicator_bolus_delivered">Bolusul de %1$.2fU a fost administrat cu succes</string>
@@ -220,9 +222,9 @@
     <string name="smscommunicator_calibration_sent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip+.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ nu recepționează calibrări</string>
     <string name="smscommunicator_message_body">Conținutul mesajului nu este valid</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">Pentru a schimba modul buclei în LGS (Suspendare la hipoglicemie), răspundeți cu codul %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Pentru a schimba modul buclei în LGS (Suspendare la glicemie scăzută), răspundeți cu codul %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Pentru a schimba modul buclei în Buclă Închisă răspundeți cu codul %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Mod buclă actual: %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Mod de funcționare curent: %1$s</string>
     <string name="wrong_format">Format greșit</string>
     <string name="sms_actual_bg">Glicemie:</string>
     <string name="sms_last_bg">Ultima glicemie:</string>

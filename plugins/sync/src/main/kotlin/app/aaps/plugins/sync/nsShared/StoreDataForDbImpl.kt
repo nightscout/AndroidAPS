@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsShared
 
-import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
@@ -20,6 +19,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
@@ -27,7 +27,13 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -41,7 +47,8 @@ class StoreDataForDbImpl @Inject constructor(
     private val preferences: Preferences,
     private val config: Config,
     private val virtualPump: VirtualPump,
-    private val nsClientRepository: NSClientRepository
+    private val nsClientRepository: NSClientRepository,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : StoreDataForDb {
 
     private val glucoseValues: MutableList<GV> = mutableListOf()
@@ -81,14 +88,37 @@ class StoreDataForDbImpl @Inject constructor(
     private val durationUpdated = HashMap<String, Int>()
     private val ended = HashMap<String, Int>()
 
-    private val pause = 300L // to slow down db operations
+    // Throttle between DB chunks; non-blocking suspend so the WS / worker thread is free.
+    private val pause = 300L
     private val chunk = 500
 
-    fun <T> HashMap<T, Int>.inc(key: T) =
-        synchronized(this) {
-            if (containsKey(key)) merge(key, 1, Int::plus)
-            else put(key, 1)
-        }
+    // Per-pipeline mutexes so BG ingest can run while a long treatments sync is in progress.
+    private val bgMutex = Mutex()
+    private val treatmentsMutex = Mutex()
+    private val nsIdMutex = Mutex()
+
+    // Coalescing channels for fire-and-forget request* methods. CONFLATED so a burst
+    // of N WS arrivals collapses into 1 (or 2) collector runs instead of queueing N
+    // coroutines on the mutex. The buffer is shared, so the single drain catches all.
+    private val glucoseRequests = Channel<Unit>(Channel.CONFLATED)
+    private val treatmentsRequests = Channel<Boolean>(Channel.CONFLATED)
+    private val foodsRequests = Channel<Unit>(Channel.CONFLATED)
+    private val deletedTreatmentsRequests = Channel<Unit>(Channel.CONFLATED)
+    private val deletedGlucoseRequests = Channel<Unit>(Channel.CONFLATED)
+
+    init {
+        appScope.launch { glucoseRequests.consumeEach { storeGlucoseValuesToDb() } }
+        appScope.launch { treatmentsRequests.consumeEach { fullSync -> storeTreatmentsToDb(fullSync) } }
+        appScope.launch { foodsRequests.consumeEach { storeFoodsToDb() } }
+        appScope.launch { deletedTreatmentsRequests.consumeEach { updateDeletedTreatmentsInDb() } }
+        appScope.launch { deletedGlucoseRequests.consumeEach { updateDeletedGlucoseValuesInDb() } }
+    }
+
+    override fun requestStoreGlucoseValues() { glucoseRequests.trySend(Unit) }
+    override fun requestStoreTreatments(fullSync: Boolean) { treatmentsRequests.trySend(fullSync) }
+    override fun requestStoreFoods() { foodsRequests.trySend(Unit) }
+    override fun requestUpdateDeletedTreatments() { deletedTreatmentsRequests.trySend(Unit) }
+    override fun requestUpdateDeletedGlucoseValues() { deletedGlucoseRequests.trySend(Unit) }
 
     fun <T> HashMap<T, Int>.add(key: T, amount: Int) = synchronized(this) {
         if (containsKey(key)) merge(key, amount, Int::plus)
@@ -97,225 +127,143 @@ class StoreDataForDbImpl @Inject constructor(
 
     fun <T> HashMap<T, Int>.removeClass(key: T) = synchronized(this) { remove(key) }
 
-    override fun storeGlucoseValuesToDb() {
-        synchronized(glucoseValues) {
-            if (glucoseValues.isNotEmpty()) {
-                glucoseValues.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.insertCgmSourceData(Sources.NSClient, it.toMutableList(), emptyList(), null)
-                    }
-                    result.updated.forEach { _ ->
-                        updated.inc(GV::class.java.simpleName)
-                    }
-                    result.inserted.forEach { _ ->
-                        inserted.inc(GV::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach { _ ->
-                        nsIdUpdated.inc(GV::class.java.simpleName)
-                    }
-                    sendLog("GlucoseValue", GV::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                glucoseValues.clear()
-            }
+    /** Atomically copies and clears the buffer. Returns null if the buffer was empty. */
+    private fun <T> snapshotAndClear(list: MutableList<T>): List<T>? = synchronized(list) {
+        if (list.isEmpty()) null
+        else {
+            val copy = list.toList()
+            list.clear()
+            copy
+        }
+    }
+
+    override suspend fun storeGlucoseValuesToDb() = bgMutex.withLock {
+        snapshotAndClear(glucoseValues)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.insertCgmSourceData(Sources.NSClient, batch.toMutableList(), emptyList(), null)
+            updated.add(GV::class.java.simpleName, result.updated.size)
+            inserted.add(GV::class.java.simpleName, result.inserted.size)
+            nsIdUpdated.add(GV::class.java.simpleName, result.updatedNsId.size)
+            sendLog("GlucoseValue", GV::class.java.simpleName)
+            delay(pause)
         }
         nsClientRepository.addLog("● DONE PROCESSING BG", "")
     }
 
-    override fun storeFoodsToDb() {
-        synchronized(foods) {
-            if (foods.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.syncNsFood(foods.toMutableList())
-                }
-                updated.add(FD::class.java.simpleName, result.updated.size)
-                inserted.add(FD::class.java.simpleName, result.inserted.size)
-                nsIdUpdated.add(FD::class.java.simpleName, result.invalidated.size)
-                sendLog("Food", FD::class.java.simpleName)
-                SystemClock.sleep(pause)
-                foods.clear()
-            }
+    override suspend fun storeFoodsToDb() = treatmentsMutex.withLock {
+        snapshotAndClear(foods)?.let { batch ->
+            val result = persistenceLayer.syncNsFood(batch.toMutableList())
+            updated.add(FD::class.java.simpleName, result.updated.size)
+            inserted.add(FD::class.java.simpleName, result.inserted.size)
+            nsIdUpdated.add(FD::class.java.simpleName, result.invalidated.size)
+            sendLog("Food", FD::class.java.simpleName)
+            delay(pause)
         }
-
-        SystemClock.sleep(pause)
         nsClientRepository.addLog("● DONE PROCESSING FOOD", "")
     }
 
-    override fun storeTreatmentsToDb(fullSync: Boolean) {
-        synchronized(boluses) {
-            if (boluses.isNotEmpty()) {
-                boluses.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsBolus(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(BS::class.java.simpleName, result.inserted.size)
-                    invalidated.add(BS::class.java.simpleName, result.invalidated.size)
-                    nsIdUpdated.add(BS::class.java.simpleName, result.updatedNsId.size)
-                    updated.add(BS::class.java.simpleName, result.updated.size)
-                    sendLog("Bolus", BS::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                boluses.clear()
-            }
+    override suspend fun storeTreatmentsToDb(fullSync: Boolean) = treatmentsMutex.withLock {
+        snapshotAndClear(boluses)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsBolus(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(BS::class.java.simpleName, result.inserted.size)
+            invalidated.add(BS::class.java.simpleName, result.invalidated.size)
+            nsIdUpdated.add(BS::class.java.simpleName, result.updatedNsId.size)
+            updated.add(BS::class.java.simpleName, result.updated.size)
+            sendLog("Bolus", BS::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(carbs) {
-            if (carbs.isNotEmpty()) {
-                carbs.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsCarbs(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(CA::class.java.simpleName, result.inserted.size)
-                    invalidated.add(CA::class.java.simpleName, result.invalidated.size)
-                    updated.add(CA::class.java.simpleName, result.updated.size)
-                    nsIdUpdated.add(CA::class.java.simpleName, result.updatedNsId.size)
-                    sendLog("Carbs", CA::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                carbs.clear()
-            }
+        snapshotAndClear(carbs)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsCarbs(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(CA::class.java.simpleName, result.inserted.size)
+            invalidated.add(CA::class.java.simpleName, result.invalidated.size)
+            updated.add(CA::class.java.simpleName, result.updated.size)
+            nsIdUpdated.add(CA::class.java.simpleName, result.updatedNsId.size)
+            sendLog("Carbs", CA::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(temporaryTargets) {
-            if (temporaryTargets.isNotEmpty()) {
-                temporaryTargets.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsTemporaryTargets(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(TT::class.java.simpleName, result.inserted.size)
-                    invalidated.add(TT::class.java.simpleName, result.invalidated.size)
-                    ended.add(TT::class.java.simpleName, result.ended.size)
-                    nsIdUpdated.add(TT::class.java.simpleName, result.updatedNsId.size)
-                    durationUpdated.add(TT::class.java.simpleName, result.updatedDuration.size)
-                    sendLog("TemporaryTarget", TT::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                temporaryTargets.clear()
-            }
+        snapshotAndClear(temporaryTargets)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsTemporaryTargets(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(TT::class.java.simpleName, result.inserted.size)
+            invalidated.add(TT::class.java.simpleName, result.invalidated.size)
+            ended.add(TT::class.java.simpleName, result.ended.size)
+            nsIdUpdated.add(TT::class.java.simpleName, result.updatedNsId.size)
+            durationUpdated.add(TT::class.java.simpleName, result.updatedDuration.size)
+            sendLog("TemporaryTarget", TT::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(temporaryBasals) {
-            if (temporaryBasals.isNotEmpty()) {
-                temporaryBasals.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsTemporaryBasals(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(TB::class.java.simpleName, result.inserted.size)
-                    invalidated.add(TB::class.java.simpleName, result.invalidated.size)
-                    ended.add(TB::class.java.simpleName, result.ended.size)
-                    nsIdUpdated.add(TB::class.java.simpleName, result.updatedNsId.size)
-                    durationUpdated.add(TB::class.java.simpleName, result.updatedDuration.size)
-                    sendLog("TemporaryBasal", TB::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                temporaryBasals.clear()
-            }
+        snapshotAndClear(temporaryBasals)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsTemporaryBasals(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(TB::class.java.simpleName, result.inserted.size)
+            invalidated.add(TB::class.java.simpleName, result.invalidated.size)
+            ended.add(TB::class.java.simpleName, result.ended.size)
+            nsIdUpdated.add(TB::class.java.simpleName, result.updatedNsId.size)
+            durationUpdated.add(TB::class.java.simpleName, result.updatedDuration.size)
+            sendLog("TemporaryBasal", TB::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(effectiveProfileSwitches) {
-            if (effectiveProfileSwitches.isNotEmpty()) {
-                effectiveProfileSwitches.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsEffectiveProfileSwitches(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(EPS::class.java.simpleName, result.inserted.size)
-                    invalidated.add(EPS::class.java.simpleName, result.invalidated.size)
-                    nsIdUpdated.add(EPS::class.java.simpleName, result.updatedNsId.size)
-                    sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                effectiveProfileSwitches.clear()
-            }
+        snapshotAndClear(effectiveProfileSwitches)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsEffectiveProfileSwitches(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(EPS::class.java.simpleName, result.inserted.size)
+            invalidated.add(EPS::class.java.simpleName, result.invalidated.size)
+            nsIdUpdated.add(EPS::class.java.simpleName, result.updatedNsId.size)
+            sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(profileSwitches) {
-            if (profileSwitches.isNotEmpty()) {
-                profileSwitches.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsProfileSwitches(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(PS::class.java.simpleName, result.inserted.size)
-                    invalidated.add(PS::class.java.simpleName, result.invalidated.size)
-                    nsIdUpdated.add(PS::class.java.simpleName, result.updatedNsId.size)
-                    sendLog("ProfileSwitch", PS::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                profileSwitches.clear()
-            }
+        snapshotAndClear(profileSwitches)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsProfileSwitches(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(PS::class.java.simpleName, result.inserted.size)
+            invalidated.add(PS::class.java.simpleName, result.invalidated.size)
+            nsIdUpdated.add(PS::class.java.simpleName, result.updatedNsId.size)
+            sendLog("ProfileSwitch", PS::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(bolusCalculatorResults) {
-            if (bolusCalculatorResults.isNotEmpty()) {
-                bolusCalculatorResults.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsBolusCalculatorResults(it.toMutableList())
-                    }
-                    inserted.add(BCR::class.java.simpleName, result.inserted.size)
-                    invalidated.add(BCR::class.java.simpleName, result.invalidated.size)
-                    nsIdUpdated.add(BCR::class.java.simpleName, result.updatedNsId.size)
-                    sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                bolusCalculatorResults.clear()
-            }
+        snapshotAndClear(bolusCalculatorResults)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsBolusCalculatorResults(batch.toMutableList())
+            inserted.add(BCR::class.java.simpleName, result.inserted.size)
+            invalidated.add(BCR::class.java.simpleName, result.invalidated.size)
+            nsIdUpdated.add(BCR::class.java.simpleName, result.updatedNsId.size)
+            sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(therapyEvents) {
-            if (therapyEvents.isNotEmpty()) {
-                therapyEvents.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsTherapyEvents(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(TE::class.java.simpleName, result.inserted.size)
-                    invalidated.add(TE::class.java.simpleName, result.invalidated.size)
-                    nsIdUpdated.add(TE::class.java.simpleName, result.updatedNsId.size)
-                    durationUpdated.add(TE::class.java.simpleName, result.updatedDuration.size)
-                    sendLog("TherapyEvent", TE::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                therapyEvents.clear()
-            }
+        snapshotAndClear(therapyEvents)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsTherapyEvents(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(TE::class.java.simpleName, result.inserted.size)
+            invalidated.add(TE::class.java.simpleName, result.invalidated.size)
+            nsIdUpdated.add(TE::class.java.simpleName, result.updatedNsId.size)
+            durationUpdated.add(TE::class.java.simpleName, result.updatedDuration.size)
+            sendLog("TherapyEvent", TE::class.java.simpleName)
+            delay(pause)
         }
 
-        SystemClock.sleep(pause)
+        delay(pause)
 
-        synchronized(runningModes) {
-            if (runningModes.isNotEmpty()) {
-                runningModes.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsRunningModes(it.toMutableList(), doLog = !fullSync)
-                    }
-                    inserted.add(RM::class.java.simpleName, result.inserted.size)
-                    invalidated.add(RM::class.java.simpleName, result.invalidated.size)
-                    ended.add(RM::class.java.simpleName, result.ended.size)
-                    nsIdUpdated.add(RM::class.java.simpleName, result.updatedNsId.size)
-                    durationUpdated.add(RM::class.java.simpleName, result.updatedDuration.size)
-                    sendLog("RunningMode", RM::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                runningModes.clear()
-            }
+        snapshotAndClear(runningModes)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsRunningModes(batch.toMutableList(), doLog = !fullSync)
+            inserted.add(RM::class.java.simpleName, result.inserted.size)
+            invalidated.add(RM::class.java.simpleName, result.invalidated.size)
+            ended.add(RM::class.java.simpleName, result.ended.size)
+            nsIdUpdated.add(RM::class.java.simpleName, result.updatedNsId.size)
+            durationUpdated.add(RM::class.java.simpleName, result.updatedDuration.size)
+            sendLog("RunningMode", RM::class.java.simpleName)
+            delay(pause)
         }
 
-        synchronized(extendedBoluses) {
-            if (extendedBoluses.isNotEmpty()) {
-                extendedBoluses.chunked(chunk).forEach {
-                    val result = runBlocking {
-                        persistenceLayer.syncNsExtendedBoluses(it.toMutableList(), doLog = !fullSync)
-                    }
-                    result.inserted.forEach { eb ->
-                        if (eb.isEmulatingTempBasal) virtualPump.fakeDataDetected = true
-                        inserted.inc(EB::class.java.simpleName)
-                    }
-                    invalidated.add(EB::class.java.simpleName, result.invalidated.size)
-                    ended.add(EB::class.java.simpleName, result.ended.size)
-                    nsIdUpdated.add(EB::class.java.simpleName, result.updatedNsId.size)
-                    durationUpdated.add(EB::class.java.simpleName, result.updatedDuration.size)
-                    sendLog("ExtendedBolus", EB::class.java.simpleName)
-                    SystemClock.sleep(pause)
-                }
-                extendedBoluses.clear()
-            }
+        snapshotAndClear(extendedBoluses)?.chunked(chunk)?.forEach { batch ->
+            val result = persistenceLayer.syncNsExtendedBoluses(batch.toMutableList(), doLog = !fullSync)
+            if (result.inserted.any { it.isEmulatingTempBasal }) virtualPump.fakeDataDetected = true
+            inserted.add(EB::class.java.simpleName, result.inserted.size)
+            invalidated.add(EB::class.java.simpleName, result.invalidated.size)
+            ended.add(EB::class.java.simpleName, result.ended.size)
+            nsIdUpdated.add(EB::class.java.simpleName, result.updatedNsId.size)
+            durationUpdated.add(EB::class.java.simpleName, result.updatedDuration.size)
+            sendLog("ExtendedBolus", EB::class.java.simpleName)
+            delay(pause)
         }
 
         nsClientRepository.addLog("● DONE PROCESSING TR", "")
@@ -326,150 +274,79 @@ class StoreDataForDbImpl @Inject constructor(
 
     @Synchronized
     override fun scheduleNsIdUpdate() {
-        class PostRunnable : Runnable {
-
-            override fun run() {
-                aapsLogger.debug(LTag.CORE, "Firing updateNsIds")
-                scheduledEventPost = null
-                updateNsIds()
-            }
-        }
         // cancel waiting task to prevent sending multiple posts
         scheduledEventPost?.cancel(false)
-        val task: Runnable = PostRunnable()
-        scheduledEventPost = eventWorker.schedule(task, 10, TimeUnit.SECONDS)
+        scheduledEventPost = eventWorker.schedule({
+                                                      aapsLogger.debug(LTag.CORE, "Firing updateNsIds")
+                                                      scheduledEventPost = null
+                                                      appScope.launch { updateNsIds() }
+                                                  }, 10, TimeUnit.SECONDS)
     }
 
-    @Synchronized
-    override fun updateNsIds() {
-        synchronized(nsIdTemporaryTargets) {
-            if (nsIdTemporaryTargets.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateTemporaryTargetsNsIds(nsIdTemporaryTargets)
-                }
-                nsIdTemporaryTargets.clear()
-                nsIdUpdated.add(TT::class.java.simpleName, result.updatedNsId.size)
-            }
+    override suspend fun updateNsIds() = nsIdMutex.withLock {
+        snapshotAndClear(nsIdTemporaryTargets)?.let { batch ->
+            val result = persistenceLayer.updateTemporaryTargetsNsIds(batch)
+            nsIdUpdated.add(TT::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdGlucoseValues) {
-            if (nsIdGlucoseValues.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateGlucoseValuesNsIds(nsIdGlucoseValues)
-                }
-                nsIdGlucoseValues.clear()
-                nsIdUpdated.add(GV::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdGlucoseValues)?.let { batch ->
+            val result = persistenceLayer.updateGlucoseValuesNsIds(batch)
+            nsIdUpdated.add(GV::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdFoods) {
-            if (nsIdFoods.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateFoodsNsIds(nsIdFoods)
-                }
-                nsIdFoods.clear()
-                nsIdUpdated.add(FD::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdFoods)?.let { batch ->
+            val result = persistenceLayer.updateFoodsNsIds(batch)
+            nsIdUpdated.add(FD::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdTherapyEvents) {
-            if (nsIdTherapyEvents.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateTherapyEventsNsIds(nsIdTherapyEvents)
-                }
-                nsIdTherapyEvents.clear()
-                nsIdUpdated.add(TE::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdTherapyEvents)?.let { batch ->
+            val result = persistenceLayer.updateTherapyEventsNsIds(batch)
+            nsIdUpdated.add(TE::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdBoluses) {
-            if (nsIdBoluses.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateBolusesNsIds(nsIdBoluses)
-                }
-                nsIdBoluses.clear()
-                nsIdUpdated.add(BS::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdBoluses)?.let { batch ->
+            val result = persistenceLayer.updateBolusesNsIds(batch)
+            nsIdUpdated.add(BS::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdCarbs) {
-            if (nsIdCarbs.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateCarbsNsIds(nsIdCarbs)
-                }
-                nsIdCarbs.clear()
-                nsIdUpdated.add(CA::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdCarbs)?.let { batch ->
+            val result = persistenceLayer.updateCarbsNsIds(batch)
+            nsIdUpdated.add(CA::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdBolusCalculatorResults) {
-            if (nsIdBolusCalculatorResults.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateBolusCalculatorResultsNsIds(nsIdBolusCalculatorResults)
-                }
-                nsIdBolusCalculatorResults.clear()
-                nsIdUpdated.add(BCR::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdBolusCalculatorResults)?.let { batch ->
+            val result = persistenceLayer.updateBolusCalculatorResultsNsIds(batch)
+            nsIdUpdated.add(BCR::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdTemporaryBasals) {
-            if (nsIdTemporaryBasals.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateTemporaryBasalsNsIds(nsIdTemporaryBasals)
-                }
-                nsIdTemporaryBasals.clear()
-                nsIdUpdated.add(TB::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdTemporaryBasals)?.let { batch ->
+            val result = persistenceLayer.updateTemporaryBasalsNsIds(batch)
+            nsIdUpdated.add(TB::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdExtendedBoluses) {
-            if (nsIdExtendedBoluses.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateExtendedBolusesNsIds(nsIdExtendedBoluses)
-                }
-                nsIdExtendedBoluses.clear()
-                nsIdUpdated.add(EB::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdExtendedBoluses)?.let { batch ->
+            val result = persistenceLayer.updateExtendedBolusesNsIds(batch)
+            nsIdUpdated.add(EB::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdProfileSwitches) {
-            if (nsIdProfileSwitches.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateProfileSwitchesNsIds(nsIdProfileSwitches)
-                }
-                nsIdProfileSwitches.clear()
-                nsIdUpdated.add(PS::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdProfileSwitches)?.let { batch ->
+            val result = persistenceLayer.updateProfileSwitchesNsIds(batch)
+            nsIdUpdated.add(PS::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdEffectiveProfileSwitches) {
-            if (nsIdEffectiveProfileSwitches.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateEffectiveProfileSwitchesNsIds(nsIdEffectiveProfileSwitches)
-                }
-                nsIdEffectiveProfileSwitches.clear()
-                nsIdUpdated.add(EPS::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdEffectiveProfileSwitches)?.let { batch ->
+            val result = persistenceLayer.updateEffectiveProfileSwitchesNsIds(batch)
+            nsIdUpdated.add(EPS::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdDeviceStatuses) {
-            if (nsIdDeviceStatuses.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateDeviceStatusesNsIds(nsIdDeviceStatuses)
-                }
-                nsIdDeviceStatuses.clear()
-                nsIdUpdated.add(DS::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdDeviceStatuses)?.let { batch ->
+            val result = persistenceLayer.updateDeviceStatusesNsIds(batch)
+            nsIdUpdated.add(DS::class.java.simpleName, result.updatedNsId.size)
         }
 
-        synchronized(nsIdRunningModes) {
-            if (nsIdRunningModes.isNotEmpty()) {
-                val result = runBlocking {
-                    persistenceLayer.updateRunningModesNsIds(nsIdRunningModes)
-                }
-                nsIdRunningModes.clear()
-                nsIdUpdated.add(RM::class.java.simpleName, result.updatedNsId.size)
-            }
+        snapshotAndClear(nsIdRunningModes)?.let { batch ->
+            val result = persistenceLayer.updateRunningModesNsIds(batch)
+            nsIdUpdated.add(RM::class.java.simpleName, result.updatedNsId.size)
         }
 
         sendLog("GlucoseValue", GV::class.java.simpleName)
@@ -487,90 +364,68 @@ class StoreDataForDbImpl @Inject constructor(
         nsClientRepository.addLog("● DONE NSIDs", "")
     }
 
-    override fun updateDeletedTreatmentsInDb() {
-        synchronized(deleteTreatment) {
-            deleteTreatment.forEach { id ->
-                if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT)
-                    runBlocking { persistenceLayer.getBolusByNSId(id) }?.let { bolus ->
-                        val result = runBlocking {
-                            persistenceLayer.invalidateBolus(bolus.id, Action.BOLUS_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(bolus.timestamp)))
-                        }
-                        invalidated.add(BS::class.java.simpleName, result.invalidated.size)
-                        sendLog("Bolus", BS::class.java.simpleName)
-                    }
-                if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT)
-                    runBlocking { persistenceLayer.getCarbsByNSId(id) }?.let { carb ->
-                        val result = runBlocking {
-                            persistenceLayer.invalidateCarbs(carb.id, Action.CARBS_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(carb.timestamp)))
-                        }
-                        invalidated.add(CA::class.java.simpleName, result.invalidated.size)
-                        sendLog("Carbs", CA::class.java.simpleName)
-                    }
-                if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.AAPSCLIENT)
-                    runBlocking {
-                        persistenceLayer.getTemporaryTargetByNSId(id)?.let { tt ->
-                            val result = persistenceLayer.invalidateTemporaryTarget(tt.id, Action.TT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(tt.timestamp)))
-                            invalidated.add(TT::class.java.simpleName, result.invalidated.size)
-                            sendLog("TemporaryTarget", TT::class.java.simpleName)
-                        }
-                    }
-                if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT)
-                    runBlocking { persistenceLayer.getTemporaryBasalByNSId(id) }?.let { tb ->
-                        val result = runBlocking {
-                            persistenceLayer.invalidateTemporaryBasal(tb.id, Action.TEMP_BASAL_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(tb.timestamp)))
-                        }
-                        invalidated.add(TB::class.java.simpleName, result.invalidated.size)
-                        sendLog("TemporaryBasal", TB::class.java.simpleName)
-                    }
-                if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT)
-                    runBlocking { persistenceLayer.getEffectiveProfileSwitchByNSId(id) }?.let { eps ->
-                        val result = runBlocking {
-                            persistenceLayer.invalidateEffectiveProfileSwitch(eps.id, Action.PROFILE_SWITCH_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(eps.timestamp)))
-                        }
-                        invalidated.add(EPS::class.java.simpleName, result.invalidated.size)
-                        sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
-                    }
-                if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT)
-                    runBlocking {
-                        persistenceLayer.getProfileSwitchByNSId(id)?.let { ps ->
-                            val result = persistenceLayer.invalidateProfileSwitch(ps.id, Action.PROFILE_SWITCH_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(ps.timestamp)))
-                            invalidated.add(PS::class.java.simpleName, result.invalidated.size)
-                            sendLog("ProfileSwitch", PS::class.java.simpleName)
-                        }
-                    }
-                runBlocking { persistenceLayer.getBolusCalculatorResultByNSId(id) }?.let { bcr ->
-                    val result = runBlocking {
-                        persistenceLayer.invalidateBolusCalculatorResult(bcr.id, Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(bcr.timestamp)))
-                    }
-                    invalidated.add(BCR::class.java.simpleName, result.invalidated.size)
-                    sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
+    override suspend fun updateDeletedTreatmentsInDb() = treatmentsMutex.withLock {
+        val ids = snapshotAndClear(deleteTreatment) ?: return@withLock
+        ids.forEach { id ->
+            if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT)
+                persistenceLayer.getBolusByNSId(id)?.let { bolus ->
+                    val result = persistenceLayer.invalidateBolus(bolus.id, Action.BOLUS_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(bolus.timestamp)))
+                    invalidated.add(BS::class.java.simpleName, result.invalidated.size)
+                    sendLog("Bolus", BS::class.java.simpleName)
                 }
-                if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT)
-                    runBlocking { persistenceLayer.getTherapyEventByNSId(id) }?.let { te ->
-                        val result = runBlocking {
-                            persistenceLayer.invalidateTherapyEvent(te.id, Action.TREATMENT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(te.timestamp)))
-                        }
-                        invalidated.add(TE::class.java.simpleName, result.invalidated.size)
-                        sendLog("TherapyEvent", TE::class.java.simpleName)
-                    }
-                if (preferences.get(BooleanKey.NsClientAcceptRunningMode) && config.isEngineeringMode() || config.AAPSCLIENT)
-                    runBlocking { persistenceLayer.getRunningModeByNSId(id) }?.let { rm ->
-                        val result = runBlocking {
-                            persistenceLayer.invalidateRunningMode(rm.id, Action.TREATMENT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(rm.timestamp)))
-                        }
-                        invalidated.add(RM::class.java.simpleName, result.invalidated.size)
-                        sendLog("RunningMode", RM::class.java.simpleName)
-                    }
-                if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT)
-                    runBlocking { persistenceLayer.getExtendedBolusByNSId(id) }?.let { eb ->
-                        val result = runBlocking {
-                            persistenceLayer.invalidateExtendedBolus(eb.id, Action.EXTENDED_BOLUS_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(eb.timestamp)))
-                        }
-                        invalidated.add(EB::class.java.simpleName, result.invalidated.size)
-                        sendLog("EB", EB::class.java.simpleName)
-                    }
+            if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT)
+                persistenceLayer.getCarbsByNSId(id)?.let { carb ->
+                    val result = persistenceLayer.invalidateCarbs(carb.id, Action.CARBS_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(carb.timestamp)))
+                    invalidated.add(CA::class.java.simpleName, result.invalidated.size)
+                    sendLog("Carbs", CA::class.java.simpleName)
+                }
+            if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.AAPSCLIENT)
+                persistenceLayer.getTemporaryTargetByNSId(id)?.let { tt ->
+                    val result = persistenceLayer.invalidateTemporaryTarget(tt.id, Action.TT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(tt.timestamp)))
+                    invalidated.add(TT::class.java.simpleName, result.invalidated.size)
+                    sendLog("TemporaryTarget", TT::class.java.simpleName)
+                }
+            if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT)
+                persistenceLayer.getTemporaryBasalByNSId(id)?.let { tb ->
+                    val result = persistenceLayer.invalidateTemporaryBasal(tb.id, Action.TEMP_BASAL_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(tb.timestamp)))
+                    invalidated.add(TB::class.java.simpleName, result.invalidated.size)
+                    sendLog("TemporaryBasal", TB::class.java.simpleName)
+                }
+            if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT)
+                persistenceLayer.getEffectiveProfileSwitchByNSId(id)?.let { eps ->
+                    val result = persistenceLayer.invalidateEffectiveProfileSwitch(eps.id, Action.PROFILE_SWITCH_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(eps.timestamp)))
+                    invalidated.add(EPS::class.java.simpleName, result.invalidated.size)
+                    sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
+                }
+            if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT)
+                persistenceLayer.getProfileSwitchByNSId(id)?.let { ps ->
+                    val result = persistenceLayer.invalidateProfileSwitch(ps.id, Action.PROFILE_SWITCH_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(ps.timestamp)))
+                    invalidated.add(PS::class.java.simpleName, result.invalidated.size)
+                    sendLog("ProfileSwitch", PS::class.java.simpleName)
+                }
+            persistenceLayer.getBolusCalculatorResultByNSId(id)?.let { bcr ->
+                val result = persistenceLayer.invalidateBolusCalculatorResult(bcr.id, Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(bcr.timestamp)))
+                invalidated.add(BCR::class.java.simpleName, result.invalidated.size)
+                sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
             }
-            deleteTreatment.clear()
+            if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT)
+                persistenceLayer.getTherapyEventByNSId(id)?.let { te ->
+                    val result = persistenceLayer.invalidateTherapyEvent(te.id, Action.TREATMENT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(te.timestamp)))
+                    invalidated.add(TE::class.java.simpleName, result.invalidated.size)
+                    sendLog("TherapyEvent", TE::class.java.simpleName)
+                }
+            if (preferences.get(BooleanKey.NsClientAcceptRunningMode) && config.isEngineeringMode() || config.AAPSCLIENT)
+                persistenceLayer.getRunningModeByNSId(id)?.let { rm ->
+                    val result = persistenceLayer.invalidateRunningMode(rm.id, Action.TREATMENT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(rm.timestamp)))
+                    invalidated.add(RM::class.java.simpleName, result.invalidated.size)
+                    sendLog("RunningMode", RM::class.java.simpleName)
+                }
+            if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT)
+                persistenceLayer.getExtendedBolusByNSId(id)?.let { eb ->
+                    val result = persistenceLayer.invalidateExtendedBolus(eb.id, Action.EXTENDED_BOLUS_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(eb.timestamp)))
+                    invalidated.add(EB::class.java.simpleName, result.invalidated.size)
+                    sendLog("EB", EB::class.java.simpleName)
+                }
         }
     }
 
@@ -602,18 +457,14 @@ class StoreDataForDbImpl @Inject constructor(
     override fun addToDeleteTreatment(payload: String): Boolean = synchronized(deleteTreatment) { deleteTreatment.add(payload) }
     override fun addToDeleteGlucoseValue(payload: String): Boolean = synchronized(deleteGlucoseValue) { deleteGlucoseValue.add(payload) }
 
-    override fun updateDeletedGlucoseValuesInDb() {
-        synchronized(deleteGlucoseValue) {
-            deleteGlucoseValue.forEach { id ->
-                runBlocking {
-                    persistenceLayer.getBgReadingByNSId(id)?.let { gv ->
-                        val result = persistenceLayer.invalidateGlucoseValue(id = gv.id, action = Action.BG_REMOVED, source = Sources.NSClient, note = null, listValues = listOf(ValueWithUnit.Timestamp(gv.timestamp)))
-                        invalidated.add(GV::class.java.simpleName, result.invalidated.size)
-                        sendLog("GlucoseValue", GV::class.java.simpleName)
-                    }
-                }
+    override suspend fun updateDeletedGlucoseValuesInDb() = bgMutex.withLock {
+        val ids = snapshotAndClear(deleteGlucoseValue) ?: return@withLock
+        ids.forEach { id ->
+            persistenceLayer.getBgReadingByNSId(id)?.let { gv ->
+                val result = persistenceLayer.invalidateGlucoseValue(id = gv.id, action = Action.BG_REMOVED, source = Sources.NSClient, note = null, listValues = listOf(ValueWithUnit.Timestamp(gv.timestamp)))
+                invalidated.add(GV::class.java.simpleName, result.invalidated.size)
+                sendLog("GlucoseValue", GV::class.java.simpleName)
             }
-            deleteGlucoseValue.clear()
         }
     }
 

@@ -3,9 +3,9 @@
     <string name="open_humans">Open Humans</string>
     <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Deschide Humans îți permite să încarci datele tale despre diabet și să le donezi proiectelor științifice.</string>
-    <string name="logout">Deconectare</string>
+    <string name="logout">Deconectați-vă</string>
     <string name="setup">Configurare</string>
-    <string name="setup_completed_info">Open Humans a fost configurat. În cazul în care doriți să încetați încărcarea, apăsați „Deconectare”.</string>
+    <string name="setup_completed_info">Open Humans a fost configurat. În cazul în care doriți să încetați încărcarea, apăsați \"Deconectare\".</string>
     <string name="not_setup_info">Open Humans este deocamdată inactiv. Pentru a începe încărcarea datelor, apasă \"Configurare\".</string>
     <string name="project_member_id">ID Membru proiect: %1$s</string>
     <string name="open_humans_uploading">Se încarcă în Open Humans…</string>
@@ -15,7 +15,7 @@
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Atingeți aici pentru a vă conecta din nou, dacă a fost din greșeală.</string>
     <string name="next">Următor</string>
     <string name="welcome_to_open_humans">Bine ați venit la Open Humans</string>
-    <string name="setup_data_upload">Pentru a configura modul de încărcare a datelor, apasă \'Pasul următor\'.</string>
+    <string name="setup_data_upload">Pentru a configura modul de încărcare a datelor, apăsați \'Pasul următor\'.</string>
     <string name="consent">Consimțământ</string>
     <string name="terms_of_use">Condiții de utilizare</string>
     <string name="please_read__information">Vă rugăm să citiți cu atenție informațiile următoare și să acceptați termenii de folosire pentru a continua.</string>
@@ -39,7 +39,7 @@
     <string name="passwords">Parole</string>
     <string name="nightscout_url">Adresa Nightscout</string>
     <string name="nightscout_api_secret">Nightscout API Secret</string>
-    <string name="free_text_fields">Câmpuri de text liber</string>
+    <string name="free_text_fields">Câmpuri text liber</string>
     <string name="agree">Înțeleg și sunt de acord.</string>
     <string name="login_open_humans">Conectare la Open Humans</string>
     <string name="final_touches">Retușuri finale</string>

@@ -361,14 +361,10 @@ class DateUtilImplTest {
         val twentyFiveHoursAgo = System.currentTimeMillis() - (25 * 60 * 60 * 1000)
 
         val newTodayResult = dateUtilImpl.dateStringRelative(oneHourAgo, rh)
-        val oldTodayResult = dateUtilOldImpl.dateStringRelative(oneHourAgo, rh)
-        assertThat(newTodayResult).isEqualTo("Today")
-        assertThat(newTodayResult).isEqualTo(oldTodayResult)
+        assertThat(newTodayResult).startsWith("Today - ")
 
         val newYesterdayResult = dateUtilImpl.dateStringRelative(twentyFiveHoursAgo, rh)
-        val oldYesterdayResult = dateUtilOldImpl.dateStringRelative(twentyFiveHoursAgo, rh)
-        assertThat(newYesterdayResult).isEqualTo("Yesterday")
-        assertThat(newYesterdayResult).isEqualTo(oldYesterdayResult)
+        assertThat(newYesterdayResult).startsWith("Yesterday - ")
     }
 
     @Test
@@ -384,12 +380,12 @@ class DateUtilImplTest {
         // The clock is now fixed to a time later on the same day.
         val clockForTodayTest = Clock.fixed(startOfDay.plus(12, java.time.temporal.ChronoUnit.HOURS), fixedZone)
         val utilForToday = DateUtilImpl(mockContext, clockForTodayTest)
-        assertThat(utilForToday.dateStringRelative(todayTimestamp, rh)).isEqualTo("Today")
+        assertThat(utilForToday.dateStringRelative(todayTimestamp, rh)).isEqualTo("Today - 10/27/23")
 
         // --- Test for "Yesterday" ---
         // A timestamp from the previous day.
         val yesterdayTimestamp = startOfDay.minus(2, java.time.temporal.ChronoUnit.HOURS).toEpochMilli()
-        assertThat(utilForToday.dateStringRelative(yesterdayTimestamp, rh)).isEqualTo("Yesterday")
+        assertThat(utilForToday.dateStringRelative(yesterdayTimestamp, rh)).isEqualTo("Yesterday - 10/26/23")
 
         // --- Test for "Later today" ---
         val laterTodayTimestamp = startOfDay.plus(14, java.time.temporal.ChronoUnit.HOURS).toEpochMilli()

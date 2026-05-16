@@ -18,8 +18,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.objects.runningMode.TbrGate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -89,18 +89,15 @@ class TempBasalDialogViewModel @Inject constructor(
     }
 
     fun updateBasalPercent(value: Double) {
-        val clamped = value.coerceIn(0.0, uiState.value.maxTempPercent)
-        _uiState.update { it.copy(basalPercent = clamped) }
+        _uiState.update { it.copy(basalPercent = value) }
     }
 
     fun updateBasalAbsolute(value: Double) {
-        val clamped = value.coerceIn(0.0, uiState.value.maxTempAbsolute)
-        _uiState.update { it.copy(basalAbsolute = clamped) }
+        _uiState.update { it.copy(basalAbsolute = value) }
     }
 
     fun updateDuration(value: Double) {
-        val clamped = value.coerceIn(uiState.value.tempDurationStep, uiState.value.tempMaxDuration)
-        _uiState.update { it.copy(durationMinutes = clamped) }
+        _uiState.update { it.copy(durationMinutes = value) }
     }
 
     fun hasAction(): Boolean {
@@ -159,7 +156,7 @@ class TempBasalDialogViewModel @Inject constructor(
             val percent = constraintChecker.applyBasalPercentConstraints(
                 ConstraintObject(state.basalPercent.toInt(), aapsLogger), profile
             ).value()
-            val gateKind = if (percent == 0) TbrGate.CommandKind.TEMP_BASAL_ZERO else TbrGate.CommandKind.TEMP_BASAL_NONZERO
+            val gateKind = if (percent == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
             if (runningModeGuard.checkWithSnackbar(gateKind)) return
             uel.log(
                 action = Action.TEMP_BASAL, source = Sources.TempBasalDialog,
@@ -173,7 +170,7 @@ class TempBasalDialogViewModel @Inject constructor(
             val absolute = constraintChecker.applyBasalConstraints(
                 ConstraintObject(state.basalAbsolute, aapsLogger), profile
             ).value()
-            val gateKind = if (absolute == 0.0) TbrGate.CommandKind.TEMP_BASAL_ZERO else TbrGate.CommandKind.TEMP_BASAL_NONZERO
+            val gateKind = if (absolute == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
             if (runningModeGuard.checkWithSnackbar(gateKind)) return
             uel.log(
                 action = Action.TEMP_BASAL, source = Sources.TempBasalDialog,

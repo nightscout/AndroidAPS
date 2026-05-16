@@ -47,6 +47,8 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
             config = config,
             dateUtil = dateUtil,
             aapsLogger = aapsLogger,
+            rxBus = rxBus,
+            rh = rh,
             appScope = testScope
         )
     }
@@ -257,6 +259,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
 
     // --- Helpers ---
 
+    @Suppress("SameParameterValue")
     private fun workingMode(mode: RM.Mode) = RM(
         id = mode.ordinal.toLong() + 1,
         timestamp = now,

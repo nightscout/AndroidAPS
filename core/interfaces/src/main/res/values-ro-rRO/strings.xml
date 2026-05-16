@@ -7,10 +7,12 @@
     <string name="bolus_delivered_so_far">Administrat %1$.2fU / %2$.2fU</string>
     <string name="bolus_delivered_successfully">Bolusul de %1$.2fU a fost administrat cu succes</string>
     <!-- PumpPluginBase -->
-    <string name="pump_driver_changed" comment="26 characters max for translation">Driver-ul pompei a fost schimbat.</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Driverul pompei a fost schimbat.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d minute în urmă</string>
     <string name="secago">%1$d zile în urmă</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minute în urmă</string>
     <string name="hoursago">%1$.1f ore în urmă</string>
     <string name="days_ago">%1$.1f zile în urmă</string>
@@ -48,6 +50,8 @@
     <string name="unit_weeks">săptămâni</string>
     <string name="shortminute">m</string>
     <string name="shortday">z</string>
+    <string name="time_remaining_h_m">%1$dh %2$dm rămase</string>
+    <string name="time_remaining_m">%1$d rămase</string>
     <string name="later_today">Mai târziu astăzi</string>
     <string name="tomorrow">Mâine</string>
     <string name="today">Astăzi</string>

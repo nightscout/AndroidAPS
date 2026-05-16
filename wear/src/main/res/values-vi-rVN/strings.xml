@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_watchface_circle">AAPS (Vòng tròn)</string>
-    <string name="label_watchface_digital_style">AAPS (Kỹ thuật số)</string>
-    <string name="label_watchface_custom">AAPS (Tùy chỉnh)</string>
+    <string name="label_watchface_circle">AAPS(Vòng tròn)</string>
+    <string name="label_watchface_digital_style">AAPS(Kỹ thuật số)</string>
+    <string name="label_watchface_custom">AAPS(Tùy chỉnh)</string>
     <string name="label_actions_tile">Hành động</string>
     <string name="label_temp_target_tile">Mục tiêu tạm thời</string>
-    <string name="label_quick_wizard_tile">Quick Wizard</string>
+    <string name="label_quick_wizard_tile">Hướng dẫn nhanh</string>
     <string name="label_user_action_tile">Thao tác người dùng</string>
+    <string name="label_scene_tile">Ngữ cảnh</string>
     <string name="msg_warning_sync">Không nhận được dữ liệu kể từ %1$s! Kiểm tra xem AAPS trên điện thoại có gửi dữ liệu cho đồng hồ hay không</string>
     <string name="msg_warning_old">Dữ liệu AAPS đã cũ %1$s! Kiểm tra cảm biến, xDrip+, NS, cấu hình AAPS hoặc nguyên nhân khác!</string>
     <string name="pref_vibrate_on_bolus">Rung khi bolus</string>
@@ -14,7 +15,7 @@
     <string name="pref_display_settings">Hiển thị</string>
     <string name="pref_graph_settings">Đồ thị</string>
     <string name="pref_interface_settings">Giao diện</string>
-    <string name="pref_tile_settings">Các mục</string>
+    <string name="pref_tile_settings">Ô gạch</string>
     <string name="pref_others_settings">Khác</string>
     <string name="pref_complication_settings">Ô hiển thị</string>
     <string name="pref_show_date">Hiển thị ngày</string>
@@ -82,14 +83,16 @@
     <string name="menu_default">Mặc định</string>
     <string name="menu_menu">Danh Mục</string>
     <string name="action_tempt_confirmation">Mục tiêu tạm thời được yêu cầu</string>
-    <string name="action_quick_wizard_confirmation">Yêu cầu Quick Wizard</string>
+    <string name="action_quick_wizard_confirmation">Yêu cầu hướng dẫn nhanh</string>
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
+    <string name="action_scene_confirmation">Kích hoạt ngữ cảnh</string>
+    <string name="scene_stop">DỪNG</string>
     <string name="action_treatment_confirmation">Yêu cầu xử lý</string>
     <string name="action_bolus_confirmation">Bolus được yêu cầu</string>
     <string name="action_wizard_confirmation">Yêu cầu tính toán</string>
     <string name="action_fill_confirmation">Yêu cầu nạp insulin</string>
     <string name="action_ecarb_confirmation">Lượng carb cần nạp</string>
-    <string name="action_profile_switch_confirmation">Yêu cầu chuyển đổi Hồ sơ</string>
+    <string name="action_profile_switch_confirmation">Yêu cầu chuyển đổi Cấu hình</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Mục tiêu [%s]</string>
     <string name="action_low_unit" comment="In temp target menu, lower value from range">Thấp[%s]</string>
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Cao[%s]</string>
@@ -119,9 +122,9 @@
     <string name="bolus_progress">Tiêm liều Bolus</string>
     <string name="press_to_cancel">nhấn để hủy</string>
     <string name="cancel_bolus">HỦY LIỀU BOLUS</string>
-    <string name="status_pump">Pump</string>
+    <string name="status_pump">Bơm Insulin</string>
     <string name="status_loop">Vòng lặp</string>
-    <string name="status_profile_switch">Chuyển Hồ sơ</string>
+    <string name="status_profile_switch">Chuyển cấu hình</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>

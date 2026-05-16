@@ -6,5 +6,7 @@
     <string name="avg_smoothing_name">Průměrovací vyhlazování</string>
     <string name="description_avg_smoothing">"Průměrovací vyhlazovací algoritmus, nejnovější hodnota není ovlivněna"</string>
     <string name="no_smoothing_name">Žádné vyhlazování</string>
-    <string name="description_no_smoothing">"U vstupních dat glykémie se neprovádí žádné vyhlazení. Použijte to, pokud již máte filtrovaná data, např. z BYODA G6."</string>
+    <string name="description_no_smoothing">"Použijte tuto možnost, pokud již máte filtrované údaje, např. z BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalmanův filtr</string>
+    <string name="description_UKF">"Pokročilý algoritmus s automatickým laděním šumu a vyhlazením RTS."</string>
 </resources>

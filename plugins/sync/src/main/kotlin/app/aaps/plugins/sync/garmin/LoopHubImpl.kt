@@ -174,7 +174,7 @@ class LoopHubImpl @Inject constructor(
             device = device ?: "Garmin",
         )
         appScope.launch {
-            persistenceLayer.insertOrUpdateHeartRate(hr)
+            persistenceLayer.insertOrUpdateHeartRates(listOf(hr))
         }
     }
 }

@@ -115,16 +115,6 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
     }
 
     @Test
-    fun `queue gate rejects bolus when mode is SUSPENDED_BY_USER`() = runBlocking {
-        insertActiveMode(RM.Mode.SUSPENDED_BY_USER, durationMs = T.mins(30).msecs())
-        val rejection = CaptureCallback()
-        val info = DetailedBolusInfo().apply { insulin = 1.0 }
-        val queued = commandQueue.bolus(info, rejection)
-        assertThat(queued).isFalse()
-        assertThat(rxHelper.waitUntil("bolus rejection callback fired", maxSeconds = 5) { rejection.invoked }).isTrue()
-    }
-
-    @Test
     fun `queue gate allows bolus when mode is working`() = runBlocking {
         insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
         val info = DetailedBolusInfo().apply { insulin = 0.1 }

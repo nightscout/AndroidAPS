@@ -21,7 +21,6 @@
     <string name="equil_title_attach">Připojit pumpu</string>
     <string name="equil_title_air">Naplnit kanylu</string>
     <string name="equil_title_unpair_detach">Odpojit pumpu</string>
-    <string name="equil_title_unpair_confirm">Potvrdit odpárování</string>
     <string name="equil_title_history_events">Historie událostí</string>
     <string name="equil_tone">Typ výstrahy</string>
     <string name="equil_tone_mode_mute">Ztlumit</string>

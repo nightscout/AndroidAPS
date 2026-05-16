@@ -50,6 +50,7 @@
     <string name="alarm_no_calibration">Žiadna kalibrácia</string>
     <string name="pump_time_update_failed">Nepodarilo sa aktualizovať časové pásmo pumpy, odložiť správu a aktualizovať ručne.</string>
     <string name="bolus_error">Chyba bolusu</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Opakovať</string>
     <string name="step_prepare_patch">Aktivovať Patch</string>
@@ -64,9 +65,9 @@
     <string name="step_deactivate">Deaktivovať Patch</string>
     <string name="step_deactivating">Deaktivácia...</string>
     <string name="step_deactivate_complete">Patch deaktivovaný</string>
+    <string name="unpair_confirm_message">Toto vymaže uložené sériové číslo pumpy a odpojí ju. Pre vyhľadanie pumpy aktivuj nový Patch.</string>
     <string name="step_retry_activation">Aktivácia prebieha</string>
     <string name="unexpected_state">Neočakávaný stav: %1$s</string>
-    <string name="no_profile_selected">Žiadny vybraný profil. Prosím vyberte si profil a skúste to znovu.</string>
     <string name="patch_begin_activation">Žiadny aktívny Patch. Stlačte <b>Ďalšia</b> pre zahájenie aktivačného procesu.</string>
     <string name="patch_not_active_note">Základňa by nemala byť pripojená ku kanyle až do dalšieho kroku!</string>
     <string name="connect_pump_base">Pripojte základňu k novej kanyle, odstráňte zostávajúci vzduch a doplňte inzulínom, potom stlačte tlačítko <b>Ďalšia</b>.</string>
@@ -95,9 +96,6 @@
     <string name="press_retry_or_discard">Stlačte <b>Ďalšia</b> pre obnovenie aktivácie alebo <b>Zahodiť</b> pre resetovanie stavu aktivácie.</string>
     <string name="reading_activation_status">Počkajte prosím, načítanie stavu aktivácie z Patch.</string>
     <!-- settings-->
-    <string name="sn_input_title">Sériové číslo</string>
-    <string name="sn_input_invalid">Neplatné sériové číslo!</string>
-    <string name="change_sn">Zmeniť</string>
     <string name="alarm_setting_title">Nastavenie výstrah</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavenie výstrah.</string>
     <string name="alarm_setting_light_vibrate_beep">Svetlo, vibrácie a pípnutie</string>

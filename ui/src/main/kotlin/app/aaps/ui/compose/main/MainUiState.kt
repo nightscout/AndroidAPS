@@ -45,6 +45,8 @@ data class MainUiState(
     val runningModeRecordId: Long = 0, // DB record ID (for scene override detection)
     // Running TBR state for chip (HIGH / LOW / NONE)
     val tbrState: TbrState = TbrState.NONE,
+    // SMB enabled in APS preferences — drives a small triangle marker on the running-mode chip
+    val smbEnabled: Boolean = false,
     // QuickWizard entries for treatment bottom sheet
     val quickWizardItems: List<QuickWizardItem> = emptyList(),
     // Navigation-triggered dialogs
@@ -69,7 +71,10 @@ data class QuickWizardItem(
 data class ActionConfirmation(
     val title: String,
     val message: String,
-    val onConfirmAction: ConfirmableAction
+    val onConfirmAction: ConfirmableAction,
+    val confirmLabel: String? = null,
+    val secondaryAction: ConfirmableAction? = null,
+    val secondaryLabel: String? = null
 )
 
 /**
@@ -87,4 +92,5 @@ sealed class ConfirmableAction {
 
     data class ActivateScene(val sceneId: String, val durationMinutes: Int) : ConfirmableAction()
     data object DeactivateScene : ConfirmableAction()
+    data class DeactivateAndChainScene(val targetSceneId: String) : ConfirmableAction()
 }

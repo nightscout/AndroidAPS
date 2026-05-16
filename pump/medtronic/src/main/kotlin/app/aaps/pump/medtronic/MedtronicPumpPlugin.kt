@@ -349,7 +349,7 @@ class MedtronicPumpPlugin @Inject constructor(
         return !isServiceSet || rileyLinkMedtronicService?.isInitialized != true
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         var needRefresh = true
         if (firstRun) {
             needRefresh = initializePump()  /*!isRefresh*/
@@ -721,8 +721,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
-    @Synchronized
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         setRefreshButtonEnabled(false)
         if (isPumpNotReachable) {
             setRefreshButtonEnabled(true)
@@ -867,8 +866,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
-    @Synchronized
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult =
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult =
         error("Pump doesn't support percent basal rate")
 
     private fun finishAction(overviewKey: String?) {
@@ -1033,8 +1031,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
-    @Synchronized
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "cancelTempBasal - started")
         if (isPumpNotReachable) {
             setRefreshButtonEnabled(true)
@@ -1076,18 +1073,16 @@ class MedtronicPumpPlugin @Inject constructor(
                     val differenceTime = System.currentTimeMillis() - runningTBR.date
                     //val tbrData = runningTBR
 
-                    val result = runBlocking {
-                        pumpSync.syncTemporaryBasalWithPumpId(
-                            runningTBR.date,
-                            PumpRate(runningTBR.rate),
-                            differenceTime,
-                            runningTBR.isAbsolute,
-                            runningTBR.tbrType,
-                            runningTBR.pumpId!!,
-                            runningTBR.pumpType,
-                            runningTBR.serialNumber
-                        )
-                    }
+                    val result = pumpSync.syncTemporaryBasalWithPumpId(
+                        runningTBR.date,
+                        PumpRate(runningTBR.rate),
+                        differenceTime,
+                        runningTBR.isAbsolute,
+                        runningTBR.tbrType,
+                        runningTBR.pumpId!!,
+                        runningTBR.pumpType,
+                        runningTBR.serialNumber
+                    )
 
                     val differenceTimeMin = floor(differenceTime / (60.0 * 1000.0))
 
@@ -1118,8 +1113,7 @@ class MedtronicPumpPlugin @Inject constructor(
         return medtronicPumpStatus.serialNumber
     }
 
-    @Synchronized
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setNewBasalProfile")
 
         // this shouldn't be needed, but let's do check if profile setting we are setting is same as current one

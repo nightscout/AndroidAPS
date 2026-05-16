@@ -11,6 +11,8 @@
     <!--    DateUtil-->
     <string name="minago">%1$dm ago</string>
     <string name="secago">%1$ds ago</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d phút trước</string>
     <string name="hoursago">%1$.1fh ago</string>
     <string name="days_ago">%1$.1f ngày trước</string>
@@ -42,6 +44,8 @@
     <string name="unit_weeks">tuần</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">Còn %1$d giờ %2$d phút</string>
+    <string name="time_remaining_m">Còn %1$d phút</string>
     <string name="later_today">Sau ngày hôm nay</string>
     <string name="tomorrow">Ngày mai</string>
     <string name="today">Hôm nay</string>
@@ -68,7 +72,7 @@
     <string name="pref_show_detailed_delta">Hiển thị chi tiết độ lệch</string>
     <string name="pref_show_avgdelta">Hiển thị AvgDelta</string>
     <string name="pref_show_tempTarget">Hiển thị mục tiêu tạm thời</string>
-    <string name="pref_show_reservoir_level">Hiển thị mức ống chứa</string>
+    <string name="pref_show_reservoir_level">Hiển thị mức bình chứa</string>
     <string name="pref_show_phone_battery">Hiển thị pin điện thoại</string>
     <string name="pref_show_rig_battery">Hiển thị mức pin Rig</string>
     <string name="pref_show_basal_rate">Hiển thị liều nền</string>

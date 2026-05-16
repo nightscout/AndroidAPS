@@ -18,10 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -162,7 +162,7 @@ internal fun DeactivatingContent(
         ) else null
     ) {
         if (isError) {
-            WizardErrorBanner(message = stringResource(R.string.deactivating_error).stripHtml())
+            ErrorBanner(message = stringResource(R.string.deactivating_error).stripHtml())
         } else {
             Text(
                 text = stringResource(R.string.deactivating_pump),

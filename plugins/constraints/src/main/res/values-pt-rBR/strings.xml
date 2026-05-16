@@ -19,6 +19,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">A limitar bólus estendido para %1$.1f U porque %2$s</string>
     <string name="limitingcarbs">A limitar carboidratos para %1$d g porque %2$s</string>
+    <string name="safety">Segurança</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desabilitado.</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop desabilitado por causa da execução do Bólus Estendido</string>

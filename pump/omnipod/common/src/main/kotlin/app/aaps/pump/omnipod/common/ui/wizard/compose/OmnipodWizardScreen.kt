@@ -6,6 +6,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
+import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.wizard.compose.steps.ActionStep
@@ -61,6 +62,8 @@ fun OmnipodWizardScreen(
         val textResId = viewModel.getTextForStep(step)
 
         when (step) {
+            OmnipodWizardStep.PROFILE_GATE           -> ProfileGateWizardStep(viewModel)
+
             // Activation info steps
             OmnipodWizardStep.START_POD_ACTIVATION   -> InfoStep(
                 textResId = textResId,

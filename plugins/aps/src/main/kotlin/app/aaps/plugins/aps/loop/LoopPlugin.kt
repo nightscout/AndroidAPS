@@ -61,7 +61,6 @@ import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -200,9 +199,9 @@ class LoopPlugin @Inject constructor(
     override suspend fun minutesToEndOfSuspend(): Int =
         runningModeRecord().let { runningMode ->
             when {
-                runningMode.mode.isSuspended().not() -> 0
-                runningMode.isTemporary()            -> T.msecs(runningMode.timestamp + runningMode.duration - dateUtil.now()).mins().toInt()
-                else                                 -> Int.MAX_VALUE
+                runningMode.mode.pausesLoopExecution().not() -> 0
+                runningMode.isTemporary()                    -> T.msecs(runningMode.timestamp + runningMode.duration - dateUtil.now()).mins().toInt()
+                else                                         -> Int.MAX_VALUE
             }
         }
 
@@ -273,18 +272,6 @@ class LoopPlugin @Inject constructor(
                     source = source,
                     listValues = listValues
                 )
-                if (newRM == RM.Mode.DISABLED_LOOP && config.APS) {
-                    // DISABLED_LOOP is a working-bucket mode so the reconciler treats entry as
-                    // a no-op. Keep the inline cancel to ensure any APS-driven TBR is stopped
-                    // when the loop goes dark.
-                    commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
-                            }
-                        }
-                    })
-                }
                 rxBus.send(EventRefreshOverview("handleRunningModeChange"))
                 return inserted.inserted.isNotEmpty()
             }
@@ -459,9 +446,8 @@ class LoopPlugin @Inject constructor(
     override suspend fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
-            val currentMode = runningModeRecord()
             if (runningMode() == RM.Mode.DISABLED_LOOP) {
-                val message = rh.gs(app.aaps.core.ui.R.string.loop_disabled) + "\n" + currentMode.reasons
+                val message = rh.gs(app.aaps.core.ui.R.string.loop_disabled_by_user)
                 aapsLogger.debug(LTag.APS, message)
                 rxBus.send(EventLoopSetLastRunGui(message))
                 return
@@ -535,7 +521,7 @@ class LoopPlugin @Inject constructor(
                 lastRun.lastSMBRequest = 0
                 scheduleBuildAndStoreDeviceStatus("APS result")
 
-                if (runningMode().isSuspended()) {
+                if (runningMode().pausesLoopExecution()) {
                     aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.loopsuspended))
                     rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.loopsuspended)))
                     return
@@ -883,7 +869,7 @@ class LoopPlugin @Inject constructor(
             callback?.result(pumpEnactResultProvider.get().comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
             return
         }
-        if (runBlocking { runningMode() }.isSuspended()) {
+        if (runBlocking { runningMode() }.pausesLoopExecution()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
             callback?.result(pumpEnactResultProvider.get().comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
@@ -926,11 +912,12 @@ class LoopPlugin @Inject constructor(
     }
 
     /**
-     * Enter a suspended running mode (SUSPENDED_BY_USER / SUSPENDED_BY_PUMP). Pure DB write:
-     * the RunningModeReconciler observes the change and cancels any active TBR on the pump side.
+     * Enter a suspended running mode (SUSPENDED_BY_USER / SUSPENDED_BY_PUMP / SUSPENDED_BY_DST).
+     * Pure DB write: the RunningModeReconciler observes the change and cancels any active TBR
+     * on the pump side.
      */
     suspend fun suspendLoop(mode: RM.Mode, autoForced: Boolean, reasons: String?, durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = emptyList()) {
-        assert(mode == RM.Mode.SUSPENDED_BY_PUMP || mode == RM.Mode.SUSPENDED_BY_USER)
+        assert(mode == RM.Mode.SUSPENDED_BY_PUMP || mode == RM.Mode.SUSPENDED_BY_USER || mode == RM.Mode.SUSPENDED_BY_DST)
         @SuppressLint("CheckResult")
         persistenceLayer.insertOrUpdateRunningMode(
             runningMode = RM(timestamp = dateUtil.now(), duration = T.mins(durationInMinutes.toLong()).msecs(), mode = mode, autoForced = autoForced, reasons = reasons),

@@ -85,6 +85,7 @@
     <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
     <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
     <string name="action_scene_confirmation">Scena Attivata</string>
+    <string name="scene_stop">STOP</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>

@@ -21,9 +21,9 @@
     <string name="common_values">Sử dụng giá trị của bữa ăn lớn nhất bạn thường ăn</string>
     <string name="syncinfotext">Đồng bộ dữ liệu lên đám mây. Bạn có thể bỏ qua bước này ngay bây giờ, nhưng sẽ không thể hoàn thành các mục tiêu cho đến khi bạn thiết lập client Nightscout hoặc Tidepool.</string>
     <string name="status">Trạng thái:</string>
-    <string name="diawarning">Lưu ý: Các Hồ sơ insulin mới yêu cầu DIA ít nhất 5 giờ. DIA 5–6 giờ trên Hồ sơ mới tương đương với DIA 3 giờ trên hồ sơ insulin cũ.</string>
-    <string name="profile">Hồ sơ</string>
-    <string name="doprofileswitch">Thực hiện chuyển Hồ sơ</string>
+    <string name="diawarning">Lưu ý: Các cấu hình insulin mới yêu cầu DIA ít nhất 5 giờ. DIA 5–6 giờ trên cấu hình mới tương đương với DIA 3 giờ trên cấu hình insulin cũ.</string>
+    <string name="profile">Cấu hình</string>
+    <string name="doprofileswitch">Chuyển cấu hình</string>
     <string name="exitwizard">Bỏ qua cài đặt nhanh</string>
     <string name="setupwizard_sensitivity_description">Plugin Sensitivity được sử dụng để phát hiện độ nhạy và tính toán COB. Để biết thêm thông tin, hãy truy cập:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
@@ -33,7 +33,7 @@
     <string name="startobjective">Bắt đầu mục tiêu đầu tiên của bạn</string>
     <string name="open_objectives">Mở mục tiêu</string>
     <string name="setupwizard_permissions">Quyền truy cập</string>
-    <string name="setupwizard_profile_info">Tạo hồ sơ với các tỷ lệ basal, IC, ISF và giá trị mục tiêu của bạn. Bạn có thể thêm nhiều hồ sơ sau.</string>
+    <string name="setupwizard_profile_info">Tạo cấu hình với các tỷ lệ basal, IC, ISF và giá trị mục tiêu của bạn. Bạn có thể thêm nhiều cấu hình sau.</string>
     <string name="setupwizard_permissions_info">AAPS cần quyền truy cập bộ nhớ để hoạt động đúng cách. Vui lòng cấp các quyền cần thiết bên dưới.</string>
     <string name="setupwizard_pump_riley_link_status">Trạng thái RileyLink:</string>
     <string name="readstatus">Đọc trạng thái</string>
@@ -45,7 +45,7 @@
     <string name="configbuilder_sync_description">Các plugin tải lên dữ liệu, đồng bộ hóa và giao tiếp.</string>
     <string name="configbuilder_bgsource_description">Bạn muốn AAPS lấy dữ liệu từ đâu?</string>
     <string name="configbuilder_sensitivity_description">Bạn muốn chọn thuật toán độ nhạy nào?</string>
-    <string name="allow_hardware_pump_text">Chú ý: Nếu bạn kích hoạt và kết nối với phần cứng bơm insulin, AAPS sẽ sao chép các thiết lập liều nền từ Hồ sơ sang bơm, ghi đè lên tốc độ liều nền hiện có được lưu trên bơm. Hãy đảm bảo rằng bạn đã có thiết lập liều nền chính xác trong AAPS. Nếu bạn không chắc chắn hoặc không muốn ghi đè các thiết lập liều nền trên bơm, hãy nhấn Hủy và thực hiện lại việc chuyển sang bơm sau.</string>
+    <string name="allow_hardware_pump_text">Chú ý: Nếu bạn kích hoạt và kết nối với phần cứng bơm insulin, AAPS sẽ sao chép các thiết lập liều nền từ cấu hình sang bơm, ghi đè lên tốc độ liều nền hiện có được lưu trên bơm. Hãy đảm bảo rằng bạn đã có thiết lập liều nền chính xác trong AAPS. Nếu bạn không chắc chắn hoặc không muốn ghi đè các thiết lập liều nền trên bơm, hãy nhấn Hủy và thực hiện lại việc chuyển sang bơm sau.</string>
     <string name="nsclient_version_does_not_match">Phiên bản AAPSClient không khớp với phiên bản AAPS. Vui lòng cập nhật.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->

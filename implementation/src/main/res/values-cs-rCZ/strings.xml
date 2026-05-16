@@ -3,18 +3,6 @@
     <string name="executing_right_now">Příkaz je právě prováděn</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <!--       Stats -->
-    <string name="veryLow" comment="below 3.1">Velmi nízká</string>
-    <string name="low" comment="3.1-3.9">Nízká</string>
-    <string name="high" comment="10.0-13.9">Vysoká</string>
-    <string name="veryHigh" comment="above 13.9">Velmi vysoká</string>
-    <string name="below" comment="below &quot;in range&quot;">Pod</string>
-    <string name="in_range">V rozsahu</string>
-    <string name="above" comment="above &quot;in range&quot;">Nad</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="detailed_14_days">Podrobně 14 dní</string>
-    <string name="day_tir">Denní TIR</string>
-    <string name="night_tir">Noční TIR</string>
     <string name="carbs_short" comment="max 6 characters">Sach</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">PoslSpojPřed: %1$dmin</string>
@@ -31,6 +19,12 @@
     <string name="permission_notifications_description">Vyžadováno pro zobrazování výstrah, alarmů a aktualizací stavu pumpy</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Nastavení úspěšně exportováno do cloudového úložiště</string>
@@ -70,6 +64,7 @@
     <string name="metadata_format_new">Nový šifrovaný formát</string>
     <string name="metadata_format_other">Neznámý formát exportu</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba přístupu k souborovému systému. Vyberte správně adresář AAPS.</string>
+    <string name="storage_google_drive">Google Drive</string>
     <string name="backup_to_google_drive">Zálohovat na Google Drive</string>
     <string name="csv_upload_failed">Nahrání uživatelských záznamů CSV do cloudového úložiště selhalo</string>
     <string name="csv_upload_error">Při nahrávání CSV do cloudu došlo k chybě</string>

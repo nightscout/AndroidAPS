@@ -68,10 +68,10 @@ import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransact
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.transactions.InsertOrUpdateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
-import app.aaps.database.transactions.InsertOrUpdateHeartRateTransaction
+import app.aaps.database.transactions.InsertOrUpdateHeartRatesTransaction
 import app.aaps.database.transactions.InsertOrUpdateProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateRunningModeTransaction
-import app.aaps.database.transactions.InsertOrUpdateStepsCountTransaction
+import app.aaps.database.transactions.InsertOrUpdateStepsCountsTransaction
 import app.aaps.database.transactions.InsertOrUpdateTherapyEventTransaction
 import app.aaps.database.transactions.InsertTemporaryBasalWithTempIdTransaction
 import app.aaps.database.transactions.InvalidateBolusCalculatorResultTransaction
@@ -124,8 +124,6 @@ import app.aaps.database.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.database.transactions.UserEntryTransaction
 import app.aaps.database.transactions.VersionChangeTransaction
 import dagger.Reusable
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -148,7 +146,6 @@ class PersistenceLayerImpl @Inject constructor(
     private val fabricPrivacy: FabricPrivacy
 ) : PersistenceLayer {
 
-    private val compositeDisposable = CompositeDisposable()
     private suspend fun log(entries: List<UE>) {
         if (config.AAPSCLIENT.not())
             if (entries.isNotEmpty()) {
@@ -158,6 +155,7 @@ class PersistenceLayerImpl @Inject constructor(
     }
 
     override fun clearDatabases() = repository.clearDatabases()
+    override val databaseClearedFlow: Flow<Unit> get() = repository.databaseClearedFlow()
     override fun clearApsResults() = repository.clearApsResults()
     override suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = withContext(Dispatchers.IO) {
         repository.cleanupDatabase(keepDays, deleteTrackedChanges)
@@ -328,11 +326,6 @@ class PersistenceLayerImpl @Inject constructor(
             aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", e)
             throw e
         }
-    }
-
-    override suspend fun updateBolusNoLogging(bolus: BS): Unit = withContext(Dispatchers.IO) {
-        repository.runTransactionForResultSuspend(InsertOrUpdateBolusTransaction(bolus.toDb()))
-        Unit
     }
 
     override suspend fun insertBolusWithTempId(bolus: BS): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
@@ -986,11 +979,6 @@ class PersistenceLayerImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateEffectiveProfileSwitchNoLogging(effectiveProfileSwitch: EPS): Unit = withContext(Dispatchers.IO) {
-        repository.runTransactionForResultSuspend(InsertOrUpdateEffectiveProfileSwitchTransaction(effectiveProfileSwitch.toDb()))
-        Unit
-    }
-
     override suspend fun invalidateEffectiveProfileSwitch(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<EPS> = withContext(Dispatchers.IO) {
         try {
             val result = repository.runTransactionForResultSuspend(InvalidateEffectiveProfileSwitchTransaction(id))
@@ -1187,7 +1175,7 @@ class PersistenceLayerImpl @Inject constructor(
 
     override suspend fun syncNsRunningModes(runningModes: List<RM>, doLog: Boolean): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
         try {
-            val result = repository.runTransactionForResultSuspend(SyncNsRunningModeTransaction(runningModes.map { it.toDb() }))
+            val result = repository.runTransactionForResultSuspend(SyncNsRunningModeTransaction(runningModes.map { it.toDb() }, config.AAPSCLIENT))
             val transactionResult = PersistenceLayer.TransactionResult<RM>()
             val ueValues = mutableListOf<UE>()
             result.inserted.forEach {
@@ -1317,11 +1305,6 @@ class PersistenceLayerImpl @Inject constructor(
             aapsLogger.error(LTag.DATABASE, "Error while inserting ProfileSwitch", e)
             throw e
         }
-    }
-
-    override suspend fun updateProfileSwitchNoLogging(profileSwitch: PS): Unit = withContext(Dispatchers.IO) {
-        repository.runTransactionForResultSuspend(InsertOrUpdateProfileSwitchTransaction(profileSwitch.toDb()))
-        Unit
     }
 
     override suspend fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
@@ -2210,9 +2193,10 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getHeartRatesFromTimeToTime(startTime, endTime).map { it.fromDb() }
     }
 
-    override suspend fun insertOrUpdateHeartRate(heartRate: HR): PersistenceLayer.TransactionResult<HR> = withContext(Dispatchers.IO) {
+    override suspend fun insertOrUpdateHeartRates(heartRates: List<HR>): PersistenceLayer.TransactionResult<HR> = withContext(Dispatchers.IO) {
+        if (heartRates.isEmpty()) return@withContext PersistenceLayer.TransactionResult<HR>()
         try {
-            val result = repository.runTransactionForResultSuspend(InsertOrUpdateHeartRateTransaction(heartRate.toDb()))
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateHeartRatesTransaction(heartRates.map { it.toDb() }))
             val transactionResult = PersistenceLayer.TransactionResult<HR>()
             result.inserted.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
@@ -2224,7 +2208,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
             transactionResult
         } catch (e: Exception) {
-            aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate", e)
+            aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate batch", e)
             throw e
         }
     }
@@ -2426,9 +2410,10 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getLastStepsCountFromTimeToTime(startTime, endTime)?.fromDb()
     }
 
-    override suspend fun insertOrUpdateStepsCount(stepsCount: SC): PersistenceLayer.TransactionResult<SC> = withContext(Dispatchers.IO) {
+    override suspend fun insertOrUpdateStepsCounts(stepsCounts: List<SC>): PersistenceLayer.TransactionResult<SC> = withContext(Dispatchers.IO) {
+        if (stepsCounts.isEmpty()) return@withContext PersistenceLayer.TransactionResult<SC>()
         try {
-            val result = repository.runTransactionForResultSuspend(InsertOrUpdateStepsCountTransaction(stepsCount.toDb()))
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateStepsCountsTransaction(stepsCounts.map { it.toDb() }))
             val transactionResult = PersistenceLayer.TransactionResult<SC>()
             result.inserted.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Inserted StepsCount $it")
@@ -2440,14 +2425,15 @@ class PersistenceLayerImpl @Inject constructor(
             }
             transactionResult
         } catch (e: Exception) {
-            aapsLogger.error(LTag.DATABASE, "Error while saving StepsCount $e")
+            aapsLogger.error(LTag.DATABASE, "Error while saving StepsCount batch $e")
             throw e
         }
     }
 
     // VersionChange
-    override fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable =
-        repository.runTransaction(VersionChangeTransaction(versionName, versionCode, gitRemote, commitHash))
+    override suspend fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?) = withContext(Dispatchers.IO) {
+        repository.runTransactionSuspend(VersionChangeTransaction(versionName, versionCode, gitRemote, commitHash))
+    }
 
     override suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): NE = withContext(Dispatchers.IO) {
         repository.collectNewEntriesSince(since, until, limit, offset).fromDb()

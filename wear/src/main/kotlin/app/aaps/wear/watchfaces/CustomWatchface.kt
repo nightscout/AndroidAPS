@@ -621,6 +621,7 @@ class CustomWatchface : BaseWatchFace() {
         var highCustom: Drawable? = null
         var lowCustom: Drawable? = null
         var textDrawable: Drawable? = null
+
         fun drawable(cwf: CustomWatchface): Drawable? = dynData?.getDrawable(cwf) ?: when (cwf.singleBg[0].sgvLevel) {
                 2L   -> highCustom ?: rangeCustom
                 1L   -> highCustom ?: rangeCustom

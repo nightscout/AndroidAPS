@@ -119,6 +119,12 @@ const val DEFAULT_GRAPH_ZOOM_MINUTES = 360.0
 const val MIN_GRAPH_ZOOM_MINUTES = 30.0
 
 /**
+ * Grace period after the last user pan/zoom during which auto-scroll on new BG is suppressed,
+ * so the viewport doesn't snap back while the user is examining the graph.
+ */
+const val INTERACTION_GRACE_MS = 60_000L
+
+/**
  * Filters data points to only include those within the valid x-axis range.
  *
  * Use this when you have data that might extend beyond the visible time range

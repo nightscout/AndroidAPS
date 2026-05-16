@@ -37,8 +37,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -138,7 +138,9 @@ class InsulinDialogViewModel @Inject constructor(
         }
         viewModelScope.launch {
             val runningIcfg = getRunningIcfg()
-            val forcedRecordOnly = loop.runningMode().isSuspended() || !pumpInitialized
+            val mode = loop.runningMode()
+            val cantDeliverBolus = PumpCommandGate.check(mode, PumpCommandGate.CommandKind.BOLUS) is PumpCommandGate.Decision.Reject
+            val forcedRecordOnly = cantDeliverBolus || !pumpInitialized
             _uiState.update {
                 it.copy(
                     selectedIcfg = runningIcfg,
@@ -357,7 +359,7 @@ class InsulinDialogViewModel @Inject constructor(
                     automation.removeAutomationEventBolusReminder()
                 }
             } else {
-                if (runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)) return
+                if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
                 uel.log(
                     Action.BOLUS, Sources.InsulinDialog,
                     notes,

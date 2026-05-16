@@ -27,6 +27,7 @@ import app.aaps.core.ui.compose.icons.IcExtendedBolus
 import app.aaps.core.ui.compose.icons.IcHistory
 import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.icons.IcNote
+import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
@@ -143,7 +144,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.SITE_ROTATION           -> IcSiteRotation
     ElementType.TEMP_BASAL              -> IcTbrHigh
     ElementType.EXTENDED_BOLUS          -> IcExtendedBolus
-    ElementType.AUTOMATION              -> IcAutomation
+    ElementType.AUTOMATION              -> IcPluginAutomation
     ElementType.PUMP                    -> Pump
     ElementType.SETTINGS                -> Icons.Default.Settings
     ElementType.QUICK_LAUNCH_CONFIG     -> Icons.Default.Settings
@@ -160,7 +161,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.COB                     -> IcCarbs
     ElementType.SENSITIVITY             -> IcAs
     ElementType.SCENE,
-    ElementType.SCENE_MANAGEMENT        -> IcAutomation  // TODO: create dedicated scene icon
+    ElementType.SCENE_MANAGEMENT        -> IcAutomation  // TODO: rename IcScene ?
     ElementType.RUNNING_MODE            -> IcLoopClosed
     ElementType.USER_ENTRY              -> IcUserOptions
     ElementType.LOOP                    -> IcLoopClosed

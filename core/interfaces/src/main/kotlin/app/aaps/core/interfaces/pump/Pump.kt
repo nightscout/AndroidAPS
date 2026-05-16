@@ -96,14 +96,14 @@ interface Pump {
      * Force reading of full pump status
      * @param reason originator identification
      */
-    fun getPumpStatus(reason: String)
+    suspend fun getPumpStatus(reason: String)
 
     /**
      *  Upload to pump new basal profile (and IC/ISF if supported by pump)
      *
      *  @param profile new profile
      */
-    fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult
+    suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult
 
     /**
      * @param profile profile to check
@@ -152,7 +152,7 @@ interface Pump {
      *                          e.g. DBI will not contain carbs if the pump can't store carbs.
      * @return PumpEnactResult
      */
-    fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult
+    suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult
 
     /**
      *  Stopping of performed bolus requested by user
@@ -174,7 +174,7 @@ interface Pump {
      *                              (if the same TBR rate is requested && enforceNew == false driver can keep
      *                              running TBR. In this case return will be success = true, enacted = false)
      */
-    fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
+    suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
 
     /**
      * Request a TRB in %
@@ -191,7 +191,7 @@ interface Pump {
      *                              (if the same TBR rate is requested && enforceNew == false driver can keep
      *                              running TBR. In this case return will be success = true, enacted = false)
      */
-    fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
+    suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
 
     /**
      * Cancel current TBR if a TBR is running
@@ -202,10 +202,10 @@ interface Pump {
      * @param enforceNew            if true disable workaround above
      * @return                      PumpEnactResult.success if TBR is canceled
      */
-    fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult
+    suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult
 
-    fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult
-    fun cancelExtendedBolus(): PumpEnactResult
+    suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult
+    suspend fun cancelExtendedBolus(): PumpEnactResult
 
     /**
      * Status to be passed to NS.
@@ -258,7 +258,7 @@ interface Pump {
     /**
      * Load TDDs and store them to the database
      */
-    fun loadTDDs(): PumpEnactResult
+    suspend fun loadTDDs(): PumpEnactResult
 
     /**
      * @return true if pump handles DST changes by it self. In this case it's not necessary stop the loop

@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Nessuna velocità basale valida letta dal micro</string>
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
+    <string name="loop_disabled_by_user">Loop disabilitato dall\'utente</string>
     <string name="event_type">Tipo evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -51,7 +52,7 @@
     <string name="simple_mode">Modalità semplice</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Contrai</string>
-    <string name="no_compose_preferences">Nessuna preferenza di composizione disponibile per questo plugin</string>
+    <string name="no_compose_preferences">Nessuna preferenza disponibile per questo plugin</string>
     <string name="plugin_no_preferences">Il plugin non supporta le preferenze</string>
     <string name="confirm_password_hint">Conferma la password</string>
     <string name="confirm_pin_hint">Conferma il PIN</string>
@@ -173,11 +174,12 @@
     <string name="a11y_high">alto</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">basso</string>
-    <string name="average">Media</string>
-    <string name="tir">Tempo nell’intervallo</string>
     <string name="remove_label">Rimuovi</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="activate_insulin">Attiva insulina</string>
+    <string name="pump_wizard_profile_gate_title">Profilo richiesto</string>
+    <string name="pump_wizard_profile_gate_pick">Seleziona il profilo da applicare all\'attivazione.</string>
+    <string name="pump_wizard_profile_gate_no_store">Nessun profilo definito. Apri la Gestione del Profilo per crearne una, quindi riavvia l\'attivazione.</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
@@ -264,6 +266,23 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina Selezionata: %1$s</string>
     <string name="record_insulin_hint">Se si entra in insulina applicata dalla penna, selezionare di seguito il tipo di insulina corretto. La dose è sempre nelle Unità Internazionali.</string>
+    <!--       Stats -->
+    <string name="average">Media</string>
+    <string name="tir">Tempo nell’intervallo</string>
+    <string name="below" comment="below &quot;in range&quot;">Sotto</string>
+    <string name="in_range">In range</string>
+    <string name="veryLow" comment="below 3.1">Molto basso</string>
+    <string name="low" comment="3.1-3.9">Basso</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Molto alto</string>
+    <string name="above" comment="above &quot;in range&quot;">Sopra</string>
+    <string name="detailed_14_days">Dettaglio 14 giorni</string>
+    <string name="day_tir">TIR giorno</string>
+    <string name="night_tir">TIR notturno</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7gg</string>
+    <string name="thirty_days_short">30gg</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
@@ -313,14 +332,14 @@
     <string name="scene_confirm_deactivate">Terminare la scena \"%1$s\" e ripristinare le modifiche?</string>
     <string name="scene_conflict_active_tt">Il target temporaneo attivo verrà sostituito</string>
     <string name="scene_conflict_active_profile">L\'interruttore del profilo attivo verrà sostituito</string>
+    <string name="scene_conflict_active_running_mode">La modalità di esecuzione attiva verrà sostituita</string>
     <string name="scene_conflict_active_scene">Scena attiva \"%1$s\" sarà terminata prima</string>
     <string name="scene_action_tt">Temp-Target %1$s</string>
     <string name="scene_action_profile">Profilo: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Abilita SMB</string>
     <string name="scene_action_smb_off">Disabilita SMB</string>
-    <string name="scene_action_running_mode">Modalità Loop: %1$s</string>
+    <string name="scene_action_running_mode">Modalità in esecuzione: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
-    <string name="scene_time_remaining">%1$s rimanenti</string>
     <string name="scene_management">Scene</string>
     <string name="scene_management_desc">Crea, modifica e gestisci scene</string>
     <string name="scene_action_count">Azioni %1$d</string>
@@ -340,6 +359,7 @@
     <string name="scene_editor_enabled">Abilitato</string>
     <string name="scene_editor_disabled">Disabilitato</string>
     <string name="scene_summary">%1$d azioni, %2$s</string>
+    <string name="scene_duration_indefinite">Indefinito (fine manuale)</string>
     <string name="scene_some_actions_failed">Alcune azioni fallite</string>
     <string name="scene_no_active">Nessuna scena attiva</string>
     <string name="scene_some_reverts_failed">Alcune azioni di ripristino non sono riuscite</string>
@@ -347,10 +367,10 @@
     <string name="scene_no_actions">La scena non ha azioni</string>
     <string name="scene_profile_not_found">Profilo \"%1$s\" non trovato</string>
     <string name="scene_revert_tt">Cancella basali temporanee</string>
-    <string name="scene_revert_profile">Ripristina il profilo ad %1$s %2$d%%</string>
+    <string name="scene_revert_profile">Ripristina la modifica del profilo</string>
     <string name="scene_revert_smb_on">Riattiva SMB</string>
     <string name="scene_revert_smb_off">Disabilita SMB</string>
-    <string name="scene_revert_loop_mode">Annulla override modalità loop</string>
+    <string name="scene_revert_loop_mode">Annulla l\'override della modalità in esecuzione</string>
     <string name="scene_careportal_no_revert">Le voci CarePortal non verranno ripristinate</string>
     <string name="careportal_sickness">Malattia</string>
     <string name="careportal_stress">Stress</string>
@@ -587,6 +607,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Nessun profilo selezionato</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
+    <string name="profile_not_saved_activate">Profilo non salvato. Si prega di salvare il profilo prima di attivarlo.</string>
+    <string name="profile_activation_failed">Attivazione del profilo fallita</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
     <string name="error_in_basal_values">Errore nei valori della basale</string>
@@ -791,7 +813,7 @@
     <string name="maintenance_export_csv_desc">Esporta la cronologia del trattamento come foglio di calcolo</string>
     <string name="maintenance_cleanup_db_desc">Rimuovi le vecchie voci dal database</string>
     <string name="maintenance_reset_aps_results_desc">Cancella i risultati dell\'algoritmo memorizzati</string>
-    <string name="maintenance_reset_db_desc">Cancella tutti i database e riavvia</string>
+    <string name="maintenance_reset_db_desc">Cancella tutti i database e ricarica</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Seleziona il Tipo di Storage</string>
     <string name="clear_cloud_action">Cancella impostazioni</string>
@@ -809,8 +831,10 @@
     <string name="need_connect_permission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Accoppiamento</string>
     <string name="pump_unpair">Disaccoppia</string>
+    <string name="pump_unpair_confirm_title">Disassocia micro?</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
@@ -975,6 +999,7 @@
     <string name="database_cleanup">Pulizia database</string>
     <string name="nav_resetdb">Reset database</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Trova Micro</string>
     <string name="ble_scan_select_pump">Seleziona il tuo micro dall\'elenco qui sotto</string>
     <string name="ble_scan_scanning">Ricerca dispositivi in corso...</string>
     <!-- Graph configuration -->

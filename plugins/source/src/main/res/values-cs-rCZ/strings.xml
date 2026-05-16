@@ -35,7 +35,11 @@
     <string name="patched_sino_app">Aplikace Sino</string>
     <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Přijímat hodnoty glykémie z aplikace Instara.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Žádost o historická data Instara</string>
+    <string name="pref_summary_instara_history_request">Požadovat možné chybějící historické údaje na pozadí</string>
     <!-- Notification Reader -->
     <string name="notification_reader">Čtečka oznámení</string>
     <string name="description_source_notification_reader">Čte hodnoty glykémie z oznámení zasílaných oficiálními CGM aplikacemi (Dexcom, Medtronic, Eversense atd.).</string>

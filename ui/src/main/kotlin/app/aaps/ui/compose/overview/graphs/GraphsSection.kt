@@ -204,6 +204,12 @@ fun GraphsSection(
         val newTimestamp = bgInfoState.bgInfo?.timestamp ?: return@LaunchedEffect
         val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         if (lastBgTimestamp != 0L && newTimestamp > lastBgTimestamp) {
+            // Skip auto-scroll while user is interacting with the graph
+            val sinceInteraction = System.currentTimeMillis() - graphViewModel.lastInteractionMs
+            if (sinceInteraction < INTERACTION_GRACE_MS) {
+                lastBgTimestamp = newTimestamp
+                return@LaunchedEffect
+            }
             val timeRange = derivedTimeRange
             if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
                 // Scroll so "now + 2h" is at the right edge of viewport

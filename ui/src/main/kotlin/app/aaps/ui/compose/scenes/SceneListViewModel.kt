@@ -126,7 +126,7 @@ class SceneListViewModel @Inject constructor(
             if (!scene.isEnabled) return@launch
 
             // Validation: pump disconnected / loop suspended
-            if (loop.runningMode().isSuspended()) {
+            if (loop.runningMode().pausesLoopExecution()) {
                 _dialogState.value = DialogState.ValidationError(rh.gs(R.string.pump_disconnected))
                 return@launch
             }
@@ -273,7 +273,7 @@ class SceneListViewModel @Inject constructor(
         return conflicts
     }
 
-    private suspend fun buildRevertSummaries(activeState: ActiveSceneState): List<String> {
+    private fun buildRevertSummaries(activeState: ActiveSceneState): List<String> {
         val summaries = mutableListOf<String>()
         val prior = activeState.priorState
         var hasCarePortal = false

@@ -57,7 +57,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
@@ -136,7 +135,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     override fun isBusy(): Boolean = false
 
     // Pump interface
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (executionService == null) {
             aapsLogger.error("setNewBasalProfile sExecutionService is null")
@@ -195,7 +194,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         executionService?.bolusStop()
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var percentReq = percent
         val result = pumpEnactResultProvider.get()
         if (percentReq < 0) {
@@ -224,18 +223,16 @@ abstract class AbstractDanaRPlugin protected constructor(
                 .percent(danaPump.tempBasalPercent)
                 .isPercent(true)
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK")
-            runBlocking {
-                pumpSync.syncTemporaryBasalWithPumpId(
-                    danaPump.tempBasalStart,
-                    PumpRate(danaPump.tempBasalPercent.toDouble()),
-                    danaPump.tempBasalDuration,
-                    false,
-                    tbrType,
-                    danaPump.tempBasalStart,
-                    pumpDescription.pumpType,
-                    serialNumber()
-                )
-            }
+            pumpSync.syncTemporaryBasalWithPumpId(
+                danaPump.tempBasalStart,
+                PumpRate(danaPump.tempBasalPercent.toDouble()),
+                danaPump.tempBasalDuration,
+                false,
+                tbrType,
+                danaPump.tempBasalStart,
+                pumpDescription.pumpType,
+                serialNumber()
+            )
             return result
         }
         result.enacted(false).success(false).comment(app.aaps.core.ui.R.string.temp_basal_delivery_error)
@@ -243,7 +240,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         return result
     }
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         var insulinReq = insulin
         insulinReq = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulinReq, aapsLogger)).value()
         // needs to be rounded
@@ -279,17 +276,15 @@ abstract class AbstractDanaRPlugin protected constructor(
                 .absolute(danaPump.extendedBolusAbsoluteRate)
                 .isPercent(false)
             if (!preferences.get(DanaBooleanKey.UseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
-            runBlocking {
-                pumpSync.syncExtendedBolusWithPumpId(
-                    danaPump.extendedBolusStart,
-                    PumpRate(danaPump.extendedBolusAmount),
-                    danaPump.extendedBolusDuration,
-                    preferences.get(DanaBooleanKey.UseExtended),
-                    danaPump.extendedBolusStart,
-                    pumpDescription.pumpType,
-                    serialNumber()
-                )
-            }
+            pumpSync.syncExtendedBolusWithPumpId(
+                danaPump.extendedBolusStart,
+                PumpRate(danaPump.extendedBolusAmount),
+                danaPump.extendedBolusDuration,
+                preferences.get(DanaBooleanKey.UseExtended),
+                danaPump.extendedBolusStart,
+                pumpDescription.pumpType,
+                serialNumber()
+            )
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
             return result
         }
@@ -299,20 +294,18 @@ abstract class AbstractDanaRPlugin protected constructor(
         return result
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (danaPump.isExtendedInProgress) {
             executionService?.extendedBolusStop()
             if (!danaPump.isExtendedInProgress) {
                 result.success(true).enacted(true).isTempCancel(true)
-                runBlocking {
-                    pumpSync.syncStopExtendedBolusWithPumpId(
-                        dateUtil.now(),
-                        dateUtil.now(),
-                        pumpDescription.pumpType,
-                        serialNumber()
-                    )
-                }
+                pumpSync.syncStopExtendedBolusWithPumpId(
+                    dateUtil.now(),
+                    dateUtil.now(),
+                    pumpDescription.pumpType,
+                    serialNumber()
+                )
             } else result.success(false).enacted(false).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {
             result.success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true)
@@ -344,7 +337,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         executionService?.stopConnecting()
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         executionService?.getPumpStatus()
         pumpDescription.basalStep = danaPump.basalStep
         pumpDescription.bolusStep = danaPump.bolusStep
@@ -382,7 +375,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         return applyBolusConstraints(insulin)
     }
 
-    override fun loadTDDs(): PumpEnactResult {
+    override suspend fun loadTDDs(): PumpEnactResult {
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY)
     }
 

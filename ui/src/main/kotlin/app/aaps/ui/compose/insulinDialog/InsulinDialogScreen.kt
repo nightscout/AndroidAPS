@@ -532,6 +532,8 @@ private fun InsulinQuickAddButtons(
     val increments = listOf(increment1, increment2, increment3).filter { it != 0.0 }
     if (increments.isEmpty()) return
 
+    val focusManager = LocalFocusManager.current
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -540,7 +542,10 @@ private fun InsulinQuickAddButtons(
         increments.forEach { amount ->
             val formatted = formatAmount(amount)
             val label = if (amount > 0) "+$formatted" else formatted
-            FilledTonalButton(onClick = { onAddInsulin(amount) }) {
+            FilledTonalButton(onClick = {
+                focusManager.clearFocus()
+                onAddInsulin(amount)
+            }) {
                 Text(label)
             }
         }

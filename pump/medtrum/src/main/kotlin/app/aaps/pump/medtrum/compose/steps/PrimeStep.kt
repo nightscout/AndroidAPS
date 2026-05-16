@@ -91,7 +91,7 @@ fun PrimeStep(
         state = state,
         primeProgress = primeProgress,
         onStartPrime = { viewModel.moveStep(PatchStep.PRIMING) },
-        onNext = { viewModel.moveStep(PatchStep.ATTACH_PATCH) },
+        onNext = { viewModel.moveAfterPriming() },
         onCancel = onCancel
     )
 

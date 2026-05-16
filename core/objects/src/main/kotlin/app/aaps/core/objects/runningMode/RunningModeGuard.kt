@@ -12,7 +12,7 @@ import javax.inject.Singleton
 /**
  * Pre-check helper for UI / sync / automation entry points that call CommandQueue.
  *
- * The queue-level [TbrGate] check is a last-resort safety net: by the time a command reaches
+ * The queue-level [PumpCommandGate] check is a last-resort safety net: by the time a command reaches
  * the queue and is rejected, the caller's failure callback fires — which in many call sites
  * plays the "treatment delivery error" alarm. That alarm is appropriate for real pump failures,
  * not for commands that were intentionally blocked by the running mode.
@@ -34,36 +34,35 @@ class RunningModeGuard @Inject constructor(
      * Use this in callers that render their own error channel (SMS reply text, Wear response,
      * Garmin callback, etc.).
      */
-    fun rejectionMessage(kind: TbrGate.CommandKind): String? {
+    fun rejectionMessage(kind: PumpCommandGate.CommandKind): String? {
         // TODO: Loop.runningMode() is now suspend; this guard is invoked from many synchronous
         // entry points (Compose ViewModels' non-suspend handlers, BolusWizard.confirmAndExecute,
         // SmsCommunicator, Wear DataHandlerMobile). The underlying call is a fast persistence read.
         // Localizing runBlocking here avoids cascading suspend through dozens of call sites.
         val mode = runBlocking { loop.runningMode() }
-        val decision = TbrGate.check(mode, kind)
-        return (decision as? TbrGate.Decision.Reject)?.let { rh.gs(it.reason.toStringRes()) }
+        val decision = PumpCommandGate.check(mode, kind)
+        return (decision as? PumpCommandGate.Decision.Reject)?.let { rh.gs(it.reason.toStringRes()) }
     }
 
     /**
      * UI convenience: if the gate rejects [kind], sends a Warning snackbar and returns true.
      * Callers should early-return on true:
      * ```
-     * if (runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)) return
+     * if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
      * commandQueue.bolus(...)
      * ```
      */
-    fun checkWithSnackbar(kind: TbrGate.CommandKind): Boolean {
+    fun checkWithSnackbar(kind: PumpCommandGate.CommandKind): Boolean {
         val msg = rejectionMessage(kind) ?: return false
         rxBus.send(EventShowSnackbar(msg, EventShowSnackbar.Type.Warning))
         return true
     }
 
-    private fun TbrGate.Reason.toStringRes(): Int = when (this) {
-        TbrGate.Reason.PUMP_DISCONNECTED       -> R.string.pump_disconnected
-        TbrGate.Reason.LOOP_SUSPENDED_USER,
-        TbrGate.Reason.LOOP_SUSPENDED_DST,
-        TbrGate.Reason.SUPER_BOLUS_ACTIVE      -> R.string.loopsuspended
+    private fun PumpCommandGate.Reason.toStringRes(): Int = when (this) {
+        PumpCommandGate.Reason.PUMP_DISCONNECTED       -> R.string.pump_disconnected
+        PumpCommandGate.Reason.LOOP_SUSPENDED_DST,
+        PumpCommandGate.Reason.SUPER_BOLUS_ACTIVE      -> R.string.loopsuspended
 
-        TbrGate.Reason.PUMP_REPORTED_SUSPENDED -> R.string.pumpsuspended
+        PumpCommandGate.Reason.PUMP_REPORTED_SUSPENDED -> R.string.pumpsuspended
     }
 }

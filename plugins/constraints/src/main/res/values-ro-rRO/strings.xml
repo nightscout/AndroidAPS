@@ -13,13 +13,14 @@
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Date recalculate utilizate</string>
-    <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
+    <string name="bg_too_close">Glicemia prea aproape:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">recalculate</string>
     <string name="a11y_bg_quality_doubles">intrări duble</string>
     <string name="a11y_bg_quality_flat">Date plate. Se consideră greșite</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Se limitează bolusul extins la %1$.1f U din cauza %2$s</string>
     <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
+    <string name="safety">Siguranță</string>
     <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
     <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>

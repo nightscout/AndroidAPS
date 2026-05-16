@@ -21,7 +21,6 @@
     <string name="equil_title_attach">Attacher la pompe</string>
     <string name="equil_title_air">Amorcer la canule</string>
     <string name="equil_title_unpair_detach">Détacher la pompe</string>
-    <string name="equil_title_unpair_confirm">Confirmer la dissociation</string>
     <string name="equil_title_history_events">Événement de l\'historique</string>
     <string name="equil_tone">Son d\'alerte</string>
     <string name="equil_tone_mode_mute">Muet</string>

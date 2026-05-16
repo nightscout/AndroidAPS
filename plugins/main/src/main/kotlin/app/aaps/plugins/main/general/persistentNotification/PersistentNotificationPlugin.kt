@@ -6,14 +6,19 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -26,13 +31,16 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
+import kotlin.math.abs
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.runBlocking
@@ -59,7 +67,12 @@ class PersistentNotificationPlugin @Inject constructor(
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val config: Config,
     private val decimalFormatter: DecimalFormatter,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    private val loop: Loop,
+    private val persistenceLayer: PersistenceLayer,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val dateUtil: DateUtil,
+    private val trendCalculator: TrendCalculator
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -120,50 +133,37 @@ class PersistentNotificationPlugin @Inject constructor(
         var line3: String? = null
         var unreadConversationBuilder: NotificationCompat.CarExtender.UnreadConversation.Builder? = null
         if (profileFunction.isProfileValid("Notification")) {
-            var line1aa: String
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
-                line1aa = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
-                line1 = line1aa
+                val trendSymbol = (trendCalculator.getTrendArrow(iobCobCalculator.ads)
+                    ?.takeIf { it != TrendArrow.NONE } ?: TrendArrow.FLAT).symbol
+                line1 = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated) + " " + trendSymbol
                 if (glucoseStatus != null) {
-                    line1 += ("  Δ" + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
-                        + " avgΔ" + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.shortAvgDelta))
-                    line1aa += "  " + lastBG.trendArrow.symbol
+                    line1 += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
                 } else {
-                    line1 += " " +
-                        rh.gs(R.string.old_data) +
-                        " "
-                    line1aa += "$line1."
+                    line1 += " " + rh.gs(R.string.old_data)
                 }
             } else {
-                line1aa = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
-                line1 = line1aa
+                line1 = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
             }
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
-            if (activeTemp != null) {
-                line1 += "  " + activeTemp.toStringShort(rh)
-                line1aa += "  " + activeTemp.toStringShort(rh) + "."
+            line1 += if (activeTemp != null) {
+                " • " + activeTemp.toStringShort(rh) + " "
+            } else {
+                " • " + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + " "
             }
+            val profileName = profileFunction.getProfileName()
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             val cobInfo = iobCobCalculator.getCobInfo("PersistentNotificationPlugin")
             line2 =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + " " + rh.gs(
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(R.string.notification_iob_short, bolusIob.iob + basalIob.basaliob) + " • " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
                 ) + ": " + cobInfo.generateCOBString(decimalFormatter)
-            val line2aa =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + ". " + rh.gs(
-                    app.aaps.core.ui.R
-                        .string.cob
-                ) + ": " + cobInfo.generateCOBString(decimalFormatter) + "."
-            line3 = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate))
-            var line3aa = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + "."
-            val profileName = profileFunction.getProfileName()
-            line3 += " - $profileName"
-            line3aa += " - $profileName."
+            line3 = profileName
             /// For Android Auto
             val msgReadIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
@@ -189,13 +189,36 @@ class PersistentNotificationPlugin @Inject constructor(
             )
             // Build a RemoteInput for receiving voice input from devices
             val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
-            // Create the UnreadConversation
-            unreadConversationBuilder = NotificationCompat.CarExtender.UnreadConversation.Builder(line1aa + "\n" + line2aa)
+            // Build Android Auto message: IOB • COB • Target • Profile
+            val units = profileFunction.getUnits()
+            var aaTarget = ""
+            val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+            if (tempTarget != null) {
+                aaTarget = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) +
+                    " " + dateUtil.untilString(tempTarget.end, rh)
+            } else {
+                profileFunction.getProfile()?.let { profile ->
+                    val targetUsed = when {
+                        config.APS        -> loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                        config.AAPSCLIENT -> processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
+                        else              -> 0.0
+                    }
+                    aaTarget = if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
+                        profileUtil.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
+                    } else {
+                        profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                    }
+                }
+            }
+            val aaMsg = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname) +
+                " • " + cobInfo.generateCOBString(decimalFormatter) +
+                " • " + aaTarget +
+                " • " + profileName
+            unreadConversationBuilder = NotificationCompat.CarExtender.UnreadConversation.Builder(rh.gs(config.appName))
                 .setLatestTimestamp(System.currentTimeMillis())
                 .setReadPendingIntent(msgReadPendingIntent)
                 .setReplyAction(msgReplyPendingIntent, remoteInput)
-            /// Add dot to produce a "more natural sounding result"
-            unreadConversationBuilder.addMessage(line3aa)
+            unreadConversationBuilder.addMessage(aaMsg)
             /// End Android Auto
         } else {
             line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)

@@ -153,7 +153,7 @@ class DanaRKoreanPlugin @Inject constructor(
         executionService?.finishHandshaking()
     }
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -163,9 +163,9 @@ class DanaRKoreanPlugin @Inject constructor(
         if (detailedBolusInfo.insulin > 0)
             connectionOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
-        result.success(connectionOK && abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep)
-            .bolusDelivered(delivered)
+        val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+        result.success(connectionOK && abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep)
+            .bolusDelivered(delivered.cU)
         if (!result.success) result.comment(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
@@ -175,21 +175,20 @@ class DanaRKoreanPlugin @Inject constructor(
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-        if (detailedBolusInfo.insulin > 0) runBlocking {
+        if (detailedBolusInfo.insulin > 0)
             pumpSync.syncBolusWithPumpId(
                 dateUtil.now(),
-                PumpInsulin(delivered),
+                delivered,
                 detailedBolusInfo.bolusType,
                 dateUtil.now(),
                 PumpType.DANA_R_KOREAN,
                 serialNumber()
             )
-        }
         return result
     }
 
     // This is called from APS
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0 && absoluteRate >= 0.10
@@ -300,7 +299,7 @@ class DanaRKoreanPlugin @Inject constructor(
         return pumpEnactResultProvider.get().success(false).comment("Internal error")
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (danaPump.isTempBasalInProgress) return cancelRealTempBasal()
         if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
             return cancelExtendedBolus()

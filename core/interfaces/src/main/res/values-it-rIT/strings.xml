@@ -11,6 +11,8 @@
     <!--    DateUtil-->
     <string name="minago">%1$dm fa</string>
     <string name="secago">%1$ds fa</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minuti fa</string>
     <string name="hoursago">%1$.1fh fa</string>
     <string name="days_ago">%1$.1f giorni fa</string>
@@ -45,6 +47,8 @@
     <string name="unit_weeks">settimane</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dh %2$d m rimanenti</string>
+    <string name="time_remaining_m">%1$dm rimanenti</string>
     <string name="later_today">Più tardì oggi</string>
     <string name="tomorrow">Domani</string>
     <string name="today">Oggi</string>

@@ -318,13 +318,13 @@ class LoopHubTest : TestBase() {
             beatsPerMinute = 101.0,
             device = "Test Device"
         )
-        whenever(persistenceLayer.insertOrUpdateHeartRate(hr)).thenReturn(
+        whenever(persistenceLayer.insertOrUpdateHeartRates(listOf(hr))).thenReturn(
             PersistenceLayer.TransactionResult()
         )
         loopHub.storeHeartRate(
             samplingStart, samplingEnd, 101, "Test Device"
         )
         kotlinx.coroutines.delay(100) // Give time for GlobalScope.launch to complete
-        verify(persistenceLayer).insertOrUpdateHeartRate(hr)
+        verify(persistenceLayer).insertOrUpdateHeartRates(listOf(hr))
     }
 }

@@ -5,7 +5,8 @@ import app.aaps.database.entities.RunningMode
 /**
  * Sync the RunningMode from NS
  */
-class SyncNsRunningModeTransaction(private val runningModes: List<RunningMode>) : Transaction<SyncNsRunningModeTransaction.TransactionResult>() {
+class SyncNsRunningModeTransaction(private val runningModes: List<RunningMode>, private val nsClientMode: Boolean) :
+    Transaction<SyncNsRunningModeTransaction.TransactionResult>() {
 
     override suspend fun run(): TransactionResult {
         val result = TransactionResult()
@@ -28,15 +29,18 @@ class SyncNsRunningModeTransaction(private val runningModes: List<RunningMode>) 
                 // infinite — otherwise a permanent→finite cut (incoming > 0, current == 0)
                 // would be wrongly rejected as "longer". Incoming 0 (lengthening to permanent)
                 // stays rejected.
-                // Guard: autoForced rows (SUSPENDED_BY_PUMP, constraint-forced modes) are
-                // locally determined by each device from its own pump/constraints state.
-                // Remote clients (including older versions that rewrite durations based on
-                // their non-authoritative local pump.isSuspended()) must not be allowed to
-                // shorten them here — otherwise the chip on the authoritative device
-                // flips to the truncated value on every NS round-trip.
+                // Guard: on the authoritative device (config.APS=true) autoForced rows
+                // (SUSPENDED_BY_PUMP, constraint-forced modes) are locally determined from
+                // pump/constraints state. Remote/older clients that rewrite durations based on
+                // their non-authoritative local pump.isSuspended() must not be allowed to
+                // shorten them — otherwise the chip on the authoritative device flips to
+                // the truncated value on every NS round-trip.
+                // On a follower (AAPSCLIENT) there is no local authoritative state to protect,
+                // so accept cuts unconditionally — that's the only way SUSPENDED_BY_PUMP end
+                // (cut by the master) reaches the follower.
                 val isCut = runningMode.duration > 0 &&
                     (current.duration == 0L || runningMode.duration < current.duration)
-                if (!current.autoForced &&
+                if ((!current.autoForced || nsClientMode) &&
                     current.duration != runningMode.duration &&
                     isCut
                 ) {

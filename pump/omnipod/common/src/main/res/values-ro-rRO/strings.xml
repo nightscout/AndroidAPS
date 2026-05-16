@@ -33,15 +33,15 @@
     <string name="omnipod_common_confirmation_time_on_pod_updated">Timpul din pompă a fost actualizat.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Setați ora</string>
-    <string name="omnipod_common_overview_button_suspend_delivery">Suspendare</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Suspendați</string>
     <string name="omnipod_common_overview_button_resume_delivery">Reluați administrarea</string>
     <string name="omnipod_common_overview_button_silence_alerts">Opriți Alarmele</string>
     <string name="omnipod_common_overview_pod_status">Stare pompă</string>
-    <string name="omnipod_common_overview_total_delivered">Total livrat</string>
+    <string name="omnipod_common_overview_total_delivered">Total administrat</string>
     <string name="omnipod_common_overview_pod_unique_id">ID unic</string>
     <string name="omnipod_common_overview_lot_number">Număr LOT</string>
     <string name="omnipod_common_overview_pod_sequence_number">Număr de secvență</string>
-    <string name="omnipod_common_overview_pod_expiry_date">Pod-ul expiră</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Pompa expiră</string>
     <string name="omnipod_common_overview_last_connection">Ultima Conexiune</string>
     <string name="omnipod_common_overview_last_bolus">Ultimul Bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Rată bazală temporară</string>
@@ -58,7 +58,7 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Umplere pompă</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inițializează pompă</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Atașează pompă</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">\nPregătiți locul de infuzie. Scoateți capacul acului și suport adeziv și atașați pompa la locul de infuzie.\n\nDacă canula pare în neregulă, apăsați <b>Anulare</b> și înlăturați pompa.\n\nApăsați <b>Următor</b> pentru a introduce canula și a începe livrarea bazalei.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">\nPregătiți locul de infuzie. Scoateți capacul acului și suport adeziv și atașați pompa la locul de infuzie.\n\nDacă canula pare în neregulă, apăsați <b>Anulare</b> și înlăturați pompa.\n\nApăsați <b>Următor</b> pentru a introduce canula și a începe administrarea bazalei.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Când apăsați <b>OK</b>, canula va fi introdusă. Asigurați-vă că ați atașat pompa la locul de infuzie.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Inserează canula</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Încercare de programare inițială a ratelor bazale si de inserție a canulei.\n\nCând canula a fost inserata cu succes, puteți apăsa <b>Următor</b>.</string>
@@ -66,7 +66,7 @@
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Noua pompă este acum activă.\n\nRata bazala a fost programata și a fost introdusa canula.\n\nVă rugăm să verificați dacă canula a fost inserată corect și să schimbați pompa dacă considerați altfel.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Dezactivare Pompă</string>
-    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nApăsați <b>Următor</b> pentru a dezactiva pompa.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva pompa.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nApăsați <b>Următor</b> pentru a dezactiva pompa.\n\n<b>Notă:</b> Acest lucru va suspenda orice administrare de insulină și va dezactiva pompa.</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Se dezactivează pompa</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Se dezactivează pompa.\n\nCand dezactivarea s-a încheiat cu succes, puteți sa apăsați <b>Următorul</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pompă dezactivată</string>
@@ -98,7 +98,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sunet pentru notificări RBT incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru notificările SMB incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sunet activat pentru notificări bolus incert</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sunet când notificarea de livrare suspendată este activă</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sunet când notificarea de administrare suspendată este activă</string>
     <string name="omnipod_dash_use_bonding">Asociază un dispozitiv Bluetooth pe Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nicio pompă activă</string>
@@ -121,7 +121,7 @@
     <string name="omnipod_common_cmd_deactivate_pod">Dezactivați pompa</string>
     <string name="omnipod_common_cmd_set_basal_schedule">Setați ratele bazale</string>
     <string name="omnipod_common_cmd_set_bolus">Setați bolus</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Anulează Bolus</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Anulați Bolus</string>
     <string name="omnipod_common_cmd_set_tbr">Setați RBT</string>
     <string name="omnipod_common_cmd_cancel_tbr_by_driver">Anulați RBT</string>
     <string name="omnipod_common_cmd_discard_pod">Renunțați la pompă</string>

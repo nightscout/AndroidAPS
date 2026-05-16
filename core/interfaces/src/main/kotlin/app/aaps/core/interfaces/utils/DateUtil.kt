@@ -267,6 +267,15 @@ interface DateUtil {
     fun minOrSecAgo(rh: ResourceHelper, time: Long?): String
 
     /**
+     * Formats a duration into a short bracketed string with a leading '+', using seconds under
+     * 2 minutes and minutes otherwise. E.g., "(+30s)" or "(+5m)".
+     * @param rh Resource helper for localized strings.
+     * @param durationMs The duration in milliseconds. Negative values return an empty string.
+     * @return The formatted duration string, or empty if negative.
+     */
+    fun minOrSec(rh: ResourceHelper, durationMs: Long): String
+
+    /**
      * Returns a short string showing the difference in minutes between now and a given time, with a sign.
      * E.g., "(+5)" for 5 minutes in the future, "(-10)" for 10 minutes in the past.
      * @param time The timestamp in milliseconds. Can be null.
@@ -336,6 +345,17 @@ interface DateUtil {
      * @return A formatted duration string of the remaining time.
      */
     fun untilString(timestamp: Long, rh: ResourceHelper): String
+
+    /**
+     * Formats a remaining duration as a localized "time remaining" string.
+     * Uses the `time_remaining_h_m` resource when hours > 0 (e.g., "1h 30m remaining"),
+     * otherwise the `time_remaining_m` resource (e.g., "30m remaining"). Whole-word ordering
+     * and units are owned by the resource so all locales translate correctly.
+     * @param timeInMillis The remaining duration in milliseconds.
+     * @param rh Resource helper for the localized format string.
+     * @return The formatted "time remaining" string.
+     */
+    fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String
 
     /**
      * Gets the current system time in milliseconds.

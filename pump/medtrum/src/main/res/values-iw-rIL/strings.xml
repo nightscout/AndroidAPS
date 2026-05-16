@@ -6,6 +6,7 @@
     <!-- overview fragment -->
     <string name="active_bolus_label">בולוס פעיל</string>
     <!-- Alarm strings -->
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="step_prepare_patch_connect">חיבור ומילוי</string>
     <string name="step_prime">תיחול</string>

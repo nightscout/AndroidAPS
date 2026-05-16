@@ -115,7 +115,6 @@
     <string name="a11y_high">גבוה</string>
     <string name="a11y_inrange">בטווח</string>
     <string name="a11y_low">נמוך</string>
-    <string name="average">ממוצע</string>
     <string name="activate_profile">הפעלת פרופיל</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
     <string name="profile">פרופיל</string>
@@ -165,6 +164,8 @@
     <string name="reason">סיבה</string>
     <string name="nochangerequested">אין בקשות החלפה</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">ממוצע</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
@@ -457,6 +458,7 @@
     <string name="need_connect_permission">האפליקציה צריכה הרשאה לבלוטות\'</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">בקשת משתמש</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
