@@ -646,6 +646,10 @@
     <string name="basal">Liều Basal</string>
     <string name="basalpct">Liều nền %</string>
     <string name="sensitivity">Độ nhạy</string>
+    <string name="isf_for_carbs">ISF trung bình cho Tính toán và Hấp thu carb: %1$.1f</string>
+    <string name="isf_profile">Cấu hình ISF: %1$.1f</string>
+    <string name="isf_variable">ISF biến thiên: %1$.1f</string>
+    <string name="isf_effective">ISF hiệu dụng: %1$.1f</string>
     <string name="autosens_long">Giá trị Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens trong thuật toán: %.0f%%</string>
