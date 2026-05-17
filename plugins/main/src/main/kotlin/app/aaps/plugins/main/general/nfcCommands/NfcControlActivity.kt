@@ -6,7 +6,6 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
-import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.widget.Toast
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -85,55 +84,25 @@ open class NfcControlActivity : Activity() {
             return
         }
 
-        val payload = record.payload ?: return
-        val token = String(payload, StandardCharsets.UTF_8)
-        aapsLogger.debug(LTag.NFC, "NFC token scanned")
+        val tagUid = NfcTokenSupport.tagUidHex(nfcTag.id) ?: return
+        aapsLogger.debug(LTag.NFC, "NFC tag scanned, UID: $tagUid")
 
-        val tagUid = NfcTokenSupport.tagUidHex(nfcTag.id)
-        when (val prep = nfcPlugin.prepareExecution(token, tagUid)) {
+        when (val prep = nfcPlugin.prepareExecution(tagUid)) {
             is NfcPrepareResult.Error -> {
-                if (prep.eraseTag) erasePhysicalTag(intent)
                 showToast(prep.message)
                 return
             }
             is NfcPrepareResult.Ready -> {
-                if (prep.rewriteWith != null) {
-                    val newCreatedTag =
-                        NfcCreatedTag(
-                            id = prep.rewriteWith.tokenId,
-                            name = prep.oldTag!!.name,
-                            commands = prep.oldTag.commands,
-                            token = prep.rewriteWith.token,
-                            createdAtMillis = prep.rewriteWith.issuedAtMillis,
-                            expiresAtMillis = prep.rewriteWith.expiresAtMillis,
-                        )
-                    val ndefMessage =
-                        NdefMessage(
-                            arrayOf(
-                                NdefRecord.createMime(
-                                    NfcTokenSupport.MIME_TYPE,
-                                    prep.rewriteWith.token.toByteArray(),
-                                ),
-                            ),
-                        )
-                    val writeSuccess = writeNdefToPhysicalTag(nfcTag, ndefMessage)
-
-                    if (!writeSuccess) {
-                        showToast(rh.gs(R.string.nfccommands_tag_rewrite_failed))
-                        return
-                    }
-                    nfcPlugin.replaceTag(prep.oldTag.id, newCreatedTag)
-                }
                 val result = nfcPlugin.executeCascade(prep.commands)
-                appendReadLogEntry(prep.tokenId, result)
+                appendReadLogEntry(tagUid, result)
                 showToast(result.message)
             }
         }
     }
 
     /** Overridable in tests to avoid SharedPreferences access. */
-    open fun appendReadLogEntry(tokenId: String, result: NfcExecutionResult) {
-        val tagName = NfcTokenSupport.loadCreatedTags(this).find { it.id == tokenId }?.name ?: tokenId
+    open fun appendReadLogEntry(tagUid: String, result: NfcExecutionResult) {
+        val tagName = NfcTokenSupport.findTagByUid(this, tagUid)?.name ?: tagUid
         NfcTokenSupport.appendLogEntry(
             this,
             NfcLogEntry(
@@ -144,45 +113,6 @@ open class NfcControlActivity : Activity() {
                 message = result.message,
             ),
         )
-    }
-
-    /** Overridable in tests to avoid real NFC I/O. */
-    open fun writeNdefToPhysicalTag(
-        nfcTag: Tag,
-        message: NdefMessage,
-    ): Boolean =
-        try {
-            val ndef = Ndef.get(nfcTag) ?: return false
-            ndef.connect()
-            try {
-                ndef.writeNdefMessage(message)
-                true
-            } finally {
-                ndef.close()
-            }
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.NFC, "Failed to rewrite expiring tag", e)
-            false
-        }
-
-    /** Overridable in tests to avoid real NFC I/O. */
-    open fun erasePhysicalTag(intent: Intent) {
-        // getParcelableExtra(String) deprecated in API 33; type-safe overload requires API 33+, minSdk=26
-        @Suppress("DEPRECATION")
-        val nfcTag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) ?: return
-        try {
-            val ndef = Ndef.get(nfcTag) ?: return
-            ndef.connect()
-            try {
-                ndef.writeNdefMessage(
-                    NdefMessage(arrayOf(NdefRecord(NdefRecord.TNF_EMPTY, null, null, null))),
-                )
-            } finally {
-                ndef.close()
-            }
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.NFC, "Failed to erase blacklisted tag", e)
-        }
     }
 
     private fun showToast(message: String) {

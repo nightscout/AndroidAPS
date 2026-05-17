@@ -1,7 +1,6 @@
 package app.aaps.plugins.main.general.nfcCommands
 
 import android.content.Context
-import android.widget.Toast
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
@@ -37,7 +36,6 @@ import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -52,27 +50,17 @@ import javax.inject.Singleton
 sealed class NfcPrepareResult {
     data class Error(
         val message: String,
-        val eraseTag: Boolean = false,
     ) : NfcPrepareResult()
 
     data class Ready(
-        val tokenId: String,
+        val tagUid: String,
         val commands: List<String>,
-        val rewriteWith: NfcIssuedToken?, // null = no rewrite needed
-        val oldTag: NfcCreatedTag?, // non-null iff rewriteWith != null
-    ) : NfcPrepareResult() {
-        init {
-            require((rewriteWith == null) == (oldTag == null)) {
-                "rewriteWith and oldTag must both be null or both be non-null"
-            }
-        }
-    }
+    ) : NfcPrepareResult()
 }
 
 data class NfcExecutionResult(
     val success: Boolean,
     val message: String,
-    val eraseTag: Boolean = false,
 )
 
 @Singleton
@@ -104,7 +92,7 @@ class NfcCommandsPlugin
                 .pluginName(R.string.nfccommands)
                 .shortName(R.string.nfccommands_shortname)
                 .description(R.string.description_nfc_communicator),
-            ownPreferences = listOf(NfcIntentKey::class.java),
+            ownPreferences = emptyList(),
             aapsLogger,
             rh,
             preferences,
@@ -116,59 +104,23 @@ class NfcCommandsPlugin
             titleResId = R.string.nfccommands,
             items = listOf(
                 BooleanKey.NfcAllowRemoteCommands,
-                NfcIntentKey.ClearBlacklist.withClick {
-                    NfcTokenSupport.clearBlacklist(context)
-                    Toast.makeText(context, rh.gs(R.string.nfccommands_blacklist_cleared), Toast.LENGTH_SHORT).show()
-                },
             ),
             icon = pluginDescription.icon,
         )
 
-        fun prepareExecution(token: String, tagUid: String? = null): NfcPrepareResult {
+        fun prepareExecution(tagUid: String): NfcPrepareResult {
             if (!isEnabled()) {
                 return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
             }
-            val now = dateUtil.now()
-            return when (val verified = NfcTokenSupport.verifyToken(context, token, now, tagUid)) {
-                is NfcTokenVerificationResult.Failure ->
-                    NfcPrepareResult.Error(verified.reason)
-                is NfcTokenVerificationResult.Success -> {
-                    if (NfcTokenSupport.isBlacklisted(context, verified.tokenId, now)) {
-                        aapsLogger.debug(LTag.NFC, "Scanned token is blacklisted: ${verified.tokenId}")
-                        return NfcPrepareResult.Error(
-                            message = rh.gs(R.string.nfccommands_tag_erased_blacklisted),
-                            eraseTag = true,
-                        )
-                    }
-                    val foundTag =
-                        NfcTokenSupport
-                            .loadCreatedTags(context)
-                            .find { it.id == verified.tokenId }
-                    if (foundTag != null && foundTag.isExpiringSoon(now)) {
-                        val newToken = NfcTokenSupport.issueToken(context, verified.commands, tagUid = tagUid)
-                        NfcPrepareResult.Ready(
-                            tokenId = verified.tokenId,
-                            commands = verified.commands,
-                            rewriteWith = newToken,
-                            oldTag = foundTag,
-                        )
-                    } else {
-                        NfcPrepareResult.Ready(
-                            tokenId = verified.tokenId,
-                            commands = verified.commands,
-                            rewriteWith = null,
-                            oldTag = null,
-                        )
-                    }
-                }
+            val tag = NfcTokenSupport.findTagByUid(context, tagUid)
+            if (tag == null) {
+                aapsLogger.debug(LTag.NFC, "No registered tag found for UID: $tagUid")
+                return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_tag_not_registered))
             }
-        }
-
-        fun replaceTag(
-            oldId: String,
-            newTag: NfcCreatedTag,
-        ) {
-            NfcTokenSupport.replaceTag(context, oldId, newTag)
+            return NfcPrepareResult.Ready(
+                tagUid = tagUid,
+                commands = tag.commands,
+            )
         }
 
         fun executeCascade(commands: List<String>): NfcExecutionResult {

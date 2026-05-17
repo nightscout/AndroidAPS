@@ -28,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,9 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -245,7 +242,7 @@ private fun NfcTagsScreen(onBuild: () -> Unit) {
             text = { Text(stringResource(R.string.nfccommands_delete_confirm_msg)) },
             confirmButton = {
                 TextButton(onClick = {
-                    NfcTokenSupport.blacklistTag(context, tag)
+                    NfcTokenSupport.deleteCreatedTag(context, tag.tagUid)
                     refreshKey++
                     deleteTarget = null
                 }) { Text(stringResource(R.string.nfccommands_delete_confirm_ok)) }
@@ -310,7 +307,7 @@ private fun NfcTagsScreen(onBuild: () -> Unit) {
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 72.dp)) {
-                items(tags, key = { it.id }) { tag ->
+                items(tags, key = { it.tagUid }) { tag ->
                     NfcTagCard(
                         tag = tag,
                         onRename = { renameTarget = tag; renameText = tag.name },
@@ -340,27 +337,6 @@ private fun NfcTagCard(
     onDelete: () -> Unit,
 ) {
     val context = LocalContext.current
-    val now = System.currentTimeMillis()
-    val dayMillis = 24L * 60L * 60L * 1000L
-    val formatter = remember { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) }
-
-    val expiryText: String
-    val expiryColor: Color
-    when {
-        tag.isExpired(now) -> {
-            expiryText = stringResource(R.string.nfccommands_tag_expired_at, formatter.format(tag.expiresAtMillis))
-            expiryColor = colorResource(R.color.nfccommands_tag_expired)
-        }
-        tag.isExpiringSoon(now) -> {
-            val daysLeft = ((tag.expiresAtMillis - now) / dayMillis).toInt().coerceAtLeast(0)
-            expiryText = stringResource(R.string.nfccommands_tag_expires_soon, daysLeft)
-            expiryColor = colorResource(R.color.nfccommands_tag_expiring_soon)
-        }
-        else -> {
-            expiryText = stringResource(R.string.nfccommands_tag_expires_at, formatter.format(tag.expiresAtMillis))
-            expiryColor = colorResource(R.color.nfccommands_tag_valid)
-        }
-    }
 
     val commandsText = tag.commands.mapIndexed { i, cmd ->
         context.getString(R.string.nfccommands_cascade_step_label, i + 1, cmd)
@@ -390,11 +366,7 @@ private fun NfcTagCard(
             }
             SuggestionChip(
                 onClick = {},
-                label = { Text(expiryText) },
-                colors = SuggestionChipDefaults.suggestionChipColors(
-                    containerColor = expiryColor,
-                    labelColor = Color.White,
-                ),
+                label = { Text(tag.tagUid) },
                 modifier = Modifier.padding(top = 6.dp),
             )
         }
