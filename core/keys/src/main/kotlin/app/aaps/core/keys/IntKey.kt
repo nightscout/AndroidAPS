@@ -63,23 +63,6 @@ enum class IntKey(
         unitType = UnitType.GRAMS
     ),
 
-    @Deprecated(
-        message = "Migrated to StringKey.TempTargetPresets JSON array. Used by legacy TempTargetDialog.",
-        replaceWith = ReplaceWith("StringKey.TempTargetPresets")
-    )
-    OverviewEatingSoonDuration(key = "eatingsoon_duration", defaultValue = 45, min = 15, max = 120, titleResId = R.string.pref_title_eating_soon_duration, defaultedBySM = true, hideParentScreenIfHidden = true, unitType = UnitType.MIN),
-
-    @Deprecated(
-        message = "Migrated to StringKey.TempTargetPresets JSON array. Used by legacy TempTargetDialog.",
-        replaceWith = ReplaceWith("StringKey.TempTargetPresets")
-    )
-    OverviewActivityDuration(key = "activity_duration", defaultValue = 90, min = 15, max = 600, titleResId = R.string.pref_title_activity_duration, defaultedBySM = true, unitType = UnitType.MIN),
-
-    @Deprecated(
-        message = "Migrated to StringKey.TempTargetPresets JSON array. Used by legacy TempTargetDialog.",
-        replaceWith = ReplaceWith("StringKey.TempTargetPresets")
-    )
-    OverviewHypoDuration(key = "hypo_duration", defaultValue = 60, min = 15, max = 180, titleResId = R.string.pref_title_hypo_duration, defaultedBySM = true, unitType = UnitType.MIN),
     OverviewCageWarning(key = "statuslights_cage_warning", defaultValue = 48, min = 24, max = 240, titleResId = R.string.pref_title_cage_warning, defaultedBySM = true, unitType = UnitType.HOURS),
     OverviewCageCritical(key = "statuslights_cage_critical", defaultValue = 72, min = 24, max = 240, titleResId = R.string.pref_title_cage_critical, defaultedBySM = true, unitType = UnitType.HOURS),
     OverviewIageWarning(

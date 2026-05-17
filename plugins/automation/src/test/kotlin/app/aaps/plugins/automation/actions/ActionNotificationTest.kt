@@ -1,13 +1,10 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,7 +19,6 @@ class ActionNotificationTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
     private lateinit var sut: ActionNotification
-    private val testScope = CoroutineScope(Dispatchers.Unconfined)
 
     init {
         addInjector {
@@ -33,7 +29,6 @@ class ActionNotificationTest : TestBaseWithProfile() {
                 it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
                 it.pumpEnactResultProvider = pumpEnactResultProvider
-                it.appScope = testScope
             }
         }
     }
@@ -59,18 +54,9 @@ class ActionNotificationTest : TestBaseWithProfile() {
         assertThat(sut.shortDescription()).isEqualTo("Notification: %s")
     }
 
-    @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(R.drawable.ic_notifications)
-    }
-
     @Test fun doActionTest() = runTest {
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
-        //verify(rxBus, times(2)).send(anyOrNull())
-        //verify(repository, times(1)).runTransaction(any(Transaction::class.java))
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
     }
 
     @Test fun hasDialogTest() {

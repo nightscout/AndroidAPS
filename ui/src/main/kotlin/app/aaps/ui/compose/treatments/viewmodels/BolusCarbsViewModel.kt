@@ -17,11 +17,12 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.MealLink
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
@@ -29,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
@@ -47,11 +49,12 @@ class BolusCarbsViewModel @Inject constructor(
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
-    val uiState: StateFlow<BolusCarbsUiState>
-        field = MutableStateFlow(BolusCarbsUiState())
+    private val _uiState = MutableStateFlow(BolusCarbsUiState())
+    val uiState: StateFlow<BolusCarbsUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -66,7 +69,7 @@ class BolusCarbsViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.mealLinks.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -101,21 +104,16 @@ class BolusCarbsViewModel @Inject constructor(
                     it.bolusCalculatorResult?.timestamp ?: it.bolus?.timestamp ?: it.carbs?.timestamp ?: 0L
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         mealLinks = mealLinks,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load bolus/carbs data", e)
-                uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading bolus/carbs data")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading bolus/carbs data", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -137,17 +135,10 @@ class BolusCarbsViewModel @Inject constructor(
     }
 
     /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
-    }
-
-    /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -155,7 +146,7 @@ class BolusCarbsViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: MealLink) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -167,7 +158,7 @@ class BolusCarbsViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -179,7 +170,7 @@ class BolusCarbsViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: MealLink) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -209,7 +200,7 @@ class BolusCarbsViewModel @Inject constructor(
             } else {
                 val carbs = ml.carbs
                 if (carbs != null) {
-                    "${rh.gs(R.string.carbs)}: ${rh.gs(app.aaps.core.objects.R.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
+                    "${rh.gs(R.string.carbs)}: ${rh.gs(R.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
                 } else {
                     rh.gs(R.string.confirm_remove_multiple_items, selected.size)
                 }
@@ -264,10 +255,11 @@ class BolusCarbsViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete treatments", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting treatments")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting treatments", EventShowSnackbar.Type.Error))
             }
         }
     }
+
     /**
      * Get toolbar configuration for current state
      */
@@ -300,5 +292,4 @@ data class BolusCarbsUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<MealLink> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
 )

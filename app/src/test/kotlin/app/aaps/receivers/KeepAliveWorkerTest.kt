@@ -10,12 +10,12 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.keys.LongNonKey
-import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.util.concurrent.ListenableFuture
@@ -34,7 +34,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     private lateinit var worker: KeepAliveWorker
 
     @Mock private lateinit var loop: Loop
-    @Mock private lateinit var maintenancePlugin: MaintenancePlugin
+    @Mock private lateinit var maintenance: Maintenance
     @Mock private lateinit var dstHelperPlugin: DstHelperPlugin
     @Mock private lateinit var workerParameters: WorkerParameters
     @Mock private lateinit var persistenceLayer: PersistenceLayer
@@ -52,6 +52,9 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         whenever(workManager.getWorkInfos(any())).thenReturn(listenableFuture)
         whenever(listenableFuture.get()).thenReturn(emptyList())
         whenever(workerParameters.inputData).thenReturn(workDataOf("schedule" to "KA_5"))
+        // Short-circuit Config.awaitInitialized() so doWorkAndLog() proceeds past the init gate.
+        // Without this the suspend gate hits initProgressFlow (null on a fresh Mock) and NPEs.
+        whenever(config.appInitialized).thenReturn(true)
     }
 
     // Helper to create the worker instance directly
@@ -67,7 +70,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
             it.profileFunction = profileFunction
             it.rxBus = mockedRxBus
             it.commandQueue = commandQueue
-            it.maintenancePlugin = maintenancePlugin
+            it.maintenance = maintenance
             it.preferences = preferences
             it.dstHelperPlugin = dstHelperPlugin
             it.aapsLogger = aapsLogger
@@ -81,7 +84,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkPump requests status when connection is outdated`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
         whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch)
         whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)).thenReturn(true)
@@ -98,7 +101,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkPump sends profile switch event if profile is mismatched`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
         whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch)
         testPumpPlugin.isProfileSet = false
 
@@ -113,7 +116,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkPump does nothing if mode is DISCONNECTED_PUMP`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.DISCONNECTED_PUMP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.DISCONNECTED_PUMP)
         testPumpPlugin.lastData = now - T.mins(20).msecs()
 
         // Act
@@ -128,7 +131,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkAPS schedules device status upload if BG is missing`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
         whenever(ads.actualBg()).thenReturn(null)
 
         // Act

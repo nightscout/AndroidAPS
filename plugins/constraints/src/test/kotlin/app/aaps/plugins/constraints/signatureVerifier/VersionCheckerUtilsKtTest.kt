@@ -72,18 +72,18 @@ class VersionCheckerUtilsKtTest : TestBase() {
     }
 
     @Test
-    fun `should parse 4 digit version`() {
-        assertThat(versionCheckerUtils.versionDigits("42.7.13.101")).asList().containsExactly(42, 7, 13, 101).inOrder()
+    fun `should parse 4 digit version but only 3 digits are taken`() {
+        assertThat(versionCheckerUtils.versionDigits("42.7.13.101")).asList().containsExactly(42, 7, 13).inOrder()
     }
 
     @Test
-    fun `should parse 4 digit version with extra`() {
-        assertThat(versionCheckerUtils.versionDigits("1.2.3.4-RC5")).asList().containsExactly(1, 2, 3, 4).inOrder()
+    fun `should parse 3 digit version with extra`() {
+        assertThat(versionCheckerUtils.versionDigits("1.2.3-RC5")).asList().containsExactly(1, 2, 3).inOrder()
     }
 
     @Test
-    fun `should parse version but only 4 digits are taken`() {
-        assertThat(versionCheckerUtils.versionDigits("67.8.31.5.153.4.2")).asList().containsExactly(67, 8, 31, 5).inOrder()
+    fun `should parse version but only 3 digits are taken`() {
+        assertThat(versionCheckerUtils.versionDigits("67.8.31.5.153.4.2")).asList().containsExactly(67, 8, 31).inOrder()
     }
 
     @Test
@@ -94,11 +94,6 @@ class VersionCheckerUtilsKtTest : TestBase() {
     @Test
     fun `should keep 3 digit version`() {
         assertThat("1.2.3".numericVersionPart()).isEqualTo("1.2.3")
-    }
-
-    @Test
-    fun `should keep 4 digit version`() {
-        assertThat("1.2.3.4".numericVersionPart()).isEqualTo("1.2.3.4")
     }
 
     @Test
@@ -137,8 +132,8 @@ class VersionCheckerUtilsKtTest : TestBase() {
     }
 
     @Test
-    fun `should strip 4 digit version RC`() {
-        assertThat("1.2.3.4-RC5".numericVersionPart()).isEqualTo("1.2.3.4")
+    fun `should strip 3 digit version RC long`() {
+        assertThat("1.2.3-RC5".numericVersionPart()).isEqualTo("1.2.3")
     }
 
     @Test
@@ -177,7 +172,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
     }
 
     @Test
-    fun `should not find update on fourth version digit`() {
+    fun `should not find update on extra version digit beyond third`() {
         assertThat(versionCheckerUtils.evaluateVersion(newVersion = "2.5.0", currentVersion = "2.5.0.1")).isEqualTo(VersionCheckerUtilsImpl.VersionResult.SAME_VERSION)
     }
 

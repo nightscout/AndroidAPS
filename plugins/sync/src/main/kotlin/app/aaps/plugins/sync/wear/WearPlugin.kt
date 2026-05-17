@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Watch
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -27,16 +27,15 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.compose.WearComposeContent
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
@@ -47,16 +46,19 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.rx3.rxCompletable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -72,27 +74,23 @@ class WearPlugin @Inject constructor(
     private val dataHandlerMobile: DataHandlerMobile,
     private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper,
     private val config: Config,
-    private val dateUtil: DateUtil,
-    private val versionCheckerUtils: VersionCheckerUtils,
     private val bolusProgressData: BolusProgressData,
+    private val persistenceLayer: PersistenceLayer,
+    private val scenes: SceneAutomationApi,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .icon(Icons.Default.Watch)
         .pluginName(app.aaps.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_wear)
-        .composeContent { plugin ->
-            WearComposeContent(
-            )
-        },
+        .composeContent { WearComposeContent() },
     aapsLogger = aapsLogger, rh = rh, preferences = preferences
 ) {
 
     private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
+    private val deferredStart = DeferredForegroundStart()
 
     private val _connectedDevice = MutableStateFlow<String?>(null)
     val connectedDevice: StateFlow<String?> = _connectedDevice.asStateFlow()
@@ -108,18 +106,19 @@ class WearPlugin @Inject constructor(
         _savedCustomWatchface.value = cwfData
     }
 
+    @OptIn(FlowPreview::class)
     override fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        dataLayerListenerServiceMobileHelper.startService(context)
+        deferredStart.start { dataLayerListenerServiceMobileHelper.startService(context) }
         bolusProgressData.state
             .drop(1) // Skip initial null emission on collection start
             .onEach { state ->
                 if (isEnabled()) {
                     if (state != null) {
                         if (!state.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
-                            rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.status)))
+                            rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.wearStatus)))
                         }
                     } else {
                         // Bolus ended — send 100% to clear wear display
@@ -150,15 +149,45 @@ class WearPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ dataHandlerMobile.resendData("EventAutosensCalculationFinished") }, fabricPrivacy::logException)
+            .concatMapCompletable {
+                rxCompletable { dataHandlerMobile.resendData("EventAutosensCalculationFinished") }
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
+            }
+            .subscribe()
         disposable += rxBus
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ dataHandlerMobile.resendData("EventLoopUpdateGui") }, fabricPrivacy::logException)
+            .concatMapCompletable {
+                rxCompletable { dataHandlerMobile.resendData("EventLoopUpdateGui") }
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
+            }
+            .subscribe()
+        // Push status to watch quickly when a TT changes, without waiting for the loop's 10s debounce
+        persistenceLayer.observeChanges<TT>()
+            .drop(1) // Skip initial emission on collection start
+            .debounce(2_000L)
+            .onEach { dataHandlerMobile.resendData("TempTargetChange") }
+            .launchIn(newScope)
+        // Refresh wear scene tile whenever the scene list changes (add / update / delete)
+        scenes.scenesFlow
+            .drop(1) // Skip initial replay on subscribe
+            .onEach { dataHandlerMobile.sendScenes() }
+            .launchIn(newScope)
+        // Push active-scene flag to wear so the tile can swap between scene list and STOP button
+        scenes.activeFlow
+            .onEach { dataHandlerMobile.sendActiveSceneState(it) }
+            .launchIn(newScope)
         disposable += rxBus
             .toObservable(EventWearUpdateTiles::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ dataHandlerMobile.sendUserActions() }, fabricPrivacy::logException)
+            .concatMapCompletable {
+                rxCompletable { dataHandlerMobile.sendUserActions() }
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
+            }
+            .subscribe({})
         disposable += rxBus
             .toObservable(EventWearUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
@@ -209,6 +238,7 @@ class WearPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         disposable.clear()
+        deferredStart.cancel()
         super.onStop()
         dataLayerListenerServiceMobileHelper.stopService(context)
     }
@@ -238,49 +268,6 @@ class WearPlugin @Inject constructor(
                 context.sendBroadcast(intent, WearDataReceiver.PERMISSION)
                 aapsLogger.debug(LTag.WEAR, "Sending broadcast " + intent.action + " to: " + it)
             }
-        }
-    }
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "wear_wizard_settings" && requiredKey != "wear_custom_watchface_settings" && requiredKey != "wear_general_settings") return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "wear_settings"
-            title = rh.gs(R.string.wear_settings)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearControl, summary = R.string.wearcontrol_summary, title = R.string.wearcontrol_title))
-            if (config.AAPSCLIENT)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearBroadcastData, summary = R.string.wear_broadcast_data_summary, title = R.string.wear_broadcast_data))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "wear_wizard_settings"
-                title = rh.gs(app.aaps.core.ui.R.string.wear_wizard_settings)
-                summary = rh.gs(R.string.wear_wizard_settings_summary)
-                //dependency = rh.gs(BooleanKey.WearControl.key)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardBg, title = app.aaps.core.ui.R.string.bg_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardTt, title = app.aaps.core.ui.R.string.tt_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardTrend, title = app.aaps.core.ui.R.string.bg_trend_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardCob, title = app.aaps.core.ui.R.string.treatments_wizard_cob_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardIob, title = app.aaps.core.ui.R.string.iob_label))
-            })
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "wear_custom_watchface_settings"
-                title = rh.gs(R.string.wear_custom_watchface_settings)
-                addPreference(
-                    AdaptiveSwitchPreference(
-                        ctx = context,
-                        booleanKey = BooleanKey.WearCustomWatchfaceAuthorization,
-                        summary = R.string.wear_custom_watchface_authorization_summary,
-                        title = R.string.wear_custom_watchface_authorization_title
-                    )
-                )
-            })
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "wear_general_settings"
-                title = rh.gs(R.string.wear_general_settings)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearNotifyOnSmb, summary = R.string.wear_notifysmb_summary, title = R.string.wear_notifysmb_title))
-            })
         }
     }
 

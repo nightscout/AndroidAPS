@@ -1,6 +1,7 @@
 package app.aaps.pump.dana.emulator
 
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
@@ -69,8 +70,8 @@ class HistoryEventStore {
             .toLocalDateTime(TimeZone.currentSystemDefault())
         data[0] = event.code.toByte()
         data[1] = (ldt.year - 2000).toByte()
-        data[2] = ldt.monthNumber.toByte()
-        data[3] = ldt.dayOfMonth.toByte()
+        data[2] = ldt.month.number.toByte()
+        data[3] = ldt.day.toByte()
         data[4] = ldt.hour.toByte()
         data[5] = ldt.minute.toByte()
         data[6] = ldt.second.toByte()

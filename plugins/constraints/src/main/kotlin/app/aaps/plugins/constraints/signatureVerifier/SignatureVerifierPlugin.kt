@@ -48,7 +48,6 @@ class SignatureVerifierPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.signature_verifier),

@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Wat is waar over DIA?</string>
     <string name="dia_label_exam">Duur van insuline activiteit (DIA)</string>
-    <string name="dia_profile">Je moet de waarde voor DIA in je profiel instellen.</string>
     <string name="dia_minimumis5h">De minimumwaarde is 5 uur.</string>
     <string name="dia_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Als je tevreden bent met de waarde voor DIA die je in je pomp gebruikte voordat je AndroidAPS ging gebruiken goed werkte, dan is het niet nodig om deze te wijzigen als je begint met loopen.</string>
@@ -76,9 +75,7 @@
     <string name="prerequisites2_supportedcgm">Een ondersteunde CGM en geschikte app om bloedglucosewaarden te ontvangen op je telefoon/apparaat.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/nl/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">AAPS bijwerken</string>
-    <string name="update_git">Je moet Git geïnstalleerd en geconfigureerd hebben op je computer.</string>
     <string name="update_asap">Wanneer nieuwe versies van AndroidAPS zijn uitgebracht, kunnen eerdere versies na een bepaalde tijd van afstand beperkt worden.</string>
-    <string name="update_keys">Je moet de locatie van de keystore onthouden en dezelfde signing key gebruiken voor updates als bij je vorige installatie.</string>
     <string name="update_askfriend">Als je moeite hebt met het bouwen van de apk, kun je een apk installeren die is gebouwd door een vriend.</string>
     <string name="update_hint1">https://wiki.aaps.app/nl/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Probleemoplossing</string>

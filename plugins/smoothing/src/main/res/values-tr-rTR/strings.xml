@@ -6,5 +6,4 @@
     <string name="avg_smoothing_name">Ortalama yumuşatma</string>
     <string name="description_avg_smoothing">"Ortalama yumuşatma algoritması, en yeni değer etkilenmez"</string>
     <string name="no_smoothing_name">Yumuşatma yok</string>
-    <string name="description_no_smoothing">"Girilen glikoz verilerinde yumuşatma yapılmadı. BYODA G6'dan filtrelenmiş verileriniz olduğunda bunu kullanın."</string>
 </resources>

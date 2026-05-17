@@ -17,19 +17,19 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
+import app.aaps.core.ui.compose.AapsTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,7 +73,7 @@ internal fun EquilHistoryScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            AapsTopAppBar(
                 title = { Text(stringResource(R.string.equil_title_history_events)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
@@ -88,7 +88,7 @@ internal fun EquilHistoryScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            TabRow(selectedTabIndex = pagerState.currentPage) {
+            PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
                 Tab(
                     selected = pagerState.currentPage == 0,
                     onClick = { scope.launch { pagerState.animateScrollToPage(0) } },
@@ -241,7 +241,7 @@ private fun GroupFilterDropdown(
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                 .fillMaxWidth(),
             singleLine = true
         )

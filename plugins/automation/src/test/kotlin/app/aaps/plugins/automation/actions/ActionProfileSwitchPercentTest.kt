@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.PS
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputPercent
@@ -40,19 +39,12 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
         assertThat(sut.shortDescription()).isEqualTo("Start profile 100% for 30 min")
     }
 
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp)
-    }
-
     @Test fun doActionTest() = runTest {
         whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
         sut.pct = InputPercent(110.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
         verify(profileFunction, times(1)).createProfileSwitch(eq(30), eq(110), eq(0), any(), any(), any(), any())
     }
 

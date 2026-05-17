@@ -2,10 +2,6 @@ package app.aaps.plugins.automation
 
 import android.Manifest
 import android.content.Context
-import android.os.SystemClock
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
@@ -17,40 +13,46 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.core.interfaces.rx.events.EventBTChange
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.preferences.AdaptiveListPreference
+import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
+import app.aaps.plugins.automation.actions.ActionDisableScene
+import app.aaps.plugins.automation.actions.ActionEnableScene
 import app.aaps.plugins.automation.actions.ActionNotification
 import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
+import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
+import app.aaps.plugins.automation.compose.AutomationComposeContent
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
-import app.aaps.plugins.automation.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventLocationChange
 import app.aaps.plugins.automation.keys.AutomationStringKey
@@ -82,7 +84,6 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
-import app.aaps.plugins.automation.ui.TimerUtil
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -122,18 +123,30 @@ class AutomationPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val timerUtil: TimerUtil,
-    private val receiverStatusStore: ReceiverStatusStore
+    private val receiverStatusStore: ReceiverStatusStore,
+    private val uel: UserEntryLogger,
+    private val localProfileManager: LocalProfileManager,
+    private val sceneApi: SceneAutomationApi
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
-        .fragmentClass(AutomationFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_automation)
+        .composeContent { plugin ->
+            AutomationComposeContent(
+                plugin = plugin as AutomationPlugin,
+                rxBus = rxBus,
+                aapsSchedulers = aapsSchedulers,
+                fabricPrivacy = fabricPrivacy,
+                injector = injector,
+                uel = uel,
+                rh = rh,
+                localProfileManager = localProfileManager,
+                sceneApi = sceneApi
+            )
+        }
         .icon(IcPluginAutomation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
         .showInList { config.APS }
-        .neverVisible(!config.APS)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.automation_description),
     ownPreferences = listOf(AutomationStringKey::class.java),
     aapsLogger, rh, preferences
@@ -141,6 +154,7 @@ class AutomationPlugin @Inject constructor(
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
+    private val deferredStart = DeferredForegroundStart()
 
     private val automationEvents = ArrayList<AutomationEventObject>()
     var executionLog: MutableList<String> = ArrayList()
@@ -168,7 +182,7 @@ class AutomationPlugin @Inject constructor(
     )
 
     override fun onStart() {
-        locationServiceHelper.startService(context)
+        deferredStart.start { locationServiceHelper.startService(context) }
 
         super.onStart()
         loadFromSP()
@@ -222,6 +236,7 @@ class AutomationPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         disposable.clear()
+        deferredStart.cancel()
         locationServiceHelper.stopService(context)
         super.onStop()
     }
@@ -275,7 +290,8 @@ class AutomationPlugin @Inject constructor(
         /*
          * Running mode must report running to process automation events.
          */
-        if (loop.runningMode.isSuspended() || !loop.runningMode.isLoopRunning()) {
+        val runningMode = loop.runningMode()
+        if (runningMode.pausesLoopExecution() || !runningMode.isLoopRunning()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop suspended")
             executionLog.add(rh.gs(app.aaps.core.ui.R.string.loopsuspended))
             rxBus.send(EventAutomationUpdateGui())
@@ -330,31 +346,26 @@ class AutomationPlugin @Inject constructor(
             for (action in actions) {
                 action.title = event.title
                 if (action.isValid()) {
-                    action.doAction(object : Callback() {
-                        override fun run() {
-                            val sb = StringBuilder()
-                                .append(dateUtil.timeString(dateUtil.now()))
-                                .append(" ")
-                                .append(if (result.success) "☺" else "▼")
-                                .append(" <b>")
-                                .append(event.title)
-                                .append(":</b> ")
-                                .append(action.shortDescription())
-                                .append(": ")
-                                .append(result.comment)
-                            executionLog.add(sb.toString())
-                            aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
-                            rxBus.send(EventAutomationUpdateGui())
-                        }
-                    })
-                    SystemClock.sleep(3000)
+                    val result = action.doAction()
+                    val sb = StringBuilder()
+                        .append(dateUtil.timeString(dateUtil.now()))
+                        .append(" ")
+                        .append(if (result.success) "☺" else "▼")
+                        .append(" <b>")
+                        .append(event.title)
+                        .append(":</b> ")
+                        .append(action.shortDescription())
+                        .append(": ")
+                        .append(result.comment)
+                    executionLog.add(sb.toString())
+                    aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
+                    rxBus.send(EventAutomationUpdateGui())
                 } else {
                     executionLog.add("Invalid action: ${action.shortDescription()}")
                     aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
                     rxBus.send(EventAutomationUpdateGui())
                 }
             }
-            SystemClock.sleep(1100)
             event.lastRun = dateUtil.now()
             if (event.autoRemove) remove(event)
         }
@@ -431,7 +442,10 @@ class AutomationPlugin @Inject constructor(
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
             ActionSendSMS(injector),
-            ActionSMBChange(injector)
+            ActionSMBChange(injector),
+            ActionRunScene(injector),
+            ActionEnableScene(injector),
+            ActionDisableScene(injector)
         )
         if (config.isEngineeringMode() && config.isDev())
             actions.add(ActionRunAutotune(injector))
@@ -484,7 +498,7 @@ class AutomationPlugin @Inject constructor(
     }
 
     /**
-     * Generate reminder via [app.aaps.plugins.automation.ui.TimerUtil]
+     * Generate reminder via [TimerUtil]
      *
      * @param seconds seconds to the future
      */
@@ -598,27 +612,4 @@ class AutomationPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-        val entries = arrayOf<CharSequence>(
-            rh.gs(R.string.use_passive_location),
-            rh.gs(R.string.use_network_location),
-            rh.gs(R.string.use_gps_location),
-        )
-
-        val entryValues = arrayOf<CharSequence>(
-            "PASSIVE",
-            "NETWORK",
-            "GPS",
-        )
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "automation_settings"
-            title = rh.gs(app.aaps.core.ui.R.string.automation)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.AutomationLocation, title = R.string.locationservice, entries = entries, entryValues = entryValues))
-        }
-    }
 }

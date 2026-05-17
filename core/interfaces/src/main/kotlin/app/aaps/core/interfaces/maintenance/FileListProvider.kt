@@ -22,4 +22,5 @@ interface FileListProvider {
     fun listCustomWatchfaceFiles(): MutableList<CwfFile>
     fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata>
     fun formatExportedAgo(utcTime: String): String
+    fun isDirectoryAccessGranted(): Boolean
 }

@@ -49,7 +49,6 @@ import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcSmb
 import app.aaps.core.ui.compose.icons.Ns
@@ -166,12 +165,6 @@ fun BolusCarbsScreen(
                 )
             }
 
-            // Error display
-            AapsSnackbarHost(
-                message = uiState.snackbarMessage,
-                onDismiss = { viewModel.clearSnackbar() },
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
         }
     }
 }
@@ -425,7 +418,7 @@ private fun MealLinkItem(
                         )
 
                         Text(
-                            text = rh.gs(app.aaps.core.objects.R.string.format_carbs, carbs.amount.toInt()),
+                            text = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs.amount.toInt()),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )

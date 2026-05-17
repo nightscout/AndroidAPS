@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.aps.IobTotal
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
@@ -60,10 +59,6 @@ class TriggerIobTest : TriggerTestBase() {
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerIob
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.insulin.value).isWithin(0.01).of(4.1)
-    }
-
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerIob(injector).icon().get()).isEqualTo(R.drawable.ic_keyboard_capslock)
     }
 
     private fun generateIobRecordData(): IobTotal {

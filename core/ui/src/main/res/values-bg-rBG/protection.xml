@@ -13,10 +13,7 @@
     <string name="bolus_pin">PIN за болус</string>
     <string name="protection_timeout_title">Време между опити за PIN [сек]</string>
     <string name="protection_timeout_summary">Времето, за което паролата или PIN трябва да бъдат въведени</string>
-    <string name="biometric">Биометрични данни</string>
-    <string name="custom_password">Допълнителна парола</string>
-    <string name="custom_pin">Персонален PIN</string>
-    <string name="noprotection">Няма защита</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Грешка при биометрични данни!</string>
     <string name="unsecure_fallback_descriotion_biometric">За да бъде ефективна, биометричната защита се нуждае от главна парола.\n\nМоля, въведете главна парола!</string>
     <string name="password_set">Паролата е зададена!</string>
@@ -26,6 +23,4 @@
     <string name="password_not_changed">Паролата не е променена</string>
     <string name="pin_not_changed">PIN кодът не е променен</string>
     <string name="pin_cleared">PIN кодът е изтрит!</string>
-    <string name="password_hint">Въведете парола</string>
-    <string name="pin_hint">Въведи PIN</string>
 </resources>

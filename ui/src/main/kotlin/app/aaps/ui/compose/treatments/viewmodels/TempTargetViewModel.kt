@@ -15,23 +15,24 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.friendlyDescription
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -44,11 +45,12 @@ class TempTargetViewModel @Inject constructor(
     private val profileUtil: ProfileUtil,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
-    val uiState: StateFlow<TempTargetUiState>
-        field = MutableStateFlow(TempTargetUiState())
+    private val _uiState = MutableStateFlow(TempTargetUiState())
+    val uiState: StateFlow<TempTargetUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -63,7 +65,7 @@ class TempTargetViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.tempTargets.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -76,21 +78,18 @@ class TempTargetViewModel @Inject constructor(
                     persistenceLayer.getTemporaryTargetDataFromTime(now - millsToThePast, false)
                 }
 
-                uiState.update {
+                val activeTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+                _uiState.update {
                     it.copy(
                         tempTargets = tempTargets,
-                        isLoading = false,
-                        snackbarMessage = null
+                        activeTarget = activeTarget,
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load temp targets", e)
-                uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading temp targets")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading temp targets", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -108,17 +107,10 @@ class TempTargetViewModel @Inject constructor(
     }
 
     /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
-    }
-
-    /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -126,7 +118,7 @@ class TempTargetViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: TT) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -138,7 +130,7 @@ class TempTargetViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -150,7 +142,7 @@ class TempTargetViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: TT) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -163,9 +155,7 @@ class TempTargetViewModel @Inject constructor(
     /**
      * Get currently active temporary target
      */
-    fun getActiveTarget(): TT? {
-        return runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
-    }
+    fun getActiveTarget(): TT? = uiState.value.activeTarget
 
     /**
      * Prepare delete confirmation message
@@ -210,7 +200,7 @@ class TempTargetViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete temp targets", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp targets")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting temp targets", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -243,9 +233,9 @@ class TempTargetViewModel @Inject constructor(
 @Immutable
 data class TempTargetUiState(
     val tempTargets: List<TT> = emptyList(),
+    val activeTarget: TT? = null,
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<TT> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
+    val selectedItems: Set<TT> = emptySet()
 )

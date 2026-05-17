@@ -81,7 +81,6 @@ enum class StringKey(
         summaryResId = R.string.pref_summary_patient_name,
         validator = StringValidator.personName()
     ),
-    GeneralSkin(key = "skin", defaultValue = "", titleResId = R.string.pref_title_skin, preferenceType = PreferenceType.LIST),
     GeneralDarkMode(
         key = "use_dark_mode",
         defaultValue = "dark",
@@ -123,8 +122,6 @@ enum class StringKey(
         key = "bolus_pin", defaultValue = "", titleResId = R.string.pref_title_bolus_pin, isPin = true, isHashed = true,
         visibility = PreferenceVisibility.intEquals({ IntKey.ProtectionTypeBolus }, ProtectionType.CUSTOM_PIN.ordinal)
     ),
-
-    OverviewCopySettingsFromNs(key = "statuslights_copy_ns", defaultValue = "", titleResId = R.string.pref_title_copy_settings_from_ns),
 
     SafetyAge(key = "age", defaultValue = "adult", titleResId = R.string.pref_title_patient_age, preferenceType = PreferenceType.LIST),
     MaintenanceEmail(

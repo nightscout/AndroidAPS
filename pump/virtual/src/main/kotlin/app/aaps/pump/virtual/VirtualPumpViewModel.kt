@@ -1,13 +1,16 @@
 package app.aaps.pump.virtual
 
+import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpTempBasalType
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
-import android.content.Context
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
@@ -18,12 +21,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.toStringFull
+import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
-import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
@@ -35,7 +38,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.runBlocking
+import app.aaps.core.ui.R as CoreUiR
 
 class VirtualPumpViewModel(
     private val virtualPumpPlugin: VirtualPumpPlugin,
@@ -84,21 +87,55 @@ class VirtualPumpViewModel(
 
     private fun buildInitialState(): PumpOverviewUiState {
         val isSuspended = preferences.get(VirtualBooleanNonPreferenceKey.IsSuspended)
-        return buildUiState(isSuspended, virtualPumpPlugin.pumpTypeFlow.value)
+        return PumpOverviewUiState(
+            statusBanner = communicationStatus.statusBanner(),
+            queueStatus = communicationStatus.queueStatus(),
+            infoRows = emptyList(),
+            managementActions = listOf(
+                PumpAction(
+                    label = rh.gs(CoreUiR.string.pump_suspend),
+                    icon = IcLoopPaused,
+                    category = ActionCategory.MANAGEMENT,
+                    visible = !isSuspended,
+                    onClick = { onSuspendToggle(true) }
+                ),
+                PumpAction(
+                    label = rh.gs(CoreUiR.string.pump_resume),
+                    icon = Icons.Filled.PlayArrow,
+                    category = ActionCategory.MANAGEMENT,
+                    visible = isSuspended,
+                    onClick = { onSuspendToggle(false) }
+                )
+            )
+        )
     }
 
-    private fun buildUiState(isSuspended: Boolean, pumpType: PumpType?): PumpOverviewUiState {
+    private suspend fun buildUiState(isSuspended: Boolean, pumpType: PumpType?): PumpOverviewUiState {
         virtualPumpPlugin.refreshConfiguration()
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+        val profile = pumpSync.expectedPumpState().profile
         val now = dateUtil.now()
 
         val tempBasalText = profile?.let {
-            runBlocking { persistenceLayer.getTemporaryBasalActiveAt(now) }
-                ?.toStringFull(it, dateUtil, rh)
+            persistenceLayer.getTemporaryBasalActiveAt(now)
+                ?.let { tempBasal ->
+                    ch.basalTbrString(
+                        rate = PumpRate(tempBasal.rate),
+                        startTime = tempBasal.timestamp,
+                        durationInMin = T.msecs(tempBasal.duration).mins().toInt(),
+                        isAbsolute = tempBasal.isAbsolute
+                    )
+                }
         } ?: ""
 
-        val extendedBolusText = runBlocking { persistenceLayer.getExtendedBolusActiveAt(now) }
-            ?.toStringFull(dateUtil, rh) ?: ""
+        val extendedBolusText = persistenceLayer.getExtendedBolusActiveAt(now)
+            ?.let {
+                ch.basalTbrString(
+                    rate = PumpRate(it.rate),
+                    startTime = it.timestamp,
+                    durationInMin = T.msecs(it.duration).mins().toInt(),
+                    isExtended = true
+                )
+            } ?: ""
 
         // Format values for the shared builder
         val lastConnection = virtualPumpPlugin.lastDataTime.value.takeIf { it != 0L }
@@ -106,7 +143,7 @@ class VirtualPumpViewModel(
 
         val lastBolus = virtualPumpPlugin.lastBolusAmount.value?.let { amount ->
             virtualPumpPlugin.lastBolusTime.value?.takeIf { it != 0L }?.let { time ->
-                ch.insulinAmountAgoString(amount, dateUtil.sinceString(time, rh))
+                ch.insulinAmountAgoString(amount, time)
             }
         }
 
@@ -115,7 +152,7 @@ class VirtualPumpViewModel(
         }
 
         val battery = virtualPumpPlugin.batteryLevel.value?.let { level ->
-            rh.gs(app.aaps.core.ui.R.string.format_percent, level)
+            rh.gs(CoreUiR.string.format_percent, level)
         }
 
         val reservoir = ch.insulinAmountString(virtualPumpPlugin.reservoirLevel.value)
@@ -152,15 +189,15 @@ class VirtualPumpViewModel(
 
         val managementActions = listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.pump_suspend),
-                iconRes = app.aaps.core.ui.R.drawable.ic_loop_paused,
+                label = rh.gs(CoreUiR.string.pump_suspend),
+                icon = IcLoopPaused,
                 category = ActionCategory.MANAGEMENT,
                 visible = !isSuspended,
                 onClick = { onSuspendToggle(true) }
             ),
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.pump_resume),
-                iconRes = app.aaps.core.ui.R.drawable.ic_loop_resume,
+                label = rh.gs(CoreUiR.string.pump_resume),
+                icon = Icons.Filled.PlayArrow,
                 category = ActionCategory.MANAGEMENT,
                 visible = isSuspended,
                 onClick = { onSuspendToggle(false) }

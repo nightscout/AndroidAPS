@@ -19,7 +19,6 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
 
     testImplementation(project(":implementation"))
     testImplementation(project(":pump:insight"))
@@ -33,9 +32,7 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     api(libs.kotlinx.datetime)
-
-    // Phone checker
-    api(libs.com.scottyab.rootbeer.lib)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)

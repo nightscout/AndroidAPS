@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpentreiber geändert.</string>
@@ -60,4 +61,7 @@
     <string name="pref_show_date">Datum anzeigen</string>
     <string name="default_custom_watchface_comment">Standard-Watchface, Du kannst auf den Knopf WATCHFACE exportieren drücken, um eine Vorlage zu generieren</string>
     <string name="wear_default_watchface">Standard-Watchface</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

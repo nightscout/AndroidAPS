@@ -25,11 +25,6 @@
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Tạo dữ liệu đường huyết ngẫu nhiên (chỉ dùng cho chế độ Demo)</string>
     <string name="random_bg_short">Đường huyết</string>
-    <string name="bgsource_settings">Cài đặt nguồn dữ liệu đường huyết</string>
-    <string name="bgsource_log_sensor_change_title">Chấp nhận khởi động cảm biến</string>
-    <string name="bgsource_log_sensor_change_summary">Tự động tạo sự kiện “CGM Sensor Insert” trong Careportal khi nhận được tín hiệu khởi động cảm biến từ nguồn BG (local broadcast)</string>
-    <string name="direction">direction</string>
-    <string name="bg_generation_interval_minutes">Chu kỳ tạo đường huyết (phút)</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Nhận dữ liệu đường huyết từ ứng dụng Syai/Ottai.</string>
@@ -39,4 +34,18 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Ứng dụng Sino</string>
     <string name="description_source_patched_sino_app">Nhận dữ liệu đường huyết từ ứng dụng Sino.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Nhận giá trị đường huyết từ ứng dụng Instara.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Yêu cầu dữ liệu lịch sử từ Instara</string>
+    <string name="pref_summary_instara_history_request">Yêu cầu dữ liệu lịch sử có thể bị thiếu trong nền</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Đọc thông báo</string>
+    <string name="description_source_notification_reader">Đọc giá trị đường huyết từ các thông báo do ứng dụng CGM chính thức gửi (Dexcom, Medtronic, Eversense, v.v.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Ứng dụng cần quyền để nhận dữ liệu CGM từ ứng dụng Dexcom</string>
+    <string name="permission_notification_listener_title">Truy cập thông báo</string>
+    <string name="permission_notification_listener_description">Cần để đọc đường huyết từ thông báo CGM</string>
 </resources>

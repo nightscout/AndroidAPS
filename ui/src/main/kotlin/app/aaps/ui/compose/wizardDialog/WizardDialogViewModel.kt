@@ -26,6 +26,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.runningMode.PumpCommandGate
+import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -33,9 +35,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
@@ -43,7 +46,7 @@ import kotlin.math.abs
 @HiltViewModel
 @Stable
 class WizardDialogViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
@@ -52,114 +55,125 @@ class WizardDialogViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val persistenceLayer: PersistenceLayer,
-    val preferences: Preferences,
-    val config: Config,
-    val rh: ResourceHelper,
-    val dateUtil: DateUtil,
+    private val preferences: Preferences,
+    private val config: Config,
+    private val rh: ResourceHelper,
+    private val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val runningModeGuard: RunningModeGuard
 ) : ViewModel() {
 
-    val uiState: StateFlow<WizardDialogUiState>
-        field = MutableStateFlow(WizardDialogUiState())
+    private val _uiState = MutableStateFlow(WizardDialogUiState())
+    val uiState: StateFlow<WizardDialogUiState> = _uiState.asStateFlow()
 
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data class ShowTempBasalError(val comment: String) : SideEffect()
     }
 
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
+    private val _sideEffect = MutableSharedFlow<SideEffect>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     private var wizard: BolusWizard? = null
 
     init {
+        viewModelScope.launch { initialize() }
+    }
+
+    private suspend fun initialize() {
         val initialCarbs = savedStateHandle.get<String>("carbs")?.toIntOrNull()
         val initialNotes = savedStateHandle.get<String>("notes")
 
-        val profileStore = localProfileManager.profile
-        if (profileStore != null) {
-            val units = profileFunction.getUnits()
+        val profileStore = localProfileManager.profile ?: return
 
-            val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
-            val maxBolus = constraintChecker.getMaxBolusAllowed().value()
-            val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
-            val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
+        val units = profileFunction.getUnits()
 
-            // Build profile names list: "Active" + profile store names
-            val profileList = mutableListOf(rh.gs(app.aaps.core.ui.R.string.active))
-            profileList.addAll(profileStore.getProfileList().map { it.toString() })
+        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
+        val maxBolus = constraintChecker.getMaxBolusAllowed().value()
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
-            // Load saved preferences
-            val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
-            val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
-            val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
-            val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
+        // Build profile names list: "Active" + profile store names
+        val profileList = mutableListOf(rh.gs(app.aaps.core.ui.R.string.active))
+        profileList.addAll(profileStore.getProfileList().map { it.toString() })
 
-            // Percentage: reset to 100% if last BG is too old
-            var percentage = preferences.get(IntKey.OverviewBolusPercentage)
-            val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
-            runBlocking { persistenceLayer.getLastGlucoseValue() }.let {
-                if (it != null) {
-                    if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
-                        percentage = 100
-                } else percentage = 100
-            }
+        // Load saved preferences
+        val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
+        val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
+        val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
+        val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
 
-            // Current BG
-            val actualBg = iobCobCalculator.ads.actualBg()
-            val hasBgData = actualBg != null
-            val currentBg = actualBg?.valueToUnits(units) ?: 0.0
-            val bgAgeMinutes = if (actualBg != null) ((dateUtil.now() - actualBg.timestamp) / 60000).toInt() else 0
-
-            // IOB for display
-            val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
-            val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
-            val totalIOB = bolusIob.iob + basalIob.basaliob
-
-            uiState.update {
-                WizardDialogUiState(
-                    // User inputs
-                    bg = currentBg,
-                    carbs = initialCarbs ?: 0,
-                    percentage = percentage,
-                    directCorrection = 0.0,
-                    carbTime = 0,
-                    notes = initialNotes ?: "",
-                    selectedProfileIndex = 0,
-                    // Toggles
-                    useBg = true,
-                    useTT = true,
-                    useTrend = useTrend,
-                    useIOB = true,
-                    useCOB = useCOB,
-                    alarmChecked = false,
-                    calculationExpanded = false,
-                    // Config
-                    maxCarbs = maxCarbs,
-                    maxBolus = maxBolus,
-                    bolusStep = bolusStep,
-                    units = units,
-                    profileNames = profileList,
-                    showNotes = showNotes,
-                    hasTempTarget = tempTarget != null,
-                    useBolusAdvisor = useBolusAdvisor,
-                    defaultPercentage = percentage,
-                    simpleMode = preferences.simpleMode,
-                    // BG card
-                    hasBgData = hasBgData,
-                    bgAgeMinutes = bgAgeMinutes,
-                    // Initial IOB display
-                    totalIOB = -totalIOB
-                )
-            }
-
-            recalculate()
+        // Percentage: reset to 100% if last BG is too old
+        var percentage = preferences.get(IntKey.OverviewBolusPercentage)
+        val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
+        persistenceLayer.getLastGlucoseValue().let {
+            if (it != null) {
+                if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
+                    percentage = 100
+            } else percentage = 100
         }
+
+        // Current BG
+        val actualBg = iobCobCalculator.ads.actualBg()
+        val hasBgData = actualBg != null
+        val currentBg = actualBg?.valueToUnits(units) ?: 0.0
+        val bgAgeMinutes = if (actualBg != null) ((dateUtil.now() - actualBg.timestamp) / 60000).toInt() else 0
+
+        // IOB for display
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val totalIOB = bolusIob.iob + basalIob.basaliob
+
+        val cantDeliverBolus = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS) != null
+        val forcedRecordOnly = cantDeliverBolus || !activePlugin.activePump.isInitialized() || config.AAPSCLIENT
+
+        _uiState.update {
+            WizardDialogUiState(
+                // User inputs
+                bg = currentBg,
+                carbs = initialCarbs ?: 0,
+                percentage = percentage,
+                directCorrection = 0.0,
+                carbTime = 0,
+                notes = initialNotes ?: "",
+                selectedProfileIndex = 0,
+                // Toggles
+                useBg = true,
+                useTT = true,
+                useTrend = useTrend,
+                useIOB = true,
+                useCOB = useCOB,
+                alarmChecked = false,
+                calculationExpanded = false,
+                // Config
+                maxCarbs = maxCarbs,
+                maxBolus = maxBolus,
+                bolusStep = bolusStep,
+                units = units,
+                profileNames = profileList,
+                showNotes = showNotes,
+                hasTempTarget = tempTarget != null,
+                useBolusAdvisor = useBolusAdvisor,
+                defaultPercentage = percentage,
+                simpleMode = preferences.simpleMode,
+                carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
+                carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
+                carbsButtonIncrement3 = preferences.get(IntKey.OverviewCarbsButtonIncrement3),
+                // BG card
+                hasBgData = hasBgData,
+                bgAgeMinutes = bgAgeMinutes,
+                // Initial IOB display
+                totalIOB = -totalIOB,
+                forcedRecordOnly = forcedRecordOnly
+            )
+        }
+
+        recalculate()
     }
 
     // --- Input update methods ---
@@ -168,59 +182,60 @@ class WizardDialogViewModel @Inject constructor(
         val state = uiState.value
         val range = if (state.isMgdl) 0.0..500.0 else 0.0..30.0
         val clamped = value.coerceIn(range)
-        uiState.update { it.copy(bg = clamped) }
+        _uiState.update { it.copy(bg = clamped) }
         recalculate()
     }
 
     fun updateCarbs(value: Int) {
         val state = uiState.value
         val clamped = value.coerceIn(0, state.maxCarbs)
-        uiState.update { it.copy(carbs = clamped) }
+        _uiState.update { it.copy(carbs = clamped) }
+        recalculate()
+    }
+
+    fun addCarbs(increment: Int) {
+        val state = uiState.value
+        val newValue = (state.carbs + increment).coerceIn(0, state.maxCarbs)
+        _uiState.update { it.copy(carbs = newValue) }
         recalculate()
     }
 
     fun updatePercentage(value: Int) {
-        val clamped = value.coerceIn(10, 200)
-        uiState.update { it.copy(percentage = clamped) }
+        _uiState.update { it.copy(percentage = value) }
         recalculate()
     }
 
     fun updateDirectCorrection(value: Double) {
         val state = uiState.value
         val clamped = value.coerceIn(-state.maxBolus, state.maxBolus)
-        uiState.update { it.copy(directCorrection = clamped) }
+        _uiState.update { it.copy(directCorrection = clamped) }
         recalculate()
     }
 
     fun updateCarbTime(value: Int) {
         val clamped = value.coerceIn(-60, 60)
-        uiState.update {
-            it.copy(
-                carbTime = clamped,
-                alarmChecked = clamped > 0
-            )
-        }
+        _uiState.update { it.copy(carbTime = clamped) }
         recalculate()
     }
 
     fun updateCarbsType(value: CarbsType) {
-        uiState.update { it.copy(carbsType = value) }
+        _uiState.update { it.copy(carbsType = value) }
         recalculate()
     }
 
     fun updateNotes(value: String) {
-        uiState.update { it.copy(notes = value) }
+        _uiState.update { it.copy(notes = value) }
     }
 
     fun selectProfile(index: Int) {
-        uiState.update { it.copy(selectedProfileIndex = index) }
+        _uiState.update { it.copy(selectedProfileIndex = index) }
         recalculate()
     }
 
     // --- Toggle methods ---
 
     fun toggleBg(checked: Boolean) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 useBg = checked,
                 // TT depends on BG being checked
@@ -231,18 +246,18 @@ class WizardDialogViewModel @Inject constructor(
     }
 
     fun toggleTT(checked: Boolean) {
-        uiState.update { it.copy(useTT = checked) }
+        _uiState.update { it.copy(useTT = checked) }
         recalculate()
     }
 
     fun toggleTrend(checked: Boolean) {
-        uiState.update { it.copy(useTrend = checked) }
+        _uiState.update { it.copy(useTrend = checked) }
         savePreferences()
         recalculate()
     }
 
     fun toggleIOB(checked: Boolean) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 useIOB = checked,
                 // COB requires IOB
@@ -254,7 +269,7 @@ class WizardDialogViewModel @Inject constructor(
     }
 
     fun toggleCOB(checked: Boolean) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 useCOB = checked,
                 // COB requires IOB
@@ -266,15 +281,15 @@ class WizardDialogViewModel @Inject constructor(
     }
 
     fun toggleAlarm(checked: Boolean) {
-        uiState.update { it.copy(alarmChecked = checked) }
+        _uiState.update { it.copy(alarmChecked = checked) }
     }
 
     fun toggleAdvancedExpanded() {
-        uiState.update { it.copy(advancedExpanded = !it.advancedExpanded) }
+        _uiState.update { it.copy(advancedExpanded = !it.advancedExpanded) }
     }
 
     fun toggleCalculationExpanded() {
-        uiState.update { it.copy(calculationExpanded = !it.calculationExpanded) }
+        _uiState.update { it.copy(calculationExpanded = !it.calculationExpanded) }
     }
 
     fun refreshAfterSettings() {
@@ -283,7 +298,7 @@ class WizardDialogViewModel @Inject constructor(
         val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
         val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
         val percentage = preferences.get(IntKey.OverviewBolusPercentage)
-        uiState.update {
+        _uiState.update {
             it.copy(
                 useTrend = useTrend,
                 useCOB = useCOB,
@@ -378,7 +393,7 @@ class WizardDialogViewModel @Inject constructor(
             rh.gs(app.aaps.core.ui.R.string.wizard_trend_detail, signedTrendValue, state.units.asText)
         } else ""
 
-        uiState.update {
+        _uiState.update {
             it.copy(
                 // Calculation results
                 insulinFromBG = w.insulinFromBG,
@@ -428,7 +443,8 @@ class WizardDialogViewModel @Inject constructor(
             advisor = false,
             eCarbsGrams = state.eCarbs,
             eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-            eCarbsDurationHours = state.eCarbsDurationHours
+            eCarbsDurationHours = state.eCarbsDurationHours,
+            forcedRecordOnly = state.forcedRecordOnly
         ) ?: emptyList()
     }
 
@@ -438,7 +454,8 @@ class WizardDialogViewModel @Inject constructor(
             advisor = true,
             eCarbsGrams = state.eCarbs,
             eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-            eCarbsDurationHours = state.eCarbsDurationHours
+            eCarbsDurationHours = state.eCarbsDurationHours,
+            forcedRecordOnly = state.forcedRecordOnly
         ) ?: emptyList()
     }
 
@@ -447,25 +464,29 @@ class WizardDialogViewModel @Inject constructor(
         viewModelScope.launch {
             wizard?.executeNormal(
                 onError = { comment ->
-                    sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
                 },
                 eCarbsGrams = state.eCarbs,
-                eCarbsDelayMinutes = state.eCarbsDelayMinutes,
-                eCarbsDurationHours = state.eCarbsDurationHours
+                eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
+                eCarbsDurationHours = state.eCarbsDurationHours,
+                forcedRecordOnly = state.forcedRecordOnly
             )
         }
     }
 
     fun executeBolusAdvisor() {
         val state = uiState.value
-        wizard?.executeBolusAdvisor(
-            onError = { comment ->
-                sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
-            },
-            eCarbsGrams = state.eCarbs,
-            eCarbsDelayMinutes = state.eCarbsDelayMinutes,
-            eCarbsDurationHours = state.eCarbsDurationHours
-        )
+        viewModelScope.launch {
+            wizard?.executeBolusAdvisor(
+                onError = { comment ->
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
+                },
+                eCarbsGrams = state.eCarbs,
+                eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
+                eCarbsDurationHours = state.eCarbsDurationHours,
+                forcedRecordOnly = state.forcedRecordOnly
+            )
+        }
     }
 
     fun savePreferences() {

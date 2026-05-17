@@ -73,7 +73,7 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isFalse()
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.15)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isWithin(0.01).of(0.15)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(163.5)
     }
 
@@ -87,7 +87,7 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(1.65)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isWithin(0.01).of(1.65)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(161.95)
     }
 
@@ -130,7 +130,7 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.0)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isWithin(0.01).of(0.0)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
     }
 
@@ -180,7 +180,7 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.0)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isWithin(0.01).of(0.0)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
     }
 
@@ -196,7 +196,7 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.0)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isWithin(0.01).of(0.0)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
     }
 }

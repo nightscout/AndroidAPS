@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,8 +15,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,16 +33,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import java.text.DecimalFormat
@@ -124,26 +124,16 @@ private fun TempBasalDialogContent(
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = ElementType.TEMP_BASAL.icon(),
-                            contentDescription = null,
-                            tint = ElementType.TEMP_BASAL.color(),
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(start = 8.dp))
-                        Text(stringResource(ElementType.TEMP_BASAL.labelResId()))
-                    }
-                },
+                title = { Text(stringResource(ElementType.TEMP_BASAL.labelResId())) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(CoreUiR.string.back)
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(CoreUiR.string.close)
                         )
                     }
                 },
@@ -153,11 +143,14 @@ private fun TempBasalDialogContent(
         bottomBar = {
             val hasAction = if (uiState.isPercentPump) uiState.basalPercent != 100.0 else uiState.basalAbsolute > 0.0
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = hasAction || uiState.durationMinutes > 0.0,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .imePadding()
+                    .bottomBarSafeArea()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Icon(
@@ -169,7 +162,7 @@ private fun TempBasalDialogContent(
                 if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
                     Text("${DecimalFormat("0").format(uiState.basalPercent)}%")
                 } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                    Text("${DecimalFormat("0.00").format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.insulin_unit_shortname)}/h")
+                    Text("${DecimalFormat("0.00").format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.profile_ins_units_per_hour)}")
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -216,7 +209,7 @@ private fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
                             valueFormat = DecimalFormat("0.00"),
-                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname) + "/h",
+                            unitLabel = stringResource(CoreUiR.string.profile_ins_units_per_hour),
                             modifier = itemModifier
                         )
                     }

@@ -31,6 +31,7 @@ import app.aaps.ui.compose.navigation.ElementAvailability
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -58,8 +59,8 @@ class TreatmentViewModel @Inject constructor(
     private val elementAvailability: ElementAvailability
 ) : ViewModel() {
 
-    val uiState: StateFlow<TreatmentUiState>
-        field = MutableStateFlow(TreatmentUiState())
+    private val _uiState = MutableStateFlow(TreatmentUiState())
+    val uiState: StateFlow<TreatmentUiState> = _uiState.asStateFlow()
 
     init {
         setupEventListeners()
@@ -98,7 +99,7 @@ class TreatmentViewModel @Inject constructor(
 
             val showSettingsIcon = !preferences.simpleMode
 
-            uiState.update { state ->
+            _uiState.update { state ->
                 state.copy(
                     showCgm = showCgm,
                     showCalibration = showCalibration,
@@ -122,7 +123,7 @@ class TreatmentViewModel @Inject constructor(
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
         val pump = activePlugin.activePump
-        val runningMode = loop.runningMode
+        val runningMode = loop.runningMode()
 
         return activeEntries.map { entry ->
             when (entry.mode()) {
@@ -158,7 +159,7 @@ class TreatmentViewModel @Inject constructor(
     private fun buildCarbsItem(entry: QuickWizardEntry): QuickWizardItem {
         val buttonText = entry.buttonText()
         val guid = entry.guid()
-        val detail = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs())
+        val detail = rh.gs(R.string.format_carbs, entry.carbs())
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
@@ -193,7 +194,7 @@ class TreatmentViewModel @Inject constructor(
         if (wizard.calculatedTotalInsulin <= 0.0)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(app.aaps.ui.R.string.wizard_no_insulin_required))
 
-        val detail = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs()) +
+        val detail = rh.gs(R.string.format_carbs, entry.carbs()) +
             " " + rh.gs(R.string.format_insulin_units, wizard.calculatedTotalInsulin)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()

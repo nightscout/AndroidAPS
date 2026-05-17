@@ -42,11 +42,13 @@ data class NSOfflineEvent(
         OPEN_LOOP,
         CLOSED_LOOP,
         CLOSED_LOOP_LGS,
+
         // Temporary only
         SUPER_BOLUS,
         DISCONNECTED_PUMP,
         SUSPENDED_BY_PUMP,
         SUSPENDED_BY_USER,
+        SUSPENDED_BY_DST,
         UNKNOWN
         ;
 

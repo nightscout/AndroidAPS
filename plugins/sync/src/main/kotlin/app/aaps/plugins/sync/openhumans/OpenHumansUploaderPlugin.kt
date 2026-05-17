@@ -1,25 +1,13 @@
 package app.aaps.plugins.sync.openhumans
 
-import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.util.DisplayMetrics
 import android.view.WindowManager
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
-import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
@@ -29,6 +17,9 @@ import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -37,7 +28,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.compose.OHComposeContent
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
@@ -64,12 +54,12 @@ import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
+import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
@@ -79,18 +69,17 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     internal val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
+    private val notificationManager: NotificationManager,
     internal val stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
 ) : Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(R.drawable.open_humans_white)
         .icon(IcPluginOpenHumans)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)
         .description(R.string.open_humans_description)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .composeContent { plugin ->
             OHComposeContent(
                 plugin = plugin as OpenHumansUploaderPlugin,
@@ -116,7 +105,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        setupNotificationChannels()
         if (openHumansState != null) scheduleWorker(false)
         merge(
             preferences.observe(BooleanKey.OpenHumansWifiOnly).drop(1).map {},
@@ -633,72 +621,23 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         openHumansState = null
     }
 
-    private fun setupNotificationChannels() {
-        val notificationManagerCompat = NotificationManagerCompat.from(context)
-        notificationManagerCompat.createNotificationChannel(
-            NotificationChannel(
-                NOTIFICATION_CHANNEL_WORKER,
-                rh.gs(R.string.open_humans_uploading),
-                NotificationManager.IMPORTANCE_MIN
-            )
-        )
-        notificationManagerCompat.createNotificationChannel(
-            NotificationChannel(
-                NOTIFICATION_CHANNEL_MESSAGES,
-                rh.gs(R.string.open_humans_notifications),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-        )
-    }
-
     private suspend fun handleSignOut() {
-        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_MESSAGES)
-            .setContentTitle(rh.gs(R.string.you_have_been_signed_out_of_open_humans))
-            .setContentText(rh.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose))
-            .setStyle(NotificationCompat.BigTextStyle())
-            .setSmallIcon(R.drawable.open_humans_notification)
-            .setAutoCancel(true)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    context,
-                    0,
-                    Intent(context, OHLoginActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    },
-                    PendingIntent.FLAG_IMMUTABLE
-                )
+        notificationManager.post(
+            id = NotificationId.OPEN_HUMANS_SIGNED_OUT,
+            text = rh.gs(R.string.you_have_been_signed_out_of_open_humans)
+                + "\n" + rh.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose),
+            actions = listOf(
+                NotificationAction(CoreUiR.string.login) {
+                    val intent = Intent(context, OHLoginActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
+                }
             )
-            .build()
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
-            withContext(Dispatchers.Main) {
-                logout()
-            }
+        )
+        withContext(Dispatchers.Main) {
+            logout()
         }
-    }
-
-    internal fun createForegroundInfo(id: UUID): ForegroundInfo {
-        val cancel = context.getString(R.string.cancel)
-
-        val intent = WorkManager.getInstance(context)
-            .createCancelPendingIntent(id)
-
-        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_WORKER)
-            .setContentTitle(context.getString(R.string.open_humans_uploading))
-            .setContentText(context.getString(R.string.uploading_to_open_humans))
-            .setSmallIcon(R.drawable.open_humans_notification)
-            .setOngoing(true)
-            .addAction(android.R.drawable.ic_delete, cancel, intent)
-            .build()
-
-        return ForegroundInfo(UPLOAD_NOTIFICATION_ID, notification)
     }
 
     private companion object {
@@ -708,10 +647,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
         const val WORK_NAME_PERIODIC = "Open Humans Periodic"
         const val WORK_NAME_MANUAL = "Open Humans Manual"
-        const val NOTIFICATION_CHANNEL_WORKER = "OpenHumansWorker"
-        const val NOTIFICATION_CHANNEL_MESSAGES = "OpenHumansMessages"
-        const val SIGNED_OUT_NOTIFICATION_ID = 3125
-        const val UPLOAD_NOTIFICATION_ID = 3126
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
@@ -724,17 +659,4 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "open_humans_settings"
-            title = rh.gs(R.string.open_humans)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OpenHumansWifiOnly, title = R.string.only_upload_if_connected_to_wifi))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OpenHumansChargingOnly, title = R.string.only_upload_if_charging))
-        }
-    }
 }

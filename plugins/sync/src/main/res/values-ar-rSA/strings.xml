@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <!-- AAPSClient -->
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <!-- Tidepool -->
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
     <!--    Wear-->
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

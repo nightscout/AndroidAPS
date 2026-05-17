@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans ha sido configurado. En caso de que quiera dejar de subir datos, haga clic en \'Cerrar sesión\'.</string>
     <string name="not_setup_info">Open Humans está actualmente inactivo. Para empezar a subir datos, haga clic en \'Configurar\'.</string>
     <string name="project_member_id">ID de miembro del proyecto: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Subir datos solo si está conectado a WiFi</string>
-    <string name="only_upload_if_charging">Sólo subir datos si se está cargando</string>
     <string name="open_humans_uploading">Subiendo a Open Humans…</string>
     <string name="open_humans_notifications">Notificaciones de Open Humans</string>
     <string name="uploading_to_open_humans">AAPS está subiendo datos a Open Humans. Esto puede llevar un tiempo.</string>

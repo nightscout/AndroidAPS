@@ -1,8 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import android.content.Context
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
@@ -13,10 +11,10 @@ import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -40,13 +38,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -77,8 +73,6 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
-        .fragmentClass(OpenAPSFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.openapssmb)
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesVisibleInSimpleMode(false)
@@ -119,15 +113,6 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
     override fun specialShowInListCondition(): Boolean {
         val pump = activePlugin.activePump
         return pump.pumpDescription.isTempBasalCapable
-    }
-
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-        val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
-        val advancedFiltering = runBlocking { persistenceLayer.isAdvancedFilteringSupported() }
-        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithCob.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithLowTt.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAfterCarbs.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
     override suspend fun invoke(initiator: String, tempBasalFallback: Boolean) {
@@ -333,7 +318,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
         return value
     }
 
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
             val maxIobPref = preferences.get(DoubleKey.ApsSmbMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
@@ -366,7 +351,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
         return absoluteRate
     }
 
-    override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+    override suspend fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = preferences.get(BooleanKey.ApsUseSmb)
         if (!enabled) value.set(false, rh.gs(R.string.smb_disabled_in_preferences), this)
         return value

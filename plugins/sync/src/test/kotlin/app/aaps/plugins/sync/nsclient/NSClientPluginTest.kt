@@ -26,7 +26,7 @@ class NSClientPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         nsClientPlugin = NSClientPlugin(
             aapsLogger, rxBus, rh, context, preferences, receiverDelegate, dataSyncSelectorV1,
-            dateUtil, profileUtil, nsSettingsStatus, decimalFormatter, nsClientRepository, persistenceLayer, uel, activePlugin
+            dateUtil, profileUtil, nsSettingsStatus, decimalFormatter, nsClientRepository, persistenceLayer, uel
         )
     }
 
@@ -40,10 +40,4 @@ class NSClientPluginTest : TestBaseWithProfile() {
         assertThat(nsClientPlugin.specialShowInListCondition()).isTrue()
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        nsClientPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

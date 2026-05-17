@@ -3,10 +3,6 @@ package app.aaps.core.interfaces.plugin
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -34,14 +30,6 @@ abstract class PluginBase(
     }
 
     private var state = State.NOT_INITIALIZED
-    private var fragmentVisible = false
-
-    @Deprecated("use icon")
-    open val menuIcon: Int
-        get() = pluginDescription.pluginIcon
-    @Deprecated("use icon2")
-    open val menuIcon2: Int
-        get() = pluginDescription.pluginIcon2
 
     open val name: String
         get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else rh.gs(pluginDescription.pluginName)
@@ -61,9 +49,6 @@ abstract class PluginBase(
 
     fun getType(): PluginType = pluginDescription.mainType
 
-    open val preferencesId: Int
-        get() = pluginDescription.preferencesId
-
     open fun isEnabled() = isEnabled(pluginDescription.mainType)
 
     fun isEnabled(type: PluginType): Boolean {
@@ -74,13 +59,19 @@ abstract class PluginBase(
         return type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.APS && isEnabled(PluginType.APS)
     }
 
-    fun hasFragment(): Boolean {
-        return pluginDescription.fragmentClass != null
-    }
-
     fun hasComposeContent(): Boolean {
         return pluginDescription.composeContentProvider != null
     }
+
+    /**
+     * Whether this plugin exposes a preferences screen via [getPreferenceScreenContent].
+     * Cached after the first call — the existence bit is stable for a plugin instance,
+     * while [getPreferenceScreenContent] itself is still invoked on demand when the screen is rendered.
+     * Override to `true` eagerly when [getPreferenceScreenContent] does a runtime lookup that might not be
+     * resolved at first call (see SensitivityWeightedAveragePlugin).
+     */
+    open fun hasPreferences(): Boolean = hasPreferencesLazy
+    private val hasPreferencesLazy: Boolean by lazy { getPreferenceScreenContent() != null }
 
     /**
      * Returns the compose content provider for this plugin's main UI.
@@ -143,17 +134,6 @@ abstract class PluginBase(
         }
     }
 
-    open fun setFragmentVisible(type: PluginType, fragmentVisible: Boolean) {
-        if (type == pluginDescription.mainType) {
-            this.fragmentVisible = fragmentVisible && specialEnableCondition()
-        }
-    }
-
-    fun isFragmentVisible(): Boolean {
-        if (pluginDescription.alwaysVisible) return true
-        return if (pluginDescription.neverVisible) false else fragmentVisible
-    }
-
     fun showInList(type: PluginType): Boolean {
         if (pluginDescription.mainType == type) return pluginDescription.showInList.invoke() && specialShowInListCondition()
         return false
@@ -170,15 +150,6 @@ abstract class PluginBase(
     open fun onStart() {}
     open fun onStop() {}
     protected open fun onStateChange(type: PluginType?, oldState: State?, newState: State?) {}
-    open fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {}
-    open fun updatePreferenceSummary(pref: Preference) {}
-
-    /**
-     * Add [PreferenceScreen] to preferences
-     *
-     * Plugin can provide either this method or [preferencesId] XML
-     */
-    open fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {}
 
     /**
      * Add compose preference screen content

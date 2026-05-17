@@ -1,20 +1,17 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcDelta
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -108,15 +105,9 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.deltacompared, rh.gs(comparator.value.stringRes), delta.value, rh.gs(delta.deltaType.stringRes))
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_auto_delta)
+    override fun composeIcon() = IcDelta
+    override fun composeIconTint() = IconTint.Delta
 
     override fun duplicate(): Trigger = TriggerDelta(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.deltalabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.deltalabel_u, units) + ": ", "", delta))
-            .build(root)
-    }
 }

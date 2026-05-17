@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -91,14 +91,14 @@ class OmnipodErosComposeContent(
             } else if (showRileyLinkStats) {
                 setToolbarConfig(
                     ToolbarConfig(
-                    title = context.getString(app.aaps.core.ui.R.string.settings),
-                    navigationIcon = {
-                        IconButton(onClick = { showRileyLinkStats = false }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
-                        }
-                    },
-                    actions = {}
-                ))
+                        title = context.getString(app.aaps.core.ui.R.string.settings),
+                        navigationIcon = {
+                            IconButton(onClick = { showRileyLinkStats = false }) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                            }
+                        },
+                        actions = {}
+                    ))
             }
         }
 

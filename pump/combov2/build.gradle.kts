@@ -15,15 +15,14 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
     implementation(project(":pump:combov2:comboctl"))
 
-    api(libs.androidx.lifecycle.viewmodel)
     api(libs.kotlinx.datetime)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.hilt.navigation.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)

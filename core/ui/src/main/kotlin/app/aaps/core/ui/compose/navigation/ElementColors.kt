@@ -41,7 +41,10 @@ data class ElementColors(
     // Navigation screens
     val treatments: Color,
     val statistics: Color,
+    val scene: Color,               // scenes / situation presets
     val navigation: Color,          // history browser, setup wizard, maintenance, configuration
+    // Graph overlay colors (no ElementType)
+    val activity: Color,
     // Running mode belt graph background colors (no ElementType)
     val loopClosed: Color,
     val loopOpened: Color,
@@ -56,7 +59,7 @@ data class ElementColors(
  * Light mode color scheme for basic elements.
  * Colors match the light theme values from colors.xml.
  */
-internal val LightElementColors = ElementColors(
+val LightElementColors = ElementColors(
     insulin = Color(0xFF1E88E5),         // insulin - bolus
     carbs = Color(0xFFE19701),           // colorCarbsButton
     extendedBolus = Color(0xFFCF8BFE),   // extendedBolus
@@ -85,10 +88,13 @@ internal val LightElementColors = ElementColors(
     deviceMaintenance = Color(0xFF78909C), // blue-grey — sensor/battery/cannula
     siteRotation = Color(0xFF5C6BC0),    // indigo
     settings = Color(0xFF546E7A),         // blue-grey 600 — distinct from pump grey
+    scene = Color(0xFF7B1FA2),             // purple 700 — distinct from all other element colors
     // Navigation screens
     treatments = Color(0xFF00897B),       // teal 600
     statistics = Color(0xFF5C6BC0),       // indigo 400
     navigation = Color(0xFF607D8B),       // blue-grey 500
+    // Graph overlay colors
+    activity = Color(0xFFD3F166),         // activity — yellow-green
     // Running mode belt graph background colors
     loopClosed = Color(0xFF4CAF50),       // green — normal operating state
     loopOpened = Color(0xFF4983D7),       // blue
@@ -103,7 +109,7 @@ internal val LightElementColors = ElementColors(
  * Dark mode color scheme for basic elements.
  * Colors match the dark theme values from colors.xml (night folder).
  */
-internal val DarkElementColors = ElementColors(
+val DarkElementColors = ElementColors(
     insulin = Color(0xFF67DFE8),         // insulin - bolus
     carbs = Color(0xFFFFAE01),           // colorCarbsButton (night)
     extendedBolus = Color(0xFFCF8BFE),   // extendedBolus (night)
@@ -132,10 +138,13 @@ internal val DarkElementColors = ElementColors(
     deviceMaintenance = Color(0xFF90A4AE), // blue-grey (night)
     siteRotation = Color(0xFF7986CB),    // indigo (night)
     settings = Color(0xFF78909C),         // blue-grey 400 (night)
+    scene = Color(0xFFCE93D8),             // purple 200 (night) — distinct from all other element colors
     // Navigation screens
     treatments = Color(0xFF26A69A),       // teal 400 (night)
     statistics = Color(0xFF7986CB),       // indigo 300 (night)
     navigation = Color(0xFF90A4AE),       // blue-grey 300 (night)
+    // Graph overlay colors
+    activity = Color(0xFFD3F166),         // activity — yellow-green
     // Running mode belt graph background colors
     loopClosed = Color(0xFF4CAF50),       // green — normal operating state
     loopOpened = Color(0xFF4983D7),       // blue

@@ -162,127 +162,22 @@
     <string name="nfccommands_rename_tag_title">Rename tag</string>
     <string name="wrong_format">Wrong format</string>
     <string name="disabled_loop">Loop Disabled</string>
-    <string name="smscommunicator_pump_disconnected">Pump disconnected</string>
 
-    <!-- Food-->
-    <string name="food_short">Food</string>
-    <string name="description_food">Displays the food presets defined in Nightscout</string>
-    <string name="filter">Filter</string>
-    <string name="food">Food</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Fat</string>
-    <string name="category">Category</string>
-    <string name="subcategory">Subcategory</string>
-    <string name="calculator_label">Calculator</string>
-
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Define a profile describing your insulin needs.</string>
-    <string name="a11y_add_new_to_list">add new to list</string>
-    <string name="do_you_want_switch_profile">Do you want to switch profile and discard changes made to current profile?</string>
-    <string name="save_or_reset_changes_first">Save or reset current changes first</string>
-    <string name="delete_current_profile">Delete current profile?</string>
-    <string name="units_colon">Units:</string>
-
-    <!-- Actions -->
-    <string name="actions">Actions</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Some buttons to quickly access common features</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="status">Status</string>
-    <string name="pump_actions">Pump actions</string>
-    <string name="tempbasal_button">TempBasal</string>
-    <string name="extended_bolus_button">Extended Bolus</string>
-    <string name="extended_bolus_cancel_button">Cancel Extended Bolus</string>
-    <string name="tools">Tools</string>
-    <string name="site_rotation">Site Rotation</string>
     <string name="nav_history_browser">History browser</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">age:</string>
-    <string name="level_label">level:</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pump battery</string>
     <string name="cannula">Cannula</string>
-    <string name="statuslights_cannula_age">cannula age</string>
-    <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copy settings from NS</string>
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 hours</string>
-    <string name="graph_long_scale_12h">12 hours</string>
-    <string name="graph_long_scale_18h">18 hours</string>
-    <string name="graph_long_scale_24h">24 hours</string>
-    <string name="a11y_graph">graph</string>
-    <string name="a11y_graph_scale">select graph scale</string>
-    <string name="a11y_graph_scale_6h">graph scale 6 hours</string>
-    <string name="a11y_graph_scale_12h">graph scale 12 hours</string>
-    <string name="a11y_graph_scale_18h">graph scale 18 hours</string>
-    <string name="a11y_graph_scale_24h">graph scale 24 hours</string>
-    <string name="a11y_insulin_label">insulin</string>
-    <string name="chart_menu">Chart menu</string>
-    <string name="a11y_bg_quality">blood glucose quality</string>
-    <string name="a11y_blood_glucose">blood glucose</string>
-    <string name="a11y_bg_outdated">outdated</string>
-    <string name="set_basal_question">Accept new temp basal:</string>
-    <string name="overview_cgm">CGM</string>
+
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">HOME</string>
-    <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
-    <string name="overview_buttons_selection">Buttons</string>
-    <string name="not_available_full">Not available</string>
-    <string name="constraints_violation">Constraints violation</string>
-    <string name="change_your_input">Change your input!</string>
-    <string name="data_status">BG data status</string>
-    <string name="quickwizard_settings">QuickWizard settings</string>
-    <string name="default_temptargets">Default Temp-Targets</string>
-    <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
-    <string name="run_question">Run %s?</string>
+
 
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Predictions</string>
-    <string name="overview_show_treatments">Treatments</string>
-    <string name="overview_show_heartRate">Heart Rate</string>
-    <string name="overview_show_deviation_slope">Deviation slope</string>
-    <string name="overview_show_activity">Activity</string>
-    <string name="overview_show_bgi">Blood Glucose Impact</string>
-    <string name="overview_show_sensitivity">Sensitivity change</string>
-    <string name="overview_show_deviations">Deviations</string>
-    <string name="overview_show_cob">Carbs On Board</string>
-    <string name="overview_show_iob">Insulin On Board</string>
-    <string name="overview_show_basals">Basals</string>
-    <string name="overview_show_abs_insulin">Absolute insulin</string>
-    <string name="overview_show_variable_sens">Variable sensitivity</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
-    <string name="treatments_shortname">TREAT</string>
-    <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
-    <string name="graph_scale">Graph scale</string>
-    <string name="graph_menu_divider_header">Graph</string>
-    <string name="temp_basal_overview_short_name">T:</string>
 
-    <!-- Skins -->
-    <string name="classic_description">Original skin</string>
-    <string name="lowres_description">Low Resolution skin</string>
-    <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
-    <string name="largedisplay_description">Large display</string>
-    <string name="skin">Skin</string>
-
-    <string name="cannula_usage">usage:</string>
 
     <!--    Iob-->
     <string name="iob_cob_calculator" translatable="false">IobCobCalculator</string>
@@ -291,8 +186,6 @@
     <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="old_data">OLD DATA</string>
-    <string name="overview_show_steps">Steps</string>
-    <string name="steps_shortname">STEPS</string>
-    <string name="simple_mode_enabled">Simple mode enabled</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 
 </resources>

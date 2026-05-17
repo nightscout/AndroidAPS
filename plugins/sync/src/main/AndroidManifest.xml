@@ -19,17 +19,6 @@
 
     <application>
 
-        <activity
-            android:name=".smsCommunicator.activities.SmsCommunicatorOtpActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="app.aaps.plugins.sync.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
         <service
             android:name=".nsclient.services.NSClientService"
             android:enabled="true"

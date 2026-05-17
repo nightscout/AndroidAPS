@@ -2,20 +2,21 @@ package app.aaps.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.history.HistoryBrowserData
 import app.aaps.implementations.ConfigImpl
 import app.aaps.implementations.UiInteractionImpl
+import app.aaps.ui.compose.history.HistoryScope
 import dagger.Binds
 import dagger.Lazy
 import dagger.Module
-import dagger.android.AndroidInjectionModule
 import dagger.Provides
 import dagger.Reusable
+import dagger.android.AndroidInjectionModule
 import dagger.android.HasAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -66,7 +67,8 @@ abstract class AppModule {
 
         @Reusable
         @Provides
-        fun providesDefaultSharedPreferences(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        fun providesDefaultSharedPreferences(context: Context): SharedPreferences =
+            context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
 
         @Provides
         fun provideContext(@ApplicationContext context: Context): Context = context
@@ -83,6 +85,8 @@ abstract class AppModule {
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
+
+        @Binds @Singleton fun bindHistoryScope(impl: HistoryBrowserData): HistoryScope
     }
 }
 

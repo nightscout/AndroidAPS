@@ -16,6 +16,7 @@ import androidx.lifecycle.MutableLiveData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.pump.insight.app_layer.activities.InsightAlertActivity
 import app.aaps.pump.insight.app_layer.remote_control.ConfirmAlertMessage
@@ -41,6 +42,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var alertUtils: AlertUtils
+    @Inject lateinit var rxBus: RxBus
 
     private var connectionRequested = false
     private var alert: Alert? = null
@@ -199,13 +201,13 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while muting alert: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-                ExceptionTranslator.makeToast(this@InsightAlertService, e)
+                ExceptionTranslator.notify(this@InsightAlertService, rxBus, e)
             } catch (e: InsightException) {
                 aapsLogger.info(LTag.PUMP, "Exception while muting alert: " + e.javaClass.simpleName)
-                ExceptionTranslator.makeToast(this@InsightAlertService, e)
+                ExceptionTranslator.notify(this@InsightAlertService, rxBus, e)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMP, "Exception while muting alert", e)
-                ExceptionTranslator.makeToast(this@InsightAlertService, e)
+                ExceptionTranslator.notify(this@InsightAlertService, rxBus, e)
             }
         }).start()
     }
@@ -225,13 +227,13 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-                ExceptionTranslator.makeToast(this@InsightAlertService, e)
+                ExceptionTranslator.notify(this@InsightAlertService, rxBus, e)
             } catch (e: InsightException) {
                 aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.javaClass.simpleName)
-                ExceptionTranslator.makeToast(this@InsightAlertService, e)
+                ExceptionTranslator.notify(this@InsightAlertService, rxBus, e)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMP, "Exception while confirming alert", e)
-                ExceptionTranslator.makeToast(this@InsightAlertService, e)
+                ExceptionTranslator.notify(this@InsightAlertService, rxBus, e)
             }
         }).start()
     }
@@ -246,7 +248,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         notificationBuilder.setOngoing(true)
         notificationBuilder.setOnlyAlertOnce(true)
         notificationBuilder.setAutoCancel(false)
-        alert.alertCategory?.let { notificationBuilder.setSmallIcon(alertUtils.getAlertIcon(it)) }
+        notificationBuilder.setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
         alert.alertType?.let { notificationBuilder.setContentTitle(alertUtils.getAlertCode(it) + " – " + alertUtils.getAlertTitle(it)) }
         val description = alertUtils.getAlertDescription(alert)
         if (description != null) notificationBuilder.setContentText(HtmlHelper.fromHtml(description).toString())

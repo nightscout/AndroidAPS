@@ -9,7 +9,6 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
-import java.util.Optional
 
 class TriggerPumpBatteryLevelTest : TriggerTestBase() {
 
@@ -67,10 +66,5 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerPumpBatteryLevel
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.pumpBatteryLevel.value).isWithin(0.01).of(4.0)
-    }
-
-    @Test fun iconTest() = runTest {
-        val t = TriggerPumpBatteryLevel(injector)
-        assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_battery))
     }
 }

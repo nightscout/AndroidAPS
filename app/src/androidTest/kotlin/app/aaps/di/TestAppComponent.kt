@@ -1,7 +1,6 @@
 package app.aaps.di
 
 import app.aaps.core.objects.di.CoreModule
-import app.aaps.core.validators.di.ValidatorsModule
 import app.aaps.database.di.TestDatabaseModule
 import app.aaps.database.persistence.di.PersistenceModule
 import app.aaps.implementation.di.ImplementationModule
@@ -35,7 +34,6 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
 
         PluginsListModule::class,
-        ActivitiesModule::class,
         ReceiversModule::class,
         PersistenceModule::class,
 
@@ -52,7 +50,6 @@ import javax.inject.Singleton
         SharedImplModule::class,
         LoggerModule::class,
         UiModule::class,
-        ValidatorsModule::class,
         PluginsConstraintsModule::class,
         SourceModule::class,
         SyncModule::class,

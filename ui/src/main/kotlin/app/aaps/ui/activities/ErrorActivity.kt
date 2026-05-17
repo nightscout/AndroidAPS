@@ -1,9 +1,13 @@
 package app.aaps.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,11 +26,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,6 +61,8 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.ui.services.AlarmSoundService
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
@@ -74,8 +82,8 @@ class ErrorActivity : DaggerAppCompatActivity() {
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-    private var status: String = ""
-    private var title: String = ""
+    private var status by mutableStateOf("")
+    private var title by mutableStateOf("")
     private var sound: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,35 +97,44 @@ class ErrorActivity : DaggerAppCompatActivity() {
         aapsLogger.debug("Error activity displayed: $title - $status")
 
         setContent {
+            val snackbarHostState = remember { SnackbarHostState() }
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
                 LocalDateUtil provides dateUtil,
-                LocalConfig provides config
+                LocalConfig provides config,
+                LocalSnackbarHostState provides snackbarHostState
             ) {
                 AapsTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = Color.Transparent
-                    ) {
-                        ErrorScreen(
-                            title = title,
-                            status = status,
-                            appIcon = appIcon,
-                            onOk = {
-                                uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-                                stopAlarm("Dismiss")
-                                finish()
-                            },
-                            onMute = {
-                                uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-                                stopAlarm("Mute")
-                            },
-                            onMute5Min = {
-                                uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
-                                stopAlarm("Mute 5 min")
-                                handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
-                            },
-                            onStart = { startAlarm() }
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = Color.Transparent
+                        ) {
+                            ErrorScreen(
+                                title = title,
+                                status = status,
+                                appIcon = appIcon,
+                                onOk = {
+                                    uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
+                                    stopAlarm("Dismiss")
+                                    finish()
+                                },
+                                onMute = {
+                                    uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
+                                    stopAlarm("Mute")
+                                },
+                                onMute5Min = {
+                                    uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
+                                    stopAlarm("Mute 5 min")
+                                    handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
+                                },
+                                onStart = { startAlarm() }
+                            )
+                        }
+                        GlobalSnackbarHost(
+                            rxBus = rxBus,
+                            hostState = snackbarHostState,
+                            modifier = Modifier.align(Alignment.BottomCenter)
                         )
                     }
                 }
@@ -136,6 +153,18 @@ class ErrorActivity : DaggerAppCompatActivity() {
                     listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                 )
             }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        status = intent.getStringExtra(AlarmSoundService.STATUS) ?: ""
+        title = intent.getStringExtra(AlarmSoundService.TITLE) ?: ""
+        sound = intent.getIntExtra(AlarmSoundService.SOUND_ID, app.aaps.core.ui.R.raw.error)
+        aapsLogger.debug("Error activity updated: $title - $status")
+        handler.removeCallbacksAndMessages(null)
+        stopAlarm("Update")
+        startAlarm()
     }
 
     override fun onDestroy() {

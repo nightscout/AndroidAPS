@@ -11,9 +11,6 @@ interface NotificationManager {
     /** Remove expired and validity-failed notifications on demand. */
     fun cleanUp()
 
-    /** Create the Android notification channel for system notifications. */
-    fun createNotificationChannel()
-
     fun post(
         id: NotificationId,
         text: String,

@@ -26,6 +26,7 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 @Composable
 fun AdaptivePreferenceList(
     items: List<PreferenceItem>,
+    onShowMessage: (String) -> Unit = { },
     visibilityContext: PreferenceVisibilityContext? = null,
     onNavigateToSubScreen: ((PreferenceSubScreenDef) -> Unit)? = null
 ) {
@@ -36,6 +37,7 @@ fun AdaptivePreferenceList(
                 // (simpleMode, mode flags, dependencies, engineeringMode, runtime visibility)
                 AdaptivePreferenceItem(
                     key = item,
+                    onShowMessage = onShowMessage,
                     visibilityContext = visibilityContext
                 )
             }

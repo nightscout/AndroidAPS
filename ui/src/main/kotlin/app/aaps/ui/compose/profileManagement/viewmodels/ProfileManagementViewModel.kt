@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.graph.profile.ProfileCompareData
+import app.aaps.core.graph.profile.buildProfileCompareData
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
@@ -31,21 +32,20 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.ScreenMode
-import app.aaps.ui.compose.profileManagement.ProfileCompareData
-import app.aaps.ui.compose.profileManagement.buildProfileCompareData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -78,11 +78,18 @@ class ProfileManagementViewModel @Inject constructor(
     private val preferences: Preferences
 ) : ViewModel() {
 
-    val uiState: StateFlow<ProfileManagementUiState>
-        field = MutableStateFlow(ProfileManagementUiState())
+    private val _uiState = MutableStateFlow(ProfileManagementUiState())
+    val uiState: StateFlow<ProfileManagementUiState> = _uiState.asStateFlow()
+
+    private val _snackbarEvent = MutableStateFlow<String?>(null)
+    val snackbarEvent: StateFlow<String?> = _snackbarEvent.asStateFlow()
+
+    fun clearSnackbarEvent() {
+        _snackbarEvent.value = null
+    }
 
     fun setScreenMode(mode: ScreenMode) {
-        uiState.update { it.copy(screenMode = mode) }
+        _uiState.update { it.copy(screenMode = mode) }
     }
 
     init {
@@ -129,8 +136,9 @@ class ProfileManagementViewModel @Inject constructor(
                     } else null
                 }
 
-                // Build profile names list
-                val profileNames = profiles.map { it.name }
+                // Build profile names list from persisted store so they always match what can be activated
+                val profileNames = localProfileManager.profile?.getProfileList()?.map { it.toString() }
+                    ?: profiles.map { it.name }
 
                 // Calculate basal sum for each profile
                 val basalSums = profiles.mapIndexed { _, singleProfile ->
@@ -243,7 +251,7 @@ class ProfileManagementViewModel @Inject constructor(
                     }
                 } else null
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         profileNames = profileNames,
                         currentProfileIndex = currentIndex,
@@ -260,7 +268,7 @@ class ProfileManagementViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load profiles", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(isLoading = false)
                 }
             }
@@ -350,7 +358,6 @@ class ProfileManagementViewModel @Inject constructor(
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
-    fun formatIcfg(iCfg: ICfg): String = iCfg.insulinLabel
     fun formatBasalSum(basalSum: Double): String = rh.gs(R.string.format_insulin_units, basalSum)
 
     /**
@@ -401,25 +408,9 @@ class ProfileManagementViewModel @Inject constructor(
             return false
         }
 
-        // Validate profile before activation
-        val pureProfile = profileStore.getSpecificProfile(profileName) ?: run {
+        profileStore.getSpecificProfile(profileName) ?: run {
             aapsLogger.error(LTag.UI, "Profile not found in store: $profileName")
-            return false
-        }
-
-        val profileSealed = ProfileSealed.Pure(pureProfile, activePlugin)
-        val validity = profileSealed.isValid(
-            rh.gs(R.string.careportal_profileswitch),
-            activePlugin.activePump,
-            config,
-            rh,
-            notificationManager,
-            hardLimits,
-            false
-        )
-
-        if (!validity.isValid) {
-            aapsLogger.error(LTag.UI, "Profile validation failed: ${validity.reasons}")
+            _snackbarEvent.value = rh.gs(R.string.profile_not_saved_activate)
             return false
         }
 
@@ -440,10 +431,13 @@ class ProfileManagementViewModel @Inject constructor(
                 ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
                 ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
             ),
-            iCfg = insulin.iCfg
+            iCfg = profileFunction.getProfile()?.iCfg ?: insulin.iCfg
         )
 
-        if (success != null) {
+        if (success == null) {
+            aapsLogger.error(LTag.UI, "Profile activation failed (validation or DB write): $profileName")
+            _snackbarEvent.value = rh.gs(R.string.profile_activation_failed)
+        } else {
             // Track objectives progress
             if (percentage == 90 && durationMinutes == 10) {
                 preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
@@ -451,16 +445,15 @@ class ProfileManagementViewModel @Inject constructor(
 
             if (withTT && durationMinutes > 0 && percentage < 100) {
                 // Create Activity TT
-                val target = preferences.get(UnitDoubleKey.OverviewActivityTarget)
-                val units = profileFunction.getUnits()
+                val targetMgdl = preferences.ttTargetMgdl(TT.Reason.ACTIVITY)
                 viewModelScope.launch {
                     persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         TT(
                             timestamp = timestamp + 10000, // Add ten secs for proper NSCv1 sync
                             duration = TimeUnit.MINUTES.toMillis(durationMinutes.toLong()),
                             reason = TT.Reason.ACTIVITY,
-                            lowTarget = profileUtil.convertToMgdl(target, units),
-                            highTarget = profileUtil.convertToMgdl(target, units)
+                            lowTarget = targetMgdl,
+                            highTarget = targetMgdl
                         ),
                         action = Action.TT,
                         source = Sources.TTDialog,
@@ -468,7 +461,7 @@ class ProfileManagementViewModel @Inject constructor(
                         listValues = listOfNotNull(
                             ValueWithUnit.Timestamp(timestamp).takeIf { timeChanged },
                             ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
-                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Mgdl(targetMgdl),
                             ValueWithUnit.Minute(durationMinutes)
                         )
                     )

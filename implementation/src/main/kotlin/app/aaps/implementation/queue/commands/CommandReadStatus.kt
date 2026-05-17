@@ -32,7 +32,7 @@ class CommandReadStatus(
 
     override val commandType: Command.CommandType = Command.CommandType.READSTATUS
 
-    override fun execute() {
+    override suspend fun execute() {
         activePlugin.activePump.getPumpStatus(reason)
         localAlertUtils.reportPumpStatusRead()
         aapsLogger.debug(LTag.PUMPQUEUE, "CommandReadStatus executed. Reason: $reason")

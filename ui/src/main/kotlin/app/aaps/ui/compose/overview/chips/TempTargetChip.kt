@@ -28,6 +28,7 @@ import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
+import app.aaps.core.ui.compose.ttReasonColor
 import app.aaps.ui.compose.main.TempTargetChipState
 
 @Composable
@@ -37,7 +38,8 @@ fun TempTargetChip(
     progress: Float,
     reason: TT.Reason?,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sceneManaged: Boolean = false
 ) {
     val iconColor = when (state) {
         TempTargetChipState.Active   -> reason.toIconColor()
@@ -76,6 +78,9 @@ fun TempTargetChip(
                     color = textColor,
                     modifier = Modifier.padding(start = AapsSpacing.medium)
                 )
+                if (sceneManaged) {
+                    SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))
+                }
             }
             Box(
                 modifier = Modifier
@@ -98,12 +103,7 @@ fun TempTargetChip(
 }
 
 @Composable
-private fun TT.Reason?.toIconColor(): Color = when (this) {
-    TT.Reason.EATING_SOON  -> AapsTheme.generalColors.ttEatingSoon
-    TT.Reason.ACTIVITY     -> AapsTheme.generalColors.ttActivity
-    TT.Reason.HYPOGLYCEMIA -> AapsTheme.generalColors.ttHypoglycemia
-    else                   -> AapsTheme.generalColors.ttCustom // Custom, Automation, Wear, null
-}
+private fun TT.Reason?.toIconColor(): Color = ttReasonColor(AapsTheme.generalColors)
 
 private fun TT.Reason?.toIcon(): ImageVector = when (this) {
     TT.Reason.EATING_SOON  -> IcTtEatingSoon

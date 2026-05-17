@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -15,10 +16,13 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,6 +49,8 @@ class BolusWizardTest : TestBaseWithProfile() {
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var runningModeGuard: RunningModeGuard
+    @Mock lateinit var activeInsulin: Insulin
 
     @BeforeEach
     fun prepare() {
@@ -90,7 +96,8 @@ class BolusWizardTest : TestBaseWithProfile() {
     private fun createWizard() = BolusWizard(
         aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, activePlugin,
         commandQueue, loop, iobCobCalculator, dateUtil, config, uel, automation, glucoseStatusProvider, uiInteraction,
-        persistenceLayer, decimalFormatter, processedDeviceStatusData
+        persistenceLayer, decimalFormatter, processedDeviceStatusData, runningModeGuard, activeInsulin,
+        CoroutineScope(Dispatchers.Unconfined)
     )
 
     // ==========================================

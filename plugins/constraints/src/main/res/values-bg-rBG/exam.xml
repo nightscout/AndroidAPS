@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Какво е вярно за DIA(Продължителност на Действие на Инсулина)?</string>
     <string name="dia_label_exam">Продължителност на действие на инсулина (DIA)</string>
-    <string name="dia_profile">Трябва да зададете стойността за DIA в профила си.</string>
     <string name="dia_minimumis5h">Минималната стойност е 5 часа.</string>
     <string name="dia_meaningisequaltodiapump">Ако сте били доволни от зададената стойност за DIA, която е използвалa вашата помпа, преди да започнете да ползвате AndroidAPS, няма нужда да я променяте, когато затворите цикъла.</string>
     <string name="dia_valuemustbedetermined">Вие трябва да установите за себе си правилната стойност за DIA.</string>
@@ -64,9 +63,7 @@
     <string name="prerequisites2_internet">AAPS изисква интернет връзка, за да работи в затворен цикъл.</string>
     <string name="prerequisites2_supportedcgm">Поддържан CGM и подходящо приложение за получаване на стойности на кръвната захар на телефона/устройството.</string>
     <string name="update_label">Актуализиране на AAPS</string>
-    <string name="update_git">Трябва да имате инсталиран и конфигуриран Git на вашия компютър.</string>
     <string name="update_asap">Когато се пуснат актуализирани версии на AAPS, по-ранните версии може да бъдат донякъде ограничени след определено време.</string>
-    <string name="update_keys">Трябва да запазите и да отбележите местоположението на вашия  keystoreе и да използвате същия ключ за подписване за актуализации, както при предишната ви инсталация.</string>
     <string name="update_askfriend">Ако имате затруднения при изграждането на .apk, можете да инсталирате .apk, което е създадено от приятел.</string>
     <string name="troubleshooting_label">Отстраняване на неизправности</string>
     <string name="troubleshooting_wheretoask">Къде можете да потърсите помощ за AAPS?</string>

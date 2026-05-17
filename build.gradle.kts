@@ -23,7 +23,6 @@ buildscript {
 
 plugins {
     alias(libs.plugins.klint)
-    alias(libs.plugins.moduleDependencyGraph)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler) apply false
     id(libs.plugins.android.test.get().pluginId) apply false
@@ -40,7 +39,6 @@ allprojects {
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
             freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
             freeCompilerArgs.add("-Xannotation-default-target=param-property")
-            freeCompilerArgs.add("-XXLanguage:+ExplicitBackingFields")
             jvmTarget.set(Versions.jvmTarget)
         }
     }

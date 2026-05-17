@@ -1,13 +1,12 @@
 package app.aaps.plugins.automation.actions
 
-import android.widget.LinearLayout
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.ui.compose.icons.IcPluginSms
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
@@ -20,11 +19,12 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.sendsmsactiondescription
     override fun shortDescription(): String = rh.gs(R.string.sendsmsactionlabel, text.value)
-    override fun icon(): Int = R.drawable.ic_notifications
+    override fun composeIcon() = IcPluginSms
+    override fun composeIconTint() = IconTint.Sms
 
-    override suspend fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         val result = smsCommunicator.sendNotificationToAllNumbers(text.value)
-        callback.result(pumpEnactResultProvider.get().success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)).run()
+        return pumpEnactResultProvider.get().success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)
     }
 
     override fun isValid(): Boolean = text.value.isNotEmpty()
@@ -45,9 +45,4 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     override fun hasDialog(): Boolean = true
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.sendsmsactiontext), "", text))
-            .build(root)
-    }
 }

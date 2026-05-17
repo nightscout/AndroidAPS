@@ -1,13 +1,15 @@
 package app.aaps.plugins.configuration.setupwizard
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import javax.inject.Inject
 
 class SWScreen @Inject constructor(private val rh: ResourceHelper) {
 
-    private var header: Int = 0
+    var header: Int = 0
+        private set
 
     var items: MutableList<SWItem> = ArrayList()
     var validator: (() -> Boolean)? = null
@@ -21,6 +23,11 @@ class SWScreen @Inject constructor(private val rh: ResourceHelper) {
 
     fun getHeader(): String {
         return rh.gs(header)
+    }
+
+    @Composable
+    fun getHeaderCompose(): String {
+        return stringResource(header)
     }
 
     fun skippable(skippable: Boolean): SWScreen {
@@ -43,7 +50,10 @@ class SWScreen @Inject constructor(private val rh: ResourceHelper) {
         return this
     }
 
-    fun processVisibility(activity: AppCompatActivity) {
-        for (i in items) i.processVisibility(activity)
+    @Composable
+    fun Compose() {
+        items.forEach { item ->
+            item.Compose()
+        }
     }
 }

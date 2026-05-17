@@ -12,24 +12,22 @@ import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
+import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
 
 class MainMenuActivity : MenuListActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        when (BuildConfig.FLAVOR) {
-            "full"        -> setTitle(R.string.app_name)
-            "aapsclient"  -> setTitle("AAPSClient")
-            "aapsclient2" -> setTitle("AAPSClient2")
-            "aapsclient3" -> setTitle("AAPSClient3")
-            "pumpcontrol" -> setTitle("Pumpcontrol")
-        }
+        setTitle(R.string.app_name)
         super.onCreate(savedInstanceState)
         rxBus.send(EventWearToMobile(ActionResendData("MainMenuListActivity")))
     }
 
-    override fun provideTitleIcon(): Int = R.drawable.ic_aaps_light
+    override fun provideTitleIcon(): Int = when (BuildConfig.FLAVOR) {
+        "aapsclient", "aapsclient2", "aapsclient3" -> R.drawable.ic_aaps_client_light
+        else                                        -> R.drawable.ic_aaps_light
+    }
 
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
@@ -38,6 +36,7 @@ class MainMenuActivity : MenuListActivity() {
                 add(MenuItem(R.drawable.ic_sync, getString(R.string.menu_resync)))
             } else {
                 add(MenuItem(R.drawable.ic_loop_closed, getString(R.string.loop_status)))
+                add(MenuItem(R.drawable.ic_bg_graph, getString(R.string.menu_bg_graph)))
                 if (sp.getBoolean(R.string.key_show_wizard, true))
                     add(MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)))
                 add(MenuItem(R.drawable.ic_carbs_orange, getString(R.string.menu_ecarb)))
@@ -54,6 +53,7 @@ class MainMenuActivity : MenuListActivity() {
     override fun doAction(position: String) {
         when (position) {
             getString(R.string.loop_status)             -> startActivity(Intent(this, LoopStatusActivity::class.java))
+            getString(R.string.menu_bg_graph)           -> startActivity(Intent(this, BgGraphActivity::class.java))
             getString(R.string.menu_wizard)             -> startActivity(Intent(this, WizardActivity::class.java))
             getString(R.string.menu_ecarb)              -> startActivity(Intent(this, ECarbActivity::class.java))
             getString(R.string.menu_treatment)          -> startActivity(Intent(this, TreatmentActivity::class.java))

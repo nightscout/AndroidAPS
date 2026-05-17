@@ -1,7 +1,5 @@
 package app.aaps.wear.comm
 
-import app.aaps.wear.interaction.actions.WizardResultActivity
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -34,6 +32,7 @@ import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
 import app.aaps.wear.complications.BrComplication
 import app.aaps.wear.complications.BrIobComplication
+import app.aaps.wear.complications.BrTtComplication
 import app.aaps.wear.complications.CobDetailedComplication
 import app.aaps.wear.complications.CobIconComplication
 import app.aaps.wear.complications.CobIobComplication
@@ -44,14 +43,19 @@ import app.aaps.wear.complications.LongStatusFlippedComplication
 import app.aaps.wear.complications.SgvComplication
 import app.aaps.wear.complications.SgvComplicationExt1
 import app.aaps.wear.complications.SgvComplicationExt2
+import app.aaps.wear.complications.SgvLargeComplication
+import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
+import app.aaps.wear.interaction.actions.WizardResultActivity
 import app.aaps.wear.tile.ActionsTileService
-import app.aaps.wear.tile.RunningModeTileService
+import app.aaps.wear.tile.BgGraphTileService
 import app.aaps.wear.tile.QuickWizardTileService
+import app.aaps.wear.tile.RunningModeTileService
+import app.aaps.wear.tile.SceneTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.UserActionTileService
 import com.google.android.gms.wearable.WearableListenerService
@@ -228,6 +232,7 @@ class DataHandlerWear @Inject constructor(
 
                     // Trigger complications AFTER DataStore write completes
                     triggerComplicationUpdates()
+                    TileService.getUpdater(context).requestUpdate(BgGraphTileService::class.java)
                 }
 
                 LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
@@ -294,6 +299,28 @@ class DataHandlerWear @Inject constructor(
                 if (serialized != sp.getString(R.string.key_user_action_data, "")) {
                     sp.putString(R.string.key_user_action_data, serialized)
                     TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.SceneList::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                aapsLogger.debug(LTag.WEAR, "SceneList received from ${it.sourceNodeId}")
+                val serialized = it.serialize()
+                if (serialized != sp.getString(R.string.key_scene_data, "")) {
+                    sp.putString(R.string.key_scene_data, serialized)
+                    TileService.getUpdater(context).requestUpdate(SceneTileService::class.java)
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.ActiveSceneState::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                aapsLogger.debug(LTag.WEAR, "ActiveSceneState received from ${it.sourceNodeId} active=${it.active}")
+                val serialized = it.serialize()
+                if (serialized != sp.getString(R.string.key_active_scene_state, "")) {
+                    sp.putString(R.string.key_active_scene_state, serialized)
+                    TileService.getUpdater(context).requestUpdate(SceneTileService::class.java)
                 }
             }
         disposable += rxBus
@@ -472,6 +499,7 @@ class DataHandlerWear @Inject constructor(
             SgvComplication::class.java,
             SgvComplicationExt1::class.java,
             SgvComplicationExt2::class.java,
+            SgvLargeComplication::class.java,
             // Long status complications (show detailed glucose + status info)
             LongStatusComplication::class.java,
             LongStatusFlippedComplication::class.java,
@@ -485,6 +513,8 @@ class DataHandlerWear @Inject constructor(
             // Basal rate complications
             BrComplication::class.java,
             BrIobComplication::class.java,
+            BrTtComplication::class.java,
+            TargetComplication::class.java,
             BrCobIobComplication::class.java,
             BrCobIobComplicationExt1::class.java,
             BrCobIobComplicationExt2::class.java,

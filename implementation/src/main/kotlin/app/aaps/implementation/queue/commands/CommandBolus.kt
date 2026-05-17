@@ -35,7 +35,7 @@ class CommandBolus(
         this.commandType = type
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         if (r.success) carbsRunnable.run()
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
@@ -61,7 +61,7 @@ class CommandBolus(
 
     override fun log(): String {
         return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(app.aaps.core.objects.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
+            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(app.aaps.core.ui.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 
     override fun cancel() {

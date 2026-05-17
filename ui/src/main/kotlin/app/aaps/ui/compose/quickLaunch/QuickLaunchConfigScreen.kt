@@ -1,11 +1,6 @@
 package app.aaps.ui.compose.quickLaunch
 
 import androidx.compose.foundation.background
-import androidx.compose.ui.graphics.Color
-import app.aaps.core.ui.compose.icons.IcBolus
-import app.aaps.core.ui.compose.icons.IcCarbs
-import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,14 +40,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.ElementCategory
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
@@ -96,22 +96,27 @@ fun QuickLauchConfigScreen(
         previousSelectedCount = state.selectedItems.size
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        AapsTopAppBar(
-            title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
-            navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
                 }
-            }
-        )
-
+            )
+        }
+    ) { paddingValues ->
         LazyColumn(
             state = lazyListState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
             // ── Selected actions ──
             item(key = "header_selected") {
@@ -205,6 +210,19 @@ fun QuickLauchConfigScreen(
                 item(key = "empty_qw") { EmptyHint(stringResource(R.string.quick_launch_no_quick_wizard)) }
             } else {
                 items(state.availableQuickWizardItems, key = { "avail_qw_${it.action.dynamicId}" }) { item ->
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
+                }
+            }
+
+            // ── Dynamic: Scenes ──
+            if (state.availableSceneItems.isNotEmpty()) {
+                item(key = "divider_scenes") {
+                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                }
+                item(key = "header_scenes") {
+                    SectionHeader(stringResource(app.aaps.core.ui.R.string.scenes))
+                }
+                items(state.availableSceneItems, key = { "avail_scene_${it.action.dynamicId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
@@ -340,7 +358,7 @@ private fun SelectedActionItem(
                     )
                 }
                 Spacer(modifier = Modifier.width(4.dp))
-                TonalIcon(painter = rememberVectorPainter(item.icon), color = color)
+                TonalIcon(icon = item.icon, color = color)
             }
         },
         trailingContent = {
@@ -391,7 +409,7 @@ private fun AvailableActionItem(
             { Text(text = desc, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         },
         leadingContent = {
-            TonalIcon(painter = rememberVectorPainter(item.icon), color = color)
+            TonalIcon(icon = item.icon, color = color)
         },
         trailingContent = {
             OutlinedIconButton(

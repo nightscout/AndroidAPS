@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AAPS</string>
-    <string name="label_actions_activity">AAPS</string>
     <string name="label_watchface_circle">AAPS (Cercle)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS (perso)</string>
-    <string name="label_actions_tile">AAPS (Actions)</string>
-    <string name="label_temp_target_tile">AAPS(Cible Temp)</string>
-    <string name="label_quick_wizard_tile">AAPS(Assistant rapide)</string>
-    <string name="label_user_action_tile">AAPS (Action utilisateur)</string>
-    <string name="label_warning_sync">Pas de données !</string>
-    <string name="label_warning_old">Données anciennes!</string>
-    <string name="label_warning_since">Depuis %1$s</string>
-    <string name="label_warning_sync_aaps">Synchro avec AAPS !</string>
+    <string name="label_actions_tile">Actions</string>
+    <string name="label_temp_target_tile">Cible Temp</string>
+    <string name="label_quick_wizard_tile">Assistant</string>
+    <string name="label_user_action_tile">Action Utilisateur</string>
+    <string name="label_scene_tile">Scénario</string>
     <string name="msg_warning_sync">Aucune donnée deçues depuis %1$s! Vérifez sur le téléphone si AAPS envoie les données à la montre</string>
     <string name="msg_warning_old">Données AAPS anciennes de %1$s ! Vérifiez votre capteur, les configurations xDrip+, NS, AAPS ou autre !</string>
     <string name="pref_vibrate_on_bolus">Vibrer sur Bolus</string>
@@ -20,6 +15,7 @@
     <string name="pref_display_settings">Affichage</string>
     <string name="pref_graph_settings">Graphique</string>
     <string name="pref_interface_settings">Interface</string>
+    <string name="pref_tile_settings">Tuiles</string>
     <string name="pref_others_settings">Autres</string>
     <string name="pref_complication_settings">Complication</string>
     <string name="pref_show_date">Afficher Date</string>
@@ -56,11 +52,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Design de saisie</string>
-    <string name="pref_default">Défaut</string>
-    <string name="pref_quick_righty">Droitier</string>
-    <string name="pref_quick_lefty">Gaucher</string>
-    <string name="pref_modern_sparse">Moderne</string>
     <string name="pref_big_numbers">Gros chiffres (Cercle)</string>
     <string name="pref_ring_history">Historique (Cercle)</string>
     <string name="pref_light_ring_history">Historique Léger (Cercle)</string>
@@ -75,6 +66,7 @@
     <string name="pref_moreWatchfaceSettings">Plus de paramètres</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Veuillez regardez dans la configuration du cadran.</string>
     <string name="menu_tempt">Cible Temp</string>
+    <string name="menu_tempt_long">Cible Temp</string>
     <string name="menu_wizard">Assistant</string>
     <string name="menu_wizard_short">Assist.</string>
     <string name="menu_treatment">Traitement</string>
@@ -84,32 +76,41 @@
     <string name="menu_ecarb">eGlucides</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_status">États</string>
+    <string name="menu_bg_graph">Graphique Glycémie</string>
     <string name="menu_resync">Re-sync</string>
     <string name="menu_prime_fill">Amorcer/Remplir</string>
     <string name="menu_none">Aucun</string>
     <string name="menu_default">Défaut</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Durée\n[minutes]</string>
     <string name="action_tempt_confirmation">Cible Temp demandée</string>
     <string name="action_quick_wizard_confirmation">Assistant rapide demandé</string>
     <string name="action_user_action_confirmation">Action de l\'utilisateur demandée</string>
+    <string name="action_scene_confirmation">Activer scénario</string>
+    <string name="scene_stop">ARRÊT</string>
     <string name="action_treatment_confirmation">Traitement demandé</string>
     <string name="action_bolus_confirmation">Bolus demandé</string>
     <string name="action_wizard_confirmation">Calcul demandé</string>
     <string name="action_fill_confirmation">Remplissage demandé</string>
     <string name="action_ecarb_confirmation">Glucides requis</string>
     <string name="action_profile_switch_confirmation">Changement de profil demandé</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Cible\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Bas\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Haut\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Cible [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Bas [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Haut [%s]</string>
     <string name="action_carbs">Glucides</string>
     <string name="action_carbs_gram">Glucides [g]</string>
     <string name="action_ecarbs">eGlucides</string>
     <string name="action_percentage">Pourcentage\n[%]</string>
     <string name="action_start_minutes">Démarrage\n[minutes]</string>
-    <string name="action_duration_h">Durée [h]</string>
     <string name="action_duration_hours">Durée\n[hours]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Décalage : %1$s</string>
+    <string name="ecarbs_confirm_duration">Durée : %1$d h</string>
+    <string name="action_confirm_reason">Motif : %1$s</string>
+    <string name="action_confirm_duration">Durée : %1$s</string>
+    <string name="action_confirm_timeshift">Décalage horaire: %1$s</string>
     <string name="action_insulin">Insuline</string>
     <string name="action_insulin_units">Insuline [U]</string>
     <string name="action_preset_1">Quantité 1</string>
@@ -148,7 +149,6 @@
     <string name="color_name_gray">gris</string>
     <string name="color_name_bluegray">gris bleu</string>
     <string name="color_name_white">white</string>
-    <string name="color_name_black">noir</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Interface simplifiée</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
@@ -181,8 +181,6 @@
     <string name="tile_no_config">Aucune configuration disponible</string>
     <string name="wear_control_not_enabled">Contrôles Wear désactivés</string>
     <string name="wear_control_no_data">Aucune donnée disponible</string>
-    <string name="increment">augmenter</string>
-    <string name="decrement">diminuer</string>
     <string name="abbreviation_average">moy</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -195,11 +193,10 @@
     <string name="week_short">s</string>
     <string name="day_short">j</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">ancien</string>
-    <string name="old_warning">!ancien!</string>
-    <string name="error">!err!</string>
+    <string name="error">Erreur</string>
     <string name="pref_heartRateSampling">Fréquence Cardiaque</string>
     <string name="pref_heartRateSmoothing">Lissage FC</string>
     <string name="pref_stepsSampling">Activer le comptage des pas</string>
@@ -218,6 +215,7 @@
     <string name="complication_full_status">État complet</string>
     <string name="complication_full_status_flipped">État complet (transposé)</string>
     <string name="complication_blood_glucose">Glycémie</string>
+    <string name="complication_blood_glucose_large">Glycémie (grande)</string>
     <string name="complication_blood_glucose_ext1">Glycémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glycémie Ext2</string>
     <string name="complication_br_cob_iob">DB, GA &amp; IA</string>
@@ -225,32 +223,41 @@
     <string name="complication_br_cob_iob_ext2">DB, GA &amp; IA Ext2</string>
     <string name="complication_br_iob">Basal &amp; IA</string>
     <string name="complication_br">Débit Basal</string>
+    <string name="complication_br_tt">Gly &amp; Cible</string>
+    <string name="complication_target">Cible</string>
     <string name="complication_cob_iob">GA &amp; IA</string>
     <string name="complication_cob_icon">Icône GA</string>
     <string name="complication_cob_detailed">GA détaillés</string>
     <string name="complication_iob_icon">Icône IA</string>
     <string name="complication_iob_detailed">IA détaillée</string>
     <string name="complication_uploader_phone_battery">Batterie téléphone</string>
-    <string name="status_loop_state">État boucle</string>
-    <string name="label_loop_state_title">AAPS (État boucle)</string>
-    <string name="action_loop_state_selected">État boucle demandé</string>
+    <string name="status_running_mode">Mode de fonctionnement</string>
+    <string name="label_running_mode_title">Mode</string>
+    <string name="label_bg_graph_tile">Graphique Glycémie</string>
+    <string name="tile_tap_action">Action du clic</string>
+    <string name="tile_graph_time_range">Période de temps</string>
+    <string name="tile_tap_bg_graph">Graphique Gly</string>
+    <string name="tile_tap_main_menu">Menu principal</string>
+    <string name="tile_tap_loop_status">Statut de la boucle</string>
+    <string name="action_running_mode_selected">Mode de fonctionnement demandé</string>
+    <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
+    <string name="title_activity_suspend_loop">Suspendre la boucle</string>
     <string name="wizard_total_insulin">Insuline totale</string>
     <string name="wizard_calculation">Calcul</string>
     <string name="wizard_carbs_format">%1$d g de glucides</string>
     <string name="wizard_settings_format">G/I: %1$s | SI: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Glisser vers la gauche pour confirmer</string>
     <string name="wizard_result_bg">Gly</string>
     <string name="wizard_result_bg_tt">Gly (CT : %1$s)</string>
     <string name="wizard_result_trend">Tendance 15\'</string>
     <string name="wizard_result_iob">IA</string>
+    <string name="wizard_result_new_iob">Nouvelle IA : %1$s U</string>
     <string name="wizard_result_cob">GA (%1$.1f g)</string>
     <string name="wizard_result_carbs">Glucides (%1$d g)</string>
     <string name="wizard_result_subtotal">Sous-total</string>
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
-    <string name="expand_calculation_details">Cliquez pour développer les détails du calcul</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_confirmation_sent">Envoyé</string>
     <string name="tile_settings">Paramètres des tuiles</string>
     <string name="loop_status_error">Impossible de charger l\'état</string>
@@ -267,6 +274,8 @@
     <string name="loop_status_lgs">Arrêt Glycémie Basse</string>
     <string name="loop_status_disabled">Boucle Désactivée</string>
     <string name="loop_status_suspended">Boucle Suspendue</string>
+    <string name="loop_status_pump_suspended">Pompe suspendue</string>
+    <string name="loop_status_dst_suspended">Boucle suspendue par le changement d\'heure</string>
     <string name="loop_status_disconnected">Pompe Déconnectée</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Inconnue</string>
@@ -282,5 +291,10 @@
     <string name="loop_status_temp_target">Cible Temp</string>
     <string name="loop_status_target_range">Plage</string>
     <string name="loop_status_target">Cible</string>
+    <string name="loop_status_adjusted_target">Cible ajustée</string>
     <string name="loop_status">État de la boucle</string>
+    <string name="loop_status_refresh">Actualiser</string>
+    <string name="confirm">Confirmer</string>
+    <string name="request">Requête</string>
+    <string name="constraint_applied">Restriction appliquée !</string>
 </resources>

@@ -28,7 +28,6 @@ import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONObject
@@ -245,23 +244,23 @@ open class AutotuneIob @Inject constructor(
         }
     }
 
-    open fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal =
-        getCalculationToTimeTreatments(time, localInsulin).round()
+    open fun getIOB(time: Long, iCfg: ICfg): IobTotal =
+        getCalculationToTimeTreatments(time, iCfg).round()
 
     // Add specific calculation for Autotune (reference localInsulin for Peak/dia)
-    private fun BS.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
+    private fun BS.iobCalc(time: Long, iCfg: ICfg): Iob {
         if (!isValid || type == BS.Type.PRIMING) return Iob()
-        return localInsulin.iobCalcForTreatment(this, time)
+        return iCfg.iobCalcForTreatment(this, time)
     }
 
-    private fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
+    private fun getCalculationToTimeTreatments(time: Long, iCfg: ICfg): IobTotal {
         val total = IobTotal(time)
         val detailedLog = preferences.get(BooleanKey.AutotuneAdditionalLog)
         for (pos in boluses.indices) {
             val t = boluses[pos]
             if (!t.isValid) continue
-            if (t.timestamp > time || t.timestamp < time - localInsulin.duration) continue
-            val tIOB = t.iobCalc(time, localInsulin)
+            if (t.timestamp > time || t.timestamp < time - iCfg.insulinEndTime) continue
+            val tIOB = t.iobCalc(time, iCfg)
             if (detailedLog)
                 log(
                     "iobCalc;${t.ids.nightscoutId};$time;${t.timestamp};${tIOB.iobContrib};${tIOB.activityContrib};${dateUtil.dateAndTimeAndSecondsString(time)};${

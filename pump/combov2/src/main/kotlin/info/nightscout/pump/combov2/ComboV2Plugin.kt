@@ -2,14 +2,6 @@ package info.nightscout.pump.combov2
 
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -44,18 +36,13 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.withActivity
-import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -72,11 +59,10 @@ import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
-import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
+import info.nightscout.pump.combov2.compose.ComboV2ComposeContent
 import info.nightscout.pump.combov2.keys.ComboBooleanKey
 import info.nightscout.pump.combov2.keys.ComboIntKey
 import info.nightscout.pump.combov2.keys.ComboIntNonKey
-import info.nightscout.pump.combov2.keys.ComboIntentKey
 import info.nightscout.pump.combov2.keys.ComboLongNonKey
 import info.nightscout.pump.combov2.keys.ComboStringNonKey
 import kotlinx.coroutines.CancellationException
@@ -132,7 +118,6 @@ class ComboV2Plugin @Inject constructor(
     sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val config: Config,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
@@ -141,14 +126,18 @@ class ComboV2Plugin @Inject constructor(
     PumpPluginBase(
         pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
-            .fragmentClass(ComboV2Fragment::class.java.name)
-            .pluginIcon(R.drawable.ic_combov2)
+            .composeContent { plugin ->
+                ComboV2ComposeContent(
+                    pluginName = rh.gs(R.string.combov2_plugin_name),
+                    combov2Plugin = plugin as ComboV2Plugin
+                )
+            }
+            .icon(IcPluginCombo)
             .pluginName(R.string.combov2_plugin_name)
             .shortName(R.string.combov2_plugin_shortname)
-            .description(R.string.combov2_plugin_description)
-            .preferencesId(PluginDescription.PREFERENCE_SCREEN),
+            .description(R.string.combov2_plugin_description),
         ownPreferences = listOf(
-            ComboIntentKey::class.java, ComboIntKey::class.java, ComboBooleanKey::class.java,
+            ComboIntKey::class.java, ComboBooleanKey::class.java,
             ComboStringNonKey::class.java, ComboIntNonKey::class.java, ComboLongNonKey::class.java
         ),
         aapsLogger, rh, preferences, commandQueue
@@ -281,8 +270,7 @@ class ComboV2Plugin @Inject constructor(
 
     private val driverStateFlow = _driverStateFlow.asStateFlow()
 
-    // Used by ComboV2PairingActivity to launch its own
-    // custom activities that have a result.
+    // Used by the pairing wizard to launch BT discoverability activities for result.
     var customDiscoveryActivityStartCallback: ((intent: Intent) -> Unit)?
         set(value) {
             bluetoothInterface?.customDiscoveryActivityStartCallback = value
@@ -415,41 +403,6 @@ class ComboV2Plugin @Inject constructor(
         super.onStop()
 
         aapsLogger.info(LTag.PUMP, "combov2 driver stopped")
-    }
-
-    // MIGRATED TO COMPOSE: ComboV2PreferencesCompose handles pair/unpair button enabled state
-    // via enabledCondition on ComboIntentKey using isPumpPaired from visibilityContext
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-
-        // Setup coroutine to enable/disable the pair and unpair
-        // preferences depending on the pairing state.
-        preferenceFragment.run {
-            // We use the fragment's lifecycle instead of the fragment view's, since the latter
-            // is initialized in onCreateView(), and we reach this point here _before_ that
-            // method is called. In other words, the fragment view does not exist at this point.
-            // repeatOnLifecycle() is a utility function that runs its block when the lifecycle
-            // starts. If the fragment is destroyed, the code inside - that is, the flow - is
-            // cancelled. That way, the UI flow is automatically reconstructed when Android
-            // recreates the fragment.
-            lifecycle.coroutineScope.launch {
-                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    val pairPref: Preference? = findPreference(ComboIntentKey.PairWithPump.key)
-                    val unpairPref: Preference? = findPreference(ComboIntentKey.UnpairPump.key)
-
-                    val isInitiallyPaired = pairedStateUIFlow.value
-                    pairPref?.isEnabled = !isInitiallyPaired
-                    unpairPref?.isEnabled = isInitiallyPaired
-
-                    pairedStateUIFlow
-                        .onEach { isPaired ->
-                            pairPref?.isEnabled = !isPaired
-                            unpairPref?.isEnabled = isPaired
-                        }
-                        .launchIn(this)
-                }
-            }
-        }
     }
 
     override fun isConfigured(): Boolean = isPaired()
@@ -762,7 +715,7 @@ class ComboV2Plugin @Inject constructor(
                     connectionSetupJob = null
                     disconnectInternal(forceDisconnect = true)
 
-                    ToastUtils.showToastInUiThread(context, rh.gs(R.string.combov2_could_not_connect))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.combov2_could_not_connect), EventShowSnackbar.Type.Error))
                 } else {
                     connectionSetupJob = null
                     // In case the pump queue issued a disconnect while the checks
@@ -777,7 +730,7 @@ class ComboV2Plugin @Inject constructor(
             notificationManager.post(NotificationId.BLUETOOTH_NOT_ENABLED, R.string.combov2_bluetooth_disabled)
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Connection failure: $e")
-            ToastUtils.showToastInUiThread(context, rh.gs(R.string.combov2_could_not_connect))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.combov2_could_not_connect), EventShowSnackbar.Type.Error))
             disconnectInternal(forceDisconnect = true)
         }
     }
@@ -797,32 +750,30 @@ class ComboV2Plugin @Inject constructor(
         disconnectInternal(forceDisconnect = true)
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Getting pump status; reason: $reason")
 
         lastComboAlert = null
 
-        runBlocking {
-            try {
-                executeCommand {
-                    pump?.updateStatus()
-                }
-
-                // We send this event here, and not in onStart(), to include
-                // the initial pump status update before emitting the event.
-                if (!initializationChangedEventSent) {
-                    rxBus.send(EventInitializationChanged())
-                    initializationChangedEventSent = true
-                }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (_: Exception) {
+        try {
+            executeCommand {
+                pump?.updateStatus()
             }
+
+            // We send this event here, and not in onStart(), to include
+            // the initial pump status update before emitting the event.
+            if (!initializationChangedEventSent) {
+                rxBus.send(EventInitializationChanged())
+                initializationChangedEventSent = true
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
         }
 
     }
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         if (!isInitialized()) {
             aapsLogger.error(LTag.PUMP, "Cannot set profile since driver is not initialized")
 
@@ -845,54 +796,52 @@ class ComboV2Plugin @Inject constructor(
         val requestedBasalProfile = profile.toComboCtlBasalProfile()
         aapsLogger.debug(LTag.PUMP, "Basal profile to set: $requestedBasalProfile")
 
-        runBlocking {
-            try {
-                executeCommand {
-                    if (acquiredPump.setBasalProfile(requestedBasalProfile)) {
-                        aapsLogger.debug(LTag.PUMP, "Basal profiles are different; new profile set")
-                        activeBasalProfile = requestedBasalProfile
-                        updateBaseBasalRateUI()
+        try {
+            executeCommand {
+                if (acquiredPump.setBasalProfile(requestedBasalProfile)) {
+                    aapsLogger.debug(LTag.PUMP, "Basal profiles are different; new profile set")
+                    activeBasalProfile = requestedBasalProfile
+                    updateBaseBasalRateUI()
 
-                        notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
-                    } else {
-                        aapsLogger.debug(LTag.PUMP, "Basal profiles are equal; did not have to set anything")
-                        // Treat this as if the command had been enacted. Setting a basal profile is
-                        // an idempotent operation, meaning that setting the exact same profile factors
-                        // twice in a row does not actually change anything. Therefore, we can just
-                        // completely skip such a redundant set basal profile operation and still get
-                        // the exact same result.
-                        // Furthermore, it is actually important to also set enacted to true in this case
-                        // because even though this _driver_ might know that the Combo uses this profile
-                        // already, _AAPS_ might not. A good example is when AAPS is set up the first time
-                        // and no profile has been activated. If in this case the profile happens to be
-                        // identical to what's already in the Combo, then enacted=false would cause errors,
-                        // because AAPS expects the driver to always enact the profile change in this case
-                        // (since it thinks that no profile is set yet).
-                    }
-
-                    pumpEnactResult.apply {
-                        success = true
-                        enacted = true
-                    }
+                    notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+                } else {
+                    aapsLogger.debug(LTag.PUMP, "Basal profiles are equal; did not have to set anything")
+                    // Treat this as if the command had been enacted. Setting a basal profile is
+                    // an idempotent operation, meaning that setting the exact same profile factors
+                    // twice in a row does not actually change anything. Therefore, we can just
+                    // completely skip such a redundant set basal profile operation and still get
+                    // the exact same result.
+                    // Furthermore, it is actually important to also set enacted to true in this case
+                    // because even though this _driver_ might know that the Combo uses this profile
+                    // already, _AAPS_ might not. A good example is when AAPS is set up the first time
+                    // and no profile has been activated. If in this case the profile happens to be
+                    // identical to what's already in the Combo, then enacted=false would cause errors,
+                    // because AAPS expects the driver to always enact the profile change in this case
+                    // (since it thinks that no profile is set yet).
                 }
-            } catch (e: CancellationException) {
-                // Cancellation is not an error, but it also means
-                // that the profile update was not enacted.
+
                 pumpEnactResult.apply {
                     success = true
-                    enacted = false
+                    enacted = true
                 }
-                throw e
-            } catch (e: Exception) {
-                aapsLogger.error("Exception thrown during basal profile update: $e")
+            }
+        } catch (e: CancellationException) {
+            // Cancellation is not an error, but it also means
+            // that the profile update was not enacted.
+            pumpEnactResult.apply {
+                success = true
+                enacted = false
+            }
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error("Exception thrown during basal profile update: $e")
 
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
+            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
 
-                pumpEnactResult.apply {
-                    success = false
-                    enacted = false
-                    comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
-                }
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
             }
         }
         return pumpEnactResult
@@ -976,7 +925,7 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -1104,18 +1053,15 @@ class ComboV2Plugin @Inject constructor(
 
         bolusJob = newBolusJob
 
-        // Do a blocking wait until the bolus coroutine completes or is cancelled.
         // AndroidAPS expects deliverTreatment() calls to block and to be cancellable
         // (via stopBolusDelivering()), so we run a separate bolus coroutine and
         // wait here until it is done.
-        runBlocking {
-            try {
-                aapsLogger.debug(LTag.PUMP, "Waiting for bolus coroutine to finish")
-                newBolusJob.join()
-                aapsLogger.debug(LTag.PUMP, "Bolus coroutine finished")
-            } catch (_: CancellationException) {
-                aapsLogger.debug(LTag.PUMP, "Bolus coroutine was cancelled")
-            }
+        try {
+            aapsLogger.debug(LTag.PUMP, "Waiting for bolus coroutine to finish")
+            newBolusJob.join()
+            aapsLogger.debug(LTag.PUMP, "Bolus coroutine finished")
+        } catch (_: CancellationException) {
+            aapsLogger.debug(LTag.PUMP, "Bolus coroutine was cancelled")
         }
 
         return pumpEnactResult
@@ -1130,7 +1076,7 @@ class ComboV2Plugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Bolus delivery stopped")
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = false
 
@@ -1181,7 +1127,7 @@ class ComboV2Plugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = true
 
@@ -1213,7 +1159,7 @@ class ComboV2Plugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = true
         pumpEnactResult.isTempCancel = enforceNew
@@ -1292,10 +1238,10 @@ class ComboV2Plugin @Inject constructor(
     // It is currently not known how to program an extended bolus into the Combo.
     // Until that is reverse engineered, inform callers that we can't handle this.
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
         createFailurePumpEnactResult(R.string.combov2_extended_bolus_not_supported)
 
-    override fun cancelExtendedBolus(): PumpEnactResult =
+    override suspend fun cancelExtendedBolus(): PumpEnactResult =
         createFailurePumpEnactResult(R.string.combov2_extended_bolus_not_supported)
 
     override fun updateExtendedJsonStatus(extendedStatus: JSONObject) {
@@ -1343,60 +1289,58 @@ class ComboV2Plugin @Inject constructor(
     override val isFakingTempsByExtendedBoluses = false
 
     @OptIn(ExperimentalTime::class)
-    override fun loadTDDs(): PumpEnactResult {
+    override suspend fun loadTDDs(): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         val acquiredPump = getAcquiredPump()
 
-        runBlocking {
-            try {
-                // Map key = timestamp; value = TDD
-                val tddMap = mutableMapOf<Long, Int>()
+        try {
+            // Map key = timestamp; value = TDD
+            val tddMap = mutableMapOf<Long, Int>()
 
-                executeCommand {
-                    val tddHistory = acquiredPump.fetchTDDHistory()
+            executeCommand {
+                val tddHistory = acquiredPump.fetchTDDHistory()
 
-                    tddHistory
-                        .filter { it.totalDailyAmount >= 1 }
-                        .forEach { tddHistoryEntry ->
-                            val timestamp = tddHistoryEntry.date.toEpochMilliseconds()
-                            tddMap[timestamp] = (tddMap[timestamp] ?: 0) + tddHistoryEntry.totalDailyAmount
-                        }
-                }
+                tddHistory
+                    .filter { it.totalDailyAmount >= 1 }
+                    .forEach { tddHistoryEntry ->
+                        val timestamp = tddHistoryEntry.date.toEpochMilliseconds()
+                        tddMap[timestamp] = (tddMap[timestamp] ?: 0) + tddHistoryEntry.totalDailyAmount
+                    }
+            }
 
-                for (tddEntry in tddMap) {
-                    val timestamp = tddEntry.key
-                    val totalDailyAmount = tddEntry.value
+            for (tddEntry in tddMap) {
+                val timestamp = tddEntry.key
+                val totalDailyAmount = tddEntry.value
 
-                    pumpSync.createOrUpdateTotalDailyDose(
-                        timestamp,
-                        bolusAmount = 0.0,
-                        basalAmount = 0.0,
-                        totalAmount = totalDailyAmount.cctlBasalToIU(),
-                        pumpId = null,
-                        pumpType = PumpType.ACCU_CHEK_COMBO,
-                        pumpSerial = serialNumber()
-                    )
-                }
+                pumpSync.createOrUpdateTotalDailyDose(
+                    timestamp,
+                    bolusAmount = 0.0,
+                    basalAmount = 0.0,
+                    totalAmount = totalDailyAmount.cctlBasalToIU(),
+                    pumpId = null,
+                    pumpType = PumpType.ACCU_CHEK_COMBO,
+                    pumpSerial = serialNumber()
+                )
+            }
 
-                pumpEnactResult.apply {
-                    success = true
-                    enacted = true
-                }
-            } catch (e: CancellationException) {
-                pumpEnactResult.apply {
-                    success = true
-                    enacted = false
-                    comment = rh.gs(R.string.combov2_load_tdds_cancelled)
-                }
-                throw e
-            } catch (e: Exception) {
-                aapsLogger.error("Exception thrown during TDD retrieval: $e")
+            pumpEnactResult.apply {
+                success = true
+                enacted = true
+            }
+        } catch (e: CancellationException) {
+            pumpEnactResult.apply {
+                success = true
+                enacted = false
+                comment = rh.gs(R.string.combov2_load_tdds_cancelled)
+            }
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error("Exception thrown during TDD retrieval: $e")
 
-                pumpEnactResult.apply {
-                    success = false
-                    enacted = false
-                    comment = rh.gs(R.string.combov2_retrieving_tdds_failed)
-                }
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(R.string.combov2_retrieving_tdds_failed)
             }
         }
 
@@ -1504,7 +1448,7 @@ class ComboV2Plugin @Inject constructor(
                         // Notifications on the AAPS overview fragment are not useful here
                         // because the pairing activity obscures that fragment. So, instead,
                         // alert the user by showing the notification via the toaster.
-                        ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_enabled)
+                        rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.ble_not_enabled), EventShowSnackbar.Type.Error))
                         ComboCtlPumpManager.PairingResult.ExceptionDuringPairing(e)
                     }
                 }
@@ -1552,7 +1496,7 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
-    private fun unpair() {
+    internal fun unpair() {
         if (unpairing)
             return
 
@@ -2228,8 +2172,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     private fun reportFinishedBolus(status: String, id: Long, pumpEnactResult: PumpEnactResult, succeeded: Boolean) {
-        val totalInsulin = bolusProgressData.state.value?.insulin ?: 0.0
-        bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), totalInsulin)
+        bolusProgressData.updateProgress(100)
 
         pumpEnactResult.apply {
             success = succeeded
@@ -2263,8 +2206,6 @@ class ComboV2Plugin @Inject constructor(
         key = "combov2_settings",
         titleResId = R.string.combov2_title,
         items = listOf(
-            ComboIntentKey.PairWithPump.withActivity(ComboV2PairingActivity::class.java),
-            ComboIntentKey.UnpairPump.withClick { unpair() },
             ComboIntKey.DiscoveryDuration,
             ComboBooleanKey.AutomaticReservoirEntry,
             ComboBooleanKey.AutomaticBatteryEntry,
@@ -2273,47 +2214,4 @@ class ComboV2Plugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "combov2_settings"
-            title = rh.gs(R.string.combov2_title)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context, intentKey = ComboIntentKey.PairWithPump, title = R.string.combov2_pair_with_pump_title, summary = R.string.combov2_pair_with_pump_summary,
-                    intent = Intent(context, ComboV2PairingActivity::class.java)
-                )
-            )
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context, intentKey = ComboIntentKey.UnpairPump, title = R.string.combov2_unpair_pump_title, summary = R.string.combov2_unpair_pump_summary
-                ).apply {
-                    onPreferenceClickListener = Preference.OnPreferenceClickListener { preference ->
-                        uiInteraction.showOkCancelDialog(
-                            context = preference.context,
-                            title = "Confirm pump unpairing",
-                            message = "Do you really want to unpair the pump?",
-                            ok = { unpair() })
-                        false
-                    }
-                }
-            )
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = ComboIntKey.DiscoveryDuration, title = R.string.combov2_discovery_duration))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticReservoirEntry, title = R.string.combov2_automatic_reservoir_entry))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticBatteryEntry, title = R.string.combov2_automatic_battery_entry))
-            addPreference(
-                AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.VerboseLogging, title = R.string.combov2_verbose_logging).apply {
-                    onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-                        updateComboCtlLogLevel(newValue as Boolean)
-                        true
-                    }
-                }
-            )
-        }
-    }
 }

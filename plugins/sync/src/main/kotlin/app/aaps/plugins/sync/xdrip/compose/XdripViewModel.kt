@@ -10,6 +10,7 @@ import app.aaps.core.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,19 +30,19 @@ class XdripViewModel @Inject constructor(
 ) : ViewModel() {
 
     // UI state
-    val uiState: StateFlow<XdripUiState>
-        field = MutableStateFlow(XdripUiState())
+    private val _uiState = MutableStateFlow(XdripUiState())
+    val uiState: StateFlow<XdripUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             xdripMvvmRepository.queueSize.collect { size ->
                 val queueText = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
-                uiState.update { it.copy(queue = queueText) }
+                _uiState.update { it.copy(queue = queueText) }
             }
         }
         viewModelScope.launch {
             xdripMvvmRepository.logList.collect { logList ->
-                uiState.update { it.copy(logList = logList) }
+                _uiState.update { it.copy(logList = logList) }
             }
         }
     }

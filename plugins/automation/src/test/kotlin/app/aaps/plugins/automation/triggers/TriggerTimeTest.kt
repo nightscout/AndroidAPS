@@ -60,9 +60,4 @@ class TriggerTimeTest : TriggerTestBase() {
         whenever(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
         assertThat(TriggerTime(injector).friendlyDescription()).startsWith("At ")
     }
-
-    @Test
-    fun iconTest() = runTest {
-        assertThat(TriggerTime(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
-    }
 }

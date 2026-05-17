@@ -4,27 +4,12 @@
     <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
 
     <!--       Stats -->
-    <string name="veryLow" comment="below 3.1">Very low</string>
-    <string name="low" comment="3.1-3.9">Low</string>
-    <string name="high" comment="10.0-13.9">High</string>
-    <string name="veryHigh" comment="above 13.9">Very high</string>
-    <string name="below" comment="below &quot;in range&quot;">Below</string>
-    <string name="in_range">In range</string>
-    <string name="above" comment="above &quot;in range&quot;">Above</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="detailed_14_days">Detailed 14 days</string>
-    <string name="day_tir">Day TIR</string>
-    <string name="night_tir">Night TIR</string>
     <string name="carbs_short" comment="max 6 characters">Carbs</string>
 
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">LastConn: %1$d min ago</string>
-    <string name="short_status_alert">Alert: %1$s</string>
     <string name="short_status_last_bolus">LastBolus: %1$sU @ %2$s</string>
     <string name="short_status_temp_basal">Temp: %1$s</string>
-    <string name="short_status_extended">Ext: %1$s</string>
-    <string name="short_status_reservoir">Reserv: %1$dU</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pump not initialized</string>
 
@@ -37,10 +22,75 @@
     <string name="permission_notifications_description">Required to show alerts, alarms, and pump status updates</string>
 
     <!--       ConcentrationHelper / DecimalFormatter-->
-    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
-    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
 
+
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Settings successfully exported to cloud storage</string>
+    <string name="export_to_cloud_failed">Failed to export to cloud storage</string>
+    <string name="csv_uploaded_to_cloud">User Entries CSV successfully uploaded to cloud storage</string>
+    <string name="exported">Preferences exported</string>
+    <string name="exported_failed">Preferences export failed!</string>
+    <string name="filenotfound">File not found</string>
+    <string name="ue_exported">User Entries exported</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exported %1$s ago</string>
+    <string name="exported_at" comment="at placeholder we add export date">exported at %1$s</string>
+    <string name="exported_less_than_hour_ago">exported less than hour ago</string>
+    <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
+    <string name="metadata_warning_different_device">Preferences were created on a different device. It is OK if you are importing from older/different phone, but make sure imported preferences are correct!</string>
+    <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you choose the wrong file? Remember to export preferences regularly!</string>
+    <string name="metadata_warning_date_format">Invalid date-time format!</string>
+    <string name="metadata_warning_different_version">Preferences from different minor version of application. It is OK if you are importing after upgrade, but check after import if preferences are still correct!</string>
+    <string name="metadata_urgent_different_version">Preferences from different major version of application. Major versions differ significantly and may have incompatible preferences! Make sure after import that preferences are still correct!</string>
+    <string name="prefdecrypt_settings_tampered">Settings file tampered</string>
+    <string name="prefdecrypt_settings_secure">Settings file is secure</string>
+    <string name="prefdecrypt_settings_unencrypted">Using not secure, unencrypted settings format</string>
+    <string name="prefdecrypt_wrong_json">JSON format error, missing required field (format, content, metadata or security)</string>
+    <string name="prefdecrypt_wrong_password">Decryption error, the given password cannot decrypt the file</string>
+    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) missing, cannot verify the authenticity of settings!</string>
+    <string name="prefdecrypt_issue_modified">File was modified after export!</string>
+    <string name="prefdecrypt_issue_parsing">Decryption error, parsing preferences failed!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Decryption error, the provided password is invalid or settings file was modified! It may happen that the imported file was exported with a different Master password.</string>
+    <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
+    <string name="metadata_label_format">File format</string>
+    <string name="metadata_label_created_at">Created at</string>
+    <string name="metadata_label_aaps_version">AAPS Version</string>
+    <string name="metadata_label_aaps_flavour">Build Variant</string>
+    <string name="metadata_label_device_name">Exporting device patient name</string>
+    <string name="metadata_label_device_model">Exporting device model</string>
+    <string name="metadata_label_encryption">File encryption</string>
+    <string name="metadata_format_new">New encrypted format</string>
+    <string name="metadata_format_other">Unknown export format</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Error accessing filesystem. Select AAPS directory properly.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Backup to Google Drive</string>
+    <string name="csv_upload_failed">Failed to upload User Entries CSV to cloud storage</string>
+    <string name="csv_upload_error">Error occurred while uploading CSV to cloud</string>
+    <string name="uploading_to_cloud">Uploading to cloud...</string>
+    <string name="cloud_directory_path">Cloud directory: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Unable to refresh Google Drive access token</string>
+    <string name="google_drive_token_refresh_error">Unable to refresh Google Drive access token: %1$s</string>
+    <string name="google_drive_connection_test_failed">Google Drive connection test failed</string>
+    <string name="google_drive_connect_error">Unable to connect to Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Failed to list Google Drive folders</string>
+    <string name="google_drive_list_folders_error">Error listing folders: %1$s</string>
+    <string name="google_drive_upload_no_id">Upload succeeded but no id returned</string>
+    <string name="google_drive_upload_verify_failed">Upload verification failed</string>
+    <string name="google_drive_upload_failed">Upload failed: %1$s</string>
+    <string name="google_drive_upload_error">Error uploading file: %1$s</string>
+    <string name="google_drive_folder_access_error">Cannot create or access destination folder: %1$s</string>
+    <string name="google_drive_list_settings_failed">Failed to list settings files</string>
+    <string name="google_drive_list_settings_error">Error listing settings files: %1$s</string>
+    <string name="google_drive_download_failed">Failed to download file</string>
+    <string name="google_drive_download_error">Error downloading file: %1$s</string>
+    <string name="google_drive_authorized">Google Drive Authorized</string>
+    <string name="google_drive_reauth_required">Please clear settings and re-authorize Google Drive</string>
 </resources>

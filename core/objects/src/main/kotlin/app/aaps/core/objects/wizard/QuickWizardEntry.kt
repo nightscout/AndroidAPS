@@ -159,7 +159,7 @@ class QuickWizardEntry @Inject constructor(
         if (useSuperBolus() == YES && preferences.get(BooleanKey.OverviewUseSuperBolus)) {
             superBolus = true
         }
-        if (loop.runningMode == RM.Mode.SUPER_BOLUS) superBolus = false
+        if (loop.runningMode() == RM.Mode.SUPER_BOLUS) superBolus = false
         // Trend
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false
@@ -208,10 +208,6 @@ class QuickWizardEntry @Inject constructor(
     fun buttonText(): String = safeGetString(storage, "buttonText", "")
 
     fun carbs(): Int = safeGetInt(storage, "carbs")
-
-    fun validFromDate(): Long = dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(validFrom())
-
-    fun validToDate(): Long = dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(validTo())
 
     fun validFrom(): Int = safeGetInt(storage, "validFrom")
 

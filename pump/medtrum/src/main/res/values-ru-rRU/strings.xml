@@ -14,22 +14,16 @@
     <string name="pump_setting_failed">Сбой передачи пользовательских настроек на помпу!</string>
     <string name="pump_sync_error">Ошибка при синхронизации журнала с помпы, запись пропущена. Проверьте вкладку терапии, правильно ли синхронизированы болюсы. Уберите предупреждение, а если ошибка повторится, замените патч или базу помпы.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Статус BT</string>
     <string name="last_connection_label">Последнее подключение</string>
     <string name="active_bolus_label">Активный болюс</string>
     <string name="pump_state_label">Статус помпы</string>
     <string name="active_alarms_label">Активные оповещения</string>
-    <string name="reservoir_level"> %.2f ед</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Тип базала</string>
-    <string name="basal_rate_label">Базальная скорость</string>
-    <string name="current_basal_rate"> %.2f ед/ч</string>
     <string name="pump_type_label">Тип помпы</string>
     <string name="fw_version_label">Версия ПО</string>
     <string name="patch_no_label">Номер патча</string>
     <string name="patch_expiry_label">Патч заканчивается</string>
     <string name="patch_activation_time_label">Активация</string>
-    <string name="refresh_label">Обновить</string>
     <string name="reset_alarms_label">Сбросить оповещения</string>
     <string name="change_patch_label">Сменить патч</string>
     <string name="requested_by_user" comment="26 characters max for translation">Запрошено пользователем</string>
@@ -55,10 +49,9 @@
     <string name="alarm_no_calibration">Нет калибровки</string>
     <string name="pump_time_update_failed">Не удалось обновить часовой пояс помпы, закройте сообщение и обновите вручную.</string>
     <string name="bolus_error">Болюс - ошибка</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Повторить</string>
-    <string name="next">Далее</string>
-    <string name="discard">Завершить пользование</string>
     <string name="step_prepare_patch">Активировать патч</string>
     <string name="step_prepare_patch_connect">Подключиться и заполнить</string>
     <string name="step_prime">Заправить систему</string>
@@ -72,9 +65,6 @@
     <string name="step_deactivate_complete">Патч деактивирован</string>
     <string name="step_retry_activation">Выполняется активация</string>
     <string name="unexpected_state">Непредвиденное состояние: %1$s</string>
-    <string name="no_profile_selected">Профиль не выбран. Выберите профиль и повторите попытку.</string>
-    <string name="no_sn_in_settings">Серийный номер не известен. Введите серийный номер помпы в настройках и повторите попытку.</string>
-    <string name="base_serial">Серийный номер основания: %1$X</string>
     <string name="patch_begin_activation">Активный патч отсутствует. Нажмите <b>Далее</b> для начала процесса активации.</string>
     <string name="patch_not_active_note">Не соединяйте основание и патч до следующего шага!</string>
     <string name="connect_pump_base">Соедините основание помпы и новый патч, удалите воздух и заполните инсулином, затем нажмите <b>Далее</b>.</string>
@@ -83,12 +73,10 @@
     <string name="do_not_attach_to_body">Пока не устанавливайте патч на тело.</string>
     <string name="half_press_needle">Слегка нажмите на кнопку иглы. Затем нажмите <b>Далее</b> для начала заправки.</string>
     <string name="wait_for_priming">Дождитесь окончания заправки.</string>
-    <string name="priming_error">Не удалось заполнить помпу, нажмите <b>Повторить</b>, чтобы попробовать еще раз.</string>
     <string name="press_next">Нажмите <b>Далее</b> для продолжения.</string>
     <string name="press_next_to_start_activation">Нажмите <b>Далее</b> для начала активации.</string>
     <string name="remove_safety_lock">Снимите защиту. Прикрепите помпу к телу. Нажмите на кнопку иглы.</string>
     <string name="activating_pump">Активация помпы и установка базальной скорости. Пожалуйста, подождите.</string>
-    <string name="activating_error">Сбой активации, нажмите <b>Повторить</b>, чтобы попробовать еще раз.</string>
     <string name="activating_complete">Новый патч активирован. Заполнение %.2f единиц.</string>
     <string name="can_export_settings">Можно экспортировать настройки, чтобы затем восстановить эту сессию патча.</string>
     <string name="press_OK_to_return">Нажмите <b>OK</b> для возврата к главному экрану.</string>
@@ -105,12 +93,6 @@
     <string name="press_retry_or_discard">Нажмите <b>Далее</b>, чтобы возобновить активацию или <b>Discard</b> для сброса статуса активации.</string>
     <string name="reading_activation_status">Пожалуйста, подождите, получение статуса активации с помпы.</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Принудительно включена сигнализация о недоступности помпы, так как патч Medtrum может выйти из строя и быть недоступным.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Рекомендуется установить значение в 30 минут, так как патч Medtrum может выйти из строя и быть недоступным.</string>
-    <string name="sn_input_title">Серийный номер</string>
-    <string name="sn_input_summary">Введите серийный номер основания вашей помпы.</string>
-    <string name="sn_input_invalid">Неверный серийный номер!</string>
-    <string name="pump_unsupported">Помпа не тестировалась: %1$s! Свяжитесь с нами в discord или github по поводу поддержки</string>
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
     <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>

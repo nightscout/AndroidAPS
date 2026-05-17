@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans a été configuré. Si vous souhaitez arrêter le téléchargement, cliquez sur «Déconnexion».</string>
     <string name="not_setup_info">Open Humans est actuellement inactif. Pour commencer à télécharger des données, cliquez sur «Configuration».</string>
     <string name="project_member_id">ID utilisateur : %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Ne télécharger que si connecté au WiFi</string>
-    <string name="only_upload_if_charging">Ne télécharger que si en charge</string>
     <string name="open_humans_uploading">Téléchargement vers Open Humans…</string>
     <string name="open_humans_notifications">Notifications Open Humans</string>
     <string name="uploading_to_open_humans">AAPS téléverse vers Open Humans. Cela peut prendre un certain temps.</string>

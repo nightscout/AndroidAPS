@@ -47,6 +47,17 @@ enum class ComplicationAction {
     STATUS,
 
     /**
+     * Opens the temp target entry dialog.
+     */
+    TEMP_TARGET,
+
+    /**
+     * Opens the BG graph activity.
+     * Shows 3h (default) BG history with predictions; tap cycles the window up to 8h.
+     */
+    BG_GRAPH,
+
+    /**
      * Opens warning dialog about watch-phone sync issues.
      * Displayed when data hasn't updated from phone recently.
      */

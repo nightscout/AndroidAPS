@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,29 +16,26 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.TextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,16 +44,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.QuickAddButtons
+import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -70,13 +68,12 @@ import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
 import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.overview.chips.CobUiState
+import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
-import app.aaps.ui.compose.overview.graphs.CobUiState
-import app.aaps.ui.compose.overview.graphs.IobUiState
 import kotlinx.coroutines.flow.StateFlow
 import java.text.DecimalFormat
 import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -234,23 +231,12 @@ private fun CarbsDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = ElementType.CARBS.icon(),
-                            contentDescription = null,
-                            tint = ElementType.CARBS.color(),
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(start = 8.dp))
-                        Text(stringResource(ElementType.CARBS.labelResId()))
-                    }
-                },
+                title = { Text(stringResource(ElementType.CARBS.labelResId())) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(CoreUiR.string.back)
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(CoreUiR.string.close)
                         )
                     }
                 },
@@ -270,11 +256,14 @@ private fun CarbsDialogContent(
         bottomBar = {
             val hasAction = uiState.carbs != 0 || uiState.hypoTtChecked || uiState.eatingSoonTtChecked || uiState.activityTtChecked
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = hasAction,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .imePadding()
+                    .bottomBarSafeArea()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Icon(
@@ -459,7 +448,6 @@ private fun CarbsDialogScreenPreview() {
     }
 }
 
-
 @Composable
 private fun TempTargetCheckboxes(
     hypoChecked: Boolean,
@@ -514,29 +502,6 @@ private fun TempTargetCheckboxes(
                 modifier = Modifier.weight(1f)
             )
             Switch(checked = activityChecked, onCheckedChange = { onActivityChange(it) })
-        }
-    }
-}
-
-@Composable
-private fun QuickAddButtons(
-    increment1: Int,
-    increment2: Int,
-    increment3: Int,
-    onAddCarbs: (Int) -> Unit
-) {
-    val increments = listOf(increment1, increment2, increment3).filter { it > 0 }
-    if (increments.isEmpty()) return
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        increments.forEach { amount ->
-            FilledTonalButton(onClick = { onAddCarbs(amount) }) {
-                Text("+$amount")
-            }
         }
     }
 }

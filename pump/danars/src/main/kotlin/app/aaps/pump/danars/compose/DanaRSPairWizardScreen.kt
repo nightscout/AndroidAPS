@@ -22,9 +22,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.BleScanStep
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.dana.R
@@ -153,7 +153,7 @@ private fun EnterPasswordStep(
             value = password,
             onValueChange = { input -> input.filter { it.isHexChar() }.take(4).uppercase().let(onPasswordChange) },
             label = { Text(stringResource(R.string.danars_password_title)) },
-            supportingText = { Text(stringResource(app.aaps.core.validators.R.string.error_mustbe4hexadidits)) },
+            supportingText = { Text(stringResource(app.aaps.core.ui.R.string.error_mustbe4hexadidits)) },
             keyboardOptions = hexKeyboardOptions,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -187,7 +187,7 @@ private fun EnterPinStep(
             style = MaterialTheme.typography.bodyLarge
         )
 
-        errorMessage?.let { WizardErrorBanner(message = it) }
+        errorMessage?.let { ErrorBanner(message = it) }
 
         OutlinedTextField(
             value = pin1,
@@ -262,8 +262,8 @@ private fun PairingErrorStep(
         )
     ) {
         Spacer(modifier = Modifier.height(24.dp))
-        errorMessage?.let { WizardErrorBanner(message = it) }
-            ?: WizardErrorBanner(message = stringResource(app.aaps.core.ui.R.string.error))
+        errorMessage?.let { ErrorBanner(message = it) }
+            ?: ErrorBanner(message = stringResource(app.aaps.core.ui.R.string.error))
     }
 }
 

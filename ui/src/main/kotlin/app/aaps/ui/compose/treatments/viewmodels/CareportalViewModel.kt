@@ -14,18 +14,20 @@ import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -42,11 +44,12 @@ class CareportalViewModel @Inject constructor(
     val rh: ResourceHelper,
     private val translator: Translator,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
-    val uiState: StateFlow<CareportalUiState>
-        field = MutableStateFlow(CareportalUiState())
+    private val _uiState = MutableStateFlow(CareportalUiState())
+    val uiState: StateFlow<CareportalUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -61,7 +64,7 @@ class CareportalViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.therapyEvents.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -74,21 +77,16 @@ class CareportalViewModel @Inject constructor(
                     persistenceLayer.getTherapyEventDataFromTime(now - millsToThePast, false)
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         therapyEvents = therapyEvents,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load therapy events", e)
-                uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading therapy events")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading therapy events", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -106,17 +104,10 @@ class CareportalViewModel @Inject constructor(
     }
 
     /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
-    }
-
-    /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -124,7 +115,7 @@ class CareportalViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: TE) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -136,7 +127,7 @@ class CareportalViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -148,7 +139,7 @@ class CareportalViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: TE) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -200,7 +191,7 @@ class CareportalViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete therapy events", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting therapy events")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting therapy events", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -237,6 +228,5 @@ data class CareportalUiState(
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<TE> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
+    val selectedItems: Set<TE> = emptySet()
 )

@@ -5,14 +5,18 @@
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
-    <!-- InsulinDialog -->
-    <!-- ProfileSwitchDialog -->
+    <!-- Scene -->
+    <!-- Insulin Management -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
-    <!--    BolusProgressDialog-->
     <!--QuickWizard-->
+    <!--    History browser-->
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

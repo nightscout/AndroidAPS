@@ -102,7 +102,7 @@ class NfcCommandsPlugin
             PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(NfcCommandsFragment::class.java.name)
-                .pluginIcon(app.aaps.core.objects.R.drawable.ic_nfc)
+                .pluginIcon(app.aaps.ui.R.drawable.ic_nfc)
                 .pluginName(R.string.nfccommands)
                 .shortName(R.string.nfccommands_shortname)
                 .preferencesId(PluginDescription.PREFERENCE_SCREEN)

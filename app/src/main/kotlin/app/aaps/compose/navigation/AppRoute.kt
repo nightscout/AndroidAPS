@@ -41,6 +41,7 @@ sealed class AppRoute(val route: String) {
 
     data object Stats : AppRoute("stats")
     data object ProfileHelper : AppRoute("profile_helper")
+    data object HistoryBrowser : AppRoute("history_browser")
     data object Preferences : AppRoute("preferences")
     data object PluginPreferences : AppRoute("plugin_preferences/{pluginKey}") {
 
@@ -92,8 +93,20 @@ sealed class AppRoute(val route: String) {
         fun createRoute(pluginIndex: Int) = "plugin_content/$pluginIndex"
     }
 
+    data object SceneList : AppRoute("scene_list")
+    data object SceneWizard : AppRoute("scene_wizard?sceneId={sceneId}") {
+
+        fun createRoute(sceneId: String? = null): String =
+            if (sceneId != null) "scene_wizard?sceneId=$sceneId" else "scene_wizard"
+    }
+
     data object QuickLaunchConfig : AppRoute("quick_launch_config")
     data object Configuration : AppRoute("configuration")
+    data object PluginCategory : AppRoute("plugin_category/{typeOrdinal}") {
+
+        fun createRoute(typeOrdinal: Int) = "plugin_category/$typeOrdinal"
+    }
+
     data object ImportSettings : AppRoute("import_settings/{source}") {
 
         fun createRoute(source: String) = "import_settings/$source"
@@ -104,6 +117,8 @@ sealed class AppRoute(val route: String) {
         fun createRoute(siteType: app.aaps.core.data.model.TE.Type) = "siteLocationPicker/${siteType.ordinal}"
     }
 
+    data object FoodManagement : AppRoute("food_management")
     data object SiteRotationManagement : AppRoute("siteRotationManagement")
     data object SiteRotationSettings : AppRoute("siteRotationSettings")
+    data object SetupWizard : AppRoute("setup_wizard")
 }

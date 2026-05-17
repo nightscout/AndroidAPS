@@ -49,6 +49,12 @@ interface PreferenceVisibilityContext {
      */
     val isPumpInitialized: Boolean
         get() = false
+
+    /**
+     * Whether insulin concentration is enabled by constraints (Objective 3 finished).
+     */
+    val isConcentrationEnabled: Boolean
+        get() = false
 }
 
 /**

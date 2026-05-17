@@ -13,10 +13,7 @@
     <string name="bolus_pin">ПИН для болюсов</string>
     <string name="protection_timeout_title">Тайм-аут удержания пароля и ПИН-кода [s]</string>
     <string name="protection_timeout_summary">Время до ввода пароля или PIN-кода</string>
-    <string name="biometric">Биометрия</string>
-    <string name="custom_password">Настраиваемый пароль</string>
-    <string name="custom_pin">Настраиваемый пин-код</string>
-    <string name="noprotection">Без защиты</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Небезопасный резервный вход</string>
     <string name="unsecure_fallback_descriotion_biometric">Биометрической защите требуется главный пароль для безопасности.\n\n Установите главный пароль!</string>
     <string name="password_set">Пароль задан!</string>
@@ -27,8 +24,6 @@
     <string name="password_not_changed">Пароль не был изменён</string>
     <string name="pin_not_changed">ПИН не изменён</string>
     <string name="pin_cleared">ПИН очищен!</string>
-    <string name="password_hint">Введите пароль здесь</string>
-    <string name="pin_hint">Введите ПИН здесь</string>
     <string name="master_password_not_set">Главный пароль не задан</string>
     <string name="aaps_directory_not_selected">Не выбрана папка AAPS</string>
 </resources>

@@ -110,6 +110,7 @@ enum class NotificationId(
     NS_URGENT_ALARM(20, URGENT, SYNC),
     NS_MALFUNCTION(40, URGENT, SYNC),
     NSCLIENT_VERSION_DOES_NOT_MATCH(73, NORMAL, SYNC),
+    OPEN_HUMANS_SIGNED_OUT(3125, NORMAL, SYNC),
 
     // Sync — SMS
     INVALID_PHONE_NUMBER(10, URGENT, SYNC),
@@ -131,9 +132,16 @@ enum class NotificationId(
     AAPS_DIR_NOT_SELECTED(92, NORMAL, SYSTEM),
     GOOGLE_DRIVE_ERROR(1100, URGENT, SYSTEM),
     SETTINGS_EXPORT_RESULT(-2, INFO, SYSTEM),
+    SNACKBAR_FALLBACK(1200, NORMAL, SYSTEM, allowMultiple = true),
 
     // Automation
-    AUTOMATION_MESSAGE(-1, URGENT, AUTOMATION, allowMultiple = true);
+    AUTOMATION_MESSAGE(-1, URGENT, AUTOMATION, allowMultiple = true),
+
+    // Scenes
+    SCENE_ENDED(1301, INFO, AUTOMATION, allowMultiple = true),
+    SCENE_CHAINED(1302, INFO, AUTOMATION, allowMultiple = true),
+    SCENE_CHAIN_SKIPPED(1303, NORMAL, AUTOMATION, allowMultiple = true),
+    SCENE_CHAIN_ERROR(1300, URGENT, AUTOMATION, allowMultiple = true);
 
     companion object {
 

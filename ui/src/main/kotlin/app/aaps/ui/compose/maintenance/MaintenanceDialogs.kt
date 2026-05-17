@@ -51,6 +51,7 @@ fun MaintenanceDialogs(
     val exportState by maintenanceViewModel.exportState.collectAsStateWithLifecycle()
     val cloudDirectoryState by maintenanceViewModel.cloudDirectoryState.collectAsStateWithLifecycle()
     val exportConfig by maintenanceViewModel.exportConfig.collectAsStateWithLifecycle()
+    val isDirectoryAccessGranted by maintenanceViewModel.isDirectoryAccessGranted.collectAsStateWithLifecycle()
 
     // Collect maintenance events
     LaunchedEffect(Unit) {
@@ -93,6 +94,7 @@ fun MaintenanceDialogs(
             onCleanupDbClick = { showConfirmCleanupDb = true },
             onResetDbClick = { showConfirmResetDb = true },
             exportConfig = exportConfig,
+            isDirectoryAccessGranted = isDirectoryAccessGranted,
             onToggleSettingsLocal = { maintenanceViewModel.toggleSettingsLocal(it) },
             onToggleSettingsCloud = { maintenanceViewModel.toggleSettingsCloud(it) },
             onToggleLogEmail = { maintenanceViewModel.toggleLogEmail(it) },
@@ -188,7 +190,7 @@ fun MaintenanceDialogs(
         is ExportState.MasterPasswordMissing -> {
             OkDialog(
                 title = stringResource(CoreUiR.string.nav_export),
-                message = stringResource(CoreUiR.string.master_password_missing, stringResource(CoreUiR.string.protection)),
+                message = stringResource(CoreUiR.string.master_password_missing),
                 onDismiss = { maintenanceViewModel.cancelExport() }
             )
         }

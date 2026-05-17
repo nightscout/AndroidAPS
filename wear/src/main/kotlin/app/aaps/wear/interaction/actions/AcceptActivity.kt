@@ -261,16 +261,14 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                             fontWeight = FontWeight.Bold,
                                         )
                                         Spacer(Modifier.height(4.dp))
-                                        if (profileName != null) {
-                                            Text(
-                                                text = profileName,
-                                                color = Color.White,
-                                                fontSize = 16.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                textAlign = TextAlign.Center,
-                                                maxLines = 2,
-                                            )
-                                        }
+                                        Text(
+                                            text = profileName,
+                                            color = Color.White,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            textAlign = TextAlign.Center,
+                                            maxLines = 2,
+                                        )
                                         if (profilePercentage != null) {
                                             Text(
                                                 text = "$profilePercentage%",
@@ -314,27 +312,25 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                             fontWeight = FontWeight.Bold,
                                         )
                                         Spacer(Modifier.height(8.dp))
-                                        if (runningModeTitle != null) {
-                                            val stateColor = when (runningModeType) {
-                                                "LOOP_CLOSED"       -> LoopClosedColor
-                                                "LOOP_OPEN"         -> LoopOpenColor
-                                                "LOOP_LGS"          -> LoopLgsColor
-                                                "LOOP_USER_SUSPEND" -> LoopSuspendedColor
-                                                "LOOP_DISABLE"      -> LoopDisabledColor
-                                                "PUMP_DISCONNECT"   -> LoopDisconnectedColor
-                                                "SUPERBOLUS"        -> LoopSuperbolusColor
-                                                "LOOP_RESUME",
-                                                "PUMP_RECONNECT"    -> LoopClosedColor
-                                                else                -> ConfirmGreen
-                                            }
-                                            Text(
-                                                text = runningModeTitle,
-                                                color = stateColor,
-                                                fontSize = 20.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                textAlign = TextAlign.Center,
-                                            )
+                                        val stateColor = when (runningModeType) {
+                                            "LOOP_CLOSED"       -> LoopClosedColor
+                                            "LOOP_OPEN"         -> LoopOpenColor
+                                            "LOOP_LGS"          -> LoopLgsColor
+                                            "LOOP_USER_SUSPEND" -> LoopSuspendedColor
+                                            "LOOP_DISABLE"      -> LoopDisabledColor
+                                            "PUMP_DISCONNECT"   -> LoopDisconnectedColor
+                                            "SUPERBOLUS"        -> LoopSuperbolusColor
+                                            "LOOP_RESUME",
+                                            "PUMP_RECONNECT"    -> LoopClosedColor
+                                            else                -> ConfirmGreen
                                         }
+                                        Text(
+                                            text = runningModeTitle,
+                                            color = stateColor,
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            textAlign = TextAlign.Center,
+                                        )
                                         if (runningModeDuration != null) {
                                             Text(
                                                 text = stringResource(R.string.action_confirm_duration, formatDurationMinutes(runningModeDuration)),

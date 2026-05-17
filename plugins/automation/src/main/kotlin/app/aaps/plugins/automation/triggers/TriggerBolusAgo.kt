@@ -1,19 +1,16 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.util.Optional
 
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -74,15 +71,9 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.lastboluscompared, rh.gs(comparator.value.stringRes), minutesAgo.getMinutes())
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_bolus)
+    override fun composeIcon() = IcBolus
+    override fun composeIconTint() = IconTint.Insulin
 
     override fun duplicate(): Trigger = TriggerBolusAgo(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.lastboluslabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(app.aaps.core.interfaces.R.string.unit_minutes), minutesAgo))
-            .build(root)
-    }
 }

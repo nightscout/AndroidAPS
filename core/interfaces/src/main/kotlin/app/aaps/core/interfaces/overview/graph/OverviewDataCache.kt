@@ -45,7 +45,11 @@ interface OverviewDataCache {
     val tempTargetFlow: StateFlow<TempTargetDisplayData?>
     val profileFlow: StateFlow<ProfileDisplayData?>
     val runningModeFlow: StateFlow<RunningModeDisplayData?>
+    val tbrFlow: StateFlow<TbrDisplayData?>
     fun refreshTempTarget()
+    fun refreshProfile()
+    fun refreshRunningMode()
+    fun refreshTbr()
 
     // =========================================================================
     // Secondary graph flows (Phase 5) - one per graph
@@ -87,6 +91,14 @@ interface OverviewDataCache {
     // Variable sensitivity graph: sensitivity line from APS results
     val varSensGraphFlow: StateFlow<VarSensGraphData>
     fun updateVarSensGraph(data: VarSensGraphData)
+
+    // Heart rate graph: BPM readings from smartwatch
+    val heartRateGraphFlow: StateFlow<HeartRateGraphData>
+    fun updateHeartRateGraph(data: HeartRateGraphData)
+
+    // Steps count graph: 5-minute step counts from smartwatch
+    val stepsGraphFlow: StateFlow<StepsGraphData>
+    fun updateStepsGraph(data: StepsGraphData)
 
     // =========================================================================
     // Treatment graph flows (main graph overlays)

@@ -1,7 +1,5 @@
 package app.aaps.implementation.overview
 
-import android.content.Context
-import androidx.annotation.ColorInt
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -41,14 +39,6 @@ class LastBgDataImpl @Inject constructor(
         lastBg()?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewHighMark)
         } == true
-
-    @ColorInt
-    override fun lastBgColor(context: Context?): Int =
-        when {
-            isLow()  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
-            isHigh() -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
-            else     -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
-        }
 
     override fun lastBgDescription(): String =
         when {

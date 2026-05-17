@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Parring</string>
-    <string name="danars_no_device_available">Ingen enhed fundet indtil videre</string>
-    <string name="danars_pairingok">Parring OK</string>
     <string name="danars_pairingtimedout">Parring fik timeout</string>
-    <string name="danars_waitingforpairing">Venter på parring på pumpen</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pumpeintegration til DANA Diabecare RS og Dana-i pumper</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Bolusser</string>
     <string name="danar_history_carbohydrates">Kulhydrater</string>
     <string name="danar_history_dailyinsulin">Daglig insulin</string>
-    <string name="danar_history_errors">Fejl</string>
     <string name="danar_history_glucose">Glukose</string>
     <string name="danar_history_refill">Genopfyld</string>
     <string name="danar_history_syspend">Suspendér</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">Visning af tidsformat</string>
     <string name="danar_button_scroll">Knap rulning</string>
     <string name="danar_beep">Bip ved tryk på knap</string>
-    <string name="danar_pump_alarm">Alarm</string>
     <string name="danar_pump_alarm_sound">Lyd</string>
     <string name="danar_pump_alarm_vibrate">Vibrér</string>
     <string name="danar_pump_alarm_both">Begge</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">Pumpeintegration til DANA Diabecare R pumper, koreansk version</string>
     <string name="description_pump_dana_r_v2">Pumpeintegration til DANA Diabecare R pumper med opgraderet firmware (v2)</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Ingen bluetooth-adapter fundet</string>
     <string name="devicenotfound">Valgte enhed ikke fundet</string>
     <string name="danar_switchtouhmode">Skift tilstand fra E/d til E/t på pumpen</string>
     <string name="danarkoreanpump">DanaR Koreansk</string>
@@ -91,27 +84,20 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Deaktivér EasyUI-tilstand i pumpen</string>
     <string name="profile_set_failed">Indstilling af basal profil mislykkedes</string>
-    <string name="danar_bluetooth_status">Bluetooth Status</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pumpe indstillinger</string>
     <string name="time_format_12h">12t</string>
     <string name="time_format_24h">24t</string>
     <string name="option_on">Tændt</string>
     <string name="option_off">Slukket</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth enhed</string>
     <string name="danars_password_title">Pumpe kodeord (kun v1)</string>
     <string name="danar_password_title">Pumpe kodeord</string>
-    <string name="bolusspeed">Bolus hastighed</string>
     <string name="selectedpump">Valgt pumpe</string>
     <string name="rs_loginsulinchange_title">Log reservoir ændring</string>
     <string name="rs_loginsulinchange_summary">Tilføj \"Insulin Skift\" begivenhed til careportal, når de registreres i historik</string>
     <string name="rs_logcanulachange_title">Log indstik skift</string>
     <string name="rs_logcanulachange_summary">Tilføj \"Indstik skift\" begivenhed til careportal, når de registreres i historik</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Tryk OK på pumpen\nog angiv 2 viste numre\nHold skærmen tændt på pumpen ved at trykke på minus knappen, indtil du er færdig med at indtaste kode.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
     <string name="basal_bolus_step">Basal/bolus trin</string>
-    <string name="carbs_store_error">Kulhydrater blev sandsynligvis ikke gemt korrekt. Tjek manuelt og gem igen, hvis det er nødvendigt.</string>
 </resources>

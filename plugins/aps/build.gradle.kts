@@ -18,22 +18,22 @@ dependencies {
     implementation(project(":core:nssdk"))
     implementation(project(":core:objects"))
     implementation(project(":core:utils"))
+    implementation(project(":core:graph"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
+
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(project(":pump:virtual"))
     testImplementation(project(":shared:tests"))
 
-    api(libs.androidx.appcompat)
-    api(libs.androidx.swiperefreshlayout)
-    api(libs.androidx.gridlayout)
     api(kotlin("reflect"))
 
     // APS (it should be androidTestImplementation but it doesn't work)
-    api(libs.org.mozilla.rhino)
+    runtimeOnly(libs.org.mozilla.rhino)
 
     //Logger
-    api(libs.org.slf4j.api)
+    implementation(libs.org.slf4j.api)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)

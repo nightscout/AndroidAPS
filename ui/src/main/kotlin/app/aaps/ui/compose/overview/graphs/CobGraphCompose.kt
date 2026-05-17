@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.graph.vico.AdaptiveStep
 import app.aaps.core.ui.compose.AapsTheme
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -69,16 +70,17 @@ fun CobGraphCompose(
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
+    nowTimestamp: Long,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
     val cobGraphData by viewModel.cobGraphFlow.collectAsStateWithLifecycle()
     val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
 
-    // Use derived time range or fall back to default (last 24 hours)
+    // Use derived time range or fall back to default (last GRAPH_TIME_RANGE_HOURS hours)
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
         val now = System.currentTimeMillis()
-        val dayAgo = now - 24 * 60 * 60 * 1000L
+        val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }
 
@@ -177,7 +179,7 @@ fun CobGraphCompose(
                     )
                 )
             ),
-            pointConnector = AdaptiveStep  // Adaptive: step for steep angles (>45°), line for gradual
+            interpolator = AdaptiveStep  // Adaptive: step for steep angles (>45°), line for gradual
         )
     }
 
@@ -242,15 +244,16 @@ fun CobGraphCompose(
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val decorations = remember(nowLine) { listOf(nowLine) }
+
+    val rangeProvider = remember(maxX) { CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX) }
 
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(lines),
-                rangeProvider = remember(maxX) { CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX) }
+                rangeProvider = rangeProvider
             ),
             startAxis = VerticalAxis.rememberStart(
                 label = rememberTextComponent(

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <!--    DateUtil-->
@@ -19,4 +20,7 @@
     <string name="pref_show_bgi">Prikaži indeks glukoze u krvi</string>
     <string name="pref_show_direction_arrow">Prikaži strelicu za pravac</string>
     <string name="pref_show_ago">Prikaži pre</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

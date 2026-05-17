@@ -9,12 +9,15 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpInsulin
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.SwapHoriz
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
@@ -31,8 +34,10 @@ import app.aaps.pump.equil.events.EventEquilModeChanged
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
 import android.content.Context
+import app.aaps.core.interfaces.pump.PumpRate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -44,6 +49,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import java.time.Duration
 import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class EquilOverviewEvent {
     data class StartWizard(val workflow: EquilWorkflow) : EquilOverviewEvent()
@@ -159,9 +165,9 @@ class EquilOverviewViewModel @Inject constructor(
                 }
             )
         )
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.battery_label), value = "${state.battery}%"))
-        add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = state.currentInsulin.toString()))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = "${state.battery}%"))
+        add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = ch.insulinAmountString(PumpInsulin(state.currentInsulin.toDouble()))))
         add(
             PumpInfoRow(
                 label = rh.gs(R.string.equil_basal_speed),
@@ -171,27 +177,27 @@ class EquilOverviewViewModel @Inject constructor(
 
         // Temp basal
         val tempBasal = state.tempBasal
-        val tempBasalText = if (tempBasal != null && equilManager.isTempBasalRunning()) {
+        if (tempBasal != null && equilManager.isTempBasalRunning()) {
             val startTime = tempBasal.startTime
             val duration = tempBasal.duration / 60 / 1000
-            val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - startTime).toMinutes()
-            rh.gs(R.string.equil_common_overview_temp_basal_value, tempBasal.rate, dateUtil.timeString(startTime), minutesRunning, duration)
-        } else "-"
-        add(PumpInfoRow(label = rh.gs(R.string.equil_temp_basal_rate), value = tempBasalText))
+            add(PumpInfoRow(label = rh.gs(R.string.equil_temp_basal_rate), value = ch.basalTbrString( rate = PumpRate(tempBasal.rate),startTime = startTime, durationInMin = duration)))
+        }
 
         // Total delivered
         val totalDelivered = if (state.startInsulin == -1) "-"
-        else rh.gs(R.string.equil_unit_u, (state.startInsulin - state.currentInsulin).toString())
+        else ch.insulinAmountString(PumpInsulin((state.startInsulin - state.currentInsulin).toDouble()))
         add(PumpInfoRow(label = rh.gs(R.string.equil_total_delivered), value = totalDelivered))
 
         // Last bolus (bolusRecord.amount is in cU from PumpWithConcentration)
         val lastBolusText = state.bolusRecord?.let {
             ch.insulinAmountAgoString(
                 PumpInsulin(it.amount),
-                dateUtil.sinceString(it.startTime, rh)
+                it.startTime
             )
-        } ?: "-"
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label), value = lastBolusText))
+        }
+        lastBolusText?.let {
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it))
+        }
     }
 
     private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {
@@ -222,7 +228,7 @@ class EquilOverviewViewModel @Inject constructor(
             add(
                 PumpAction(
                 label = rh.gs(R.string.equil_pair),
-                iconRes = app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp,
+                icon = Icons.Filled.Bluetooth,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.PAIR)) }
             ))
@@ -230,21 +236,21 @@ class EquilOverviewViewModel @Inject constructor(
             add(
                 PumpAction(
                 label = rh.gs(R.string.equil_dressing),
-                iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                icon = Icons.Filled.SwapHoriz,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.CHANGE_INSULIN)) }
             ))
             add(
                 PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.history),
-                iconRes = app.aaps.core.ui.R.drawable.ic_pump_history,
+                label = rh.gs(CoreUiR.string.history),
+                icon = Icons.Filled.History,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartHistory) }
             ))
             add(
                 PumpAction(
                 label = rh.gs(R.string.equil_unbind),
-                iconRes = app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp,
+                icon = Icons.Filled.Bluetooth,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.UNPAIR)) }
             ))
@@ -255,19 +261,15 @@ class EquilOverviewViewModel @Inject constructor(
         val runMode = equilManager.equilState?.runMode ?: return
         val targetMode = if (runMode == RunMode.RUN) RunMode.SUSPEND else RunMode.RUN
         _isModeChanging.value = true
-        commandQueue.customCommand(
-            CmdModelSet(targetMode.command, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isModeChanging.value = false
-                    aapsLogger.debug(LTag.PUMPCOMM, "toggleMode result: ${result.success}")
-                    if (result.success) {
-                        equilManager.equilState?.runMode = targetMode
-                        _refreshTrigger.value = System.currentTimeMillis()
-                    }
-                }
+        viewModelScope.launch {
+            val r = commandQueue.customCommand(CmdModelSet(targetMode.command, aapsLogger, preferences, equilManager))
+            _isModeChanging.value = false
+            aapsLogger.debug(LTag.PUMPCOMM, "toggleMode result: ${r.success}")
+            if (r.success) {
+                equilManager.equilState?.runMode = targetMode
+                _refreshTrigger.value = System.currentTimeMillis()
             }
-        )
+        }
     }
 
     private fun readableDuration(duration: Duration): String {

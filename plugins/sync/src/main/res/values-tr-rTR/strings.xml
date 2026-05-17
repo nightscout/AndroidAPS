@@ -1,38 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_cellular">Mobil veri kullan</string>
-    <string name="ns_wifi">Wi-Fi bağlantısı kullan</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_charging">Şarj olurken</string>
-    <string name="ns_battery">Pilde</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Bağlantı Ayarları</string>
-    <string name="ns_wifi_allowed_ssids">İzin verilen SSID (noktalı virgülle ayrılmış)</string>
-    <string name="ns_allow_roaming">Roaming bağlantıya izin ver</string>
-    <string name="ns_create_announcements_from_errors_title">Hatalardan duyurular oluştur</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Karbonhidrat gerekli uyarılarından duyurular oluşturun</string>
-    <string name="ns_create_announcements_from_errors_summary">Hata diyalogları ve yerel uyarılar için Nightscout anonsu oluşturun (Tedaviler altında Bakım portalında da görüntülenebilir)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Karbonhidrat gerekli uyarılarından Nightscout duyuruları oluşturun</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client">v1 API kullanarak verilerinizi Nightscout ile senkronize eder</string>
     <string name="description_ns_client_v3">Verilerinizi v3 API kullanarak Nightscout ile senkronize eder</string>
     <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
     <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
     <string name="no_connectivity">Bağlantı yok</string>
     <string name="unsupported_ns_version">Nightscout\'un desteklenmeyen sürümü</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT yazma izni yok. Yanlış API Anahtarı?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Yeniden başlat</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Nightscout URL\'nizi girin (örn: https://sitenizinadı.platformunuzunadı.com)</string>
-    <string name="ns_client_secret_title">Nightscout API parolası</string>
-    <string name="ns_client_secret_dialog_message">Nightscout API parolanızı girin (Nightscout değişkenlerinizde kayıtlı en az 12 karakterlik parola)</string>
-    <string name="nsclient_token_title">Nightscout erişim anahtarı</string>
-    <string name="nsclient_token_dialog_message">Nightscout yönetici araçlarında oluşturulan yönetici düzeyindeki erişim anahtarınızı girin (minimum 17 karakter, API parolanız değildir!)</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Simdi ilet</string>
     <string name="queue">Sıra:</string>
     <string name="status">Durum:</string>
@@ -40,29 +28,7 @@
     <string name="full_sync">Tam senkronizasyon</string>
     <string name="full_sync_comment">Tam senkronizasyon? Birkaç saat sürebilir ve bitene kadar NS\'ta yeni veriler göremeyeceksiniz.</string>
     <string name="ns_sync_options">Senkronizasyon</string>
-    <string name="ns_upload_summary">Profiller, boluslar, karbonhidratlar, geçici bazallar NS\'a yüklenir</string>
-    <string name="ns_upload">Verileri NS\'a yükleyin</string>
-    <string name="ns_receive_profile_store">Profil deposunu al</string>
-    <string name="ns_receive_profile_store_summary">NS profil düzenleyicisinden profilleri senkronize edin</string>
-    <string name="ns_receive_temp_target">Geçici hedefleri al</string>
-    <string name="ns_receive_profile_switch">Profil değişimlerini al</string>
-    <string name="ns_receive_tbr_eb">GBO ve EB (Yayma Bolus) alın</string>
-    <string name="ns_receive_tbr_eb_summary">Başka bir örnek üzerinden girilen GBO ve EB (Yayma Bolusu) kabul edin</string>
-    <string name="ns_receive_insulin">İnsülinleri alın</string>
-    <string name="ns_receive_carbs">Karbonhidratları alın</string>
-    <string name="ns_receive_therapy_events">Terapi etkinlikleri alın</string>
-    <string name="ns_receive_cgm">SGİ (CGM) verilerini alma/doldurma</string>
-    <string name="ns_receive_cgm_summary">NS\'tan SGİ (CGM) verilerini kabul edin</string>
-    <string name="ns_sync_slow">Yüklemeleri yavaşlat</string>
     <string name="ns_alarm_options">Alarm seçenekleri</string>
-    <string name="ns_alarms">NS alarmlarından bildirimler oluşturun</string>
-    <string name="ns_announcements">NS duyurularından bildirimler oluşturun</string>
-    <string name="ns_alarm_stale_data_value_label">Eski veri eşiği [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Acil durum verileri eşiği [min]</string>
-    <string name="ns_log_app_started_event">NS\'a uygulama başlangıcını kaydet</string>
-    <string name="copy_existing_values">NS ayarları kopyalansın mı (varsa)?</string>
-    <string name="ns_use_ws_title">Websockets\'e bağlanın</string>
-    <string name="ns_use_ws_summary">Etkinleştirme şu anlama gelir: daha hızlı güncelleme, alarm ve duyuru alma ve v1 \'deki gibi daha yüksek pil tüketimi. NS\'ye diğer tüm yükleyiciler v3 protokolünü kullanmalıdır.</string>
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Entegrasyon (test) sunucularını kullanın</string>
     <string name="tidepool">Tidepool</string>
@@ -76,21 +42,13 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">xDrip+\'a verileri gönder</string>
-    <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
-    <string name="xdrip_status_detailed_iob_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal AİNS olarak ayırın</string>
-    <string name="xdrip_status_show_bgi_title">KŞ Etkisi Göster</string>
-    <string name="xdrip_status_show_bgi_summary">KŞ Etkisini durum satırına ekle</string>
     <string name="xdrip_status_settings">xDrip+ Durum Satırı Gelişmiş</string>
     <string name="disabled_loop">Döngü devre dışı</string>
-    <string name="xdrip_send_status_title">Durum satırını xDrip+\'a gönder</string>
     <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
     <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
     <string name="xdrip_local_broadcasts_summary">KŞ ve tedavi verilerini xDrip+\'a gönderin. Veri Kaynağı \"xDrip+ Sync Follower\" seçilmeli ve Ayarlar - Uygulamalar arası ayarlar - KŞ/Tedavileri Kabul Et bölümünde verilerin kabul edilmesi etkinleştirilmelidir.</string>
     <string name="xdrip_local_broadcasts_title">xDrip+ \'a yayınları etkinleştirin.</string>
     <!--    DataBroadcast-->
-    <string name="tizen">Samsung Tizen</string>
-    <string name="tizen_short">TIZ</string>
-    <string name="tizen_description">Verileri Samsung\'un G-Watch Wear Uygulamasına (Tizen OS) yayınlayın</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Garmin cihazına bağlantı (Fenix, Edge,…)</string>
@@ -102,7 +60,6 @@
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
     <string name="pump_status">Pompa durumu</string>
     <string name="loop_status">Döngü durumu</string>
-    <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
     <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
@@ -115,19 +72,9 @@
     <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\n\nMin: %1$s\nMaks: %2$s\nSüre: %3$d dk</string>
     <string name="wear_action_tempt_manual_message">GeçiciHedef\n\nHedef: %1$s\nSüre: %2$d dk</string>
     <string name="wear_action_tempt_preset_message">GeçiciHedef\n\nSebep: %1$s\nHedef: %2$s\nSüre: %3$d dk</string>
-    <string name="no_success">başarısız - lütfen telefonu kontrol edin</string>
-    <string name="wear_settings">Wear ayarları</string>
-    <string name="wearcontrol_title">Saat tarafından kontrol</string>
-    <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
-    <string name="wear_broadcast_data">Veri yayını</string>
-    <string name="wear_broadcast_data_summary">Verileri AAPS veya AAPSClient\'a yayınla</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
-    <string name="wear_notifysmb_title">SMB\'yi bildir</string>
-    <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
     <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
-    <string name="wear_custom_watchface_authorization_title">Özel Saat arayüzü Yetkilendirmesi</string>
-    <string name="wear_custom_watchface_authorization_summary">Bazı saat ekranı ayarlarını saatarayüzü tasarımına uyacak şekilde değiştirmek ve kilitlemek için, yüklenen özel saat arayüzüne yetki verin</string>
     <string name="wear_custom_watchface">Özel Saat arayüzü: %1$s</string>
     <string name="wear_load_watchface">Saat arayüzü yükle</string>
     <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
@@ -166,23 +113,23 @@
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
     <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient bu eylemi desteklemiyor</string>
-    <string name="wear_action_loop_state_requires_duration">Bu eylemin süreye ihtiyacı var..</string>
-    <string name="wear_action_loop_state_pump_suspended">Pompa durduruldu!</string>
-    <string name="wear_action_loop_state_profile_invalid">Profil geçersiz!</string>
     <string name="wear_action_loop_state_unauthorized">Lütfen tekrar deneyin.</string>
     <string name="wear_action_loop_state_invalid">Geçersiz döngü durumu talep edildi</string>
-    <string name="wear_action_loop_state_title">DÖNGÜ DURUMU</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nSüre: %2$d dk</string>
-    <string name="wear_action_loop_state_now_closed">Kapalı</string>
-    <string name="wear_action_loop_state_now_lgs">LGS</string>
-    <string name="wear_action_loop_state_now_open">Açık</string>
-    <string name="wear_action_loop_state_now_suspended">Askıya Alındı</string>
-    <string name="wear_action_loop_state_now_resumed">Devam ediyor</string>
-    <string name="wear_action_loop_state_now_disabled">Devre dışı</string>
+    <string name="wear_action_loop_state_now_pump_suspended">Pompa Durduruldu</string>
     <string name="wear_action_loop_state_now_superbolus">Süperbolus</string>
     <string name="wear_action_loop_state_now_invalid">Geçersiz</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Pompa bağlantısı kesildi</string>
     <string name="garmin_request_key">Anahtar talebi</string>
-    <string name="garmin_request_key_summary">Garmin cihazı ile AAPS arasındaki HTTP iletişimini güvence altına almak için isteğe bağlı anahtar.</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Kominikatör</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator (kimlik doğrulama) uygulamasından %1$s için PIN girin</string>
+    <string name="smscommunicator_tab_otp_label">Authenticator (kimlik doğrulama) kurulumu</string>
+    <string name="smscommunicator_code_verify_info">Doğrulama kodu, Authenticator uygulaması (OTP olarak bilinir) tarafından görüntülenen 6 haneden ve ardından 3 veya daha fazla zorunlu PIN hanesinden oluşur.</string>
+    <string name="smscommunicator_otp_reset_btn">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
+    <string name="smscommunicator_otp_reset_title">Kimlik Doğrulayıcı Anahtarını Sıfırla</string>
+    <string name="smscommunicator_otp_reset_prompt">Kimlik Doğrulayıcı (Authenticator) anahtarını sıfırlamak istediğinizden emin misiniz? Şu anda yapılandırılmış tüm Kimlik Doğrulayıcıları geçersiz kılar ve bunları yeniden ayarlamanız gerekir.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Kimlik Doğrulayıcıyı (Authenticator) yükleyin</string>
+    <string name="smscommunicator_otp_reset_header">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
+    <string name="smscommunicator_otp_install_info">Her takipçi telefonuna, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Kimlik doğrulayıcıyı sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
 </resources>

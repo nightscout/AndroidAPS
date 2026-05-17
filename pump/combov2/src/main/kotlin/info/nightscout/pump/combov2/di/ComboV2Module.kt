@@ -10,11 +10,7 @@ import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 import info.nightscout.pump.combov2.ComboV2Plugin
 
-@Module(
-    includes = [
-        ComboV2ActivitiesModule::class
-    ]
-)
+@Module
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class ComboV2Module {

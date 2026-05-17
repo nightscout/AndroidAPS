@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Zrušit párování</string>
-    <string name="diaconn_no_device_available">Nejsou k dispozici žádná zařízení</string>
     <string name="diaconn_pairing">Párování pumpy Diaconn</string>
-    <string name="pumperror">Chyba pumpy</string>
     <string name="diaconn_g8_history_alarm">Alarmy</string>
     <string name="diaconn_g8_history_basalhours">Hodinové bazály</string>
     <string name="diaconn_g8_history_bolus">Bolusy</string>
     <string name="diaconn_g8_history_dailyinsulin">Denní inzulín</string>
     <string name="diaconn_g8_history_refill">Plnění</string>
     <string name="diaconn_g8_history_suspend">Pozastavit</string>
-    <string name="invalidpairing">Neplatné párovací informace. Spouštění nového párování</string>
     <string name="gettingpumpsettings">Nahrávám nastavení pumpy</string>
     <string name="gettingpumptime">Nahrávám čas v pumpě</string>
     <string name="largetimediff">Velký rozdíl v času:\nČas v pumpě se liší minimálně o 1,5 h.\nProsím upravte čas v pumpě ručně a vymažte historii pumpy.\nPokud je to třeba, pozastavte smyčku alespoň na \"DIA\" hodin.</string>
-    <string name="largetimedifftitle">Velký rozdíl v času</string>
+    <string name="largetimedifftitle">Velký časový rozdíl</string>
     <string name="approachingdailylimit">Blíží se denní limit inzulínu</string>
     <string name="startingbolus">Spouštím bolus</string>
     <string name="waitingforestimatedbolusend">Čekání na předpokládaný konec bolusu</string>
-    <string name="gettingbolusstatus">Nahrávám bolusy</string>
+    <string name="gettingbolusstatus">Zjišťování stavu bolusu</string>
     <string name="stoppingtempbasal">Zastavuji dočasný bazál</string>
     <string name="settingtempbasal">Nastavuji dočasný bazál</string>
     <string name="settingextendedbolus">Nastavuji prodloužený bolus</string>
@@ -32,13 +29,9 @@
     <string name="speederror">Chyba rychlosti</string>
     <string name="insulinlimitviolation">Překročen limit inzulínu</string>
     <string name="boluserrorcode">Požadováno: %1$.2fU Doručeno: %2$.2fU Chyba: %3$s</string>
-    <string name="bolusspeed">Rychlost bolusu</string>
     <string name="selectedpump">Vybraná pumpa</string>
-    <string name="diaconn_g8_bluetooth_status">Stav Bluetooth</string>
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
-    <string name="pump_firmware_label">Firmware</string>
-    <string name="diaconn_g8_user_options">UŽIVATELSKÉ VOLBY</string>
     <string name="pairfirst">Prosím, spárujte pumpu s telefonem!</string>
     <string name="processinghistory">"Zpracovávám Událost "</string>
     <string name="diaconn_g8_history_tempbasal">Dočasný Bazál</string>
@@ -133,4 +126,14 @@
     <string name="diaconn_g8_errorcode_36">Zastavení dočasného bazálu je odmítnuto, pokud žádný není spuštěn</string>
     <string name="diaconn_g8_cloudsend_summary">Odeslat protokoly pumpy do Diaconn Cloudu.</string>
     <string name="diaconn_g8_cloudsend_title">Synchronizace do Diaconn cloudu</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Spárování úspěšné!</string>
+    <string name="diaconn_pairing_successful_message">Vaše pumpa je nyní připojena a připravena k použití.</string>
 </resources>

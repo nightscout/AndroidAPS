@@ -13,23 +13,18 @@
     <string name="patch_not_active">Patch není aktivován</string>
     <string name="pump_setting_failed">Načtení uživatelského nastavení do pumpy selhalo!</string>
     <string name="pump_sync_error">Chyba při synchronizaci historie z pumpy, záznam byl přeskočen. Zkontrolujte, zda je bolus správně synchronizován. Potvrďte, a pokud se chyba vrátí, změňte patch nebo pumpu.</string>
+    <string name="patch_reset_after_primed_error">Po naplnění patche byl zjištěn jeho reset! Odstraňte patch a aktivujte nový.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Stav BLE</string>
     <string name="last_connection_label">Naposledy připojeno</string>
     <string name="active_bolus_label">Aktivní bolus</string>
     <string name="pump_state_label">Stav pumpy</string>
     <string name="active_alarms_label">Aktivní alarmy</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Typ bazálu</string>
-    <string name="basal_rate_label">Bazální dávka</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Typ pumpy</string>
     <string name="fw_version_label">Verze FW</string>
     <string name="patch_no_label">Č. patche</string>
     <string name="patch_expiry_label">Patch vyprší</string>
     <string name="patch_activation_time_label">Aktivace</string>
-    <string name="refresh_label">Obnovit</string>
     <string name="reset_alarms_label">Resetovat alarmy</string>
     <string name="change_patch_label">Vyměnit patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vyžádáno uživatelem</string>
@@ -55,12 +50,20 @@
     <string name="alarm_no_calibration">Žádná kalibrace</string>
     <string name="pump_time_update_failed">Nepodařilo se aktualizovat časové pásmo pumpy, odložit zprávu a aktualizovat ručně.</string>
     <string name="bolus_error">Chyba bolusu</string>
+    <!-- Status strings -->
+    <string name="status_idle">Nečinný</string>
+    <string name="status_filled">Naplněno</string>
+    <string name="status_priming">Plnění</string>
+    <string name="status_primed">Naplněný</string>
+    <string name="status_ejecting">Vysouvání</string>
+    <string name="status_ejected">Vysunuto</string>
+    <string name="status_active">Aktivní</string>
+    <string name="status_stopped">Zastaveno</string>
     <!-- wizard-->
     <string name="retry">Opakovat</string>
-    <string name="next">Další</string>
-    <string name="discard">Zahodit</string>
     <string name="step_prepare_patch">Aktivovat Patch</string>
     <string name="step_prepare_patch_connect">Připojit a naplnit</string>
+    <string name="step_select_insulin">Vybrat inzulín</string>
     <string name="step_prime">Naplnit</string>
     <string name="step_priming">Plnění</string>
     <string name="step_priming_complete">Plnění dokončeno</string>
@@ -70,11 +73,9 @@
     <string name="step_deactivate">Deaktivovat Patch</string>
     <string name="step_deactivating">Deaktivace...</string>
     <string name="step_deactivate_complete">Patch deaktivován</string>
+    <string name="unpair_confirm_message">Toto vymaže uložené sériové číslo pumpy a odpojí. Aktivujte nový pod pro vyhledání pumpy.</string>
     <string name="step_retry_activation">Aktivace probíhá</string>
     <string name="unexpected_state">Neočekávaný stav: %1$s</string>
-    <string name="no_profile_selected">Nebyl vybrán žádný profil. Vyberte prosím profil a zkuste to znovu.</string>
-    <string name="no_sn_in_settings">Není zadáno žádné sériové číslo. Zadejte sériové číslo pumpy v nastavení a zkuste to znovu.</string>
-    <string name="base_serial">Sériové číslo pumpy: %1$X</string>
     <string name="patch_begin_activation">Žádný aktivní Patch. Stiskněte <b>Další</b> pro zahájení aktivačního procesu.</string>
     <string name="patch_not_active_note">Základna by neměla být připojena ke kanyle až do dalšího kroku!</string>
     <string name="connect_pump_base">Připojte základnu k nové kanyle, odstraňte zbývající vzduch a doplňte inzulinem, poté stiskněte tlačítko <b>Další</b>.</string>
@@ -83,12 +84,10 @@
     <string name="do_not_attach_to_body">Prozatím nepřipojujte Patch k tělu.</string>
     <string name="half_press_needle">Stiskněte tlačítko jehly do poloviny. Potom klepněte na <b>Další</b> pro spuštění plnění.</string>
     <string name="wait_for_priming">Počkejte prosím na dokončení plnění.</string>
-    <string name="priming_error">Nepodařilo se provést plnění, zkuste to znovu stisknutím tlačítka <b>Opakovat</b>.</string>
     <string name="press_next">Stiskněte <b>Další</b> pro pokračování.</string>
     <string name="press_next_to_start_activation">Stiskněte <b>Další</b> pro spuštění aktivace.</string>
     <string name="remove_safety_lock">Odstraňte bezpečnostní zámek. Připojte pumpu k tělu. Stiskněte tlačítko jehly.</string>
     <string name="activating_pump">Aktivace Pacthe a nastavení počátečního bazálu. Počkejte prosím.</string>
-    <string name="activating_error">Chyba při aktivaci, stiskněte <b>Opakovat</b> pro nový pokus.</string>
     <string name="activating_complete">Nový Patch aktivován. Zbývá %.2f jednotek.</string>
     <string name="can_export_settings">Můžete exportovat nastavení, abyste mohli později obnovit tuto relaci pumpy.</string>
     <string name="press_OK_to_return">Stiskněte <b>OK</b> pro návrat na hlavní obrazovku.</string>
@@ -105,14 +104,16 @@
     <string name="press_retry_or_discard">Stiskněte <b>Další</b> pro obnovení aktivace nebo <b>Zahodit</b> pro resetování stavu aktivace.</string>
     <string name="reading_activation_status">Počkejte prosím, čtení stavu aktivace z Patche.</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Výstraha při nedostupné pumpě byla vynucena, protože patch pumpa Medtrum může selhat a být nedostupná.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Doporučujeme nastavit na 30 minut, protože patch pumpa Medtrum může selhat a být nedostupná.</string>
-    <string name="sn_input_title">Sériové číslo</string>
-    <string name="sn_input_summary">Zadejte sériové číslo základny Patche.</string>
-    <string name="sn_input_invalid">Neplatné sériové číslo!</string>
-    <string name="pump_unsupported">Nevyzkoušená pumpa: %1$s! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
     <string name="alarm_setting_title">Nastavení alarmů</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavení alarmů.</string>
+    <string name="alarm_setting_light_vibrate_beep">Blikání, vibrace a pípnutí</string>
+    <string name="alarm_setting_light_vibrate">Blikání a vibrace</string>
+    <string name="alarm_setting_light_beep">Blikání a pípnutí</string>
+    <string name="alarm_setting_light">Blikání</string>
+    <string name="alarm_setting_vibrate_beep">Vibrace a pípnutí</string>
+    <string name="alarm_setting_vibrate">Vibrace</string>
+    <string name="alarm_setting_beep">Pípnutí</string>
+    <string name="alarm_setting_silent">Tiché</string>
     <string name="pump_warning_notification_title">Oznámení o varování pumpy</string>
     <string name="pump_warning_notification_summary">Zobrazit upozornění na nekritická varování pumpy: vybitá baterie, téměř prázdný zásobník (20 jednotek) a brzy dojde inzulin. Doporučeno ponechat zapnuté, když jsou výstrahy pumpy nastaveny na ticho.</string>
     <string name="pump_warning_expiry_hour_title">Varování před vypršením platnosti pumpy [hodiny]</string>

@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Što je istina o DIA-i?</string>
     <string name="dia_label_exam">Trajanje djelovanja inzulina (DIA)</string>
-    <string name="dia_profile">Trebali biste postaviti vrijednost za DIA u svom profilu.</string>
     <string name="pumpdisconnect_label">Razlozi za primjenu \"Otkači pumpu\" u AAPS</string>
     <string name="pumpdisconnect_openloop">Poslat će AAPS u način rada otvorene petlje.</string>
     <string name="objectives_label">AAPS postavke</string>

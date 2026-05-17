@@ -15,5 +15,5 @@ class GlucoseStatusProviderImpl @Inject constructor(
         get() = getGlucoseStatusData()
 
     override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? =
-        activePlugin.activeAPS.getGlucoseStatusData(allowOldData)
+        activePlugin.activeAPS?.getGlucoseStatusData(allowOldData)
 }

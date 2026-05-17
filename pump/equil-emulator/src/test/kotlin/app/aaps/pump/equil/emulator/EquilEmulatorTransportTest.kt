@@ -97,8 +97,8 @@ class EquilEmulatorTransportTest {
             transport.gatt.writeCharacteristic(buf.array())
         }
 
-        // Wait for async response delivery (5ms delay + margin)
-        Thread.sleep(50)
+        // Wait for async response delivery
+        transport.awaitPendingCallbacks()
 
         // Should have received response packets
         assertTrue(receivedPackets.isNotEmpty(), "Should receive response packets")
@@ -119,7 +119,7 @@ class EquilEmulatorTransportTest {
             "0F0F0000",
             0
         )
-        Thread.sleep(50)
+        transport.awaitPendingCallbacks()
         assertTrue(receivedPackets.isNotEmpty(), "Phase 1 should produce response")
         receivedPackets.clear()
 
@@ -130,7 +130,7 @@ class EquilEmulatorTransportTest {
             "0404A1B2",
             1
         )
-        Thread.sleep(50)
+        transport.awaitPendingCallbacks()
         assertTrue(receivedPackets.isNotEmpty(), "Phase 2 should produce response")
 
         // Parse response and verify running mode
@@ -150,7 +150,7 @@ class EquilEmulatorTransportTest {
             "0404A1B2",
             2
         )
-        Thread.sleep(50)
+        transport.awaitPendingCallbacks()
         assertTrue(receivedPackets.isNotEmpty(), "Phase 3 should produce response")
     }
 

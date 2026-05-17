@@ -51,13 +51,6 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         assertThat(openAPSAutoISFPlugin.specialShowInListCondition()).isTrue()
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        openAPSAutoISFPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
-
     @Suppress("KotlinConstantConditions")
     @Test
     fun withinISFLimitsTest() {

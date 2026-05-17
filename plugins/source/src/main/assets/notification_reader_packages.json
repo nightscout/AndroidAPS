@@ -1,193 +1,240 @@
 {
-  "version": 1,
+  "version": 2,
   "packages": [
     {
       "package": "com.dexcom.g6",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region1.mmol",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region2.mgdl",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region3.mgdl",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region4.mmol",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region5.mmol",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region6.mgdl",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region7.mmol",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region8.mmol",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region9.mgdl",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region10.mgdl",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g6.region11.mmol",
-      "sensor": "AAPS-DexcomG6"
+      "sensor": "AAPS-DexcomG6",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.g7",
-      "sensor": "AAPS-DexcomG7"
+      "sensor": "AAPS-DexcomG7",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.dexcomone",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.d1plus",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.dexcom.stelo",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.camdiab.fx_alert.mmoll",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.camdiab.fx_alert.mgdl",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.camdiab.fx_alert.hx.mmoll",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.camdiab.fx_alert.hx.mgdl",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.camdiab.fx_alert.mmoll.ca",
-      "sensor": "AAPS-Dexcom"
+      "sensor": "AAPS-Dexcom",
+      "intervalMinutes": 5
     },
     {
       "package": "com.medtronic.diabetes.guardian",
-      "sensor": "MM600Series"
+      "sensor": "MM600Series",
+      "intervalMinutes": 5
     },
     {
       "package": "com.medtronic.diabetes.guardianconnect",
-      "sensor": "MM600Series"
+      "sensor": "MM600Series",
+      "intervalMinutes": 5
     },
     {
       "package": "com.medtronic.diabetes.guardianconnect.us",
-      "sensor": "MM600Series"
+      "sensor": "MM600Series",
+      "intervalMinutes": 5
     },
     {
       "package": "com.medtronic.diabetes.minimedmobile.eu",
-      "sensor": "MM600Series"
+      "sensor": "MM600Series",
+      "intervalMinutes": 5
     },
     {
       "package": "com.medtronic.diabetes.minimedmobile.us",
-      "sensor": "MM600Series"
+      "sensor": "MM600Series",
+      "intervalMinutes": 5
     },
     {
       "package": "com.medtronic.diabetes.simplera.eu",
-      "sensor": "Simplera"
+      "sensor": "Simplera",
+      "intervalMinutes": 5
     },
     {
       "package": "com.medtronic.diabetes.simplera.us",
-      "sensor": "Simplera"
+      "sensor": "Simplera",
+      "intervalMinutes": 5
     },
     {
       "package": "com.senseonics.gen12androidapp",
-      "sensor": "Eversense"
+      "sensor": "Eversense",
+      "intervalMinutes": 5
     },
     {
       "package": "com.senseonics.androidapp",
-      "sensor": "Eversense"
+      "sensor": "Eversense",
+      "intervalMinutes": 5
     },
     {
       "package": "com.senseonics.eversense365.us",
-      "sensor": "Eversense"
+      "sensor": "Eversense",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtechmd.cgms.uk",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtechmd.cgms.mg",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtech.aidexx",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtech.aidexx.mgdl",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtech.aidexx.linxneo.mmoll",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtech.aidexx.equil.mmoll",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtech.aidexx.diaexport.mmoll",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.microtech.aidexx.smart.mmoll",
-      "sensor": "GlucoRx Aidex"
+      "sensor": "GlucoRx Aidex",
+      "intervalMinutes": 5
     },
     {
       "package": "com.ottai.seas",
-      "sensor": "Ottai"
+      "sensor": "Ottai",
+      "intervalMinutes": 5
     },
     {
       "package": "com.ottai.tag",
-      "sensor": "Ottai"
+      "sensor": "Ottai",
+      "intervalMinutes": 5
     },
     {
       "package": "com.sinocare.cgm.ce",
-      "sensor": "Sino App"
+      "sensor": "Sino App",
+      "intervalMinutes": 5
     },
     {
       "package": "com.sinocare.ican.health.ce",
-      "sensor": "Sino App"
+      "sensor": "Sino App",
+      "intervalMinutes": 5
     },
     {
       "package": "com.sinocare.ican.health.ru",
-      "sensor": "Sino App"
+      "sensor": "Sino App",
+      "intervalMinutes": 5
     },
     {
       "package": "com.kakaohealthcare.pasta",
-      "sensor": "Unknown"
+      "sensor": "Unknown",
+      "intervalMinutes": 5
     },
     {
       "package": "com.glucotech.app.android",
-      "sensor": "Unknown"
+      "sensor": "Unknown",
+      "intervalMinutes": 5
     },
     {
       "package": "com.suswel.ai",
-      "sensor": "Unknown"
+      "sensor": "Unknown",
+      "intervalMinutes": 5
     }
   ]
 }

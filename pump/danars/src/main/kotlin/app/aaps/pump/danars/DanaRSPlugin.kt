@@ -5,10 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -46,17 +42,15 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.ui.compose.icons.IcPluginDana
+import app.aaps.core.ui.compose.icons.IcPluginDanaI
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
@@ -110,10 +104,9 @@ class DanaRSPlugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         }
-        .icon(IcPluginDana)
+        .icon(IcPluginDanaI)
         .pluginName(app.aaps.pump.dana.R.string.danarspump)
         .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
     ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java, DanaStringComposedKey::class.java, DanaLongKey::class.java),
     aapsLogger, rh, preferences, commandQueue
@@ -133,15 +126,6 @@ class DanaRSPlugin @Inject constructor(
 
     override val pumpDescription
         get() = PumpDescription().fillFor(danaPump.pumpType())
-
-    override fun updatePreferenceSummary(pref: Preference) {
-        super.updatePreferenceSummary(pref)
-
-        if (pref.key == DanaStringNonKey.RsName.key) {
-            val value = preferences.getIfExists(DanaStringNonKey.RsName)
-            pref.summary = value ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
-        }
-    }
 
     override fun onStart() {
         super.onStart()
@@ -190,7 +174,7 @@ class DanaRSPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = danaRSService?.connect(reason, mDeviceAddress) == true
-            if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported_or_not_paired)
+            if (!success) rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.ble_not_supported_or_not_paired), EventShowSnackbar.Type.Error))
         }
     }
 
@@ -207,7 +191,7 @@ class DanaRSPlugin @Inject constructor(
         danaRSService?.stopConnecting()
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         danaRSService?.readPumpStatus()
         pumpDescription.basalStep = danaPump.basalStep
         pumpDescription.bolusStep = danaPump.bolusStep
@@ -263,7 +247,7 @@ class DanaRSPlugin @Inject constructor(
 
     override fun isBusy(): Boolean = false
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
@@ -306,8 +290,7 @@ class DanaRSPlugin @Inject constructor(
 
     override val baseBasalRate get() = PumpRate(danaPump.currentBasal)
 
-    @Synchronized
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -329,9 +312,9 @@ class DanaRSPlugin @Inject constructor(
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
-        result.success = connectionOK && (abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep || danaPump.bolusStopped)
-        result.bolusDelivered = delivered
+        val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+        result.success = connectionOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped)
+        result.bolusDelivered = delivered.cU
         if (!result.success) {
             var error = "" + danaPump.bolusStartErrorCode
             when (danaPump.bolusStartErrorCode) {
@@ -351,8 +334,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     // This is called from APS
-    @Synchronized
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0
         val doLowTemp = absoluteRate < baseBasalRate.cU
         val doHighTemp = absoluteRate > baseBasalRate.cU
@@ -425,8 +407,7 @@ class DanaRSPlugin @Inject constructor(
             .comment("Internal error")
     }
 
-    @Synchronized
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var percent = percent
         val result = pumpEnactResultProvider.get()
         if (percent < 0) {
@@ -474,7 +455,7 @@ class DanaRSPlugin @Inject constructor(
         return result
     }
 
-    @Synchronized private fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
+    private suspend fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         val connectionOK = danaRSService?.highTempBasal(percent) == true
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {
@@ -495,8 +476,7 @@ class DanaRSPlugin @Inject constructor(
         return result
     }
 
-    @Synchronized
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
@@ -533,8 +513,7 @@ class DanaRSPlugin @Inject constructor(
         return result
     }
 
-    @Synchronized
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (danaPump.isTempBasalInProgress) {
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: Failed")
             danaRSService?.tempBasalStop()
@@ -553,7 +532,7 @@ class DanaRSPlugin @Inject constructor(
         }
     }
 
-    @Synchronized override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         if (danaPump.isExtendedInProgress) {
             danaRSService?.extendedBolusStop()
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: Failed")
@@ -582,7 +561,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
+    override suspend fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
     override fun canHandleDST(): Boolean = danaPump.usingUTC
     override fun clearPairing() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
@@ -606,31 +585,4 @@ class DanaRSPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        val speedEntries = arrayOf<CharSequence>("12 s/U", "30 s/U", "60 s/U")
-        val speedValues = arrayOf<CharSequence>("0", "1", "2")
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "danars_settings"
-            title = rh.gs(app.aaps.pump.dana.R.string.danarspump)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveListIntPreference(
-                    ctx = context,
-                    intKey = DanaIntKey.BolusSpeed,
-                    title = app.aaps.core.ui.R.string.bolusspeed,
-                    dialogTitle = app.aaps.core.ui.R.string.bolusspeed,
-                    entries = speedEntries,
-                    entryValues = speedValues
-                )
-            )
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.LogInsulinChange, title = app.aaps.pump.dana.R.string.rs_loginsulinchange_title, summary = app.aaps.pump.dana.R.string.rs_loginsulinchange_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.LogCannulaChange, title = app.aaps.pump.dana.R.string.rs_logcanulachange_title, summary = app.aaps.pump.dana.R.string.rs_logcanulachange_summary))
-        }
-    }
 }

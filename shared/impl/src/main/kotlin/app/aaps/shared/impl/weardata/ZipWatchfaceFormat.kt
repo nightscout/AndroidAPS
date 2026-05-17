@@ -66,7 +66,8 @@ class ZipWatchfaceFormat {
                 else
                     null
 
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                println("CWF load failed for '$zipName': ${e.stackTraceToString()}")
                 return null     // mainly IOException
             }
         }

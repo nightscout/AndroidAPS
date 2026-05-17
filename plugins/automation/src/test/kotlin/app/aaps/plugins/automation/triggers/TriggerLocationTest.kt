@@ -91,10 +91,6 @@ class TriggerLocationTest : TriggerTestBase() {
         assertThat(TriggerLocation(injector).friendlyDescription()).isNull() //not mocked
     }
 
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerLocation(injector).icon().get()).isEqualTo(R.drawable.ic_location_on)
-    }
-
     private fun mockedLocation(): Location {
         val newLocation = Location("test")
         newLocation.latitude = 10.0

@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -30,16 +29,8 @@ class ActionStopProcessingTest : ActionsTestBase() {
     }
 
     @Test
-    fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(R.drawable.ic_stop_24dp)
-    }
-
-    @Test
     fun doActionTest() = runTest {
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
     }
 }

@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus-PIN</string>
     <string name="protection_timeout_title">Varighet for passord og PIN [s]</string>
     <string name="protection_timeout_summary">Tid før passord eller PIN-kode må angis</string>
-    <string name="biometric">Biometrisk</string>
-    <string name="custom_password">Egendefinert passord</string>
-    <string name="custom_pin">Egendefinert PIN-kode</string>
-    <string name="noprotection">Ingen beskyttelse</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Usikret reserveløsning</string>
     <string name="unsecure_fallback_descriotion_biometric">For å være effektiv må biometrisk beskyttelse også definere et hovedpassord som reserveløsning.\n\nVennligst definer et hovedpassord!</string>
     <string name="password_set">Passord definert!</string>
@@ -27,8 +24,13 @@
     <string name="password_not_changed">Passordet er ikke endret</string>
     <string name="pin_not_changed">PIN-koden er ikke endret</string>
     <string name="pin_cleared">PIN-kode fjernet!</string>
-    <string name="password_hint">Skriv inn passordet</string>
-    <string name="pin_hint">Skriv inn PIN-koden</string>
+    <string name="protection_password_hint">Skriv inn passordet her</string>
+    <string name="protection_pin_hint">Skriv inn PIN-koden her</string>
+    <string name="auth_hint_master_password">Skriv inn hovedpassordet</string>
+    <string name="auth_hint_master_or_pin">Skriv inn hovedpassordet eller PIN-kode</string>
+    <string name="auth_hint_master_or_password">Skriv inn hovedpassordet eller det tilpassede passordet</string>
+    <string name="use_pin_password">Bruk PIN/passord</string>
+    <string name="current_master_password">Nåværende hovedpassord</string>
     <string name="master_password_not_set">Hovedpassord ikke satt</string>
     <string name="aaps_directory_not_selected">AAPS-mappe ikke valgt</string>
 </resources>

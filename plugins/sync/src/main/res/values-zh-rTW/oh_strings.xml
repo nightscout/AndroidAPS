@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans 已經設定完成。如果您想停止上傳，請點擊「登出」。</string>
     <string name="not_setup_info">Open Humans 目前處於非活動狀態。要開始上傳資料，請點擊「設定」。</string>
     <string name="project_member_id">項目成員ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">僅在連線WiFi時上傳</string>
-    <string name="only_upload_if_charging">僅在充電時上傳</string>
     <string name="open_humans_uploading">正在上傳到 Open Humans…</string>
     <string name="open_humans_notifications">Open Humans 通知</string>
     <string name="uploading_to_open_humans">AAPS 正在上傳到 Open Humans。這可能需要一段時間。</string>

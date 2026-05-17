@@ -31,10 +31,11 @@ import kotlinx.coroutines.delay
  */
 fun LazyListScope.addPreferenceContent(
     content: Any,
+    onShowMessage: (String) -> Unit,
     sectionState: PreferenceSectionState? = null
 ) {
     when (content) {
-        is PreferenceSubScreenDef -> addPreferenceSubScreenDef(content, sectionState)
+        is PreferenceSubScreenDef -> addPreferenceSubScreenDef(content, onShowMessage, sectionState)
     }
 }
 
@@ -45,6 +46,7 @@ fun LazyListScope.addPreferenceContent(
  */
 fun LazyListScope.addPreferenceSubScreenDef(
     def: PreferenceSubScreenDef,
+    onShowMessage: (String) -> Unit,
     sectionState: PreferenceSectionState? = null
 ) {
     val sectionKey = "${def.key}_main"
@@ -57,13 +59,13 @@ fun LazyListScope.addPreferenceSubScreenDef(
             summaryItems = def.effectiveSummaryItems(),
             expanded = isExpanded,
             onToggle = { sectionState?.toggle(sectionKey, SectionLevel.TOP_LEVEL) },
-            iconResId = def.iconResId,
             icon = def.icon
         ) {
             // Render items in order, preserving the original structure
             RenderPreferenceItems(
                 items = def.items,
                 parentKey = def.key,
+                onShowMessage = onShowMessage,
                 sectionState = sectionState,
                 visibilityContext = visibilityContext
             )
@@ -78,6 +80,7 @@ fun LazyListScope.addPreferenceSubScreenDef(
 private fun RenderPreferenceItems(
     items: List<Any>,
     parentKey: String,
+    onShowMessage: (String) -> Unit,
     sectionState: PreferenceSectionState?,
     visibilityContext: PreferenceVisibilityContext?
 ) {
@@ -87,6 +90,7 @@ private fun RenderPreferenceItems(
                 HighlightablePreference(preferenceKey = item.key) {
                     AdaptivePreferenceItem(
                         key = item,
+                        onShowMessage = onShowMessage,
                         visibilityContext = visibilityContext
                     )
                 }
@@ -109,8 +113,7 @@ private fun RenderPreferenceItems(
                         summaryItems = item.effectiveSummaryItems(),
                         expanded = isSubExpanded,
                         onToggle = { sectionState?.toggle(subSectionKey, SectionLevel.SUB_SECTION, parentKey = parentKey) },
-                        insideCard = true,
-                        iconResId = null  // No icon for nested subscreens
+                        insideCard = true
                     )
 
                     // Content without card wrapper
@@ -122,6 +125,7 @@ private fun RenderPreferenceItems(
                             ) {
                                 AdaptivePreferenceList(
                                     items = item.items,
+                                    onShowMessage = onShowMessage,
                                     visibilityContext = visibilityContext,
                                     onNavigateToSubScreen = null // Nested subscreens not supported here
                                 )

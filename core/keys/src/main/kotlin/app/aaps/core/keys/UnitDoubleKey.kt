@@ -21,23 +21,6 @@ enum class UnitDoubleKey(
     override val exportable: Boolean = true
 ) : UnitDoublePreferenceKey {
 
-    @Deprecated(
-        message = "Migrated to StringKey.TempTargetPresets JSON array. Used by legacy TempTargetDialog.",
-        replaceWith = ReplaceWith("StringKey.TempTargetPresets")
-    )
-    OverviewEatingSoonTarget(key = "eatingsoon_target", defaultValue = 90.0, minMgdl = 72, maxMgdl = 160, titleResId = R.string.pref_title_eating_soon_target, defaultedBySM = true),
-
-    @Deprecated(
-        message = "Migrated to StringKey.TempTargetPresets JSON array. Used by legacy TempTargetDialog.",
-        replaceWith = ReplaceWith("StringKey.TempTargetPresets")
-    )
-    OverviewActivityTarget(key = "activity_target", defaultValue = 140.0, minMgdl = 108, maxMgdl = 180, titleResId = R.string.pref_title_activity_target, defaultedBySM = true),
-
-    @Deprecated(
-        message = "Migrated to StringKey.TempTargetPresets JSON array. Used by legacy TempTargetDialog.",
-        replaceWith = ReplaceWith("StringKey.TempTargetPresets")
-    )
-    OverviewHypoTarget(key = "hypo_target", defaultValue = 160.0, minMgdl = 108, maxMgdl = 180, titleResId = R.string.pref_title_hypo_target, defaultedBySM = true),
     OverviewLowMark(key = "low_mark", defaultValue = 72.0, minMgdl = 25, maxMgdl = 160, titleResId = R.string.pref_title_low_mark, showInNsClientMode = false, hideParentScreenIfHidden = true),
     OverviewHighMark(key = "high_mark", defaultValue = 180.0, minMgdl = 90, maxMgdl = 250, titleResId = R.string.pref_title_high_mark, showInNsClientMode = false),
     ApsLgsThreshold(

@@ -4,14 +4,10 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.shared.tests.TestBaseWithProfile
-import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class XdripPluginTest : TestBaseWithProfile() {
@@ -24,18 +20,6 @@ class XdripPluginTest : TestBaseWithProfile() {
 
     private lateinit var xdripPlugin: XdripPlugin
     private lateinit var rateLimit: RateLimit
-
-    init {
-        addInjector {
-            if (it is AdaptiveSwitchPreference) {
-                it.preferences = preferences
-                it.config = config
-            }
-            if (it is AdaptiveIntentPreference) {
-                it.preferences = preferences
-            }
-        }
-    }
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
@@ -60,12 +44,5 @@ class XdripPluginTest : TestBaseWithProfile() {
             dataSyncSelector,
             persistenceLayer
         )
-    }
-
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        xdripPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

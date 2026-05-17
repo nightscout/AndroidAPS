@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
@@ -40,13 +39,10 @@ class ActionSMBChangeTest : ActionsTestBase() {
 
     @Test fun doAction() = runTest {
         sut.smbState = InputDropdownOnOffMenu(rh, true)
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-                assertThat(result.comment).isEqualTo("OK")
-                verify(preferences, times(1)).put(any<BooleanPreferenceKey>(), anyBoolean())
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
+        assertThat(result.comment).isEqualTo("OK")
+        verify(preferences, times(1)).put(any<BooleanPreferenceKey>(), anyBoolean())
     }
 
     @Test fun hasDialogTest() = runTest {
@@ -61,9 +57,5 @@ class ActionSMBChangeTest : ActionsTestBase() {
     @Test fun fromJSONTest() = runTest {
         sut.fromJSON("""{"smbState":"false"}""")
         assertThat(sut.smbState.value).isEqualTo(false)
-    }
-
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_running_mode)
     }
 }

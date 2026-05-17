@@ -141,6 +141,7 @@ class EquilBLE @Inject constructor(
 
     fun disconnect() {
         isConnected = false
+        connecting = false
         startTrue = false
         autoScan = false
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
@@ -208,6 +209,7 @@ class EquilBLE @Inject constructor(
             preCmd = baseCmd
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "readHistory error")
+            synchronized(baseCmd) { baseCmd.notifyAll() }
         }
     }
 
@@ -259,10 +261,12 @@ class EquilBLE @Inject constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "startScan====$startTrue====$macAddress===")
         if (macAddress.isNullOrEmpty()) return
         if (startTrue) return
+        startTrue = true
+        connecting = true
+        equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
 
         bleTransport.scanAddress = macAddress
         updateCmdStatus(ResolvedResult.NOT_FOUNT)
-        connecting = true
 
         scanJob = scope.launch {
             bleTransport.scanner.scannedDevices.collect { device ->
@@ -287,8 +291,8 @@ class EquilBLE @Inject constructor(
     }
 
     fun connect(from: String) {
-        aapsLogger.debug(LTag.PUMPCOMM, "connect====startTrue=$startTrue====isConnected=$isConnected from $from")
-        if (startTrue || isConnected) {
+        aapsLogger.debug(LTag.PUMPCOMM, "connect====connecting=$connecting====isConnected=$isConnected from $from")
+        if (connecting || isConnected) {
             return
         }
         autoScan = true

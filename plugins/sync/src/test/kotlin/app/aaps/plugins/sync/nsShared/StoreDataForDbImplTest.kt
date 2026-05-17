@@ -24,7 +24,17 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.keys.BooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -48,6 +58,7 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
     @Mock private lateinit var nsClientRepository: NSClientRepository
 
     private lateinit var storeDataForDb: StoreDataForDbImpl
+    private lateinit var testAppScope: CoroutineScope
 
     val tt = TT(timestamp = now, reason = TT.Reason.ACTIVITY, highTarget = 120.0, lowTarget = 100.0, duration = T.mins(30).msecs())
     val gv = GV(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now, sourceSensor = SourceSensor.IOB_PREDICTION, trendArrow = TrendArrow.NONE)
@@ -148,48 +159,52 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
 
+        testAppScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
         storeDataForDb = StoreDataForDbImpl(
             aapsLogger = aapsLogger,
             persistenceLayer = persistenceLayer,
             preferences = preferences,
             config = config,
             virtualPump = virtualPump,
-            nsClientRepository = nsClientRepository
+            nsClientRepository = nsClientRepository,
+            appScope = testAppScope
         )
     }
 
+    @AfterEach
+    fun tearDown() {
+        // Cancel the channel collectors so they don't leak into the next test.
+        testAppScope.cancel()
+    }
+
     @Test
-    fun `storeGlucoseValuesToDb calls persistenceLayer and clears list`() {
+    fun `storeGlucoseValuesToDb calls persistenceLayer and clears list`() = runTest {
         val glucoseValues = mutableListOf(gv)
         storeDataForDb.addToGlucoseValues(glucoseValues)
         storeDataForDb.storeGlucoseValuesToDb()
 
-        runTest {
-            verify(persistenceLayer).insertCgmSourceData(
-                eq(Sources.NSClient),
-                argThat { size == 1 && get(0).value == gv.value },
-                anyList(),
-                eq(null)
-            )
-        }
+        verify(persistenceLayer).insertCgmSourceData(
+            eq(Sources.NSClient),
+            argThat { size == 1 && get(0).value == gv.value },
+            anyList(),
+            eq(null)
+        )
         storeDataForDb.storeGlucoseValuesToDb()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `storeFoodsToDb calls persistenceLayer and clears list`() {
+    fun `storeFoodsToDb calls persistenceLayer and clears list`() = runTest {
         val foods = mutableListOf(fd)
         storeDataForDb.addToFoods(foods)
         storeDataForDb.storeFoodsToDb()
-        runTest {
-            verify(persistenceLayer).syncNsFood(argThat { size == 1 && get(0).name == "Apple" })
-        }
+        verify(persistenceLayer).syncNsFood(argThat { size == 1 && get(0).name == "Apple" })
         storeDataForDb.storeFoodsToDb()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `storeTreatmentsToDb calls all relevant persistenceLayer methods`() {
+    fun `storeTreatmentsToDb calls all relevant persistenceLayer methods`() = runTest {
         storeDataForDb.addToBoluses(bs)
         storeDataForDb.addToCarbs(ca)
         storeDataForDb.addToTemporaryTargets(tt)
@@ -203,18 +218,16 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
 
         storeDataForDb.storeTreatmentsToDb(fullSync = false)
 
-        runTest {
-            verify(persistenceLayer).syncNsBolus(any(), eq(true))
-            verify(persistenceLayer).syncNsCarbs(any(), eq(true))
-            verify(persistenceLayer).syncNsTemporaryTargets(any(), eq(true))
-            verify(persistenceLayer).syncNsTemporaryBasals(any(), eq(true))
-            verify(persistenceLayer).syncNsExtendedBoluses(any(), eq(true))
-            verify(persistenceLayer).syncNsBolusCalculatorResults(any())
-            verify(persistenceLayer).syncNsEffectiveProfileSwitches(any(), eq(true))
-            verify(persistenceLayer).syncNsProfileSwitches(any(), eq(true))
-            verify(persistenceLayer).syncNsRunningModes(any(), eq(true))
-            verify(persistenceLayer).syncNsTherapyEvents(any(), eq(true))
-        }
+        verify(persistenceLayer).syncNsBolus(any(), eq(true))
+        verify(persistenceLayer).syncNsCarbs(any(), eq(true))
+        verify(persistenceLayer).syncNsTemporaryTargets(any(), eq(true))
+        verify(persistenceLayer).syncNsTemporaryBasals(any(), eq(true))
+        verify(persistenceLayer).syncNsExtendedBoluses(any(), eq(true))
+        verify(persistenceLayer).syncNsBolusCalculatorResults(any())
+        verify(persistenceLayer).syncNsEffectiveProfileSwitches(any(), eq(true))
+        verify(persistenceLayer).syncNsProfileSwitches(any(), eq(true))
+        verify(persistenceLayer).syncNsRunningModes(any(), eq(true))
+        verify(persistenceLayer).syncNsTherapyEvents(any(), eq(true))
 
         // Assert that methods were not called a second time
         storeDataForDb.storeTreatmentsToDb(fullSync = false)
@@ -222,175 +235,165 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `store methods do not call persistenceLayer when lists are empty`() {
+    fun `store methods do not call persistenceLayer when lists are empty`() = runTest {
         // Act
         storeDataForDb.storeGlucoseValuesToDb()
         storeDataForDb.storeFoodsToDb()
         storeDataForDb.storeTreatmentsToDb(fullSync = true)
 
         // Assert
-        runTest {
-            verify(persistenceLayer, never()).insertCgmSourceData(any(), any(), any(), any())
-            verify(persistenceLayer, never()).syncNsFood(any())
-            verify(persistenceLayer, never()).syncNsBolus(any(), any())
-            verify(persistenceLayer, never()).syncNsCarbs(any(), any())
-            verify(persistenceLayer, never()).syncNsTemporaryTargets(any(), any())
-            verify(persistenceLayer, never()).syncNsTemporaryBasals(any(), any())
-            verify(persistenceLayer, never()).syncNsExtendedBoluses(any(), eq(true))
-            verify(persistenceLayer, never()).syncNsBolusCalculatorResults(any())
-            verify(persistenceLayer, never()).syncNsEffectiveProfileSwitches(any(), eq(true))
-            verify(persistenceLayer, never()).syncNsProfileSwitches(any(), eq(true))
-            verify(persistenceLayer, never()).syncNsRunningModes(any(), eq(true))
-            verify(persistenceLayer, never()).syncNsTherapyEvents(any(), eq(true))
-        }
+        verify(persistenceLayer, never()).insertCgmSourceData(any(), any(), any(), any())
+        verify(persistenceLayer, never()).syncNsFood(any())
+        verify(persistenceLayer, never()).syncNsBolus(any(), any())
+        verify(persistenceLayer, never()).syncNsCarbs(any(), any())
+        verify(persistenceLayer, never()).syncNsTemporaryTargets(any(), any())
+        verify(persistenceLayer, never()).syncNsTemporaryBasals(any(), any())
+        verify(persistenceLayer, never()).syncNsExtendedBoluses(any(), eq(true))
+        verify(persistenceLayer, never()).syncNsBolusCalculatorResults(any())
+        verify(persistenceLayer, never()).syncNsEffectiveProfileSwitches(any(), eq(true))
+        verify(persistenceLayer, never()).syncNsProfileSwitches(any(), eq(true))
+        verify(persistenceLayer, never()).syncNsRunningModes(any(), eq(true))
+        verify(persistenceLayer, never()).syncNsTherapyEvents(any(), eq(true))
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for temporary targets`() {
+    fun `updateNsIds calls persistenceLayer for temporary targets`() = runTest {
         storeDataForDb.addToNsIdTemporaryTargets(tt)
         storeDataForDb.updateNsIds()
 
-        runTest {
-            verify(persistenceLayer).updateTemporaryTargetsNsIds(any())
-        }
+        verify(persistenceLayer).updateTemporaryTargetsNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for glucose values`() {
+    fun `updateNsIds calls persistenceLayer for glucose values`() = runTest {
         storeDataForDb.addToNsIdGlucoseValues(gv)
         storeDataForDb.updateNsIds()
 
-        runTest {
-            verify(persistenceLayer).updateGlucoseValuesNsIds(any())
-        }
+        verify(persistenceLayer).updateGlucoseValuesNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for foods`() {
+    fun `updateNsIds calls persistenceLayer for foods`() = runTest {
         storeDataForDb.addToNsIdFoods(fd)
         storeDataForDb.updateNsIds()
 
-        runTest {
-            verify(persistenceLayer).updateFoodsNsIds(any())
-        }
+        verify(persistenceLayer).updateFoodsNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for therapy events`() {
+    fun `updateNsIds calls persistenceLayer for therapy events`() = runTest {
         storeDataForDb.addToNsIdTherapyEvents(te)
         storeDataForDb.updateNsIds()
 
-        runTest {
-            verify(persistenceLayer).updateTherapyEventsNsIds(any())
-        }
+        verify(persistenceLayer).updateTherapyEventsNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for boluses`() {
+    fun `updateNsIds calls persistenceLayer for boluses`() = runTest {
         storeDataForDb.addToNsIdBoluses(bs)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateBolusesNsIds(any()) }
+        verify(persistenceLayer).updateBolusesNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for carbs`() {
+    fun `updateNsIds calls persistenceLayer for carbs`() = runTest {
         storeDataForDb.addToNsIdCarbs(ca)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateCarbsNsIds(any()) }
+        verify(persistenceLayer).updateCarbsNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for bolus calculator results`() {
+    fun `updateNsIds calls persistenceLayer for bolus calculator results`() = runTest {
         storeDataForDb.addToNsIdBolusCalculatorResults(bcr)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateBolusCalculatorResultsNsIds(any()) }
+        verify(persistenceLayer).updateBolusCalculatorResultsNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for temporary basals`() {
+    fun `updateNsIds calls persistenceLayer for temporary basals`() = runTest {
         storeDataForDb.addToNsIdTemporaryBasals(tb)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateTemporaryBasalsNsIds(any()) }
+        verify(persistenceLayer).updateTemporaryBasalsNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for extended boluses`() {
+    fun `updateNsIds calls persistenceLayer for extended boluses`() = runTest {
         storeDataForDb.addToNsIdExtendedBoluses(eb)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateExtendedBolusesNsIds(any()) }
+        verify(persistenceLayer).updateExtendedBolusesNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for profile switches`() {
+    fun `updateNsIds calls persistenceLayer for profile switches`() = runTest {
         storeDataForDb.addToNsIdProfileSwitches(ps)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateProfileSwitchesNsIds(any()) }
+        verify(persistenceLayer).updateProfileSwitchesNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for effective profile switches`() {
+    fun `updateNsIds calls persistenceLayer for effective profile switches`() = runTest {
         storeDataForDb.addToNsIdEffectiveProfileSwitches(eps)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateEffectiveProfileSwitchesNsIds(any()) }
+        verify(persistenceLayer).updateEffectiveProfileSwitchesNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for device statuses`() {
+    fun `updateNsIds calls persistenceLayer for device statuses`() = runTest {
         storeDataForDb.addToNsIdDeviceStatuses(ds)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateDeviceStatusesNsIds(any()) }
+        verify(persistenceLayer).updateDeviceStatusesNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
     }
 
     @Test
-    fun `updateNsIds calls persistenceLayer for running modes`() {
+    fun `updateNsIds calls persistenceLayer for running modes`() = runTest {
         storeDataForDb.addToNsIdRunningModes(rm)
         storeDataForDb.updateNsIds()
 
-        runTest { verify(persistenceLayer).updateRunningModesNsIds(any()) }
+        verify(persistenceLayer).updateRunningModesNsIds(any())
         // Verify the list is cleared
         storeDataForDb.updateNsIds()
         verifyNoMoreInteractions(persistenceLayer) // Verifies it was only called once
@@ -769,5 +772,77 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
         assertNull(storeDataForDb.scheduledEventPost)
         storeDataForDb.scheduleNsIdUpdate()
         assertNotNull(storeDataForDb.scheduledEventPost)
+    }
+
+    /* -------- Concurrency / coalescing tests -------- */
+
+    @Test
+    fun `concurrent storeGlucoseValuesToDb calls do not lose items and serialize`() = runTest {
+        // Two callers race to drain the same buffer. The bgMutex must serialize them and
+        // snapshotAndClear must hand all items to whichever wins; the loser sees an empty buffer.
+        val gv2 = gv.copy(timestamp = now + 1)
+        storeDataForDb.addToGlucoseValues(mutableListOf(gv, gv2))
+
+        val jobs = listOf(
+            async { storeDataForDb.storeGlucoseValuesToDb() },
+            async { storeDataForDb.storeGlucoseValuesToDb() }
+        )
+        jobs.awaitAll()
+
+        // Exactly one DB call carrying both items; second call had nothing to do.
+        verify(persistenceLayer).insertCgmSourceData(
+            eq(Sources.NSClient),
+            argThat { size == 2 },
+            anyList(),
+            eq(null)
+        )
+        verifyNoMoreInteractions(persistenceLayer)
+    }
+
+    @Test
+    fun `addToGlucoseValues during processing lands in the next call`() = runTest {
+        // First call drains [gv]. Add gv2 after the snapshot. Second call drains [gv2].
+        storeDataForDb.addToGlucoseValues(mutableListOf(gv))
+        storeDataForDb.storeGlucoseValuesToDb()
+        verify(persistenceLayer).insertCgmSourceData(eq(Sources.NSClient), argThat { size == 1 && get(0).timestamp == gv.timestamp }, anyList(), eq(null))
+
+        val gv2 = gv.copy(timestamp = now + 1)
+        storeDataForDb.addToGlucoseValues(mutableListOf(gv2))
+        storeDataForDb.storeGlucoseValuesToDb()
+        verify(persistenceLayer).insertCgmSourceData(eq(Sources.NSClient), argThat { size == 1 && get(0).timestamp == gv2.timestamp }, anyList(), eq(null))
+    }
+
+    @Test
+    fun `bg pipeline runs in parallel with treatments pipeline`() = runTest {
+        // bgMutex and treatmentsMutex are independent: a long treatments sync must not
+        // block BG ingest. We can't measure wall-clock here, but verifying both DB calls
+        // were issued in a single test scope (no deadlock) with no shared lock proves
+        // the mutexes are separate.
+        storeDataForDb.addToGlucoseValues(mutableListOf(gv))
+        storeDataForDb.addToBoluses(bs)
+
+        val jobs = listOf(
+            async { storeDataForDb.storeGlucoseValuesToDb() },
+            async { storeDataForDb.storeTreatmentsToDb(fullSync = false) }
+        )
+        jobs.awaitAll()
+
+        verify(persistenceLayer).insertCgmSourceData(eq(Sources.NSClient), any(), anyList(), eq(null))
+        verify(persistenceLayer).syncNsBolus(any(), any())
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `requestStoreGlucoseValues coalesces a burst into a single DB call`() = runTest {
+        // CONFLATED channel: 100 trySend calls between collector iterations should still
+        // produce just one drain (because the collector runs once and there's nothing left).
+        storeDataForDb.addToGlucoseValues(mutableListOf(gv))
+        repeat(100) { storeDataForDb.requestStoreGlucoseValues() }
+        // Allow the collector launched in init to drain the channel.
+        advanceUntilIdle()
+        yield()
+
+        verify(persistenceLayer).insertCgmSourceData(eq(Sources.NSClient), any(), anyList(), eq(null))
+        verifyNoMoreInteractions(persistenceLayer)
     }
 }

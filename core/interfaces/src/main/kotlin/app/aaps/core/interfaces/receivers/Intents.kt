@@ -56,5 +56,9 @@ interface Intents {
         const val SINO_APP = "cn.diyaps.sharing.SINO_APP"
         // Patched Syai Tag App -> AAPS
         const val SYAI_APP = "info.nightscout.androidaps.action.SYAI_TAG_APP"
+
+        // Instara App -> AAPS
+        // NOTE: The action name for INSTARA_APP is still called "Teljane_APP"
+        const val INSTARA_APP = "info.nightscout.androidaps.action.Teljane_APP"
     }
 }

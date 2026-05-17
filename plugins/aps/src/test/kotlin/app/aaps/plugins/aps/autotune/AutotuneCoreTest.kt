@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
@@ -10,7 +11,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -93,7 +93,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
             val units = GlucoseUnit.fromText(txtUnits)
             val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
             val peak = JsonHelper.safeGetIntAllowNull(jsonObject, "insulinPeakTime") ?: return null
-            val localInsulin = LocalInsulin("insulin", peak, dia)
+            val iCfg = ICfg("insulin", peak, dia, 1.0)
             val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
             val isfJson = jsonObject.getJSONObject("isfProfile")
             val isfBlocks = ArrayList<Block>(1).also {
@@ -120,7 +120,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 glucoseUnit = units,
                 timeZone = timezone
             )
-            return ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), localInsulin)
+            return ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), iCfg)
         } catch (_: Exception) {
             return null
         }

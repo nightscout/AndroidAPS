@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
@@ -29,7 +28,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
         sut = ActionCarePortalEvent(injector)
-        sut.cpEvent = InputCarePortalMenu(rh)
+        sut.cpEvent = InputCarePortalMenu()
         sut.cpEvent.value = InputCarePortalMenu.EventType.NOTE
         sut.note = InputString("Asd")
         sut.duration = InputDuration(5, InputDuration.TimeUnit.MINUTES)
@@ -43,16 +42,9 @@ class ActionCarePortalEventTest : ActionsTestBase() {
         assertThat(sut.shortDescription()).isEqualTo("Note : Asd")
     }
 
-    @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_note_24dp)
-    }
-
     @Test fun doActionTest() = runTest {
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
     }
 
     @Test fun hasDialogTest() {

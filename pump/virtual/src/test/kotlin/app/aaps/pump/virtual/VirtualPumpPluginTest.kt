@@ -50,13 +50,6 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        virtualPumpPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
-
-    @Test
     fun `requiredPermissions should return empty list`() {
         assertThat(virtualPumpPlugin.requiredPermissions()).isEmpty()
     }

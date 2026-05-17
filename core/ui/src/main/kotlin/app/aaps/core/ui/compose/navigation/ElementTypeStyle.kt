@@ -27,6 +27,7 @@ import app.aaps.core.ui.compose.icons.IcExtendedBolus
 import app.aaps.core.ui.compose.icons.IcHistory
 import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.icons.IcNote
+import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
@@ -34,6 +35,7 @@ import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.icons.IcQuestion
+import app.aaps.core.ui.compose.icons.IcPluginFood
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.core.ui.compose.icons.IcSetupWizard
 import app.aaps.core.ui.compose.icons.IcSiteRotation
@@ -60,6 +62,7 @@ fun ElementType.color(): Color = when (this) {
     ElementType.BOLUS_WIZARD            -> AapsTheme.elementColors.bolusWizard
     ElementType.QUICK_WIZARD,
     ElementType.QUICK_WIZARD_MANAGEMENT -> AapsTheme.elementColors.quickWizard
+    ElementType.FOOD_MANAGEMENT         -> AapsTheme.elementColors.carbs
 
     ElementType.CGM_XDRIP               -> AapsTheme.elementColors.cgmXdrip
     ElementType.CGM_DEX                 -> AapsTheme.elementColors.cgmDex
@@ -102,6 +105,8 @@ fun ElementType.color(): Color = when (this) {
 
     ElementType.COB                     -> AapsTheme.elementColors.cob
     ElementType.SENSITIVITY             -> AapsTheme.elementColors.sensitivity
+    ElementType.SCENE,
+    ElementType.SCENE_MANAGEMENT        -> AapsTheme.elementColors.scene
     ElementType.RUNNING_MODE            -> AapsTheme.elementColors.runningMode
     ElementType.USER_ENTRY              -> AapsTheme.elementColors.userEntry
     ElementType.LOOP                    -> AapsTheme.elementColors.loop
@@ -115,6 +120,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.BOLUS_WIZARD            -> IcCalculator
     ElementType.QUICK_WIZARD,
     ElementType.QUICK_WIZARD_MANAGEMENT -> IcQuickwizard
+    ElementType.FOOD_MANAGEMENT         -> IcPluginFood
 
     ElementType.TREATMENT               -> Icons.Default.Add
     ElementType.CGM_XDRIP               -> IcXDrip
@@ -138,7 +144,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.SITE_ROTATION           -> IcSiteRotation
     ElementType.TEMP_BASAL              -> IcTbrHigh
     ElementType.EXTENDED_BOLUS          -> IcExtendedBolus
-    ElementType.AUTOMATION              -> IcAutomation
+    ElementType.AUTOMATION              -> IcPluginAutomation
     ElementType.PUMP                    -> Pump
     ElementType.SETTINGS                -> Icons.Default.Settings
     ElementType.QUICK_LAUNCH_CONFIG     -> Icons.Default.Settings
@@ -154,6 +160,8 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.ABOUT                   -> Icons.Default.Info
     ElementType.COB                     -> IcCarbs
     ElementType.SENSITIVITY             -> IcAs
+    ElementType.SCENE,
+    ElementType.SCENE_MANAGEMENT        -> IcAutomation  // TODO: rename IcScene ?
     ElementType.RUNNING_MODE            -> IcLoopClosed
     ElementType.USER_ENTRY              -> IcUserOptions
     ElementType.LOOP                    -> IcLoopClosed
@@ -167,6 +175,7 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.BOLUS_WIZARD            -> R.string.boluswizard
     ElementType.QUICK_WIZARD            -> 0 // dynamic label
     ElementType.QUICK_WIZARD_MANAGEMENT -> R.string.quickwizard_managemnt
+    ElementType.FOOD_MANAGEMENT         -> R.string.food_management
     ElementType.TREATMENT               -> R.string.overview_treatment_label
     ElementType.CGM_XDRIP               -> R.string.cgm
     ElementType.CGM_DEX                 -> R.string.cgm
@@ -190,7 +199,7 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.PUMP                    -> R.string.pump
     ElementType.SETTINGS                -> R.string.settings
     ElementType.QUICK_LAUNCH_CONFIG     -> R.string.quick_launch_configure
-    ElementType.TREATMENTS              -> R.string.treatments
+    ElementType.TREATMENTS              -> R.string.treatments_history
     ElementType.STATISTICS              -> R.string.statistics
     ElementType.TDD_CYCLE_PATTERN       -> R.string.tdd_cycle_pattern
     ElementType.PROFILE_HELPER          -> R.string.nav_profile_helper
@@ -201,6 +210,8 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.ABOUT                   -> R.string.nav_about
     ElementType.COB                     -> R.string.cob
     ElementType.SENSITIVITY             -> R.string.sensitivity
+    ElementType.SCENE                   -> 0 // dynamic label
+    ElementType.SCENE_MANAGEMENT        -> R.string.scene_management
     ElementType.RUNNING_MODE            -> R.string.running_mode
     ElementType.USER_ENTRY              -> R.string.user_entry
     ElementType.LOOP                    -> R.string.loop
@@ -217,6 +228,7 @@ fun ElementType.descriptionResId(): Int = when (this) {
     ElementType.PROFILE_MANAGEMENT      -> R.string.manage_profile_desc
     ElementType.TEMP_TARGET_MANAGEMENT  -> R.string.manage_temp_target_desc
     ElementType.QUICK_WIZARD_MANAGEMENT -> R.string.manage_quickwizard_desc
+    ElementType.FOOD_MANAGEMENT         -> R.string.manage_food_desc
 
     ElementType.TEMP_BASAL              -> R.string.manage_temp_basal_desc
     ElementType.EXTENDED_BOLUS          -> R.string.manage_extended_bolus_desc
@@ -244,6 +256,8 @@ fun ElementType.descriptionResId(): Int = when (this) {
     ElementType.CONFIGURATION           -> R.string.nav_configuration_desc
     ElementType.ABOUT                   -> R.string.nav_about_desc
     ElementType.QUICK_LAUNCH_CONFIG     -> R.string.quick_launch_configure_desc
+    ElementType.SCENE                   -> R.string.scene_desc
+    ElementType.SCENE_MANAGEMENT        -> R.string.scene_management_desc
     ElementType.QUICK_WIZARD,
     ElementType.RUNNING_MODE,
     ElementType.AUTOMATION,

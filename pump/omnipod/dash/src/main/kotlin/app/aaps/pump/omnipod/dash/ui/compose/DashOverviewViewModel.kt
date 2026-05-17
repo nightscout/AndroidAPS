@@ -1,8 +1,8 @@
 package app.aaps.pump.omnipod.dash.ui.compose
 
 import android.content.Context
-import android.os.SystemClock
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.NotificationsOff
@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -71,8 +70,8 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Inject
-import app.aaps.pump.omnipod.common.R as CommonR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
 @HiltViewModel
@@ -248,13 +247,15 @@ class DashOverviewViewModel @Inject constructor(
 
             // Last bolus
             val (lastBolusText, lastBolusLevel) = buildLastBolus()
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = lastBolusText, level = lastBolusLevel))
+            lastBolusText?.let {
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it, level = lastBolusLevel))
+            }
 
             // Base basal rate
             val basalText = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
-                rh.gs(
-                    app.aaps.core.ui.R.string.pump_base_basal_rate,
-                    omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
+                ch.basalRateString(
+                    rate = PumpRate(omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))),
+                    isAbsolute = true
                 )
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_base_basal_rate), value = basalText))
@@ -269,7 +270,7 @@ class DashOverviewViewModel @Inject constructor(
 
             // Total delivered
             val totalDelivered = if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
-                rh.gs(CommonR.string.omnipod_common_overview_total_delivered_value, podStateManager.pulsesDelivered!! * PodConstants.POD_PULSE_BOLUS_UNITS)
+                ch.insulinAmountString(PumpInsulin(podStateManager.pulsesDelivered!! * PodConstants.POD_PULSE_BOLUS_UNITS))
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_total_delivered), value = totalDelivered))
 
@@ -300,11 +301,11 @@ class DashOverviewViewModel @Inject constructor(
 
         return listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
+                label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
                 enabled = podStateManager.isUniqueIdSet && queueEmpty,
                 onClick = {
-                    commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.refresh), object : Callback() {
+                    commandQueue.readStatus(rh.gs(CoreUiR.string.refresh), object : Callback() {
                         override fun run() {}
                     })
                 }
@@ -360,7 +361,7 @@ class DashOverviewViewModel @Inject constructor(
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_play_test_beep),
-                icon = Icons.Filled.VolumeUp,
+                icon = Icons.AutoMirrored.Filled.VolumeUp,
                 category = ActionCategory.MANAGEMENT,
                 enabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java),
                 visible = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED),
@@ -388,17 +389,6 @@ class DashOverviewViewModel @Inject constructor(
 
     private fun onActivatePodClicked() {
         viewModelScope.launch {
-            val profile = profileFunction.getProfile()
-            if (profile == null) {
-                _events.tryEmit(
-                    OmnipodOverviewEvent.ShowDialog(
-                        rh.gs(CoreUiR.string.warning),
-                        rh.gs(CommonR.string.omnipod_common_error_failed_to_set_profile_empty_profile)
-                    )
-                )
-                return@launch
-            }
-
             val type = if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIME_COMPLETED)) {
                 ActivationType.SHORT
             } else {
@@ -457,55 +447,50 @@ class DashOverviewViewModel @Inject constructor(
         else                                                                                                -> StatusLevel.NORMAL
     }
 
-    private fun buildLastBolus(): Pair<String, StatusLevel> {
+    private fun buildLastBolus(): Pair<String?, StatusLevel> {
         podStateManager.activeCommand?.let {
             val requestedBolus = it.requestedBolus
             if (requestedBolus != null) {
                 var text = ch.insulinAmountAgoString(
                     PumpInsulin(omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus)),
-                    readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
+                    it.createdRealtime
                 )
                 text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
                 return text to StatusLevel.CRITICAL
             }
         }
-
         podStateManager.lastBolus?.let {
             val bolusSize = it.deliveredUnits() ?: it.requestedUnits
             val text = ch.insulinAmountAgoString(
                 PumpInsulin(omnipodDashPumpPlugin.model().determineCorrectBolusSize(bolusSize)),
-                readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
+                it.startTime
             )
             val level = if (!it.deliveryComplete) StatusLevel.WARNING else StatusLevel.NORMAL
             return text to level
         }
-
-        return PLACEHOLDER to StatusLevel.NORMAL
+        return null to StatusLevel.NORMAL
     }
 
     private fun buildTempBasalText(): String {
         val tempBasal = podStateManager.tempBasal
         if (podStateManager.isActivationCompleted && podStateManager.tempBasalActive && tempBasal != null) {
-            val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - tempBasal.startTime).toMinutes()
-            return rh.gs(
-                CommonR.string.omnipod_common_overview_temp_basal_concentration_value,
-                ch.basalRateString(PumpRate(tempBasal.rate), true),
-                dateUtil.timeString(tempBasal.startTime),
-                minutesRunning,
-                tempBasal.durationInMinutes
+            return ch.basalTbrString(
+                rate = PumpRate(tempBasal.rate),
+                startTime = tempBasal.startTime,
+                durationInMin = tempBasal.durationInMinutes.toInt()
             )
         }
         return PLACEHOLDER
     }
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
-        if (podStateManager.pulsesRemaining == null) {
-            return rh.gs(CommonR.string.omnipod_common_overview_reservoir_concentration_value_over50, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
-        }
-        val lowThreshold: Short = PodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD
-        val text = ch.insulinAmountString(PumpInsulin(podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS))
-        val level = if (ch.fromPump(PumpInsulin(podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS)) < lowThreshold.toDouble()) StatusLevel.CRITICAL else StatusLevel.NORMAL
-        return text to level
+        val reservoirLevel = podStateManager.pulsesRemaining?.let { PumpInsulin(it * PodConstants.POD_PULSE_BOLUS_UNITS) }
+        return reservoirLevel?.let {
+            val lowThreshold = PodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD.toDouble()
+            val text = ch.insulinAmountString(it)
+            val level = if (ch.fromPump(it) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
+            text to level
+        } ?: (rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL)
     }
 
     private fun translatedActiveAlert(alert: AlertType): String {

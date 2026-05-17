@@ -6,8 +6,10 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import kotlin.math.ceil
@@ -48,6 +50,24 @@ fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, rh: ResourceHelper): S
 
         else                          -> { // percent
             rh.gs(app.aaps.core.ui.R.string.temp_basal_tsf_percent, rate, timeAndDuration)
+        }
+    }
+}
+
+fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, ch: ConcentrationHelper): String {
+    val timeAndDuration = "${dateUtil.timeString(timestamp)} ${getPassedDurationToTimeInMinutes(dateUtil.now())}/${durationInMinutes}'"
+
+    return when {
+        type == TB.Type.FAKE_EXTENDED -> {
+            "${ch.basalRateString(PumpRate(rate), true)} (${netExtendedRate(profile)}E) $timeAndDuration"
+        }
+
+        isAbsolute                    -> {
+            "${ch.basalRateString(PumpRate(rate), true)} $timeAndDuration"
+        }
+
+        else                          -> { // percent
+            "${ch.basalRateString(PumpRate(rate), false)} $timeAndDuration"
         }
     }
 }

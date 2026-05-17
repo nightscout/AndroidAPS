@@ -1,9 +1,7 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
-import android.view.View
-import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -50,14 +48,9 @@ open class SWItem @Inject constructor(
         scheduleChange(updateDelay)
     }
 
-    fun generateLayout(view: View): LinearLayout {
-        val layout = view as LinearLayout
-        layout.removeAllViews()
-        return layout
+    @Composable
+    open fun Compose() {
     }
-
-    open fun generateDialog(layout: LinearLayout) {}
-    open fun processVisibility(activity: AppCompatActivity) {}
 
     fun scheduleChange(updateDelay: Long) {
         // cancel waiting task to prevent sending multiple posts

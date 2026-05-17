@@ -1,6 +1,7 @@
 package app.aaps.pump.equil.emulator
 
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
@@ -97,8 +98,8 @@ data class HistoryEvent(
             val ldt = Instant.fromEpochMilliseconds(System.currentTimeMillis()).toLocalDateTime(TimeZone.currentSystemDefault())
             return HistoryEvent(
                 year = ldt.year - 2000,
-                month = ldt.monthNumber,
-                day = ldt.dayOfMonth,
+                month = ldt.month.number,
+                day = ldt.day,
                 hour = ldt.hour,
                 minute = ldt.minute,
                 second = ldt.second,

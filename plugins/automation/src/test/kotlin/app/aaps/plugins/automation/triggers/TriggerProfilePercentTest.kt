@@ -61,10 +61,6 @@ class TriggerProfilePercentTest : TriggerTestBase() {
         assertThat(t2.pct.value).isWithin(0.01).of(120.0)
     }
 
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerProfilePercent(injector).icon().get()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch)
-    }
-
     @Test fun friendlyNameTest() = runTest {
         assertThat(TriggerProfilePercent(injector).friendlyName()).isEqualTo(R.string.profilepercentage) // not mocked
     }

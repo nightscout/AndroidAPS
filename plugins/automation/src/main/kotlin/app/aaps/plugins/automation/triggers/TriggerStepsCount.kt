@@ -1,19 +1,16 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import app.aaps.plugins.automation.elements.InputDropdownMenu
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -78,7 +75,8 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerStepsCountDesc, measurementDuration.value, rh.gs(comparator.value.stringRes), stepsCount.value)
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_exercise)
+    override fun composeIcon() = IcActivity
+    override fun composeIconTint() = IconTint.Exercise
 
     override fun duplicate(): Trigger {
         return TriggerStepsCount(injector).also { o ->
@@ -88,13 +86,4 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
         }
     }
 
-    override fun generateDialog(root: LinearLayout) {
-        measurementDuration.setList(arrayListOf("5", "10", "15", "30", "60", "180"))
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggerStepsCountLabel, this))
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerStepsCountDropdownLabel) + ": ", rh.gs(app.aaps.core.interfaces.R.string.unit_minutes), measurementDuration))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerStepsCountLabel) + ": ", "", stepsCount))
-            .build(root)
-    }
 }

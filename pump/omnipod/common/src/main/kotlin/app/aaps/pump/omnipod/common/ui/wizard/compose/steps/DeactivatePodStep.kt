@@ -1,5 +1,9 @@
 package app.aaps.pump.omnipod.common.ui.wizard.compose.steps
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -8,18 +12,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActionState
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardStep
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * DeactivatePod action step with discard-pod branching on failure.
@@ -77,11 +84,7 @@ internal fun DeactivatePodStepContent(
     WizardStepLayout(
         primaryButton = when (actionState) {
             is ActionState.Idle,
-            is ActionState.Executing -> WizardButton(
-                text = stringResource(CoreUiR.string.next),
-                onClick = {},
-                loading = true
-            )
+            is ActionState.Executing -> null
 
             is ActionState.Success   -> WizardButton(
                 text = stringResource(CoreUiR.string.next),
@@ -106,6 +109,12 @@ internal fun DeactivatePodStepContent(
             is ActionState.Idle,
             is ActionState.Executing -> {
                 Text(text = text, style = MaterialTheme.typography.bodyLarge)
+                Spacer(modifier = Modifier.height(48.dp))
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
             }
 
             is ActionState.Success   -> {
@@ -113,7 +122,7 @@ internal fun DeactivatePodStepContent(
             }
 
             is ActionState.Error     -> {
-                WizardErrorBanner(message = (actionState as ActionState.Error).message)
+                ErrorBanner(message = actionState.message)
             }
         }
     }

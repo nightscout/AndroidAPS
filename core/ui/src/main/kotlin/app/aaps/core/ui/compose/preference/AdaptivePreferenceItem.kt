@@ -39,6 +39,7 @@ import app.aaps.core.ui.compose.ComposeScreenContent
 @Composable
 fun AdaptivePreferenceItem(
     key: PreferenceKey,
+    onShowMessage: (String) -> Unit,
     visibilityContext: PreferenceVisibilityContext? = null,
     onIntentClick: (() -> Unit)? = null,
     intentUrl: String? = null,
@@ -135,15 +136,15 @@ fun AdaptivePreferenceItem(
                     // Special handling for master password (requires current password first)
                     if (key == StringKey.ProtectionMasterPassword) {
                         AdaptiveMasterPasswordPreferenceItem(
-
                             checkPassword = checkPassword,
-                            hashPassword = hashPassword
+                            hashPassword = hashPassword,
+                            onShowMessage = onShowMessage
                         )
                     } else {
                         AdaptivePasswordPreferenceItem(
-
                             stringKey = key,
                             hashPassword = hashPassword,
+                            onShowMessage = onShowMessage,
                             visibilityContext = visibilityContext
                         )
                     }

@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,10 +50,6 @@ class TriggerWifiSsidTest : TriggerTestBase() {
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerWifiSsid
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.ssid.value).isEqualTo("aSSID")
-    }
-
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerWifiSsid(injector).icon().get()).isEqualTo(R.drawable.ic_network_wifi)
     }
 
     @Test fun friendlyNameTest() = runTest {

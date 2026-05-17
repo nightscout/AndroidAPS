@@ -22,9 +22,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.compose.EquilWizardViewModel
@@ -47,7 +47,7 @@ internal fun PasswordStep(
     val focusManager = LocalFocusManager.current
 
     var password by rememberSaveable { mutableStateOf("") }
-    val passwordErrorText = stringResource(app.aaps.core.validators.R.string.error_mustbe4hexadidits)
+    val passwordErrorText = stringResource(app.aaps.core.ui.R.string.error_mustbe4hexadidits)
     val isPasswordValid = password.isEmpty() || HEX_4_PATTERN.matches(password)
 
     WizardStepLayout(
@@ -107,7 +107,7 @@ internal fun PasswordStep(
         }
 
         scanError?.let { error ->
-            WizardErrorBanner(message = error)
+            ErrorBanner(message = error)
         }
     }
 }

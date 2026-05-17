@@ -10,6 +10,5 @@ enum class IntNonKey(
 ) : IntNonPreferenceKey {
 
     ObjectivesManualEnacts("ObjectivesmanualEnacts", 0),
-    RangeToDisplay("rangetodisplay", 6),
     TddCycleOffset("tdd_cycle_offset", 0)
 }

@@ -1,18 +1,11 @@
 package app.aaps.plugins.automation.elements
 
-import android.view.Gravity
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.ui.elements.NumberPicker
 import app.aaps.plugins.automation.R
 import java.text.DecimalFormat
 
-class InputDelta(private val rh: ResourceHelper) : Element {
+class InputDelta(private val rh: ResourceHelper) {
 
     enum class DeltaType {
         DELTA, SHORT_AVERAGE, LONG_AVERAGE;
@@ -59,32 +52,5 @@ class InputDelta(private val rh: ResourceHelper) : Element {
         step = inputDelta.step
         decimalFormat = inputDelta.decimalFormat
         deltaType = inputDelta.deltaType
-    }
-
-    override fun addToLayout(root: LinearLayout) {
-        root.addView(
-            Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, app.aaps.core.ui.R.layout.spinner_centered, DeltaType.labels(rh)).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                }
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                    setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
-                }
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        deltaType = DeltaType.entries.toTypedArray()[position]
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-                }
-                setSelection(deltaType.ordinal)
-                gravity = Gravity.CENTER_HORIZONTAL
-            })
-        root.addView(
-            NumberPicker(root.context, null).also {
-                it.setParams(value, minValue, maxValue, step, decimalFormat, true, null, null)
-                it.setOnValueChangedListener { v: Double -> value = v }
-                it.gravity = Gravity.CENTER_HORIZONTAL
-            })
     }
 }

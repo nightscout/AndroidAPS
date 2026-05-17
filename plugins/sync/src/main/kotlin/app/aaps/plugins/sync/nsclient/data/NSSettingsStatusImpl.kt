@@ -9,10 +9,8 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
-import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R
-import dagger.Lazy
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -112,8 +110,7 @@ import javax.inject.Singleton
 class NSSettingsStatusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,
-    private val config: Config,
-    private val overview: Lazy<Overview>
+    private val config: Config
 ) : NSSettingsStatus {
 
     // ***** PUMP STATUS ******
@@ -146,7 +143,6 @@ class NSSettingsStatusImpl @Inject constructor(
         }
         data = status
         aapsLogger.debug(LTag.NSCLIENT, "Received status: $status")
-        if (config.AAPSCLIENT) overview.get().applyStatusLightsFromNs(null)
     }
 
     override fun getVersion(): String =

@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,8 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.core.ui.compose.LocalSnackbarHostState
+import kotlinx.coroutines.launch
 
 /**
  * Screen for displaying plugin preferences using Compose.
@@ -80,12 +83,7 @@ fun PluginPreferencesScreen(
                     Scaffold(
                         topBar = {
                             AapsTopAppBar(
-                                title = {
-                                    Text(
-                                        text = title,
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
-                                },
+                                title = { Text(title) },
                                 navigationIcon = {
                                     IconButton(onClick = onBackClick) {
                                         Icon(
@@ -160,6 +158,11 @@ private fun SinglePluginPreferencesRenderer(
     }
 
     val sectionState = rememberPreferenceSectionState()
+    val snackbarHostState = LocalSnackbarHostState.current
+    val snackbarScope = rememberCoroutineScope()
+    val onShowMessage: (String) -> Unit = { message ->
+        snackbarScope.launch { snackbarHostState.showSnackbar(message) }
+    }
 
     // For single plugin view, start with the main section expanded
     LaunchedEffect(screen.key) {
@@ -169,12 +172,7 @@ private fun SinglePluginPreferencesRenderer(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                },
+                title = { Text(title) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -204,6 +202,7 @@ private fun SinglePluginPreferencesRenderer(
                 // This renders as collapsible sections, not navigation
                 addPreferenceContent(
                     content = screen,
+                    onShowMessage = onShowMessage,
                     sectionState = sectionState
                 )
             }

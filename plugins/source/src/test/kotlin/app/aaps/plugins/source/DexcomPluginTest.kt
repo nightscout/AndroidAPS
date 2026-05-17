@@ -22,13 +22,6 @@ class DexcomPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        dexcomPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
-
-    @Test
     fun `requiredPermissions should include dexcom permission when app is installed`() {
         val mockPm = mock<PackageManager> {
             @Suppress("DEPRECATION")

@@ -4,7 +4,6 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
 import com.google.common.truth.Truth.assertThat
@@ -79,10 +78,6 @@ class TriggerDeltaTest : TriggerTestBase() {
         assertThat(t2.delta.value).isWithin(0.01).of(4.1)
         assertThat(t2.units).isEqualTo(GlucoseUnit.MMOL)
         assertThat(t2.delta.deltaType).isEqualTo(DeltaType.DELTA)
-    }
-
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerDelta(injector).icon().get()).isEqualTo(R.drawable.ic_auto_delta)
     }
 
     @Test fun initializerTest() = runTest {

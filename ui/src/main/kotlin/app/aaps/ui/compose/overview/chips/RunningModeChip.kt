@@ -1,10 +1,13 @@
 package app.aaps.ui.compose.overview.chips
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.RM
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
@@ -31,6 +35,8 @@ import app.aaps.core.ui.compose.icons.IcLoopLgs
 import app.aaps.core.ui.compose.icons.IcLoopOpen
 import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.icons.IcLoopSuperbolus
+import app.aaps.core.ui.compose.loopColor
+import app.aaps.ui.compose.overview.graphs.TriangleShape
 
 @Composable
 fun RunningModeChip(
@@ -38,6 +44,8 @@ fun RunningModeChip(
     text: String,
     progress: Float,
     modifier: Modifier = Modifier,
+    sceneManaged: Boolean = false,
+    smbEnabled: Boolean = false,
     onClick: () -> Unit = {}
 ) {
     val isTemporary = mode.mustBeTemporary()
@@ -59,17 +67,31 @@ fun RunningModeChip(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
             ) {
-                Icon(
-                    imageVector = mode.toIcon(),
-                    contentDescription = null,
-                    tint = iconColor,
-                    modifier = Modifier.size(AapsSpacing.chipIconSize)
-                )
+                Box(modifier = Modifier.size(AapsSpacing.chipIconSize)) {
+                    Icon(
+                        imageVector = mode.toIcon(),
+                        contentDescription = null,
+                        tint = iconColor,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    if (smbEnabled) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .offset(x = 4.dp, y = 4.dp)
+                                .size(13.dp)
+                                .background(AapsTheme.elementColors.insulin, TriangleShape)
+                        )
+                    }
+                }
                 Text(
                     text = text,
                     color = textColor,
                     modifier = Modifier.padding(start = AapsSpacing.medium)
                 )
+                if (sceneManaged) {
+                    SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))
+                }
             }
             Box(
                 modifier = Modifier
@@ -92,22 +114,11 @@ fun RunningModeChip(
 }
 
 /**
- * Extension to get theme color for RM.Mode
+ * Extension to get theme color for RM.Mode.
+ * Thin composable wrapper around the shared [loopColor] mapping.
  */
 @Composable
-internal fun RM.Mode.toColor(): Color = when (this) {
-    RM.Mode.CLOSED_LOOP       -> AapsTheme.generalColors.loopClosed
-    RM.Mode.CLOSED_LOOP_LGS   -> AapsTheme.generalColors.loopLgs
-    RM.Mode.OPEN_LOOP         -> AapsTheme.generalColors.loopOpened
-    RM.Mode.DISABLED_LOOP     -> AapsTheme.generalColors.loopDisabled
-    RM.Mode.SUPER_BOLUS       -> AapsTheme.generalColors.loopSuperBolus
-    RM.Mode.DISCONNECTED_PUMP -> AapsTheme.generalColors.loopDisconnected
-    RM.Mode.SUSPENDED_BY_PUMP,
-    RM.Mode.SUSPENDED_BY_USER,
-    RM.Mode.SUSPENDED_BY_DST  -> AapsTheme.generalColors.loopDisabled
-
-    RM.Mode.RESUME            -> AapsTheme.generalColors.loopClosed
-}
+internal fun RM.Mode.toColor(): Color = loopColor(AapsTheme.generalColors)
 
 /**
  * Extension to get Compose icon for RM.Mode
@@ -146,6 +157,32 @@ private fun RunningModeChipSuspendedPreview() {
             mode = RM.Mode.SUSPENDED_BY_USER,
             text = "Suspended (30 min)",
             progress = 0.4f
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RunningModeChipClosedLoopSmbPreview() {
+    MaterialTheme {
+        RunningModeChip(
+            mode = RM.Mode.CLOSED_LOOP,
+            text = "Closed Loop",
+            progress = 0f,
+            smbEnabled = true
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RunningModeChipOpenLoopSmbPreview() {
+    MaterialTheme {
+        RunningModeChip(
+            mode = RM.Mode.OPEN_LOOP,
+            text = "Open Loop",
+            progress = 0f,
+            smbEnabled = true
         )
     }
 }

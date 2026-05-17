@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.garmin
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
@@ -57,16 +58,8 @@ class GarminDeviceClientTest : TestBase() {
             receivers[i.getArgument<IQApp>(0).applicationId] = i.getArgument(1)
         }
     }
-    private val context = mock<Context> {
+    private val baseContext = mock<Context> {
         on { packageName } doReturn this@GarminDeviceClientTest.packageName
-        on { registerReceiver(any<BroadcastReceiver>(), any()) } doAnswer { i ->
-            actions[i.getArgument<IntentFilter>(1).getAction(0)] = i.getArgument(0)
-            Intent()
-        }
-        on { unregisterReceiver(any()) } doAnswer { i ->
-            val keys = actions.entries.filter { (_, br) -> br == i.getArgument(0) }.map { (k, _) -> k }
-            keys.forEach { k -> actions.remove(k) }
-        }
         on { bindService(any(), eq(Context.BIND_AUTO_CREATE), any(), any()) }.doAnswer { i ->
             serviceConnection = i.getArgument(3)
             i.getArgument<Executor>(2).execute {
@@ -84,6 +77,31 @@ class GarminDeviceClientTest : TestBase() {
             true
         }
     }
+    private val context = object : ContextWrapper(baseContext) {
+        override fun getPackageName(): String = this@GarminDeviceClientTest.packageName
+
+        private fun captureReceiver(receiver: BroadcastReceiver?, filter: IntentFilter): Intent {
+            if (receiver != null) actions[filter.getAction(0)] = receiver
+            return Intent()
+        }
+
+        override fun registerReceiver(receiver: BroadcastReceiver?, filter: IntentFilter): Intent? =
+            captureReceiver(receiver, filter)
+
+        override fun registerReceiver(receiver: BroadcastReceiver?, filter: IntentFilter, flags: Int): Intent? =
+            captureReceiver(receiver, filter)
+
+        override fun registerReceiver(receiver: BroadcastReceiver?, filter: IntentFilter, broadcastPermission: String?, scheduler: android.os.Handler?): Intent? =
+            captureReceiver(receiver, filter)
+
+        override fun registerReceiver(receiver: BroadcastReceiver?, filter: IntentFilter, broadcastPermission: String?, scheduler: android.os.Handler?, flags: Int): Intent? =
+            captureReceiver(receiver, filter)
+
+        override fun unregisterReceiver(receiver: BroadcastReceiver) {
+            val keys = actions.entries.filter { (_, br) -> br == receiver }.map { (k, _) -> k }
+            keys.forEach { k -> actions.remove(k) }
+        }
+    }
 
     @Before
     fun setup() {
@@ -96,7 +114,7 @@ class GarminDeviceClientTest : TestBase() {
     fun shutdown() {
         if (::client.isInitialized) client.dispose()
         assertEquals(0, actions.size)  // make sure all broadcastReceivers were unregistered
-        verify(context).unbindService(serviceConnection)
+        verify(baseContext).unbindService(serviceConnection)
     }
 
     @Test
@@ -123,7 +141,7 @@ class GarminDeviceClientTest : TestBase() {
 
         verify(ciqService).connectedDevices
         verify(ciqService, times(2)).asBinder()
-        verify(context, times(2))
+        verify(baseContext, times(2))
             .bindService(any(), eq(Context.BIND_AUTO_CREATE), any(), any())
 
         verifyNoMoreInteractions(ciqService)

@@ -11,8 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
-import app.aaps.core.ui.compose.icons.IcBolus
-import app.aaps.core.ui.compose.icons.IcCarbs
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -30,16 +28,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
@@ -187,7 +185,7 @@ private fun TreatmentSelectionContent(
                 },
                 leadingContent = {
                     TonalIcon(
-                        painter = rememberVectorPainter(itemIcon),
+                        icon = itemIcon,
                         color = if (itemEnabled) itemColor
                         else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
                         enabled = itemEnabled
@@ -341,7 +339,7 @@ private fun TreatmentItem(
         } else null,
         leadingContent = {
             TonalIcon(
-                painter = rememberVectorPainter(elementType.icon()),
+                icon = elementType.icon(),
                 color = if (enabled) color
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
                 enabled = enabled

@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Welche Aussagen zum DIA stimmen?</string>
     <string name="dia_label_exam">Insulinwirkdauer (DIA)</string>
-    <string name="dia_profile">Setze den DIA-Wert in Deinem Profil.</string>
     <string name="dia_minimumis5h">Der minimal zulässige Wert ist 5 Stunden.</string>
     <string name="dia_meaningisequaltodiapump">Wenn Du mit dem DIA zufrieden warst, bevor Du AndroidAPS verwendet hast, dann musst Du ihn nicht ändern, wenn Du anfängst zu loopen.</string>
     <string name="dia_valuemustbedetermined">Du solltest den für dich geeigneten DIA selbst festlegen.</string>
@@ -64,9 +63,7 @@
     <string name="prerequisites2_internet">AndroidAPS benötigt eine Internetverbindung, um im Closed Loop laufen zu können.</string>
     <string name="prerequisites2_supportedcgm">Ein unterstütztes CGM und eine passende App, um Blutzuckerwerte auf dem Gerät zu erhalten.</string>
     <string name="update_label">Aktualisiere AAPS</string>
-    <string name="update_git">Du musst Git auf Deinem Computer installiert und konfiguriert haben.</string>
     <string name="update_asap">Wenn aktualisierte Versionen von AndroidAPS veröffentlicht werden, können die früheren Versionen nach einer bestimmten Zeit aus der Ferne eingeschränkt werden.</string>
-    <string name="update_keys">Du solltest den Speicherort des Keystores speichern und immer den gleichen Signaturschlüssel für Updates verwenden wie für die vorherige Installation.</string>
     <string name="update_askfriend">Wenn Du Schwierigkeiten beim Erstellen der apk hast, kannst Du eine apk installieren, die von einem Freund erstellt wurde.</string>
     <string name="troubleshooting_label">Problembehandlung</string>
     <string name="troubleshooting_wheretoask">Wo können Sie nach Hilfe bei AAPS suchen?</string>

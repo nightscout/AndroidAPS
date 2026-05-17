@@ -34,15 +34,13 @@ open class DanaRTestBase : TestBaseWithProfile() {
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Mock lateinit var uiInteraction: UiInteraction
 
-    val bolusProgressData = BolusProgressData()
+    val bolusProgressData by lazy { BolusProgressData(ch, rh) }
 
     @BeforeEach
     fun setup() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         doNothing().whenever(danaRKoreanPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
         doNothing().whenever(danaRPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
-        doNothing().whenever(danaRKoreanPlugin).setFragmentVisible(anyOrNull(), anyBoolean())
-        doNothing().whenever(danaRPlugin).setFragmentVisible(anyOrNull(), anyBoolean())
         whenever(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 

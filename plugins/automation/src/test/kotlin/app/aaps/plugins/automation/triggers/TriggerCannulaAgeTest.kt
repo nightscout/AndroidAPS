@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
-import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
@@ -11,7 +10,6 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
-import java.util.Optional
 
 class TriggerCannulaAgeTest : TriggerTestBase() {
 
@@ -62,15 +60,5 @@ class TriggerCannulaAgeTest : TriggerTestBase() {
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerCannulaAge
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.cannulaAgeHours.value).isWithin(0.01).of(4.0)
-    }
-
-    @Test fun iconTest() {
-        val t = TriggerCannulaAge(injector)
-        val pumpDescription = PumpDescription()
-        pumpDescription.isPatchPump = false
-        whenever(pumpPluginWithConcentration.pumpDescription).thenReturn(pumpDescription)
-        assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_cannula))
-        pumpDescription.isPatchPump = true
-        assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_patch_pump_outline))
     }
 }

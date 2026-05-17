@@ -13,6 +13,7 @@ import app.aaps.pump.eopatch.vo.PatchState
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -57,12 +58,12 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
-            protectionCheck, blePreCheck, ch, bolusProgressData
+            protectionCheck, blePreCheck, bolusProgressData
         )
     }
 
     @Test
-    fun `deliverTreatment should require insulin greater than 0`() {
+    fun `deliverTreatment should require insulin greater than 0`() = runBlocking {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = 0.0
         detailedBolusInfo.carbs = 0.0
@@ -77,7 +78,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `deliverTreatment should require carbs equal to 0`() {
+    fun `deliverTreatment should require carbs equal to 0`() = runBlocking {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = 5.0
         detailedBolusInfo.carbs = 10.0 // Not allowed
@@ -92,7 +93,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `setTempBasalAbsolute should fail when normal basal not active`() {
+    fun `setTempBasalAbsolute should fail when normal basal not active`() = runBlocking {
         val patchState = PatchState()
         patchState.update(ByteArray(20), System.currentTimeMillis())
         // isNormalBasalAct will be false
@@ -105,7 +106,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `setTempBasalPercent should fail when normal basal not active`() {
+    fun `setTempBasalPercent should fail when normal basal not active`() = runBlocking {
         val patchState = PatchState()
         patchState.update(ByteArray(20), System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
@@ -117,7 +118,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `setTempBasalPercent should fail when percent is 0`() {
+    fun `setTempBasalPercent should fail when percent is 0`() = runBlocking {
         val patchState = PatchState()
         val bytes = ByteArray(20)
         bytes[4] = 0x14.toByte() // isNormalBasalAct = true
@@ -131,12 +132,10 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `cancelTempBasal should return success when TBR already false`() {
-        runBlocking {
-            whenever(pumpSync.expectedPumpState()).thenReturn(
-                PumpSync.PumpState(null, null, null, profile, "")
-            )
-        }
+    fun `cancelTempBasal should return success when TBR already false`() = runBlocking {
+        whenever(pumpSync.expectedPumpState()).thenReturn(
+            PumpSync.PumpState(null, null, null, profile, "")
+        )
 
         val result = plugin.cancelTempBasal(false)
 
@@ -145,15 +144,13 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `cancelExtendedBolus should return success when not active`() {
+    fun `cancelExtendedBolus should return success when not active`() = runBlocking {
         val patchState = PatchState()
         patchState.update(ByteArray(20), System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
-        runBlocking {
-            whenever(pumpSync.expectedPumpState()).thenReturn(
-                PumpSync.PumpState(null, null, null, profile, "")
-            )
-        }
+        whenever(pumpSync.expectedPumpState()).thenReturn(
+            PumpSync.PumpState(null, null, null, profile, "")
+        )
 
         val result = plugin.cancelExtendedBolus()
 
@@ -161,7 +158,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `loadTDDs should return empty result`() {
+    fun `loadTDDs should return empty result`() = runTest {
         val result = plugin.loadTDDs()
 
         assertThat(result).isNotNull()
@@ -202,7 +199,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `getPumpStatus should update last data time when activated`() {
+    fun `getPumpStatus should update last data time when activated`() = runTest {
         whenever(patchManagerExecutor.updateConnection()).thenReturn(Single.just(mock<PatchState>()))
 
         val beforeTime = System.currentTimeMillis()
@@ -213,7 +210,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `getPumpStatus should do nothing when not activated`() {
+    fun `getPumpStatus should do nothing when not activated`() = runTest {
         patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
 
         plugin.getPumpStatus("test")

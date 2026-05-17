@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.PowerManager
-import android.os.SystemClock
 import androidx.core.content.ContextCompat
 import androidx.work.WorkerParameters
 import app.aaps.core.data.configuration.Constants
@@ -20,15 +19,16 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.R
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeEnable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class QueueWorker internal constructor(
@@ -61,8 +61,8 @@ class QueueWorker internal constructor(
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConfigured()) {
-                    aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - clearing queue")
-                    queue.clear()
+                    aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - completing queue as no-op")
+                    queue.completeAllAsNoOp(R.string.pump_not_configured)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     return Result.success()
                 }
@@ -72,10 +72,10 @@ class QueueWorker internal constructor(
                             Manifest.permission.BLUETOOTH_SCAN
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
-                        ToastUtils.errorToast(context, R.string.need_connect_permission)
+                        rxBus.send(EventShowSnackbar(rh.gs(R.string.need_connect_permission), EventShowSnackbar.Type.Error))
                         aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
-                        SystemClock.sleep(5000)
+                        delay(5000)
                         continue
                     }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
@@ -94,10 +94,12 @@ class QueueWorker internal constructor(
                         preferences.put(LongNonKey.BtWatchdogLastBark, System.currentTimeMillis())
                         //toggle BT
                         pump.disconnect("watchdog")
-                        SystemClock.sleep(1000)
+                        delay(1000)
                         (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bluetoothAdapter ->
-                            bluetoothAdapter.safeDisable(1000)
-                            bluetoothAdapter.safeEnable(1000)
+                            bluetoothAdapter.safeDisable(0)
+                            delay(1000)
+                            bluetoothAdapter.safeEnable(0)
+                            delay(1000)
                         }
                         //start over again once after watchdog barked
                         lastCommandTime = System.currentTimeMillis()
@@ -115,26 +117,26 @@ class QueueWorker internal constructor(
                 if (pump.isHandshakeInProgress()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "handshaking $secondsElapsed")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.HANDSHAKING, secondsElapsed.toInt()))
-                    SystemClock.sleep(100)
+                    delay(100)
                     continue
                 }
                 if (pump.isConnecting()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "connecting $secondsElapsed")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
-                    SystemClock.sleep(1000)
+                    delay(1000)
                     continue
                 }
                 if (!pump.isConnected()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "connect")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
                     pump.connect("Connection needed")
-                    SystemClock.sleep(1000)
+                    delay(1000)
                     continue
                 }
                 if (pump.isBusy()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "busy")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
-                    SystemClock.sleep(1000)
+                    delay(1000)
                     continue
                 }
                 if (queue.performing() == null) {
@@ -153,7 +155,7 @@ class QueueWorker internal constructor(
                             queue.resetPerforming()
                             rxBus.send(EventQueueChanged())
                             lastCommandTime = System.currentTimeMillis()
-                            SystemClock.sleep(100)
+                            delay(100)
                             true
                         } == true
                         if (cont) {
@@ -174,7 +176,7 @@ class QueueWorker internal constructor(
                     } else {
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.WAITING_FOR_DISCONNECTION))
                         aapsLogger.debug(LTag.PUMPQUEUE, "waiting for disconnect")
-                        SystemClock.sleep(1000)
+                        delay(1000)
                     }
                 }
             }

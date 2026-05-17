@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Η αλλαγή της θερινής ώρας θα γίνει σε 24 ώρες ή λιγότερο</string>
     <string name="dst_loop_disabled_warning">Η αλλαγή της θερινής ώρας θα γίνει σε λιγότερο από 3 ώρες - Το κλειστό κύκλωμα απενεργοποιήθηκε</string>
@@ -27,7 +26,6 @@
     <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
-    <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <!-- Objectives -->
     <string name="completed_well_done">Ολοκληρώθηκε, συγχαρητήρια!</string>
     <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
@@ -40,8 +38,6 @@
     <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
     <string name="doyouwantresetstart">Θέλετε έναρξη επαναφοράς στόχου? Μπορεί να χάσετε την πρόοδό σας.</string>
-    <string name="objectives_next_button">Επόμενο</string>
-    <string name="objectives_previous_button">Προηγούμενο</string>
     <string name="objectives_button_unfinish">Επαναφορά ολοκληρωμένης κατάστασης</string>
     <string name="objectives_button_unstart">Επαναφορά κατάστασης εκκίνησης</string>
 </resources>

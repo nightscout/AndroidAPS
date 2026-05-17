@@ -7,8 +7,7 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.overview.Overview
-import app.aaps.core.interfaces.profile.ProfileSource
+
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -25,15 +24,10 @@ interface ActivePlugin {
     val activeBgSource: BgSource
 
     /**
-     *  Currently selected Profile plugin
-     */
-    val activeProfileSource: ProfileSource
-
-    /**
      *  Currently selected APS plugin
-     *  Default SMB
+     *  Default SMB. Null during early startup before plugin initialization.
      */
-    val activeAPS: APS
+    val activeAPS: APS?
 
     /**
      *  PumpWithConcentration should pass data to real Pump plugin if U100 is used
@@ -52,12 +46,6 @@ interface ActivePlugin {
      *  Default Oref1
      */
     val activeSensitivity: Sensitivity
-
-    /**
-     *  Currently selected Overview plugin
-     *  Always OverviewPlugin
-     */
-    val activeOverview: Overview
 
     /**
      *  Currently selected Safety plugin

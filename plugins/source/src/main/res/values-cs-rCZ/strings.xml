@@ -25,11 +25,6 @@
     <string name="random_bg">Náhodná glykémie</string>
     <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="bgsource_settings">Nastavení zdroje glykémie</string>
-    <string name="bgsource_log_sensor_change_title">Přijmout spuštění senzoru</string>
-    <string name="bgsource_log_sensor_change_summary">Automaticky vytvořit událost „Výměna senzoru“ v části Péče při spuštění senzoru ze zdroje glykémie pomocí lokálního odesílání dat</string>
-    <string name="direction">směr</string>
-    <string name="bg_generation_interval_minutes">Interval generování glykémie v minutách</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Přijímat glykémie z aplikace Syai/Ottai.</string>
@@ -39,4 +34,18 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplikace Sino</string>
     <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Přijímat hodnoty glykémie z aplikace Instara.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Žádost o historická data Instara</string>
+    <string name="pref_summary_instara_history_request">Požadovat možné chybějící historické údaje na pozadí</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Čtečka oznámení</string>
+    <string name="description_source_notification_reader">Čte hodnoty glykémie z oznámení zasílaných oficiálními CGM aplikacemi (Dexcom, Medtronic, Eversense atd.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Aplikace potřebuje oprávnění k přijímání dat CGM z aplikace Dexcom</string>
+    <string name="permission_notification_listener_title">Přístup k oznámením</string>
+    <string name="permission_notification_listener_description">Vyžadováno pro čtení hodnot glykémie z oznámení CGM aplikace</string>
 </resources>

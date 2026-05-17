@@ -52,6 +52,7 @@ private class ReactiveVisibilityContext(
     override val advancedFilteringSupported: Boolean get() = delegate.advancedFilteringSupported
     override val isPumpPaired: Boolean get() = delegate.isPumpPaired
     override val isPumpInitialized: Boolean get() = delegate.isPumpInitialized
+    override val isConcentrationEnabled: Boolean get() = delegate.isConcentrationEnabled
 
     // Return a reactive preferences wrapper
     override val preferences: Preferences get() = ReactivePreferencesWrapper(delegatePreferences, sharedStates)

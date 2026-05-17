@@ -1,12 +1,21 @@
 package app.aaps.pump.medtrum.compose
 
+import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
@@ -14,12 +23,13 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
-import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
@@ -31,7 +41,7 @@ import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
-import android.content.Context
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -47,10 +57,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class MedtrumOverviewEvent {
     data class StartPatchWorkflow(val startStep: PatchStep) : MedtrumOverviewEvent()
     data class ShowDialog(val title: String, val message: String) : MedtrumOverviewEvent()
+    data object ConfirmUnpair : MedtrumOverviewEvent()
 }
 
 @HiltViewModel
@@ -65,6 +77,8 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val medtrumPlugin: MedtrumPlugin,
     val medtrumPump: MedtrumPump,
     private val ch: ConcentrationHelper,
+    private val preferences: Preferences,
+    private val uel: UserEntryLogger,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -93,7 +107,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         val connectionState = values[0] as ConnectionState
         val pumpState = values[1] as MedtrumPumpState
         val basalType = values[2] as BasalType
-        val basalRate = values[3] as Double
+        val tempBasalRate = values[3] as Double
         val reservoir = values[4] as Double
         val batteryVoltage = values[5] as Double
         val bolusDelivered = values[6] as Double
@@ -102,7 +116,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         val lastConnectionTime = values[9] as Long
 
         buildUiState(
-            connectionState, pumpState, basalType, basalRate, reservoir, batteryVoltage,
+            connectionState, pumpState, medtrumPump.baseBasalRate, basalType, tempBasalRate, medtrumPump.lastBasalStartTime, medtrumPump.lastBasalDuration, reservoir, batteryVoltage,
             bolusDelivered, lastBolusTime, lastBolusAmount, lastConnectionTime
         )
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildInitialState())
@@ -123,36 +137,44 @@ class MedtrumOverviewViewModel @Inject constructor(
     fun onClickChangePatch() {
         aapsLogger.debug(LTag.PUMP, "ChangePatch clicked!")
         viewModelScope.launch {
-            val profile = profileFunction.getProfile()
-            if (profile == null) {
-                _events.tryEmit(
-                    MedtrumOverviewEvent.ShowDialog(
-                        title = rh.gs(app.aaps.core.ui.R.string.message),
-                        message = rh.gs(R.string.no_profile_selected)
-                    )
-                )
-            } else {
-                val nextStep = when {
-                    medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED ->
-                        PatchStep.START_DEACTIVATION
+            val nextStep = when {
+                medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                                                    ->
+                    PatchStep.PREPARE_PATCH
 
-                    medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                     ->
-                        PatchStep.PREPARE_PATCH
+                medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMING && medtrumPump.patchPrimed) ->
+                    PatchStep.RETRY_ACTIVATION
 
-                    else                                                                                                 ->
-                        PatchStep.RETRY_ACTIVATION
-                }
-                _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
+                else                                                                                                                                ->
+                    PatchStep.START_DEACTIVATION
             }
+            _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
         }
+    }
+
+    fun onUnpairClick() {
+        _events.tryEmit(MedtrumOverviewEvent.ConfirmUnpair)
+    }
+
+    fun performUnpair() {
+        aapsLogger.debug(LTag.PUMP, "performUnpair")
+        uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Medtrum)
+        medtrumPlugin.getService()?.disconnect("Unpair")
+        preferences.put(MedtrumStringNonKey.SnInput, "0")
+        medtrumPump.patchPrimed = false
+        medtrumPump.pumpState = MedtrumPumpState.NONE
+        medtrumPump.resetPatchParameters()
+        medtrumPump.loadUserSettingsFromSP()
     }
 
     private fun buildInitialState(): PumpOverviewUiState {
         return buildUiState(
             connectionState = medtrumPump.connectionState,
             pumpState = medtrumPump.pumpState,
+            basalRate = medtrumPump.baseBasalRate,
             basalType = medtrumPump.lastBasalType,
-            basalRate = medtrumPump.lastBasalRate,
+            tempBasalRate = medtrumPump.lastBasalRate.takeIf { medtrumPump.tempBasalInProgress }, // only show temp basal if it is in progress
+            tempBasalStartTime = medtrumPump.lastBasalStartTime,
+            tempBasalDuration = medtrumPump.lastBasalDuration,
             reservoir = medtrumPump.reservoir,
             batteryVoltage = medtrumPump.batteryVoltage_B,
             bolusDelivered = medtrumPump.bolusAmountDeliveredFlow.value,
@@ -165,8 +187,11 @@ class MedtrumOverviewViewModel @Inject constructor(
     private fun buildUiState(
         connectionState: ConnectionState,
         pumpState: MedtrumPumpState,
-        basalType: BasalType,
         basalRate: Double,
+        basalType: BasalType,
+        tempBasalRate: Double?,
+        tempBasalStartTime: Long,
+        tempBasalDuration: Int,
         reservoir: Double,
         batteryVoltage: Double,
         bolusDelivered: Double,
@@ -191,21 +216,19 @@ class MedtrumOverviewViewModel @Inject constructor(
 
         // Last bolus
         val lastBolus = if (lastBolusTime != null && lastBolusAmount != null) {
-            val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 1000.0 / 60.0 / 60.0
-            if (agoHours < 6.0) {
-                ch.insulinAmountAgoString(
-                    PumpInsulin(lastBolusAmount),
-                    dateUtil.sinceString(lastBolusTime, rh)
-                )
-            } else null
+            ch.insulinAmountAgoString(
+                PumpInsulin(lastBolusAmount),
+                lastBolusTime
+            )
         } else null
 
         // Active bolus
         val activeBolusText = if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized() && bolusDelivered > 0.0) {
-            dateUtil.timeString(medtrumPump.bolusStartTime) + " " +
-                dateUtil.sinceString(medtrumPump.bolusStartTime, rh) + " " +
-                ch.bolusProgressString(PumpInsulin(bolusDelivered), ch.fromPump(PumpInsulin(medtrumPump.bolusAmountToBeDelivered))) +
-                " (" + rh.gs(app.aaps.core.ui.R.string.bolus_delivered_CU, bolusDelivered, medtrumPump.bolusAmountToBeDelivered) + ")"
+            ch.insulinDeliveryAgoString(
+                amount = PumpInsulin(bolusDelivered),
+                totalAmount = PumpInsulin(medtrumPump.bolusAmountToBeDelivered),
+                startTime = medtrumPump.bolusStartTime
+            )
         } else null
 
         // Battery voltage
@@ -226,11 +249,15 @@ class MedtrumOverviewViewModel @Inject constructor(
         // Medtrum-specific rows
         val specificRows = buildList {
             // Pump state
-            add(PumpInfoRow(label = rh.gs(R.string.pump_state_label), value = pumpState.toString()))
-            // Basal type
-            add(PumpInfoRow(label = rh.gs(R.string.basal_type_label), value = basalType.toString()))
-            // Basal rate
-            add(PumpInfoRow(label = rh.gs(R.string.basal_rate_label), value = ch.basalRateString(PumpRate(basalRate), basalType != BasalType.RELATIVE_TEMP)))
+            add(PumpInfoRow(label = rh.gs(R.string.pump_state_label), value = rh.gs(pumpState.label)))
+            // tempBasal rate
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = ch.basalRateString(PumpRate(basalRate), true)))
+            tempBasalRate?.let {
+                // Basal type
+                // add(PumpInfoRow(label = rh.gs(R.string.basal_type_label), value = basalType.toString()))
+                // tempBasal rate
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.tempbasal_label), value = ch.basalTbrString(PumpRate(it), tempBasalStartTime, tempBasalDuration, basalType != BasalType.RELATIVE_TEMP)))
+            }
             // Active bolus
             activeBolusText?.let {
                 add(PumpInfoRow(label = rh.gs(R.string.active_bolus_label), value = it))
@@ -266,15 +293,15 @@ class MedtrumOverviewViewModel @Inject constructor(
         // Primary actions
         val primaryActions = listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
-                iconRes = app.aaps.core.ui.R.drawable.ic_refresh,
+                label = rh.gs(CoreUiR.string.refresh),
+                icon = Icons.Filled.Refresh,
                 category = ActionCategory.PRIMARY,
                 enabled = canRefresh,
                 onClick = { onClickRefresh() }
             ),
             PumpAction(
                 label = rh.gs(R.string.reset_alarms_label),
-                iconRes = app.aaps.core.ui.R.drawable.ic_loop_resume,
+                icon = Icons.Filled.PlayArrow,
                 category = ActionCategory.PRIMARY,
                 enabled = pumpState.isSuspendedByPump(),
                 visible = pumpState.isSuspendedByPump(),
@@ -282,15 +309,29 @@ class MedtrumOverviewViewModel @Inject constructor(
             )
         )
 
+        val isPaired = medtrumPump.pumpSN != 0L
+
         // Management actions
-        val managementActions = listOf(
-            PumpAction(
-                label = rh.gs(R.string.change_patch_label),
-                iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
-                category = ActionCategory.MANAGEMENT,
-                onClick = { onClickChangePatch() }
+        val managementActions = buildList {
+            add(
+                PumpAction(
+                    label = rh.gs(R.string.change_patch_label),
+                    icon = Icons.Filled.SwapHoriz,
+                    category = ActionCategory.MANAGEMENT,
+                    onClick = { onClickChangePatch() }
+                )
             )
-        )
+            if (isPaired) {
+                add(
+                    PumpAction(
+                        label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
+                        icon = Icons.Filled.Bluetooth,
+                        category = ActionCategory.MANAGEMENT,
+                        onClick = { onUnpairClick() }
+                    )
+                )
+            }
+        }
 
         return PumpOverviewUiState(
             statusBanner = statusBanner,

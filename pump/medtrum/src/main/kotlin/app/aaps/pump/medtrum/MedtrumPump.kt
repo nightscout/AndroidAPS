@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -23,6 +24,7 @@ import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
+import app.aaps.pump.medtrum.keys.MedtrumBooleanNonKey
 import app.aaps.pump.medtrum.keys.MedtrumDoubleNonKey
 import app.aaps.pump.medtrum.keys.MedtrumIntKey
 import app.aaps.pump.medtrum.keys.MedtrumIntNonKey
@@ -31,6 +33,7 @@ import app.aaps.pump.medtrum.keys.MedtrumStringKey
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.runBlocking
 import java.util.EnumSet
 import java.util.GregorianCalendar
@@ -69,6 +72,12 @@ class MedtrumPump @Inject constructor(
     var pumpState: MedtrumPumpState
         get() = _pumpState.value
         set(value) {
+            // Maintain patchPrimed flag: set once we reach PRIMING, clear only on STOPPED
+            when {
+                value >= MedtrumPumpState.PRIMING && value < MedtrumPumpState.STOPPED -> patchPrimed = true
+                value == MedtrumPumpState.STOPPED                                     -> patchPrimed = false
+            }
+            
             _pumpState.value = value
             preferences.put(MedtrumIntNonKey.PumpState, value.state.toInt())
         }
@@ -99,6 +108,17 @@ class MedtrumPump @Inject constructor(
             _primeProgress.value = value
         }
 
+    // Tracks that the patch has started priming at least once during the current activation session.
+    // Set when pumpState reaches PRIMING; cleared only by STOPPED or NONE.
+    // Used to detect an unexpected patch reset and block activation in that case.
+    private var _patchPrimed = false
+    var patchPrimed: Boolean
+        get() = _patchPrimed
+        set(value) {
+            _patchPrimed = value
+            preferences.put(MedtrumBooleanNonKey.PatchPrimed, value)
+        }
+
     private var _lastBasalType: MutableStateFlow<BasalType> = MutableStateFlow(BasalType.NONE)
     val lastBasalTypeFlow: StateFlow<BasalType> = _lastBasalType
     val lastBasalType: BasalType
@@ -109,22 +129,22 @@ class MedtrumPump @Inject constructor(
     val lastBasalRate: Double
         get() = _lastBasalRate.value
 
-    val reservoirFlow: StateFlow<Double>
-        field = MutableStateFlow(0.0)
+    private val _reservoirFlow = MutableStateFlow(0.0)
+    val reservoirFlow: StateFlow<Double> = _reservoirFlow.asStateFlow()
     var reservoir: Double
         get() = reservoirFlow.value
         set(value) {
-            reservoirFlow.value = value
+            _reservoirFlow.value = value
         }
 
     var batteryVoltage_A = 0.0 // Not used in UI
-    val batteryVoltage_BFlow: StateFlow<Double>
-        field = MutableStateFlow(0.0)
+    private val _batteryVoltage_BFlow = MutableStateFlow(0.0)
+    val batteryVoltage_BFlow: StateFlow<Double> = _batteryVoltage_BFlow.asStateFlow()
     val batteryFlow: StateFlow<Int?> = MutableStateFlow(null) // Medtrum reports voltage, not percentage
     var batteryVoltage_B: Double
         get() = batteryVoltage_BFlow.value
         set(value) {
-            batteryVoltage_BFlow.value = value
+            _batteryVoltage_BFlow.value = value
         }
 
     /** Stuff stored in preferences */
@@ -171,30 +191,30 @@ class MedtrumPump @Inject constructor(
             preferences.put(MedtrumStringNonKey.ActualBasalProfile, encodedString ?: "")
         }
 
-    val lastBolusTimeFlow: StateFlow<Long?> // Time in ms!
-        field = MutableStateFlow(null)
+    private val _lastBolusTimeFlow = MutableStateFlow<Long?>(null) // Time in ms!
+    val lastBolusTimeFlow: StateFlow<Long?> = _lastBolusTimeFlow.asStateFlow()
     var lastBolusTime: Long?
         get() = lastBolusTimeFlow.value
         set(value) {
-            lastBolusTimeFlow.value = value
+            _lastBolusTimeFlow.value = value
             preferences.put(MedtrumLongNonKey.LastBolusTime, value ?: 0L)
         }
 
-    val lastBolusAmountFlow: StateFlow<Double?>
-        field = MutableStateFlow(null)
+    private val _lastBolusAmountFlow = MutableStateFlow<Double?>(null)
+    val lastBolusAmountFlow: StateFlow<Double?> = _lastBolusAmountFlow.asStateFlow()
     var lastBolusAmount: Double?
         get() = lastBolusAmountFlow.value
         set(value) {
-            lastBolusAmountFlow.value = value
+            _lastBolusAmountFlow.value = value
             preferences.put(MedtrumDoubleNonKey.LastBolusAmount, value ?: 0.0)
         }
 
-    val lastConnectionFlow: StateFlow<Long> // Time in ms!
-        field = MutableStateFlow(0L)
+    private val _lastConnectionFlow = MutableStateFlow(0L) // Time in ms!
+    val lastConnectionFlow: StateFlow<Long> = _lastConnectionFlow.asStateFlow()
     var lastConnection: Long
         get() = lastConnectionFlow.value
         set(value) {
-            lastConnectionFlow.value = value
+            _lastConnectionFlow.value = value
             preferences.put(MedtrumLongNonKey.LastConnection, value)
         }
 
@@ -285,6 +305,10 @@ class MedtrumPump @Inject constructor(
     val lastBasalStartTime: Long
         get() = _lastBasalStartTime
 
+    private var _lastBasalDuration = 0
+    val lastBasalDuration: Int
+        get() = _lastBasalDuration
+
     val baseBasalRate: Double
         get() = getHourlyBasalFromMedtrumProfileArray(actualBasalProfile, dateUtil.now())
 
@@ -318,9 +342,9 @@ class MedtrumPump @Inject constructor(
     fun loadVarsFromSP() {
         // Load stuff from preferences
         _patchSessionToken = preferences.get(MedtrumLongNonKey.SessionToken)
-        lastConnectionFlow.value = preferences.get(MedtrumLongNonKey.LastConnection)
-        lastBolusTimeFlow.value = preferences.get(MedtrumLongNonKey.LastBolusTime).takeIf { it != 0L }
-        lastBolusAmountFlow.value = preferences.get(MedtrumDoubleNonKey.LastBolusAmount).takeIf { it != 0.0 }
+        _lastConnectionFlow.value = preferences.get(MedtrumLongNonKey.LastConnection)
+        _lastBolusTimeFlow.value = preferences.get(MedtrumLongNonKey.LastBolusTime).takeIf { it != 0L }
+        _lastBolusAmountFlow.value = preferences.get(MedtrumDoubleNonKey.LastBolusAmount).takeIf { it != 0.0 }
         _currentSequenceNumber = preferences.get(MedtrumIntNonKey.CurrentSequenceNumber)
         _patchId = preferences.get(MedtrumLongNonKey.PatchId)
         _syncedSequenceNumber = preferences.get(MedtrumIntNonKey.SyncedSequenceNumber)
@@ -331,6 +355,7 @@ class MedtrumPump @Inject constructor(
         _pumpTimeZoneOffset = preferences.get(MedtrumIntNonKey.PumpTimezoneOffset)
         _bolusStartTime = preferences.get(MedtrumLongNonKey.BolusStartTime)
         _bolusAmountToBeDelivered = preferences.get(MedtrumDoubleNonKey.BolusAmountToBeDelivered)
+        _patchPrimed = preferences.get(MedtrumBooleanNonKey.PatchPrimed)
 
         loadActiveAlarms()
 
@@ -411,11 +436,7 @@ class MedtrumPump @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
         bolusProgressLastTimeStamp = dateUtil.now()
         _bolusAmountDelivered.value = amountDelivered
-        val state = bolusProgressData.state.value
-        val insulin = state?.insulin ?: 0.0
-        val percent = if (insulin > 0) ((amountDelivered / insulin) * 100).toInt().coerceAtMost(100) else 0
-        val status = state?.status ?: ""
-        bolusProgressData.updateProgress(percent, status, amountDelivered)
+        bolusProgressData.updateProgress(PumpInsulin(amountDelivered))
         bolusDone = bolusCompleted
     }
 
@@ -430,6 +451,7 @@ class MedtrumPump @Inject constructor(
         )
         @Suppress("UNNECESSARY_SAFE_CALL") // Safe call to allow mocks to return null
         val expectedTemporaryBasal = runBlocking { pumpSync.expectedPumpState() }?.temporaryBasal
+        var durationInMin = 0
         when {
             basalType.isTempBasal() && expectedTemporaryBasal?.pumpId != basalStartTime                                                                     -> {
                 // Note: temporaryBasalInfo will be removed from temporaryBasalStorage after this call
@@ -437,6 +459,7 @@ class MedtrumPump @Inject constructor(
 
                 // If duration is unknown, no way to get it now, set patch lifetime as duration
                 val duration = temporaryBasalInfo?.duration ?: T.mins(FAKE_TBR_LENGTH).msecs()
+                durationInMin = T.msecs(duration).mins().toInt()
                 val adjustedBasalRate = if (basalType == BasalType.ABSOLUTE_TEMP) {
                     basalRate
                 } else {
@@ -517,6 +540,7 @@ class MedtrumPump @Inject constructor(
             aapsLogger.error(LTag.PUMP, "handleBasalStatusUpdate: WTF? PatchId in status update does not match current patchId!")
         }
         _lastBasalStartTime = basalStartTime
+        _lastBasalDuration = durationInMin
     }
 
     fun handleStopStatusUpdate(stopSequence: Int, stopPatchId: Long) {
@@ -537,6 +561,7 @@ class MedtrumPump @Inject constructor(
             setFakeTBR()
             _lastBasalType.value = BasalType.NONE
             _lastBasalRate.value = 0.0
+            _lastBasalDuration = FAKE_TBR_LENGTH.toInt()
         }
     }
 

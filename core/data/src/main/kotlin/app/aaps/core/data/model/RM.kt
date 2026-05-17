@@ -9,7 +9,7 @@ data class RM(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     override var ids: IDs = IDs(),
-    var timestamp: Long,
+    override var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     /** Current running mode. */
     var mode: Mode,
@@ -22,7 +22,7 @@ data class RM(
     var autoForced: Boolean = false,
     /** List of reasons for automated mode change */
     var reasons: String? = null
-) : HasIDs {
+) : HasIDs, TimeStamped {
 
     fun contentEqualsTo(other: RM): Boolean =
         timestamp == other.timestamp &&
@@ -45,8 +45,11 @@ data class RM(
         CLOSED_LOOP,
         CLOSED_LOOP_LGS,
 
-        // Temporary only
+        // Can be permanent (duration=0) or temporary; NS sync layer substitutes a long
+        // wire duration so the offline marker still renders.
         DISABLED_LOOP,
+
+        // Temporary only
         SUPER_BOLUS,
         DISCONNECTED_PUMP,
         SUSPENDED_BY_PUMP,
@@ -62,10 +65,15 @@ data class RM(
 
         fun isClosedLoopOrLgs() = this == CLOSED_LOOP || this == CLOSED_LOOP_LGS
         fun isLoopRunning() = this == OPEN_LOOP || this == CLOSED_LOOP || this == CLOSED_LOOP_LGS
-        fun isSuspended() = this == DISCONNECTED_PUMP || this == SUSPENDED_BY_PUMP || this == SUSPENDED_BY_USER || this == SUSPENDED_BY_DST || this == SUPER_BOLUS
-        fun isPumpSuspended() = this == DISCONNECTED_PUMP || this == SUSPENDED_BY_PUMP
-        // DISABLED_LOOP is added to "mustBeTemporary" to be properly rendered in NS
-        fun mustBeTemporary() = this == DISCONNECTED_PUMP || this == SUSPENDED_BY_PUMP || this == SUSPENDED_BY_USER || this == SUSPENDED_BY_DST || this == SUPER_BOLUS || this == DISABLED_LOOP
+
+        /**
+         * True when the loop algorithm should not run / not dispatch new dosing decisions.
+         * Includes SUPER_BOLUS (the bolus is delivered by the wizard, basal is forced to 0)
+         * and all explicit suspends. **Does not** mean "manual bolus blocked" — for that
+         * use [PumpCommandGate.check] with [PumpCommandGate.CommandKind.BOLUS].
+         */
+        fun pausesLoopExecution() = this == DISCONNECTED_PUMP || this == SUSPENDED_BY_PUMP || this == SUSPENDED_BY_USER || this == SUSPENDED_BY_DST || this == SUPER_BOLUS
+        fun mustBeTemporary() = this == DISCONNECTED_PUMP || this == SUSPENDED_BY_PUMP || this == SUSPENDED_BY_USER || this == SUSPENDED_BY_DST || this == SUPER_BOLUS
 
         companion object {
 
@@ -74,6 +82,7 @@ data class RM(
     }
 
     companion object {
+
         val DEFAULT_MODE = Mode.DISABLED_LOOP
     }
 }

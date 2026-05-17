@@ -9,7 +9,7 @@ data class BCR(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     override var ids: IDs = IDs(),
-    var timestamp: Long,
+    override var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var targetBGLow: Double,
     var targetBGHigh: Double,
@@ -40,7 +40,7 @@ data class BCR(
     var percentageCorrection: Int,
     var profileName: String,
     var note: String
-) : HasIDs {
+) : HasIDs, TimeStamped {
 
     fun contentEqualsTo(other: BCR): Boolean =
         isValid == other.isValid &&

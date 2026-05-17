@@ -14,22 +14,23 @@ import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -41,11 +42,12 @@ class RunningModeViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
-    val uiState: StateFlow<RunningModeUiState>
-        field = MutableStateFlow(RunningModeUiState())
+    private val _uiState = MutableStateFlow(RunningModeUiState())
+    val uiState: StateFlow<RunningModeUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -60,7 +62,7 @@ class RunningModeViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.runningModes.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -73,21 +75,18 @@ class RunningModeViewModel @Inject constructor(
                     persistenceLayer.getRunningModesFromTime(now - millsToThePast, false)
                 }
 
-                uiState.update {
+                val activeMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
+                _uiState.update {
                     it.copy(
                         runningModes = runningModes,
-                        isLoading = false,
-                        snackbarMessage = null
+                        activeMode = activeMode,
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load running modes", e)
-                uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading running modes")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading running modes", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -105,17 +104,10 @@ class RunningModeViewModel @Inject constructor(
     }
 
     /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
-    }
-
-    /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -123,7 +115,7 @@ class RunningModeViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: RM) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -135,7 +127,7 @@ class RunningModeViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -147,7 +139,7 @@ class RunningModeViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: RM) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -160,9 +152,7 @@ class RunningModeViewModel @Inject constructor(
     /**
      * Get currently active running mode
      */
-    fun getActiveMode(): RM {
-        return runBlocking { persistenceLayer.getRunningModeActiveAt(dateUtil.now()) }
-    }
+    fun getActiveMode(): RM? = uiState.value.activeMode
 
     /**
      * Prepare delete confirmation message
@@ -204,7 +194,7 @@ class RunningModeViewModel @Inject constructor(
                 exitSelectionMode()
                 loadData()
             } catch (e: Exception) {
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting running modes")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting running modes", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -237,9 +227,9 @@ class RunningModeViewModel @Inject constructor(
 @Immutable
 data class RunningModeUiState(
     val runningModes: List<RM> = emptyList(),
+    val activeMode: RM? = null,
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<RM> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
+    val selectedItems: Set<RM> = emptySet()
 )

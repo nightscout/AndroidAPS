@@ -99,7 +99,7 @@ android {
         testInstrumentationRunner = "app.aaps.runners.InjectedTestRunner"
     }
 
-    flavorDimensions.add("standard")
+    flavorDimensions += "standard"
     productFlavors {
         create("full") {
             isDefault = true
@@ -171,15 +171,11 @@ dependencies {
     implementation(project(":shared:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:objects"))
-    implementation(project(":core:graph"))
-    implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
     implementation(project(":ui"))
     implementation(project(":plugins:aps"))
     implementation(project(":plugins:automation"))
@@ -229,6 +225,9 @@ dependencies {
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
     androidTestImplementation(libs.kotlinx.coroutines.test)
+    // Rhino is needed by the openAPS adapter test fixtures under app/src/androidTest
+    // (these files reference org.mozilla.javascript.* classes directly).
+    androidTestImplementation(libs.org.mozilla.rhino)
 
     debugImplementation(libs.com.squareup.leakcanary.android)
 
@@ -242,7 +241,7 @@ dependencies {
     ksp(libs.com.google.dagger.hilt.compiler)
 
     // MainApp
-    api(libs.com.uber.rxdogtag2.rxdogtag)
+    implementation(libs.com.uber.rxdogtag2.rxdogtag)
     // Remote config
     api(libs.com.google.firebase.config)
     // Navigation Compose

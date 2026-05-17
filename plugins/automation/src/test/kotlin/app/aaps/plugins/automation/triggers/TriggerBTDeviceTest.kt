@@ -29,11 +29,6 @@ class TriggerBTDeviceTest : TriggerTestBase() {
         assertThat(t2.btDevice.value).isEqualTo("Headset")
     }
 
-    @Test
-    fun icon() {
-        assertThat(TriggerBTDevice(injector).icon().get()).isEqualTo(app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp)
-    }
-
     @Test fun duplicate() {
         val t: TriggerBTDevice = TriggerBTDevice(injector).also {
             it.comparator.value = ComparatorConnect.Compare.ON_DISCONNECT

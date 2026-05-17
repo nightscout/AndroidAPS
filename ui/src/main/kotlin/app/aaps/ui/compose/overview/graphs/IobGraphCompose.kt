@@ -1,7 +1,6 @@
 package app.aaps.ui.compose.overview.graphs
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.ui.compose.AapsTheme
@@ -56,6 +56,7 @@ fun IobGraphCompose(
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
+    nowTimestamp: Long,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
@@ -65,7 +66,7 @@ fun IobGraphCompose(
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
         val now = System.currentTimeMillis()
-        val dayAgo = now - 24 * 60 * 60 * 1000L
+        val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }
 
@@ -235,7 +236,7 @@ fun IobGraphCompose(
             areaFill = LineCartesianLayer.AreaFill.single(
                 Fill(Brush.verticalGradient(listOf(iobColor.copy(alpha = 1f), Color.Transparent)))
             ),
-            pointConnector = Square
+            interpolator = Square
         )
     }
 
@@ -343,15 +344,16 @@ fun IobGraphCompose(
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val decorations = remember(nowLine) { listOf(nowLine) }
+
+    val rangeProvider = remember(maxX) { CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX) }
 
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(lines),
-                rangeProvider = remember(maxX) { CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX) }
+                rangeProvider = rangeProvider
             ),
             startAxis = VerticalAxis.rememberStart(
                 label = rememberTextComponent(
@@ -372,9 +374,7 @@ fun IobGraphCompose(
             getXStep = { 1.0 }
         ),
         modelProducer = modelProducer,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(100.dp),
+        modifier = modifier.fillMaxWidth(),
         scrollState = scrollState,
         zoomState = zoomState
     )

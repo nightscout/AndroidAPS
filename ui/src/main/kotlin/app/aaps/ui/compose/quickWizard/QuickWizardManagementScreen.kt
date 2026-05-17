@@ -21,11 +21,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,8 +55,6 @@ import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
@@ -170,20 +168,7 @@ fun QuickWizardManagementScreen(
         Scaffold(
             topBar = {
                 AapsTopAppBar(
-                    title = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = ElementType.QUICK_WIZARD_MANAGEMENT.icon(),
-                                contentDescription = null,
-                                tint = ElementType.QUICK_WIZARD_MANAGEMENT.color(),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId()))
-                        }
-                    },
+                    title = { Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId())) },
                     navigationIcon = {
                         IconButton(onClick = {
                             if (!isPlayMode && viewModel.hasUnsavedChanges()) {
@@ -210,9 +195,12 @@ fun QuickWizardManagementScreen(
                         } else {
                             // Save button (shown when editor has unsaved changes in EDIT mode)
                             if (uiState.entries.isNotEmpty() && uiState.hasUnsavedChanges) {
-                                IconButton(onClick = { viewModel.saveCurrentEntry() }) {
+                                IconButton(onClick = {
+                                    focusManager.clearFocus()
+                                    viewModel.saveCurrentEntry()
+                                }) {
                                     Icon(
-                                        imageVector = Icons.Filled.Save,
+                                        imageVector = Icons.Default.Save,
                                         contentDescription = stringResource(CoreR.string.save),
                                         tint = MaterialTheme.colorScheme.primary
                                     )

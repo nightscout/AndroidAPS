@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,8 +34,8 @@ class SmsCommunicatorViewModel @Inject constructor(
     private val dateUtil: DateUtil
 ) : ViewModel() {
 
-    val uiState: StateFlow<SmsCommunicatorUiState>
-        field = MutableStateFlow(SmsCommunicatorUiState())
+    private val _uiState = MutableStateFlow(SmsCommunicatorUiState())
+    val uiState: StateFlow<SmsCommunicatorUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -50,7 +51,7 @@ class SmsCommunicatorViewModel @Inject constructor(
                         isIgnored = sms.ignored
                     )
                 }
-                uiState.update { it.copy(messages = items) }
+                _uiState.update { it.copy(messages = items) }
             }
         }
     }

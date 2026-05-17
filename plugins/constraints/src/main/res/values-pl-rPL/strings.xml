@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Zmiana czasu w 24h lub mniej</string>
     <string name="dst_loop_disabled_warning">Zmiana czasu nastąpiła mniej niż 3 godziny temu - Zamknięta pętla wyłączona</string>
-    <string name="dst_loop_disabled_error">Zmiana na czas letni/zimowy (DST) wystąpiła mniej niż 3 godziny temu. Zamknięta pętla została tymczasowo wyłączona, zostanie automatycznie re-aktywowana 3 godziny po zmianie DST</string>
     <!-- Storage constraint -->
     <string name="disk_full">Brak miejsca! Zwolnij co najmniej %1$d MB w pamięci wewnętrznej! Pętla zatrzymana!</string>
     <!-- Version Checker -->
@@ -29,7 +27,6 @@
     <string name="smbnotallowedinopenloopmode">SMB nie dozwolone w trybie otwartej pętli</string>
     <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>
     <string name="hardlimit">twarde ograniczenie</string>
-    <string name="treatmentssafety_title">Bezpieczeństwo terapii</string>
     <!-- Objectives -->
     <string name="completed_well_done">Ukończono, dobra robota!</string>
     <string name="not_completed_yet">Nie ukończono</string>
@@ -42,8 +39,6 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Program do nauki</string>
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
-    <string name="objectives_next_button">Dalej</string>
-    <string name="objectives_previous_button">Wstecz</string>
     <string name="objectives_button_unfinish">Resetuj stan zakończenia</string>
     <string name="objectives_button_unstart">Resetuj stan rozpoczęcia</string>
 </resources>

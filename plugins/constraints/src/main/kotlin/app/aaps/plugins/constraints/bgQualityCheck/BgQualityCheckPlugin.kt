@@ -1,6 +1,5 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
-import androidx.annotation.DrawableRes
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -20,6 +19,9 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.constraints.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -39,7 +41,6 @@ class BgQualityCheckPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.bg_quality),
@@ -61,11 +62,17 @@ class BgQualityCheckPlugin @Inject constructor(
         disposable.clear()
     }
 
-    override var state: BgQualityCheck.State = BgQualityCheck.State.UNKNOWN
+    private val _stateFlow = MutableStateFlow(BgQualityCheck.State.UNKNOWN)
+    override val stateFlow: StateFlow<BgQualityCheck.State> = _stateFlow.asStateFlow()
+    override var state: BgQualityCheck.State
+        get() = _stateFlow.value
+        set(value) {
+            _stateFlow.value = value
+        }
     override var message: String = ""
 
     // Fallback to LGS if BG values are doubled
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (state == BgQualityCheck.State.DOUBLED)
             maxIob.set(0.0, "Limiting max IOB to 0 U due to doubled values in BG Source", this)
         else
@@ -122,15 +129,6 @@ class BgQualityCheckPlugin @Inject constructor(
         }
         return true
     }
-
-    @DrawableRes override fun icon(): Int =
-        when (state) {
-            BgQualityCheck.State.UNKNOWN       -> 0
-            BgQualityCheck.State.FIVE_MIN_DATA -> 0
-            BgQualityCheck.State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
-            BgQualityCheck.State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
-            BgQualityCheck.State.FLAT          -> R.drawable.ic_baseline_trending_flat_24
-        }
 
     override fun stateDescription(): String =
         when (state) {

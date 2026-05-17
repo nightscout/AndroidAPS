@@ -145,7 +145,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
     override fun versionDigits(versionString: String?): IntArray {
         val digits = mutableListOf<Int>()
         versionString?.numericVersionPart().toNumberList()?.let {
-            digits.addAll(it.take(4))
+            digits.addAll(it.take(3))
         }
         return digits.toIntArray()
     }

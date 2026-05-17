@@ -10,7 +10,6 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
-import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -39,7 +38,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRPlugin(
             aapsLogger, rh, preferences, config, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, activePlugin, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(), pumpEnactResultProvider
+            notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, rh), pumpEnactResultProvider
         )
     }
 
@@ -67,10 +66,4 @@ class DanaRPluginTest : TestBaseWithProfile() {
         Assertions.assertEquals("DanaR: Limiting max percent rate to 200% because of pump limit", c.getMostLimitedReasons())
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        danaRPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

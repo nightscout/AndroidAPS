@@ -22,18 +22,15 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
 
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    api(libs.androidx.room)
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
+    implementation(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 
     testImplementation(project(":shared:tests"))

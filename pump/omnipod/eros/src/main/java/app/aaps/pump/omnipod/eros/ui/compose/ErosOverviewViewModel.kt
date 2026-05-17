@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.eros.ui.compose
 
 import android.content.Context
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.History
@@ -11,7 +12,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
-import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -58,7 +57,6 @@ import app.aaps.pump.omnipod.eros.driver.definition.ActivationProgress
 import app.aaps.pump.omnipod.eros.driver.definition.OmnipodConstants
 import app.aaps.pump.omnipod.eros.driver.definition.PodProgressStatus
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
-import app.aaps.pump.omnipod.eros.driver.util.TimeUtil
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.pump.omnipod.eros.queue.command.CommandGetPodStatus
@@ -83,9 +81,9 @@ import org.joda.time.Duration
 import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Provider
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 import app.aaps.pump.omnipod.common.R as CommonR
-import app.aaps.core.ui.R as CoreUiR
 
 @Stable
 @HiltViewModel
@@ -218,11 +216,16 @@ class ErosOverviewViewModel @Inject constructor(
 
             // Last bolus
             val (lastBolusText, lastBolusLevel) = buildLastBolus()
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = lastBolusText, level = lastBolusLevel))
+            lastBolusText?.let {
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it, level = lastBolusLevel))
+            }
 
             // Base basal rate
             val basalText = if (podStateManager.isPodActivationCompleted) {
-                rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                ch.basalRateString(
+                    rate = omnipodErosPumpPlugin.baseBasalRate,
+                    isAbsolute = true
+                )
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_base_basal_rate), value = basalText))
 
@@ -236,7 +239,7 @@ class ErosOverviewViewModel @Inject constructor(
 
             // Total delivered
             val totalDelivered = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) {
-                rh.gs(CommonR.string.omnipod_common_overview_total_delivered_value, podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS)
+                ch.insulinAmountString(PumpInsulin(podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS))
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_total_delivered), value = totalDelivered))
 
@@ -264,12 +267,13 @@ class ErosOverviewViewModel @Inject constructor(
     // region Actions
 
     private fun buildPrimaryActions(): List<PumpAction> {
+        if (!podStateManager.hasPodState()) return emptyList()
         val queueEmpty = isQueueEmpty()
         val rlReady = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
         return listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
+                label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
                 enabled = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED) && rlReady && queueEmpty,
                 onClick = { commandQueue.customCommand(CommandGetPodStatus(), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_refresh_status), false)) }
@@ -327,7 +331,7 @@ class ErosOverviewViewModel @Inject constructor(
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_play_test_beep),
-                icon = Icons.Filled.VolumeUp,
+                icon = Icons.AutoMirrored.Filled.VolumeUp,
                 category = ActionCategory.MANAGEMENT,
                 enabled = rlReady && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java),
                 visible = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED),
@@ -381,17 +385,6 @@ class ErosOverviewViewModel @Inject constructor(
 
     private fun onActivatePodClicked() {
         viewModelScope.launch {
-            val profile = profileFunction.getProfile()
-            if (profile == null) {
-                _events.tryEmit(
-                    OmnipodOverviewEvent.ShowDialog(
-                        rh.gs(CoreUiR.string.warning),
-                        rh.gs(CommonR.string.omnipod_common_error_failed_to_set_profile_empty_profile)
-                    )
-                )
-                return@launch
-            }
-
             val type = if (podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIMING_COMPLETED)) {
                 ActivationType.SHORT
             } else {
@@ -469,19 +462,21 @@ class ErosOverviewViewModel @Inject constructor(
         return PLACEHOLDER to StatusLevel.NORMAL
     }
 
-    private fun buildLastBolus(): Pair<String, StatusLevel> {
+    private fun buildLastBolus(): Pair<String?, StatusLevel> {
         if (podStateManager.isPodActivationCompleted && podStateManager.hasLastBolus()) {
             var text = ch.insulinAmountAgoString(
                 PumpInsulin(omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount)),
-                readableDuration(podStateManager.lastBolusStartTime)
+                podStateManager.lastBolusStartTime.millis
             )
-            if (!podStateManager.isLastBolusCertain) {
-                text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
-                return text to StatusLevel.CRITICAL
+            text?.let {
+                if (!podStateManager.isLastBolusCertain) {
+                    text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                    return text to StatusLevel.CRITICAL
+                }
+                return text to StatusLevel.NORMAL
             }
-            return text to StatusLevel.NORMAL
         }
-        return PLACEHOLDER to StatusLevel.NORMAL
+        return null to StatusLevel.NORMAL
     }
 
     private fun buildTempBasal(): Pair<String, StatusLevel> {
@@ -489,14 +484,10 @@ class ErosOverviewViewModel @Inject constructor(
             if (!podStateManager.hasTempBasal()) {
                 return "???" to StatusLevel.CRITICAL
             }
-            val now = DateTime.now()
-            val minutesRunning = Duration(podStateManager.tempBasalStartTime, now).standardMinutes
-            var text = rh.gs(
-                CommonR.string.omnipod_common_overview_temp_basal_concentration_value,
-                ch.basalRateString(PumpRate(podStateManager.tempBasalAmount), true),
-                dateUtil.timeString(podStateManager.tempBasalStartTime.millis),
-                minutesRunning,
-                podStateManager.tempBasalDuration.standardMinutes
+            var text = ch.basalTbrString(
+                rate = PumpRate(podStateManager.tempBasalAmount),
+                startTime = podStateManager.tempBasalStartTime.millis,
+                durationInMin = podStateManager.tempBasalDuration.standardMinutes.toInt()
             )
             if (!podStateManager.isTempBasalCertain) {
                 text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
@@ -514,11 +505,12 @@ class ErosOverviewViewModel @Inject constructor(
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
         if (podStateManager.reservoirLevel == null) {
-            return rh.gs(CommonR.string.omnipod_common_overview_reservoir_concentration_value_over50, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
+            return rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
         }
+        val reservoirLevel = PumpInsulin(podStateManager.reservoirLevel)
         val lowThreshold = (omnipodAlertUtil.lowReservoirAlertUnits ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
-        val text = ch.insulinAmountString(PumpInsulin(podStateManager.reservoirLevel))
-        val level = if (ch.fromPump(PumpInsulin(podStateManager.reservoirLevel)) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
+        val text = ch.insulinAmountString(reservoirLevel)
+        val level = if (ch.fromPump(reservoirLevel) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
         return text to level
     }
 

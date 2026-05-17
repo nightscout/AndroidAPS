@@ -15,14 +15,16 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.SnackbarMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,11 +42,12 @@ class BgSourceViewModel @Inject constructor(
     internal val rh: ResourceHelper,
     internal val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
-    val uiState: StateFlow<BgSourceUiState>
-        field = MutableStateFlow(BgSourceUiState())
+    private val _uiState = MutableStateFlow(BgSourceUiState())
+    val uiState: StateFlow<BgSourceUiState> = _uiState.asStateFlow()
 
     /** Default time range for BG source history */
     private val defaultHistoryHours = 36L
@@ -62,7 +65,7 @@ class BgSourceViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.glucoseValues.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -80,22 +83,17 @@ class BgSourceViewModel @Inject constructor(
                     }
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         glucoseValues = data,
                         duplicateIds = duplicateIds,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load BG data", e)
-                uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading BG data")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading BG data", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -104,7 +102,7 @@ class BgSourceViewModel @Inject constructor(
      * Load more historical data (for infinite scroll)
      */
     fun loadMoreData() {
-        uiState.update { it.copy(historyHours = it.historyHours + 24L) }
+        _uiState.update { it.copy(historyHours = it.historyHours + 24L) }
         loadData()
     }
 
@@ -120,13 +118,6 @@ class BgSourceViewModel @Inject constructor(
     }
 
     /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
-    }
-
-    /**
      * Format glucose value to string in user's preferred units
      */
     fun formatGlucoseValue(value: Double): String = profileUtil.fromMgdlToStringInUnits(value)
@@ -135,7 +126,7 @@ class BgSourceViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: GV) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -147,7 +138,7 @@ class BgSourceViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -159,7 +150,7 @@ class BgSourceViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: GV) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -206,7 +197,7 @@ class BgSourceViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete BG readings", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting BG readings")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting BG readings", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -222,6 +213,5 @@ data class BgSourceUiState(
     val isLoading: Boolean = true,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<GV> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null,
     val historyHours: Long = 36L
 )

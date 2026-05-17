@@ -1,7 +1,6 @@
 package app.aaps.ui.compose.overview.graphs
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,11 +16,14 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.graph.vico.Square
+import app.aaps.core.interfaces.overview.graph.ActivityGraphData
 import app.aaps.core.interfaces.overview.graph.BasalGraphData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.EpsGraphPoint
+import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.TargetLineData
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcProfile
@@ -34,6 +36,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalBox
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -44,6 +47,10 @@ import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 
 /** Series identifiers */
+/** Basal on BG graph — deprecated, now shown as flipped overlay on IOB graph. Set to true to restore. */
+@Deprecated("Basal moved to IOB graph as flipped overlay")
+private const val showBasalOnBgGraph = false
+
 private const val SERIES_REGULAR = "regular"
 private const val SERIES_BUCKETED = "bucketed"
 private const val SERIES_PRED_IOB = "pred_iob"
@@ -54,6 +61,20 @@ private const val SERIES_PRED_ZT = "pred_zt"
 
 /** All prediction series identifiers */
 private val PREDICTION_SERIES = listOf(SERIES_PRED_IOB, SERIES_PRED_COB, SERIES_PRED_ACOB, SERIES_PRED_UAM, SERIES_PRED_ZT)
+
+private fun interpolateBgAtTimestamp(timestamp: Long, sortedPoints: List<BgDataPoint>): Double {
+    if (sortedPoints.isEmpty()) return 0.0
+    val before = sortedPoints.lastOrNull { it.timestamp <= timestamp }
+    val after = sortedPoints.firstOrNull { it.timestamp > timestamp }
+    return when {
+        before == null -> after!!.value
+        after == null -> before.value
+        else -> {
+            val t = (timestamp - before.timestamp).toDouble() / (after.timestamp - before.timestamp).toDouble()
+            before.value + t * (after.value - before.value)
+        }
+    }
+}
 
 /**
  * BG Graph using Vico — dual-layer chart.
@@ -70,23 +91,35 @@ private val PREDICTION_SERIES = listOf(SERIES_PRED_IOB, SERIES_PRED_COB, SERIES_
 @Composable
 fun BgGraphCompose(
     viewModel: GraphViewModel,
+    bgOverlays: List<SeriesType>,
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
+    nowTimestamp: Long,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently - each triggers recomposition only when it changes
     val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val bucketedData by viewModel.bucketedDataFlow.collectAsStateWithLifecycle()
-    val predictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
-    val basalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
+    val showPredictions = SeriesType.PREDICTIONS in bgOverlays
+    val rawPredictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
+    val predictions = if (showPredictions) rawPredictions else emptyList()
+    val rawBasalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
-    val epsPoints by viewModel.epsGraphFlow.collectAsStateWithLifecycle()
 
-    // Use derived time range or fall back to default (last 24 hours)
+    // Basal on BG graph is deprecated — now shown as flipped overlay on IOB graph instead.
+    // Keep the layer structure intact (dummy data) to avoid chart restructuring.
+    @Suppress("DEPRECATION")
+    val basalData = if (showBasalOnBgGraph) rawBasalData else BasalGraphData(emptyList(), emptyList(), 0.0)
+    val epsPoints by viewModel.epsGraphFlow.collectAsStateWithLifecycle()
+    val showActivity = SeriesType.ACTIVITY in bgOverlays
+    val activityData by viewModel.activityGraphFlow.collectAsStateWithLifecycle()
+    val chartConfig by viewModel.chartConfigFlow.collectAsStateWithLifecycle()
+
+    // Use derived time range or fall back to default (last GRAPH_TIME_RANGE_HOURS hours)
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
         val now = System.currentTimeMillis()
-        val dayAgo = now - 24 * 60 * 60 * 1000L
+        val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }
 
@@ -103,6 +136,7 @@ fun BgGraphCompose(
     val highColor = AapsTheme.generalColors.bgHigh
     val basalColor = AapsTheme.elementColors.tempBasal
     val targetLineColor = AapsTheme.elementColors.tempTarget
+    val activityColor = AapsTheme.elementColors.activity
 
     // Prediction colors
     val iobPredColor = AapsTheme.generalColors.iobPrediction
@@ -128,7 +162,9 @@ fun BgGraphCompose(
     suspend fun rebuildChart(
         currentBasalData: BasalGraphData,
         currentTargetData: TargetLineData,
-        currentEpsPoints: List<EpsGraphPoint>
+        currentEpsPoints: List<EpsGraphPoint>,
+        currentActivityData: ActivityGraphData,
+        currentMaxBgY: Double
     ) {
         val regularPoints = seriesRegistry[SERIES_REGULAR] ?: emptyList()
         val bucketedPoints = seriesRegistry[SERIES_BUCKETED] ?: emptyList()
@@ -159,7 +195,7 @@ fun BgGraphCompose(
                 // Prediction series - each type as a separate line
                 for (predSeries in PREDICTION_SERIES) {
                     val predPoints = seriesRegistry[predSeries]
-                    if (predPoints != null && predPoints.isNotEmpty()) {
+                    if (!predPoints.isNullOrEmpty()) {
                         val dataPoints = predPoints
                             .map { timestampToX(it.timestamp, minTimestamp) to it.value }
                             .sortedBy { it.first }
@@ -210,18 +246,47 @@ fun BgGraphCompose(
                 }
             }
 
-            // Block 4 → EPS layer (layer 3, end axis — Y-values normalized to basal coordinate space)
-            // EPS shares End axis with basal, so Y-values must fit within basalMaxY range.
-            // Place icons at 75% of chart height for 100% profile, scaled proportionally.
+            // Block 4 → EPS layer (layer 3, start axis — Y at interpolated BG value at switch timestamp)
             lineSeries {
                 if (currentEpsPoints.isNotEmpty()) {
-                    val epsBaseline = currentBasalData.maxBasal * 4.0 * 0.75 // 75% of basalMaxY
+                    val allBgPoints = (regularPoints + bucketedPoints).sortedBy { it.timestamp }
                     val pts = currentEpsPoints
-                        .map { timestampToX(it.timestamp, minTimestamp) to (it.originalPercentage / 100.0 * epsBaseline) }
+                        .mapNotNull { eps ->
+                            val bgY = interpolateBgAtTimestamp(eps.timestamp, allBgPoints)
+                            if (bgY > 0.0) timestampToX(eps.timestamp, minTimestamp) to bgY else null
+                        }
                         .sortedBy { it.first }
-                    series(x = pts.map { it.first }, y = pts.map { it.second })
+                    if (pts.isNotEmpty()) series(x = pts.map { it.first }, y = pts.map { it.second })
+                    else series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                 } else {
                     // Dummy series - invisible at y=0
+                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                }
+            }
+
+            // Block 5 → Activity layer (layer 4, start axis — Y-values normalized to BG coordinate space)
+            // Scale so maxActivity maps to 80% of maxBgY (same as legacy: maxY * 0.8 / maxIAValue)
+            lineSeries {
+                val maxAct = currentActivityData.maxActivity
+                if (!showActivity || maxAct <= 0.0 || currentActivityData.activity.size < 2) {
+                    // Activity disabled or no data — emit dummy series (history + prediction)
+                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                    return@lineSeries
+                }
+                val scaleFactor = currentMaxBgY * 0.8 / maxAct
+
+                val pts = currentActivityData.activity
+                    .map { timestampToX(it.timestamp, minTimestamp) to (it.value * scaleFactor) }
+                    .sortedBy { it.first }
+                series(x = pts.map { it.first }, y = pts.map { it.second })
+
+                if (currentActivityData.activityPrediction.size >= 2) {
+                    val predPts = currentActivityData.activityPrediction
+                        .map { timestampToX(it.timestamp, minTimestamp) to (it.value * scaleFactor) }
+                        .sortedBy { it.first }
+                    series(x = predPts.map { it.first }, y = predPts.map { it.second })
+                } else {
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                 }
             }
@@ -240,13 +305,16 @@ fun BgGraphCompose(
     }
 
     // Single LaunchedEffect for all data - ensures atomic updates
-    LaunchedEffect(bgReadings, bucketedData, predictionsByType, basalData, targetData, epsPoints, stableTimeRange) {
+    LaunchedEffect(bgReadings, bucketedData, predictionsByType, basalData, targetData, epsPoints, activityData, showActivity, chartConfig, stableTimeRange) {
         seriesRegistry[SERIES_REGULAR] = bgReadings
         seriesRegistry[SERIES_BUCKETED] = bucketedData
         for ((key, points) in predictionsByType) {
             seriesRegistry[key] = points
         }
-        rebuildChart(basalData, targetData, epsPoints)
+        // maxBgY clamped against highMark (same as legacy GraphData.maxY logic)
+        val allBgValues = (bgReadings + bucketedData).map { it.value }
+        val maxBgY = if (allBgValues.isNotEmpty()) maxOf(allBgValues.max(), chartConfig.highMark) else chartConfig.highMark
+        rebuildChart(basalData, targetData, epsPoints, activityData, maxBgY)
     }
 
     // Build lookup map for BUCKETED points: x-value -> BgDataPoint (for PointProvider)
@@ -330,7 +398,7 @@ fun BgGraphCompose(
                 gapLength = 2.dp
             ),
             areaFill = null,
-            pointConnector = Square
+            interpolator = Square
         )
     }
 
@@ -340,7 +408,7 @@ fun BgGraphCompose(
             fill = LineCartesianLayer.LineFill.single(Fill(basalColor)),
             stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.dp),
             areaFill = LineCartesianLayer.AreaFill.single(Fill(basalColor.copy(alpha = 0.3f))),
-            pointConnector = Square
+            interpolator = Square
         )
     }
 
@@ -357,7 +425,7 @@ fun BgGraphCompose(
             fill = LineCartesianLayer.LineFill.single(Fill(targetLineColor)),
             stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.dp),
             areaFill = null,
-            pointConnector = Square
+            interpolator = Square
         )
     }
 
@@ -385,8 +453,36 @@ fun BgGraphCompose(
 
     val epsLines = remember(epsLine) { listOf(epsLine) }
 
+    // =========================================================================
+    // Activity layer lines (layer 4) — solid historical + dashed prediction
+    // =========================================================================
+
+    val activityHistLine = remember(activityColor) {
+        LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(activityColor)),
+            stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.5.dp),
+            areaFill = null
+        )
+    }
+
+    val activityPredLine = remember(activityColor) {
+        LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(activityColor)),
+            stroke = LineCartesianLayer.LineStroke.Dashed(
+                thickness = 1.5.dp,
+                cap = StrokeCap.Round,
+                dashLength = 4.dp,
+                gapLength = 4.dp
+            ),
+            areaFill = null
+        )
+    }
+
+    val activityLines = remember(activityHistLine, activityPredLine) {
+        listOf(activityHistLine, activityPredLine)
+    }
+
     // Basal Y-axis range: maxBasal * 4 so basal occupies ~25% of chart height
-    // EPS layer shares End axis with basal, so both must use the same Y-range (basalMaxY)
     val basalMaxY = remember(basalData.maxBasal) {
         if (basalData.maxBasal > 0.0) basalData.maxBasal * 4.0 else 1.0
     }
@@ -396,12 +492,34 @@ fun BgGraphCompose(
     // =========================================================================
 
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
-    val decorations = remember(nowLine) { listOf(nowLine) }
+
+    // In-range belt — translucent band between lowMark and highMark on the BG axis
+    val lowMark = chartConfig.lowMark
+    val highMark = chartConfig.highMark
+    val inRangeBox = remember(lowMark, highMark, inRangeColor) {
+        HorizontalBox(
+            y = { lowMark..highMark },
+            box = ShapeComponent(fill = Fill(inRangeColor.copy(alpha = 0.2f))),
+            verticalAxisPosition = Axis.Position.Vertical.Start
+        )
+    }
+
+    val decorations = remember(inRangeBox, nowLine) { listOf(inRangeBox, nowLine) }
 
     // =========================================================================
-    // Chart — dual layer
+    // Range providers — hoisted out of rememberCartesianChart so keys are re-evaluated on recomposition
+    // =========================================================================
+
+    val startAxisRangeProvider = remember(maxX) {
+        CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
+    }
+    val endAxisRangeProvider = remember(maxX, basalMaxY) {
+        CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = basalMaxY)
+    }
+
+    // =========================================================================
+    // Chart — multi layer
     // =========================================================================
 
     CartesianChartHost(
@@ -409,30 +527,32 @@ fun BgGraphCompose(
             // Layer 0: BG (start axis, visible)
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(bgLines),
-                rangeProvider = remember(maxX) { CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX) },
+                rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
             // Layer 1: Basal (end axis, hidden — no endAxis parameter)
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(basalLines),
-                rangeProvider = remember(maxX, basalMaxY) {
-                    CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = basalMaxY)
-                },
+                rangeProvider = endAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.End
             ),
             // Layer 2: Target line (start axis — shares BG Y-axis range)
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(targetLines),
-                rangeProvider = remember(maxX) { CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX) },
+                rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            // Layer 3: EPS (end axis — shares basalMaxY range, EPS Y-values normalized in rebuildChart)
+            // Layer 3: EPS (start axis — Y at interpolated BG value, same range as BG layer)
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(epsLines),
-                rangeProvider = remember(maxX, basalMaxY) {
-                    CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = basalMaxY)
-                },
-                verticalAxisPosition = Axis.Position.Vertical.End
+                rangeProvider = startAxisRangeProvider,
+                verticalAxisPosition = Axis.Position.Vertical.Start
+            ),
+            // Layer 4: Activity (start axis — shares BG Y-axis range, values normalized in rebuildChart)
+            rememberLineCartesianLayer(
+                lineProvider = LineCartesianLayer.LineProvider.series(activityLines),
+                rangeProvider = startAxisRangeProvider,
+                verticalAxisPosition = Axis.Position.Vertical.Start
             ),
             startAxis = VerticalAxis.rememberStart(
                 itemPlacer = VerticalAxis.ItemPlacer.step({ 1.0 }),
@@ -454,9 +574,7 @@ fun BgGraphCompose(
             getXStep = { 1.0 }
         ),
         modelProducer = modelProducer,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(100.dp),
+        modifier = modifier.fillMaxWidth(),
         scrollState = scrollState,
         zoomState = zoomState
     )

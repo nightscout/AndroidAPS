@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
@@ -68,4 +69,7 @@
     <string name="temp_basal_absolute_rate">%1$.2f V/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.keys.IntKey
 import app.aaps.shared.tests.TestBaseWithProfile
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -53,10 +52,4 @@ class RandomBgPluginTest : TestBaseWithProfile() {
         Assertions.assertNull(randomBgPlugin.handler)
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        randomBgPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

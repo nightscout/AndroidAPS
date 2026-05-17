@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AAPS</string>
-    <string name="label_actions_activity">AAPS</string>
     <string name="label_watchface_circle">AAPS(Kruhový)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (vlastní)</string>
-    <string name="label_actions_tile">AAPS(Akce)</string>
-    <string name="label_temp_target_tile">AAPS(Doč. cíl)</string>
-    <string name="label_quick_wizard_tile">AAPS(Rychlý bolus)</string>
-    <string name="label_user_action_tile">AAPS (akce uživatele)</string>
-    <string name="label_warning_sync">Žádná data!</string>
-    <string name="label_warning_old">Stará data!</string>
-    <string name="label_warning_since">Od %1$s</string>
-    <string name="label_warning_sync_aaps">Synchronizovat s AAPS!</string>
+    <string name="label_actions_tile">Akce</string>
+    <string name="label_temp_target_tile">Dočasný cíl</string>
+    <string name="label_quick_wizard_tile">Rychlý průvodce</string>
+    <string name="label_user_action_tile">Uživatelská akce</string>
+    <string name="label_scene_tile">Scéna</string>
     <string name="msg_warning_sync">Od %1$s nebyla obdržena žádná data! Zkontrolujte, zda AAPS na telefonu odesílá data ke sledování</string>
     <string name="msg_warning_old">AAPS data jsou %1$s stará! Zkontrolujte svůj senzor, xDrip +, NS, AAPS konfigurace nebo ostatní!</string>
     <string name="pref_vibrate_on_bolus">Vibrovat při bolusu</string>
@@ -20,6 +15,7 @@
     <string name="pref_display_settings">Displej</string>
     <string name="pref_graph_settings">Graf</string>
     <string name="pref_interface_settings">Rozhraní</string>
+    <string name="pref_tile_settings">Dlaždice</string>
     <string name="pref_others_settings">Ostatní</string>
     <string name="pref_complication_settings">Komplikace</string>
     <string name="pref_show_date">Zobrazit datum</string>
@@ -56,11 +52,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Design zadávání</string>
-    <string name="pref_default">Výchozí</string>
-    <string name="pref_quick_righty">Rychle zprava</string>
-    <string name="pref_quick_lefty">Rychle zleva</string>
-    <string name="pref_modern_sparse">Modern Sparse</string>
     <string name="pref_big_numbers">Velké číslice</string>
     <string name="pref_ring_history">Kroužek Historie</string>
     <string name="pref_light_ring_history">Světlý kroužek Historie</string>
@@ -75,6 +66,7 @@
     <string name="pref_moreWatchfaceSettings">Další nastavení ciferníku</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Podívejte se na konfiguraci hodinek prosím.</string>
     <string name="menu_tempt">Dočasný cíl</string>
+    <string name="menu_tempt_long">Dočasný cíl</string>
     <string name="menu_wizard">Kalkulačka</string>
     <string name="menu_wizard_short">Kalk</string>
     <string name="menu_treatment">Ošetření</string>
@@ -84,32 +76,41 @@
     <string name="menu_ecarb">eSacharidy</string>
     <string name="menu_settings">Nastavení</string>
     <string name="menu_status">Stav</string>
+    <string name="menu_bg_graph">Graf glykémie</string>
     <string name="menu_resync">Re-Sync</string>
     <string name="menu_prime_fill">Plnění/doplňování</string>
     <string name="menu_none">Nic</string>
     <string name="menu_default">Výchozí</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Trvání\n[minuty]</string>
     <string name="action_tempt_confirmation">Požadován dočasný cíl</string>
     <string name="action_quick_wizard_confirmation">Požadován rychlý bolus</string>
     <string name="action_user_action_confirmation">Požadována Uživatelská akce</string>
+    <string name="action_scene_confirmation">Aktivovat scénu</string>
+    <string name="scene_stop">ZASTAVIT</string>
     <string name="action_treatment_confirmation">Požadováno ošetření</string>
     <string name="action_bolus_confirmation">Požadován bolus</string>
     <string name="action_wizard_confirmation">Požadován kalkulátor</string>
     <string name="action_fill_confirmation">Požadováno plnění</string>
     <string name="action_ecarb_confirmation">Požadovány sacharidy</string>
     <string name="action_profile_switch_confirmation">Požadováno přepnutí profilu</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Cíl\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Nízká\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Vysoká\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Cíl [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Dolní [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Horní [%s]</string>
     <string name="action_carbs">Sacharidy</string>
     <string name="action_carbs_gram">Sacharidy [g]</string>
     <string name="action_ecarbs">eSacharidy</string>
     <string name="action_percentage">Procento\n[%]</string>
     <string name="action_start_minutes">Spustit\n[minuty]</string>
-    <string name="action_duration_h">Trvání [h]</string>
     <string name="action_duration_hours">Trvání\n[hodiny]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Čas: %1$s</string>
+    <string name="ecarbs_confirm_duration">Trvání: %1$d h</string>
+    <string name="action_confirm_reason">Důvod: %1$s</string>
+    <string name="action_confirm_duration">Trvání: %1$s</string>
+    <string name="action_confirm_timeshift">Časový posun: %1$s</string>
     <string name="action_insulin">Inzulín</string>
     <string name="action_insulin_units">Inzulin [U]</string>
     <string name="action_preset_1">Předvolba 1</string>
@@ -148,7 +149,6 @@
     <string name="color_name_gray">šedá</string>
     <string name="color_name_bluegray">modrošedá</string>
     <string name="color_name_white">bílá</string>
-    <string name="color_name_black">černá</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Zjednodušené rozhraní</string>
     <string name="pref_vibrate_hourly">Vibrovat každou hodinu</string>
@@ -181,8 +181,6 @@
     <string name="tile_no_config">Není dostupná žádná konfigurace</string>
     <string name="wear_control_not_enabled">Ovládání hodinkami vypnuto</string>
     <string name="wear_control_no_data">Žádná data k dispozici</string>
-    <string name="increment">zvýšení</string>
-    <string name="decrement">snížení</string>
     <string name="abbreviation_average">prům</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -195,11 +193,10 @@
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">starý</string>
-    <string name="old_warning">!starý!</string>
-    <string name="error">!chyba!</string>
+    <string name="error">Chyba</string>
     <string name="pref_heartRateSampling">Tepová frekvence</string>
     <string name="pref_heartRateSmoothing">Vyhlazování HR</string>
     <string name="pref_stepsSampling">Povolit počet kroků</string>
@@ -218,6 +215,7 @@
     <string name="complication_full_status">Kompletní stav</string>
     <string name="complication_full_status_flipped">Kompletní stav (obráceně)</string>
     <string name="complication_blood_glucose">Glykémie</string>
+    <string name="complication_blood_glucose_large">Glykémie (velká)</string>
     <string name="complication_blood_glucose_ext1">Glykémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glykémie Ext2</string>
     <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
@@ -225,20 +223,29 @@
     <string name="complication_br_cob_iob_ext2">Bazál, COB a IOB Ext2</string>
     <string name="complication_br_iob">Bazál &amp; IOB</string>
     <string name="complication_br">Bazál</string>
+    <string name="complication_br_tt">Bazál a cíl</string>
+    <string name="complication_target">Cíl</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
     <string name="complication_cob_icon">Ikona COB</string>
     <string name="complication_cob_detailed">Detailní COB</string>
     <string name="complication_iob_icon">Ikona IOB</string>
     <string name="complication_iob_detailed">Detailní IOB</string>
     <string name="complication_uploader_phone_battery">Baterie telefonu/uploaderu</string>
-    <string name="status_loop_state">Stav smyčky</string>
-    <string name="label_loop_state_title">AAPS (Stav smyčky)</string>
-    <string name="action_loop_state_selected">Požadován stav smyčky</string>
+    <string name="status_running_mode">Provozní režim</string>
+    <string name="label_running_mode_title">Režim smyčky</string>
+    <string name="label_bg_graph_tile">Graf glykémie</string>
+    <string name="tile_tap_action">Akce při klepnutí</string>
+    <string name="tile_graph_time_range">Časové rozmezí</string>
+    <string name="tile_tap_bg_graph">Graf glykémie</string>
+    <string name="tile_tap_main_menu">Hlavní nabídka</string>
+    <string name="tile_tap_loop_status">Stav smyčky</string>
+    <string name="action_running_mode_selected">Vyžádán provozní režim</string>
+    <string name="title_activity_disconnect_pump">Odpojit pumpu</string>
+    <string name="title_activity_suspend_loop">Pozastavit smyčku</string>
     <string name="wizard_total_insulin">Celkový inzulín</string>
     <string name="wizard_calculation">Výpočet</string>
     <string name="wizard_carbs_format">%1$d g sacharidů</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Přejetím vlevo potvrďte</string>
     <string name="wizard_result_bg">GL</string>
     <string name="wizard_result_bg_tt">GL (DC: %1$s)</string>
     <string name="wizard_result_trend">15min trend</string>
@@ -250,8 +257,7 @@
     <string name="wizard_result_total">Celkem</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Korekce %1$d%%</string>
-    <string name="expand_calculation_details">Kliknutím rozbalíte podrobnosti výpočtu</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_confirmation_sent">Odesláno</string>
     <string name="tile_settings">Nastavení dlaždice</string>
     <string name="loop_status_error">Nepodařilo se načíst stav</string>
@@ -268,6 +274,8 @@
     <string name="loop_status_lgs">Ochrana před nízkou glykémií</string>
     <string name="loop_status_disabled">Smyčka zakázána</string>
     <string name="loop_status_suspended">Smyčka pozastavena</string>
+    <string name="loop_status_pump_suspended">Pumpa pozastavena</string>
+    <string name="loop_status_dst_suspended">Pozastaveno letním časem</string>
     <string name="loop_status_disconnected">Pumpa odpojena</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Neznámý</string>
@@ -283,5 +291,10 @@
     <string name="loop_status_temp_target">Dočasný cíl</string>
     <string name="loop_status_target_range">Rozsah</string>
     <string name="loop_status_target">Cíl</string>
+    <string name="loop_status_adjusted_target">Upravený cíl</string>
     <string name="loop_status">Stav smyčky</string>
+    <string name="loop_status_refresh">Obnovit</string>
+    <string name="confirm">Potvrdit</string>
+    <string name="request">Požadavek</string>
+    <string name="constraint_applied">Omezení aplikováno!</string>
 </resources>

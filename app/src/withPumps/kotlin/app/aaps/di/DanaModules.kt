@@ -107,7 +107,6 @@ class DanaModules {
                 aapsLogger.debug(LTag.PUMP, "Emulator: auto-enabling ${targetPlugin.javaClass.simpleName} for variant $variant")
                 for (plugin in listOf(danaRPlugin, danaRKoreanPlugin, danaRv2Plugin)) {
                     plugin.setPluginEnabled(PluginType.PUMP, plugin == targetPlugin)
-                    plugin.setFragmentVisible(PluginType.PUMP, plugin == targetPlugin)
                 }
                 configBuilder.storeSettings("EmulatorVariantAutoSwitch")
             }

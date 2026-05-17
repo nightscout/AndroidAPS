@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">İES (DIA) hakkında doğru olan nedir?</string>
     <string name="dia_label_exam">İnsülin Etki Süresi (İES)</string>
-    <string name="dia_profile">Profilinizde İES değerini ayarlamalısınız.</string>
     <string name="dia_minimumis5h">İzin verilen minimum değer 5 saattir.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">AAPS\'den önce pompanızda kullandığınız İES değerinin doğru olduğundan eminseniz, döngüye başladığınızda bunu değiştirmenize gerek yoktur.</string>
@@ -75,9 +74,7 @@
     <string name="prerequisites2_supportedcgm">Telefonda/cihazda kan şekeri değerlerini almak için desteklenen bir CGM ve uygulama.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">AAPS\'i güncelleme</string>
-    <string name="update_git">Git\'in bilgisayarınızda kurulu ve yapılandırılmış olması gerekir.</string>
     <string name="update_asap">AAPS\'nin güncellenmiş sürümleri yayınlandığında, önceki sürümler belirli bir süre sonra uzaktan sınırlandırılabilir.</string>
-    <string name="update_keys">Anahtar deponuzun konumunu kaydetmeli ve not etmeli ve önceki yüklemenizde olduğu gibi güncellemeler için aynı imzalama anahtarını kullanmalısınız.</string>
     <string name="update_askfriend">Apk oluşturmakta zorluk çekiyorsanız, bir arkadaşınız tarafından oluşturulmuş bir apk yükleyebilirsiniz.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Sorun giderme</string>

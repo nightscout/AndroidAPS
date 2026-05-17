@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.objects.constraints.ConstraintObject
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -51,21 +50,21 @@ class PumpWithConcentrationImpl @Inject constructor(
     override fun isConnecting(): Boolean = activePumpInternal.isConnecting()
     override fun isHandshakeInProgress(): Boolean = activePumpInternal.isHandshakeInProgress()
     override fun waitForDisconnectionInSeconds(): Int = activePumpInternal.waitForDisconnectionInSeconds()
-    override fun getPumpStatus(reason: String) = activePumpInternal.getPumpStatus(reason)
+    override suspend fun getPumpStatus(reason: String) = activePumpInternal.getPumpStatus(reason)
     override val lastDataTime: StateFlow<Long> get() = activePumpInternal.lastDataTime
     override val lastBolusTime: StateFlow<Long?> get() = activePumpInternal.lastBolusTime
     override val lastBolusAmount: StateFlow<PumpInsulin?> get() = activePumpInternal.lastBolusAmount
     override val reservoirLevel: StateFlow<PumpInsulin> get() = activePumpInternal.reservoirLevel
     override val batteryLevel: StateFlow<Int?> get() = activePumpInternal.batteryLevel
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = activePumpInternal.cancelTempBasal(enforceNew)
-    override fun cancelExtendedBolus(): PumpEnactResult = activePumpInternal.cancelExtendedBolus()
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = activePumpInternal.cancelTempBasal(enforceNew)
+    override suspend fun cancelExtendedBolus(): PumpEnactResult = activePumpInternal.cancelExtendedBolus()
     override fun updateExtendedJsonStatus(extendedStatus: JSONObject) = activePumpInternal.updateExtendedJsonStatus(extendedStatus)
     override fun manufacturer(): ManufacturerType = activePumpInternal.manufacturer()
     override fun model(): PumpType = activePumpInternal.model()
     override fun serialNumber(): String = activePumpInternal.serialNumber()
     override fun pumpSpecificShortStatus(veryShort: Boolean): String = activePumpInternal.pumpSpecificShortStatus(veryShort)
     override val isFakingTempsByExtendedBoluses: Boolean get() = activePumpInternal.isFakingTempsByExtendedBoluses
-    override fun loadTDDs(): PumpEnactResult = activePumpInternal.loadTDDs()
+    override suspend fun loadTDDs(): PumpEnactResult = activePumpInternal.loadTDDs()
     override fun canHandleDST(): Boolean = activePumpInternal.canHandleDST()
     override fun getCustomActions(): List<CustomAction>? = activePumpInternal.getCustomActions()
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? = activePumpInternal.executeCustomCommand(customCommand)
@@ -98,38 +97,38 @@ class PumpWithConcentrationImpl @Inject constructor(
         activePumpInternal.executeCustomAction(customActionType)
     }
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult = error("Must no be called directly. Use: setNewBasalProfile(profile: EffectiveProfile)")
-    override fun setNewBasalProfile(profile: EffectiveProfile): PumpEnactResult = activePumpInternal.setNewBasalProfile(profile.toPump())
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult = error("Must no be called directly. Use: setNewBasalProfile(profile: EffectiveProfile)")
+    override suspend fun setNewBasalProfile(profile: EffectiveProfile): PumpEnactResult = activePumpInternal.setNewBasalProfile(profile.toPump())
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean = error("Must no be called directly. Use: isThisProfileSet(profile: EffectiveProfile)")
     override fun isThisProfileSet(profile: EffectiveProfile): Boolean = activePumpInternal.isThisProfileSet(profile.toPump())
 
     override val baseBasalRate: PumpRate get() = activePumpInternal.baseBasalRate
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = activePumpInternal.deliverTreatment(
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = activePumpInternal.deliverTreatment(
         detailedBolusInfo.also { if (it.bolusType != BS.Type.PRIMING) it.insulin /= concentration }
     )
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
-        runBlocking { profileFunction.getProfile() }?.let { profile ->
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+        profileFunction.getProfile()?.let { profile ->
             constraintsChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value().let { absoluteAfterConstrains ->
                 activePumpInternal.setTempBasalAbsolute(absoluteAfterConstrains / concentration, durationInMinutes, enforceNew, tbrType)
             }
         } ?: error("No profile running")
 
-    override fun setTempBasalPercent(
+    override suspend fun setTempBasalPercent(
         percent: Int,
         durationInMinutes: Int,
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult =
-        runBlocking { profileFunction.getProfile() }?.let { profile ->
+        profileFunction.getProfile()?.let { profile ->
             constraintsChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value().let { percentAfterConstraint ->
                 activePumpInternal.setTempBasalPercent(percentAfterConstraint, durationInMinutes, enforceNew, tbrType)
             }
         } ?: error("No profile running")
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
         activePumpInternal.setExtendedBolus(insulin / concentration, durationInMinutes)
 
     /** PumpWithConcentration.pumpDescription should be used instead of Pump.pumpDescription outside Pump Driver to have corrected values */

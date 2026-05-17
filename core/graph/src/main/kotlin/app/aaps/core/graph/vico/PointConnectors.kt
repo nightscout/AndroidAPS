@@ -1,42 +1,40 @@
 package app.aaps.core.graph.vico
 
-import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer.PointConnector
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 
 /**
- * Custom Vico PointConnector that creates a stepped (staircase) line appearance.
+ * Custom Vico Interpolator that creates a stepped (staircase) line appearance.
  *
- * This connector draws horizontal-then-vertical segments between data points instead of
- * diagonal lines, creating a "square" or "stepped" visual effect. This is ideal for
- * displaying profile data that changes at discrete time blocks rather than gradually.
+ * Draws horizontal-then-vertical segments between data points instead of diagonal
+ * lines, producing right-angle corners ("square" / stepped look). Useful for profile
+ * data that changes at discrete time blocks (basal rates, IC, ISF, target BG).
  *
- * **Visual Behavior:**
- * - From point (x1, y1) to point (x2, y2):
- *   1. Draw horizontal line from (x1, y1) to (x2, y1)
- *   2. Draw vertical line from (x2, y1) to (x2, y2)
- * - Creates right-angle corners instead of diagonal connections
- * - Results in a stepped/staircase appearance
+ * Between point (x1, y1) and point (x2, y2):
+ *   1. horizontal line from (x1, y1) to (x2, y1)
+ *   2. vertical line from (x2, y1) to (x2, y2)
  *
- * **Use Cases in AndroidAPS:**
- * - Basal rate profiles (rates change at specific times, not gradually)
- * - IC (Insulin to Carb) ratios (discrete time blocks with different ratios)
- * - ISF (Insulin Sensitivity Factor) profiles (sensitivity changes at specific times)
- * - Target BG ranges (target values change at discrete time boundaries)
- *
- * This visual representation accurately reflects how profile values actually work in
- * insulin therapy: values remain constant within a time block and change abruptly at
- * block boundaries, rather than transitioning smoothly.
- *
- * **Example:**
- * ```
- * Diagonal connector:     Square connector (this):
- *     •                        •——
- *    /                              |
- *   /                               |
- *  •                                •
- * ```
+ * Replaces the older `PointConnector`-based implementation (Vico 2.x API),
+ * which is now deprecated in favor of `Interpolator`.
  */
-val Square: PointConnector = PointConnector { _, path, _, y1, x2, y2 ->
-    path.lineTo(x2, y1)  // Draw horizontal line to new x-coordinate at current y-level
-    path.lineTo(x2, y2)  // Draw vertical line from current position to new y-level
+val Square: LineCartesianLayer.Interpolator = object : LineCartesianLayer.Interpolator {
+    override fun interpolate(
+        context: CartesianDrawingContext,
+        path: Path,
+        points: List<Offset>,
+        visibleIndexRange: IntRange
+    ) {
+        for (index in visibleIndexRange) {
+            val point = points[index]
+            if (index == visibleIndexRange.first) {
+                path.moveTo(point.x, point.y)
+            } else {
+                val prev = points[index - 1]
+                path.lineTo(point.x, prev.y)
+                path.lineTo(point.x, point.y)
+            }
+        }
+    }
 }
-

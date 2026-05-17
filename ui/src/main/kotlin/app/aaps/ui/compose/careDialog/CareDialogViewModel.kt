@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
@@ -28,6 +27,7 @@ import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,11 +47,11 @@ class CareDialogViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<CareDialogUiState>
-        field = MutableStateFlow(CareDialogUiState())
+    private val _uiState = MutableStateFlow(CareDialogUiState())
+    val uiState: StateFlow<CareDialogUiState> = _uiState.asStateFlow()
 
     init {
-        val eventType = UiInteraction.EventType.entries[savedStateHandle.get<Int>("eventTypeOrdinal") ?: 0]
+        val eventType = CareportalEventType.entries[savedStateHandle.get<Int>("eventTypeOrdinal") ?: 0]
         val units = profileFunction.getUnits()
         val currentBg = profileUtil.fromMgdlToUnits(
             glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
@@ -59,7 +59,7 @@ class CareDialogViewModel @Inject constructor(
         val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
         val siteRotation = preferences.get(BooleanKey.SiteRotationManageCgm)
 
-        uiState.update {
+        _uiState.update {
             CareDialogUiState(
                 eventType = eventType,
                 meterType = TE.MeterType.SENSOR,
@@ -73,12 +73,10 @@ class CareDialogViewModel @Inject constructor(
                 siteRotationManageCgm = siteRotation
             )
         }
-        if (eventType == UiInteraction.EventType.SENSOR_INSERT && siteRotation) {
+        if (eventType == CareportalEventType.SENSOR_INSERT && siteRotation) {
             loadLastSensorLocation()
         }
     }
-
-    private var siteRotationEntriesCache: List<TE> = emptyList()
 
     private fun loadLastSensorLocation() {
         viewModelScope.launch {
@@ -86,14 +84,14 @@ class CareDialogViewModel @Inject constructor(
                 val allEntries = persistenceLayer.getTherapyEventDataFromTime(
                     dateUtil.now() - T.days(45).msecs(), false
                 ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
-                siteRotationEntriesCache = allEntries
                 val lastEntry = allEntries
                     .filter { it.type == TE.Type.SENSOR_CHANGE && it.location != null && it.location != TE.Location.NONE }
                     .maxByOrNull { it.timestamp }
-                if (lastEntry != null) {
-                    uiState.update {
-                        it.copy(lastSiteLocationString = translator.translate(lastEntry.location))
-                    }
+                _uiState.update {
+                    it.copy(
+                        siteRotationEntries = allEntries,
+                        lastSiteLocationString = if (lastEntry != null) translator.translate(lastEntry.location) else it.lastSiteLocationString
+                    )
                 }
             } catch (_: Exception) {
                 // ignore
@@ -102,7 +100,7 @@ class CareDialogViewModel @Inject constructor(
     }
 
     fun updateSiteLocation(location: TE.Location) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 siteLocation = location,
                 selectedSiteLocationString = if (location != TE.Location.NONE) translator.translate(location) else null
@@ -111,34 +109,34 @@ class CareDialogViewModel @Inject constructor(
     }
 
     fun updateSiteArrow(arrow: TE.Arrow) {
-        uiState.update { it.copy(siteArrow = arrow) }
+        _uiState.update { it.copy(siteArrow = arrow) }
     }
 
     fun bodyType(): BodyType = BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    fun siteRotationEntries(): List<TE> = uiState.value.siteRotationEntries
 
     fun updateMeterType(meterType: TE.MeterType) {
-        uiState.update { it.copy(meterType = meterType) }
+        _uiState.update { it.copy(meterType = meterType) }
     }
 
     fun updateBgValue(value: Double) {
         // When user changes BG value, auto-switch from Sensor to Finger (matches old bgTextWatcher)
         val state = uiState.value
         val newMeterType = if (state.meterType == TE.MeterType.SENSOR) TE.MeterType.FINGER else state.meterType
-        uiState.update { it.copy(bgValue = value, meterType = newMeterType) }
+        _uiState.update { it.copy(bgValue = value, meterType = newMeterType) }
     }
 
     fun updateDuration(value: Double) {
-        uiState.update { it.copy(duration = value) }
+        _uiState.update { it.copy(duration = value) }
     }
 
     fun updateNotes(value: String) {
-        uiState.update { it.copy(notes = value) }
+        _uiState.update { it.copy(notes = value) }
     }
 
     fun updateEventTime(timeMillis: Long) {
-        uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
+        _uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
     }
 
     private var confirmedState: CareDialogUiState? = null
@@ -189,7 +187,7 @@ class CareDialogViewModel @Inject constructor(
 
         val eventTime = state.eventTime - (state.eventTime % 1000)
 
-        val isSensorChange = eventType == UiInteraction.EventType.SENSOR_INSERT
+        val isSensorChange = eventType == CareportalEventType.SENSOR_INSERT
         val location = if (isSensorChange) state.siteLocation.takeIf { it != TE.Location.NONE } else null
         val arrow = if (isSensorChange) state.siteArrow.takeIf { it != TE.Arrow.NONE } else null
 
@@ -244,23 +242,23 @@ class CareDialogViewModel @Inject constructor(
 
     }
 
-    private fun UiInteraction.EventType.toTEType(): TE.Type = when (this) {
-        UiInteraction.EventType.BGCHECK        -> TE.Type.FINGER_STICK_BG_VALUE
-        UiInteraction.EventType.SENSOR_INSERT  -> TE.Type.SENSOR_CHANGE
-        UiInteraction.EventType.BATTERY_CHANGE -> TE.Type.PUMP_BATTERY_CHANGE
-        UiInteraction.EventType.NOTE           -> TE.Type.NOTE
-        UiInteraction.EventType.EXERCISE       -> TE.Type.EXERCISE
-        UiInteraction.EventType.QUESTION       -> TE.Type.QUESTION
-        UiInteraction.EventType.ANNOUNCEMENT   -> TE.Type.ANNOUNCEMENT
+    private fun CareportalEventType.toTEType(): TE.Type = when (this) {
+        CareportalEventType.BGCHECK        -> TE.Type.FINGER_STICK_BG_VALUE
+        CareportalEventType.SENSOR_INSERT  -> TE.Type.SENSOR_CHANGE
+        CareportalEventType.BATTERY_CHANGE -> TE.Type.PUMP_BATTERY_CHANGE
+        CareportalEventType.NOTE           -> TE.Type.NOTE
+        CareportalEventType.EXERCISE       -> TE.Type.EXERCISE
+        CareportalEventType.QUESTION       -> TE.Type.QUESTION
+        CareportalEventType.ANNOUNCEMENT   -> TE.Type.ANNOUNCEMENT
     }
 
-    private fun UiInteraction.EventType.toSource(): Sources = when (this) {
-        UiInteraction.EventType.BGCHECK        -> Sources.BgCheck
-        UiInteraction.EventType.SENSOR_INSERT  -> Sources.SensorInsert
-        UiInteraction.EventType.BATTERY_CHANGE -> Sources.BatteryChange
-        UiInteraction.EventType.NOTE           -> Sources.Note
-        UiInteraction.EventType.EXERCISE       -> Sources.Exercise
-        UiInteraction.EventType.QUESTION       -> Sources.Question
-        UiInteraction.EventType.ANNOUNCEMENT   -> Sources.Announcement
+    private fun CareportalEventType.toSource(): Sources = when (this) {
+        CareportalEventType.BGCHECK        -> Sources.BgCheck
+        CareportalEventType.SENSOR_INSERT  -> Sources.SensorInsert
+        CareportalEventType.BATTERY_CHANGE -> Sources.BatteryChange
+        CareportalEventType.NOTE           -> Sources.Note
+        CareportalEventType.EXERCISE       -> Sources.Exercise
+        CareportalEventType.QUESTION       -> Sources.Question
+        CareportalEventType.ANNOUNCEMENT   -> Sources.Announcement
     }
 }

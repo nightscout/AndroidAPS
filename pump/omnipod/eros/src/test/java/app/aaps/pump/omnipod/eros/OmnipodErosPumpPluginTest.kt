@@ -14,6 +14,7 @@ import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.rx.TestAapsSchedulers
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
 import org.junit.jupiter.api.BeforeEach
@@ -56,7 +57,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
 
     @Test fun `setTempBasalPercent should throw because pump does not support percent basal rate`() {
         assertThrows<IllegalStateException> {
-            plugin.setTempBasalPercent(80, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+            runBlocking { plugin.setTempBasalPercent(80, 30, false, PumpSync.TemporaryBasalType.NORMAL) }
         }
     }
 }

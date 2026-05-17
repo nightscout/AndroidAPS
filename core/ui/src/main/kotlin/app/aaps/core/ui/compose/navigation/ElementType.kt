@@ -34,6 +34,7 @@ enum class ElementType(
     TEMP_TARGET_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
     INSULIN_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
     QUICK_WIZARD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
+    FOOD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true),
 
     // Careportal
     BG_CHECK(category = ElementCategory.CAREPORTAL, searchable = true),
@@ -73,6 +74,10 @@ enum class ElementType(
     // Display indicators
     COB,
     SENSITIVITY,
+
+    // Scenes (situation presets)
+    SCENE(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
+    SCENE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
 
     // Running mode / loop (used by UserEntry)
     RUNNING_MODE(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),

@@ -1,9 +1,8 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.ui.TimerUtil
+import app.aaps.plugins.automation.TimerUtil
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -37,7 +36,7 @@ class ActionAlarmTest : TestBaseWithProfile() {
     fun setup() {
         whenever(rh.gs(app.aaps.core.ui.R.string.alarm)).thenReturn("Alarm")
         whenever(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), any())).thenReturn("Alarm: %s")
-        timerUtil = TimerUtil(context)
+        timerUtil = TimerUtil(context, rh, rxBus)
         sut = ActionAlarm(injector)
     }
 
@@ -50,17 +49,10 @@ class ActionAlarmTest : TestBaseWithProfile() {
         assertThat(sut.shortDescription()).isEqualTo("Alarm: %s")
     }
 
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
-    }
-
     @Test fun doActionTest() = runTest {
         sut.text = InputString("Asd")
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
     }
 
     @Test fun hasDialogTest() = runTest {

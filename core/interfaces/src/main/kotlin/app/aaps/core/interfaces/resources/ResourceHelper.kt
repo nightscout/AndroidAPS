@@ -1,12 +1,10 @@
 package app.aaps.core.interfaces.resources
 
-import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import androidx.annotation.ArrayRes
-import androidx.annotation.AttrRes
 import androidx.annotation.BoolRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -33,19 +31,4 @@ interface ResourceHelper {
     fun dpToPx(dp: Int): Int
     fun dpToPx(dp: Float): Int
     fun shortTextMode(): Boolean
-
-    /**
-     * Get Attribute Color based on theme style
-     */
-    @ColorInt fun gac(@AttrRes attributeId: Int): Int
-
-    /**
-     * Get Attribute Color based on theme style for specified context
-     */
-    @ColorInt fun gac(context: Context?, @AttrRes attributeId: Int): Int
-
-    /**
-     * Get themed context -->> context dependent on light or darkmode
-     */
-    fun getThemedCtx(context: Context): Context
 }

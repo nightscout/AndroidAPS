@@ -7,17 +7,21 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ProfileGateStepHost
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.eopatch.CommonUtils
@@ -76,8 +80,9 @@ class EopatchPatchViewModel @Inject constructor(
     private val preferences: Preferences,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
+    private val localProfileManager: LocalProfileManager,
     private val persistenceLayer: PersistenceLayer
-) : ViewModel(), SiteLocationStepHost {
+) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     companion object {
 
@@ -125,6 +130,13 @@ class EopatchPatchViewModel @Inject constructor(
 
     val showSiteLocationStep: Boolean
         get() = preferences.get(BooleanKey.SiteRotationManagePump)
+
+    // Profile gate state (for PROFILE_GATE step) — implements ProfileGateStepHost
+    private val _availableProfiles = MutableStateFlow<List<String>>(emptyList())
+    override val availableProfiles: StateFlow<List<String>> = _availableProfiles.asStateFlow()
+
+    private val _selectedProfile = MutableStateFlow<String?>(null)
+    override val selectedProfile: StateFlow<String?> = _selectedProfile.asStateFlow()
 
     // Ticks every second to drive recomposition of time-dependent properties
     private val _expirationTick = MutableStateFlow(0L)
@@ -301,9 +313,68 @@ class EopatchPatchViewModel @Inject constructor(
     }
 
     fun initializePatchStep(step: PatchStep?, withAlarmHandle: Boolean = true) {
-        mInitPatchStep = prepareStep(step, withAlarmHandle)
-        dismissPatchCommCheckDialogInternal(false)
+        // If launching the standard activation flow but no profile switch exists yet, gate first.
+        if (step == PatchStep.WAKE_UP) {
+            viewModelScope.launch {
+                if (profileFunction.getRequestedProfile() == null) {
+                    loadAvailableProfiles()
+                    mInitPatchStep = prepareStep(PatchStep.PROFILE_GATE, withAlarmHandle)
+                } else {
+                    mInitPatchStep = prepareStep(step, withAlarmHandle)
+                }
+                dismissPatchCommCheckDialogInternal(false)
+            }
+        } else {
+            mInitPatchStep = prepareStep(step, withAlarmHandle)
+            dismissPatchCommCheckDialogInternal(false)
+        }
     }
+
+    // region ProfileGateStepHost
+
+    private fun loadAvailableProfiles() {
+        val names = localProfileManager.profiles.map { it.name }
+        _availableProfiles.value = names
+        if (_selectedProfile.value !in names) {
+            _selectedProfile.value = names.getOrNull(localProfileManager.currentProfileIndex) ?: names.firstOrNull()
+        }
+    }
+
+    override fun selectProfile(name: String) {
+        _selectedProfile.value = name
+    }
+
+    override fun activateSelectedProfile() {
+        val name = _selectedProfile.value ?: return
+        val store = localProfileManager.profile ?: return
+        val iCfg = insulinManager.insulins.firstOrNull() ?: return
+        viewModelScope.launch {
+            val result = profileFunction.createProfileSwitch(
+                profileStore = store,
+                profileName = name,
+                durationInMinutes = 0,
+                percentage = 100,
+                timeShiftInHours = 0,
+                timestamp = System.currentTimeMillis(),
+                action = Action.PROFILE_SWITCH,
+                source = Sources.EOPatch2,
+                note = null,
+                listValues = listOf(ValueWithUnit.SimpleString(name)),
+                iCfg = iCfg
+            )
+            if (result == null) {
+                aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
+            } else {
+                moveStep(PatchStep.WAKE_UP)
+            }
+        }
+    }
+
+    override fun cancelGate() {
+        _events.tryEmit(PatchEvent.Finish)
+    }
+
+    // endregion
 
     private fun prepareStep(step: PatchStep?, withAlarmHandle: Boolean = true): PatchStep {
         (step ?: convertToPatchStep(patchConfig.lifecycleEvent.lifeCycle)).let { newStep ->
@@ -314,6 +385,7 @@ class EopatchPatchViewModel @Inject constructor(
                 PatchStep.DISCARDED_FOR_CHANGE       -> R.string.patch_discard_complete_title
 
                 PatchStep.MANUALLY_TURNING_OFF_ALARM -> R.string.patch_manually_turning_off_alarm_title
+                PatchStep.PROFILE_GATE               -> app.aaps.core.ui.R.string.pump_wizard_profile_gate_title
                 PatchStep.WAKE_UP,
                 PatchStep.CONNECT_NEW,
                 PatchStep.SELECT_INSULIN,

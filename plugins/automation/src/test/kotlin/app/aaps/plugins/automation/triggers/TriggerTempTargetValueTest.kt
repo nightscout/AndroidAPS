@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -80,11 +79,6 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.ttValue.value).isWithin(0.01).of(7.7)
         assertThat(t2.ttValue.units).isEqualTo(GlucoseUnit.MMOL)
-    }
-
-    @Test
-    fun iconTest() {
-        assertThat(TriggerTempTargetValue(injector).icon().get()).isEqualTo(R.drawable.ic_keyboard_tab)
     }
 }
 

@@ -14,16 +14,18 @@ import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,11 +42,12 @@ class ExtendedBolusViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
-    val uiState: StateFlow<ExtendedBolusUiState>
-        field = MutableStateFlow(ExtendedBolusUiState())
+    private val _uiState = MutableStateFlow(ExtendedBolusUiState())
+    val uiState: StateFlow<ExtendedBolusUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -59,7 +62,7 @@ class ExtendedBolusViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.extendedBoluses.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -72,21 +75,16 @@ class ExtendedBolusViewModel @Inject constructor(
                     persistenceLayer.getExtendedBolusesStartingFromTime(now - millsToThePast, false)
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         extendedBoluses = extendedBoluses,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load extended boluses", e)
-                uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading extended boluses")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading extended boluses", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -104,17 +102,10 @@ class ExtendedBolusViewModel @Inject constructor(
     }
 
     /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
-    }
-
-    /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -122,7 +113,7 @@ class ExtendedBolusViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: EB) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -134,7 +125,7 @@ class ExtendedBolusViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -146,7 +137,7 @@ class ExtendedBolusViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: EB) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -197,7 +188,7 @@ class ExtendedBolusViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete extended boluses", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting extended boluses")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting extended boluses", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -233,6 +224,5 @@ data class ExtendedBolusUiState(
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<EB> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
+    val selectedItems: Set<EB> = emptySet()
 )

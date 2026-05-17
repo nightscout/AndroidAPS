@@ -11,7 +11,6 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
-import java.util.Optional
 
 class TriggerInsulinAgeTest : TriggerTestBase() {
 
@@ -69,10 +68,5 @@ class TriggerInsulinAgeTest : TriggerTestBase() {
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerInsulinAge
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.insulinAgeHours.value).isWithin(0.01).of(4.0)
-    }
-
-    @Test fun iconTest() {
-        val t = TriggerInsulinAge(injector)
-        assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_insulin))
     }
 }

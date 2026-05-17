@@ -19,12 +19,10 @@ import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
-import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -159,7 +157,6 @@ class PluginStore @Inject constructor(
             (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
         }
-        setFragmentVisibilities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
 
         // PluginType.SENSITIVITY
         pluginsInCategory = getSpecificPluginsList(PluginType.SENSITIVITY)
@@ -169,7 +166,7 @@ class PluginStore @Inject constructor(
             (activeSensitivityStore as PluginBase).setPluginEnabled(PluginType.SENSITIVITY, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SensitivityInterface")
         }
-        setFragmentVisibilities((activeSensitivityStore as PluginBase).name, pluginsInCategory, PluginType.SENSITIVITY)
+        activeSensitivityStore = fallbackIfNotVisible(activeSensitivityStore as PluginBase, PluginType.SENSITIVITY) as Sensitivity
 
         // PluginType.SMOOTHING
         pluginsInCategory = getSpecificPluginsList(PluginType.SMOOTHING)
@@ -179,7 +176,6 @@ class PluginStore @Inject constructor(
             (activeSmoothingStore as PluginBase).setPluginEnabled(PluginType.SMOOTHING, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
         }
-        setFragmentVisibilities((activeSmoothingStore as PluginBase).name, pluginsInCategory, PluginType.SMOOTHING)
 
         // PluginType.BGSOURCE
         pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
@@ -189,7 +185,6 @@ class PluginStore @Inject constructor(
             (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
         }
-        setFragmentVisibilities((activeBgSourceStore as PluginBase).name, pluginsInCategory, PluginType.BGSOURCE)
 
         // PluginType.PUMP
         pluginsInCategory = getSpecificPluginsList(PluginType.PUMP)
@@ -199,17 +194,25 @@ class PluginStore @Inject constructor(
             (activePumpStore as PluginBase).setPluginEnabled(PluginType.PUMP, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
         }
-        setFragmentVisibilities((activePumpStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
     }
 
-    private fun setFragmentVisibilities(
-        activePluginName: String, pluginsInCategory: ArrayList<PluginBase>,
-        pluginType: PluginType
-    ) {
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Selected interface: $activePluginName")
-        for (p in pluginsInCategory)
-            if (p.name != activePluginName)
-                p.setFragmentVisible(pluginType, false)
+    /**
+     * If the active plugin is no longer visible in its category (e.g., sensitivity plugin
+     * incompatible with the current APS algorithm), disable it and fall back to the default.
+     *
+     * Framework plugins declared `alwaysEnabled` are exempt — they use `showInList { false }`
+     * to hide from the UI list but must stay functional regardless.
+     */
+    private fun fallbackIfNotVisible(active: PluginBase, type: PluginType): PluginBase {
+        if (active.pluginDescription.alwaysEnabled) return active
+        if (!active.showInList(type)) {
+            active.setPluginEnabled(type, false)
+            val default = getDefaultPlugin(type)
+            default.setPluginEnabled(type, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Falling back ${type.name} from ${active.name} to ${default.name}")
+            return default
+        }
+        return active
     }
 
     private fun getTheOneEnabledInArray(pluginsInCategory: ArrayList<PluginBase>, type: PluginType): PluginBase? {
@@ -230,12 +233,8 @@ class PluginStore @Inject constructor(
     override val activeBgSource: BgSource
         get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
 
-    override val activeProfileSource: ProfileSource
-        get() = getSpecificPluginsListByInterface(ProfileSource::class.java).first() as ProfileSource
-
-    // App may not be initialized yet. Wait before second return
-    override val activeAPS: APS
-        get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
+    override val activeAPS: APS?
+        get() = activeAPSStore
 
     override val activePump: PumpWithConcentration
         get() = pumpWithConcentration.get()
@@ -256,9 +255,6 @@ class PluginStore @Inject constructor(
     override val activeSmoothing: Smoothing
         get() = activeSmoothingStore ?: checkNotNull(activeSmoothingStore) { "No smoothing selected" }
 
-    override val activeOverview: Overview
-        get() = getSpecificPluginsListByInterface(Overview::class.java).first() as Overview
-
     override val activeSafety: Safety
         get() = getSpecificPluginsListByInterface(Safety::class.java).first() as Safety
 
@@ -271,11 +267,11 @@ class PluginStore @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     override val firstActiveSync: Sync?
-        get() = (getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>).firstOrNull { it.connected }
+        get() = (getSpecificPluginsListByInterface(Sync::class.java) as ArrayList<Sync>).firstOrNull { it.connected }
 
     @Suppress("UNCHECKED_CAST")
     override val activeSyncs: ArrayList<Sync>
-        get() = getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>
+        get() = getSpecificPluginsListByInterface(Sync::class.java) as ArrayList<Sync>
 
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 

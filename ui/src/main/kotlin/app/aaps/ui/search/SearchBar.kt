@@ -1,5 +1,6 @@
 package app.aaps.ui.search
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -68,6 +69,12 @@ fun M3SearchBar(
         } else {
             focusManager.clearFocus()
         }
+    }
+
+    BackHandler(enabled = isActive) {
+        keyboardController?.hide()
+        onClearClick()
+        onActiveChange(false)
     }
 
     Surface(

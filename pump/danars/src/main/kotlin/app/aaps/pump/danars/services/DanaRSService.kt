@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
@@ -82,7 +83,6 @@ import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import dagger.android.DaggerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -191,7 +191,7 @@ class DanaRSService : DaggerService() {
         bleComm.sendMessage(message)
     }
 
-    fun readPumpStatus() {
+    suspend fun readPumpStatus() {
         try {
             val pump = activePlugin.activePump
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
@@ -213,7 +213,7 @@ class DanaRSService : DaggerService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
             sendMessage(danaRSPacketBolusGetStepBolusInformation.get()) // last bolus, bolusStep, maxBolus
             danaPump.lastConnection = System.currentTimeMillis()
-            val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+            val profile = pumpSync.expectedPumpState().profile
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
                 if (!danaRSPlugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
@@ -274,7 +274,7 @@ class DanaRSService : DaggerService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.reading_pump_history)))
             loadEvents()
             // RS doesn't provide exact timestamp = rely on history
-            val expectedState = runBlocking { pumpSync.expectedPumpState() }
+            val expectedState = pumpSync.expectedPumpState()
             val eb = expectedState.extendedBolus
             danaPump.fromExtendedBolus(eb)
             val tbr = expectedState.temporaryBasal
@@ -285,14 +285,12 @@ class DanaRSService : DaggerService() {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
-                    runBlocking {
-                        pumpSync.insertAnnouncement(
-                            rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
-                            null,
-                            danaPump.pumpType(),
-                            danaPump.serialNumber
-                        )
-                    }
+                    pumpSync.insertAnnouncement(
+                        rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
+                        null,
+                        danaPump.pumpType(),
+                        danaPump.serialNumber
+                    )
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
@@ -373,7 +371,7 @@ class DanaRSService : DaggerService() {
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
-            bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), bolusProgressData.state.value?.delivered ?: 0.0)
+            bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
@@ -382,7 +380,7 @@ class DanaRSService : DaggerService() {
                 // reread bolus status
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
                 sendMessage(danaRSPacketBolusGetStepBolusInformation.get()) // last bolus
-                bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.disconnecting), bolusProgressData.state.value?.delivered ?: 0.0)
+                bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.disconnecting), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
                 rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
             }
         })
@@ -390,7 +388,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun bolusStop() {
-        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @${bolusProgressData.state.value?.delivered ?: 0.0}")
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @${bolusProgressData.state.value?.delivered?.cU ?: 0.0}")
         val stop = danaRSPacketBolusSetStepBolusStop.get()
         danaPump.bolusStopForced = true
         if (isConnected) {
@@ -404,7 +402,7 @@ class DanaRSService : DaggerService() {
         }
     }
 
-    fun tempBasal(percent: Int, durationInHours: Int): Boolean {
+    suspend fun tempBasal(percent: Int, durationInHours: Int): Boolean {
         if (!isConnected) return false
         val status = danaRSPacketGeneralInitialScreenInformation.get()
         sendMessage(status)
@@ -420,13 +418,13 @@ class DanaRSService : DaggerService() {
         SystemClock.sleep(200)
         loadEvents()
         SystemClock.sleep(4500)
-        val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()
     }
 
-    fun highTempBasal(percent: Int): Boolean {
+    suspend fun highTempBasal(percent: Int): Boolean {
         val status = danaRSPacketGeneralInitialScreenInformation.get()
         sendMessage(status)
         if (status.failed) return false
@@ -440,13 +438,13 @@ class DanaRSService : DaggerService() {
         sendMessage(msgTBR)
         loadEvents()
         SystemClock.sleep(4500)
-        val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()
     }
 
-    fun tempBasalShortDuration(percent: Int, durationInMinutes: Int): Boolean {
+    suspend fun tempBasalShortDuration(percent: Int, durationInMinutes: Int): Boolean {
         if (durationInMinutes != 15 && durationInMinutes != 30) {
             aapsLogger.error(LTag.PUMPCOMM, "Wrong duration param")
             return false
@@ -464,27 +462,27 @@ class DanaRSService : DaggerService() {
         sendMessage(msgTBR)
         loadEvents()
         SystemClock.sleep(4500)
-        val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
         aapsLogger.debug(LTag.PUMPCOMM, "Expected TBR found: $tbr")
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()
     }
 
-    fun tempBasalStop(): Boolean {
+    suspend fun tempBasalStop(): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
         val msgCancel = danaRSPacketBasalSetCancelTemporaryBasal.get()
         sendMessage(msgCancel)
         loadEvents()
         SystemClock.sleep(4500)
-        val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgCancel.success()
     }
 
-    fun extendedBolus(insulin: Double, durationInHalfHours: Int): Boolean {
+    suspend fun extendedBolus(insulin: Double, durationInHalfHours: Int): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingextendedbolus)))
         val msgExtended = danaRSPacketBolusSetExtendedBolus.get().with(insulin, durationInHalfHours)
@@ -492,26 +490,26 @@ class DanaRSService : DaggerService() {
         SystemClock.sleep(200)
         loadEvents()
         SystemClock.sleep(4500)
-        val eb = runBlocking { pumpSync.expectedPumpState() }.extendedBolus
+        val eb = pumpSync.expectedPumpState().extendedBolus
         danaPump.fromExtendedBolus(eb)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgExtended.success()
     }
 
-    fun extendedBolusStop(): Boolean {
+    suspend fun extendedBolusStop(): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingextendedbolus)))
         val msgStop = danaRSPacketBolusSetExtendedBolusCancel.get()
         sendMessage(msgStop)
         loadEvents()
         SystemClock.sleep(4500)
-        val eb = runBlocking { pumpSync.expectedPumpState() }.extendedBolus
+        val eb = pumpSync.expectedPumpState().extendedBolus
         danaPump.fromExtendedBolus(eb)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgStop.success()
     }
 
-    fun updateBasalsInPump(profile: Profile): Boolean {
+    suspend fun updateBasalsInPump(profile: Profile): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.updatingbasalrates)))
         val basal = danaPump.buildDanaRProfileRecord(profile)

@@ -8,8 +8,6 @@
     <string name="setup_completed_info">שירות Open Humans הוגדר. אם ברצונכם להפסיק את שליחת הנתונים, לחצו על \'התנתקות\'.</string>
     <string name="not_setup_info">שירות Open Humans אינו פעיל. להתחלת העלאת הנתונים, לחצו על \'תצורה\'.</string>
     <string name="project_member_id">מספר זיהוי משתמש: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">אפשר העלאה רק כאשר מחובר ל-WiFi</string>
-    <string name="only_upload_if_charging">אפשר העלאה רק בזמן טעינת הסוללה</string>
     <string name="open_humans_uploading">מעלה נתונים ל-Open Humans…</string>
     <string name="open_humans_notifications">התראות Open Humans</string>
     <string name="uploading_to_open_humans"> Androidaps מעלה נתונים ל-Open Humans. פעולה זו תיקח זמן מה.</string>

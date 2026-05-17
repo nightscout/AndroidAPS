@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AAPS</string>
-    <string name="label_actions_activity">AAPS</string>
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Personalizzato)</string>
-    <string name="label_actions_tile">AAPS(azioni)</string>
-    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
-    <string name="label_user_action_tile">AAPS(Azione Utente)</string>
-    <string name="label_warning_sync">No dati!</string>
-    <string name="label_warning_old">Dati vecchi!</string>
-    <string name="label_warning_since">Da %1$s</string>
-    <string name="label_warning_sync_aaps">Sincro con AAPS!</string>
+    <string name="label_actions_tile">Azioni</string>
+    <string name="label_temp_target_tile">Target Temporaneo</string>
+    <string name="label_quick_wizard_tile">Procedura Guidata Veloce</string>
+    <string name="label_user_action_tile">Azione utente</string>
+    <string name="label_scene_tile">Scena</string>
     <string name="msg_warning_sync">Nessun dato ricevuto da %1$s! Controlla se AAPS sul telefono invia i dati allo smartwatch</string>
     <string name="msg_warning_old">I dati di AAPS sono vecchi di %1$s ! Controlla il tuo sensore, xDrip+, NS, la configurazione di AAPS o altro!</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
@@ -56,11 +51,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Input Design</string>
-    <string name="pref_default">Default</string>
-    <string name="pref_quick_righty">Quick righty</string>
-    <string name="pref_quick_lefty">Quick lefty</string>
-    <string name="pref_modern_sparse">Modern Sparse</string>
     <string name="pref_big_numbers">Numeri grandi</string>
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
@@ -75,6 +65,7 @@
     <string name="pref_moreWatchfaceSettings">Più impostazioni watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Controlla configurazione watchface.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Target Temporaneo</string>
     <string name="menu_wizard">Calcolatore</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Trattamento</string>
@@ -84,32 +75,41 @@
     <string name="menu_ecarb">CHO estesi</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_status">Stato</string>
+    <string name="menu_bg_graph">Grafico BG</string>
     <string name="menu_resync">Re-Sincronizza</string>
     <string name="menu_prime_fill">Carica/Riempi</string>
     <string name="menu_none">Nessuno</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Durata\n[minutes]</string>
     <string name="action_tempt_confirmation">Target temporaneo richiesto</string>
     <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
     <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
+    <string name="action_scene_confirmation">Scena Attivata</string>
+    <string name="scene_stop">STOP</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>
     <string name="action_fill_confirmation">Riempimento richiesto</string>
     <string name="action_ecarb_confirmation">CHO richiesti</string>
     <string name="action_profile_switch_confirmation">Cambio profilo richiesto</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Target\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Basso\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Target [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Basso[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto[%s]</string>
     <string name="action_carbs">CHO</string>
     <string name="action_carbs_gram">Carboidrati [g]</string>
     <string name="action_ecarbs">CHO estesi</string>
     <string name="action_percentage">Percentuale\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
-    <string name="action_duration_h">Durata [h]</string>
     <string name="action_duration_hours">Durata\n[ore]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Tempo: %1$s</string>
+    <string name="ecarbs_confirm_duration">Durata: %1$d h</string>
+    <string name="action_confirm_reason">Motivo: %1$s</string>
+    <string name="action_confirm_duration">Durata: %1$s</string>
+    <string name="action_confirm_timeshift">Timeshift: %1$s</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_insulin_units">Insulina [U]</string>
     <string name="action_preset_1">Preset 1</string>
@@ -148,7 +148,6 @@
     <string name="color_name_gray">grigio</string>
     <string name="color_name_bluegray">grigio-azzurro</string>
     <string name="color_name_white">bianco</string>
-    <string name="color_name_black">nero</string>
     <string name="color_name_multicolor">multicolore</string>
     <string name="pref_simplify_ui">Semplifica UI</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
@@ -181,8 +180,6 @@
     <string name="tile_no_config">Nessuna configurazione disponibile</string>
     <string name="wear_control_not_enabled">Controlli smartwatch disabilitati</string>
     <string name="wear_control_no_data">Nessun dato disponibile</string>
-    <string name="increment">incremento</string>
-    <string name="decrement">decremento</string>
     <string name="abbreviation_average">media</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -195,11 +192,10 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">vecchio</string>
-    <string name="old_warning">!vecchio!</string>
-    <string name="error">!err!</string>
+    <string name="error">Errore</string>
     <string name="pref_heartRateSampling">Frequenza cardiaca</string>
     <string name="pref_heartRateSmoothing">Smussamento HR</string>
     <string name="pref_stepsSampling">Abilita Conteggio Passi</string>
@@ -218,6 +214,7 @@
     <string name="complication_full_status">Stato Completo</string>
     <string name="complication_full_status_flipped">Stato completo (capovolto)</string>
     <string name="complication_blood_glucose">Glicemia</string>
+    <string name="complication_blood_glucose_large">Glucosio Sangue (Grande)</string>
     <string name="complication_blood_glucose_ext1">Glicemia Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemia Ext2</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
@@ -225,20 +222,28 @@
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Velocità basale</string>
+    <string name="complication_target">Target</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">Icona CoB</string>
     <string name="complication_cob_detailed">Cob Dettagliato</string>
     <string name="complication_iob_icon">Icona IoB</string>
     <string name="complication_iob_detailed">IoB Dettagliato</string>
     <string name="complication_uploader_phone_battery">Caricamento/Batteria Telefono</string>
-    <string name="status_loop_state">Stato loop</string>
-    <string name="label_loop_state_title">AAPS (stato Loop)</string>
-    <string name="action_loop_state_selected">Stato del loop richiesto</string>
+    <string name="status_running_mode">Modalità esecuzione</string>
+    <string name="label_running_mode_title">Modalità esecuzione</string>
+    <string name="label_bg_graph_tile">Grafico BG</string>
+    <string name="tile_tap_action">Azione al tocco</string>
+    <string name="tile_graph_time_range">Intervallo di tempo</string>
+    <string name="tile_tap_bg_graph">Grafico BG</string>
+    <string name="tile_tap_main_menu">Menu principale</string>
+    <string name="tile_tap_loop_status">Stato loop</string>
+    <string name="action_running_mode_selected">Modalità di esecuzione richiesta</string>
+    <string name="title_activity_disconnect_pump">Disconnetti micro</string>
+    <string name="title_activity_suspend_loop">Sospendi loop</string>
     <string name="wizard_total_insulin">Insulina totale</string>
     <string name="wizard_calculation">Calcolo</string>
     <string name="wizard_carbs_format">%1$d g carboidrati</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Scorri verso sinistra per confermare</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">Trend di 15min</string>
@@ -250,8 +255,7 @@
     <string name="wizard_result_total">Totale</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
-    <string name="expand_calculation_details">Clicca per espandere i dettagli di calcolo</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_confirmation_sent">Inviato</string>
     <string name="tile_settings">Impostazioni delle caselle</string>
     <string name="loop_status_error">Impossibile aggiornare lo stato</string>
@@ -268,6 +272,8 @@
     <string name="loop_status_lgs">Sospensione per glucosio basso</string>
     <string name="loop_status_disabled">Loop disabilitato</string>
     <string name="loop_status_suspended">Loop sospeso</string>
+    <string name="loop_status_pump_suspended">Micro sospeso</string>
+    <string name="loop_status_dst_suspended">Loop sospeso da DST</string>
     <string name="loop_status_disconnected">Micro disconnesso</string>
     <string name="loop_status_superbolus">Superbolo</string>
     <string name="loop_status_unknown">Sconosciuto</string>
@@ -283,5 +289,10 @@
     <string name="loop_status_temp_target">Target Temporaneo</string>
     <string name="loop_status_target_range">Intervallo</string>
     <string name="loop_status_target">Target</string>
+    <string name="loop_status_adjusted_target">Obiettivo adattato</string>
     <string name="loop_status">Stato loop</string>
+    <string name="loop_status_refresh">Aggiorna</string>
+    <string name="confirm">Conferma</string>
+    <string name="request">Richiesta</string>
+    <string name="constraint_applied">Vincolo applicato!</string>
 </resources>

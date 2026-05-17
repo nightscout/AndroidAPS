@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
+import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.notifyAll
@@ -155,7 +156,9 @@ class GarminDeviceClient(
             }
         }
         broadcastReceiver.add(recv)
-        context.registerReceiver(recv, IntentFilter(action))
+        ContextCompat.registerReceiver(
+            context, recv, IntentFilter(action), ContextCompat.RECEIVER_EXPORTED
+        )
     }
 
     override fun registerForMessages(app: GarminApplication) {

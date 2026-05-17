@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Драйверът на помпата е променен.</string>
@@ -63,4 +64,7 @@
     <string name="pref_show_seconds">Покажи секунди</string>
     <string name="default_custom_watchface_comment">Watchface по подразбиране, можете да изберете бутон ЕКСПОРТИРАНЕ НА WATCHFACE за създаване на шаблон</string>
     <string name="wear_default_watchface">Watchface по подразбиране</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

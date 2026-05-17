@@ -22,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
@@ -91,6 +92,7 @@ fun TreatmentBeltGraphCompose(
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
+    nowTimestamp: Long,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
@@ -100,7 +102,7 @@ fun TreatmentBeltGraphCompose(
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
         val now = System.currentTimeMillis()
-        val dayAgo = now - 24 * 60 * 60 * 1000L
+        val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }
 
@@ -469,17 +471,18 @@ fun TreatmentBeltGraphCompose(
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val beltDecorations = remember(nowLine) { listOf(nowLine) }
+
+    val rangeProvider = remember(maxX) {
+        CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
+    }
 
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(lines),
-                rangeProvider = remember(maxX) {
-                    CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
-                }
+                rangeProvider = rangeProvider
             ),
             marker = beltMarker,
             markerController = CartesianMarkerController.rememberToggleOnTap(),

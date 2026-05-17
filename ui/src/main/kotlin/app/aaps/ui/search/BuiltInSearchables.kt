@@ -9,17 +9,16 @@ import androidx.compose.material.icons.outlined.Palette
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.skin.SkinDescriptionProvider
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.withChangeGuard
-import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -39,20 +38,10 @@ import javax.inject.Singleton
  */
 @Singleton
 class BuiltInSearchables @Inject constructor(
-    private val skinDescriptionProvider: SkinDescriptionProvider,
     private val rh: ResourceHelper,
     private val insulinManager: InsulinManager,
     private val insulin: Insulin
 ) : SearchableProvider {
-
-    /**
-     * Skin entries computed from SkinDescriptionProvider.
-     * Maps skin class name to localized display name.
-     */
-    private val skinEntries: Map<String, String>
-        get() = skinDescriptionProvider.skinDescriptions.associate { (className, descriptionResId) ->
-            className to rh.gs(descriptionResId)
-        }
 
     private fun hasNonU100Insulin(): Boolean =
         insulinManager.insulins.any { it.concentration != 1.0 } || insulin.iCfg.concentration != 1.0
@@ -99,7 +88,6 @@ class BuiltInSearchables @Inject constructor(
             ),
 
             BooleanKey.OverviewShowNotesInDialogs,
-            StringKey.GeneralSkin.withEntries(skinEntries),
             StringKey.GeneralDarkMode
         ),
         icon = Icons.Outlined.Palette
@@ -142,6 +130,34 @@ class BuiltInSearchables @Inject constructor(
             BooleanKey.PumpBtWatchdog
         ),
         icon = Pump
+    )
+
+    /**
+     * Maintenance preferences (email recipient, logs amount, data choices, unattended export)
+     */
+    val maintenance = PreferenceSubScreenDef(
+        key = "maintenance_settings",
+        titleResId = app.aaps.core.ui.R.string.maintenance,
+        items = listOf(
+            StringKey.MaintenanceEmail,
+            IntKey.MaintenanceLogsAmount,
+            PreferenceSubScreenDef(
+                key = "data_choice_setting",
+                titleResId = app.aaps.core.ui.R.string.data_choices,
+                items = listOf(
+                    BooleanKey.MaintenanceEnableFabric,
+                    StringKey.MaintenanceIdentification
+                )
+            ),
+            PreferenceSubScreenDef(
+                key = "unattended_export_setting",
+                titleResId = app.aaps.core.ui.R.string.unattended_settings_export,
+                items = listOf(
+                    BooleanKey.MaintenanceEnableExportSettingsAutomation
+                )
+            )
+        ),
+        icon = IcPluginMaintenance
     )
 
     /**
@@ -270,6 +286,7 @@ class BuiltInSearchables @Inject constructor(
         SearchableItem.Category(protection),
         SearchableItem.Category(pump),
         SearchableItem.Category(alerts),
+        SearchableItem.Category(maintenance),
         // Dialog settings (only for search, not in AllPreferencesScreen)
         SearchableItem.Category(fillButtons),
         SearchableItem.Category(insulinButtons),

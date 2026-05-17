@@ -1,6 +1,5 @@
 package app.aaps.implementation.queue
 
-import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
@@ -48,6 +47,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.implementation.R
 import app.aaps.implementation.queue.commands.CommandBolus
@@ -92,7 +92,6 @@ class CommandQueueImplementation @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val context: Context,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
@@ -127,10 +126,10 @@ class CommandQueueImplementation @Inject constructor(
         workManager.cancelUniqueWork(jobName.name)
     }
 
-    private fun onProfileChanged() {
+    private suspend fun onProfileChanged() {
         if (config.AAPSCLIENT) return // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
         aapsLogger.debug(LTag.PROFILE, "onProfileChanged")
-        runBlocking { profileFunction.getRequestedProfile() }?.let {
+        profileFunction.getRequestedProfile()?.let {
             setProfile(ProfileSealed.PS(it, activePlugin), it.ids.nightscoutId != null, object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -164,6 +163,40 @@ class CommandQueueImplementation @Inject constructor(
 
     private fun executingNowError(): PumpEnactResult =
         pumpEnactResultProvider.get().success(false).enacted(false).comment(R.string.executing_right_now)
+
+    /**
+     * Running-mode gate: reject commands that contradict the currently active running mode.
+     * Returns true if the command was rejected (caller should return false); false if allowed.
+     * Fails open on read errors — the gate is a belt, not the only line; upstream checks already
+     * handle most suspended-mode paths in [LoopPlugin.invoke] and [applySMBRequest].
+     */
+    private fun rejectedByRunningModeGate(kind: PumpCommandGate.CommandKind, callback: Callback?): Boolean {
+        val mode = try {
+            runBlocking { persistenceLayer.getRunningModeActiveAt(dateUtil.now()) }.mode
+        } catch (e: Throwable) {
+            aapsLogger.warn(LTag.PUMPQUEUE, "Running-mode gate: failed to read active mode, allowing command: ${e.message}")
+            return false
+        }
+        val decision = PumpCommandGate.check(mode, kind)
+        if (decision is PumpCommandGate.Decision.Reject) {
+            val commentRes = when (decision.reason) {
+                PumpCommandGate.Reason.PUMP_DISCONNECTED       -> app.aaps.core.ui.R.string.pump_disconnected
+                PumpCommandGate.Reason.LOOP_SUSPENDED_DST,
+                PumpCommandGate.Reason.SUPER_BOLUS_ACTIVE      -> app.aaps.core.ui.R.string.loopsuspended
+
+                PumpCommandGate.Reason.PUMP_REPORTED_SUSPENDED -> app.aaps.core.ui.R.string.pumpsuspended
+            }
+            aapsLogger.debug(
+                LTag.PUMPQUEUE,
+                "Command rejected by running-mode gate: mode=$mode, kind=$kind, reason=${decision.reason}"
+            )
+            callback?.result(
+                pumpEnactResultProvider.get().success(false).enacted(false).comment(commentRes)
+            )?.run()
+            return true
+        }
+        return false
+    }
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -226,6 +259,19 @@ class CommandQueueImplementation @Inject constructor(
             for (i in queue.indices) {
                 queue[i].cancel()
 
+            }
+            queue.clear()
+        }
+    }
+
+    @Synchronized
+    override fun completeAllAsNoOp(commentResId: Int) {
+        performing = null
+        synchronized(queue) {
+            for (i in queue.indices) {
+                queue[i].callback?.result(
+                    pumpEnactResultProvider.get().success(true).enacted(false).comment(commentResId)
+                )?.run()
             }
             queue.clear()
         }
@@ -321,6 +367,8 @@ class CommandQueueImplementation @Inject constructor(
             }
 
         }
+        // Running-mode gate: reject bolus if current mode forbids new delivery.
+        if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.BOLUS, callback)) return false
         val type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
@@ -389,6 +437,8 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     override fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
+        val gateKind = if (absoluteRate == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
+        if (rejectedByRunningModeGate(gateKind, callback)) return false
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
             return false
@@ -404,6 +454,8 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     override fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
+        val gateKind = if (percent == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
+        if (rejectedByRunningModeGate(gateKind, callback)) return false
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
             return false
@@ -419,6 +471,7 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     override fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?): Boolean {
+        if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.EXTENDED_BOLUS, callback)) return false
         if (isRunning(CommandType.EXTENDEDBOLUS)) {
             callback?.result(executingNowError())?.run()
             return false
@@ -461,13 +514,13 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    fun setProfile(profile: EffectiveProfile, hasNsId: Boolean, callback: Callback?): Boolean {
+    suspend fun setProfile(profile: EffectiveProfile, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
             callback?.result(pumpEnactResultProvider.get().success(true).enacted(false))?.run()
             return false
         }
-        if (isThisProfileSet(profile) && runBlocking { persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) } != null) {
+        if (isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
             callback?.result(pumpEnactResultProvider.get().success(true).enacted(false))?.run()
             return false
@@ -677,11 +730,11 @@ class CommandQueueImplementation @Inject constructor(
         return HtmlHelper.fromHtml(s)
     }
 
-    override fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
-        val runningProfile = runBlocking { profileFunction.getProfile() } ?: return false
+    override suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
+        val runningProfile = profileFunction.getProfile() ?: return false
         val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
         if (!result) {
-            aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${runBlocking { profileFunction.getProfile() }}")
+            aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
             aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")
         }
         return result

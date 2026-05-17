@@ -18,9 +18,9 @@ import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.ui.compose.overview.chips.CobUiState
+import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
-import app.aaps.ui.compose.overview.graphs.CobUiState
-import app.aaps.ui.compose.overview.graphs.IobUiState
 import app.aaps.core.ui.R as CoreUiR
 
 /**

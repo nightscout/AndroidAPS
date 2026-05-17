@@ -6,7 +6,10 @@ import app.aaps.core.interfaces.rx.weardata.CwfData
 import org.json.JSONObject
 
 /** Where to send the export. */
-enum class ExportDestination { LOCAL, CLOUD, BOTH }
+enum class ExportDestination {
+
+    LOCAL, CLOUD, BOTH
+}
 
 /**
  * Snapshot of the current export-options configuration.
@@ -46,10 +49,7 @@ data class ExportPreparation(
 
 interface ImportExportPrefs {
 
-    fun doImportSharedPreferences(activity: FragmentActivity)
-    fun importSharedPreferences(activity: FragmentActivity)
     fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean = true)
-    fun prefsFileExists(): Boolean
     fun exportSharedPreferences(activity: FragmentActivity)
     fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean
     fun exportUserEntriesCsv(context: Context)
@@ -80,11 +80,6 @@ interface ImportExportPrefs {
     fun setLogCloudEnabled(enabled: Boolean)
     fun setCsvLocalEnabled(enabled: Boolean)
     fun setCsvCloudEnabled(enabled: Boolean)
-
-    /**
-     * Store for selected file from UI
-     */
-    var selectedImportFile: PrefsFile?
 
     // Compose import support — discrete steps, no UI
 

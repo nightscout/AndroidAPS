@@ -23,7 +23,6 @@ class AvgSmoothingPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_timeline_24)
         .icon(Icons.Default.Timeline)
         .pluginName(R.string.avg_smoothing_name)
         .shortName(R.string.smoothing_shortname)

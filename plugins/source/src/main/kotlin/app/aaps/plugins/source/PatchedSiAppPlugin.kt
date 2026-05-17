@@ -40,9 +40,7 @@ class PatchedSiAppPlugin @Inject constructor(
                 title = rh.gs(R.string.patched_si_app)
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_generic_cgm)
         .icon(IcGenericCgm)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.patched_si_app)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_patched_si_app),

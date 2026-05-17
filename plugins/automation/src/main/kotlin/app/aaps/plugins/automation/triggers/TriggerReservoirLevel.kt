@@ -1,20 +1,17 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
 import javax.inject.Inject
 
 class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
@@ -68,15 +65,9 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerReservoirLevelDesc, rh.gs(comparator.value.stringRes), reservoirLevel.value)
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_insulin)
+    override fun composeIcon() = IcPumpCartridge
+    override fun composeIconTint() = IconTint.Device
 
     override fun duplicate(): Trigger = TriggerReservoirLevel(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggerReservoirLevelLabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerReservoirLevelLabel) + ": ", rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname), reservoirLevel))
-            .build(root)
-    }
 }

@@ -12,25 +12,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
-import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalConfig
@@ -43,10 +40,10 @@ import app.aaps.core.ui.compose.preference.addPreferenceContent
 import app.aaps.core.ui.compose.preference.rememberPreferenceSectionState
 import app.aaps.core.ui.compose.preference.verticalScrollIndicators
 import app.aaps.ui.search.BuiltInSearchables
+import kotlinx.coroutines.launch
 
 /**
  * Screen for displaying all preferences from all plugins.
- * Maintains the same ordering as the legacy MyPreferenceFragment.
  *
  * Plugins are looked up via their interfaces through ActivePlugin, eliminating
  * direct dependencies on specific plugin implementations.
@@ -67,10 +64,8 @@ fun AllPreferencesScreen(
     val preferences = LocalPreferences.current
     val config = LocalConfig.current
     // Look up plugins by interface
-    val smsCommunicatorPlugin = activePlugin.getSpecificPluginsListByInterface(SmsCommunicator::class.java).firstOrNull()
     val automationPlugin = activePlugin.getSpecificPluginsListByInterface(Automation::class.java).firstOrNull()
     val autotunePlugin = activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).firstOrNull()
-    val maintenancePlugin = activePlugin.getSpecificPluginsListByInterface(Maintenance::class.java).firstOrNull()
 
     // Built-in preference screens from BuiltInSearchables (single source of truth)
     val generalPreferences = builtInSearchables.general
@@ -78,6 +73,7 @@ fun AllPreferencesScreen(
     val protectionPreferences = builtInSearchables.protection
     val pumpPreferences = builtInSearchables.pump
     val alertsPreferences = builtInSearchables.alerts
+    val maintenancePreferences = builtInSearchables.maintenance
 
     // Helper function to get preference content if plugin is enabled
     fun getPreferenceContentIfEnabled(plugin: PluginBase?, enabledCondition: Boolean = true): Any? {
@@ -97,11 +93,7 @@ fun AllPreferencesScreen(
         }
     }
 
-    // Build plugin preference screens in the same order as MyPreferenceFragment
     val pluginContents = buildList {
-        // 1. Overview plugin (always enabled)
-        getPreferenceContentIfEnabled(activePlugin.activeOverview as PluginBase)?.let { add(it) }
-
         // 2. Safety plugin (always enabled)
         getPreferenceContentIfEnabled(activePlugin.activeSafety as PluginBase)?.let { add(it) }
 
@@ -114,7 +106,7 @@ fun AllPreferencesScreen(
         }
 
         // 5. APS plugin (enabled only if APS is configured)
-        getPreferenceContentIfEnabled(activePlugin.activeAPS as PluginBase, config.APS)?.let { add(it) }
+        (activePlugin.activeAPS as? PluginBase)?.let { getPreferenceContentIfEnabled(it, config.APS)?.let { pref -> add(pref) } }
 
         // 6. Sensitivity plugin
         getPreferenceContentIfEnabled(activePlugin.activeSensitivity as PluginBase)?.let { add(it) }
@@ -127,9 +119,6 @@ fun AllPreferencesScreen(
             getPreferenceContentIfEnabled(plugin)?.let { add(it) }
         }
 
-        // 10. SMS Communicator plugin (found via interface)
-        getPreferenceContentIfEnabled(smsCommunicatorPlugin)?.let { add(it) }
-
         // 11. Automation plugin (found via interface)
         getPreferenceContentIfEnabled(automationPlugin)?.let { add(it) }
 
@@ -137,7 +126,11 @@ fun AllPreferencesScreen(
         getPreferenceContentIfEnabled(autotunePlugin)?.let { add(it) }
     }
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = LocalSnackbarHostState.current
+    val snackbarScope = rememberCoroutineScope()
+    val onShowMessage: (String) -> Unit = { message ->
+        snackbarScope.launch { snackbarHostState.showSnackbar(message) }
+    }
     var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
 
     BackHandler(enabled = composeScreen != null) {
@@ -150,7 +143,6 @@ fun AllPreferencesScreen(
     }
 
     CompositionLocalProvider(
-        LocalSnackbarHostState provides snackbarHostState,
         LocalNavigateToCompose provides { screen -> composeScreen = screen }
     ) {
         ProvidePreferenceTheme {
@@ -172,8 +164,7 @@ fun AllPreferencesScreen(
                             }
                         }
                     )
-                },
-                snackbarHost = { SnackbarHost(snackbarHostState) }
+                }
             ) { paddingValues ->
                 val listState = rememberLazyListState()
                 val sectionState = rememberPreferenceSectionState()
@@ -185,27 +176,25 @@ fun AllPreferencesScreen(
                     state = listState
                 ) {
                     // Built-in: General settings (first)
-                    addPreferenceContent(generalPreferences, sectionState)
-                    addPreferenceContent(appearancePreferences, sectionState)
+                    addPreferenceContent(generalPreferences, onShowMessage, sectionState)
+                    addPreferenceContent(appearancePreferences, onShowMessage, sectionState)
 
                     // Built-in: Protection settings
-                    addPreferenceContent(protectionPreferences, sectionState)
+                    addPreferenceContent(protectionPreferences, onShowMessage, sectionState)
 
                     // Plugin preferences (in fixed order, only enabled plugins)
                     pluginContents.forEach { content ->
-                        addPreferenceContent(content, sectionState)
+                        addPreferenceContent(content, onShowMessage, sectionState)
                     }
 
                     // Built-in: Pump settings
-                    addPreferenceContent(pumpPreferences, sectionState)
+                    addPreferenceContent(pumpPreferences, onShowMessage, sectionState)
 
                     // Built-in: Alerts settings
-                    addPreferenceContent(alertsPreferences, sectionState)
+                    addPreferenceContent(alertsPreferences, onShowMessage, sectionState)
 
-                    // Maintenance plugin (found via interface, always last)
-                    getPreferenceContentIfEnabled(maintenancePlugin)?.let { content ->
-                        addPreferenceContent(content, sectionState)
-                    }
+                    // Built-in: Maintenance settings (always last)
+                    addPreferenceContent(maintenancePreferences, onShowMessage, sectionState)
                 }
             }
         }

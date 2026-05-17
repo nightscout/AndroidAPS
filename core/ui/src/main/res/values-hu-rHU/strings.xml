@@ -6,16 +6,15 @@
     <string name="tt_label">ÁC</string>
     <string name="pump_unreachable">Pumpa nem elérhető</string>
     <string name="insulin_unit_shortname">Е</string>
-    <string name="reload">Újratölt</string>
     <string name="snooze">Szundi</string>
     <string name="superbolus">Szuperbólus</string>
     <string name="and">És</string>
     <string name="settings">Beállítások</string>
     <string name="configbuilder_insulin">Inzulin</string>
     <string name="value_unavailable_short">n/a</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="pump">Pumpa</string>
     <string name="mute">Némít</string>
-    <string name="waitingforpump">Várakozás pumpára</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="please_wait">Kérem várjon…</string>
     <string name="stop">Leállít</string>
@@ -25,13 +24,10 @@
     <string name="basal_long_label">Bázisütem</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pumpa idő frissítve</string>
     <string name="exit">Kilép</string>
     <string name="alarm">Riasztás</string>
-    <string name="duration_min_label">Időtartam [min]</string>
     <string name="notification">Értesítés</string>
     <string name="exists">létezik</string>
     <string name="notexists">nem létezik</string>
@@ -40,23 +36,16 @@
     <string name="name_short">Név:</string>
     <string name="time">Idő</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="remove_button">Eltávolít</string>
     <string name="bg_label">VC</string>
     <string name="calibration">Kalibrálás</string>
-    <string name="bolus_reminder">Bólus emlékeztető</string>
     <string name="duration_label">Időtartam</string>
     <string name="shortgramm">g</string>
     <string name="notconfigured">Nincs beállítva</string>
-    <string name="trend_arrow">Trendnyil</string>
     <string name="a11y_arrow_none">semmi</string>
     <string name="a11y_arrow_unknown">ismeretlen</string>
     <string name="a11y_high">magas</string>
     <string name="a11y_low">alacsony</string>
-    <string name="average">Átlag</string>
-    <string name="tir">TIR</string>
-    <string name="remove_label">ELTÁVOLÍT</string>
     <string name="profile">Profil</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_basaliob_label">Bázis IOB</string>
     <string name="overview_insulin_label">Inzulin</string>
     <string name="lowglucosesuspend">Alacsony SZG felfüggesztés</string>
@@ -71,6 +60,9 @@
     <!--    ProfileFunction-->
     <!--    APSResult-->
     <string name="duration">Időtartam</string>
+    <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Átlag</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
@@ -78,7 +70,6 @@
     <string name="careportal_announcement">Közlemény</string>
     <string name="careportal_question">Kérdés</string>
     <string name="glucosetype_sensor">Szenzor</string>
-    <string name="unknown">ismeretlen</string>
     <string name="wear">Wear</string>
     <string name="automation">Automatizálás</string>
     <string name="custom">Egyéni</string>
@@ -87,15 +78,13 @@
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
-    <!--    TDDStatsActivity-->
     <string name="basalrate">Bázis</string>
     <string name="bolus">Bólus</string>
-    <string name="tdd">TND</string>
-    <string name="weight">Súly</string>
     <!--    Ntp-->
     <!-- User Entry -->
     <string name="uel_cancel_bolus">BÓLUS MEGSZAKÍT</string>
     <!-- HardLimits -->
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bázis</string>
@@ -111,11 +100,8 @@
     <!--    Protection-->
     <!--    Pumps -->
     <string name="serial_number">Sorozatszám</string>
-    <string name="pump_icon">Pumpa ikon</string>
-    <string name="not_set_short">Nincs beállítva</string>
     <string name="reading_pump_history">Pumpa előzmények lekérése</string>
     <string name="pairing">Párosítás</string>
-    <string name="initializing">Inicializálás ...</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
@@ -125,14 +111,22 @@
     <string name="close">Bezár</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
-    <!-- NumberPicker -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <!--    Preferences -->
-    <!-- SmsCommunicator -->
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d nap</item>
@@ -150,8 +144,16 @@
     <string name="weekday_wednesday_short">Sze</string>
     <string name="weekday_tuesday_short">Ke</string>
     <string name="weekday_monday_short">Hé</string>
-    <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2f E</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Food Management -->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

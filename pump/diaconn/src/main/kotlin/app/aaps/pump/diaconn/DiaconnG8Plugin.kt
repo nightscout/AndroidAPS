@@ -5,9 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -47,6 +44,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -54,9 +52,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcPluginDiaconn
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.diaconn.compose.DiaconnComposeContent
 import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
@@ -109,7 +104,6 @@ class DiaconnG8Plugin @Inject constructor(
         .icon(IcPluginDiaconn)
         .pluginName(R.string.diaconn_g8_pump)
         .shortName(R.string.diaconn_g8_pump_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_pump_diaconn_g8),
     ownPreferences = listOf(
         DiaconnIntentKey::class.java, DiaconnIntKey::class.java, DiaconnBooleanKey::class.java,
@@ -194,7 +188,7 @@ class DiaconnG8Plugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 connect from: $reason")
         if (diaconnG8Service != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = diaconnG8Service?.connect(reason, mDeviceAddress) == true
-            if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported)
+            if (!success) rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.ble_not_supported), EventShowSnackbar.Type.Error))
         }
     }
 
@@ -216,7 +210,7 @@ class DiaconnG8Plugin @Inject constructor(
         diaconnG8Service?.stopConnecting()
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         diaconnG8Service?.readPumpStatus()
         pumpDescription.basalStep = diaconnG8Pump.basalStep
         pumpDescription.bolusStep = diaconnG8Pump.bolusStep
@@ -269,7 +263,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     override fun isBusy(): Boolean = false
 
-    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (!isInitialized()) {
             notificationManager.post(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED, app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set, level = NotificationLevel.URGENT)
@@ -317,8 +311,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     override val baseBasalRate: PumpRate get() = PumpRate(diaconnG8Pump.baseAmount)
 
-    @Synchronized
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -329,7 +322,7 @@ class DiaconnG8Plugin @Inject constructor(
         if (detailedBolusInfo.insulin > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
         result.success = connectionOK
-        result.bolusDelivered = bolusProgressData.state.value?.delivered ?: 0.0
+        result.bolusDelivered = bolusProgressData.state.value?.delivered?.cU ?: 0.0
 
         if (result.success) result.enacted = true
         if (!result.success) {
@@ -344,8 +337,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     // This is called from APS
-    @Synchronized
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         val doTempOff = baseBasalRate.cU - absoluteRate == 0.0
         val doLowTemp = absoluteRate < baseBasalRate.cU
@@ -415,12 +407,10 @@ class DiaconnG8Plugin @Inject constructor(
         return result
     }
 
-    @Synchronized
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
         error("Pump doesn't support percent basal rate")
 
-    @Synchronized
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
@@ -459,8 +449,7 @@ class DiaconnG8Plugin @Inject constructor(
         return result
     }
 
-    @Synchronized
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (diaconnG8Pump.isTempBasalInProgress) {
             diaconnG8Service?.tempBasalStop()
@@ -478,7 +467,7 @@ class DiaconnG8Plugin @Inject constructor(
         return result
     }
 
-    @Synchronized override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (diaconnG8Pump.isExtendedInProgress) {
             diaconnG8Service?.extendedBolusStop()
@@ -502,7 +491,7 @@ class DiaconnG8Plugin @Inject constructor(
     override fun model(): PumpType = PumpType.DIACONN_G8
     override fun serialNumber(): String = diaconnG8Pump.serialNo.toString()
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override fun loadTDDs(): PumpEnactResult = loadHistory()
+    override suspend fun loadTDDs(): PumpEnactResult = loadHistory()
     override fun getCustomActions(): List<CustomAction>? = null
     override fun executeCustomAction(customActionType: CustomActionType) {}
     override fun canHandleDST(): Boolean = false
@@ -553,25 +542,4 @@ class DiaconnG8Plugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        val speedEntries = arrayOf<CharSequence>("1 U/min", "2 U/min", "3 U/min", "4 U/min", "5 U/min", "6 U/min", "7 U/min", "8 U/min")
-        val speedValues = arrayOf<CharSequence>("1", "2", "3", "4", "5", "6", "7", "8")
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "diaconn_settings"
-            title = rh.gs(R.string.diaconn_g8_pump)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DiaconnIntKey.BolusSpeed, title = app.aaps.core.ui.R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogInsulinChange, title = R.string.diaconn_g8_loginsulinchange_title, summary = R.string.diaconn_g8_loginsulinchange_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogCannulaChange, title = R.string.diaconn_g8_logcanulachange_title, summary = R.string.diaconn_g8_logcanulachange_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogTubeChange, title = R.string.diaconn_g8_logtubechange_title, summary = R.string.diaconn_g8_logtubechange_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogBatteryChange, title = R.string.diaconn_g8_logbatterychange_title, summary = R.string.diaconn_g8_logbatterychange_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.SendLogsToCloud, title = R.string.diaconn_g8_cloudsend_title, summary = R.string.diaconn_g8_cloudsend_summary))
-        }
-    }
 }

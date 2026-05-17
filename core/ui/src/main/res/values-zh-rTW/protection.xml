@@ -13,10 +13,7 @@
     <string name="bolus_pin">注射 PIN 碼</string>
     <string name="protection_timeout_title">密碼和 PIN 碼保持時間 [秒]</string>
     <string name="protection_timeout_summary">密碼或 PIN 碼需要重新輸入的時間</string>
-    <string name="biometric">生物識別</string>
-    <string name="custom_password">自訂密碼</string>
-    <string name="custom_pin">自訂 PIN 碼</string>
-    <string name="noprotection">無保護</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">不安全的後備</string>
     <string name="unsecure_fallback_descriotion_biometric">為了生效，生物識別保護需要設定一個主密碼作為後備。\n\n請設定主密碼！</string>
     <string name="password_set">密碼已設定！</string>
@@ -27,8 +24,13 @@
     <string name="password_not_changed">密碼未更改</string>
     <string name="pin_not_changed">PIN 碼未更改</string>
     <string name="pin_cleared">PIN 碼已清除！</string>
-    <string name="password_hint">在此輸入密碼</string>
-    <string name="pin_hint">在此輸入 PIN 碼</string>
+    <string name="protection_password_hint">在此輸入密碼</string>
+    <string name="protection_pin_hint">在此輸入 PIN</string>
+    <string name="auth_hint_master_password">輸入主密碼</string>
+    <string name="auth_hint_master_or_pin">輸入主密碼或 PIN</string>
+    <string name="auth_hint_master_or_password">輸入主密碼或自訂密碼</string>
+    <string name="use_pin_password">使用 PIN/密碼</string>
+    <string name="current_master_password">目前的主密碼</string>
     <string name="master_password_not_set">未設置主密碼</string>
     <string name="aaps_directory_not_selected">未選擇 AAPS 目錄</string>
 </resources>

@@ -3,7 +3,7 @@ package app.aaps.plugins.sync.openhumans.compose
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin

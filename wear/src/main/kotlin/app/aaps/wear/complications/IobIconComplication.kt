@@ -9,15 +9,12 @@ import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
-import app.aaps.wear.interaction.utils.DisplayFormat
-import app.aaps.wear.interaction.utils.SmallestDoubleString
 import dagger.android.AndroidInjection
 
 /**
  * IOB Icon Complication
  *
  * Shows insulin on board (IOB) with insulin icon
- * Uses SmallestDoubleString for optimal display in limited space
  * Tap action opens bolus wizard
  *
  */
@@ -38,7 +35,7 @@ class IobIconComplication : ModernBaseComplicationProviderService() {
 
         return when (type) {
             ComplicationType.SHORT_TEXT      -> {
-                val iob = SmallestDoubleString(statusData.iobSum, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MAX_FIELD_LEN_SHORT)
+                val iob = statusData.iobSum + getString(R.string.insulin_unit_short)
 
                 ShortTextComplicationData.Builder(
                     text = PlainComplicationText.Builder(text = iob).build(),

@@ -22,7 +22,7 @@ dependencies {
 
     implementation(libs.androidx.hilt.navigation.compose)
 
-    api(libs.net.danlew.android.joda)
+    runtimeOnly(libs.net.danlew.android.joda)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)

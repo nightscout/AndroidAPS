@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -122,19 +121,36 @@ private fun CommunicationStatusCard(banner: StatusBanner?, queueStatus: String?)
 // ── Info section ───────────────────────────────────────────────────────────
 
 @Composable
-private fun InfoSection(rows: List<PumpInfoRow>) {
+private fun InfoSection(rows: List<PumpInfoInterface>) {
     AapsCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             rows.forEachIndexed { index, row ->
-                AnimatedVisibility(visible = row.visible) {
-                    Column {
-                        InfoRowItem(row)
-                        if (index < rows.lastIndex) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant
-                            )
+                if (row is PumpInfoRow) {
+                    AnimatedVisibility(visible = row.visible) {
+                        Column {
+                            InfoRowItem(row)
+                            if (index < rows.lastIndex) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    color = MaterialTheme.colorScheme.outlineVariant
+                                )
+                            }
                         }
+                    }
+                } else if (row is PumpInfoGroup) {
+                    for (infoRow in row.list) {
+                        AnimatedVisibility(visible = infoRow.visible) {
+                            Column {
+                                InfoRowItem(infoRow)
+                            }
+                        }
+                    }
+
+                    if (index < rows.lastIndex) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
                     }
                 }
             }
@@ -185,18 +201,12 @@ private fun ActionButtons(actions: List<PumpAction>) {
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
                 ) {
-                    if (action.icon != null) {
+                    action.icon?.let {
                         Icon(
-                            imageVector = action.icon,
+                            imageVector = it,
                             contentDescription = action.label,
                             modifier = Modifier.size(18.dp),
                             tint = Color.Unspecified
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(id = action.iconRes),
-                            contentDescription = action.label,
-                            modifier = Modifier.size(18.dp)
                         )
                     }
                     Spacer(modifier = Modifier.size(4.dp))

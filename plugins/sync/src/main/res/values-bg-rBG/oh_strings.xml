@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humansбеше настроен. В случай че искате да спреде качването на данни, натиснете \'Изход\'.</string>
     <string name="not_setup_info">Open Humans в момента е неактивна. За да започнете да качвате данни, моля натиснете \'Настройка\'.</string>
     <string name="project_member_id">Project Member ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Качване, само при свързано WiFi</string>
-    <string name="only_upload_if_charging">Качване само при зареждане</string>
     <string name="open_humans_uploading">Качване на данни към Open Humans…</string>
     <string name="open_humans_notifications">Open Humans нотификации</string>
     <string name="uploading_to_open_humans">AAPS прикачва данни към Open Humans. Това може да отнеме известно време.</string>

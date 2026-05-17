@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
@@ -56,7 +55,6 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
 
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var receiverDelegate: ReceiverDelegate
-    private lateinit var dataWorkerStorage: DataWorkerStorage
     private lateinit var sut: LoadDeviceStatusWorker
 
     init {
@@ -66,7 +64,6 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
                 it.fabricPrivacy = fabricPrivacy
                 it.dateUtil = dateUtil
                 it.nsClientV3Plugin = nsClientV3Plugin
-                it.dataWorkerStorage = dataWorkerStorage
                 it.nsDeviceStatusHandler = nsDeviceStatusHandler
                 it.nsClientRepository = nsClientRepository
             }
@@ -75,7 +72,6 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setUp() {
-        dataWorkerStorage = DataWorkerStorage(context)
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
@@ -84,7 +80,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Что верно о длительности работы инсулина DIA?</string>
     <string name="dia_label_exam">Время действия инсулина (DIA)</string>
-    <string name="dia_profile">Следует задать значение DIA в вашем профиле.</string>
     <string name="dia_minimumis5h">Минимально допустимое значение-5 часов.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением длительности действия инсулина DIA, заданным в помпе до AAPS, то при запуске цикла изменять это значение не требуется.</string>
@@ -76,9 +75,7 @@
     <string name="prerequisites2_supportedcgm">Поддерживаемая система мониторинга и подходящее приложение для получения данных ГК на устройстве.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/ru/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Обновление AAPS</string>
-    <string name="update_git">На компьютере должен быть установлен и настроен Git.</string>
     <string name="update_asap">При выходе новой версии AAPS, функционал старых версий может быть удаленно ограничен после указанного периода времени.</string>
-    <string name="update_keys">Необходимо сохранить и запомнить расположение хранилища ключей и использовать тот же ключ подписи для обновлений, что и для предыдущей установки.</string>
     <string name="update_askfriend">Если у вас не получается самостоятельно собрать АПК - вы можете установить приложение, собранное другом.</string>
     <string name="update_hint1">https://wiki.aaps.app/ru/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Устранение неполадок</string>

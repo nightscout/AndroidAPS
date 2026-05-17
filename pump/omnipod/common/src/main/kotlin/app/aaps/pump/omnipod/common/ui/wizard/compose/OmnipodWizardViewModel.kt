@@ -3,12 +3,19 @@ package app.aaps.pump.omnipod.common.ui.wizard.compose
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.LocalProfileManager
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.ui.compose.pump.ProfileGateStepHost
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -18,6 +25,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Provider
 
 /**
@@ -58,8 +66,10 @@ sealed class ActionState {
 abstract class OmnipodWizardViewModel(
     protected val logger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    protected val pumpEnactResultProvider: Provider<PumpEnactResult>
-) : ViewModel(), SiteLocationStepHost {
+    protected val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    protected val profileFunction: ProfileFunction,
+    protected val localProfileManager: LocalProfileManager
+) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     // region Step navigation
 
@@ -168,18 +178,85 @@ abstract class OmnipodWizardViewModel(
 
     // endregion
 
+    // region Profile gate (ProfileGateStepHost)
+
+    private val _availableProfiles = MutableStateFlow<List<String>>(emptyList())
+    override val availableProfiles: StateFlow<List<String>> = _availableProfiles
+
+    private val _selectedProfile = MutableStateFlow<String?>(null)
+    override val selectedProfile: StateFlow<String?> = _selectedProfile
+
+    /** Resolved during init: true if no PS exists at activation time. */
+    private val _needsProfileGate = MutableStateFlow(false)
+
+    /** Source identifier for the user-entry log, set by concrete VMs (e.g. Sources.OmnipodEros). */
+    protected abstract val pumpSource: Sources
+
+    /** Fallback insulin config used when creating a PS via the gate. Concrete VMs return their first available insulin. */
+    protected abstract fun fallbackICfg(): ICfg?
+
+    /** Concrete VMs call this from their init coroutine after profile data is available. */
+    protected suspend fun resolveProfileGate() {
+        _needsProfileGate.value = profileFunction.getRequestedProfile() == null
+        if (_needsProfileGate.value) {
+            val names = localProfileManager.profiles.map { it.name }
+            _availableProfiles.value = names
+            if (_selectedProfile.value !in names) {
+                _selectedProfile.value = names.getOrNull(localProfileManager.currentProfileIndex) ?: names.firstOrNull()
+            }
+        }
+    }
+
+    override fun selectProfile(name: String) {
+        _selectedProfile.value = name
+    }
+
+    override fun activateSelectedProfile() {
+        val name = _selectedProfile.value ?: return
+        val store = localProfileManager.profile ?: return
+        val iCfg = fallbackICfg() ?: return
+        viewModelScope.launch {
+            val result = profileFunction.createProfileSwitch(
+                profileStore = store,
+                profileName = name,
+                durationInMinutes = 0,
+                percentage = 100,
+                timeShiftInHours = 0,
+                timestamp = System.currentTimeMillis(),
+                action = Action.PROFILE_SWITCH,
+                source = pumpSource,
+                note = null,
+                listValues = listOf(ValueWithUnit.SimpleString(name)),
+                iCfg = iCfg
+            )
+            if (result == null) {
+                logger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
+            } else {
+                _needsProfileGate.value = false
+                moveToNext()
+            }
+        }
+    }
+
+    override fun cancelGate() {
+        _events.tryEmit(OmnipodWizardEvent.Finish)
+    }
+
+    // endregion
+
     // region Initialization
 
     fun initializeActivation(type: ActivationType) {
         wizardType = WizardType.ACTIVATION
         wizardPages = buildList {
+            if (_needsProfileGate.value) add(OmnipodWizardStep.PROFILE_GATE)
             if (type == ActivationType.LONG) {
                 add(OmnipodWizardStep.START_POD_ACTIVATION)
                 if (showInsulinStep) add(OmnipodWizardStep.SELECT_INSULIN)
                 add(OmnipodWizardStep.INITIALIZE_POD)
             }
-            add(OmnipodWizardStep.ATTACH_POD)
             if (showSiteLocationStep) add(OmnipodWizardStep.SITE_LOCATION)
+            add(OmnipodWizardStep.ATTACH_POD)
             add(OmnipodWizardStep.INSERT_CANNULA)
             add(OmnipodWizardStep.POD_ACTIVATED)
         }
@@ -253,7 +330,7 @@ abstract class OmnipodWizardViewModel(
                         _actionState.value = ActionState.Success(result)
                     } else {
                         _actionState.value = ActionState.Error(
-                            result.comment ?: "Unknown error"
+                            result.comment
                         )
                     }
                 },

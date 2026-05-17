@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -31,7 +32,6 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
-import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
@@ -60,6 +60,7 @@ import app.aaps.implementation.logging.LoggerUtilsImpl
 import app.aaps.implementation.logging.UserEntryLoggerImpl
 import app.aaps.implementation.notifications.NotificationManagerImpl
 import app.aaps.implementation.overview.LastBgDataImpl
+import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.preference.PreferenceVisibilityContextImpl
 import app.aaps.implementation.profile.LocalProfileManagerImpl
@@ -78,7 +79,6 @@ import app.aaps.implementation.pump.PumpStatusProviderImpl
 import app.aaps.implementation.pump.PumpSyncImplementation
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
 import app.aaps.implementation.pump.TemporaryBasalStorageImpl
-import app.aaps.implementation.pump.WarnColorsImpl
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.ReceiverStatusStoreImpl
 import app.aaps.implementation.resources.IconsProviderImplementation
@@ -103,7 +103,8 @@ import dagger.hilt.components.SingletonComponent
 @Module(
     includes = [
         ImplementationModule.Bindings::class,
-        CommandQueueModule::class
+        CommandQueueModule::class,
+        MaintenanceImplModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)
@@ -121,6 +122,7 @@ class ImplementationModule {
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
+        @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
         @Binds fun bindInsulin(insulinImpl: InsulinImpl): Insulin
@@ -135,7 +137,6 @@ class ImplementationModule {
         @Binds fun bindSecureEncrypt(secureEncryptImpl: SecureEncryptImpl): SecureEncrypt
         @Binds fun bindLoggerUtils(loggerUtilsImpl: LoggerUtilsImpl): LoggerUtils
         @Binds fun bindProfiler(profilerImpl: ProfilerImpl): Profiler
-        @Binds fun bindWarnColors(warnColorsImpl: WarnColorsImpl): WarnColors
         @Binds fun bindHardLimits(hardLimitsImpl: HardLimitsImpl): HardLimits
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
         @Binds fun bindBlePreCheck(blePreCheckImpl: BlePreCheckImpl): BlePreCheck

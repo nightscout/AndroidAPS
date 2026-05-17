@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans bol nastavený. Pokiaľ chcete prestať nahrávať, kliknite na \"Odhlásiť\".</string>
     <string name="not_setup_info">Open Humans je momentálne neaktívny. Ak chcete začať nahrávať dáta, kliknite na tlačítko \"Nastaviť\".</string>
     <string name="project_member_id">ID člena projektu: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Odoslať iba ak ste pripojený k Wi-Fi</string>
-    <string name="only_upload_if_charging">Odoslať iba pri nabíjaní</string>
     <string name="open_humans_uploading">Nahrávanie na Open Humans…</string>
     <string name="open_humans_notifications">Notifikácie Open Humans</string>
     <string name="uploading_to_open_humans">AAPS nahráva do Open Humans. Može to chvíľu trvať.</string>

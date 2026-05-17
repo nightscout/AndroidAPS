@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Geldigheid wachtwoord en pincode [s]</string>
     <string name="protection_timeout_summary">Tijd tot het wachtwoord of de pincode moet worden ingevoerd</string>
-    <string name="biometric">Biometrisch</string>
-    <string name="custom_password">Aangepast wachtwoord</string>
-    <string name="custom_pin">Aangepaste PIN</string>
-    <string name="noprotection">Geen beveiliging</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Niet beveiligde fallback</string>
     <string name="unsecure_fallback_descriotion_biometric">Om biometrische beveiliging te kunnen gebruiken, heb je een masterwachtwoord nodig als backup optie.\n\nStel dus een masterwachtwoord in!</string>
     <string name="password_set">Wachtwoord ingesteld!</string>
@@ -27,8 +24,6 @@
     <string name="password_not_changed">Wachtwoord niet gewijzigd</string>
     <string name="pin_not_changed">Pincode niet gewijzigd</string>
     <string name="pin_cleared">Pincode gewist!</string>
-    <string name="password_hint">Vul hier het wachtwoord in</string>
-    <string name="pin_hint">Voer pincode hier in</string>
     <string name="master_password_not_set">Masterwachtwoord niet ingesteld</string>
     <string name="aaps_directory_not_selected">AAPS map niet geselecteerd</string>
 </resources>

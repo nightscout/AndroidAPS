@@ -2,7 +2,6 @@ package app.aaps.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.PumpDriver
@@ -16,6 +15,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +66,8 @@ open class TestModule {
 
         @Reusable
         @Provides
-        fun providesDefaultSharedPreferences(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        fun providesDefaultSharedPreferences(context: Context): SharedPreferences =
+            context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
     }
 
     @Module
@@ -74,6 +75,7 @@ open class TestModule {
     interface AppBindings {
 
         @Binds fun bindContext(mainApp: TestApplication): Context
+        @Binds @ApplicationContext fun bindApplicationContext(mainApp: TestApplication): Context
         @Binds fun bindInjector(mainApp: TestApplication): HasAndroidInjector
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 

@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
@@ -61,7 +60,6 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
 
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var receiverDelegate: ReceiverDelegate
-    private lateinit var dataWorkerStorage: DataWorkerStorage
     private lateinit var sut: LoadBgWorker
 
     init {
@@ -85,14 +83,13 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         whenever(nsClientSource.isEnabled()).thenReturn(true)
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
-        dataWorkerStorage = DataWorkerStorage(context)
         whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
         whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
         receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

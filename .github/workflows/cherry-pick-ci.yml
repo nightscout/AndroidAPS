@@ -33,15 +33,62 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Fetch all remotes and tags
+      - name: Load jdk versions
         run: |
-          echo "🔗 Adding upstream: https://github.com/${{ github.event.inputs.upstream_repo }}.git"
-          git remote add upstream https://github.com/${{ github.event.inputs.upstream_repo }}.git
-          git fetch --all
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
+      - name: Fetch upstream and verify commits
+        run: |
+          git remote add upstream "https://github.com/${{ github.event.inputs.upstream_repo }}.git"
+          git fetch upstream
+          echo "✅ Upstream branches fetched."
+
+          ALL_FOUND=true
+          for HASH in ${{ github.event.inputs.cherry_pick }}; do
+            TYPE=$(git cat-file -t "$HASH" 2>/dev/null || true)
+            if [ "$TYPE" = "commit" ]; then
+              echo "✅ $HASH is reachable from a branch"
+              continue
+            fi
+
+            # Commit not on any branch — may be from a squash-merged PR.
+            # Use the GitHub API to find which PR contains this commit, then
+            # fetch that PR's preserved ref (refs/pull/<n>/head).
+            echo "ℹ️ $HASH not on any branch — looking up PR via GitHub API..."
+            PR_NUMBER=$(curl -s \
+              -H "Authorization: Bearer ${{ github.token }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.event.inputs.upstream_repo }}/commits/$HASH/pulls" \
+              | jq -r '.[0].number // empty')
+
+            if [ -n "$PR_NUMBER" ]; then
+              echo "🔗 Found in PR #$PR_NUMBER — fetching PR ref..."
+              git fetch upstream "refs/pull/$PR_NUMBER/head:refs/remotes/upstream/pr/$PR_NUMBER"
+              TYPE2=$(git cat-file -t "$HASH" 2>/dev/null || true)
+              if [ "$TYPE2" = "commit" ]; then
+                echo "✅ $HASH now available via PR #$PR_NUMBER"
+              else
+                echo "❌ $HASH still not found after fetching PR #$PR_NUMBER"
+                ALL_FOUND=false
+              fi
+            else
+              echo "❌ $HASH is not reachable from any branch or PR in upstream."
+              echo "   Possible cause: squash-merged and PR ref no longer preserved."
+              echo "   Tip: use the merge commit SHA that landed on the target branch instead."
+              ALL_FOUND=false
+            fi
+          done
+
+          if [ "$ALL_FOUND" = "false" ]; then
+            echo "🛑 One or more commits could not be resolved. Aborting."
+            exit 1
+          fi
+          echo "✅ All commits verified and reachable."
 
       - name: Cherry-pick commits
         run: |
@@ -206,10 +253,10 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          # When upgrading the JDK, please update this section accordingly as well.
-          java-version: 21
+          # Java version is defined in .github/versions.env
+          java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           cache: gradle
 

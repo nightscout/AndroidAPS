@@ -3,7 +3,6 @@ package app.aaps.pump.danar.comm
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import dagger.android.HasAndroidInjector
 
 class MsgInitConnStatusTime(
@@ -21,14 +20,11 @@ class MsgInitConnStatusTime(
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRKoreanPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, false)
-            danaRPlugin.setFragmentVisible(PluginType.PUMP, false)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaDriver")
-            rxBus.send(EventRebuildTabs())
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             failed = false
             return

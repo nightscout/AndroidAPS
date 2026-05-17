@@ -47,4 +47,10 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
 
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
     suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<GlucoseValue>
+
+    @Query("SELECT * FROM glucoseValues WHERE sourceSensor = :source AND pumpId = :pumpId LIMIT 1")
+    suspend fun getGlucoseValueByPumpIdAndSource(source: String, pumpId: Long): GlucoseValue?
+
+    @Query("SELECT * FROM glucoseValues WHERE sourceSensor = :source AND pumpId BETWEEN :startPumpId AND :endPumpId ORDER BY pumpId ASC")
+    suspend fun getGlucoseValuesByPumpIdRange(source: String, startPumpId: Long, endPumpId: Long): List<GlucoseValue>
 }

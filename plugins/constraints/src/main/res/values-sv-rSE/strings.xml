@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Sommar/vintertid inträffar inom 24 timmar</string>
     <string name="dst_loop_disabled_warning">Sommar/vintertid ändrades för mindre än 3 timmar sedan. Closed Loop avstängt</string>
@@ -27,7 +26,6 @@
     <string name="smbnotallowedinopenloopmode">SMB inte tillåtet i Open Loop</string>
     <string name="maxvalueinpreferences">maxvärde i Inställningar</string>
     <string name="hardlimit">hård begränsning</string>
-    <string name="treatmentssafety_title">Säkerhetsbegränsningar</string>
     <!-- Objectives -->
     <string name="completed_well_done">Slutfört, bra jobbat!</string>
     <string name="not_completed_yet">Inte slutfört ännu</string>
@@ -40,8 +38,6 @@
     <string name="objectives_shortname">Mål</string>
     <string name="description_objectives">Inlärningsprogram</string>
     <string name="doyouwantresetstart">Vill du starta om målet? Du kan förlora de steg du gjort hittills.</string>
-    <string name="objectives_next_button">Nästa</string>
-    <string name="objectives_previous_button">Föregående</string>
     <string name="objectives_button_unfinish">Nollställ slutfört läge</string>
     <string name="objectives_button_unstart">Nollställ startat läge</string>
 </resources>

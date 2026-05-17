@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">동기화</string>
-    <string name="danars_no_device_available">현재까지 발견된 기기가 없습니다.</string>
-    <string name="danars_pairingok">연동완료</string>
     <string name="danars_pairingtimedout">연동시간초과</string>
-    <string name="danars_waitingforpairing">펌프연동 대기중</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS와 Dana-i 펌프를 위한 펌프 연동</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Boluses</string>
     <string name="danar_history_carbohydrates">탄수화물</string>
     <string name="danar_history_dailyinsulin">일일 인슐린</string>
-    <string name="danar_history_errors">에러</string>
     <string name="danar_history_glucose">혈당</string>
     <string name="danar_history_refill">교체</string>
     <string name="danar_history_syspend">중지</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">시간형식</string>
     <string name="danar_button_scroll">버튼 스크롤</string>
     <string name="danar_beep">버튼 누르면 소리가 납니다.</string>
-    <string name="danar_pump_alarm">알람</string>
     <string name="danar_pump_alarm_sound">소리</string>
     <string name="danar_pump_alarm_vibrate">진동</string>
     <string name="danar_pump_alarm_both">모두</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">내수용 다나R 펌프와 연동(다나 R)</string>
     <string name="description_pump_dana_r_v2">업그레이드 펌웨어가 설치된 다나R 펌프와 연동</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">블루투스 어댑터를 찾지 못했습니다</string>
     <string name="devicenotfound">선택된 기기를 찾지 못했습니다</string>
     <string name="danar_switchtouhmode">펌프에서 U/d에서 U/h로 모드를 변경하세요</string>
     <string name="danarkoreanpump">다나R 한글</string>
@@ -91,27 +84,20 @@
     <string name="danarv2pump">다나R v2</string>
     <string name="danar_disableeasymode">펌프에서 이지모드(EasyUI)를 해제하세요</string>
     <string name="profile_set_failed">Basal 프로파일 설정이 실패하였습니다</string>
-    <string name="danar_bluetooth_status">블루투스 상태</string>
-    <string name="firmware_label">펌웨어</string>
     <string name="danar_pump_settings">다나 펌프 설정</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">켜짐</string>
     <string name="option_off">꺼짐</string>
-    <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="danars_password_title">펌프 비밀번호 (v1 전용)</string>
     <string name="danar_password_title">펌프 비밀번호</string>
-    <string name="bolusspeed">Bolus 속도</string>
     <string name="selectedpump">선택된 펌프</string>
     <string name="rs_loginsulinchange_title">주사기 교체 기록</string>
     <string name="rs_loginsulinchange_summary">히스토리에서 발견될 때 \"인슐린 교체\"를 실행에서 입력</string>
     <string name="rs_logcanulachange_title">Canula 변경 기록</string>
     <string name="rs_logcanulachange_summary">히스토리에서 발견될 때 \"인슐린 교체\"를 실행에서 입력</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">펌프\n에 있는 OK을 누르고 2개의 표시된 번호\n를 입력하는 동안 빼기 버튼을 눌러 화면이 꺼지지 않게 합니다.</string>
     <string name="num1pin">1: (12자리)</string>
     <string name="num2pin">2: (8자리)</string>
     <string name="basal_bolus_step">Basal/bolus 단계</string>
-    <string name="carbs_store_error">탄수화물이 올바르게 저장되지 않았을 수 있습니다. 필요한 경우 수동으로 확인하고 다시 저장하십시오.</string>
 </resources>

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Сдвояване</string>
-    <string name="danars_no_device_available">Все още устройството не е намерено</string>
-    <string name="danars_pairingok">Сдвояване - ОК</string>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
-    <string name="danars_waitingforpairing">Очаква сдвояване с помпа</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Интеграция за помпа DANA Diabecare RS и Dana-i</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Болуси</string>
     <string name="danar_history_carbohydrates">Въглехидрати</string>
     <string name="danar_history_dailyinsulin">Инсулин за деня</string>
-    <string name="danar_history_errors">Грешки</string>
     <string name="danar_history_glucose">КЗ</string>
     <string name="danar_history_refill">Презареждане</string>
     <string name="danar_history_syspend">Спиране</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">Формат на времето</string>
     <string name="danar_button_scroll">Превъртане при задъжане</string>
     <string name="danar_beep">Звуков сигнал при натискане на бутон</string>
-    <string name="danar_pump_alarm">Тип аларма</string>
     <string name="danar_pump_alarm_sound">Звукова</string>
     <string name="danar_pump_alarm_vibrate">Вибрация</string>
     <string name="danar_pump_alarm_both">И двете</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">Поддръжка за корейски Dana Diabecare R помпи</string>
     <string name="description_pump_dana_r_v2">Поддръжка за Dana Diabecare R помпи с обновен софтуер</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Не е открит Bluetooth адаптер</string>
     <string name="devicenotfound">Избраното устройство не е открито</string>
     <string name="danar_switchtouhmode">Променете режима от Е/д на Е/ч в помпата</string>
     <string name="danarkoreanpump">DanaR Корейска</string>
@@ -91,27 +84,20 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Забрани EasyUI режим в помпата</string>
     <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
-    <string name="danar_bluetooth_status">Bluetooh статус</string>
-    <string name="firmware_label">Фърмуер</string>
     <string name="danar_pump_settings">DanaR настройки</string>
     <string name="time_format_12h">12ч</string>
     <string name="time_format_24h">24ч</string>
     <string name="option_on">Вкл</string>
     <string name="option_off">Изкл</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
     <string name="danars_password_title">Парола на помпата (само v1)</string>
     <string name="danar_password_title">Парола за помпата</string>
-    <string name="bolusspeed">Скорост на болус</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="rs_loginsulinchange_title">Записвай смените на резервоар</string>
     <string name="rs_loginsulinchange_summary">Добави \"Смяна на резервоар\" в НС, когато е открит в историята</string>
     <string name="rs_logcanulachange_title">Записвай смяна на канюла</string>
     <string name="rs_logcanulachange_summary">Добави \"смяна на канюла\" в НС, когато е открит в историята</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Натиснете OK на помпата\nи въведете двата номера\nДръжте дисплея на помпата включен чрез натискане минус бутон, докато завършите въвеждане на код.</string>
     <string name="num1pin">1: (12 цифри)</string>
     <string name="num2pin">2: (8 цифри)</string>
     <string name="basal_bolus_step">Базал/Болус стъпка</string>
-    <string name="carbs_store_error">Възможно е въглехидратите да не са се запазили. Моля, проверете ръчно и ги запишете отново ако е необходимо.</string>
 </resources>

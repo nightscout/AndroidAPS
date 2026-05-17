@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,9 +18,7 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
-import kotlinx.coroutines.launch
 
 /**
  * Composable password/PIN preference that opens a dialog to set the password.
@@ -39,14 +36,13 @@ import kotlinx.coroutines.launch
 fun AdaptivePasswordPreferenceItem(
     stringKey: StringPreferenceKey,
     hashPassword: (String) -> String,
+    onShowMessage: (String) -> Unit,
     titleResId: Int = 0,
     visibilityKey: IntPreferenceKey? = null,
     visibilityValue: Int? = null,
     visibilityContext: PreferenceVisibilityContext? = null
 ) {
     val preferences = LocalPreferences.current
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = LocalSnackbarHostState.current
     val effectiveTitleResId = if (titleResId != 0) titleResId else stringKey.titleResId
 
     // Skip if no title resource is available
@@ -100,31 +96,31 @@ fun AdaptivePasswordPreferenceItem(
             onConfirm = { password1, password2 ->
                 when {
                     password1 != password2 -> {
-                        scope.launch { snackbarHostState.showSnackbar(dontMatchMsg) }
+                        onShowMessage(dontMatchMsg)
                     }
 
                     password1.isNotEmpty() -> {
                         preferences.put(stringKey, if (stringKey.isHashed) hashPassword(password1) else password1)
-                        scope.launch { snackbarHostState.showSnackbar(setMsg) }
+                        onShowMessage(setMsg)
                         hasValue = true
                         showDialog = false
                     }
 
                     preferences.getIfExists(stringKey) != null -> {
                         preferences.remove(stringKey)
-                        scope.launch { snackbarHostState.showSnackbar(clearedMsg) }
+                        onShowMessage(clearedMsg)
                         hasValue = false
                         showDialog = false
                     }
 
                     else -> {
-                        scope.launch { snackbarHostState.showSnackbar(notChangedMsg) }
+                        onShowMessage(notChangedMsg)
                         showDialog = false
                     }
                 }
             },
             onCancel = {
-                scope.launch { snackbarHostState.showSnackbar(notChangedMsg) }
+                onShowMessage(notChangedMsg)
                 showDialog = false
             }
         )
@@ -137,7 +133,8 @@ private fun AdaptivePasswordPreferencePreview() {
     PreviewTheme {
         AdaptivePasswordPreferenceItem(
             stringKey = StringKey.ProtectionSettingsPassword,
-            hashPassword = { it }
+            hashPassword = { it },
+            onShowMessage = { }
         )
     }
 }

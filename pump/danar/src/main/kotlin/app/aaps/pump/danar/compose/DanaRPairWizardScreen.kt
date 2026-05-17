@@ -36,8 +36,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.dana.R
@@ -303,6 +303,6 @@ private fun ErrorStep(
         )
     ) {
         Spacer(modifier = Modifier.height(24.dp))
-        WizardErrorBanner(message = stringResource(R.string.password_wrong))
+        ErrorBanner(message = stringResource(R.string.password_wrong))
     }
 }

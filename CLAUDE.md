@@ -57,6 +57,9 @@
 
 ## User Preferences
 
+- **Use CRLF line endings, not LF** — This is a Windows repo. When writing or editing files,
+  preserve/produce CRLF (`\r\n`) line endings to avoid `git` warnings like
+  `LF will be replaced by CRLF the next time Git touches it`. Do NOT convert files to LF-only.
 - **NEVER make code changes without user confirmation** — When the user describes a problem or
   preference, propose the change first and wait for approval before editing code. Do NOT immediately
   edit files based on user feedback. The only exception is when the user explicitly says "do it",
@@ -81,10 +84,21 @@
     - After each batch, state how many remain and continue until zero remain
     - Do NOT stop early or claim "done" until truly everything is processed
     - User WILL verify results - assume accountability
-- **Always use explicit imports:**
-    - Never use fully qualified names (e.g., `kotlin.math.abs`)
-    - Always add proper import statements at the top of the file
-    - Example: Add `import kotlin.math.abs` instead of using `kotlin.math.abs()`
+- **Always use explicit imports (no exceptions):**
+    - Never use fully qualified names inline (e.g., `kotlin.math.abs`,
+      `app.aaps.core.ui.compose.icons.IcFoo`, `androidx.compose.ui.graphics.vector.ImageVector`)
+    - Always add proper `import` statements at the top of the file and use short names in code
+    - Applies to type parameters, parameter types, return types, constructor calls, property
+      delegates, `remember { mutableStateOf<Type>() }`, etc.
+    - Applies when adding new code to existing files — add the import even if only referenced once
+    - ❌ BAD: `fun composeIcon() = app.aaps.core.ui.compose.icons.IcProfile`
+    - ✅ GOOD: `import app.aaps.core.ui.compose.icons.IcProfile` at top, then
+      `fun composeIcon() = IcProfile`
+    - ❌ BAD: `mutableListOf<androidx.compose.ui.graphics.vector.ImageVector>()`
+    - ✅ GOOD: `import androidx.compose.ui.graphics.vector.ImageVector` then
+      `mutableListOf<ImageVector>()`
+    - Only exception: when two different classes with the same simple name would collide — then one
+      can stay fully qualified at use site (rare)
 - **Use centralized theme/styling:**
     - For Compose UI: Always use theme values instead of hardcoded dp/padding/colors. If proper
       setting doesn't exist, discuss it before creating hardcoded values.
@@ -140,6 +154,29 @@
   }
   ```
   The modifier is in `app.aaps.core.ui.compose.clearFocusOnTap`.
+- **Snackbar pattern (Compose)** - `LocalSnackbarHostState` exists for legacy reasons but is an
+  anti-pattern (hidden dependency, was silently failing before we fixed the default to `error()`).
+  **Do not add new `LocalSnackbarHostState.current` consumers.** Prefer either:
+    1. **Event hoisting from ViewModel / utility class** (preferred for non-Composables):
+       ```kotlin
+       // In ViewModel / domain class
+       private val _snackbarEvents = MutableSharedFlow<String>()
+       val snackbarEvents = _snackbarEvents.asSharedFlow()
+
+       // In the Composable
+       LaunchedEffect(Unit) {
+           viewModel.snackbarEvents.collect { snackbarHostState.showSnackbar(it) }
+       }
+       ```
+    2. **Parameter passing** (for child composables that need to snack):
+       ```kotlin
+       fun MyScreen(onShowMessage: (String) -> Unit) { ... }
+       ```
+  Existing `LocalSnackbarHostState.current` usages can stay as-is until touched for other reasons —
+  no forced migration. Only when refactoring a file anyway, move toward the preferred patterns.
+  **Note for Toast→Snackbar migrations:** services, workers, and background plugins cannot render
+  snackbars (no active Compose tree). For those, use Android Notifications for important messages,
+  keep Toast as low-priority fallback, or drop the message entirely if non-critical.
 - **Avoid adding new inter-module (project) dependencies** - Adding
   `implementation(project(":other:module"))`
   between modules can significantly slow down compilation time. Always discuss before adding these.

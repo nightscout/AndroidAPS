@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -41,9 +40,5 @@ class TriggerTempTargetTest : TriggerTestBase() {
         val t: TriggerTempTarget = TriggerTempTarget(injector).comparator(ComparatorExists.Compare.NOT_EXISTS)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerTempTarget
         assertThat(t2.comparator.value).isEqualTo(ComparatorExists.Compare.NOT_EXISTS)
-    }
-
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerTempTarget(injector).icon().get()).isEqualTo(R.drawable.ic_keyboard_tab)
     }
 }

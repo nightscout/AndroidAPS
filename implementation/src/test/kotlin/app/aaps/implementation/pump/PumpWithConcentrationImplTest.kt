@@ -46,9 +46,9 @@ class PumpWithConcentrationImplTest : TestBase() {
         sut = PumpWithConcentrationImpl(aapsLogger, activePlugin, profileFunction, constraintsChecker, insulin)
     }
 
-    private fun setupConcentration(concentration: Double) {
+    private suspend fun setupConcentration(concentration: Double) {
         whenever(insulin.iCfg).thenReturn(ICfg("Test", 0L, 0L, concentration))
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
     }
 
     private fun setupU100() {
@@ -58,7 +58,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     // --- deliverTreatment tests ---
 
     @Test
-    fun `deliverTreatment with U100 passes insulin unchanged`() {
+    fun `deliverTreatment with U100 passes insulin unchanged`() = runBlocking {
         setupU100()
         val dbi = DetailedBolusInfo().apply { insulin = 5.0 }
         whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
@@ -69,7 +69,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `deliverTreatment with U200 halves insulin for normal bolus`() {
+    fun `deliverTreatment with U200 halves insulin for normal bolus`() = runBlocking {
         setupConcentration(2.0)
         val dbi = DetailedBolusInfo().apply { insulin = 6.0; bolusType = BS.Type.NORMAL }
         whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
@@ -80,7 +80,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `deliverTreatment with U200 does not modify priming bolus`() {
+    fun `deliverTreatment with U200 does not modify priming bolus`() = runBlocking {
         setupConcentration(2.0)
         val dbi = DetailedBolusInfo().apply { insulin = 4.0; bolusType = BS.Type.PRIMING }
         whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
@@ -91,7 +91,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `deliverTreatment with U50 doubles insulin for normal bolus`() {
+    fun `deliverTreatment with U50 doubles insulin for normal bolus`() = runBlocking {
         setupConcentration(0.5)
         val dbi = DetailedBolusInfo().apply { insulin = 2.0; bolusType = BS.Type.NORMAL }
         whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
@@ -104,7 +104,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     // --- setTempBasalAbsolute tests ---
 
     @Test
-    fun `setTempBasalAbsolute with U200 halves rate sent to pump`() {
+    fun `setTempBasalAbsolute with U200 halves rate sent to pump`() = runBlocking {
         setupConcentration(2.0)
         val constraintResult: Constraint<Double> = mock()
         whenever(constraintResult.value()).thenReturn(4.0)
@@ -118,9 +118,9 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `setTempBasalAbsolute with U100 passes rate unchanged`() {
+    fun `setTempBasalAbsolute with U100 passes rate unchanged`() = runBlocking {
         setupU100()
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         val constraintResult: Constraint<Double> = mock()
         whenever(constraintResult.value()).thenReturn(1.5)
         whenever(constraintsChecker.applyBasalConstraints(any(), eq(effectiveProfile))).thenReturn(constraintResult)
@@ -134,7 +134,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     // --- setExtendedBolus tests ---
 
     @Test
-    fun `setExtendedBolus with U200 halves insulin`() {
+    fun `setExtendedBolus with U200 halves insulin`() = runBlocking {
         setupConcentration(2.0)
         whenever(pump.setExtendedBolus(any(), any())).thenReturn(pumpEnactResult)
 
@@ -144,7 +144,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `setExtendedBolus with U100 passes insulin unchanged`() {
+    fun `setExtendedBolus with U100 passes insulin unchanged`() = runBlocking {
         setupU100()
         whenever(pump.setExtendedBolus(any(), any())).thenReturn(pumpEnactResult)
 
@@ -154,7 +154,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `setExtendedBolus with U50 doubles insulin`() {
+    fun `setExtendedBolus with U50 doubles insulin`() = runBlocking {
         setupConcentration(0.5)
         whenever(pump.setExtendedBolus(any(), any())).thenReturn(pumpEnactResult)
 
@@ -167,7 +167,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     // --- pumpDescription tests ---
 
     @Test
-    fun `pumpDescription scales values for U200`() {
+    fun `pumpDescription scales values for U200`() = runBlocking {
         setupConcentration(2.0)
         val desc = PumpDescription().apply {
             bolusStep = 0.1
@@ -211,7 +211,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `pumpDescription scales for U50`() {
+    fun `pumpDescription scales for U50`() = runBlocking {
         setupConcentration(0.5)
         val desc = PumpDescription().apply {
             bolusStep = 0.1
@@ -234,7 +234,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     // --- setNewBasalProfile tests ---
 
     @Test
-    fun `setNewBasalProfile converts EffectiveProfile to PumpProfile`() {
+    fun `setNewBasalProfile converts EffectiveProfile to PumpProfile`() = runBlocking {
         whenever(effectiveProfile.toPump()).thenReturn(pumpProfile)
         whenever(pump.setNewBasalProfile(pumpProfile)).thenReturn(pumpEnactResult)
 
@@ -268,9 +268,9 @@ class PumpWithConcentrationImplTest : TestBase() {
     // --- no profile running ---
 
     @Test
-    fun `setTempBasalAbsolute throws when no profile running`() {
+    fun `setTempBasalAbsolute throws when no profile running`() = runBlocking<Unit> {
         setupConcentration(2.0)
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(null) }
+        whenever(profileFunction.getProfile()).thenReturn(null)
 
         try {
             sut.setTempBasalAbsolute(1.0, 30, false, PumpSync.TemporaryBasalType.NORMAL)

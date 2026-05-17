@@ -16,12 +16,8 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
-    implementation(project(":pump:common"))
 
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
