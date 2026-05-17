@@ -15,8 +15,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.main.R
 import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -239,28 +238,30 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP STOP should disable loop`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
 
         val result = plugin.executeCommand("LOOP STOP")
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.DISABLED_LOOP),
             eq(Action.LOOP_DISABLED),
             eq(Sources.NfcCommands),
             any(),
             eq(Int.MAX_VALUE),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand LOOP DISABLE should disable loop`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
 
         val result = plugin.executeCommand("LOOP DISABLE")
@@ -270,61 +271,67 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP RESUME should resume loop`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_resumed)).thenReturn("Loop resumed")
 
         val result = plugin.executeCommand("LOOP RESUME")
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.RESUME),
             eq(Action.RESUME),
             eq(Sources.NfcCommands),
             any(),
             any(),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand LOOP RESUME from disabled state should re-enable loop`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.CLOSED_LOOP_LGS))
-        whenever(loop.runningMode).thenReturn(RM.Mode.DISABLED_LOOP)
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.CLOSED_LOOP_LGS)) }
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.DISABLED_LOOP) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_resumed)).thenReturn("Loop resumed")
 
         val result = plugin.executeCommand("LOOP RESUME")
 
         assertThat(result.success).isTrue()
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.RESUME),
             eq(Action.RESUME),
             eq(Sources.NfcCommands),
             any(),
             any(),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand LOOP SUSPEND should call handleRunningModeChange directly without pre-cancelling TBR`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_suspended)).thenReturn("Loop suspended")
 
         val result = plugin.executeCommand("LOOP SUSPEND 30")
 
         assertThat(result.success).isTrue()
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.SUSPENDED_BY_USER),
             eq(Action.SUSPEND),
             eq(Sources.NfcCommands),
             any(),
             eq(30),
             eq(effectiveProfile),
-        )
+            )
+        }
         Mockito.verify(commandQueue, Mockito.never()).cancelTempBasal(any(), any(), anyOrNull())
     }
 
@@ -339,27 +346,29 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP SUSPEND clamps duration above three hours`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_suspended)).thenReturn("Loop suspended")
 
         val result = plugin.executeCommand("LOOP SUSPEND 999")
 
         assertThat(result.success).isTrue()
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.SUSPENDED_BY_USER),
             eq(Action.SUSPEND),
             eq(Sources.NfcCommands),
             any(),
             eq(180),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand LOOP LGS should switch to LGS mode`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("LGS")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("LGS mode")
 
@@ -367,20 +376,22 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.CLOSED_LOOP_LGS),
             eq(Action.LGS_LOOP_MODE),
             eq(Sources.NfcCommands),
             any(),
             any(),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand LOOP CLOSED should switch to closed loop`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(app.aaps.core.ui.R.string.closedloop)).thenReturn("Closed")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("Closed loop")
 
@@ -388,19 +399,21 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.CLOSED_LOOP),
             eq(Action.CLOSED_LOOP_MODE),
             eq(Sources.NfcCommands),
             any(),
             any(),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand LOOP STOP should fail if loop mode not allowed`() {
-        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
 
         val result = plugin.executeCommand("LOOP STOP")
@@ -410,8 +423,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP RESUME should fail when handleRunningModeChange returns false`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP RESUME")
@@ -421,8 +434,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP SUSPEND should fail when handleRunningModeChange returns false`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP SUSPEND 30")
@@ -432,8 +445,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP LGS should fail when handleRunningModeChange returns false`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP LGS")
@@ -443,8 +456,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP CLOSED should fail when handleRunningModeChange returns false`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP CLOSED")
@@ -488,45 +501,49 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand should disconnect pump for three hours`() {
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
 
         val result = plugin.executeCommand("PUMP DISCONNECT 180")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Pump disconnected")
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.DISCONNECTED_PUMP),
             eq(Action.DISCONNECT),
             eq(Sources.NfcCommands),
             any(),
             eq(180),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand should clamp disconnect duration to three hours`() {
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
 
         val result = plugin.executeCommand("PUMP DISCONNECT 240")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Pump disconnected")
-        verify(loop).handleRunningModeChange(
+        runTest {
+            verify(loop).handleRunningModeChange(
             eq(RM.Mode.DISCONNECTED_PUMP),
             eq(Action.DISCONNECT),
             eq(Sources.NfcCommands),
             any(),
             eq(180),
             eq(effectiveProfile),
-        )
+            )
+        }
     }
 
     @Test
     fun `executeCommand PUMP DISCONNECT should fail when handleRunningModeChange returns false`() {
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("PUMP DISCONNECT 60")
@@ -536,8 +553,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PUMP CONNECT should fail when handleRunningModeChange returns false`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("PUMP CONNECT")
@@ -547,14 +564,16 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PUMP CONNECT returns connected when reconnect is not needed`() {
-        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(app.aaps.core.interfaces.R.string.connected)).thenReturn("Connected")
 
         val result = plugin.executeCommand("PUMP CONNECT")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Connected")
-        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        runTest {
+            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        }
     }
 
     // ── processBasal tests ─────────────────────────────────────────────────────
@@ -782,7 +801,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .ConstraintObject(1.0, aapsLogger),
         )
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
         val result = plugin.executeCommand("BOLUS 1.0")
@@ -798,7 +817,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .ConstraintObject(1.0, aapsLogger),
         )
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
         val result = plugin.executeCommand("BOLUS 1.0 MEAL")
@@ -825,7 +844,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand BOLUS MEAL should respect suspended pump`() {
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.SUSPENDED_BY_USER)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.SUSPENDED_BY_USER) }
         whenever(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)).thenReturn("Pump suspended")
 
         val result = plugin.executeCommand("BOLUS 1.0 MEAL")
@@ -846,7 +865,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand BOLUS with unsupported third argument should fail`() {
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
@@ -862,7 +881,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
         val callbackNow = firstNow + 2_345L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
@@ -889,7 +908,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `failed bolus callback does not update last remote bolus time`() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
@@ -915,14 +934,15 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `successful meal bolus callback creates eating soon target when profile exists`() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
         whenever(commandQueue.bolus(any(), any())).thenReturn(true)
-        whenever(preferences.get(IntKey.OverviewEatingSoonDuration)).thenReturn(45)
-        whenever(preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)).thenReturn(5.5)
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
+            """[{"id":"test","reason":"Eating Soon","targetValue":99.0,"duration":2700000,"isDeletable":false}]"""
+        )
         runTest {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
@@ -948,7 +968,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `successful meal bolus callback skips eating soon target when profile is missing`() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
@@ -1005,6 +1025,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand TARGET MEAL should set eating soon target`() {
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         runTest {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
@@ -1018,6 +1039,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand TARGET ACTIVITY should set activity target`() {
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         runTest {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
@@ -1031,6 +1053,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand TARGET HYPO should set hypo target`() {
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         runTest {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
@@ -1203,8 +1226,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand always returns eraseTag=false`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
 
         val result = plugin.executeCommand("LOOP STOP")
@@ -1249,10 +1272,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .withoutPadding()
                 .encodeToString(secret)
         fakePrefs.edit().putString("nfccommunicator_jwt_secret_v1", encodedSecret).apply()
-        Mockito.mockStatic(androidx.preference.PreferenceManager::class.java).use { mockedStatic ->
+        Mockito.mockStatic(android.preference.PreferenceManager::class.java).use { mockedStatic ->
             mockedStatic
                 .`when`<SharedPreferences> {
-                    androidx.preference.PreferenceManager.getDefaultSharedPreferences(any())
+                    android.preference.PreferenceManager.getDefaultSharedPreferences(any())
                 }.thenReturn(fakePrefs)
             block(fakePrefs)
         }
@@ -1262,8 +1285,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCascade all succeed returns success with combined message`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
         whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
 
@@ -1276,7 +1299,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCascade one fails returns failure and does not execute remaining commands`() {
-        whenever(loop.allowedNextModes()).thenReturn(emptyList()) // LOOP STOP will fail
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) } // LOOP STOP will fail
         whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
 
         val result = plugin.executeCascade(listOf("LOOP STOP", "BASAL STOP"))
@@ -1463,8 +1486,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP STOP should fail when handleRunningModeChange returns false`() {
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
+        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP STOP")
@@ -1474,49 +1497,57 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP SUSPEND should fail when mode not in allowedNextModes`() {
-        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP SUSPEND 30")
 
         assertThat(result.success).isFalse()
-        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        runTest {
+            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        }
     }
 
     @Test
     fun `executeCommand LOOP LGS should fail when mode not in allowedNextModes`() {
-        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP LGS")
 
         assertThat(result.success).isFalse()
-        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        runTest {
+            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        }
     }
 
     @Test
     fun `executeCommand LOOP CLOSED should fail when mode not in allowedNextModes`() {
-        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP CLOSED")
 
         assertThat(result.success).isFalse()
-        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        runTest {
+            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        }
     }
 
     @Test
     fun `executeCommand LOOP RESUME should fail when not in allowedNextModes and loop is not disabled`() {
         // allowedNextModes does not contain RESUME, and runningMode is not DISABLED_LOOP,
         // so the "resume from disabled" fallback does not apply either
-        whenever(loop.allowedNextModes()).thenReturn(emptyList())
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
         val result = plugin.executeCommand("LOOP RESUME")
 
         assertThat(result.success).isFalse()
-        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        runTest {
+            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        }
     }
 
     @Test
@@ -1545,7 +1576,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val result = plugin.executeCommand("PUMP DISCONNECT 0")
 
         assertThat(result.success).isFalse()
-        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        runTest {
+            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        }
     }
 
     @Test
@@ -1553,7 +1586,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val result = plugin.executeCommand("PUMP")
 
         assertThat(result.success).isFalse()
-        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        runTest {
+            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        }
     }
 
     // processBasal – missing branches
@@ -1605,7 +1640,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand BOLUS with zero amount should fail`() {
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(0.0, aapsLogger),
         )
