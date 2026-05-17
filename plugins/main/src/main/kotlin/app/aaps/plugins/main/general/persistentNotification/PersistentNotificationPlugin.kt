@@ -97,6 +97,7 @@ class PersistentNotificationPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private val deferredStart = DeferredForegroundStart()
+    private var lastAutoNotificationContent: String = ""
 
     override fun onStart() {
         super.onStart()
@@ -235,6 +236,9 @@ class PersistentNotificationPlugin @Inject constructor(
         } else {
             line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
         }
+        val content = "$line1|$line2|$line3"
+        if (includeAuto && content == lastAutoNotificationContent) return
+        if (includeAuto) lastAutoNotificationContent = content
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
