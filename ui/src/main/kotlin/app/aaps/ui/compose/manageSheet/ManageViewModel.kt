@@ -129,7 +129,9 @@ class ManageViewModel @Inject constructor(
                 showCancelTempBasal = false
                 cancelTempBasalText = ""
             } else {
-                val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+                val activeTemp = withContext(Dispatchers.IO) {
+                    processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+                }
                 if (activeTemp != null) {
                     showTempBasal = false
                     showCancelTempBasal = true
@@ -167,13 +169,18 @@ class ManageViewModel @Inject constructor(
 
     // Action handlers
     fun cancelTempBasal(onResult: (Boolean, String) -> Unit) {
-        if (processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis()) != null) {
-            uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
-            commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
-                override fun run() {
-                    onResult(result.success, result.comment)
-                }
-            })
+        viewModelScope.launch {
+            val activeTemp = withContext(Dispatchers.IO) {
+                processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+            }
+            if (activeTemp != null) {
+                uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
+                commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
+                    override fun run() {
+                        onResult(result.success, result.comment)
+                    }
+                })
+            }
         }
     }
 

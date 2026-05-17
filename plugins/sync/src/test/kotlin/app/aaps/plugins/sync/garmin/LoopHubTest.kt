@@ -33,7 +33,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -99,18 +98,18 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testCurrentProfile() {
+    fun testCurrentProfile() = runTest {
         val profile = mock<EffectiveProfile>()
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
+        whenever(profileFunction.getProfile()).thenReturn(profile)
         assertEquals(profile, loopHub.currentProfile)
-        runBlocking { verify(profileFunction, times(1)).getProfile() }
+        verify(profileFunction, times(1)).getProfile()
     }
 
     @Test
-    fun testCurrentProfileName() {
-        runBlocking { whenever(profileFunction.getProfileName()).thenReturn("pro") }
+    fun testCurrentProfileName() = runTest {
+        whenever(profileFunction.getProfileName()).thenReturn("pro")
         assertEquals("pro", loopHub.currentProfileName)
-        runBlocking { verify(profileFunction, times(1)).getProfileName() }
+        verify(profileFunction, times(1)).getProfileName()
     }
 
     @Test
@@ -146,27 +145,27 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testInsulinOnBoard() {
+    fun testInsulinOnBoard() = runTest {
         val iobTotal = IobTotal(time = 0).apply { iob = 23.9 }
-        runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal) }
+        whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
         assertEquals(23.9, loopHub.insulinOnboard, 1e-10)
-        runBlocking { verify(iobCobCalculator, times(1)).calculateIobFromBolus() }
+        verify(iobCobCalculator, times(1)).calculateIobFromBolus()
     }
 
     @Test
-    fun testBasalOnBoard() {
+    fun testBasalOnBoard() = runTest {
         val iobBasal = IobTotal(time = 0).apply { basaliob = 23.9 }
-        runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal) }
+        whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
         assertEquals(23.9, loopHub.insulinBasalOnboard, 1e-10)
-        runBlocking { verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended() }
+        verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended()
     }
 
     @Test
-    fun testCarbsOnBoard() {
+    fun testCarbsOnBoard() = runTest {
         val cobInfo = CobInfo(0, 12.0, 0.0)
-        runBlocking { whenever(iobCobCalculator.getCobInfo(anyString())).thenReturn(cobInfo) }
+        whenever(iobCobCalculator.getCobInfo(anyString())).thenReturn(cobInfo)
         assertEquals(12.0, loopHub.carbsOnboard)
-        runBlocking { verify(iobCobCalculator, times(1)).getCobInfo(anyString()) }
+        verify(iobCobCalculator, times(1)).getCobInfo(anyString())
     }
 
     @Test
@@ -209,40 +208,40 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testTemporaryBasal() {
+    fun testTemporaryBasal() = runTest {
         val profile = mock<EffectiveProfile>()
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
+        whenever(profileFunction.getProfile()).thenReturn(profile)
         val tb = mock<TB> {
             on { isAbsolute }.thenReturn(false)
             on { rate }.thenReturn(45.0)
         }
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())).thenReturn(tb)
         assertEquals(0.45, loopHub.temporaryBasal, 1e-6)
-        runBlocking { verify(profileFunction, times(1)).getProfile() }
+        verify(profileFunction, times(1)).getProfile()
     }
 
     @Test
-    fun testTemporaryBasalAbsolute() {
+    fun testTemporaryBasalAbsolute() = runTest {
         val profile = mock<EffectiveProfile> {
             onGeneric { getBasal(clock.millis()) }.thenReturn(2.0)
         }
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
+        whenever(profileFunction.getProfile()).thenReturn(profile)
         val tb = mock<TB> {
             on { isAbsolute }.thenReturn(true)
             on { rate }.thenReturn(0.9)
         }
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())).thenReturn(tb)
         assertEquals(0.45, loopHub.temporaryBasal, 1e-6)
-        runBlocking { verify(profileFunction, times(1)).getProfile() }
+        verify(profileFunction, times(1)).getProfile()
     }
 
     @Test
-    fun testTemporaryBasalNoRun() {
+    fun testTemporaryBasalNoRun() = runTest {
         val profile = mock<EffectiveProfile>()
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
+        whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())).thenReturn(null)
         assertTrue(loopHub.temporaryBasal.isNaN())
-        runBlocking { verify(profileFunction, times(1)).getProfile() }
+        verify(profileFunction, times(1)).getProfile()
     }
 
     @Test

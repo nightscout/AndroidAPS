@@ -11,6 +11,6 @@ interface ProcessedTbrEbData {
      *              If pump is faking extended boluses as temporary basals
      *              return extended converted to temporary basal with type == FAKE_EXTENDED
      */
-    fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB?
+    suspend fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB?
 
 }

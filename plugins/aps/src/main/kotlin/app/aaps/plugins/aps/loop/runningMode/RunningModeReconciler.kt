@@ -88,7 +88,7 @@ class RunningModeReconciler @Inject constructor(
         aapsLogger.debug(LTag.APS, "RunningModeReconciler: startup reconcile, mode=${active.mode}")
     }
 
-    private fun handleStartupDrift(activeMode: RM.Mode, now: Long) {
+    private suspend fun handleStartupDrift(activeMode: RM.Mode, now: Long) {
         // If we are in a zero-delivery mode, normal startup path already covers it.
         if (activeMode == RM.Mode.DISCONNECTED_PUMP || activeMode == RM.Mode.SUPER_BOLUS) return
         val currentTbr = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
@@ -126,7 +126,7 @@ class RunningModeReconciler @Inject constructor(
         }
     }
 
-    private fun cancelTbrIfActive(now: Long) {
+    private suspend fun cancelTbrIfActive(now: Long) {
         val currentTbr = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         if (currentTbr == null) {
             aapsLogger.debug(LTag.APS, "RunningModeReconciler: cancelTbr — no active TBR, skipping")
@@ -244,6 +244,7 @@ class RunningModeReconciler @Inject constructor(
      * may legitimately fail silently (e.g. cancelExtended when no EB is actually active on
      * the pump despite our DB suggesting otherwise).
      */
+    @Suppress("SameParameterValue")
     private fun logCallback(label: String): Callback = object : Callback() {
         override fun run() {
             if (!result.success) {

@@ -97,7 +97,7 @@ class LoopHubImpl @Inject constructor(
     override val temporaryBasal: Double
         get() {
             return currentProfile?.let {
-                val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())
+                val tb = runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis()) }
                 tb?.convertedToPercent(clock.millis(), it)?.div(100.0)
             } ?: Double.NaN
         }
