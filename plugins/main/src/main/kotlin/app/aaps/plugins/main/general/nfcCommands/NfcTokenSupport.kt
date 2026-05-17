@@ -7,13 +7,6 @@ import android.preference.PreferenceManager
 import app.aaps.plugins.main.R
 import org.json.JSONArray
 import org.json.JSONObject
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
-import java.security.SecureRandom
-import java.util.Base64
-import java.util.UUID
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 data class NfcCommandTemplate(
     @StringRes val labelResId: Int,
@@ -24,22 +17,10 @@ data class NfcCommandTemplate(
 )
 
 data class NfcCreatedTag(
-    val id: String,
+    val tagUid: String,
     val name: String,
     val commands: List<String>,
-    val token: String,
     val createdAtMillis: Long,
-    val expiresAtMillis: Long,
-) {
-    fun isExpired(nowMillis: Long): Boolean = nowMillis >= expiresAtMillis
-
-    fun isExpiringSoon(nowMillis: Long): Boolean =
-        !isExpired(nowMillis) && (expiresAtMillis - nowMillis) <= NfcTokenSupport.THIRTY_DAYS_MILLIS
-}
-
-data class NfcBlacklistEntry(
-    val tokenId: String,
-    val expiresAtMillis: Long,
 )
 
 data class NfcLogEntry(
@@ -50,34 +31,10 @@ data class NfcLogEntry(
     val message: String,
 )
 
-data class NfcIssuedToken(
-    val token: String,
-    val tokenId: String,
-    val issuedAtMillis: Long,
-    val expiresAtMillis: Long,
-)
-
-sealed class NfcTokenVerificationResult {
-    data class Success(
-        val commands: List<String>,
-        val tokenId: String,
-        val issuedAtMillis: Long,
-        val expiresAtMillis: Long,
-    ) : NfcTokenVerificationResult()
-
-    data class Failure(
-        val reason: String,
-    ) : NfcTokenVerificationResult()
-}
-
 object NfcTokenSupport {
     const val MIME_TYPE: String = "application/vnd.app.aaps.command"
-    const val ONE_YEAR_MILLIS: Long = 365L * 24L * 60L * 60L * 1000L
-    const val THIRTY_DAYS_MILLIS: Long = 30L * 24L * 60L * 60L * 1000L
 
-    private const val PREFS_SECRET = "nfccommunicator_jwt_secret_v1"
     private const val PREFS_TAGS = "nfccommunicator_created_tags_v1"
-    private const val PREFS_BLACKLIST = "nfccommunicator_blacklisted_tokens_v1"
     private const val PREFS_LOG = "nfccommunicator_log_v1"
     private const val LOG_MAX_ENTRIES = 100
 
@@ -170,122 +127,14 @@ object NfcTokenSupport {
 
     /**
      * Encodes a raw NFC tag UID byte array as a lowercase hex string, or returns null if [id] is null.
-     * Used to produce and verify the `tid` claim in issued tokens.
      */
     fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
 
-    fun issueToken(
-        context: Context,
-        command: String,
-        nowMillis: Long = System.currentTimeMillis(),
-        tagUid: String? = null,
-    ): NfcIssuedToken = issueToken(secretBytes(context), listOf(command), nowMillis, tagUid)
+    fun findTagByUid(context: Context, uid: String): NfcCreatedTag? =
+        loadCreatedTags(context).find { it.tagUid.equals(uid, ignoreCase = true) }
 
-    fun issueToken(
-        context: Context,
-        commands: List<String>,
-        nowMillis: Long = System.currentTimeMillis(),
-        tagUid: String? = null,
-    ): NfcIssuedToken = issueToken(secretBytes(context), commands, nowMillis, tagUid)
-
-    internal fun issueToken(
-        secret: ByteArray,
-        command: String,
-        nowMillis: Long,
-        tagUid: String? = null,
-    ): NfcIssuedToken = issueToken(secret, listOf(command), nowMillis, tagUid)
-
-    internal fun issueToken(
-        secret: ByteArray,
-        commands: List<String>,
-        nowMillis: Long,
-        tagUid: String? = null,
-    ): NfcIssuedToken {
-        val tokenId = UUID.randomUUID().toString()
-        val expiresAtMillis = nowMillis + ONE_YEAR_MILLIS
-        val headerJson =
-            JSONObject()
-                .put("alg", "HS256")
-                .put("typ", "JWT")
-        val cmdsArray = JSONArray()
-        commands.forEach { cmdsArray.put(it) }
-        val payloadJson =
-            JSONObject()
-                .put("jti", tokenId)
-                .put("cmds", cmdsArray)
-                .put("iat", nowMillis / 1000L)
-                .put("exp", expiresAtMillis / 1000L)
-        if (tagUid != null) payloadJson.put("tid", tagUid)
-        val encodedHeader = encodeSegment(headerJson.toString().toByteArray(StandardCharsets.UTF_8))
-        val encodedPayload = encodeSegment(payloadJson.toString().toByteArray(StandardCharsets.UTF_8))
-        val signingInput = "$encodedHeader.$encodedPayload"
-        val signature = encodeSegment(sign(signingInput, secret))
-        return NfcIssuedToken(
-            token = "$signingInput.$signature",
-            tokenId = tokenId,
-            issuedAtMillis = nowMillis,
-            expiresAtMillis = expiresAtMillis,
-        )
-    }
-
-    fun verifyToken(
-        context: Context,
-        token: String,
-        nowMillis: Long = System.currentTimeMillis(),
-        tagUid: String? = null,
-    ): NfcTokenVerificationResult = verifyToken(secretBytes(context), token, nowMillis, tagUid)
-
-    internal fun verifyToken(
-        secret: ByteArray,
-        token: String,
-        nowMillis: Long,
-        tagUid: String? = null,
-    ): NfcTokenVerificationResult {
-        val parts = token.split(".")
-        if (parts.size != 3) return NfcTokenVerificationResult.Failure("Malformed token")
-
-        val signingInput = "${parts[0]}.${parts[1]}"
-        val expectedSignature = sign(signingInput, secret)
-        val actualSignature = decodeSegment(parts[2]) ?: return NfcTokenVerificationResult.Failure("Malformed signature")
-        if (!MessageDigest.isEqual(expectedSignature, actualSignature)) {
-            return NfcTokenVerificationResult.Failure("Invalid token signature")
-        }
-
-        val payloadBytes = decodeSegment(parts[1]) ?: return NfcTokenVerificationResult.Failure("Malformed payload")
-        val payload =
-            runCatching { JSONObject(String(payloadBytes, StandardCharsets.UTF_8)) }.getOrNull()
-                ?: return NfcTokenVerificationResult.Failure("Malformed payload")
-
-        val tokenId = payload.optString("jti")
-        val issuedAtMillis = payload.optLong("iat") * 1000L
-        val expiresAtMillis = payload.optLong("exp") * 1000L
-        val claimedUid = payload.optString("tid").takeIf { it.isNotEmpty() }
-        val cmdsArray = payload.optJSONArray("cmds")
-        val commands =
-            cmdsArray
-                ?.let { array -> (0 until array.length()).map { array.optString(it) }.filter { it.isNotBlank() } }
-                .orEmpty()
-
-        if (tokenId.isBlank() || expiresAtMillis == 0L || claimedUid == null || commands.isEmpty()) {
-            return NfcTokenVerificationResult.Failure("Missing token claims")
-        }
-        if (issuedAtMillis == 0L || issuedAtMillis > expiresAtMillis) {
-            return NfcTokenVerificationResult.Failure("Invalid token timestamps")
-        }
-        if (nowMillis >= expiresAtMillis) {
-            return NfcTokenVerificationResult.Failure("Token expired")
-        }
-        if (tagUid == null || !claimedUid.equals(tagUid, ignoreCase = true)) {
-            return NfcTokenVerificationResult.Failure("Tag UID mismatch")
-        }
-
-        return NfcTokenVerificationResult.Success(
-            commands = commands,
-            tokenId = tokenId,
-            issuedAtMillis = issuedAtMillis,
-            expiresAtMillis = expiresAtMillis,
-        )
-    }
+    internal fun findTagByUid(prefs: SharedPreferences, uid: String): NfcCreatedTag? =
+        loadCreatedTags(prefs).find { it.tagUid.equals(uid, ignoreCase = true) }
 
     fun loadCreatedTags(context: Context): List<NfcCreatedTag> = loadCreatedTags(PreferenceManager.getDefaultSharedPreferences(context))
 
@@ -298,14 +147,14 @@ object NfcTokenSupport {
             val commandsJson = item.optJSONArray("commands")
             val commands = (0 until (commandsJson?.length() ?: 0)).map { commandsJson!!.optString(it) }.filter { it.isNotBlank() }
             if (commands.isEmpty()) continue
+            val tagUid = item.optString("tagUid")
+            if (tagUid.isBlank()) continue
             tags.add(
                 NfcCreatedTag(
-                    id = item.optString("id"),
+                    tagUid = tagUid,
                     name = item.optString("name"),
                     commands = commands,
-                    token = item.optString("token"),
                     createdAtMillis = item.optLong("createdAtMillis"),
-                    expiresAtMillis = item.optLong("expiresAtMillis"),
                 ),
             )
         }
@@ -323,26 +172,23 @@ object NfcTokenSupport {
         prefs: SharedPreferences,
         tag: NfcCreatedTag,
     ) {
-        val updated = loadCreatedTags(prefs).filterNot { it.id == tag.id }.toMutableList()
+        val updated = loadCreatedTags(prefs).filterNot { it.tagUid.equals(tag.tagUid, ignoreCase = true) }.toMutableList()
         updated.add(0, tag)
         saveCreatedTagList(prefs, updated)
     }
 
-    fun replaceTag(
+    fun deleteCreatedTag(
         context: Context,
-        oldId: String,
-        newTag: NfcCreatedTag,
+        tagUid: String,
     ) {
-        replaceTag(PreferenceManager.getDefaultSharedPreferences(context), oldId, newTag)
+        deleteCreatedTag(PreferenceManager.getDefaultSharedPreferences(context), tagUid)
     }
 
-    internal fun replaceTag(
+    internal fun deleteCreatedTag(
         prefs: SharedPreferences,
-        oldId: String,
-        newTag: NfcCreatedTag,
+        tagUid: String,
     ) {
-        val updated = loadCreatedTags(prefs).filterNot { it.id == oldId }.toMutableList()
-        updated.add(0, newTag)
+        val updated = loadCreatedTags(prefs).filterNot { it.tagUid.equals(tagUid, ignoreCase = true) }
         saveCreatedTagList(prefs, updated)
     }
 
@@ -356,98 +202,13 @@ object NfcTokenSupport {
             current.commands.forEach { cmdsArray.put(it) }
             array.put(
                 JSONObject()
-                    .put("id", current.id)
+                    .put("tagUid", current.tagUid)
                     .put("name", current.name)
                     .put("commands", cmdsArray)
-                    .put("token", current.token)
-                    .put("createdAtMillis", current.createdAtMillis)
-                    .put("expiresAtMillis", current.expiresAtMillis),
+                    .put("createdAtMillis", current.createdAtMillis),
             )
         }
         prefs.edit().putString(PREFS_TAGS, array.toString()).apply()
-    }
-
-    fun loadBlacklistedTokens(
-        context: Context,
-        nowMillis: Long = System.currentTimeMillis(),
-    ): List<NfcBlacklistEntry> = loadBlacklistedTokens(PreferenceManager.getDefaultSharedPreferences(context), nowMillis)
-
-    internal fun loadBlacklistedTokens(
-        prefs: SharedPreferences,
-        nowMillis: Long = System.currentTimeMillis(),
-    ): List<NfcBlacklistEntry> {
-        val raw = prefs.getString(PREFS_BLACKLIST, "[]").orEmpty()
-        val array = runCatching { JSONArray(raw) }.getOrElse { JSONArray() }
-        val entries = mutableListOf<NfcBlacklistEntry>()
-        for (index in 0 until array.length()) {
-            val item = array.optJSONObject(index) ?: continue
-            val entry =
-                NfcBlacklistEntry(
-                    tokenId = item.optString("tokenId"),
-                    expiresAtMillis = item.optLong("expiresAtMillis"),
-                )
-            if (entry.expiresAtMillis > nowMillis) entries.add(entry)
-        }
-        return entries
-    }
-
-    fun blacklistTag(
-        context: Context,
-        tag: NfcCreatedTag,
-    ) {
-        blacklistTag(PreferenceManager.getDefaultSharedPreferences(context), tag)
-    }
-
-    internal fun blacklistTag(
-        prefs: SharedPreferences,
-        tag: NfcCreatedTag,
-    ) {
-        val updatedTags = loadCreatedTags(prefs).filterNot { it.id == tag.id }
-        saveCreatedTagList(prefs, updatedTags)
-
-        val existing = loadBlacklistedTokens(prefs).toMutableList()
-        existing.add(NfcBlacklistEntry(tag.id, tag.expiresAtMillis))
-        val array = JSONArray()
-        existing.forEach { entry ->
-            array.put(
-                JSONObject()
-                    .put("tokenId", entry.tokenId)
-                    .put("expiresAtMillis", entry.expiresAtMillis),
-            )
-        }
-        prefs.edit().putString(PREFS_BLACKLIST, array.toString()).apply()
-    }
-
-    fun clearBlacklist(context: Context) {
-        clearBlacklist(PreferenceManager.getDefaultSharedPreferences(context))
-    }
-
-    internal fun clearBlacklist(prefs: SharedPreferences) {
-        prefs.edit().putString(PREFS_BLACKLIST, "[]").apply()
-    }
-
-    fun isBlacklisted(
-        context: Context,
-        tokenId: String,
-        nowMillis: Long = System.currentTimeMillis(),
-    ): Boolean = isBlacklisted(PreferenceManager.getDefaultSharedPreferences(context), tokenId, nowMillis)
-
-    internal fun isBlacklisted(
-        prefs: SharedPreferences,
-        tokenId: String,
-        nowMillis: Long = System.currentTimeMillis(),
-    ): Boolean {
-        val active = loadBlacklistedTokens(prefs, nowMillis)
-        val pruned = JSONArray()
-        active.forEach { entry ->
-            pruned.put(
-                JSONObject()
-                    .put("tokenId", entry.tokenId)
-                    .put("expiresAtMillis", entry.expiresAtMillis),
-            )
-        }
-        prefs.edit().putString(PREFS_BLACKLIST, pruned.toString()).apply()
-        return active.any { it.tokenId == tokenId }
     }
 
     fun appendLogEntry(
@@ -496,29 +257,4 @@ object NfcTokenSupport {
         } catch (_: Exception) {
             emptyList()
         }
-
-    private fun secretBytes(context: Context): ByteArray {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val existing = prefs.getString(PREFS_SECRET, null)
-        if (!existing.isNullOrBlank()) {
-            decodeSegment(existing)?.let { return it }
-        }
-        val secret = ByteArray(32)
-        SecureRandom().nextBytes(secret)
-        prefs.edit().putString(PREFS_SECRET, encodeSegment(secret)).apply()
-        return secret
-    }
-
-    private fun sign(
-        signingInput: String,
-        secret: ByteArray,
-    ): ByteArray {
-        val mac = Mac.getInstance("HmacSHA256")
-        mac.init(SecretKeySpec(secret, "HmacSHA256"))
-        return mac.doFinal(signingInput.toByteArray(StandardCharsets.UTF_8))
-    }
-
-    private fun encodeSegment(bytes: ByteArray): String = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
-
-    private fun decodeSegment(value: String): ByteArray? = runCatching { Base64.getUrlDecoder().decode(value) }.getOrNull()
 }

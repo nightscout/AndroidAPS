@@ -155,10 +155,10 @@ fun NfcBuildScreen(
             ?: return@DisposableEffect onDispose {}
 
         val callback = NfcAdapter.ReaderCallback { tag ->
+            val uid = NfcTokenSupport.tagUidHex(tag.id) ?: return@ReaderCallback
             val commands = chain.toList()
             val name = tagName.ifBlank { commands.firstOrNull() ?: "" }
-            val issued = NfcTokenSupport.issueToken(context, commands, tagUid = NfcTokenSupport.tagUidHex(tag.id))
-            val success = buildAndWriteNdef(tag, issued.token, plugin)
+            val success = buildAndWriteNdef(tag, plugin)
             val message = if (success) context.getString(R.string.nfccommands_tag_written)
             else context.getString(R.string.nfccommands_tag_write_error)
 
@@ -176,12 +176,10 @@ fun NfcBuildScreen(
                 NfcTokenSupport.saveCreatedTag(
                     context,
                     NfcCreatedTag(
-                        id = issued.tokenId,
+                        tagUid = uid,
                         name = name,
                         commands = commands,
-                        token = issued.token,
-                        createdAtMillis = issued.issuedAtMillis,
-                        expiresAtMillis = issued.expiresAtMillis,
+                        createdAtMillis = System.currentTimeMillis(),
                     ),
                 )
             }
@@ -499,7 +497,7 @@ fun NfcBuildScreen(
                 onClick = {
                     if (tagName.isBlank()) showBlankNameDialog = true else isWritingMode = true
                 },
-                text = { Text(stringResource(R.string.nfccommands_write_tag)) },
+                text = { Text(stringResource(R.string.nfccommands_register_tag)) },
                 icon = { Icon(Icons.Filled.Info, contentDescription = null) },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -714,8 +712,8 @@ private fun buildCurrentCommand(
     }
 }
 
-private fun buildAndWriteNdef(tag: Tag, token: String, plugin: NfcCommandsPlugin): Boolean {
-    val record = NdefRecord.createMime(NfcTokenSupport.MIME_TYPE, token.toByteArray())
+private fun buildAndWriteNdef(tag: Tag, plugin: NfcCommandsPlugin): Boolean {
+    val record = NdefRecord.createMime(NfcTokenSupport.MIME_TYPE, ByteArray(0))
     val message = NdefMessage(arrayOf(record))
     return try {
         val ndef = Ndef.get(tag)
