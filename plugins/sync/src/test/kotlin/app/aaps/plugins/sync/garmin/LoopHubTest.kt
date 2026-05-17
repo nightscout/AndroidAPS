@@ -248,9 +248,8 @@ class LoopHubTest : TestBase() {
     fun testConnectPump() = runTest {
         whenever(persistenceLayer.cancelCurrentRunningMode(clock.millis(), Action.RECONNECT, Sources.Garmin)).thenReturn(PersistenceLayer.TransactionResult())
         loopHub.connectPump()
-        kotlinx.coroutines.delay(100) // Give time for GlobalScope.launch to complete
         verify(persistenceLayer).cancelCurrentRunningMode(clock.millis(), Action.RECONNECT, Sources.Garmin)
-        verify(commandQueue).cancelTempBasal(enforceNew = true, autoForced = false, callback = null)
+        verify(commandQueue).cancelTempBasal(enforceNew = true, autoForced = false)
     }
 
     @Test

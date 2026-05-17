@@ -35,8 +35,8 @@ sealed class EventShowDialog : Event() {
         val message: CharSequence,
         val secondMessage: String? = null,
         val icon: ImageVector? = null,
-        val onOk: () -> Unit,
-        val onCancel: (() -> Unit)? = null
+        val onOk: suspend () -> Unit,
+        val onCancel: (suspend () -> Unit)? = null
     ) : EventShowDialog()
 
     /** Three-option dialog: Yes / No / Cancel. */

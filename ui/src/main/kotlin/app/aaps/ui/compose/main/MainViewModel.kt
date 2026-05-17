@@ -40,7 +40,6 @@ import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -444,13 +443,10 @@ class MainViewModel @Inject constructor(
                         eventType = app.aaps.core.data.model.TE.Type.CORRECTION_BOLUS
                         this.insulin = insulinAfterConstraints
                     }
-                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        }
-                    })
+                    val result = commandQueue.bolus(detailedBolusInfo)
+                    if (!result.success) {
+                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
                     entry.markAsUsed()
                 }
             )
@@ -480,13 +476,10 @@ class MainViewModel @Inject constructor(
                         this.carbs = carbs.toDouble()
                         carbsTimestamp = dateUtil.now()
                     }
-                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        }
-                    })
+                    val result = commandQueue.bolus(detailedBolusInfo)
+                    if (!result.success) {
+                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
                     entry.markAsUsed()
                 }
             )

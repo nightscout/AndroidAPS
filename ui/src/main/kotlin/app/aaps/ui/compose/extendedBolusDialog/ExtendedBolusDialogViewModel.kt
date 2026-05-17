@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -146,12 +145,7 @@ class ExtendedBolusDialogViewModel @Inject constructor(
                 ValueWithUnit.Minute(durationInMinutes)
             )
         )
-        commandQueue.extendedBolus(insulinAfterConstraints, durationInMinutes, object : Callback() {
-            override fun run() {
-                if (!result.success) {
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                }
-            }
-        })
+        val result = commandQueue.extendedBolus(insulinAfterConstraints, durationInMinutes)
+        if (!result.success) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
     }
 }

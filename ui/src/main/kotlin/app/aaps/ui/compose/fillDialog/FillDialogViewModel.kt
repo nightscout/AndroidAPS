@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -396,14 +395,11 @@ class FillDialogViewModel @Inject constructor(
             it.bolusType = BS.Type.PRIMING
             it.notes = notes
         }
-        commandQueue.bolus(detailedBolusInfo, object : Callback() {
-            override fun run() {
-                if (!result.success) {
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                } else {
-                    onSuccess?.invoke()
-                }
-            }
-        })
+        val result = commandQueue.bolus(detailedBolusInfo)
+        if (!result.success) {
+            _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+        } else {
+            onSuccess?.invoke()
+        }
     }
 }
