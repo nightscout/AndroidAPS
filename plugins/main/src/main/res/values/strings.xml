@@ -7,7 +7,7 @@
     <string name="nfccommands_shortname">NFC</string>
     <string name="description_nfc_communicator">Trigger AAPS commands by scanning an NFC tag.</string>
     <string name="nfccommands_remote_commands_allowed">Allow commands via NFC</string>
-    <string name="nfccommands_write_tag">Write to NFC Tag</string>
+    <string name="nfccommands_write_tag">Initialize NFC Tag</string>
     <string name="nfccommands_write_tag_info">Select a command and tap a blank NFC tag to initialize it.</string>
     <string name="nfccommands_tag_written">NFC Tag written successfully</string>
     <string name="nfccommands_tag_write_error">Error writing to NFC Tag</string>

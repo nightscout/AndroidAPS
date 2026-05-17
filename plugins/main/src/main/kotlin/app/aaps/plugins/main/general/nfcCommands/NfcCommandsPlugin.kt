@@ -2,10 +2,6 @@ package app.aaps.plugins.main.general.nfcCommands
 
 import android.content.Context
 import android.widget.Toast
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
@@ -22,7 +18,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -37,12 +33,14 @@ import app.aaps.core.interfaces.rx.events.EventNSClientRestart
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.ui.compose.icons.IcPluginNfc
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.main.R
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.Strings
@@ -84,7 +82,7 @@ class NfcCommandsPlugin
         private val context: Context,
         aapsLogger: AAPSLogger,
         rh: ResourceHelper,
-        private val preferences: Preferences,
+        preferences: Preferences,
         private val constraintChecker: ConstraintsChecker,
         private val profileFunction: ProfileFunction,
         private val profileUtil: ProfileUtil,
@@ -98,53 +96,33 @@ class NfcCommandsPlugin
         private val decimalFormatter: DecimalFormatter,
         private val configBuilder: ConfigBuilder,
         private val rxBus: RxBus,
-    ) : PluginBase(
+    ) : PluginBaseWithPreferences(
             PluginDescription()
                 .mainType(PluginType.GENERAL)
-                .fragmentClass(NfcCommandsFragment::class.java.name)
-                .pluginIcon(app.aaps.ui.R.drawable.ic_nfc)
+                .icon(IcPluginNfc)
+                .composeContent { NfcCommandsComposeContent(it as NfcCommandsPlugin) }
                 .pluginName(R.string.nfccommands)
                 .shortName(R.string.nfccommands_shortname)
-                .preferencesId(PluginDescription.PREFERENCE_SCREEN)
                 .description(R.string.description_nfc_communicator),
+            ownPreferences = listOf(NfcIntentKey::class.java),
             aapsLogger,
             rh,
+            preferences,
         ) {
         @Volatile private var lastRemoteBolusTime: Long = 0
 
-        override fun addPreferenceScreen(
-            preferenceManager: PreferenceManager,
-            parent: PreferenceScreen,
-            context: Context,
-            requiredKey: String?,
-        ) {
-            if (requiredKey != null) return
-            val category = PreferenceCategory(context)
-            parent.addPreference(category)
-            category.apply {
-                key = "nfccommunicator_settings"
-                title = rh.gs(R.string.nfccommands)
-                addPreference(
-                    AdaptiveSwitchPreference(
-                        ctx = context,
-                        booleanKey = BooleanKey.NfcAllowRemoteCommands,
-                        title = R.string.nfccommands_remote_commands_allowed,
-                    ),
-                )
-                addPreference(
-                    Preference(context).apply {
-                        key = "nfccommunicator_clear_blacklist"
-                        title = rh.gs(R.string.nfccommands_clear_blacklist)
-                        summary = rh.gs(R.string.nfccommands_clear_blacklist_summary)
-                        setOnPreferenceClickListener {
-                            NfcTokenSupport.clearBlacklist(context)
-                            Toast.makeText(context, rh.gs(R.string.nfccommands_blacklist_cleared), Toast.LENGTH_SHORT).show()
-                            true
-                        }
-                    },
-                )
-            }
-        }
+        override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+            key = "nfccommunicator_settings",
+            titleResId = R.string.nfccommands,
+            items = listOf(
+                BooleanKey.NfcAllowRemoteCommands,
+                NfcIntentKey.ClearBlacklist.withClick {
+                    NfcTokenSupport.clearBlacklist(context)
+                    Toast.makeText(context, rh.gs(R.string.nfccommands_blacklist_cleared), Toast.LENGTH_SHORT).show()
+                },
+            ),
+            icon = pluginDescription.icon,
+        )
 
         fun prepareExecution(token: String, tagUid: String? = null): NfcPrepareResult {
             if (!isEnabled()) {
@@ -250,17 +228,19 @@ class NfcCommandsPlugin
             val profile = runBlocking { profileFunction.getProfile() } ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
             return when (divided[1].uppercase(Locale.ROOT)) {
                 "DISABLE", "STOP" -> {
-                    if (!loop.allowedNextModes().contains(RM.Mode.DISABLED_LOOP)) {
+                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.DISABLED_LOOP)) {
                         NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.loopisdisabled))
                     } else {
                         val result =
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.DISABLED_LOOP,
-                                durationInMinutes = Int.MAX_VALUE,
-                                action = Action.LOOP_DISABLED,
-                                source = Sources.NfcCommands,
-                                profile = profile,
-                            )
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.DISABLED_LOOP,
+                                    durationInMinutes = Int.MAX_VALUE,
+                                    action = Action.LOOP_DISABLED,
+                                    source = Sources.NfcCommands,
+                                    profile = profile,
+                                )
+                            }
                         val messageId =
                             if (result) {
                                 R.string.nfccommands_loop_has_been_disabled
@@ -271,16 +251,18 @@ class NfcCommandsPlugin
                     }
                 }
                 "RESUME" -> {
-                    if (!loop.allowedNextModes().contains(RM.Mode.RESUME) && loop.runningMode != RM.Mode.DISABLED_LOOP) {
+                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.RESUME) && runBlocking { loop.runningMode() } != RM.Mode.DISABLED_LOOP) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.RESUME,
-                                action = Action.RESUME,
-                                source = Sources.NfcCommands,
-                                profile = profile,
-                            )
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.RESUME,
+                                    action = Action.RESUME,
+                                    source = Sources.NfcCommands,
+                                    profile = profile,
+                                )
+                            }
                         val messageId = if (result) R.string.nfccommands_loop_resumed else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
@@ -290,32 +272,36 @@ class NfcCommandsPlugin
                     val normalizedDuration = duration.coerceIn(0, 180)
                     if (normalizedDuration == 0) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_wrong_duration))
-                    } else if (!loop.allowedNextModes().contains(RM.Mode.SUSPENDED_BY_USER)) {
+                    } else if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.SUSPENDED_BY_USER)) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.SUSPENDED_BY_USER,
-                                durationInMinutes = normalizedDuration,
-                                action = Action.SUSPEND,
-                                source = Sources.NfcCommands,
-                                profile = profile,
-                            )
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.SUSPENDED_BY_USER,
+                                    durationInMinutes = normalizedDuration,
+                                    action = Action.SUSPEND,
+                                    source = Sources.NfcCommands,
+                                    profile = profile,
+                                )
+                            }
                         val messageId = if (result) R.string.nfccommands_loop_suspended else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
                 }
                 "LGS" -> {
-                    if (!loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP_LGS)) {
+                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.CLOSED_LOOP_LGS)) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.CLOSED_LOOP_LGS,
-                                action = Action.LGS_LOOP_MODE,
-                                source = Sources.NfcCommands,
-                                profile = profile,
-                            )
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.CLOSED_LOOP_LGS,
+                                    action = Action.LGS_LOOP_MODE,
+                                    source = Sources.NfcCommands,
+                                    profile = profile,
+                                )
+                            }
                         val message =
                             if (result) {
                                 rh.gs(R.string.nfccommands_current_loop_mode, rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend))
@@ -326,16 +312,18 @@ class NfcCommandsPlugin
                     }
                 }
                 "CLOSED" -> {
-                    if (!loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP)) {
+                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.CLOSED_LOOP)) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.CLOSED_LOOP,
-                                action = Action.CLOSED_LOOP_MODE,
-                                source = Sources.NfcCommands,
-                                profile = profile,
-                            )
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.CLOSED_LOOP,
+                                    action = Action.CLOSED_LOOP_MODE,
+                                    source = Sources.NfcCommands,
+                                    profile = profile,
+                                )
+                            }
                         val message =
                             if (result) {
                                 rh.gs(R.string.nfccommands_current_loop_mode, rh.gs(app.aaps.core.ui.R.string.closedloop))
@@ -362,16 +350,18 @@ class NfcCommandsPlugin
                 divided.size == 2 && divided[1].equals("CONNECT", ignoreCase = true) -> {
                     val profile =
                         runBlocking { profileFunction.getProfile() } ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
-                    if (!loop.allowedNextModes().contains(RM.Mode.RESUME)) {
+                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.RESUME)) {
                         NfcExecutionResult(true, rh.gs(app.aaps.core.interfaces.R.string.connected))
                     } else {
                         val result =
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.RESUME,
-                                action = Action.RECONNECT,
-                                source = Sources.NfcCommands,
-                                profile = profile,
-                            )
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.RESUME,
+                                    action = Action.RECONNECT,
+                                    source = Sources.NfcCommands,
+                                    profile = profile,
+                                )
+                            }
                         val messageId = if (result) R.string.nfccommands_reconnect else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
@@ -384,13 +374,15 @@ class NfcCommandsPlugin
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_wrong_duration))
                     } else {
                         val result =
-                            loop.handleRunningModeChange(
-                                durationInMinutes = duration,
-                                profile = profile,
-                                newRM = RM.Mode.DISCONNECTED_PUMP,
-                                action = Action.DISCONNECT,
-                                source = Sources.NfcCommands,
-                            )
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    durationInMinutes = duration,
+                                    profile = profile,
+                                    newRM = RM.Mode.DISCONNECTED_PUMP,
+                                    action = Action.DISCONNECT,
+                                    source = Sources.NfcCommands,
+                                )
+                            }
                         val messageId = if (result) R.string.nfccommands_pump_disconnected else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
@@ -552,7 +544,7 @@ class NfcCommandsPlugin
             if (dateUtil.now() - lastRemoteBolusTime < Constants.remoteBolusMinDistance) {
                 return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
             }
-            if (loop.runningMode.isSuspended()) {
+            if (runBlocking { loop.runningMode() }.pausesLoopExecution()) {
                 return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
             }
             var bolus = SafeParse.stringToDouble(divided[1])
@@ -573,8 +565,8 @@ class NfcCommandsPlugin
                             lastRemoteBolusTime = dateUtil.now()
                             if (isMeal) {
                                 runBlocking { profileFunction.getProfile() }?.let { currentProfile ->
-                                    val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-                                    val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                                    val eatingSoonTTDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
+                                    val eatingSoonTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), profileUtil.units)
                                     runBlocking {
                                         persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                                             temporaryTarget =
@@ -651,18 +643,18 @@ class NfcCommandsPlugin
                     var tt = 0.0
                     when {
                         isMeal -> {
-                            ttDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-                            tt = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                            ttDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
+                            tt = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), profileUtil.units)
                             reason = TT.Reason.EATING_SOON
                         }
                         isActivity -> {
-                            ttDuration = preferences.get(IntKey.OverviewActivityDuration)
-                            tt = preferences.get(UnitDoubleKey.OverviewActivityTarget)
+                            ttDuration = preferences.ttDurationMinutes(TT.Reason.ACTIVITY)
+                            tt = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.ACTIVITY), profileUtil.units)
                             reason = TT.Reason.ACTIVITY
                         }
                         isHypo -> {
-                            ttDuration = preferences.get(IntKey.OverviewHypoDuration)
-                            tt = preferences.get(UnitDoubleKey.OverviewHypoTarget)
+                            ttDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
+                            tt = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.HYPOGLYCEMIA), profileUtil.units)
                             reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }

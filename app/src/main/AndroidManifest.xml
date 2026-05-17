@@ -89,12 +89,6 @@
             </intent-filter>
         </activity>
 
-        <!-- NfcBuildActivity: tag-command builder, launched from My Tags.
-             Not exported — only started by the app itself. -->
-        <activity
-            android:name="app.aaps.plugins.main.general.nfcCommands.NfcBuildActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name="app.aaps.receivers.DataReceiver"

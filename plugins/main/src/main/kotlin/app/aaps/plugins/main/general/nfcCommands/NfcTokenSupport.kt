@@ -3,7 +3,7 @@ package app.aaps.plugins.main.general.nfcCommands
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
+import android.preference.PreferenceManager
 import app.aaps.plugins.main.R
 import org.json.JSONArray
 import org.json.JSONObject
