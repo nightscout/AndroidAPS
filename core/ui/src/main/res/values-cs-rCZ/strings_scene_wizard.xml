@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Nemoc</string>
     <string name="scene_wizard_sick_day_desc">Silnější profil (150 %) pro zvládnutí zvýšené inzulínové rezistence během nemoci.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Onemocnění, horečka a stresové hormony mohou dramaticky zvýšit odolnost vůči inzulínu – někdy o 50 % nebo více. Silnější profil (např. 150%) říká algoritmu, aby dodal více inzulínu ve všech výpočtech – bazální dávky, návrhy bolusů a korekční faktory. Můžete také přidat dočasný cíl nebo upravit běh režimu v následujících krocích. Pečlivě sledujte a upravujte jak se tělo zotaví.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Nemoc — zvracení</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Snížený profil s LGS — opak standardní nemoci, když nemůžete vstřebávat jídlo.</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Luteální fáze</string>
     <string name="scene_wizard_luteal_phase_desc">Zvýšený profil pro zvládnutí inzulínové rezistence před menstruací.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Mnoho žen zažívá zvýšenou odolnost vůči inzulínu během fáze (zhruba 1–2 týdny před jejich obdobím). To je způsobeno zvyšováním progresivních úrovní, které snižují citlivost inzulínu. Účinek se mezi jednotlivci nesmírně liší – někteří si všimli zvýšení potřeb inzulínu o 10 až 30 %, jiní vidí minimální změnu. Začněte s konzervativním nárůstem (115 %) a přizpůsobte se podle vašich vlastních vzorů po několik cyklů. Sledování na CarePortálu pomáhá identifikovat váš osobní rytmus.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Horké počasí</string>
     <string name="scene_wizard_hot_weather_desc">Snížený profil — teplo urychluje vstřebávání inzulínu.</string>
