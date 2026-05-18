@@ -85,7 +85,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `available command templates should expose current NFC command set`() {
-        val labelResIds = NfcTokenSupport.availableCommands().map { it.labelResId }
+        val labelResIds = NfcTagStore.availableCommands().map { it.labelResId }
 
         assertThat(labelResIds).contains(R.string.nfccommands_cmd_aapsclient_restart)
         assertThat(labelResIds).contains(R.string.nfccommands_cmd_restart_aaps)
@@ -102,36 +102,36 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `buildCommand should ignore stale args for commands without arguments`() {
-        val template = NfcTokenSupport.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_stop }
+        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_stop }
 
-        val command = NfcTokenSupport.buildCommand(template, "unexpected")
+        val command = NfcTagStore.buildCommand(template, "unexpected")
 
         assertThat(command).isEqualTo("LOOP STOP")
     }
 
     @Test
     fun `buildCommand should return parametric disconnect command with provided duration`() {
-        val template = NfcTokenSupport.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_pump_disconnect }
+        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_pump_disconnect }
 
-        val command = NfcTokenSupport.buildCommand(template, "60")
+        val command = NfcTagStore.buildCommand(template, "60")
 
         assertThat(command).isEqualTo("PUMP DISCONNECT 60")
     }
 
     @Test
     fun `buildCommand should return null when required args are missing`() {
-        val template = NfcTokenSupport.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_suspend }
+        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_suspend }
 
-        val command = NfcTokenSupport.buildCommand(template, "")
+        val command = NfcTagStore.buildCommand(template, "")
 
         assertThat(command).isNull()
     }
 
     @Test
     fun `buildCommand should include args when template requires them`() {
-        val template = NfcTokenSupport.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_suspend }
+        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_suspend }
 
-        val command = NfcTokenSupport.buildCommand(template, "30")
+        val command = NfcTagStore.buildCommand(template, "30")
 
         assertThat(command).isEqualTo("LOOP SUSPEND 30")
     }
@@ -142,10 +142,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `prepareExecution returns Ready with commands when tag registered`() {
         val prefs = SharedPreferencesMock()
         val tag = NfcCreatedTag(tagUid = tagUid, name = "Test", commands = listOf("LOOP STOP"), createdAtMillis = 0L)
-        NfcTokenSupport.saveCreatedTag(prefs, tag)
+        NfcTagStore.saveCreatedTag(prefs, tag)
         // Use context-based lookup — inject prefs via context mock would be complex,
-        // so test via NfcTokenSupport.findTagByUid directly using prefs overload
-        val found = NfcTokenSupport.findTagByUid(prefs, tagUid)
+        // so test via NfcTagStore.findTagByUid directly using prefs overload
+        val found = NfcTagStore.findTagByUid(prefs, tagUid)
         assertThat(found).isNotNull()
         assertThat(found!!.commands).isEqualTo(listOf("LOOP STOP"))
     }
@@ -1458,4 +1458,5 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         assertThat(result.message).doesNotContain("Temp basal canceled")
         runTest { verify(commandQueue, never()).cancelTempBasal(any(), any(), any()) }
     }
+
 }

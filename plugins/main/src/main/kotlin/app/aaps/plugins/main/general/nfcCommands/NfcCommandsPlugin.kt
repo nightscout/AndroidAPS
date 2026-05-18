@@ -1,6 +1,11 @@
 package app.aaps.plugins.main.general.nfcCommands
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.os.VibrationEffect
+import android.os.VibratorManager
+import android.widget.Toast
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
@@ -38,6 +43,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcPluginNfc
+import app.aaps.core.ui.compose.preference.PreferenceActionItem
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.main.R
 import kotlinx.coroutines.runBlocking
@@ -54,6 +60,7 @@ sealed class NfcPrepareResult {
 
     data class Ready(
         val tagUid: String,
+        val tagName: String,
         val commands: List<String>,
     ) : NfcPrepareResult()
 }
@@ -105,21 +112,35 @@ class NfcCommandsPlugin
             items = listOf(
                 BooleanKey.NfcAllowRemoteCommands,
                 BooleanKey.NfcForegroundPriority,
+                PreferenceActionItem(
+                    key = "nfccommunicator_clear_log",
+                    titleResId = R.string.nfccommands_clear_log,
+                    summaryResId = R.string.nfccommands_clear_log_summary,
+                    onAction = {
+                        NfcTagStore.clearLog(context)
+                        showToast(rh.gs(R.string.nfccommands_log_cleared))
+                    },
+                ),
             ),
             icon = pluginDescription.icon,
         )
+
+        fun updateLastScanned(tagUid: String) {
+            NfcTagStore.updateLastScanned(context, tagUid)
+        }
 
         fun prepareExecution(tagUid: String): NfcPrepareResult {
             if (!isEnabled()) {
                 return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
             }
-            val tag = NfcTokenSupport.findTagByUid(context, tagUid)
+            val tag = NfcTagStore.findTagByUid(context, tagUid)
             if (tag == null) {
                 aapsLogger.debug(LTag.NFC, "No registered tag found for UID: $tagUid")
                 return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_tag_not_registered))
             }
             return NfcPrepareResult.Ready(
                 tagUid = tagUid,
+                tagName = tag.name,
                 commands = tag.commands,
             )
         }
@@ -134,6 +155,44 @@ class NfcCommandsPlugin
             val allSuccess = results.all { it.success }
             val message = results.joinToString("\n") { it.message }
             return NfcExecutionResult(success = allSuccess, message = message)
+        }
+
+        fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
+            val result = executeCascade(commands)
+            NfcTagStore.appendLogEntry(
+                context,
+                NfcLogEntry(
+                    timestamp = System.currentTimeMillis(),
+                    tagName = tagName,
+                    action = action,
+                    success = result.success,
+                    message = result.message,
+                ),
+            )
+            vibrate(result.success)
+            showToast(result.message)
+            return result
+        }
+
+        private fun vibrate(success: Boolean) {
+            runCatching {
+                val vm = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager ?: return
+                val effect =
+                    if (success) {
+                        VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
+                    } else {
+                        VibrationEffect.createWaveform(longArrayOf(0, 150, 100, 150), -1)
+                    }
+                vm.defaultVibrator.vibrate(effect)
+            }
+        }
+
+        private fun showToast(message: String) {
+            runCatching {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                }
+            }
         }
 
         fun pumpBasalDurationStep(): Int =

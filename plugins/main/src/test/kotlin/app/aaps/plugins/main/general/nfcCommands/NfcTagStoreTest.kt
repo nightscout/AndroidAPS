@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class NfcTokenSupportTest {
+class NfcTagStoreTest {
     private lateinit var prefs: SharedPreferencesMock
     private val now = 1_700_000_000_000L
     private val tagUid = "aabbccdd"
@@ -31,25 +31,26 @@ class NfcTokenSupportTest {
     @Test
     fun `saveCreatedTag and loadCreatedTags round-trips correctly`() {
         val tag = makeTag()
-        NfcTokenSupport.saveCreatedTag(prefs, tag)
+        NfcTagStore.saveCreatedTag(prefs, tag)
 
-        val loaded = NfcTokenSupport.loadCreatedTags(prefs)
+        val loaded = NfcTagStore.loadCreatedTags(prefs)
         assertThat(loaded).hasSize(1)
         assertThat(loaded.first().tagUid).isEqualTo(tag.tagUid)
         assertThat(loaded.first().name).isEqualTo(tag.name)
         assertThat(loaded.first().commands).isEqualTo(tag.commands)
         assertThat(loaded.first().createdAtMillis).isEqualTo(tag.createdAtMillis)
+        assertThat(loaded.first().lastScannedAtMillis).isNull()
     }
 
     @Test
     fun `saveCreatedTag replaces existing tag with same uid`() {
         val original = makeTag(uid = "same-uid")
         val updated = original.copy(name = "Updated Name")
-        NfcTokenSupport.saveCreatedTag(prefs, original)
+        NfcTagStore.saveCreatedTag(prefs, original)
 
-        NfcTokenSupport.saveCreatedTag(prefs, updated)
+        NfcTagStore.saveCreatedTag(prefs, updated)
 
-        val tags = NfcTokenSupport.loadCreatedTags(prefs)
+        val tags = NfcTagStore.loadCreatedTags(prefs)
         assertThat(tags).hasSize(1)
         assertThat(tags.first().tagUid).isEqualTo("same-uid")
         assertThat(tags.first().name).isEqualTo("Updated Name")
@@ -58,13 +59,48 @@ class NfcTokenSupportTest {
     @Test
     fun `saveCreatedTag uid matching is case-insensitive`() {
         val original = makeTag(uid = "AABBCCDD")
-        NfcTokenSupport.saveCreatedTag(prefs, original)
+        NfcTagStore.saveCreatedTag(prefs, original)
         val updated = original.copy(tagUid = "aabbccdd", name = "Lower")
-        NfcTokenSupport.saveCreatedTag(prefs, updated)
+        NfcTagStore.saveCreatedTag(prefs, updated)
 
-        val tags = NfcTokenSupport.loadCreatedTags(prefs)
+        val tags = NfcTagStore.loadCreatedTags(prefs)
         assertThat(tags).hasSize(1)
         assertThat(tags.first().name).isEqualTo("Lower")
+    }
+
+    // ── updateLastScanned ─────────────────────────────────────────────────────
+
+    @Test
+    fun `updateLastScanned sets lastScannedAtMillis on matching tag`() {
+        val tag = makeTag(uid = tagUid)
+        NfcTagStore.saveCreatedTag(prefs, tag)
+        val scannedAt = now + 5000L
+
+        NfcTagStore.updateLastScanned(prefs, tagUid, scannedAt)
+
+        val loaded = NfcTagStore.loadCreatedTags(prefs).first()
+        assertThat(loaded.lastScannedAtMillis).isEqualTo(scannedAt)
+    }
+
+    @Test
+    fun `updateLastScanned does nothing for unknown uid`() {
+        val tag = makeTag(uid = tagUid)
+        NfcTagStore.saveCreatedTag(prefs, tag)
+
+        NfcTagStore.updateLastScanned(prefs, "unknown-uid", now + 1000L)
+
+        assertThat(NfcTagStore.loadCreatedTags(prefs).first().lastScannedAtMillis).isNull()
+    }
+
+    @Test
+    fun `lastScannedAtMillis is null when loaded from JSON without the field`() {
+        prefs.edit().putString(
+            "nfccommunicator_created_tags_v1",
+            """[{"tagUid":"abc","name":"x","commands":["LOOP STOP"],"createdAtMillis":1000}]""",
+        ).apply()
+
+        val tag = NfcTagStore.loadCreatedTags(prefs).first()
+        assertThat(tag.lastScannedAtMillis).isNull()
     }
 
     // ── deleteCreatedTag ──────────────────────────────────────────────────────
@@ -72,24 +108,24 @@ class NfcTokenSupportTest {
     @Test
     fun `deleteCreatedTag removes tag from list`() {
         val tag = makeTag(uid = "uid-to-delete")
-        NfcTokenSupport.saveCreatedTag(prefs, tag)
-        assertThat(NfcTokenSupport.loadCreatedTags(prefs)).hasSize(1)
+        NfcTagStore.saveCreatedTag(prefs, tag)
+        assertThat(NfcTagStore.loadCreatedTags(prefs)).hasSize(1)
 
-        NfcTokenSupport.deleteCreatedTag(prefs, "uid-to-delete")
+        NfcTagStore.deleteCreatedTag(prefs, "uid-to-delete")
 
-        assertThat(NfcTokenSupport.loadCreatedTags(prefs)).isEmpty()
+        assertThat(NfcTagStore.loadCreatedTags(prefs)).isEmpty()
     }
 
     @Test
     fun `deleteCreatedTag does not remove other tags`() {
         val tag1 = makeTag(uid = "uid-1")
         val tag2 = makeTag(uid = "uid-2")
-        NfcTokenSupport.saveCreatedTag(prefs, tag1)
-        NfcTokenSupport.saveCreatedTag(prefs, tag2)
+        NfcTagStore.saveCreatedTag(prefs, tag1)
+        NfcTagStore.saveCreatedTag(prefs, tag2)
 
-        NfcTokenSupport.deleteCreatedTag(prefs, "uid-1")
+        NfcTagStore.deleteCreatedTag(prefs, "uid-1")
 
-        val remaining = NfcTokenSupport.loadCreatedTags(prefs)
+        val remaining = NfcTagStore.loadCreatedTags(prefs)
         assertThat(remaining).hasSize(1)
         assertThat(remaining.first().tagUid).isEqualTo("uid-2")
     }
@@ -99,9 +135,9 @@ class NfcTokenSupportTest {
     @Test
     fun `findTagByUid returns tag when uid matches`() {
         val tag = makeTag(uid = tagUid)
-        NfcTokenSupport.saveCreatedTag(prefs, tag)
+        NfcTagStore.saveCreatedTag(prefs, tag)
 
-        val found = NfcTokenSupport.findTagByUid(prefs, tagUid)
+        val found = NfcTagStore.findTagByUid(prefs, tagUid)
 
         assertThat(found).isNotNull()
         assertThat(found!!.tagUid).isEqualTo(tagUid)
@@ -109,7 +145,7 @@ class NfcTokenSupportTest {
 
     @Test
     fun `findTagByUid returns null for unknown uid`() {
-        val found = NfcTokenSupport.findTagByUid(prefs, "unknown-uid")
+        val found = NfcTagStore.findTagByUid(prefs, "unknown-uid")
 
         assertThat(found).isNull()
     }
@@ -117,9 +153,9 @@ class NfcTokenSupportTest {
     @Test
     fun `findTagByUid is case-insensitive`() {
         val tag = makeTag(uid = "AABBCCDD")
-        NfcTokenSupport.saveCreatedTag(prefs, tag)
+        NfcTagStore.saveCreatedTag(prefs, tag)
 
-        val found = NfcTokenSupport.findTagByUid(prefs, "aabbccdd")
+        val found = NfcTagStore.findTagByUid(prefs, "aabbccdd")
 
         assertThat(found).isNotNull()
     }
@@ -130,7 +166,7 @@ class NfcTokenSupportTest {
     fun `loadCreatedTags ignores entries without commands array`() {
         prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"abc","name":"x","createdAtMillis":0}]""").apply()
 
-        val tags = NfcTokenSupport.loadCreatedTags(prefs)
+        val tags = NfcTagStore.loadCreatedTags(prefs)
 
         assertThat(tags).isEmpty()
     }
@@ -139,7 +175,7 @@ class NfcTokenSupportTest {
     fun `loadCreatedTags ignores entries with blank tagUid`() {
         prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"","name":"x","commands":["LOOP STOP"],"createdAtMillis":0}]""").apply()
 
-        val tags = NfcTokenSupport.loadCreatedTags(prefs)
+        val tags = NfcTagStore.loadCreatedTags(prefs)
 
         assertThat(tags).isEmpty()
     }
@@ -148,7 +184,7 @@ class NfcTokenSupportTest {
     fun `loadCreatedTags returns empty list for malformed json`() {
         prefs.edit().putString("nfccommunicator_created_tags_v1", "{not-valid-json").apply()
 
-        val tags = NfcTokenSupport.loadCreatedTags(prefs)
+        val tags = NfcTagStore.loadCreatedTags(prefs)
 
         assertThat(tags).isEmpty()
     }
@@ -158,18 +194,18 @@ class NfcTokenSupportTest {
     @Test
     fun `buildCascade returns null if any step has missing required args`() {
         val suspendTemplate =
-            NfcTokenSupport.availableCommands().first {
+            NfcTagStore.availableCommands().first {
                 it.labelResId ==
                     app.aaps.plugins.main.R.string.nfccommands_cmd_loop_suspend
             }
         val stopTemplate =
-            NfcTokenSupport.availableCommands().first {
+            NfcTagStore.availableCommands().first {
                 it.labelResId ==
                     app.aaps.plugins.main.R.string.nfccommands_cmd_loop_stop
             }
         val steps = listOf(stopTemplate to "", suspendTemplate to "") // suspend requires args
 
-        val result = NfcTokenSupport.buildCascade(steps)
+        val result = NfcTagStore.buildCascade(steps)
 
         assertThat(result).isNull()
     }
@@ -177,33 +213,62 @@ class NfcTokenSupportTest {
     @Test
     fun `buildCascade returns list of commands for valid steps`() {
         val stopTemplate =
-            NfcTokenSupport.availableCommands().first {
+            NfcTagStore.availableCommands().first {
                 it.labelResId ==
                     app.aaps.plugins.main.R.string.nfccommands_cmd_loop_stop
             }
         val resumeTemplate =
-            NfcTokenSupport.availableCommands().first {
+            NfcTagStore.availableCommands().first {
                 it.labelResId ==
                     app.aaps.plugins.main.R.string.nfccommands_cmd_loop_resume
             }
         val steps = listOf(stopTemplate to "", resumeTemplate to "")
 
-        val result = NfcTokenSupport.buildCascade(steps)
+        val result = NfcTagStore.buildCascade(steps)
 
         assertThat(result).isEqualTo(listOf("LOOP STOP", "LOOP RESUME"))
     }
 
     @Test
     fun `buildCascade returns null for empty list`() {
-        val result = NfcTokenSupport.buildCascade(emptyList())
+        val result = NfcTagStore.buildCascade(emptyList())
 
         assertThat(result).isNull()
     }
 
     @Test
     fun `tagUidHex returns lowercase hex and null for null input`() {
-        assertThat(NfcTokenSupport.tagUidHex(byteArrayOf(0x0A, 0x1B, 0x2C))).isEqualTo("0a1b2c")
-        assertThat(NfcTokenSupport.tagUidHex(null)).isNull()
+        assertThat(NfcTagStore.tagUidHex(byteArrayOf(0x0A, 0x1B, 0x2C))).isEqualTo("0a1b2c")
+        assertThat(NfcTagStore.tagUidHex(null)).isNull()
+    }
+
+    // ── markJustWritten / isJustWritten ───────────────────────────────────────
+
+    @Test
+    fun `isJustWritten returns true immediately after markJustWritten`() {
+        NfcTagStore.markJustWritten("uid-fresh")
+
+        assertThat(NfcTagStore.isJustWritten("uid-fresh")).isTrue()
+    }
+
+    @Test
+    fun `isJustWritten returns false when cooldown has expired`() {
+        NfcTagStore.markJustWritten("uid-expired")
+
+        // cooldownMs = -1 means any real elapsed time exceeds the window
+        assertThat(NfcTagStore.isJustWritten("uid-expired", cooldownMs = -1L)).isFalse()
+    }
+
+    @Test
+    fun `isJustWritten returns false for uid never written`() {
+        assertThat(NfcTagStore.isJustWritten("uid-never-written")).isFalse()
+    }
+
+    @Test
+    fun `isJustWritten is case-insensitive`() {
+        NfcTagStore.markJustWritten("CASE-WRITTEN")
+
+        assertThat(NfcTagStore.isJustWritten("case-written")).isTrue()
     }
 
     // ── log tests ─────────────────────────────────────────────────────────────
@@ -211,9 +276,9 @@ class NfcTokenSupportTest {
     @Test
     fun `appendLogEntry persists an entry`() {
         val entry = NfcLogEntry(timestamp = now, tagName = "MyTag", action = "READ", success = true, message = "ok")
-        NfcTokenSupport.appendLogEntry(prefs, entry)
+        NfcTagStore.appendLogEntry(prefs, entry)
 
-        val loaded = NfcTokenSupport.loadLog(prefs)
+        val loaded = NfcTagStore.loadLog(prefs)
         assertThat(loaded).hasSize(1)
         assertThat(loaded.first().tagName).isEqualTo("MyTag")
         assertThat(loaded.first().action).isEqualTo("READ")
@@ -224,10 +289,10 @@ class NfcTokenSupportTest {
     fun `loadLog returns entries newest first`() {
         val entry1 = NfcLogEntry(timestamp = now, tagName = "Tag1", action = "READ", success = true, message = "ok")
         val entry2 = NfcLogEntry(timestamp = now + 1000L, tagName = "Tag2", action = "WRITE", success = true, message = "written")
-        NfcTokenSupport.appendLogEntry(prefs, entry1)
-        NfcTokenSupport.appendLogEntry(prefs, entry2)
+        NfcTagStore.appendLogEntry(prefs, entry1)
+        NfcTagStore.appendLogEntry(prefs, entry2)
 
-        val loaded = NfcTokenSupport.loadLog(prefs)
+        val loaded = NfcTagStore.loadLog(prefs)
         assertThat(loaded).hasSize(2)
         assertThat(loaded[0].tagName).isEqualTo("Tag2")
         assertThat(loaded[1].tagName).isEqualTo("Tag1")
@@ -236,10 +301,10 @@ class NfcTokenSupportTest {
     @Test
     fun `appendLogEntry prunes to 100 when exceeding max`() {
         repeat(105) { i ->
-            NfcTokenSupport.appendLogEntry(prefs, NfcLogEntry(now + i, "Tag$i", "READ", true, "msg"))
+            NfcTagStore.appendLogEntry(prefs, NfcLogEntry(now + i, "Tag$i", "READ", true, "msg"))
         }
 
-        val loaded = NfcTokenSupport.loadLog(prefs)
+        val loaded = NfcTagStore.loadLog(prefs)
         assertThat(loaded).hasSize(100)
     }
 
@@ -247,7 +312,7 @@ class NfcTokenSupportTest {
     fun `loadLog handles malformed JSON gracefully`() {
         prefs.edit().putString("nfccommunicator_log_v1", "not-valid-json").apply()
 
-        val loaded = NfcTokenSupport.loadLog(prefs)
+        val loaded = NfcTagStore.loadLog(prefs)
         assertThat(loaded).isEmpty()
     }
 
@@ -260,9 +325,9 @@ class NfcTokenSupportTest {
             success = true,
             message = "Loop disabled\nTemp basal canceled",
         )
-        NfcTokenSupport.appendLogEntry(prefs, entry)
+        NfcTagStore.appendLogEntry(prefs, entry)
 
-        val loaded = NfcTokenSupport.loadLog(prefs)
+        val loaded = NfcTagStore.loadLog(prefs)
         assertThat(loaded).hasSize(1)
         with(loaded.first()) {
             assertThat(tagName).isEqualTo("Morning Routine")
@@ -282,10 +347,23 @@ class NfcTokenSupportTest {
             success = false,
             message = "Remote command not allowed",
         )
-        NfcTokenSupport.appendLogEntry(prefs, entry)
+        NfcTagStore.appendLogEntry(prefs, entry)
 
-        val loaded = NfcTokenSupport.loadLog(prefs)
+        val loaded = NfcTagStore.loadLog(prefs)
         assertThat(loaded.first().success).isFalse()
         assertThat(loaded.first().message).isEqualTo("Remote command not allowed")
+    }
+
+    @Test
+    fun `clearLog removes all entries`() {
+        NfcTagStore.appendLogEntry(prefs, NfcLogEntry(1L, "Tag", "READ", true, "ok"))
+        NfcTagStore.clearLog(prefs)
+        assertThat(NfcTagStore.loadLog(prefs)).isEmpty()
+    }
+
+    @Test
+    fun `clearLog on empty log is a no-op`() {
+        NfcTagStore.clearLog(prefs)
+        assertThat(NfcTagStore.loadLog(prefs)).isEmpty()
     }
 }

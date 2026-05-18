@@ -72,6 +72,17 @@ Cascades execute sequentially; the first failure stops the chain.
 
 ---
 
+## Write cooldown
+
+When a tag is written via the Build screen, Android hardware reads it back immediately
+after the write completes. To prevent that read-back from triggering command execution,
+`NfcTagStore.markJustWritten()` stamps the tag UID with the current timestamp.
+`prepareExecution()` checks `isJustWritten()` first (5-second window) and returns an
+error if the stamp is still fresh. Subsequent scans — after the tag is removed and
+re-presented — execute normally.
+
+---
+
 ## Registering arbitrary tags (blank tags, finished Libre sensors, …)
 
 Any NFC tag can trigger a command chain — it does not need to carry AAPS NDEF data.
@@ -93,12 +104,12 @@ ahead of other apps while it is in the foreground.
 
 | Class | Responsibility |
 |-------|---------------|
-| `NfcCommandsPlugin` | `executeCascade` / `executeCommand` — all execution logic |
-| `NfcControlActivity` | Handles NFC scan intents (`NDEF_DISCOVERED` and `TAG_DISCOVERED` fallback); calls `prepareExecution` + `executeCascade` |
+| `NfcCommandsPlugin` | `executeCascade` / `executeCommand` — all execution logic; `executeWithFeedback` — unified entry point that runs the cascade, appends the log entry, vibrates, and shows a toast |
+| `NfcControlActivity` | Handles NFC scan intents (`NDEF_DISCOVERED` and `TAG_DISCOVERED` fallback); calls `prepareExecution` + `executeWithFeedback` |
 | `NfcForegroundDispatch` | Manages `NfcAdapter.enableForegroundDispatch` lifecycle for `ComposeMainActivity`; forwards intercepted intents to `NfcControlActivity` and shows the warning dialog when the setting is enabled |
 | `NfcCommandsScreen` | My Tags and Log UI; manual execution dialog |
 | `NfcBuildScreen` | Command chain builder UI |
-| `NfcTokenSupport` | SharedPreferences persistence for tags and log |
+| `NfcTagStore` | SharedPreferences persistence for tags and log; command templates; UID utilities |
 
 ---
 
@@ -115,7 +126,7 @@ ahead of other apps while it is in the foreground.
 
 | Test file | Coverage |
 |-----------|---------|
-| `NfcCommandsPluginTest` | All command processors, `executeCascade` (success, failure, empty list, early stop) |
-| `NfcControlActivityTest` | NDEF and TAG_DISCOVERED intent handling, silent ignore for unknown UIDs, log entry written after scan |
+| `NfcCommandsPluginTest` | All command processors, `executeCascade` (success, failure, empty list, early stop), write-cooldown rejection in `prepareExecution` |
+| `NfcControlActivityTest` | NDEF and TAG_DISCOVERED intent handling, silent ignore for unknown UIDs, `executeWithFeedback` delegated after successful scan |
 | `NfcForegroundDispatchTest` | `onResume`/`onPause` lifecycle (preference off, no adapter, enable/disable, idempotent disable), `onNewIntent` routing (NDEF, TAG_DISCOVERED, null action, unrelated action), `observeWarning` subscription and dialog send/suppress logic |
-| `NfcTokenSupportTest` | Tag persistence, log persistence (success, failure, pruning, ordering) |
+| `NfcTagStoreTest` | Tag persistence, log persistence (success, failure, pruning, ordering), `markJustWritten`/`isJustWritten` (fresh, expired, unknown UID, case-insensitive) |

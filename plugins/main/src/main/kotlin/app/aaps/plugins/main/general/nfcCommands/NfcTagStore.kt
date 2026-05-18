@@ -21,6 +21,7 @@ data class NfcCreatedTag(
     val name: String,
     val commands: List<String>,
     val createdAtMillis: Long,
+    val lastScannedAtMillis: Long? = null,
 )
 
 data class NfcLogEntry(
@@ -31,11 +32,11 @@ data class NfcLogEntry(
     val message: String,
 )
 
-object NfcTokenSupport {
+object NfcTagStore {
     const val MIME_TYPE: String = "application/vnd.app.aaps.command"
 
     private const val PREFS_TAGS = "nfccommunicator_created_tags_v1"
-    private const val PREFS_LOG = "nfccommunicator_log_v1"
+    internal const val PREFS_LOG = "nfccommunicator_log_v1"
     private const val LOG_MAX_ENTRIES = 100
 
     private val commandTemplates =
@@ -130,6 +131,22 @@ object NfcTokenSupport {
      */
     fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
 
+    // uid (lowercase) → System.currentTimeMillis() at write time; cleared implicitly by expiry
+    private val recentlyWrittenUids = mutableMapOf<String, Long>()
+
+    fun markJustWritten(uid: String) {
+        recentlyWrittenUids[uid.lowercase()] = System.currentTimeMillis()
+    }
+
+    fun isJustWritten(uid: String, cooldownMs: Long = 5_000L): Boolean {
+        val writtenAt = recentlyWrittenUids[uid.lowercase()] ?: return false
+        return System.currentTimeMillis() - writtenAt < cooldownMs
+    }
+
+    internal fun clearJustWrittenForTest() {
+        recentlyWrittenUids.clear()
+    }
+
     fun findTagByUid(context: Context, uid: String): NfcCreatedTag? =
         loadCreatedTags(context).find { it.tagUid.equals(uid, ignoreCase = true) }
 
@@ -155,6 +172,7 @@ object NfcTokenSupport {
                     name = item.optString("name"),
                     commands = commands,
                     createdAtMillis = item.optLong("createdAtMillis"),
+                    lastScannedAtMillis = item.optLong("lastScannedAtMillis", 0L).takeIf { it > 0 },
                 ),
             )
         }
@@ -192,6 +210,15 @@ object NfcTokenSupport {
         saveCreatedTagList(prefs, updated)
     }
 
+    fun updateLastScanned(context: Context, tagUid: String, millis: Long = System.currentTimeMillis()) {
+        updateLastScanned(PreferenceManager.getDefaultSharedPreferences(context), tagUid, millis)
+    }
+
+    internal fun updateLastScanned(prefs: SharedPreferences, tagUid: String, millis: Long = System.currentTimeMillis()) {
+        val tag = findTagByUid(prefs, tagUid) ?: return
+        saveCreatedTag(prefs, tag.copy(lastScannedAtMillis = millis))
+    }
+
     private fun saveCreatedTagList(
         prefs: SharedPreferences,
         tags: List<NfcCreatedTag>,
@@ -200,13 +227,13 @@ object NfcTokenSupport {
         tags.forEach { current ->
             val cmdsArray = JSONArray()
             current.commands.forEach { cmdsArray.put(it) }
-            array.put(
-                JSONObject()
-                    .put("tagUid", current.tagUid)
-                    .put("name", current.name)
-                    .put("commands", cmdsArray)
-                    .put("createdAtMillis", current.createdAtMillis),
-            )
+            val obj = JSONObject()
+                .put("tagUid", current.tagUid)
+                .put("name", current.name)
+                .put("commands", cmdsArray)
+                .put("createdAtMillis", current.createdAtMillis)
+            current.lastScannedAtMillis?.let { obj.put("lastScannedAtMillis", it) }
+            array.put(obj)
         }
         prefs.edit().putString(PREFS_TAGS, array.toString()).apply()
     }
@@ -240,6 +267,14 @@ object NfcTokenSupport {
     }
 
     fun loadLog(context: Context): List<NfcLogEntry> = loadLog(PreferenceManager.getDefaultSharedPreferences(context))
+
+    fun clearLog(context: Context) {
+        clearLog(PreferenceManager.getDefaultSharedPreferences(context))
+    }
+
+    internal fun clearLog(prefs: SharedPreferences) {
+        prefs.edit().remove(PREFS_LOG).apply()
+    }
 
     internal fun loadLog(prefs: SharedPreferences): List<NfcLogEntry> =
         try {

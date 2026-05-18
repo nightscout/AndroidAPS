@@ -11,10 +11,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
-import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.nio.charset.StandardCharsets
@@ -25,16 +23,12 @@ class NfcControlActivityTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        activity = spy(NfcControlActivity())
+        NfcTagStore.clearJustWrittenForTest()
+        activity = NfcControlActivity()
         activity.nfcPlugin = nfcPlugin
         activity.aapsLogger = aapsLogger
         activity.rh = rh
         whenever(nfcPlugin.isEnabled()).thenReturn(true)
-        // Stub appendReadLogEntry to avoid SharedPreferences access in unit tests
-        org.mockito.kotlin
-            .doNothing()
-            .whenever(activity)
-            .appendReadLogEntry(any(), any())
     }
 
     private val fakeUid = byteArrayOf(0xAA.toByte(), 0xBB.toByte(), 0xCC.toByte(), 0xDD.toByte())
@@ -42,17 +36,17 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     @Test
     fun `handleIntent executes commands when plugin enabled and tag registered`() {
         val mockTag = mockNfcTag(fakeUid)
-        val uid = NfcTokenSupport.tagUidHex(fakeUid)!!
+        val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
-            .thenReturn(NfcPrepareResult.Ready(uid, listOf("LOOP STOP")))
-        whenever(nfcPlugin.executeCascade(listOf("LOOP STOP")))
+            .thenReturn(NfcPrepareResult.Ready(uid, "My Tag", listOf("LOOP STOP")))
+        whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
             .thenReturn(NfcExecutionResult(true, "ok"))
         val intent = createNfcIntent(mockTag)
 
         activity.handleIntent(intent)
 
         verify(nfcPlugin).prepareExecution(uid)
-        verify(nfcPlugin).executeCascade(listOf("LOOP STOP"))
+        verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ")
     }
 
     @Test
@@ -67,7 +61,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
 
     @Test
     fun `handleIntent shows error when tag not registered`() {
-        val uid = NfcTokenSupport.tagUidHex(fakeUid)!!
+        val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
             .thenReturn(NfcPrepareResult.Error("not registered"))
 
@@ -125,40 +119,36 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `handleIntent calls appendReadLogEntry after successful execution`() {
-        val uid = NfcTokenSupport.tagUidHex(fakeUid)!!
+    fun `handleIntent delegates log and feedback to plugin executeWithFeedback`() {
+        val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
-            .thenReturn(NfcPrepareResult.Ready(uid, listOf("LOOP STOP")))
-        whenever(nfcPlugin.executeCascade(listOf("LOOP STOP")))
+            .thenReturn(NfcPrepareResult.Ready(uid, "My Tag", listOf("LOOP STOP")))
+        whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
             .thenReturn(NfcExecutionResult(true, "ok"))
-        org.mockito.kotlin
-            .doNothing()
-            .whenever(activity)
-            .appendReadLogEntry(any(), any())
         val intent = createNfcIntent(mockNfcTag(fakeUid))
 
         activity.handleIntent(intent)
 
-        verify(activity).appendReadLogEntry(org.mockito.kotlin.eq(uid), any())
+        verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ")
     }
 
     @Test
     fun `handleIntent executes commands on TAG_DISCOVERED for registered UID`() {
-        val uid = NfcTokenSupport.tagUidHex(fakeUid)!!
+        val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
-            .thenReturn(NfcPrepareResult.Ready(uid, listOf("LOOP STOP")))
-        whenever(nfcPlugin.executeCascade(listOf("LOOP STOP")))
+            .thenReturn(NfcPrepareResult.Ready(uid, "My Tag", listOf("LOOP STOP")))
+        whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
             .thenReturn(NfcExecutionResult(true, "ok"))
 
         activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
 
         verify(nfcPlugin).prepareExecution(uid)
-        verify(nfcPlugin).executeCascade(listOf("LOOP STOP"))
+        verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ")
     }
 
     @Test
     fun `handleIntent does nothing silently on TAG_DISCOVERED for unregistered UID`() {
-        val uid = NfcTokenSupport.tagUidHex(fakeUid)!!
+        val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
             .thenReturn(NfcPrepareResult.Error("not registered"))
 
@@ -176,6 +166,28 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         verify(nfcPlugin, never()).executeCascade(any())
     }
 
+    @Test
+    fun `handleIntent silently ignores just-written tag on NDEF_DISCOVERED`() {
+        val uid = NfcTagStore.tagUidHex(fakeUid)!!
+        NfcTagStore.markJustWritten(uid)
+
+        activity.handleIntent(createNfcIntent(mockNfcTag(fakeUid)))
+
+        verify(nfcPlugin, never()).prepareExecution(any())
+        verify(nfcPlugin, never()).executeWithFeedback(any(), any(), any())
+    }
+
+    @Test
+    fun `handleIntent silently ignores just-written tag on TAG_DISCOVERED`() {
+        val uid = NfcTagStore.tagUidHex(fakeUid)!!
+        NfcTagStore.markJustWritten(uid)
+
+        activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
+
+        verify(nfcPlugin, never()).prepareExecution(any())
+        verify(nfcPlugin, never()).executeWithFeedback(any(), any(), any())
+    }
+
     // ── helpers ────────────────────────────────────────────────────────────
 
     private fun mockNfcTag(uid: ByteArray): Tag {
@@ -187,7 +199,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     private fun createNfcIntent(nfcTag: Tag? = mockNfcTag(fakeUid)): Intent {
         val record = mock<NdefRecord>()
         whenever(record.tnf).thenReturn(NdefRecord.TNF_MIME_MEDIA)
-        whenever(record.type).thenReturn(NfcTokenSupport.MIME_TYPE.toByteArray(StandardCharsets.US_ASCII))
+        whenever(record.type).thenReturn(NfcTagStore.MIME_TYPE.toByteArray(StandardCharsets.US_ASCII))
         whenever(record.payload).thenReturn(ByteArray(0))
         val message = mock<NdefMessage>()
         whenever(message.records).thenReturn(arrayOf(record))

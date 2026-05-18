@@ -12,6 +12,7 @@
     <string name="nfccommands_write_tag_info">Select a command and tap an NFC tag to register it.</string>
     <string name="nfccommands_tag_written">NFC Tag written successfully</string>
     <string name="nfccommands_tag_write_error">Error writing to NFC Tag</string>
+    <string name="nfccommands_tag_reassigned">Tag reassigned successfully</string>
     <string name="nfccommands_command_executed">NFC Command executed: %1$s</string>
     <string name="nfccommands_scan_to_execute">Scan tag to execute command</string>
     <string name="nfccommands_plugin_disabled">NFC communicator is disabled</string>
@@ -156,6 +157,10 @@
     <string name="nfccommands_tab_log">Log</string>
     <string name="nfccommands_log_action_read">Read</string>
     <string name="nfccommands_log_action_write">Write</string>
+    <string name="nfccommands_log_action_manual">Manual</string>
+    <string name="nfccommands_clear_log">Clear log</string>
+    <string name="nfccommands_clear_log_summary">Remove all activity log entries</string>
+    <string name="nfccommands_log_cleared">Log cleared</string>
     <string name="nfccommands_no_name_title">No tag name</string>
     <string name="nfccommands_no_name_msg">This tag has no name. You can set one now or skip.</string>
     <string name="nfccommands_set_name">Set name</string>
