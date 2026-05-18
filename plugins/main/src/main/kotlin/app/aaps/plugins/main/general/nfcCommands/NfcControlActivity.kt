@@ -38,7 +38,12 @@ open class NfcControlActivity : Activity() {
         super.onResume()
         currentTask = executor.submit {
             handleIntent(intent)
-            runOnUiThread { finish() }
+            runOnUiThread {
+                packageManager.getLaunchIntentForPackage(packageName)?.apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }?.let { startActivity(it) }
+                finish()
+            }
         }
     }
 
