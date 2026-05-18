@@ -588,17 +588,14 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private suspend fun processPUMP(divided: Array<String>, receivedSms: Sms) {
         if (divided.size == 1) {
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.sms), object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        val reply = shortStatusBlocking()
-                        sendSMS(Sms(receivedSms.phoneNumber, reply))
-                    } else {
-                        val reply = rh.gs(R.string.sms_read_status_failed)
-                        sendSMS(Sms(receivedSms.phoneNumber, reply))
-                    }
-                }
-            })
+            val result = commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.sms))
+            if (result.success) {
+                val reply = shortStatusBlocking()
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+            } else {
+                val reply = rh.gs(R.string.sms_read_status_failed)
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+            }
             receivedSms.processed = true
         } else if ((divided.size == 2) && (divided[1].equals("CONNECT", ignoreCase = true))) {
             if (loop.allowedNextModes().contains(RM.Mode.RESUME)) {

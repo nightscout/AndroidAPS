@@ -567,7 +567,7 @@ class EopatchPumpPlugin @Inject constructor(
         return null
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
 
     }
 

@@ -54,8 +54,10 @@ internal class TizenPluginTest : TestBaseWithProfile() {
         runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis())) }
         runBlocking { whenever(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0)) }
         runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis())) }
-        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong()))
-            .thenReturn(TB(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TB.Type.NORMAL))
+        runBlocking {
+            whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong()))
+                .thenReturn(TB(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TB.Type.NORMAL))
+        }
         whenever(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         whenever(loop.lastRun).thenReturn(Loop.LastRun().also {
             it.lastTBREnact = 1000

@@ -6,7 +6,6 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
@@ -29,47 +28,40 @@ class TempBasalPercentAction(
 ) : SmsAction(pumpCommand = true) {
 
     override suspend fun run() {
-        commandQueue.tempBasalPercent(percent, durationMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-            override fun run() {
-                if (result.success) {
-                    var replyText =
-                        if (result.isPercent) rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration) else rh.gs(
-                            R.string.smscommunicator_tempbasal_set,
-                            result.absolute,
-                            result.duration
-                        )
-                    replyText += "\n" + shortStatusBlocking()
-                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    if (result.isPercent)
-                        uel.log(
-                            action = Action.TEMP_BASAL, source = Sources.SMS,
-                            note = shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
-                            listValues = listOf(
-                                ValueWithUnit.Percent(result.percent),
-                                ValueWithUnit.Minute(result.duration)
-                            )
-
-                        )
-                    else
-                        uel.log(
-                            action = Action.TEMP_BASAL,
-                            source = Sources.SMS,
-                            note = shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
-                            listValues = listOf(
-                                ValueWithUnit.UnitPerHour(result.absolute),
-                                ValueWithUnit.Minute(result.duration)
-                            )
-                        )
-                } else {
-                    var replyText = rh.gs(R.string.smscommunicator_tempbasal_failed)
-                    replyText += "\n" + shortStatusBlocking()
-                    smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(
-                        Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_failed),
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_failed))
+        val result = commandQueue.tempBasalPercent(percent, durationMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
+        if (result.success) {
+            var replyText =
+                if (result.isPercent) rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration)
+                else rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration)
+            replyText += "\n" + shortStatusBlocking()
+            sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+            if (result.isPercent)
+                uel.log(
+                    action = Action.TEMP_BASAL, source = Sources.SMS,
+                    note = shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
+                    listValues = listOf(
+                        ValueWithUnit.Percent(result.percent),
+                        ValueWithUnit.Minute(result.duration)
                     )
-                }
-            }
-        })
+                )
+            else
+                uel.log(
+                    action = Action.TEMP_BASAL,
+                    source = Sources.SMS,
+                    note = shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
+                    listValues = listOf(
+                        ValueWithUnit.UnitPerHour(result.absolute),
+                        ValueWithUnit.Minute(result.duration)
+                    )
+                )
+        } else {
+            var replyText = rh.gs(R.string.smscommunicator_tempbasal_failed)
+            replyText += "\n" + shortStatusBlocking()
+            smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
+            uel.log(
+                Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_failed),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_failed))
+            )
+        }
     }
 }

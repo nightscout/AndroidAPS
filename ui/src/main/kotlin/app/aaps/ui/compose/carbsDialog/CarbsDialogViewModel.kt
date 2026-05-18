@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
@@ -431,16 +430,15 @@ class CarbsDialogViewModel @Inject constructor(
                     ValueWithUnit.Hour(duration).takeIf { duration != 0 }
                 )
             )
-            commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                override fun run() {
-                    automation.removeAutomationEventEatReminder()
-                    if (!result.success) {
-                        _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                    } else if (preferences.get(BooleanKey.OverviewUseBolusReminder) && remindBolus) {
-                        automation.scheduleAutomationEventBolusReminder()
-                    }
+            viewModelScope.launch {
+                val result = commandQueue.bolus(detailedBolusInfo)
+                automation.removeAutomationEventEatReminder()
+                if (!result.success) {
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+                } else if (preferences.get(BooleanKey.OverviewUseBolusReminder) && remindBolus) {
+                    automation.scheduleAutomationEventBolusReminder()
                 }
-            })
+            }
         }
 
         // Schedule eat reminder alarm

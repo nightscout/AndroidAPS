@@ -336,7 +336,7 @@ abstract class PumpPluginAbstract protected constructor(
 
     var logPrefix: String = pumpDriverConfigurationInternal.logPrefix
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.warn(LTag.PUMP, logPrefix + "Time or TimeZone changed (type=$timeChangeType). ")
         this.timeChangeType = timeChangeType
         this.hasTimeDateOrTimeZoneChanged = true

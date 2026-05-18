@@ -31,12 +31,14 @@ class CommandUpdateTime(
     override suspend fun execute() {
         val pump = activePlugin.activePumpInternal
 
-        if (pump is Medtrum) {
-            val medtrumPump = pump as Medtrum
-            val r = medtrumPump.updateTime()
+        val r = if (pump is Medtrum) {
+            val r = pump.updateTime()
             aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-            callback?.result(r)?.run()
+            r
+        } else {
+            pumpEnactResultProvider.get().success(true).enacted(false)
         }
+        callback?.result(r)?.run()
     }
 
     override fun status(): String = rh.gs(app.aaps.core.ui.R.string.update_time)

@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import dagger.Reusable
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @Reusable
@@ -26,6 +25,6 @@ class ProcessedTbrEbDataImpl @Inject constructor(
         return null
     }
 
-    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB? =
-        runBlocking { persistenceLayer.getTemporaryBasalActiveAt(timestamp) ?: getConvertedExtended(timestamp) }
+    override suspend fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB? =
+        persistenceLayer.getTemporaryBasalActiveAt(timestamp) ?: getConvertedExtended(timestamp)
 }

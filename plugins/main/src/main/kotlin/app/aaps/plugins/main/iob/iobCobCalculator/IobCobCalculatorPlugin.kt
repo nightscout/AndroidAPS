@@ -314,7 +314,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         return IobTotal.combine(bolusIob, basalIob).round()
     }
 
-    override fun getBasalData(profile: Profile, fromTime: Long): BasalData {
+    override suspend fun getBasalData(profile: Profile, fromTime: Long): BasalData {
         val now = System.currentTimeMillis()
         val time = ads.roundUpTime(fromTime)
         var retVal = basalDataTable[time]

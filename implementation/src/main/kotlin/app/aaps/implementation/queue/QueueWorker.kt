@@ -49,6 +49,11 @@ class QueueWorker internal constructor(
 
     override suspend fun doWorkAndLog(): Result {
         queue.waitingForDisconnect = false
+        // Defensive: a previous worker may have been cancelled mid-execute (e.g. blocking sleep
+        // not honoring coroutine cancellation), leaving `performing` set. Without this reset the
+        // new worker's main loop has no matching branch (performing != null AND queue non-empty)
+        // and spins.
+        queue.resetPerforming()
         val wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager?)?.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(config.appName) + ":" + this::class.simpleName)
         wakeLock?.acquire(T.mins(10).msecs())
         rxBus.send(EventQueueChanged())
@@ -178,6 +183,11 @@ class QueueWorker internal constructor(
                         aapsLogger.debug(LTag.PUMPQUEUE, "waiting for disconnect")
                         delay(1000)
                     }
+                } else {
+                    // Catch-all: no branch above matched (e.g. performing != null and queue non-empty,
+                    // which can happen if a previous worker was cancelled mid-execute). Without a yield
+                    // here the loop spins CPU and the isStopped check never gets to fire.
+                    delay(100)
                 }
             }
         } finally {

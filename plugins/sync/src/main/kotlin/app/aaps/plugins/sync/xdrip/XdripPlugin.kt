@@ -222,7 +222,7 @@ class XdripPlugin @Inject constructor(
             status.append(rh.gs(R.string.disabled_loop)).append("\n")
 
         //Temp basal
-        processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
+        runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis()) }?.let {
             status.append(it.toStringShort(rh)).append(" ")
         }
         //IOB

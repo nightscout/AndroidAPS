@@ -209,7 +209,7 @@ class TizenPlugin @Inject constructor(
         bundle.putLong("basalTimeStamp", now)
         bundle.putDouble("baseBasal", profile.getBasal())
         bundle.putString("profile", runBlocking { profileFunction.getProfileName() })
-        processedTbrEbData.getTempBasalIncludingConvertedExtended(now)?.let {
+        runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(now) }?.let {
             bundle.putLong("tempBasalStart", it.timestamp)
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR

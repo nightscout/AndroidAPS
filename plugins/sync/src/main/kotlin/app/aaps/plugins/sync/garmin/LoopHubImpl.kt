@@ -97,7 +97,7 @@ class LoopHubImpl @Inject constructor(
     override val temporaryBasal: Double
         get() {
             return currentProfile?.let {
-                val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())
+                val tb = runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis()) }
                 tb?.convertedToPercent(clock.millis(), it)?.div(100.0)
             } ?: Double.NaN
         }
@@ -116,8 +116,8 @@ class LoopHubImpl @Inject constructor(
     override fun connectPump() {
         appScope.launch {
             persistenceLayer.cancelCurrentRunningMode(clock.millis(), Action.RECONNECT, Sources.Garmin)
+            commandQueue.cancelTempBasal(enforceNew = true)
         }
-        commandQueue.cancelTempBasal(enforceNew = true, callback = null)
     }
 
     /** Tells the loop algorithm that the pump will be physically disconnected
@@ -157,7 +157,9 @@ class LoopHubImpl @Inject constructor(
             eventType = TE.Type.CARBS_CORRECTION
             carbs = carbsAfterConstraints.toDouble()
         }
-        commandQueue.bolus(detailedBolusInfo, null)
+        appScope.launch {
+            commandQueue.bolus(detailedBolusInfo)
+        }
     }
 
     /** Stores hear rate readings that a taken and averaged of the given interval. */

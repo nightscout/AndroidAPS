@@ -41,8 +41,10 @@ import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
 import kotlin.math.abs
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -95,6 +97,7 @@ class PersistentNotificationPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private val deferredStart = DeferredForegroundStart()
+    private var lastAutoNotificationContent: String = ""
 
     override fun onStart() {
         super.onStart()
@@ -111,6 +114,16 @@ class PersistentNotificationPlugin @Inject constructor(
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        /// Android Auto - debounced to prevent rapid pop-ups
+        disposable += Observable.merge(
+                rxBus.toObservable(EventRefreshOverview::class.java).map { },
+                rxBus.toObservable(EventInitializationChanged::class.java).map { },
+                rxBus.toObservable(EventAutosensCalculationFinished::class.java).map { }
+            )
+            .debounce(10, TimeUnit.SECONDS)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate(includeAuto = true) }, fabricPrivacy::logException)
+        /// End Android Auto
     }
 
     override fun onStop() {
@@ -120,12 +133,12 @@ class PersistentNotificationPlugin @Inject constructor(
         super.onStop()
     }
 
-    private fun triggerNotificationUpdate() {
-        runBlocking { updateNotification() }
+    private fun triggerNotificationUpdate(includeAuto: Boolean = false) {
+        runBlocking { updateNotification(includeAuto) }
         deferredStart.start { dummyServiceHelper.startService(context) }
     }
 
-    private suspend fun updateNotification() {
+    private suspend fun updateNotification(includeAuto: Boolean = false) {
         if (!config.appInitialized) return
         val pump = activePlugins.activePump
         var line1: String?
@@ -223,6 +236,9 @@ class PersistentNotificationPlugin @Inject constructor(
         } else {
             line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
         }
+        val content = "$line1|$line2|$line3"
+        if (includeAuto && content == lastAutoNotificationContent) return
+        if (includeAuto) lastAutoNotificationContent = content
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
@@ -232,7 +248,7 @@ class PersistentNotificationPlugin @Inject constructor(
         if (line2 != null) builder.setContentText(line2)
         if (line3 != null) builder.setSubText(line3)
         /// Android Auto
-        if (unreadConversationBuilder != null) {
+        if (includeAuto && unreadConversationBuilder != null) {
             builder.extend(
                 NotificationCompat.CarExtender()
                     .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))

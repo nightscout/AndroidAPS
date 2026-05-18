@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -76,9 +75,6 @@ class RunningModeReconciler @Inject constructor(
     private suspend fun reconcileStartup() {
         val now = dateUtil.now()
         val active = persistenceLayer.getRunningModeActiveAt(now)
-        // Treat startup as a transition from a synthetic working prev into the current mode.
-        // Drift from real prior state (e.g. lingering zero-TBR when mode is now working) is
-        // handled separately below.
         val action = ReconcilerDecision.decide(RM.Mode.CLOSED_LOOP, active.mode)
         executeAction(action, active, now)
         handleStartupDrift(active.mode, now)
@@ -88,8 +84,7 @@ class RunningModeReconciler @Inject constructor(
         aapsLogger.debug(LTag.APS, "RunningModeReconciler: startup reconcile, mode=${active.mode}")
     }
 
-    private fun handleStartupDrift(activeMode: RM.Mode, now: Long) {
-        // If we are in a zero-delivery mode, normal startup path already covers it.
+    private suspend fun handleStartupDrift(activeMode: RM.Mode, now: Long) {
         if (activeMode == RM.Mode.DISCONNECTED_PUMP || activeMode == RM.Mode.SUPER_BOLUS) return
         val currentTbr = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         if (currentTbr != null && currentTbr.type == TB.Type.EMULATED_PUMP_SUSPEND) {
@@ -97,7 +92,11 @@ class RunningModeReconciler @Inject constructor(
                 LTag.APS,
                 "RunningModeReconciler: startup drift — pump has EMULATED_PUMP_SUSPEND TBR but mode is $activeMode, canceling"
             )
-            commandQueue.cancelTempBasal(enforceNew = true, callback = errorCallback("startup-drift cancelTbr"))
+            val result = commandQueue.cancelTempBasal(enforceNew = true)
+            if (!result.success) {
+                aapsLogger.warn(LTag.APS, "RunningModeReconciler: startup-drift cancelTbr failed: ${result.comment}")
+                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
+            }
         }
     }
 
@@ -107,9 +106,6 @@ class RunningModeReconciler @Inject constructor(
         val prevMode = lastReconciledMode
         val prevId = lastReconciledRowId
         val prevDuration = lastReconciledDuration
-        // A duration-only update on the same row (e.g. user extends a disconnect) must still
-        // trigger reconciliation so the zero-TBR window is re-evaluated. Only skip when the
-        // whole envelope is unchanged.
         if (prevMode == current.mode && prevId == current.id && prevDuration == current.duration) return
         val action = ReconcilerDecision.decide(prevMode ?: RM.Mode.CLOSED_LOOP, current.mode)
         executeAction(action, current, now)
@@ -126,7 +122,7 @@ class RunningModeReconciler @Inject constructor(
         }
     }
 
-    private fun cancelTbrIfActive(now: Long) {
+    private suspend fun cancelTbrIfActive(now: Long) {
         val currentTbr = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         if (currentTbr == null) {
             aapsLogger.debug(LTag.APS, "RunningModeReconciler: cancelTbr — no active TBR, skipping")
@@ -136,7 +132,11 @@ class RunningModeReconciler @Inject constructor(
             LTag.APS,
             "RunningModeReconciler: canceling active TBR (rate=${currentTbr.rate}, type=${currentTbr.type})"
         )
-        commandQueue.cancelTempBasal(enforceNew = true, callback = errorCallback("cancelTbr"))
+        val result = commandQueue.cancelTempBasal(enforceNew = true)
+        if (!result.success) {
+            aapsLogger.warn(LTag.APS, "RunningModeReconciler: cancelTbr failed: ${result.comment}")
+            rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
+        }
     }
 
     private suspend fun issueZeroTbrIfNeeded(activeMode: RM, cancelEb: Boolean, now: Long) {
@@ -150,15 +150,15 @@ class RunningModeReconciler @Inject constructor(
             aapsLogger.debug(LTag.APS, "RunningModeReconciler: RM has no remaining time, skipping zero-TBR")
             return
         }
-        // Cancel extended bolus if requested and actually active.
         if (cancelEb) {
             val eb = persistenceLayer.getExtendedBolusActiveAt(now)
             if (eb != null) {
                 aapsLogger.info(LTag.APS, "RunningModeReconciler: canceling active extended bolus")
-                commandQueue.cancelExtended(callback = logCallback("cancelExtended"))
+                val ebResult = commandQueue.cancelExtended()
+                if (!ebResult.success)
+                    aapsLogger.warn(LTag.APS, "RunningModeReconciler: cancelExtended failed: ${ebResult.comment}")
             }
         }
-        // Idempotency: skip if pump already zero-TBR for at least the remaining window.
         val currentTbr = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         if (currentTbr != null && isEffectivelyZero(currentTbr) &&
             currentTbr.end >= now + T.mins(remainingMinutes.toLong()).msecs()
@@ -190,14 +190,13 @@ class RunningModeReconciler @Inject constructor(
                     LTag.APS,
                     "RunningModeReconciler: issuing zero-TBR for ${durationMinutes}m (mode=${activeMode.mode}, remaining=${remainingMinutes}m)"
                 )
-                if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                val result = if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
                     commandQueue.tempBasalAbsolute(
                         absoluteRate = 0.0,
                         durationInMinutes = durationMinutes,
                         enforceNew = true,
                         profile = profile,
-                        tbrType = PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND,
-                        callback = errorCallback("tempBasalAbsolute 0.0")
+                        tbrType = PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
                     )
                 } else {
                     commandQueue.tempBasalPercent(
@@ -205,9 +204,12 @@ class RunningModeReconciler @Inject constructor(
                         durationInMinutes = durationMinutes,
                         enforceNew = true,
                         profile = profile,
-                        tbrType = PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND,
-                        callback = errorCallback("tempBasalPercent 0")
+                        tbrType = PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
                     )
+                }
+                if (!result.success) {
+                    aapsLogger.warn(LTag.APS, "RunningModeReconciler: zero-TBR issue failed: ${result.comment}")
+                    rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
                 }
             }
         }
@@ -216,39 +218,10 @@ class RunningModeReconciler @Inject constructor(
     private fun isEffectivelyZero(tbr: TB): Boolean = tbr.rate == 0.0
 
     private fun remainingMinutes(activeMode: RM, now: Long): Int {
-        // Permanent / non-temporary modes (duration <= 0 or Long.MAX_VALUE) — treat as max.
         if (activeMode.duration <= 0L) return Int.MAX_VALUE
         val endMs = activeMode.timestamp + activeMode.duration
-        if (endMs < 0L) return Int.MAX_VALUE // overflow guard
+        if (endMs < 0L) return Int.MAX_VALUE
         val remainingMs = endMs - now
         return (remainingMs / 60_000L).toInt().coerceAtLeast(0)
-    }
-
-    /**
-     * Error callback for TBR enforcement commands. Logs the failure AND surfaces a snackbar so
-     * the user knows the pump is in an inconsistent state versus the claimed running mode.
-     * Used for cancelTbr / tempBasalAbsolute / tempBasalPercent — i.e. the commands that
-     * actively drive the pump to match the mode.
-     */
-    private fun errorCallback(label: String): Callback = object : Callback() {
-        override fun run() {
-            if (!result.success) {
-                aapsLogger.warn(LTag.APS, "RunningModeReconciler: $label failed: ${result.comment}")
-                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
-            }
-        }
-    }
-
-    /**
-     * Quiet callback — log only, no user-visible feedback. Used for defensive cleanup that
-     * may legitimately fail silently (e.g. cancelExtended when no EB is actually active on
-     * the pump despite our DB suggesting otherwise).
-     */
-    private fun logCallback(label: String): Callback = object : Callback() {
-        override fun run() {
-            if (!result.success) {
-                aapsLogger.warn(LTag.APS, "RunningModeReconciler: $label failed: ${result.comment}")
-            }
-        }
     }
 }

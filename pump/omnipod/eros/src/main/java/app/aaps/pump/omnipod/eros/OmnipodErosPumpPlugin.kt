@@ -737,7 +737,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return result
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name + ", eventHandlingEnabled=" + aapsOmnipodErosManager.isTimeChangeEventEnabled + "]")
 
         val now = Instant.now()

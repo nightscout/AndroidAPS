@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -142,14 +141,6 @@ class TempBasalDialogViewModel @Inject constructor(
         val profile = profileFunction.getProfile() ?: return
         val durationInMinutes = state.durationMinutes.toInt()
 
-        val callback = object : Callback() {
-            override fun run() {
-                if (!result.success) {
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                }
-            }
-        }
-
         if (state.isPercentPump) {
             val percent = constraintChecker.applyBasalPercentConstraints(
                 ConstraintObject(state.basalPercent.toInt(), aapsLogger), profile
@@ -163,7 +154,8 @@ class TempBasalDialogViewModel @Inject constructor(
                     ValueWithUnit.Minute(durationInMinutes)
                 )
             )
-            commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
+            val result = commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
+            if (!result.success) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
         } else {
             val absolute = constraintChecker.applyBasalConstraints(
                 ConstraintObject(state.basalAbsolute, aapsLogger), profile
@@ -177,7 +169,8 @@ class TempBasalDialogViewModel @Inject constructor(
                     ValueWithUnit.Minute(durationInMinutes)
                 )
             )
-            commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
+            val result = commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
+            if (!result.success) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
         }
     }
 }
