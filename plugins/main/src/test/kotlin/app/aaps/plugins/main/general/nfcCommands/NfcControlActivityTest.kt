@@ -142,6 +142,40 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         verify(activity).appendReadLogEntry(org.mockito.kotlin.eq(uid), any())
     }
 
+    @Test
+    fun `handleIntent executes commands on TAG_DISCOVERED for registered UID`() {
+        val uid = NfcTokenSupport.tagUidHex(fakeUid)!!
+        whenever(nfcPlugin.prepareExecution(uid))
+            .thenReturn(NfcPrepareResult.Ready(uid, listOf("LOOP STOP")))
+        whenever(nfcPlugin.executeCascade(listOf("LOOP STOP")))
+            .thenReturn(NfcExecutionResult(true, "ok"))
+
+        activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
+
+        verify(nfcPlugin).prepareExecution(uid)
+        verify(nfcPlugin).executeCascade(listOf("LOOP STOP"))
+    }
+
+    @Test
+    fun `handleIntent does nothing silently on TAG_DISCOVERED for unregistered UID`() {
+        val uid = NfcTokenSupport.tagUidHex(fakeUid)!!
+        whenever(nfcPlugin.prepareExecution(uid))
+            .thenReturn(NfcPrepareResult.Error("not registered"))
+
+        activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
+
+        verify(nfcPlugin).prepareExecution(uid)
+        verify(nfcPlugin, never()).executeCascade(any())
+    }
+
+    @Test
+    fun `handleIntent does nothing on TAG_DISCOVERED without physical tag extra`() {
+        activity.handleIntent(createTagDiscoveredIntent(nfcTag = null))
+
+        verify(nfcPlugin, never()).prepareExecution(any())
+        verify(nfcPlugin, never()).executeCascade(any())
+    }
+
     // ── helpers ────────────────────────────────────────────────────────────
 
     private fun mockNfcTag(uid: ByteArray): Tag {
@@ -162,6 +196,14 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         @Suppress("DEPRECATION")
         whenever(intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES))
             .thenReturn(arrayOf(message))
+        @Suppress("DEPRECATION")
+        whenever(intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)).thenReturn(nfcTag)
+        return intent
+    }
+
+    private fun createTagDiscoveredIntent(nfcTag: Tag? = mockNfcTag(fakeUid)): Intent {
+        val intent = mock<Intent>()
+        whenever(intent.action).thenReturn(NfcAdapter.ACTION_TAG_DISCOVERED)
         @Suppress("DEPRECATION")
         whenever(intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)).thenReturn(nfcTag)
         return intent

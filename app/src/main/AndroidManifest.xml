@@ -77,7 +77,9 @@
         </activity>
         <!-- NfcControlActivity processes NFC tags with AAPS commands.
              The device must be unlocked before the activity can run.
-             The intent filter limits it to tags with the specific MIME type. -->
+             NDEF_DISCOVERED fires for tags carrying the app MIME type.
+             TAG_DISCOVERED is a fallback for blank tags, finished Libre sensors,
+             and any other tag whose UID is registered in My Tags. -->
         <activity
             android:name="app.aaps.plugins.main.general.nfcCommands.NfcControlActivity"
             android:exported="true"
@@ -86,6 +88,10 @@
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="application/vnd.app.aaps.command" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 

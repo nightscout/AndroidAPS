@@ -813,7 +813,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
         whenever(dateUtil.now()).thenReturn(firstNow, callbackNow)
-        whenever(commandQueue.bolus(any(), any())).thenReturn(true)
+
         val callbackCaptor = argumentCaptor<Callback>()
 
         val result = plugin.executeCommand("BOLUS 1.0")
@@ -840,7 +840,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
         whenever(dateUtil.now()).thenReturn(firstNow)
-        whenever(commandQueue.bolus(any(), any())).thenReturn(true)
+
         val callbackCaptor = argumentCaptor<Callback>()
 
         plugin.executeCommand("BOLUS 1.0")
@@ -865,7 +865,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-        whenever(commandQueue.bolus(any(), any())).thenReturn(true)
+
         whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
             """[{"id":"test","reason":"Eating Soon","targetValue":99.0,"duration":2700000,"isDeletable":false}]"""
         )
@@ -899,7 +899,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-        whenever(commandQueue.bolus(any(), any())).thenReturn(true)
+
         runTest {
             whenever(profileFunction.getProfile()).thenReturn(null)
         }

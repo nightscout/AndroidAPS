@@ -60,7 +60,7 @@ open class NfcControlActivity : Activity() {
             return
         }
 
-        if (intent == null || NfcAdapter.ACTION_NDEF_DISCOVERED != intent.action) return
+        if (intent == null) return
 
         // Require a physical Tag object. Only the Android NFC subsystem can supply this;
         // an explicit intent crafted by another app cannot forge a real Tag instance,
@@ -73,6 +73,13 @@ open class NfcControlActivity : Activity() {
             return
         }
 
+        when (intent.action) {
+            NfcAdapter.ACTION_NDEF_DISCOVERED -> handleNdefIntent(intent, nfcTag)
+            NfcAdapter.ACTION_TAG_DISCOVERED  -> handleTagIntent(nfcTag)
+        }
+    }
+
+    private fun handleNdefIntent(intent: Intent, nfcTag: Tag) {
         // getParcelableArrayExtra(String) deprecated in API 33; type-safe overload requires API 33+, minSdk=26
         @Suppress("DEPRECATION")
         val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES) ?: return
@@ -90,11 +97,23 @@ open class NfcControlActivity : Activity() {
         }
 
         val tagUid = NfcTokenSupport.tagUidHex(nfcTag.id) ?: return
-        aapsLogger.debug(LTag.NFC, "NFC tag scanned, UID: $tagUid")
+        executeByUid(tagUid, showErrorToast = true)
+    }
 
+    private fun handleTagIntent(nfcTag: Tag) {
+        val tagUid = NfcTokenSupport.tagUidHex(nfcTag.id) ?: return
+        aapsLogger.debug(LTag.NFC, "TAG_DISCOVERED fallback, UID: $tagUid")
+        // Silently ignore tags not registered in My Tags — TAG_DISCOVERED fires for all tags
+        // (credit cards, transit cards, etc.) and an error toast for every unknown card is
+        // intrusive. Only execute if the UID is explicitly registered.
+        executeByUid(tagUid, showErrorToast = false)
+    }
+
+    private fun executeByUid(tagUid: String, showErrorToast: Boolean) {
+        aapsLogger.debug(LTag.NFC, "NFC tag scanned, UID: $tagUid")
         when (val prep = nfcPlugin.prepareExecution(tagUid)) {
             is NfcPrepareResult.Error -> {
-                showToast(prep.message)
+                if (showErrorToast) showToast(prep.message)
                 return
             }
             is NfcPrepareResult.Ready -> {
