@@ -194,4 +194,7 @@
     <string name="old_data">OLD DATA</string>
     <string name="notification_iob_short">%1$.1fU</string>
 
+    <string name="nfc_foreground_priority_warning_title">NFC Foreground Priority</string>
+    <string name="nfc_foreground_priority_warning_message">When enabled, AndroidAPS will intercept all NFC tags while the app is open, including Freestyle Libre sensors.\n\nThis may prevent other apps such as LibreLink from reading your sensor while AndroidAPS is in the foreground.\n\nOnly enable this if you know what you are doing.</string>
+
 </resources>
