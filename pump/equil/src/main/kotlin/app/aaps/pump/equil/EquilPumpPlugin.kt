@@ -313,9 +313,9 @@ class EquilPumpPlugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.debug(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver")
-        commandQueue.customCommand(CmdTimeSet(aapsLogger, preferences, equilManager), null)
+        commandQueue.customCommand(CmdTimeSet(aapsLogger, preferences, equilManager))
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false

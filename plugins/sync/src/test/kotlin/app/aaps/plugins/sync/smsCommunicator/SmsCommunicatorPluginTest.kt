@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.PumpStatusProvider
-import app.aaps.core.interfaces.queue.Callback
+
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -115,50 +115,21 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             runningModeGuard, testScope, repository
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
-        doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(2)
-            callback.result = pumpEnactResultProvider.get().success(true)
-            callback.run()
-            null
-        }.whenever(commandQueue).cancelTempBasal(anyBoolean(), anyBoolean(), any(Callback::class.java))
-        doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(0)
-            callback.result = pumpEnactResultProvider.get().success(true)
-            callback.run()
-            null
-        }.whenever(commandQueue).cancelExtended(any(Callback::class.java))
-        doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(1)
-            callback.result = pumpEnactResultProvider.get().success(true)
-            callback.run()
-            null
-        }.whenever(commandQueue).readStatus(anyString(), any(Callback::class.java))
-        doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(1)
-            callback.result = pumpEnactResultProvider.get().success(true).bolusDelivered(1.0)
-            callback.run()
-            null
-        }.whenever(commandQueue).bolus(anyOrNull(), any(Callback::class.java))
-        doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(5)
-            callback.result = pumpEnactResultProvider.get().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            callback.run()
-            null
-        }.whenever(commandQueue)
-            .tempBasalPercent(anyInt(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull(), any(Callback::class.java))
-        doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(5)
-            callback.result = pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            callback.run()
-            null
-        }.whenever(commandQueue)
-            .tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull(), any(Callback::class.java))
-        doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(2)
-            callback.result = pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            callback.run()
-            null
-        }.whenever(commandQueue).extendedBolus(anyDouble(), anyInt(), any(Callback::class.java))
+        runBlocking {
+            whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.readStatus(anyString())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true).bolusDelivered(1.0))
+            whenever(commandQueue.tempBasalPercent(anyInt(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenAnswer { invocation ->
+                pumpEnactResultProvider.get().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            }
+            whenever(commandQueue.tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenAnswer { invocation ->
+                pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            }
+            whenever(commandQueue.extendedBolus(anyDouble(), anyInt())).thenAnswer { invocation ->
+                pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            }
+        }
 
         runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0)) }
         runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0)) }
@@ -250,6 +221,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         whenever(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
         whenever(rh.gsNotLocalised(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
         whenever(rh.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
+        whenever(rh.gsNotLocalised(R.string.smscommunicator_extended_canceled)).thenReturn("Extended bolus canceled")
         whenever(rh.gs(app.aaps.core.ui.R.string.closedloop)).thenReturn(modeClosed)
         whenever(rh.gs(app.aaps.core.ui.R.string.openloop)).thenReturn(modeOpen)
         whenever(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn(modeLgs)

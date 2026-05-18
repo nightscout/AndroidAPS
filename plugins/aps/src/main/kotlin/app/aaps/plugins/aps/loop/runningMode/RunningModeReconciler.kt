@@ -18,10 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -79,7 +76,7 @@ class RunningModeReconciler @Inject constructor(
         val now = dateUtil.now()
         val active = persistenceLayer.getRunningModeActiveAt(now)
         val action = ReconcilerDecision.decide(RM.Mode.CLOSED_LOOP, active.mode)
-        safeExecuteAction(action, active, now)
+        executeAction(action, active, now)
         handleStartupDrift(active.mode, now)
         lastReconciledMode = active.mode
         lastReconciledRowId = active.id
@@ -111,22 +108,10 @@ class RunningModeReconciler @Inject constructor(
         val prevDuration = lastReconciledDuration
         if (prevMode == current.mode && prevId == current.id && prevDuration == current.duration) return
         val action = ReconcilerDecision.decide(prevMode ?: RM.Mode.CLOSED_LOOP, current.mode)
-        safeExecuteAction(action, current, now)
+        executeAction(action, current, now)
         lastReconciledMode = current.mode
         lastReconciledRowId = current.id
         lastReconciledDuration = current.duration
-    }
-
-    // CancellationException guard: the suspend CommandQueue bridge calls cont.cancel() when a
-    // command isn't enqueued. That would propagate out of the collect lambda and kill the observer
-    // loop. Catch it here until the implementation is natively suspend (no cont.cancel()).
-    private suspend fun safeExecuteAction(action: ReconcilerDecision.Action, activeMode: RM, now: Long) {
-        try {
-            executeAction(action, activeMode, now)
-        } catch (e: CancellationException) {
-            if (!currentCoroutineContext().isActive) throw e
-            aapsLogger.warn(LTag.APS, "RunningModeReconciler: command not enqueued (rejected by queue), skipping reconcile cycle")
-        }
     }
 
     private suspend fun executeAction(action: ReconcilerDecision.Action, activeMode: RM, now: Long) {

@@ -174,7 +174,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     }
 
     @Test
-    fun `timezoneOrDSTChanged should not throw exception`() {
+    fun `timezoneOrDSTChanged should not throw exception`() = runTest {
         // Should not throw
         plugin.timezoneOrDSTChanged(app.aaps.core.data.pump.defs.TimeChangeType.TimezoneChanged)
         plugin.timezoneOrDSTChanged(app.aaps.core.data.pump.defs.TimeChangeType.DSTStarted)

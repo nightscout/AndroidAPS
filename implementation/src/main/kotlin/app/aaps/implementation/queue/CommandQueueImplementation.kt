@@ -77,6 +77,8 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Provider
@@ -330,7 +332,7 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     @Synchronized
-    override fun bolus(detailedBolusInfo: DetailedBolusInfo, callback: Callback?): Boolean {
+    override fun bolus(detailedBolusInfo: DetailedBolusInfo, callback: Callback?) {
         // Check if pump store carbs
         // If not, it's not necessary add command to the queue and initiate connection
         // Assuming carbs in the future and carbs with duration are NOT stores anyway
@@ -363,30 +365,30 @@ class CommandQueueImplementation @Inject constructor(
             // if no insulin just exit
             if (detailedBolusInfo.insulin == 0.0) {
                 carbsRunnable.run() // store carbs
-                return true
+                return
             }
 
         }
         // Running-mode gate: reject bolus if current mode forbids new delivery.
-        if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.BOLUS, callback)) return false
+        if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.BOLUS, callback)) return
         val type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
                 callback?.result(pumpEnactResultProvider.get().enacted(false).success(false))?.run()
-                return false
+                return
             }
             val lastBolusTime = runBlocking { persistenceLayer.getNewestBolus() }?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
                 callback?.result(pumpEnactResultProvider.get().enacted(false).success(false))?.run()
-                return false
+                return
             }
             removeAll(CommandType.SMB_BOLUS)
         }
         if (isRunning(type)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished boluses
         removeAll(type)
@@ -405,7 +407,6 @@ class CommandQueueImplementation @Inject constructor(
             }
         }
         notifyAboutNewCommand()
-        return true
     }
 
     override fun stopPump(callback: Callback?) {
@@ -436,12 +437,12 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    override fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
+    override fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?) {
         val gateKind = if (absoluteRate == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
-        if (rejectedByRunningModeGate(gateKind, callback)) return false
+        if (rejectedByRunningModeGate(gateKind, callback)) return
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.TEMPBASAL)
@@ -449,16 +450,15 @@ class CommandQueueImplementation @Inject constructor(
         // add new command to queue
         add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
+    override fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?) {
         val gateKind = if (percent == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
-        if (rejectedByRunningModeGate(gateKind, callback)) return false
+        if (rejectedByRunningModeGate(gateKind, callback)) return
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.TEMPBASAL)
@@ -466,15 +466,14 @@ class CommandQueueImplementation @Inject constructor(
         // add new command to queue
         add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?): Boolean {
-        if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.EXTENDED_BOLUS, callback)) return false
+    override fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?) {
+        if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.EXTENDED_BOLUS, callback)) return
         if (isRunning(CommandType.EXTENDEDBOLUS)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // remove all unfinished
@@ -482,35 +481,32 @@ class CommandQueueImplementation @Inject constructor(
         // add new command to queue
         add(CommandExtendedBolus(injector, rateAfterConstraints, durationInMinutes, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean, callback: Callback?): Boolean {
+    override fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean, callback: Callback?) {
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.TEMPBASAL)
         // add new command to queue
         add(CommandCancelTempBasal(injector, enforceNew, autoForced = autoForced, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun cancelExtended(callback: Callback?): Boolean {
+    override fun cancelExtended(callback: Callback?) {
         if (isRunning(CommandType.EXTENDEDBOLUS)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.EXTENDEDBOLUS)
         // add new command to queue
         add(CommandCancelExtendedBolus(injector, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
@@ -544,17 +540,16 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    override fun readStatus(reason: String, callback: Callback?): Boolean {
+    override fun readStatus(reason: String, callback: Callback?) {
         if (isReadStatusScheduled()) {
             aapsLogger.debug(LTag.PUMPQUEUE, "READSTATUS $reason ignored as duplicated")
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
 
         // add new command to queue
         add(CommandReadStatus(injector, reason, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     @Synchronized
@@ -571,112 +566,105 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    override fun loadHistory(type: Byte, callback: Callback?): Boolean {
+    override fun loadHistory(type: Byte, callback: Callback?) {
         if (isRunning(CommandType.LOAD_HISTORY)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.LOAD_HISTORY)
         // add new command to queue
         add(CommandLoadHistory(injector, type, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun setUserOptions(callback: Callback?): Boolean {
+    override fun setUserOptions(callback: Callback?) {
         if (isRunning(CommandType.SET_USER_SETTINGS)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.SET_USER_SETTINGS)
         // add new command to queue
         add(CommandSetUserSettings(injector, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun loadTDDs(callback: Callback?): Boolean {
+    override fun loadTDDs(callback: Callback?) {
         if (isRunning(CommandType.LOAD_TDD)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.LOAD_TDD)
         // add new command to queue
         add(CommandLoadTDDs(injector, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun loadEvents(callback: Callback?): Boolean {
+    override fun loadEvents(callback: Callback?) {
         if (isRunning(CommandType.LOAD_EVENTS)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.LOAD_EVENTS)
         // add new command to queue
         add(CommandLoadEvents(injector, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     // returns true if command is queued
-    override fun clearAlarms(callback: Callback?): Boolean {
+    override fun clearAlarms(callback: Callback?) {
         if (isRunning(CommandType.CLEAR_ALARMS)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.CLEAR_ALARMS)
         // add new command to queue
         add(CommandClearAlarms(injector, callback))
         notifyAboutNewCommand()
-        return true
     }
 
-    override fun deactivate(callback: Callback?): Boolean {
+    override fun deactivate(callback: Callback?) {
         if (isRunning(CommandType.DEACTIVATE)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAll(CommandType.DEACTIVATE)
         // add new command to queue
         add(CommandDeactivate(injector, callback))
         notifyAboutNewCommand()
-        return true
     }
 
-    override fun updateTime(callback: Callback?): Boolean {
-        if (isRunning(CommandType.UPDATE_TIME)) {
-            callback?.result(executingNowError())?.run()
-            return false
+    override suspend fun updateTime(): PumpEnactResult =
+        suspendCancellableCoroutine { cont ->
+            if (isRunning(CommandType.UPDATE_TIME)) {
+                cont.resume(executingNowError())
+                return@suspendCancellableCoroutine
+            }
+            removeAll(CommandType.UPDATE_TIME)
+            add(CommandUpdateTime(injector, object : Callback() {
+                override fun run() { cont.resume(result) }
+            }))
+            notifyAboutNewCommand()
         }
-        // remove all unfinished
-        removeAll(CommandType.UPDATE_TIME)
-        // add new command to queue
-        add(CommandUpdateTime(injector, callback))
-        notifyAboutNewCommand()
-        return true
-    }
 
-    override fun customCommand(customCommand: CustomCommand, callback: Callback?): Boolean {
+    override fun customCommand(customCommand: CustomCommand, callback: Callback?) {
         if (isCustomCommandInQueue(customCommand.javaClass)) {
             callback?.result(executingNowError())?.run()
-            return false
+            return
         }
         // remove all unfinished
         removeAllCustomCommands(customCommand.javaClass)
         // add new command to queue
         add(CommandCustomCommand(injector, customCommand, callback))
         notifyAboutNewCommand()
-        return true
     }
 
     @Synchronized

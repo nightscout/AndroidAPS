@@ -294,7 +294,7 @@ interface Pump {
      * This method will be called when time or Timezone changes, and pump driver can then do a specific action (for
      * example update clock on pump).
      */
-    fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
+    suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
 
     /**
      * Only used for pump types where hasCustomUnreachableAlertCheck=true

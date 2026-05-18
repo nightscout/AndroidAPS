@@ -89,8 +89,7 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
         val rejection = CaptureCallback()
         val info = DetailedBolusInfo().apply { insulin = 1.0 }
-        val queued = commandQueue.bolus(info, rejection)
-        assertThat(queued).isFalse()
+        commandQueue.bolus(info, rejection)
         assertThat(rxHelper.waitUntil("bolus rejection callback fired", maxSeconds = 5) { rejection.invoked }).isTrue()
         assertThat(rejection.capturedResult?.success).isFalse()
         assertThat(rejection.capturedResult?.enacted).isFalse()
@@ -100,8 +99,7 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
     fun `queue gate rejects extended bolus when mode is DISCONNECTED_PUMP`() = runTest {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
         val rejection = CaptureCallback()
-        val queued = commandQueue.extendedBolus(2.0, 30, rejection)
-        assertThat(queued).isFalse()
+        commandQueue.extendedBolus(2.0, 30, rejection)
         assertThat(rxHelper.waitUntil("eb rejection callback fired", maxSeconds = 5) { rejection.invoked }).isTrue()
         assertThat(rejection.capturedResult?.success).isFalse()
     }
@@ -109,16 +107,16 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
     @Test
     fun `queue gate allows cancelTempBasal during DISCONNECTED_PUMP`() = runTest {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        val queued = commandQueue.cancelTempBasal(enforceNew = true, autoForced = false, callback = null)
-        assertThat(queued).isTrue()
+        commandQueue.cancelTempBasal(enforceNew = true, autoForced = false, callback = null)
+        assertThat(commandQueue.size()).isGreaterThan(0)
     }
 
     @Test
     fun `queue gate allows bolus when mode is working`() = runTest {
         insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
         val info = DetailedBolusInfo().apply { insulin = 0.1 }
-        val queued = commandQueue.bolus(info, null)
-        assertThat(queued).isTrue()
+        commandQueue.bolus(info, null)
+        assertThat(commandQueue.size()).isGreaterThan(0)
     }
 
     @Test
@@ -126,16 +124,15 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         // Startup in working mode.
         insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
         // Initial bolus passes.
-        val allowed = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 0.05 }, null)
-        assertThat(allowed).isTrue()
+        commandQueue.bolus(DetailedBolusInfo().apply { insulin = 0.05 }, null)
+        assertThat(commandQueue.size()).isGreaterThan(0)
         commandQueue.clear()
 
         // Transition to DISCONNECTED_PUMP.
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
         // Same call is now rejected.
         val rejection = CaptureCallback()
-        val rejected = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 0.05 }, rejection)
-        assertThat(rejected).isFalse()
+        commandQueue.bolus(DetailedBolusInfo().apply { insulin = 0.05 }, rejection)
         assertThat(rxHelper.waitUntil("rejection callback after mode flip", maxSeconds = 5) { rejection.invoked }).isTrue()
     }
 
@@ -235,7 +232,7 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         val profile = profileFunction.getProfile() ?: error("profile not available")
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
         val rejection = CaptureCallback()
-        val queued = commandQueue.tempBasalAbsolute(
+        commandQueue.tempBasalAbsolute(
             absoluteRate = 1.5,
             durationInMinutes = 30,
             enforceNew = true,
@@ -243,7 +240,6 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
             tbrType = PumpSync.TemporaryBasalType.NORMAL,
             callback = rejection
         )
-        assertThat(queued).isFalse()
         assertThat(rxHelper.waitUntil("non-zero TBR rejection callback", maxSeconds = 5) { rejection.invoked }).isTrue()
         assertThat(rejection.capturedResult?.success).isFalse()
         assertThat(rejection.capturedResult?.enacted).isFalse()

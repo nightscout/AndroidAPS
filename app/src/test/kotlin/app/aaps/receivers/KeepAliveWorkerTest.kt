@@ -94,7 +94,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker.checkPump()
 
         // Assert
-        verify(commandQueue).readStatus(anyOrNull(), anyOrNull())
+        verify(commandQueue).readStatus(anyOrNull())
     }
 
     @Test

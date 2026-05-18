@@ -33,6 +33,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -296,13 +297,14 @@ class LoopHubTest : TestBase() {
             null,
             listOf(ValueWithUnit.Gram(99))
         )
-        verify(commandQueue).bolus(
-            argThat { b ->
-                b!!.eventType == TE.Type.CARBS_CORRECTION &&
-                    b.carbs == 99.0
-            } ?: DetailedBolusInfo(),
-            isNull()
-        )
+        runBlocking {
+            verify(commandQueue).bolus(
+                argThat { b ->
+                    b!!.eventType == TE.Type.CARBS_CORRECTION &&
+                        b.carbs == 99.0
+                } ?: DetailedBolusInfo()
+            )
+        }
     }
 
     @Test

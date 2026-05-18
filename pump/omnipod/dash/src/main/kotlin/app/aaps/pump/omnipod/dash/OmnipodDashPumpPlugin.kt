@@ -1286,7 +1286,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         ).toPumpEnactResultImpl()
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.info(LTag.PUMP, "Ignoring time change because automatic time handling is not implemented. timeChangeType=${timeChangeType.name}")
     }
 

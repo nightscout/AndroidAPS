@@ -28,9 +28,7 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToPercent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.Clock
@@ -118,12 +116,7 @@ class LoopHubImpl @Inject constructor(
     override fun connectPump() {
         appScope.launch {
             persistenceLayer.cancelCurrentRunningMode(clock.millis(), Action.RECONNECT, Sources.Garmin)
-            try {
-                commandQueue.cancelTempBasal(enforceNew = true)
-            } catch (e: CancellationException) {
-                if (!isActive) throw e
-                aapsLogger.warn(LTag.GARMIN, "connectPump: cancelTempBasal not enqueued")
-            }
+            commandQueue.cancelTempBasal(enforceNew = true)
         }
     }
 
@@ -165,12 +158,7 @@ class LoopHubImpl @Inject constructor(
             carbs = carbsAfterConstraints.toDouble()
         }
         appScope.launch {
-            try {
-                commandQueue.bolus(detailedBolusInfo)
-            } catch (e: CancellationException) {
-                if (!isActive) throw e
-                aapsLogger.warn(LTag.GARMIN, "postCarbs: bolus not enqueued")
-            }
+            commandQueue.bolus(detailedBolusInfo)
         }
     }
 

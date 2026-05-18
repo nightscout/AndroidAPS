@@ -277,10 +277,10 @@ class KeepAliveWorker(
             rxBus.send(EventProfileChangeRequested())
         } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = now
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_status_outdated), null)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_status_outdated))
         } else if (isBasalOutdated && !pump.isBusy()) {
             lastReadStatus = now
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_basal_outdated), null)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_basal_outdated))
         }
     }
 }

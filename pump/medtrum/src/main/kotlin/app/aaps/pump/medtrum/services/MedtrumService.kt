@@ -404,7 +404,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
         if (!sendBolusCommand(insulin)) {
             medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_unable_to_send_command)
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
-            commandQueue.readStatus(rh.gs(R.string.bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+            commandQueue.readStatus(rh.gs(R.string.bolus_error)) // make sure if anything is delivered (which is highly unlikely at this point) we get it
             medtrumPump.bolusDone = true
             bolusProgressData.updateProgress(percent = 0, status = "")
             return false
