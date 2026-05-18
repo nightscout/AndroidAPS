@@ -162,6 +162,10 @@
     <string name="nfccommands_skip_name">Skip</string>
     <string name="nfccommands_rename_ok">OK</string>
     <string name="nfccommands_rename_tag_title">Rename tag</string>
+    <string name="nfccommands_execute_confirm_title">Execute %1$s?</string>
+    <string name="nfccommands_execute_confirm_msg">Commands:\n%1$s</string>
+    <string name="nfccommands_execute_ok">Execute</string>
+    <string name="nfccommands_execute_tag">Execute tag</string>
     <string name="wrong_format">Wrong format</string>
     <string name="disabled_loop">Loop Disabled</string>
 

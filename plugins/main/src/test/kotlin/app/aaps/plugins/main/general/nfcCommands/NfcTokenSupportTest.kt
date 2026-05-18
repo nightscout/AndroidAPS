@@ -250,4 +250,42 @@ class NfcTokenSupportTest {
         val loaded = NfcTokenSupport.loadLog(prefs)
         assertThat(loaded).isEmpty()
     }
+
+    @Test
+    fun `appendLogEntry for manual execution records READ action with correct fields`() {
+        val entry = NfcLogEntry(
+            timestamp = now,
+            tagName = "Morning Routine",
+            action = "READ",
+            success = true,
+            message = "Loop disabled\nTemp basal canceled",
+        )
+        NfcTokenSupport.appendLogEntry(prefs, entry)
+
+        val loaded = NfcTokenSupport.loadLog(prefs)
+        assertThat(loaded).hasSize(1)
+        with(loaded.first()) {
+            assertThat(tagName).isEqualTo("Morning Routine")
+            assertThat(action).isEqualTo("READ")
+            assertThat(success).isTrue()
+            assertThat(message).contains("Loop disabled")
+            assertThat(message).contains("Temp basal canceled")
+        }
+    }
+
+    @Test
+    fun `appendLogEntry for failed manual execution records failure`() {
+        val entry = NfcLogEntry(
+            timestamp = now,
+            tagName = "Evening",
+            action = "READ",
+            success = false,
+            message = "Remote command not allowed",
+        )
+        NfcTokenSupport.appendLogEntry(prefs, entry)
+
+        val loaded = NfcTokenSupport.loadLog(prefs)
+        assertThat(loaded.first().success).isFalse()
+        assertThat(loaded.first().message).isEqualTo("Remote command not allowed")
+    }
 }

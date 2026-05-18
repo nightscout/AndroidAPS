@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -51,7 +52,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.main.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DateFormat
 
 private sealed class NfcRoute {
@@ -69,6 +72,7 @@ class NfcCommandsComposeContent(private val plugin: NfcCommandsPlugin) : Composa
         var route by remember { mutableStateOf<NfcRoute>(NfcRoute.Main) }
         when (route) {
             is NfcRoute.Main  -> NfcCommandsScreen(
+                plugin = plugin,
                 setToolbarConfig = setToolbarConfig,
                 onNavigateBack = onNavigateBack,
                 onSettings = onSettings,
@@ -85,6 +89,7 @@ class NfcCommandsComposeContent(private val plugin: NfcCommandsPlugin) : Composa
 
 @Composable
 private fun NfcCommandsScreen(
+    plugin: NfcCommandsPlugin,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
     onSettings: (() -> Unit)?,
@@ -130,7 +135,7 @@ private fun NfcCommandsScreen(
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
             when (page) {
                 0 -> NfcLogScreen()
-                else -> NfcTagsScreen(onBuild = onBuild)
+                else -> NfcTagsScreen(plugin = plugin, onBuild = onBuild)
             }
         }
     }
@@ -214,13 +219,15 @@ private fun NfcLogEntryCard(entry: NfcLogEntry) {
 }
 
 @Composable
-private fun NfcTagsScreen(onBuild: () -> Unit) {
+private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     var refreshKey by remember { mutableIntStateOf(0) }
     var tags by remember { mutableStateOf<List<NfcCreatedTag>>(emptyList()) }
     var deleteTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
     var renameTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
     var renameText by remember { mutableStateOf("") }
+    var executeTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
 
     LaunchedEffect(refreshKey) {
         tags = NfcTokenSupport.loadCreatedTags(context)
@@ -285,6 +292,43 @@ private fun NfcTagsScreen(onBuild: () -> Unit) {
         )
     }
 
+    executeTarget?.let { tag ->
+        val commandsText = tag.commands.mapIndexed { i, cmd ->
+            context.getString(R.string.nfccommands_cascade_step_label, i + 1, cmd)
+        }.joinToString("\n")
+        AlertDialog(
+            onDismissRequest = { executeTarget = null },
+            title = { Text(stringResource(R.string.nfccommands_execute_confirm_title, tag.name)) },
+            text = { Text(stringResource(R.string.nfccommands_execute_confirm_msg, commandsText)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    val commands = tag.commands
+                    val tagName = tag.name
+                    executeTarget = null
+                    coroutineScope.launch {
+                        val result = withContext(Dispatchers.IO) { plugin.executeCascade(commands) }
+                        NfcTokenSupport.appendLogEntry(
+                            context,
+                            NfcLogEntry(
+                                timestamp = System.currentTimeMillis(),
+                                tagName = tagName,
+                                action = "READ",
+                                success = result.success,
+                                message = result.message,
+                            ),
+                        )
+                        refreshKey++
+                    }
+                }) { Text(stringResource(R.string.nfccommands_execute_ok)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { executeTarget = null }) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+            },
+        )
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         if (tags.isEmpty()) {
             Column(
@@ -310,6 +354,7 @@ private fun NfcTagsScreen(onBuild: () -> Unit) {
                 items(tags, key = { it.tagUid }) { tag ->
                     NfcTagCard(
                         tag = tag,
+                        onExecute = { executeTarget = tag },
                         onRename = { renameTarget = tag; renameText = tag.name },
                         onDelete = { deleteTarget = tag },
                     )
@@ -333,6 +378,7 @@ private fun NfcTagsScreen(onBuild: () -> Unit) {
 @Composable
 private fun NfcTagCard(
     tag: NfcCreatedTag,
+    onExecute: () -> Unit,
     onRename: () -> Unit,
     onDelete: () -> Unit,
 ) {
@@ -356,6 +402,9 @@ private fun NfcTagCard(
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
                     )
+                }
+                IconButton(onClick = onExecute) {
+                    Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nfccommands_execute_tag))
                 }
                 IconButton(onClick = onRename) {
                     Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.nfccommands_rename_tag))
