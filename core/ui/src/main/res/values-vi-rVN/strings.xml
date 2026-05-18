@@ -133,7 +133,7 @@
     <string name="loopisdisabled">Vòng lặp bị vô hiệu hóa</string>
     <string name="alarm">Báo thức</string>
     <string name="exportsettings">Xuất Cài đặt</string>
-    <string name="disableloop">Vô hiệu hóa vòng lặp</string>
+    <string name="disableloop">Tắt vòng lặp</string>
     <string name="disabled_loop">Vô hiệu hóa vòng lặp</string>
     <string name="resumeloop">Khởi động lại vòng lặp</string>
     <string name="suspendloop">Tạm dừng vòng lặp</string>
@@ -210,7 +210,7 @@
     <string name="stoptemptarget">Dừng mục tiêu tạm thời</string>
     <string name="closedloop">Vòng lặp kín</string>
     <string name="openloop">Vòng lặp mở</string>
-    <string name="lowglucosesuspend">Tạm ngừng khi đường huyết thấp</string>
+    <string name="lowglucosesuspend">Tạm dừng khi BG Thấp</string>
     <string name="pump_disconnected">Bơm đã ngắt kết nối</string>
     <string name="pump_suspended">Bơm đã tạm ngưng</string>
     <string name="pump_suspend">Tạm dừng bơm</string>
@@ -648,7 +648,7 @@
     <string name="sensitivity">Độ nhạy</string>
     <string name="isf_for_carbs">ISF trung bình cho Tính toán và Hấp thu carb: %1$.1f</string>
     <string name="isf_profile">Cấu hình ISF: %1$.1f</string>
-    <string name="isf_variable">ISF biến thiên: %1$.1f</string>
+    <string name="isf_variable">ISF thay đổi: %1$.1f</string>
     <string name="isf_effective">ISF hiệu dụng: %1$.1f</string>
     <string name="autosens_long">Giá trị Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
