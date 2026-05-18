@@ -168,7 +168,7 @@ class DanaRv2Plugin @Inject constructor(
             .bolusDelivered(delivered.cU)
         if (!result.success) result.comment(
             rh.gs(
-                R.string.boluserrorcode, detailedBolusInfo.insulin, delivered,
+                R.string.boluserrorcode, detailedBolusInfo.insulin, delivered.cU,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)

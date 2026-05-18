@@ -323,7 +323,7 @@ class DanaRSPlugin @Inject constructor(
                 0x40 -> error = rh.gs(app.aaps.pump.dana.R.string.speederror)
                 0x80 -> error = rh.gs(app.aaps.pump.dana.R.string.insulinlimitviolation)
             }
-            result.comment = rh.gs(app.aaps.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, delivered, error)
+            result.comment = rh.gs(app.aaps.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, delivered.cU, error)
         } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         return result
