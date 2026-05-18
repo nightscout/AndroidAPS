@@ -9,7 +9,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
 import app.aaps.core.data.configuration.Constants
@@ -84,11 +83,14 @@ import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -431,45 +433,44 @@ class LoopPlugin @Inject constructor(
         return bool
     }
 
-    @Synchronized
-    fun isEmptyQueue(): Boolean {
+    suspend fun isEmptyQueue(): Boolean {
         val maxMinutes = 2L
         val start = dateUtil.now()
         while (start + T.mins(maxMinutes).msecs() > dateUtil.now()) {
             if (commandQueue.size() == 0 && commandQueue.performing() == null) return true
-            SystemClock.sleep(1000)
+            delay(1000)
         }
         return false
     }
 
-    override suspend fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
+    override suspend fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean): Unit = withContext(Dispatchers.Default) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
             if (runningMode() == RM.Mode.DISABLED_LOOP) {
                 val message = rh.gs(app.aaps.core.ui.R.string.loop_disabled_by_user)
                 aapsLogger.debug(LTag.APS, message)
                 rxBus.send(EventLoopSetLastRunGui(message))
-                return
+                return@withContext
             }
             val pump = activePlugin.activePump
             var apsResult: APSResult? = null
-            if (!isEnabled()) return
+            if (!isEnabled()) return@withContext
             val profile = profileFunction.getProfile()
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
                 aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.no_profile_set))
                 rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.no_profile_set)))
-                return
+                return@withContext
             }
 
             if (!isEmptyQueue()) {
                 aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.pump_busy))
                 rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.pump_busy)))
-                return
+                return@withContext
             }
 
             // Check if pump info is loaded
-            if (ch.fromPump(pump.baseBasalRate) < 0.01) return
-            val usedAPS = activePlugin.activeAPS ?: return
+            if (ch.fromPump(pump.baseBasalRate) < 0.01) return@withContext
+            val usedAPS = activePlugin.activeAPS ?: return@withContext
             if (usedAPS.isEnabled()) {
                 usedAPS.invoke(initiator, tempBasalFallback)
                 apsResult = usedAPS.lastAPSResult
@@ -478,7 +479,7 @@ class LoopPlugin @Inject constructor(
             // Check if we have any result
             if (apsResult == null) {
                 rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.no_aps_selected)))
-                return
+                return@withContext
             }
 
             // Store calculations to DB
@@ -523,7 +524,7 @@ class LoopPlugin @Inject constructor(
                 if (runningMode().pausesLoopExecution()) {
                     aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.loopsuspended))
                     rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.loopsuspended)))
-                    return
+                    return@withContext
                 }
                 // Store reasons
                 closedLoopEnabled = constraintChecker.isClosedLoopAllowed()

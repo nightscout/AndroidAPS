@@ -73,12 +73,22 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         // TestApplication does not start the reconciler / scheduler on its own — start them here.
         runningModeReconciler.start()
         runningModeExpiryScheduler.start()
+        // Drain late-arriving commands from the previous test's appScope coroutines (e.g. the
+        // reconciler is still inside commandQueue.tempBasalPercent when tearDown clears the queue,
+        // and the `add()` lands after the clear). Sleep briefly to let those coroutines reach
+        // their `add()` call site, then clear the queue once more.
+        Thread.sleep(200)
+        commandQueue.clear()
     }
 
     @After
     fun tearDown() {
         rxHelper.clear()
         WorkManager.getInstance(context).cancelAllWork()
+        // Reset queue state: `performing` is a singleton field and survives WorkManager.cancelAllWork().
+        // Without this, a long-running command (e.g. a virtual-pump bolus simulating delivery via
+        // SystemClock.sleep) leaves `performing != null`, and the next test's QueueWorker spins.
+        commandQueue.clear()
         runBlocking { persistenceLayer.clearDatabases() }
     }
 
