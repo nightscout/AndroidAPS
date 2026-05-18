@@ -13,6 +13,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +53,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -69,6 +72,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import app.aaps.core.interfaces.logging.LTag
@@ -155,14 +159,18 @@ fun NfcBuildScreen(
             ?: return@DisposableEffect onDispose {}
 
         val callback = NfcAdapter.ReaderCallback { tag ->
-            val uid = NfcTokenSupport.tagUidHex(tag.id) ?: return@ReaderCallback
+            val uid = NfcTagStore.tagUidHex(tag.id) ?: return@ReaderCallback
             val commands = chain.toList()
             val name = tagName.ifBlank { commands.firstOrNull() ?: "" }
-            val success = buildAndWriteNdef(tag, plugin)
-            val message = if (success) context.getString(R.string.nfccommands_tag_written)
-            else context.getString(R.string.nfccommands_tag_write_error)
+            val alreadyAssigned = NfcTagStore.findTagByUid(context, uid) != null
+            val success = if (alreadyAssigned) true else buildAndWriteNdef(tag, plugin)
+            val message = when {
+                !success        -> context.getString(R.string.nfccommands_tag_write_error)
+                alreadyAssigned -> context.getString(R.string.nfccommands_tag_reassigned)
+                else            -> context.getString(R.string.nfccommands_tag_written)
+            }
 
-            NfcTokenSupport.appendLogEntry(
+            NfcTagStore.appendLogEntry(
                 context,
                 NfcLogEntry(
                     timestamp = System.currentTimeMillis(),
@@ -173,7 +181,7 @@ fun NfcBuildScreen(
                 ),
             )
             if (success) {
-                NfcTokenSupport.saveCreatedTag(
+                NfcTagStore.saveCreatedTag(
                     context,
                     NfcCreatedTag(
                         tagUid = uid,
@@ -182,6 +190,7 @@ fun NfcBuildScreen(
                         createdAtMillis = System.currentTimeMillis(),
                     ),
                 )
+                NfcTagStore.markJustWritten(uid)
             }
             coroutineScope.launch(Dispatchers.Main) {
                 writeResult = message
@@ -261,23 +270,43 @@ fun NfcBuildScreen(
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(bottom = 4.dp),
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                categories.forEachIndexed { index, category ->
-                    FilterChip(
-                        selected = selectedCategoryIndex == index,
-                        onClick = {
-                            if (selectedCategoryIndex != index) {
-                                selectedCategoryIndex = index
-                                selectedCommandIndex = -1
-                            }
-                        },
-                        label = { Text(stringResource(category.labelResId)) },
-                    )
+            CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    categories.forEachIndexed { index, category ->
+                        FilterChip(
+                            selected = selectedCategoryIndex == index,
+                            onClick = {
+                                if (selectedCategoryIndex != index) {
+                                    selectedCategoryIndex = index
+                                    selectedCommandIndex = -1
+                                }
+                            },
+                            label = { Text(stringResource(category.labelResId)) },
+                        )
+                    }
+                    if (selectedCategoryIndex >= 0) {
+                        val category = categories[selectedCategoryIndex]
+                        Icon(
+                            Icons.Filled.Info,
+                            contentDescription = stringResource(R.string.nfccommands_doc_info),
+                            modifier = Modifier
+                                .padding(start = 2.dp)
+                                .size(20.dp)
+                                .clickable {
+                                    val url = context.getString(R.string.nfccommands_doc_base_url) +
+                                        context.getString(category.docAnchorResId)
+                                    context.startActivity(
+                                        android.content.Intent(android.content.Intent.ACTION_VIEW, url.toUri())
+                                    )
+                                },
+                        )
+                    }
                 }
             }
 
@@ -287,25 +316,6 @@ fun NfcBuildScreen(
                 Card(modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.nfccommands_select_command),
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.weight(1f),
-                        )
-                        IconButton(onClick = {
-                            val url = context.getString(R.string.nfccommands_doc_base_url) +
-                                context.getString(category.docAnchorResId)
-                            context.startActivity(
-                                android.content.Intent(android.content.Intent.ACTION_VIEW, url.toUri())
-                            )
-                        }) {
-                            Icon(Icons.Filled.Info, contentDescription = stringResource(R.string.nfccommands_doc_info))
-                        }
-                    }
                     category.commands.forEachIndexed { index, command ->
                         val isSelected = selectedCommandIndex == index
                         Surface(
@@ -318,7 +328,7 @@ fun NfcBuildScreen(
                                 text = stringResource(command.displayLabelResId),
                                 style = if (isSelected) MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                                 else MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                             )
                         }
                     }
@@ -579,7 +589,7 @@ private fun NfcWriteDialog(
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(stringResource(R.string.nfccommands_write_ready)) },
+        title = { Text(stringResource(R.string.nfccommands_write_ready), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(
@@ -623,6 +633,8 @@ private fun NfcWriteDialog(
                         context.getString(R.string.nfccommands_cascade_step_label, i + 1, cmd)
                     }.joinToString("\n"),
                     style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
@@ -695,25 +707,25 @@ private fun buildCurrentCommand(
     profileWithPct: Boolean,
     profilePct: Int,
 ): String? = when (command.argType) {
-    ArgType.NONE -> NfcTokenSupport.buildCommand(command.template, "")
-    ArgType.SUSPEND -> NfcTokenSupport.buildCommand(command.template, suspendMinutes.toString())
-    ArgType.PUMP_DISCONNECT -> NfcTokenSupport.buildCommand(command.template, pumpDisconnectMinutes.toString())
+    ArgType.NONE -> NfcTagStore.buildCommand(command.template, "")
+    ArgType.SUSPEND -> NfcTagStore.buildCommand(command.template, suspendMinutes.toString())
+    ArgType.PUMP_DISCONNECT -> NfcTagStore.buildCommand(command.template, pumpDisconnectMinutes.toString())
     ArgType.BOLUS -> {
         val args = if (mealBolus) "%.2f MEAL".format(bolusUnits) else "%.2f".format(bolusUnits)
-        NfcTokenSupport.buildCommand(command.template, args)
+        NfcTagStore.buildCommand(command.template, args)
     }
-    ArgType.BASAL_ABS -> NfcTokenSupport.buildCommand(command.template, "%.2f %d".format(basalAbsRate, basalAbsDuration))
-    ArgType.BASAL_PCT -> NfcTokenSupport.buildCommand(command.template, "$basalPct% $basalPctDuration")
-    ArgType.EXTENDED -> NfcTokenSupport.buildCommand(command.template, "%.2f %d".format(extendedUnits, extendedDuration))
-    ArgType.CARBS -> NfcTokenSupport.buildCommand(command.template, carbsGrams.toString())
+    ArgType.BASAL_ABS -> NfcTagStore.buildCommand(command.template, "%.2f %d".format(basalAbsRate, basalAbsDuration))
+    ArgType.BASAL_PCT -> NfcTagStore.buildCommand(command.template, "$basalPct% $basalPctDuration")
+    ArgType.EXTENDED -> NfcTagStore.buildCommand(command.template, "%.2f %d".format(extendedUnits, extendedDuration))
+    ArgType.CARBS -> NfcTagStore.buildCommand(command.template, carbsGrams.toString())
     ArgType.PROFILE -> {
         val args = if (profileWithPct) "$profileIndex $profilePct" else profileIndex.toString()
-        NfcTokenSupport.buildCommand(command.template, args)
+        NfcTagStore.buildCommand(command.template, args)
     }
 }
 
 private fun buildAndWriteNdef(tag: Tag, plugin: NfcCommandsPlugin): Boolean {
-    val record = NdefRecord.createMime(NfcTokenSupport.MIME_TYPE, ByteArray(0))
+    val record = NdefRecord.createMime(NfcTagStore.MIME_TYPE, ByteArray(0))
     val message = NdefMessage(arrayOf(record))
     return try {
         val ndef = Ndef.get(tag)

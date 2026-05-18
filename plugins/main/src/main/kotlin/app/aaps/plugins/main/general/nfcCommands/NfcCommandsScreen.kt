@@ -3,6 +3,7 @@
 package app.aaps.plugins.main.general.nfcCommands
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -145,9 +146,19 @@ private fun NfcCommandsScreen(
 private fun NfcLogScreen() {
     val context = LocalContext.current
     var entries by remember { mutableStateOf<List<NfcLogEntry>>(emptyList()) }
+    var refreshKey by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(Unit) {
-        entries = NfcTokenSupport.loadLog(context)
+    LaunchedEffect(refreshKey) {
+        entries = NfcTagStore.loadLog(context)
+    }
+
+    DisposableEffect(context) {
+        val prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context)
+        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == NfcTagStore.PREFS_LOG) refreshKey++
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
     if (entries.isEmpty()) {
@@ -183,22 +194,25 @@ private fun NfcLogScreen() {
 @Composable
 private fun NfcLogEntryCard(entry: NfcLogEntry) {
     val formatter = remember { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) }
-    val actionLabel = if (entry.action == "WRITE") {
-        stringResource(R.string.nfccommands_log_action_write)
-    } else {
-        stringResource(R.string.nfccommands_log_action_read)
+    val actionLabel = when (entry.action) {
+        "WRITE" -> stringResource(R.string.nfccommands_log_action_write)
+        "READ" -> stringResource(R.string.nfccommands_log_action_read)
+        "MANUAL" -> stringResource(R.string.nfccommands_log_action_manual)
+        else -> null
     }
 
     Card(modifier = Modifier
         .fillMaxWidth()
-        .padding(vertical = 3.dp)) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        .padding(vertical = 1.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                SuggestionChip(
-                    onClick = {},
-                    label = { Text(actionLabel) },
-                    modifier = Modifier.padding(end = 8.dp),
-                )
+                if (actionLabel != null) {
+                    SuggestionChip(
+                        onClick = {},
+                        label = { Text(actionLabel) },
+                        modifier = Modifier.padding(end = 8.dp),
+                    )
+                }
                 Text(
                     text = entry.tagName,
                     style = MaterialTheme.typography.bodyMedium,
@@ -230,7 +244,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
     var executeTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
 
     LaunchedEffect(refreshKey) {
-        tags = NfcTokenSupport.loadCreatedTags(context)
+        tags = NfcTagStore.loadCreatedTags(context)
     }
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -249,7 +263,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
             text = { Text(stringResource(R.string.nfccommands_delete_confirm_msg)) },
             confirmButton = {
                 TextButton(onClick = {
-                    NfcTokenSupport.deleteCreatedTag(context, tag.tagUid)
+                    NfcTagStore.deleteCreatedTag(context, tag.tagUid)
                     refreshKey++
                     deleteTarget = null
                 }) { Text(stringResource(R.string.nfccommands_delete_confirm_ok)) }
@@ -278,7 +292,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
                 TextButton(onClick = {
                     val newName = renameText.trim()
                     if (newName.isNotBlank() && newName != tag.name) {
-                        NfcTokenSupport.saveCreatedTag(context, tag.copy(name = newName))
+                        NfcTagStore.saveCreatedTag(context, tag.copy(name = newName))
                         refreshKey++
                     }
                     renameTarget = null
@@ -306,17 +320,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
                     val tagName = tag.name
                     executeTarget = null
                     coroutineScope.launch {
-                        val result = withContext(Dispatchers.IO) { plugin.executeCascade(commands) }
-                        NfcTokenSupport.appendLogEntry(
-                            context,
-                            NfcLogEntry(
-                                timestamp = System.currentTimeMillis(),
-                                tagName = tagName,
-                                action = "READ",
-                                success = result.success,
-                                message = result.message,
-                            ),
-                        )
+                        withContext(Dispatchers.IO) { plugin.executeWithFeedback(commands, tagName, action = "MANUAL") }
                         refreshKey++
                     }
                 }) { Text(stringResource(R.string.nfccommands_execute_ok)) }
@@ -383,6 +387,7 @@ private fun NfcTagCard(
     onDelete: () -> Unit,
 ) {
     val context = LocalContext.current
+    val dateFormatter = remember { DateFormat.getDateInstance(DateFormat.SHORT) }
 
     val commandsText = tag.commands.mapIndexed { i, cmd ->
         context.getString(R.string.nfccommands_cascade_step_label, i + 1, cmd)
@@ -413,11 +418,19 @@ private fun NfcTagCard(
                     Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.nfccommands_disable_tag))
                 }
             }
-            SuggestionChip(
-                onClick = {},
-                label = { Text(tag.tagUid) },
-                modifier = Modifier.padding(top = 6.dp),
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                SuggestionChip(onClick = {}, label = { Text(tag.tagUid) })
+                if (tag.lastScannedAtMillis != null) {
+                    Text(
+                        text = dateFormatter.format(tag.lastScannedAtMillis),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+            }
         }
     }
 }

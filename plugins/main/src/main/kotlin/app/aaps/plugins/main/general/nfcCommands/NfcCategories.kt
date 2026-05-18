@@ -18,7 +18,7 @@ data class NfcUiCommand(
 
 object NfcCategories {
     fun build(): List<NfcUiCategory> {
-        val templates = NfcTokenSupport.availableCommands()
+        val templates = NfcTagStore.availableCommands()
 
         fun byLabelResId(resId: Int) = templates.first { it.labelResId == resId }
 

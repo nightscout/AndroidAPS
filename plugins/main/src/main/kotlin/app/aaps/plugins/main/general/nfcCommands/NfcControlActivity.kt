@@ -90,18 +90,18 @@ open class NfcControlActivity : Activity() {
         // Validate the record type in-app. The manifest <intent-filter> enforces the MIME type
         // for implicit NFC dispatch, but not for explicit intents to this exported activity.
         if (record.tnf != NdefRecord.TNF_MIME_MEDIA ||
-            String(record.type, StandardCharsets.US_ASCII) != NfcTokenSupport.MIME_TYPE
+            String(record.type, StandardCharsets.US_ASCII) != NfcTagStore.MIME_TYPE
         ) {
             aapsLogger.debug(LTag.NFC, "Rejected NFC record with unexpected TNF/type")
             return
         }
 
-        val tagUid = NfcTokenSupport.tagUidHex(nfcTag.id) ?: return
+        val tagUid = NfcTagStore.tagUidHex(nfcTag.id) ?: return
         executeByUid(tagUid, showErrorToast = true)
     }
 
     private fun handleTagIntent(nfcTag: Tag) {
-        val tagUid = NfcTokenSupport.tagUidHex(nfcTag.id) ?: return
+        val tagUid = NfcTagStore.tagUidHex(nfcTag.id) ?: return
         aapsLogger.debug(LTag.NFC, "TAG_DISCOVERED fallback, UID: $tagUid")
         // Silently ignore tags not registered in My Tags — TAG_DISCOVERED fires for all tags
         // (credit cards, transit cards, etc.) and an error toast for every unknown card is
@@ -111,32 +111,14 @@ open class NfcControlActivity : Activity() {
 
     private fun executeByUid(tagUid: String, showErrorToast: Boolean) {
         aapsLogger.debug(LTag.NFC, "NFC tag scanned, UID: $tagUid")
+        if (NfcTagStore.isJustWritten(tagUid)) return
         when (val prep = nfcPlugin.prepareExecution(tagUid)) {
-            is NfcPrepareResult.Error -> {
-                if (showErrorToast) showToast(prep.message)
-                return
-            }
+            is NfcPrepareResult.Error -> if (showErrorToast) showToast(prep.message)
             is NfcPrepareResult.Ready -> {
-                val result = nfcPlugin.executeCascade(prep.commands)
-                appendReadLogEntry(tagUid, result)
-                showToast(result.message)
+                nfcPlugin.updateLastScanned(tagUid)
+                nfcPlugin.executeWithFeedback(prep.commands, prep.tagName)
             }
         }
-    }
-
-    /** Overridable in tests to avoid SharedPreferences access. */
-    open fun appendReadLogEntry(tagUid: String, result: NfcExecutionResult) {
-        val tagName = NfcTokenSupport.findTagByUid(this, tagUid)?.name ?: tagUid
-        NfcTokenSupport.appendLogEntry(
-            this,
-            NfcLogEntry(
-                timestamp = System.currentTimeMillis(),
-                tagName = tagName,
-                action = "READ",
-                success = result.success,
-                message = result.message,
-            ),
-        )
     }
 
     private fun showToast(message: String) {
