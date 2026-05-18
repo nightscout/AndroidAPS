@@ -104,6 +104,7 @@ class NfcCommandsPlugin
             titleResId = R.string.nfccommands,
             items = listOf(
                 BooleanKey.NfcAllowRemoteCommands,
+                BooleanKey.NfcForegroundPriority,
             ),
             icon = pluginDescription.icon,
         )
