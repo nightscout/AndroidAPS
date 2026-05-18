@@ -169,7 +169,7 @@ class DanaRKoreanPlugin @Inject constructor(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
                 detailedBolusInfo.insulin,
-                delivered,
+                delivered.cU,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)

@@ -55,6 +55,8 @@ class ErosOmnipodWizardViewModel @Inject constructor(
     aapsSchedulers: AapsSchedulers
 ) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, localProfileManager) {
 
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
+
     init {
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
@@ -75,8 +77,6 @@ class ErosOmnipodWizardViewModel @Inject constructor(
 
     override val showSiteLocationStep: Boolean
         get() = preferences.get(BooleanKey.SiteRotationManagePump)
-
-    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
