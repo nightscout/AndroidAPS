@@ -1435,4 +1435,27 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         assertThat(result.success).isFalse()
     }
+
+    // ── manual execution (My Tags screen) ────────────────────────────────────
+
+    @Test
+    fun `executeCascade with empty commands list returns success with empty message`() {
+        val result = plugin.executeCascade(emptyList())
+
+        assertThat(result.success).isTrue()
+        assertThat(result.message).isEmpty()
+    }
+
+    @Test
+    fun `executeCascade stops after first failure and skips remaining commands`() {
+        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) } // LOOP STOP will fail
+        whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
+        whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
+
+        val result = plugin.executeCascade(listOf("LOOP STOP", "BASAL STOP", "PUMP CONNECT"))
+
+        assertThat(result.success).isFalse()
+        assertThat(result.message).doesNotContain("Temp basal canceled")
+        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any(), any()) }
+    }
 }
