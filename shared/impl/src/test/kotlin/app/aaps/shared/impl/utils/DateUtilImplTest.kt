@@ -356,15 +356,17 @@ class DateUtilImplTest {
     @Test
     fun `dateStringRelative identifies today and yesterday and matches old behavior`() {
         val rh = FakeResourceHelper()
-        // This test is kept as a simple regression check. It's not fully deterministic.
-        val oneHourAgo = System.currentTimeMillis() - (60 * 60 * 1000)
-        val twentyFiveHoursAgo = System.currentTimeMillis() - (25 * 60 * 60 * 1000)
+        // Use a fixed clock anchored at noon so "one hour ago" stays in the same day
+        // regardless of when the test runs.
+        val noonToday = ZonedDateTime.of(2023, 10, 27, 12, 0, 0, 0, fixedZone).toInstant()
+        val clockAtNoon = Clock.fixed(noonToday, fixedZone)
+        val util = DateUtilImpl(mockContext, clockAtNoon)
+        val nowMillis = noonToday.toEpochMilli()
+        val oneHourAgo = nowMillis - TimeUnit.HOURS.toMillis(1)
+        val twentyFiveHoursAgo = nowMillis - TimeUnit.HOURS.toMillis(25)
 
-        val newTodayResult = dateUtilImpl.dateStringRelative(oneHourAgo, rh)
-        assertThat(newTodayResult).startsWith("Today - ")
-
-        val newYesterdayResult = dateUtilImpl.dateStringRelative(twentyFiveHoursAgo, rh)
-        assertThat(newYesterdayResult).startsWith("Yesterday - ")
+        assertThat(util.dateStringRelative(oneHourAgo, rh)).startsWith("Today - ")
+        assertThat(util.dateStringRelative(twentyFiveHoursAgo, rh)).startsWith("Yesterday - ")
     }
 
     @Test
