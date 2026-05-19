@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -85,6 +86,7 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.icons.IcBread
 import app.aaps.core.ui.compose.icons.IcCake
 import app.aaps.core.ui.compose.icons.IcPizza
@@ -371,8 +373,11 @@ private fun WizardDialogContent(
             }
 
             // --- Calculation Card (expandable, at top) ---
+            val calculationExpandRequester = rememberBringIntoViewOnExpand(uiState.calculationExpanded)
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .bringIntoViewRequester(calculationExpandRequester),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -776,7 +781,8 @@ private fun WizardDialogContent(
                         modifier = itemModifier
                     )
                     // BG (collapsible, auto-expand when old/missing)
-                    Column(modifier = itemModifier) {
+                    val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpanded)
+                    Column(modifier = itemModifier.bringIntoViewRequester(bgExpandRequester)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -837,7 +843,8 @@ private fun WizardDialogContent(
                     }
 
                     // Percentage (collapsible)
-                    Column(modifier = itemModifier) {
+                    val percentageExpandRequester = rememberBringIntoViewOnExpand(percentageExpanded)
+                    Column(modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -886,8 +893,9 @@ private fun WizardDialogContent(
                     if (!uiState.simpleMode) {
                         val currentProfile = uiState.profileNames.getOrElse(uiState.selectedProfileIndex) { "" }
                         var profileExpanded by rememberSaveable { mutableStateOf(false) }
+                        val profileExpandRequester = rememberBringIntoViewOnExpand(profileExpanded)
 
-                        Column(modifier = itemModifier) {
+                        Column(modifier = itemModifier.bringIntoViewRequester(profileExpandRequester)) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
