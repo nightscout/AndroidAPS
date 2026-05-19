@@ -167,7 +167,7 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_bg_accel_weight,
         summaryResId = R.string.openapsama_bgAccel_ISF_weight_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE_2
     ),
     ApsAutoIsfBgBrakeWeight(
         key = "bgBrake_ISF_weight",
@@ -177,7 +177,7 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_bg_brake_weight,
         summaryResId = R.string.openapsama_bgBrake_ISF_weight_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE_2
     ),
     ApsAutoIsfLowBgWeight(
         key = "lower_ISFrange_weight",
@@ -187,7 +187,7 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_low_bg_weight,
         summaryResId = R.string.openapsama_lower_ISFrange_weight_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE_2
     ),
     ApsAutoIsfHighBgWeight(
         key = "higher_ISFrange_weight",
@@ -197,7 +197,7 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_high_bg_weight,
         summaryResId = R.string.openapsama_higher_ISFrange_weight_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE_2
     ),
     ApsAutoIsfSmbDeliveryRatioBgRange(
         key = "openapsama_smb_delivery_ratio_bg_range",
@@ -209,8 +209,8 @@ enum class DoubleKey(
         defaultedBySM = true,
         unitType = UnitType.DOUBLE
     ),
-    ApsAutoIsfPpWeight(key = "pp_ISF_weight", defaultValue = 0.0, min = 0.0, max = 1.0, titleResId = R.string.pref_title_pp_weight, summaryResId = R.string.openapsama_pp_ISF_weight_summary, defaultedBySM = true, unitType = UnitType.DOUBLE),
-    ApsAutoIsfDuraWeight(key = "dura_ISF_weight", defaultValue = 0.0, min = 0.0, max = 3.0, titleResId = R.string.pref_title_dura_weight, summaryResId = R.string.openapsama_dura_ISF_weight_summary, defaultedBySM = true, unitType = UnitType.DOUBLE),
+    ApsAutoIsfPpWeight(key = "pp_ISF_weight", defaultValue = 0.0, min = 0.0, max = 1.0, titleResId = R.string.pref_title_pp_weight, summaryResId = R.string.openapsama_pp_ISF_weight_summary, defaultedBySM = true, unitType = UnitType.DOUBLE_2),
+    ApsAutoIsfDuraWeight(key = "dura_ISF_weight", defaultValue = 0.0, min = 0.0, max = 3.0, titleResId = R.string.pref_title_dura_weight, summaryResId = R.string.openapsama_dura_ISF_weight_summary, defaultedBySM = true, unitType = UnitType.DOUBLE_2),
     ApsAutoIsfSmbDeliveryRatio(
         key = "openapsama_smb_delivery_ratio",
         defaultValue = 0.5,
@@ -219,7 +219,7 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_smb_delivery_ratio,
         summaryResId = R.string.openapsama_smb_delivery_ratio_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE_2
     ),
     ApsAutoIsfSmbDeliveryRatioMin(
         key = "openapsama_smb_delivery_ratio_min",
@@ -229,7 +229,7 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_smb_delivery_ratio_min,
         summaryResId = R.string.openapsama_smb_delivery_ratio_min_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE_2
     ),
     ApsAutoIsfSmbDeliveryRatioMax(
         key = "openapsama_smb_delivery_ratio_max",
@@ -239,7 +239,7 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_smb_delivery_ratio_max,
         summaryResId = R.string.openapsama_smb_delivery_ratio_max_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE_2
     ),
     ApsAutoIsfSmbMaxRangeExtension(
         key = "openapsama_smb_max_range_extension",
