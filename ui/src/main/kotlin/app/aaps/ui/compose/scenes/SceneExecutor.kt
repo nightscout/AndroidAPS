@@ -16,11 +16,13 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -29,10 +31,12 @@ import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.profileNames
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Executes scene activation and deactivation.
@@ -51,8 +55,36 @@ class SceneExecutor @Inject constructor(
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val loop: Loop,
+    private val activePlugin: ActivePlugin
 ) {
+
+    /**
+     * Single source of truth for "can this scene activate right now?".
+     * Returns null if activation is allowed, otherwise a localized reason
+     * describing why it is blocked. Callable from UI for disable state and
+     * called defensively by [activate] so non-UI paths (automation rules,
+     * future callers) can't bypass the gate.
+     *
+     * Note: does NOT check [Scene.isEnabled] — that is the user's on/off
+     * toggle, surfaced separately in the UI.
+     */
+    suspend fun validateActivation(scene: Scene): String? {
+        if (loop.runningMode().pausesLoopExecution())
+            return rh.gs(CoreUiR.string.pump_disconnected)
+        if (!activePlugin.activePump.isInitialized() || profileFunction.getProfile() == null)
+            return rh.gs(CoreUiR.string.pump_not_initialized_profile_not_set)
+        if (scene.actions.isEmpty())
+            return rh.gs(CoreUiR.string.scene_no_actions)
+        val profileList = profileRepository.profileNames()
+        for (action in scene.actions) {
+            if (action is SceneAction.ProfileSwitch && action.profileName.isNotEmpty() &&
+                action.profileName !in profileList
+            ) return rh.gs(CoreUiR.string.scene_profile_not_found, action.profileName)
+        }
+        return null
+    }
 
     /**
      * Activate a scene: capture prior state, execute all actions, persist active state.
@@ -62,6 +94,15 @@ class SceneExecutor @Inject constructor(
      */
     suspend fun activate(scene: Scene, durationMinutes: Int = scene.defaultDurationMinutes): SceneExecutionResult {
         aapsLogger.info(LTag.UI, "XXXX activate() entry scene='${scene.name}' id=${scene.id} duration=${durationMinutes}min actions=${scene.actions.size}")
+
+        // Defensive precondition gate — covers automation rules and races
+        // where UI state lagged behind reality. UI normally disables the entry
+        // point, but never trust the caller.
+        validateActivation(scene)?.let { reason ->
+            aapsLogger.warn(LTag.UI, "activate() blocked: $reason (scene='${scene.name}')")
+            return SceneExecutionResult(success = false, errorMessage = reason)
+        }
+
         // Wind down any currently active scene first.
         // - Not yet expired: full revert (TT/PS/RM cancel, SMB restore) so SceneA's effects don't
         //   leak past SceneB's start.
@@ -158,7 +199,7 @@ class SceneExecutor @Inject constructor(
         return SceneExecutionResult(
             success = allSuccess,
             actionResults = actionResults,
-            errorMessage = if (!allSuccess) rh.gs(app.aaps.core.ui.R.string.scene_some_actions_failed) else null
+            errorMessage = if (!allSuccess) rh.gs(R.string.scene_some_actions_failed) else null
         )
     }
 
@@ -168,7 +209,7 @@ class SceneExecutor @Inject constructor(
      */
     suspend fun deactivate(): SceneExecutionResult {
         val activeState = activeSceneManager.getActiveState()
-            ?: return SceneExecutionResult(success = false, errorMessage = rh.gs(app.aaps.core.ui.R.string.scene_no_active))
+            ?: return SceneExecutionResult(success = false, errorMessage = rh.gs(R.string.scene_no_active))
 
         val now = dateUtil.now()
         val actionResults = mutableListOf<SceneExecutionResult.ActionResult>()
@@ -195,7 +236,7 @@ class SceneExecutor @Inject constructor(
         return SceneExecutionResult(
             success = allSuccess,
             actionResults = actionResults,
-            errorMessage = if (!allSuccess) rh.gs(app.aaps.core.ui.R.string.scene_some_reverts_failed) else null
+            errorMessage = if (!allSuccess) rh.gs(R.string.scene_some_reverts_failed) else null
         )
     }
 
@@ -312,7 +353,7 @@ class SceneExecutor @Inject constructor(
                             errorMessage = if (ps == null) "createProfileSwitch returned null for '$profileName'" else null
                         )
                     } else {
-                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(app.aaps.core.ui.R.string.scene_no_profile_store))
+                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(R.string.scene_no_profile_store))
                     }
                 }
 
