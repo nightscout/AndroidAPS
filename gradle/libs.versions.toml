@@ -16,7 +16,7 @@ datastorePreferences = "1.2.1"
 
 # Compose
 activityCompose = "1.13.0"
-composeBom = "2026.05.00"
+composeBom = "2026.05.01"
 wearCompose = "1.6.1"
 hiltNavigationCompose = "1.3.0"
 navigationCompose = "2.9.8"
