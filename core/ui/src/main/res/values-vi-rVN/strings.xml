@@ -291,26 +291,26 @@
     <!--    Temptarget-->
     <string name="mins">%1$d phút</string>
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
+    <string name="careportal">Thông tin điều trị</string>
     <string name="careportal_bgcheck">Kiểm tra BG</string>
     <string name="careportal_mbg">Đường huyết nhập tay hoặc hiệu chuẩn</string>
     <string name="careportal_announcement">Thông báo</string>
     <string name="careportal_settings_export">Xuất cài đặt</string>
     <string name="careportal_note">Ghi chú</string>
     <string name="careportal_question">Câu hỏi</string>
-    <string name="careportal_exercise">Bài tập luyện</string>
+    <string name="careportal_exercise">Tập thể dục</string>
     <string name="careportal_announcement_message">Thông báo: %1$s</string>
-    <string name="careportal_note_message">Ghi chú: %1$s</string>
+    <string name="careportal_note_message">Ghi chú : %1$s</string>
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
-    <string name="careportal_pump_site_change">Thay vị trí truyền của bơm</string>
+    <string name="careportal_pump_site_change">Thay vị trí bơm</string>
     <string name="cgm_sensor_insert">Gắn cảm biến</string>
     <string name="careportal_pump_site_management">Vị trí tiêm</string>
     <string name="careportal_cgm_site_management">Vị trí CGM</string>
     <string name="careportal_cgmsensorstart">Khởi động Cảm biến</string>
     <string name="careportal_cgm_sensor_stop">Dừng cảm biến</string>
     <string name="careportal_dad_alert">Cảnh báo D.A.D</string>
-    <string name="careportal_insulin_cartridge_change">Thay ống chứa insulin</string>
+    <string name="careportal_insulin_cartridge_change">Thay bình chứa insulin</string>
     <string name="careportal_profileswitch">Chuyển cấu hình</string>
     <string name="profile_management">Cấu hình</string>
     <string name="careportal_snackbolus">Bolus bữa ăn nhẹ</string>
@@ -376,7 +376,7 @@
     <string name="scene_revert_smb_off">Vô hiệu hóa SMB</string>
     <string name="scene_revert_loop_mode">Hủy chế độ ghi đè đang chạy</string>
     <string name="scene_careportal_no_revert">Các mục nhập CarePortal sẽ không được hoàn tác</string>
-    <string name="careportal_sickness">Bệnh tật</string>
+    <string name="careportal_sickness">Bị ốm</string>
     <string name="careportal_stress">Căng thẳng</string>
     <string name="careportal_pre_period">Trước kỳ kinh</string>
     <string name="careportal_alcohol">Rượu bia</string>
@@ -518,7 +518,7 @@
     <string name="uel_cancel_bolus">HỦY LIỀU BOLUS</string>
     <string name="uel_cancel_extended_bolus">HỦY LIỀU BOLUS KÉO DÀI</string>
     <string name="uel_cancel_tt">CANCEL TEMP TARGET</string>
-    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_careportal">THÔNG TIN ĐIỀU TRỊ</string>
     <string name="uel_sensor_location">VỊ TRÍ CẢM BIẾN</string>
     <string name="uel_site_change">THAY ĐIỂM GẮN</string>
     <string name="uel_site_location">SITE LOCATION</string>
@@ -526,13 +526,13 @@
     <string name="uel_calibration">CALIBRATION</string>
     <string name="uel_prime_bolus">BOLUS MỒI</string>
     <string name="uel_treatment">ĐIỀU TRỊ</string>
-    <string name="uel_careportal_ns_refresh">CẬP NHẬT CAREPORTAL TỪ NS</string>
+    <string name="uel_careportal_ns_refresh">CẬP NHẬT THÔNG TIN ĐIỀU TRỊ TỪ NS</string>
     <string name="uel_profile_switch_ns_refresh">LÀM MỚI CHUYỂN CẤU HÌNH TỪ NS</string>
     <string name="uel_treatments_ns_refresh">CẬP NHẬT ĐIỀU TRỊ TỪ NS</string>
     <string name="uel_tt_ns_refresh">CẬP NHẬT TEMP TARGET TỪ NS</string>
     <string name="uel_automation_removed">ĐÃ XÓA TỰ ĐỘNG HOÁ</string>
     <string name="uel_bg_removed">BG REMOVED</string>
-    <string name="uel_careportal_removed">ĐÃ XÓA CAREPORTAL</string>
+    <string name="uel_careportal_removed">ĐÃ XÓA THÔNG TIN ĐIỀU TRỊ</string>
     <string name="uel_bolus_removed">ĐÃ XÓA BOLUS</string>
     <string name="uel_carbs_removed">ĐÃ XÓA CARBS</string>
     <string name="uel_temp_basal_removed">ĐÃ XÓA LIỀU NỀN TẠM</string>
