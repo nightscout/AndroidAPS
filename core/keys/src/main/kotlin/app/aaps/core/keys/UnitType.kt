@@ -19,6 +19,7 @@ enum class UnitType {
     INSULIN_RATE,
     DOUBLE,
     DOUBLE_2,
+    DOUBLE_3,
     MGDL
 }
 
@@ -40,6 +41,7 @@ fun UnitType.valueResId(): Int? = when (this) {
     UnitType.INSULIN_RATE -> R.string.units_format_insulin_rate
     UnitType.DOUBLE       -> R.string.units_format_double
     UnitType.DOUBLE_2     -> R.string.units_format_double_2
+    UnitType.DOUBLE_3     -> R.string.units_format_double_3
     UnitType.MGDL         -> R.string.units_format_mgdl
 }
 
@@ -61,6 +63,7 @@ fun UnitType.rangeResId(): Int? = when (this) {
     UnitType.INSULIN_RATE -> R.string.units_format_insulin_rate_range
     UnitType.DOUBLE       -> R.string.units_format_double_range
     UnitType.DOUBLE_2     -> R.string.units_format_double_2_range
+    UnitType.DOUBLE_3     -> R.string.units_format_double_3_range
     UnitType.MGDL         -> R.string.units_format_mgdl_range
 }
 
@@ -68,6 +71,7 @@ fun UnitType.rangeResId(): Int? = when (this) {
  * Returns the number of decimal places for this unit type.
  */
 fun UnitType.decimalPlaces(): Int = when (this) {
+    UnitType.DOUBLE_3                                                               -> 3
     UnitType.DOUBLE_2                                                               -> 2
     UnitType.INSULIN, UnitType.INSULIN_RATE, UnitType.DOUBLE, UnitType.HOURS_DOUBLE -> 1
     else                                                                            -> 0
@@ -77,6 +81,7 @@ fun UnitType.decimalPlaces(): Int = when (this) {
  * Returns the step size for slider/increment controls.
  */
 fun UnitType.step(): Double = when (this) {
+    UnitType.DOUBLE_3                                                               -> 0.001
     UnitType.DOUBLE_2                                                               -> 0.01
     UnitType.INSULIN, UnitType.INSULIN_RATE, UnitType.DOUBLE, UnitType.HOURS_DOUBLE -> 0.1
     else                                                                            -> 1.0
@@ -96,6 +101,6 @@ fun UnitType.unitLabelResId(): Int? = when (this) {
     UnitType.PERCENT                       -> R.string.units_percent
     UnitType.INSULIN, UnitType.INSULIN_INT -> R.string.units_insulin
     UnitType.INSULIN_RATE                  -> R.string.units_insulin_rate
-    UnitType.DOUBLE, UnitType.DOUBLE_2     -> null  // No unit label for generic doubles
+    UnitType.DOUBLE, UnitType.DOUBLE_2, UnitType.DOUBLE_3 -> null  // No unit label for generic doubles
     UnitType.MGDL                          -> R.string.units_mgdl
 }
