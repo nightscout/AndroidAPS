@@ -611,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Ningún perfil seleccionado</string>
     <string name="missing_profile_name">Falta el nombre del perfil</string>
+    <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
+    <string name="profile_activation_failed">Error al activar el perfil</string>
     <string name="error_in_ic_values">Error en los valores de Ratio de Hidratos (IC)</string>
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
     <string name="error_in_basal_values">Error en los valores de basal</string>
@@ -644,7 +646,10 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilidad</string>
-    <string name="isf_for_carbs">ISF para Calculadora y Absorción de Carbohidratos: %1$.1f</string>
+    <string name="isf_for_carbs">ISF promedio para la calculadora y la absorción de carbohidratos: %1$.1f</string>
+    <string name="isf_profile">ISF del perfil: %1$.1f</string>
+    <string name="isf_variable">ISF variable: %1$.1f</string>
+    <string name="isf_effective">ISF efectivo: %1$.1f</string>
     <string name="autosens_long">Valor de Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens en algoritmo: %.0f%%</string>

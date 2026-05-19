@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">Gjennomsnittlig utjevning</string>
     <string name="description_avg_smoothing">"Algoritme for gjennomsnittlig utjevning, nyeste BS-verdi påvirkes ikke. Kan minne om BYODA G6 sin utjevningsalgoritme"</string>
     <string name="no_smoothing_name">Ingen utjevning</string>
+    <string name="description_no_smoothing">"Bruk dette når du allerede har filtrerte data, f.eks. fra BYODA G6."</string>
+    <string name="UKF_name">Uparfymert Kalman-filter</string>
+    <string name="description_UKF">"Avansert algoritme med automatisk støyjustering og RTS-utjevning."</string>
 </resources>

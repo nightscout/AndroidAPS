@@ -356,7 +356,6 @@
     <string name="basal">בזאלי</string>
     <string name="basalpct">בזאלי %</string>
     <string name="sensitivity">רגישות</string>
-    <string name="isf_for_carbs">פקטור הרגישות של המחשבון ושל ספיגת פחמימות: %1$.1f</string>
     <string name="autosens_long">ערך Autosens: %.0f%%</string>
     <string name="algorithm_long">ערך Autosens באלגוריתם: %.0f%%</string>
     <!-- Autotune -->

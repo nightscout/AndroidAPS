@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="equil_name">Equil 5.3</string>
+    <string name="equil_name">Equil</string>
     <string name="equil_name_short">EQ</string>
     <string name="equil_pump_description">Pompă plasture Equil 5.3 sau mai nouă </string>
     <!--  start  -->

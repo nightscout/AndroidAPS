@@ -11,6 +11,8 @@
     <!--    DateUtil-->
     <string name="minago">il y a %1$dm</string>
     <string name="secago">Il y a %1$ds</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">Il y a %1$d minutes</string>
     <string name="hoursago">il y a %1$.1fh</string>
     <string name="days_ago">Il y a %1$.1f jours</string>

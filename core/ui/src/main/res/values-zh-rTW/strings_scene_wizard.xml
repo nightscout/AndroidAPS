@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">生病日</string>
     <string name="scene_wizard_sick_day_desc">較強的設定檔（150%），以應對生病期間增加的胰島素阻抗。</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">疾病、發燒與壓力荷爾蒙會大幅提高胰島素阻抗——有時高達 50% 或更多。較強的設定檔（例如 150%）會告訴演算法在所有計算中提供更多胰島素——包含基礎率、注射建議與修正係數。你也可以在接下來的步驟加入臨時目標，或調整運作模式。請密切監測，並隨身體恢復而調整。</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">生病日 — 嘔吐</string>
     <string name="scene_wizard_sick_day_vomiting_desc">降低設定檔並啟用 LGS — 當你無法吸收食物時，這與標準的生病日作法相反。</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">黃體期</string>
     <string name="scene_wizard_luteal_phase_desc">提高設定檔，以應對經期前的胰島素阻抗。</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">許多女性在黃體期（大約在月經前 1–2 週）會出現胰島素阻抗上升。這是因為黃體素上升而降低了對胰島素的敏感度。影響在個體間差異極大——有些人胰島素需求增加 10–30%，也有人幾乎沒有變化。建議先以保守的增幅開始（115%），並根據你在多個週期中的模式進行調整。在照護入口進行追蹤有助於辨識你的個人節律。</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">高溫天氣</string>
     <string name="scene_wizard_hot_weather_desc">降低設定檔——高溫會加速胰島素吸收。</string>
@@ -52,6 +54,7 @@
     <string name="scene_template_blank">空白</string>
     <string name="scene_wizard_blank_desc">從零開始，未預先選取任何動作。</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">切換設定檔會同時變更你的基礎率、胰島素敏感度係數（ISF）以及胰島素與碳水化合物比率（IC）。你可以用百分比整體縮放——例如 110% 會將基礎輸注、注射計算與碳水吸收速率提高 10%。若你已有針對特定情境建立的其他設定檔，也可以完全切換至該設定檔。</string>
     <string name="scene_wizard_tt_info">臨時目標可在一段時間內，讓演算法以不同的血糖目標運作。較高的目標會讓演算法對上升反應較慢，且整體鎖定較高數值——這會減少胰島素輸注，有助於在運動時避免低血糖。較低的目標則會讓演算法更早反應並提供較多胰島素——適合用來搶在用餐前一步。請從下方的預設中選擇——目標值與原因已於其中設定。</string>
     <string name="scene_wizard_smb_info">超微量注射（SMB）可讓演算法先行以小劑量注射，並暫時停止基礎輸注來抵銷——等於是從未來「借用」胰島素，以獲得更快的反應。停用 SMB 會禁止此行為，並將演算法限制為僅調整基礎率。反應會更慢且更平緩，這常被用於運動或睡眠期間。</string>
     <string name="scene_wizard_loop_mode_info">執行模式決定演算法的自動化程度。於封閉循環中，它會自動調整胰島素輸注。LGS（低血糖暫停）僅會在血糖朝低值下滑時減少或停止輸注——不會增加輸注。開放循環則會提供建議計算，但會等待你逐一確認。</string>

@@ -16,7 +16,7 @@
     <string name="description_ama">Estado del algoritmo en 2017</string>
     <string name="description_smb">Algoritmo más reciente para usuarios avanzados</string>
     <string name="description_smb_dynamic_isf">Algoritmo más reciente para usuarios avanzados con ISF dinámico/automático</string>
-    <string name="description_auto_isf">Algoritmo más reciente para usuarios avanzados con la extensión AutoISF</string>
+    <string name="description_auto_isf">Algoritmo experimental para usuarios avanzados con extensiones AutoISF</string>
     <string name="openapsma_last_run_label">Última ejecución</string>
     <string name="openapsma_input_parameters_label">Parámetros de entrada</string>
     <string name="openapsma_glucose_status_label">Estado de glucosa</string>

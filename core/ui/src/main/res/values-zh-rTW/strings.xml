@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">未從幫浦讀取到有效的基礎率</string>
     <string name="limiting_iob">因 %2$s 限制 IOB 為 %1$.1f U</string>
     <string name="loop_disabled">循環因限制已停用</string>
+    <string name="loop_disabled_by_user">循環已被使用者停用</string>
     <string name="event_type">事件類型</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -48,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">使用者</string>
     <string name="result">結果</string>
     <string name="settings">設定</string>
+    <string name="open_plugin">開啟外掛</string>
+    <string name="configbuilder_pick_one_hint">選擇一個。同一時間只能啟用一個。</string>
+    <string name="configbuilder_pick_many_hint">選擇所有適用的。</string>
+    <string name="configbuilder_no_selection_warning">此分類未選擇任何外掛。</string>
     <string name="simple_mode">簡易模式</string>
     <string name="expand">展開</string>
     <string name="collapse">收合</string>
@@ -606,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">未選擇設定檔</string>
     <string name="missing_profile_name">缺少設定檔名稱</string>
+    <string name="profile_not_saved_activate">設定檔未儲存。請先儲存設定檔再啟用。</string>
+    <string name="profile_activation_failed">設定檔啟用失敗</string>
     <string name="error_in_ic_values">IC 數值錯誤</string>
     <string name="error_in_isf_values">ISF 數值錯誤</string>
     <string name="error_in_basal_values">基礎率數值錯誤</string>
@@ -639,7 +646,6 @@
     <string name="basal">基礎率</string>
     <string name="basalpct">基礎率 %</string>
     <string name="sensitivity">敏感度</string>
-    <string name="isf_for_carbs">計算機和碳水化合物吸收的 ISF：%1$.1f</string>
     <string name="autosens_long">自動靈敏值：%.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">演算法中的自動靈敏值：%.0f%%</string>
@@ -810,6 +816,7 @@
     <string name="maintenance_export_csv_desc">將治療紀錄匯出為試算表</string>
     <string name="maintenance_cleanup_db_desc">從資料庫移除舊的項目</string>
     <string name="maintenance_reset_aps_results_desc">清除已儲存的演算法結果</string>
+    <string name="maintenance_reset_db_desc">清除所有資料庫並重新載入</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">選擇儲存類型</string>
     <string name="clear_cloud_action">清除設定</string>
@@ -830,6 +837,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">配對</string>
     <string name="pump_unpair">取消配對</string>
+    <string name="pump_unpair_confirm_title">要取消幫浦配對？</string>
     <string name="pump_paired" comment="26 characters max for translation">幫浦已配對</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支援藍牙低功耗。</string>
@@ -991,6 +999,7 @@
     <string name="database_cleanup">資料庫清理</string>
     <string name="nav_resetdb">重設資料庫</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">尋找幫浦</string>
     <string name="ble_scan_select_pump">請從下方清單中選擇你的幫浦</string>
     <string name="ble_scan_scanning">正在掃描裝置…</string>
     <!-- Graph configuration -->

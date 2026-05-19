@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">Priemerovacie vyhladzovanie</string>
     <string name="description_avg_smoothing">"Priemerovací vyhladzovací algoritmus, najnovšia hodnota nie je ovplyvnená"</string>
     <string name="no_smoothing_name">Žiadne vyhladzovanie</string>
+    <string name="description_no_smoothing">"Použite túto možnosť, pokiaľ máte už filtrované údaje, napr. z BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalmanov filter</string>
+    <string name="description_UKF">"Pokročilý algoritmus s automatickým ladením šumu a vyhladzovaním RTS."</string>
 </resources>

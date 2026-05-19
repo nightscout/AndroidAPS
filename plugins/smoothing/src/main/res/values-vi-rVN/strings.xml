@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">Làm mượt trung bình</string>
     <string name="description_avg_smoothing">"Thuật toán làm mượt trung bình, giá trị mới nhất không bị ảnh hưởng"</string>
     <string name="no_smoothing_name">Không làm mượt</string>
+    <string name="description_no_smoothing">"Dùng khi dữ liệu đã được lọc sẵn, ví dụ từ BYODA G6."</string>
+    <string name="UKF_name">Bộ lọc Kalman Unscented</string>
+    <string name="description_UKF">"Thuật toán nâng cao với khả năng tự động tinh chỉnh nhiễu và làm mượt RTS."</string>
 </resources>

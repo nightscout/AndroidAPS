@@ -366,7 +366,6 @@
     <string name="basal">Valandinė bazė</string>
     <string name="basalpct">Valandinė bazė %</string>
     <string name="sensitivity">Jautrumas insulinui</string>
-    <string name="isf_for_carbs">JIF skaičiuotuvui ir AV įsisavinimui: %1$.1f</string>
     <string name="autosens_long">Autosens vertė: %.0f%%</string>
     <string name="algorithm_long">Autosens algoritme: %.0f%%</string>
     <!-- Autotune -->

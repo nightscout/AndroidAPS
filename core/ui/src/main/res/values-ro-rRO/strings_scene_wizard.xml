@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Zi de boală</string>
     <string name="scene_wizard_sick_day_desc">Profilul mai puternic (150%) pentru a face față rezistenței crescute la insulină în timpul bolii.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Bolile, febra și hormonii de stres pot crește dramatic rezistența la insulină – uneori cu 50% sau mai mult. Un profil mai puternic (de exemplu 150%) recomandă algoritmului să furnizeze mai multă insulină pentru toate calculele - rate bazale, sugestii pentru bolus și factori de corecție. De asemenea, puteți adăuga o țintă temporară sau puteți ajusta modul de rulare în următorii pași. Monitorizați îndeaproape și ajustați pe măsură ce corpul se recuperează.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Zi de boală - Vărsături</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Profil redus cu Suspendare la glicemie scăzută – opusul zilei standard de boală în care nu se pot absorbi alimentele.</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Faza luteală</string>
     <string name="scene_wizard_luteal_phase_desc">Profilul crescut pentru a face față rezistenței la insulină dinaintea menstruației.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Multe femei prezintă rezistență crescută la insulină în timpul fazei luteale (aproximativ 1-2 săptămâni înainte de perioada lor). Aceasta se datorează creșterii nivelurilor de progesteron care reduc sensibilitatea la insulină. Efectul variază enorm de la un pacient la altul – unii observă o creştere de 10-30% a nevoilor de insulină, alții văd modificări minime. Începeți cu o creștere conservatoare (115%) și ajustați-vă pe baza propriilor modele de-a lungul mai multor cicluri. Urmărirea acesteia în CarePortal ajută la identificarea ritmului personal.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Vreme fierbinte</string>
     <string name="scene_wizard_hot_weather_desc">Profilul redus – căldura accelerează absorbția insulinei.</string>
@@ -52,6 +54,7 @@
     <string name="scene_template_blank">Necompletat</string>
     <string name="scene_wizard_blank_desc">Începeți de la zero fără acțiuni pre-selectate.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">O schimbare de profil modifică simultan ratele bazale, factorul de sensibilitate la insulină (ISF) și raportul insulină-carbohidrați (IC). Puteți scala totul procentual — de exemplu, o valoare de 110% crește cu 10% administrarea de insulină bazală, calculele pentru bolus și ratele de absorbție a carbohidraților. De asemenea, puteți trece complet la un alt profil, dacă aveți unul configurat pentru situații specifice.</string>
     <string name="scene_wizard_tt_info">O țintă temporară transmite algoritmului să vizeze un nivel diferit al glicemiei pentru o perioadă determinată. Cu o țintă mai ridicată, algoritmul reacționează mai lent la creșterea glicemiei și vizează o valoare mai mare per ansamblu — acest lucru reduce administrarea de insulină și ajută la prevenirea hipoglicemiilor în timpul exercițiilor fizice. Cu o țintă mai scăzută, algoritmul răspunde mai devreme și administrează mai multă insulină — util pentru a acționa înainte de masă. Alegeți una dintre presetările de mai jos — valoarea țintei și motivul sunt deja configurate acolo.</string>
     <string name="scene_wizard_smb_info">Super Micro Bolusurile (SMB) permit algoritmului să administreze insulina în avans sub formă de bolusuri mici, oprind temporar administrarea bazală pentru a compensa — practic, \"împrumutând\" insulină din viitor pentru un răspuns mai rapid. Dezactivarea SMB previne acest proces și limitează algoritmul doar la ajustarea ratelor bazale. Răspunsul devine mai lent și mai gradual, ceea ce este adesea preferat în timpul exercițiilor fizice sau al somnului.</string>
     <string name="scene_wizard_loop_mode_info">Modul de funcționare determină cât de multă autonomie are algoritmul. În modul buclă închisă, acesta ajustează automat administrarea de insulină. LGS (suspendarea la glicemie scăzută) doar reduce sau oprește insulina atunci când glicemia scade spre o valoare mică — acesta nu va crește administrarea. Modul buclă deschisă calculează sugestii, dar așteaptă ca dumneavoastră să o confirmați pe fiecare în parte.</string>

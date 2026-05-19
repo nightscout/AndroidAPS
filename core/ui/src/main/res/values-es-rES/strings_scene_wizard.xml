@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Día de enfermedad</string>
     <string name="scene_wizard_sick_day_desc">Perfil más fuerte (150%) para gestionar el aumento de la resistencia a la insulina durante la enfermedad</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">La enfermedad, la fiebre y las hormonas del estrés pueden aumentar drásticamente la resistencia a la insulina, a veces en un 50% o más. Un perfil más fuerte (ej. 150%) le indica al algoritmo que suministre más insulina en todos sus cálculos: tasas basales, sugerencias de bolo y factores de corrección. También puede añadir un objetivo temporal o ajustar el modo de funcionamiento en los siguientes pasos. Monitorice de cerca y realice ajustes a medida que su cuerpo se recupere</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Día de enfermedad — Vómitos</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Perfil reducido con LGS — Al revés que un día de enfermedad común, para cuando no se toleran los alimentos</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Fase lútea</string>
     <string name="scene_wizard_luteal_phase_desc">Perfil incrementado para gestionar la resistencia a la insulina premenstrual</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Muchas mujeres experimentan un aumento de la resistencia a la insulina durante la fase lútea (aproximadamente 1–2 semanas antes del periodo). Esto se debe al aumento de los niveles de progesterona, que reducen la sensibilidad a la insulina. El efecto varía enormemente entre individuos: algunas notan un incremento del 10–30% en sus necesidades de insulina, mientras que otras ven cambios mínimos. Comience con un aumento conservador (115%) y ajuste según sus propios patrones a lo largo de varios ciclos. Registrar esto en el portal de cuidados ayuda a identificar su ritmo personal</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Clima cálido</string>
     <string name="scene_wizard_hot_weather_desc">Perfil reducido: el calor acelera la absorción de la insulina</string>
@@ -52,6 +54,7 @@
     <string name="scene_template_blank">Vacío | En blanco</string>
     <string name="scene_wizard_blank_desc">Empezar de cero sin acciones preseleccionadas</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Un cambio de perfil modifica sus tasas basales, el factor de sensibilidad a la insulina (ISF) y los ratios de insulina-carbohidratos (IC) de forma simultánea. Puede escalar todo mediante un porcentaje; por ejemplo, un 110% aumenta el suministro de basal, los cálculos de bolos y los ratios de absorción de carbohidratos en un 10%. También puede cambiar a un perfil completamente distinto si tiene uno configurado para situaciones específicas</string>
     <string name="scene_wizard_tt_info">Un objetivo temporal indica al algoritmo que debe apuntar a un nivel de glucosa en sangre distinto durante un periodo determinado. Con un objetivo más alto, el algoritmo reacciona más lentamente ante las subidas de glucosa y busca un valor general más elevado; esto reduce el suministro de insulina y ayuda a prevenir hipoglucemias durante el ejercicio. Con un objetivo más bajo, el algoritmo responde antes y administra más insulina, lo cual es útil para anticiparse a una comida. Elija uno de sus ajustes preestablecidos a continuación: el valor del objetivo y el motivo ya están configurados allí</string>
     <string name="scene_wizard_smb_info">Los Super Micro Bolos (SMB) permiten que el algoritmo suministre insulina por adelantado en forma de pequeños bolos, mientras detiene temporalmente el suministro basal para compensar; en la práctica, \"toman prestada\" insulina del futuro para obtener una respuesta más rápida. Desactivar las SMB impide esto y limita al algoritmo a ajustar únicamente las tasas basales. La respuesta se vuelve más lenta y gradual, lo cual suele preferirse durante el ejercicio o el sueño</string>
     <string name="scene_wizard_loop_mode_info">El modo de funcionamiento determina cuánta autonomía tiene el algoritmo. En Lazo Cerrado (Closed Loop), el sistema ajusta el suministro de insulina automáticamente. El modo LGS (suspensión por glucosa baja) solo reduce o detiene la insulina cuando la glucosa cae hacia un valor bajo, pero no aumentará el suministro. El Lazo Abierto (Open Loop) calcula sugerencias, pero espera a que usted confirme cada una de ellas</string>

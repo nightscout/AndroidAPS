@@ -16,7 +16,6 @@
     <string name="description_ama">2017 m. algoritmas</string>
     <string name="description_smb">Naujausias algoritmas patyrusiems naudotojams</string>
     <string name="description_smb_dynamic_isf">Naujausias algoritmas patyrusiems naudotojams su dinaminiu/automatiniu JIF</string>
-    <string name="description_auto_isf">Naujausias algoritmas patyrusiems naudotojams su automatiniu JIF</string>
     <string name="openapsma_last_run_label">Paskutinis veiksmas</string>
     <string name="openapsma_input_parameters_label">Įvesties parametrai</string>
     <string name="openapsma_glucose_status_label">Glikemijos statusas</string>
