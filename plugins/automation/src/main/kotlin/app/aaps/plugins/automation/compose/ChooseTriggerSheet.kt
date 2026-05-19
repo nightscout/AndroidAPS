@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
@@ -130,6 +131,7 @@ fun ChooseTriggerSheet(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
                 .padding(bottom = 24.dp)
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
         ) {
             Text(

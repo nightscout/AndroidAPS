@@ -199,7 +199,7 @@ class SceneExecutor @Inject constructor(
         return SceneExecutionResult(
             success = allSuccess,
             actionResults = actionResults,
-            errorMessage = if (!allSuccess) rh.gs(R.string.scene_some_actions_failed) else null
+            errorMessage = if (!allSuccess) rh.gs(CoreUiR.string.scene_some_actions_failed) else null
         )
     }
 
@@ -209,7 +209,7 @@ class SceneExecutor @Inject constructor(
      */
     suspend fun deactivate(): SceneExecutionResult {
         val activeState = activeSceneManager.getActiveState()
-            ?: return SceneExecutionResult(success = false, errorMessage = rh.gs(R.string.scene_no_active))
+            ?: return SceneExecutionResult(success = false, errorMessage = rh.gs(CoreUiR.string.scene_no_active))
 
         val now = dateUtil.now()
         val actionResults = mutableListOf<SceneExecutionResult.ActionResult>()
@@ -236,7 +236,7 @@ class SceneExecutor @Inject constructor(
         return SceneExecutionResult(
             success = allSuccess,
             actionResults = actionResults,
-            errorMessage = if (!allSuccess) rh.gs(R.string.scene_some_reverts_failed) else null
+            errorMessage = if (!allSuccess) rh.gs(CoreUiR.string.scene_some_reverts_failed) else null
         )
     }
 
@@ -353,7 +353,7 @@ class SceneExecutor @Inject constructor(
                             errorMessage = if (ps == null) "createProfileSwitch returned null for '$profileName'" else null
                         )
                     } else {
-                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(R.string.scene_no_profile_store))
+                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiR.string.scene_no_profile_store))
                     }
                 }
 

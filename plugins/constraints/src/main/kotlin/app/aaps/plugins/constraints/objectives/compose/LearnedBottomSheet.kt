@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.plugins.constraints.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,6 +45,7 @@ fun LearnedBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
         ) {
             Text(

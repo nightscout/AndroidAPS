@@ -55,6 +55,7 @@ import app.aaps.core.ui.compose.AapsSearchField
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.R as CoreUiR
 
@@ -309,6 +310,7 @@ private fun FoodEditorContent(
             .fillMaxWidth()
             .navigationBarsPadding()
             .imePadding()
+            .consumeOverscroll()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = AapsSpacing.xxLarge)
             .padding(bottom = AapsSpacing.xxLarge),

@@ -83,6 +83,7 @@ import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcBread
 import app.aaps.core.ui.compose.icons.IcCake
@@ -358,6 +359,7 @@ private fun WizardDialogContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
