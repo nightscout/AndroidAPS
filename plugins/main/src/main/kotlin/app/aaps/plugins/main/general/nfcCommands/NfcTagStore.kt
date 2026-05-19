@@ -1,12 +1,14 @@
 package app.aaps.plugins.main.general.nfcCommands
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import android.preference.PreferenceManager
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.main.R
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONArray
 import org.json.JSONObject
+import javax.inject.Inject
+import javax.inject.Singleton
 
 data class NfcCommandTemplate(
     @StringRes val labelResId: Int,
@@ -32,104 +34,107 @@ data class NfcLogEntry(
     val message: String,
 )
 
-object NfcTagStore {
-    const val MIME_TYPE: String = "application/vnd.app.aaps.command"
+@Singleton
+class NfcTagStore @Inject constructor(private val sp: SP) {
 
-    private const val PREFS_TAGS = "nfccommunicator_created_tags_v1"
-    internal const val PREFS_LOG = "nfccommunicator_log_v1"
-    private const val LOG_MAX_ENTRIES = 100
+    companion object {
+        const val MIME_TYPE: String = "application/vnd.app.aaps.command"
+        private const val PREFS_TAGS = "nfccommunicator_created_tags_v1"
+        private const val PREFS_LOG = "nfccommunicator_log_v1"
+        private const val LOG_MAX_ENTRIES = 100
 
-    private val commandTemplates =
-        listOf(
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_stop, commandPrefix = "LOOP STOP"),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_resume, commandPrefix = "LOOP RESUME"),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_closed, commandPrefix = "LOOP CLOSED"),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_lgs, commandPrefix = "LOOP LGS"),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_loop_suspend,
-                commandPrefix = "LOOP SUSPEND",
-                argumentsHintResId = R.string.nfccommands_hint_minutes,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_aapsclient_restart, commandPrefix = "AAPSCLIENT RESTART"),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_pump_connect, commandPrefix = "PUMP CONNECT"),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_pump_disconnect,
-                commandPrefix = "PUMP DISCONNECT",
-                argumentsHintResId = R.string.nfccommands_hint_minutes,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_basal_stop, commandPrefix = "BASAL STOP"),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_basal_absolute,
-                commandPrefix = "BASAL",
-                argumentsHintResId = R.string.nfccommands_hint_basal_abs,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_basal_percent,
-                commandPrefix = "BASAL",
-                argumentsHintResId = R.string.nfccommands_hint_basal_pct,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_bolus,
-                commandPrefix = "BOLUS",
-                argumentsHintResId = R.string.nfccommands_hint_bolus,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_extended_stop, commandPrefix = "EXTENDED STOP"),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_extended_bolus,
-                commandPrefix = "EXTENDED",
-                argumentsHintResId = R.string.nfccommands_hint_extended,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_profile_switch,
-                commandPrefix = "PROFILE",
-                argumentsHintResId = R.string.nfccommands_hint_profile,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_meal, commandPrefix = "TARGET MEAL"),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_activity, commandPrefix = "TARGET ACTIVITY"),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_hypo, commandPrefix = "TARGET HYPO"),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_stop, commandPrefix = "TARGET STOP"),
-            NfcCommandTemplate(
-                labelResId = R.string.nfccommands_cmd_carbs,
-                commandPrefix = "CARBS",
-                argumentsHintResId = R.string.nfccommands_hint_grams,
-                requiresArguments = true,
-            ),
-            NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_restart_aaps, commandPrefix = "RESTART"),
-        )
-
-    fun availableCommands(): List<NfcCommandTemplate> = commandTemplates
-
-    fun buildCommand(
-        template: NfcCommandTemplate,
-        args: String,
-    ): String? {
-        template.fixedCommand?.let { return it }
-        val cleanArgs = args.trim()
-        if (template.requiresArguments && cleanArgs.isEmpty()) return null
-        return if (template.requiresArguments) "${template.commandPrefix} $cleanArgs" else template.commandPrefix
-    }
-
-    fun buildCascade(steps: List<Pair<NfcCommandTemplate, String>>): List<String>? {
-        if (steps.isEmpty()) return null
-        val result = mutableListOf<String>()
-        for ((template, args) in steps) {
-            val cmd = buildCommand(template, args) ?: return null
-            result.add(cmd)
+        fun buildCommand(
+            template: NfcCommandTemplate,
+            args: String,
+        ): String? {
+            template.fixedCommand?.let { return it }
+            val cleanArgs = args.trim()
+            if (template.requiresArguments && cleanArgs.isEmpty()) return null
+            return if (template.requiresArguments) "${template.commandPrefix} $cleanArgs" else template.commandPrefix
         }
-        return result
+
+        fun buildCascade(steps: List<Pair<NfcCommandTemplate, String>>): List<String>? {
+            if (steps.isEmpty()) return null
+            val result = mutableListOf<String>()
+            for ((template, args) in steps) {
+                val cmd = buildCommand(template, args) ?: return null
+                result.add(cmd)
+            }
+            return result
+        }
+
+        fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
+
+        fun availableCommands(): List<NfcCommandTemplate> = commandTemplates
+
+        private val commandTemplates =
+            listOf(
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_stop, commandPrefix = "LOOP STOP"),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_resume, commandPrefix = "LOOP RESUME"),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_closed, commandPrefix = "LOOP CLOSED"),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_lgs, commandPrefix = "LOOP LGS"),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_loop_suspend,
+                    commandPrefix = "LOOP SUSPEND",
+                    argumentsHintResId = R.string.nfccommands_hint_minutes,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_aapsclient_restart, commandPrefix = "AAPSCLIENT RESTART"),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_pump_connect, commandPrefix = "PUMP CONNECT"),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_pump_disconnect,
+                    commandPrefix = "PUMP DISCONNECT",
+                    argumentsHintResId = R.string.nfccommands_hint_minutes,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_basal_stop, commandPrefix = "BASAL STOP"),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_basal_absolute,
+                    commandPrefix = "BASAL",
+                    argumentsHintResId = R.string.nfccommands_hint_basal_abs,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_basal_percent,
+                    commandPrefix = "BASAL",
+                    argumentsHintResId = R.string.nfccommands_hint_basal_pct,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_bolus,
+                    commandPrefix = "BOLUS",
+                    argumentsHintResId = R.string.nfccommands_hint_bolus,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_extended_stop, commandPrefix = "EXTENDED STOP"),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_extended_bolus,
+                    commandPrefix = "EXTENDED",
+                    argumentsHintResId = R.string.nfccommands_hint_extended,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_profile_switch,
+                    commandPrefix = "PROFILE",
+                    argumentsHintResId = R.string.nfccommands_hint_profile,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_meal, commandPrefix = "TARGET MEAL"),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_activity, commandPrefix = "TARGET ACTIVITY"),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_hypo, commandPrefix = "TARGET HYPO"),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_stop, commandPrefix = "TARGET STOP"),
+                NfcCommandTemplate(
+                    labelResId = R.string.nfccommands_cmd_carbs,
+                    commandPrefix = "CARBS",
+                    argumentsHintResId = R.string.nfccommands_hint_grams,
+                    requiresArguments = true,
+                ),
+                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_restart_aaps, commandPrefix = "RESTART"),
+            )
     }
 
-    /**
-     * Encodes a raw NFC tag UID byte array as a lowercase hex string, or returns null if [id] is null.
-     */
-    fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
+    private val _logUpdates = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val logUpdates: Flow<Unit> = _logUpdates
 
     // uid (lowercase) → System.currentTimeMillis() at write time; cleared implicitly by expiry
     private val recentlyWrittenUids = mutableMapOf<String, Long>()
@@ -147,16 +152,11 @@ object NfcTagStore {
         recentlyWrittenUids.clear()
     }
 
-    fun findTagByUid(context: Context, uid: String): NfcCreatedTag? =
-        loadCreatedTags(context).find { it.tagUid.equals(uid, ignoreCase = true) }
+    fun findTagByUid(uid: String): NfcCreatedTag? =
+        loadCreatedTags().find { it.tagUid.equals(uid, ignoreCase = true) }
 
-    internal fun findTagByUid(prefs: SharedPreferences, uid: String): NfcCreatedTag? =
-        loadCreatedTags(prefs).find { it.tagUid.equals(uid, ignoreCase = true) }
-
-    fun loadCreatedTags(context: Context): List<NfcCreatedTag> = loadCreatedTags(PreferenceManager.getDefaultSharedPreferences(context))
-
-    internal fun loadCreatedTags(prefs: SharedPreferences): List<NfcCreatedTag> {
-        val raw = prefs.getString(PREFS_TAGS, "[]").orEmpty()
+    fun loadCreatedTags(): List<NfcCreatedTag> {
+        val raw = sp.getString(PREFS_TAGS, "[]")
         val tags = mutableListOf<NfcCreatedTag>()
         val array = runCatching { JSONArray(raw) }.getOrElse { JSONArray() }
         for (index in 0 until array.length()) {
@@ -179,50 +179,23 @@ object NfcTagStore {
         return tags.sortedByDescending { it.createdAtMillis }
     }
 
-    fun saveCreatedTag(
-        context: Context,
-        tag: NfcCreatedTag,
-    ) {
-        saveCreatedTag(PreferenceManager.getDefaultSharedPreferences(context), tag)
-    }
-
-    internal fun saveCreatedTag(
-        prefs: SharedPreferences,
-        tag: NfcCreatedTag,
-    ) {
-        val updated = loadCreatedTags(prefs).filterNot { it.tagUid.equals(tag.tagUid, ignoreCase = true) }.toMutableList()
+    fun saveCreatedTag(tag: NfcCreatedTag) {
+        val updated = loadCreatedTags().filterNot { it.tagUid.equals(tag.tagUid, ignoreCase = true) }.toMutableList()
         updated.add(0, tag)
-        saveCreatedTagList(prefs, updated)
+        saveCreatedTagList(updated)
     }
 
-    fun deleteCreatedTag(
-        context: Context,
-        tagUid: String,
-    ) {
-        deleteCreatedTag(PreferenceManager.getDefaultSharedPreferences(context), tagUid)
+    fun deleteCreatedTag(tagUid: String) {
+        val updated = loadCreatedTags().filterNot { it.tagUid.equals(tagUid, ignoreCase = true) }
+        saveCreatedTagList(updated)
     }
 
-    internal fun deleteCreatedTag(
-        prefs: SharedPreferences,
-        tagUid: String,
-    ) {
-        val updated = loadCreatedTags(prefs).filterNot { it.tagUid.equals(tagUid, ignoreCase = true) }
-        saveCreatedTagList(prefs, updated)
+    fun updateLastScanned(tagUid: String, millis: Long = System.currentTimeMillis()) {
+        val tag = findTagByUid(tagUid) ?: return
+        saveCreatedTag(tag.copy(lastScannedAtMillis = millis))
     }
 
-    fun updateLastScanned(context: Context, tagUid: String, millis: Long = System.currentTimeMillis()) {
-        updateLastScanned(PreferenceManager.getDefaultSharedPreferences(context), tagUid, millis)
-    }
-
-    internal fun updateLastScanned(prefs: SharedPreferences, tagUid: String, millis: Long = System.currentTimeMillis()) {
-        val tag = findTagByUid(prefs, tagUid) ?: return
-        saveCreatedTag(prefs, tag.copy(lastScannedAtMillis = millis))
-    }
-
-    private fun saveCreatedTagList(
-        prefs: SharedPreferences,
-        tags: List<NfcCreatedTag>,
-    ) {
+    private fun saveCreatedTagList(tags: List<NfcCreatedTag>) {
         val array = JSONArray()
         tags.forEach { current ->
             val cmdsArray = JSONArray()
@@ -235,21 +208,11 @@ object NfcTagStore {
             current.lastScannedAtMillis?.let { obj.put("lastScannedAtMillis", it) }
             array.put(obj)
         }
-        prefs.edit().putString(PREFS_TAGS, array.toString()).apply()
+        sp.edit { putString(PREFS_TAGS, array.toString()) }
     }
 
-    fun appendLogEntry(
-        context: Context,
-        entry: NfcLogEntry,
-    ) {
-        appendLogEntry(PreferenceManager.getDefaultSharedPreferences(context), entry)
-    }
-
-    internal fun appendLogEntry(
-        prefs: SharedPreferences,
-        entry: NfcLogEntry,
-    ) {
-        val existing = loadLog(prefs).toMutableList()
+    fun appendLogEntry(entry: NfcLogEntry) {
+        val existing = loadLog().toMutableList()
         existing.add(0, entry)
         val pruned = existing.take(LOG_MAX_ENTRIES)
         val array = JSONArray()
@@ -263,22 +226,13 @@ object NfcTagStore {
                     .put("message", e.message),
             )
         }
-        prefs.edit().putString(PREFS_LOG, array.toString()).apply()
+        sp.edit { putString(PREFS_LOG, array.toString()) }
+        _logUpdates.tryEmit(Unit)
     }
 
-    fun loadLog(context: Context): List<NfcLogEntry> = loadLog(PreferenceManager.getDefaultSharedPreferences(context))
-
-    fun clearLog(context: Context) {
-        clearLog(PreferenceManager.getDefaultSharedPreferences(context))
-    }
-
-    internal fun clearLog(prefs: SharedPreferences) {
-        prefs.edit().remove(PREFS_LOG).apply()
-    }
-
-    internal fun loadLog(prefs: SharedPreferences): List<NfcLogEntry> =
+    fun loadLog(): List<NfcLogEntry> =
         try {
-            val array = JSONArray(prefs.getString(PREFS_LOG, "[]") ?: "[]")
+            val array = JSONArray(sp.getString(PREFS_LOG, "[]"))
             List(array.length()) { i ->
                 val o = array.getJSONObject(i)
                 NfcLogEntry(
@@ -292,4 +246,10 @@ object NfcTagStore {
         } catch (_: Exception) {
             emptyList()
         }
+
+    fun clearLog() {
+        sp.edit { remove(PREFS_LOG) }
+        _logUpdates.tryEmit(Unit)
+    }
+
 }
