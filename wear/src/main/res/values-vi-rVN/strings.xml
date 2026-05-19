@@ -271,7 +271,7 @@
     <string name="loop_status_no_last_run">N/A</string>
     <string name="loop_status_closed">Vòng lặp kín</string>
     <string name="loop_status_open">Vòng lặp mở</string>
-    <string name="loop_status_lgs">Tạm ngừng khi đường huyết thấp</string>
+    <string name="loop_status_lgs">Tạm dừng khi đường huyết thấp</string>
     <string name="loop_status_disabled">Đã tắt vòng lặp</string>
     <string name="loop_status_suspended">Đã tạm dừng vòng lặp</string>
     <string name="loop_status_pump_suspended">Bơm đã tạm dừng</string>

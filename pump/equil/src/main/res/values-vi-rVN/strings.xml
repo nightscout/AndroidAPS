@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="equil_name">Equil 5.3</string>
+    <string name="equil_name">Equil</string>
     <string name="equil_pump_description">Bơm Patch Equil 5.3 trở lên </string>
     <!--  start  -->
     <string name="equil_basal_speed">Liều nền cơ bản</string>

@@ -611,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">未选择配置文件</string>
     <string name="missing_profile_name">缺少配置文件名称</string>
+    <string name="profile_not_saved_activate">配置文件未保存。请在激活前保存配置文件。</string>
+    <string name="profile_activation_failed">配置文件激活失败</string>
     <string name="error_in_ic_values">IC 数值错误</string>
     <string name="error_in_isf_values">ISF 数值错误</string>
     <string name="error_in_basal_values">基础率数值错误</string>
@@ -644,7 +646,10 @@
     <string name="basal">基础率</string>
     <string name="basalpct">基础率 %</string>
     <string name="sensitivity">灵敏度</string>
-    <string name="isf_for_carbs">ISF（胰岛素敏感系数）计算器和碳水化合物吸收率：%1$.1f</string>
+    <string name="isf_for_carbs">计算器和碳水吸收的平均 ISF：%1$.1f</string>
+    <string name="isf_profile">配置文件 ISF: %1$.1f</string>
+    <string name="isf_variable">变量 ISF: %1$.1f</string>
+    <string name="isf_effective">有效 ISF: %1$.1f</string>
     <string name="autosens_long">Autosens 自动敏感度值：%.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">算法中自动敏感度：%.0f%%</string>

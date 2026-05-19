@@ -133,7 +133,7 @@
     <string name="loopisdisabled">Vòng lặp bị vô hiệu hóa</string>
     <string name="alarm">Báo thức</string>
     <string name="exportsettings">Xuất Cài đặt</string>
-    <string name="disableloop">Vô hiệu hóa vòng lặp</string>
+    <string name="disableloop">Tắt vòng lặp</string>
     <string name="disabled_loop">Vô hiệu hóa vòng lặp</string>
     <string name="resumeloop">Khởi động lại vòng lặp</string>
     <string name="suspendloop">Tạm dừng vòng lặp</string>
@@ -210,7 +210,7 @@
     <string name="stoptemptarget">Dừng mục tiêu tạm thời</string>
     <string name="closedloop">Vòng lặp kín</string>
     <string name="openloop">Vòng lặp mở</string>
-    <string name="lowglucosesuspend">Tạm ngừng khi đường huyết thấp</string>
+    <string name="lowglucosesuspend">Tạm dừng khi BG Thấp</string>
     <string name="pump_disconnected">Bơm đã ngắt kết nối</string>
     <string name="pump_suspended">Bơm đã tạm ngưng</string>
     <string name="pump_suspend">Tạm dừng bơm</string>
@@ -401,7 +401,7 @@
     <string name="manage_temp_basal_desc">Bắt đầu liều nền tạm thời</string>
     <string name="manage_extended_bolus_desc">Bắt đầu liều bolus kéo dài</string>
     <string name="manage_site_rotation_desc">Theo dõi và luân chuyển vị trí truyền</string>
-    <string name="manage_quickwizard_desc">Quản lý các thiết lập sẵn của hướng dẫn nhanh</string>
+    <string name="manage_quickwizard_desc">Quản lý các thiết lập sẵn của trình hướng dẫn nhanh</string>
     <string name="treatment_note_desc">Thêm ghi chú vào hồ sơ</string>
     <string name="treatment_question_desc">Ghi lại câu hỏi cho nhóm chăm sóc của bạn</string>
     <string name="treatment_cgm_desc">Mở ứng dụng CGM</string>
@@ -611,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Chưa chọn hồ sơ</string>
     <string name="missing_profile_name">Thiếu tên cấu hình</string>
+    <string name="profile_not_saved_activate">Cấu hình điều trị chưa được lưu. Vui lòng lưu trước khi kích hoạt.</string>
+    <string name="profile_activation_failed">Kích hoạt cấu hình thất bại</string>
     <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
     <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
     <string name="error_in_basal_values">Lỗi ở các giá trị liều nền</string>
@@ -644,7 +646,10 @@
     <string name="basal">Liều Basal</string>
     <string name="basalpct">Liều nền %</string>
     <string name="sensitivity">Độ nhạy</string>
-    <string name="isf_for_carbs">ISF dùng cho tính toán và hấp thụ carb: %1$.1f</string>
+    <string name="isf_for_carbs">ISF trung bình cho Tính toán và Hấp thu carb: %1$.1f</string>
+    <string name="isf_profile">Cấu hình ISF: %1$.1f</string>
+    <string name="isf_variable">ISF thay đổi: %1$.1f</string>
+    <string name="isf_effective">ISF hiệu dụng: %1$.1f</string>
     <string name="autosens_long">Giá trị Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens trong thuật toán: %.0f%%</string>

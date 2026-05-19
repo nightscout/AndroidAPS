@@ -647,6 +647,9 @@
     <string name="basalpct">Bazál %</string>
     <string name="sensitivity">Citlivost</string>
     <string name="isf_for_carbs">ISF pro kalkulačku a absorbci sacharidů: %1$.1f</string>
+    <string name="isf_profile">ISF v profilu: %1$.1f</string>
+    <string name="isf_variable">ISF počítané: %1$.1f</string>
+    <string name="isf_effective">Efektivní ISF: %1$.1f</string>
     <string name="autosens_long">Hodnota Autosense: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Detekce citlivosti algoritmu: %.0f%%</string>

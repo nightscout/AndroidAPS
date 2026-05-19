@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="result">Resultat</string>
     <string name="settings">Innstillinger</string>
+    <string name="open_plugin">Åpne plugin</string>
+    <string name="configbuilder_pick_one_hint">Velg én. Bare én kan være aktiv om gangen.</string>
+    <string name="configbuilder_pick_many_hint">Velg de som gjelder.</string>
+    <string name="configbuilder_no_selection_warning">Ingen plugin er valgt i denne kategorien.</string>
     <string name="simple_mode">Enkelmodus</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
@@ -607,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Ingen profil valgt</string>
     <string name="missing_profile_name">Mangler profilnavn</string>
+    <string name="profile_not_saved_activate">Profilen er ikke lagret. Vennligst lagre profilen før aktivering.</string>
+    <string name="profile_activation_failed">Profilaktivering mislyktes</string>
     <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
     <string name="error_in_isf_values">Feil i ISF-verdien</string>
     <string name="error_in_basal_values">Feil i basalverdiene</string>
@@ -640,7 +646,6 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivitet</string>
-    <string name="isf_for_carbs">ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
     <string name="autosens_long">Autosens-verdi: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Algoritmens sensitivitet: %.0f%%</string>
@@ -832,6 +837,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Paring</string>
     <string name="pump_unpair">Opphev paring</string>
+    <string name="pump_unpair_confirm_title">Fjern paring av pumpen?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
@@ -996,6 +1002,7 @@
     <string name="database_cleanup">Opprydding av databasen</string>
     <string name="nav_resetdb">Tilbakestill databaser</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Finn pumpe</string>
     <string name="ble_scan_select_pump">Velg pumpen din fra listen nedenfor</string>
     <string name="ble_scan_scanning">Skanner etter enheter…</string>
     <!-- Graph configuration -->

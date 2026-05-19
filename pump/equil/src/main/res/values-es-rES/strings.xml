@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
     <string name="equil_pump_description">Integración de bomba parche Equil 5.3 o superior</string>
     <!--  start  -->
     <string name="equil_basal_speed">Basal base</string>
