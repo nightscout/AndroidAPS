@@ -111,8 +111,10 @@ fun QueryAnyPasswordDialog(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            keyboardController?.hide()
-                            onConfirm(passwordText)
+                            if (passwordText.isNotBlank()) {
+                                keyboardController?.hide()
+                                onConfirm(passwordText)
+                            }
                         }
                     ),
                     singleLine = true,
@@ -124,6 +126,7 @@ fun QueryAnyPasswordDialog(
         },
         confirmButton = {
             TextButton(
+                enabled = passwordText.isNotBlank(),
                 onClick = {
                     keyboardController?.hide()
                     onConfirm(passwordText)

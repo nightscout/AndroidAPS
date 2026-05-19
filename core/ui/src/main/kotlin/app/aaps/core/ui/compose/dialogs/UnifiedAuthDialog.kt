@@ -114,8 +114,10 @@ fun UnifiedAuthDialog(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        keyboardController?.hide()
-                        tryAuthenticate(passwordText)
+                        if (passwordText.isNotBlank()) {
+                            keyboardController?.hide()
+                            tryAuthenticate(passwordText)
+                        }
                     }
                 ),
                 singleLine = true,
@@ -126,6 +128,7 @@ fun UnifiedAuthDialog(
         },
         confirmButton = {
             TextButton(
+                enabled = passwordText.isNotBlank(),
                 onClick = {
                     keyboardController?.hide()
                     tryAuthenticate(passwordText)
