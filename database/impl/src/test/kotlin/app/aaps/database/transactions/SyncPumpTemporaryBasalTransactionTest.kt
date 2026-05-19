@@ -94,6 +94,22 @@ class SyncPumpTemporaryBasalTransactionTest {
     }
 
     @Test
+    fun `skips ending running TBR when it has the same start timestamp as the new TBR`() {
+        val tb = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 2.0, duration = 30_000L)
+        val running = createTemporaryBasal(pumpId = 50L, timestamp = 1000L, rate = 1.5, duration = 60_000L)
+
+        whenever(temporaryBasalDao.findByPumpIds(100L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
+        whenever(temporaryBasalDao.getTemporaryBasalActiveAtLegacy(1000L)).thenReturn(running)
+
+        val transaction = SyncPumpTemporaryBasalTransaction(tb, null)
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updated).isEmpty()
+        assertThat(result.inserted).hasSize(1)
+    }
+
+    @Test
     fun `updates type when provided`() {
         val tb = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L, type = TemporaryBasal.Type.NORMAL)
         val existing = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L, type = TemporaryBasal.Type.NORMAL)

@@ -34,7 +34,7 @@ class SyncPumpTemporaryBasalTransaction(
             }
         } else {
             val running = database.temporaryBasalDao.getTemporaryBasalActiveAtLegacy(temporaryBasal.timestamp)
-            if (running != null) {
+            if (running != null && temporaryBasal.timestamp > running.timestamp) {
                 val old = running.copy()
                 running.end = temporaryBasal.timestamp
                 running.interfaceIDs.endId = temporaryBasal.interfaceIDs.pumpId
