@@ -204,6 +204,7 @@
     <string name="active_profile_indicator">ACTIVE</string>
     <string name="confirm_remove_profile">Remove profile \"%1$s\"?</string>
     <string name="confirm_clone_profile">Clone profile \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">Profile list changed in the meantime — please try again</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>
