@@ -17,8 +17,8 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -82,7 +82,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var theme: Resources.Theme
     @Mock lateinit var typedArray: TypedArray
-    @Mock lateinit var localProfileManager: LocalProfileManager
+    @Mock lateinit var profileRepository: ProfileRepository
     @Mock lateinit var insulin: Insulin
     @Mock lateinit var ch: ConcentrationHelper
 
@@ -157,7 +157,8 @@ open class TestBaseWithProfile : TestBase() {
         whenever(preferences.observe(any<UnitDoublePreferenceKey>())).thenReturn(MutableStateFlow(0.0))
         whenever(preferences.observe(any<IntNonPreferenceKey>())).thenReturn(MutableStateFlow(0))
         whenever(preferences.observe(any<LongNonPreferenceKey>())).thenReturn(MutableStateFlow(0L))
-        whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
+        whenever(profileRepository.profiles).thenReturn(MutableStateFlow(emptyList()))
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         deltaCalculator = DeltaCalculator(aapsLogger)
         apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!, activePlugin)

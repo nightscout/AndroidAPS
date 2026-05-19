@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -51,7 +51,7 @@ class WizardDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val persistenceLayer: PersistenceLayer,
@@ -89,7 +89,7 @@ class WizardDialogViewModel @Inject constructor(
         val initialCarbs = savedStateHandle.get<String>("carbs")?.toIntOrNull()
         val initialNotes = savedStateHandle.get<String>("notes")
 
-        val profileStore = localProfileManager.profile ?: return
+        val profileStore = profileRepository.profile.value ?: return
 
         val units = profileFunction.getUnits()
 
@@ -318,7 +318,7 @@ class WizardDialogViewModel @Inject constructor(
 
     private suspend fun recalculateSuspend() {
         val state = uiState.value
-        val profileStore = localProfileManager.profile ?: return
+        val profileStore = profileRepository.profile.value ?: return
 
         // Resolve profile
         val profileName: String

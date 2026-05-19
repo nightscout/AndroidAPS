@@ -21,8 +21,8 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
@@ -44,7 +44,7 @@ class SceneExecutor @Inject constructor(
     private val insulin: Insulin,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val preferences: Preferences,
     private val activeSceneManager: ActiveSceneManager,
     private val uel: UserEntryLogger,
@@ -283,7 +283,7 @@ class SceneExecutor @Inject constructor(
                 }
 
                 is SceneAction.ProfileSwitch   -> {
-                    val store = localProfileManager.profile
+                    val store = profileRepository.profile.value
                     // Use the BASE profile name as fallback — getProfileName() returns the display name
                     // including temp-% suffix (e.g. "Test (60%)"), which doesn't exist in the profile store.
                     val profileName = action.profileName.ifEmpty { profileFunction.getOriginalProfileName() }

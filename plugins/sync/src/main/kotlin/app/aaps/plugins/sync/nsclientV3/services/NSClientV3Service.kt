@@ -8,6 +8,7 @@ import android.os.PowerManager
 import androidx.annotation.OpenForTesting
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -38,6 +39,8 @@ import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
@@ -58,6 +61,7 @@ class NSClientV3Service : DaggerService() {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Inject lateinit var nsClientRepository: NSClientRepository
+    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     private val disposable = CompositeDisposable()
 
@@ -251,7 +255,7 @@ class NSClientV3Service : DaggerService() {
             }
 
             "profile"      ->
-                nsIncomingDataProcessor.processProfile(docJson, doFullSync = false)
+                appScope.launch { nsIncomingDataProcessor.processProfile(docJson, doFullSync = false) }
 
             "treatments"   -> docString.toNSTreatment()?.let {
                 nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)

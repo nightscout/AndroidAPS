@@ -10,13 +10,14 @@ import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TTPreset
-import app.aaps.core.interfaces.profile.LocalProfileManager
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.compose.scenes.SceneRepository
 import app.aaps.ui.compose.scenes.SceneTemplate
@@ -37,7 +38,7 @@ import javax.inject.Inject
 class SceneWizardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val sceneRepository: SceneRepository,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val profileUtil: ProfileUtil,
     private val preferences: Preferences,
     private val translator: Translator,
@@ -132,7 +133,7 @@ class SceneWizardViewModel @Inject constructor(
         )
 
     val profileNames: List<String>
-        get() = localProfileManager.profile?.getProfileList()?.map { it.toString() } ?: emptyList()
+        get() = profileRepository.profileNames()
 
     val ttPresets: List<TTPreset>
         get() = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()

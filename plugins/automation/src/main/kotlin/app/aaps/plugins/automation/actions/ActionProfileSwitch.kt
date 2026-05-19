@@ -5,8 +5,8 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcProfile
@@ -21,11 +21,11 @@ import javax.inject.Inject
 class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var insulin: Insulin
-    @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
-    var inputProfileName: InputProfileName = InputProfileName(rh, localProfileManager, "")
+    var inputProfileName: InputProfileName = InputProfileName("")
     val iCfg: ICfg
         get() = insulin.iCfg         // use Current running iCfg, changing iCfg with Automation not allowed
 
@@ -49,7 +49,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
             return pumpEnactResultProvider.get().success(true).comment(R.string.alreadyset)
         }
-        val profileStore = localProfileManager.profile
+        val profileStore = profileRepository.profile.value
             ?: return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
@@ -89,5 +89,5 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = localProfileManager.profile?.getSpecificProfile(inputProfileName.value) != null
+    override fun isValid(): Boolean = profileRepository.profile.value?.getSpecificProfile(inputProfileName.value) != null
 }

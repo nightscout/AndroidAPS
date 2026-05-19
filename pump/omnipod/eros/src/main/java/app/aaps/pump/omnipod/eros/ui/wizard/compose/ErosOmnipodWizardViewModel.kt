@@ -10,8 +10,8 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
@@ -47,13 +47,13 @@ class ErosOmnipodWizardViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val insulinManager: InsulinManager,
     profileFunction: ProfileFunction,
-    localProfileManager: LocalProfileManager,
+    profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
-) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, localProfileManager) {
+) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, profileRepository) {
 
     private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 

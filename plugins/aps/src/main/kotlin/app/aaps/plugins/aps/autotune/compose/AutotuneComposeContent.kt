@@ -1,15 +1,14 @@
 package app.aaps.plugins.aps.autotune.compose
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -28,7 +27,7 @@ class AutotuneComposeContent(
     private val autotuneFS: AutotuneFS,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val rh: ResourceHelper,
@@ -54,7 +53,7 @@ class AutotuneComposeContent(
                 autotuneFS = autotuneFS,
                 profileFunction = profileFunction,
                 profileUtil = profileUtil,
-                localProfileManager = localProfileManager,
+                profileRepository = profileRepository,
                 preferences = preferences,
                 dateUtil = dateUtil,
                 rh = rh,
@@ -66,10 +65,6 @@ class AutotuneComposeContent(
                 atProfileProvider = atProfileProvider,
                 scope = scope
             )
-        }
-
-        DisposableEffect(Unit) {
-            onDispose { viewModel.onDispose() }
         }
 
         val state = viewModel.uiState.collectAsStateWithLifecycle()

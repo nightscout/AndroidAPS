@@ -38,7 +38,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.getCustomizedName
@@ -58,7 +57,6 @@ import app.aaps.ui.compose.treatments.viewmodels.ProfileSwitchViewModel
  * Composable screen displaying profile switches with delete and show hidden functionality.
  *
  * @param viewModel ViewModel managing state and business logic
- * @param localProfileManager Profile manager for profile operations
  * @param decimalFormatter Formatter for decimal values
  * @param uel User entry logger
  * @param setToolbarConfig Callback to set the toolbar configuration
@@ -68,7 +66,6 @@ import app.aaps.ui.compose.treatments.viewmodels.ProfileSwitchViewModel
 @Composable
 fun ProfileSwitchScreen(
     viewModel: ProfileSwitchViewModel,
-    localProfileManager: LocalProfileManager,
     decimalFormatter: DecimalFormatter,
     uel: UserEntryLogger,
     setToolbarConfig: (ToolbarConfig) -> Unit,
@@ -185,11 +182,9 @@ fun ProfileSwitchScreen(
                                         )
                                     )
                                     val nonCustomized = ps.convertToNonCustomizedProfile(viewModel.dateUtil)
-                                    localProfileManager.addProfile(
-                                        localProfileManager.copyFrom(
-                                            nonCustomized,
-                                            "$profileName ${timestampStr.replace(".", "_")}"
-                                        )
+                                    viewModel.copyToLocalProfile(
+                                        profile = nonCustomized,
+                                        name = "$profileName ${timestampStr.replace(".", "_")}"
                                     )
                                 }
                                 showCloneDialog = true

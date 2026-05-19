@@ -14,6 +14,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -42,6 +44,7 @@ import javax.inject.Inject
 @Stable
 class ProfileSwitchViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
+    private val profileRepository: ProfileRepository,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
@@ -234,6 +237,17 @@ class ProfileSwitchViewModel @Inject constructor(
             showInvalidated = state.showInvalidated,
             onToggleInvalidated = { toggleInvalidated() }
         )
+    }
+
+    /**
+     * Persist a PureProfile (derived from an existing ProfileSwitch) into the local profile
+     * store as a new SingleProfile with the given [name]. Used by the "clone to local profile"
+     * action on the ProfileSwitchScreen.
+     */
+    fun copyToLocalProfile(profile: PureProfile, name: String) {
+        viewModelScope.launch {
+            profileRepository.add(profileRepository.copyFrom(profile, name))
+        }
     }
 }
 

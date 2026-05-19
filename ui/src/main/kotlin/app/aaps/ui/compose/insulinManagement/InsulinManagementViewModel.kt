@@ -15,9 +15,9 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -51,7 +52,8 @@ class InsulinManagementViewModel @Inject constructor(
     private val uel: UserEntryLogger,
     val rh: ResourceHelper,
     private val rxBus: RxBus,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinManagementUiState())
@@ -122,7 +124,8 @@ class InsulinManagementViewModel @Inject constructor(
      * Subscribe to profile change events
      */
     private fun observeProfileChanges() {
-        rxBus.toFlow(EventLocalProfileChanged::class.java)
+        // Drop the replayed initial value; only react to subsequent profile-list mutations.
+        profileRepository.profiles.drop(1)
             .onEach { updateRunningInsulin() }.launchIn(viewModelScope)
         persistenceLayer.observeChanges<EPS>()
             .onEach { updateRunningInsulin() }.launchIn(viewModelScope)

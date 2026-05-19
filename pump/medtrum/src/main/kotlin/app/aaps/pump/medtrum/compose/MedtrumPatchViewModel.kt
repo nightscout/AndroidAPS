@@ -14,8 +14,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -71,7 +71,7 @@ class MedtrumPatchViewModel @Inject constructor(
     val medtrumPump: MedtrumPump,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val preferences: Preferences,
     private val persistenceLayer: PersistenceLayer,
     private val bleTransport: MedtrumBleTransport
@@ -490,13 +490,15 @@ class MedtrumPatchViewModel @Inject constructor(
 
     // region ProfileGateStepHost
 
-    /** Load profile names from LocalProfile store and pre-select the current one (if any). */
-    private fun loadAvailableProfiles() {
-        val names = localProfileManager.profiles.map { it.name }
+    /** Load profile names from LocalProfile store and pre-select the active profile (if any). */
+    private suspend fun loadAvailableProfiles() {
+        val names = profileRepository.profiles.value.map { it.name }
         _availableProfiles.value = names
         if (_selectedProfile.value !in names) {
-            val currentIndex = localProfileManager.currentProfileIndex
-            _selectedProfile.value = names.getOrNull(currentIndex) ?: names.firstOrNull()
+            // Default to the active profile — getOriginalProfileName() returns the clean
+            // name without %/timeshift decoration (matches names from the profile store).
+            val activeName = profileFunction.getOriginalProfileName()
+            _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
         }
     }
 
@@ -506,7 +508,7 @@ class MedtrumPatchViewModel @Inject constructor(
 
     override fun activateSelectedProfile() {
         val name = _selectedProfile.value ?: return
-        val store = localProfileManager.profile ?: return
+        val store = profileRepository.profile.value ?: return
         val iCfg = insulinManager.insulins.firstOrNull() ?: return
         scope.launch {
             val result = profileFunction.createProfileSwitch(

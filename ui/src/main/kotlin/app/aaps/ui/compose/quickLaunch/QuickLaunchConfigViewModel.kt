@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.ui.compose.scenes.SceneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +46,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
     private val quickWizard: QuickWizard,
     private val automation: Automation,
     private val activePlugin: ActivePlugin,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val sceneRepository: SceneRepository,
     private val resolver: QuickLaunchResolver
 ) : ViewModel() {
@@ -88,7 +89,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
             .map { resolver.resolveItem(it) }
 
         // Available Profiles (always show all — duplicates with different presets are allowed)
-        val profileNames = localProfileManager.profile?.getProfileList() ?: emptyList()
+        val profileNames = profileRepository.profileNames()
         val availableProfiles = profileNames
             .map { QuickLaunchAction.ProfileAction(it.toString()) }
             .map { resolver.resolveItem(it) }

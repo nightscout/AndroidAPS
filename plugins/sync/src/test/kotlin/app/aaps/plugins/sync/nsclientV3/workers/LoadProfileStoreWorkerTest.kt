@@ -34,6 +34,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.seconds
@@ -81,7 +82,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, profileRepository
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }
@@ -243,7 +244,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         val result = sut.doWorkAndLog()
 
         assertIs<ListenableWorker.Result.Success>(result)
-        verify(nsIncomingDataProcessor, never()).processProfile(org.mockito.kotlin.any(), anyBoolean())
+        verifyBlocking(nsIncomingDataProcessor, never()) { processProfile(org.mockito.kotlin.any(), anyBoolean()) }
     }
 
     @Test
@@ -271,10 +272,12 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         val result = sut.doWorkAndLog()
 
         assertIs<ListenableWorker.Result.Success>(result)
-        verify(nsIncomingDataProcessor).processProfile(
-            org.mockito.kotlin.argThat { getString("defaultProfile") == "Profile2" },
-            anyBoolean()
-        )
+        verifyBlocking(nsIncomingDataProcessor) {
+            processProfile(
+                org.mockito.kotlin.argThat { getString("defaultProfile") == "Profile2" },
+                anyBoolean()
+            )
+        }
     }
 
     @Test
@@ -315,6 +318,6 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         val result = sut.doWorkAndLog()
 
         assertIs<ListenableWorker.Result.Success>(result)
-        verify(nsIncomingDataProcessor).processProfile(org.mockito.kotlin.any(), org.mockito.kotlin.eq(true))
+        verifyBlocking(nsIncomingDataProcessor) { processProfile(org.mockito.kotlin.any(), org.mockito.kotlin.eq(true)) }
     }
 }

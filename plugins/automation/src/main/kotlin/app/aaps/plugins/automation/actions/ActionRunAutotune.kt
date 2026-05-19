@@ -3,7 +3,6 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -30,11 +29,10 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var preferences: Preferences
 
     private var defaultValue = 0
-    private var inputProfileName = InputProfileName(rh, localProfileManager, "", true)
+    private var inputProfileName = InputProfileName("")
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
     private val days = InputWeekDay().also { it.setAll(true) }
 
@@ -48,6 +46,8 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
         return if (!autotunePlugin.calculationRunning) {
             autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
+            // aapsAutotune is suspend; runs heavy work but uses suspend I/O internally — keep
+            // the explicit IO dispatcher to push the CPU+I/O loop off the caller's dispatcher.
             withContext(Dispatchers.IO) {
                 autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName, days.weekdays)
             }

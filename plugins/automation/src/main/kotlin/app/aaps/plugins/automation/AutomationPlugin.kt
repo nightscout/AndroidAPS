@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.LocalProfileManager
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -125,7 +125,7 @@ class AutomationPlugin @Inject constructor(
     private val timerUtil: TimerUtil,
     private val receiverStatusStore: ReceiverStatusStore,
     private val uel: UserEntryLogger,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val sceneApi: SceneAutomationApi
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
@@ -138,8 +138,7 @@ class AutomationPlugin @Inject constructor(
                 fabricPrivacy = fabricPrivacy,
                 injector = injector,
                 uel = uel,
-                rh = rh,
-                localProfileManager = localProfileManager,
+                profileRepository = profileRepository,
                 sceneApi = sceneApi
             )
         }

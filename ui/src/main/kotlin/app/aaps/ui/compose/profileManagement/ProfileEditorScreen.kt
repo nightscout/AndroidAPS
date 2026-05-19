@@ -179,7 +179,6 @@ fun ProfileEditorScreen(
                 Spacer(Modifier.height(12.dp))
 
                 // Tab layout with error indication
-                state.tabErrors.containsKey(ProfileErrorType.DIA)
                 val icHasError = state.tabErrors.containsKey(ProfileErrorType.IC)
                 val isfHasError = state.tabErrors.containsKey(ProfileErrorType.ISF)
                 val basalHasError = state.tabErrors.containsKey(ProfileErrorType.BASAL)
@@ -224,13 +223,12 @@ fun ProfileEditorScreen(
 
                 // Tab content with error display
                 state.currentProfile?.let { profile ->
-                    // Get error message for current tab
+                    // Get error message for current tab — tabs are 0=IC, 1=ISF, 2=BASAL, 3=TARGET
                     val currentTabError = when (state.selectedTab) {
-                        0 -> state.tabErrors[ProfileErrorType.DIA]
-                        1 -> state.tabErrors[ProfileErrorType.IC]
-                        2 -> state.tabErrors[ProfileErrorType.ISF]
-                        3 -> state.tabErrors[ProfileErrorType.BASAL]
-                        4 -> state.tabErrors[ProfileErrorType.TARGET]
+                        0 -> state.tabErrors[ProfileErrorType.IC]
+                        1 -> state.tabErrors[ProfileErrorType.ISF]
+                        2 -> state.tabErrors[ProfileErrorType.BASAL]
+                        3 -> state.tabErrors[ProfileErrorType.TARGET]
                         else -> null
                     }
 
@@ -489,7 +487,7 @@ private fun IcContent(
         Spacer(Modifier.height(16.dp))
 
         // Graph
-        viewModel.getEditedProfile()?.let { pureProfile ->
+        state.editedProfile?.let { pureProfile ->
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
@@ -546,7 +544,7 @@ private fun IsfContent(
         Spacer(Modifier.height(16.dp))
 
         // Graph
-        viewModel.getEditedProfile()?.let { pureProfile ->
+        state.editedProfile?.let { pureProfile ->
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
@@ -586,7 +584,7 @@ private fun BasalContent(
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "∑ ${stringResource(R.string.format_insulin_units, viewModel.getBasalSum())}",
+                        text = "∑ ${stringResource(R.string.format_insulin_units, state.basalSum)}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -612,7 +610,7 @@ private fun BasalContent(
         Spacer(Modifier.height(16.dp))
 
         // Graph
-        viewModel.getEditedProfile()?.let { pureProfile ->
+        state.editedProfile?.let { pureProfile ->
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
@@ -662,7 +660,7 @@ private fun TargetContent(
         Spacer(Modifier.height(16.dp))
 
         // Graph
-        viewModel.getEditedProfile()?.let { pureProfile ->
+        state.editedProfile?.let { pureProfile ->
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)

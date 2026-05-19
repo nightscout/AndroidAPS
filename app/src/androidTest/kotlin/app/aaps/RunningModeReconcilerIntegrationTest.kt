@@ -11,8 +11,8 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
@@ -58,7 +58,7 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
     @Inject lateinit var rxHelper: RxHelper
     @Inject lateinit var loop: Loop
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Inject lateinit var pumpSync: PumpSync
 
@@ -378,7 +378,7 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         ) return
 
         nsIncomingDataProcessor.processProfile(JSONObject(profileData), false)
-        val store = localProfileManager.profile ?: error("no profile store after NS import")
+        val store = profileRepository.profile.value ?: error("no profile store after NS import")
         val defaultName = store.getDefaultProfileName() ?: error("no default profile name")
         profileFunction.createProfileSwitch(
             profileStore = store,

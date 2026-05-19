@@ -16,8 +16,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -38,7 +38,7 @@ class ProfileFunctionImpl @Inject constructor(
     private val preferences: Preferences,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val config: Config,
@@ -116,7 +116,7 @@ class ProfileFunctionImpl @Inject constructor(
         // ps == null
         if (config.AAPSCLIENT) {
             processedDeviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
-                localProfileManager.profile?.getSpecificProfile(activeProfile)?.let { ap ->
+                profileRepository.profile.value?.getSpecificProfile(activeProfile)?.let { ap ->
                     val sealed = ProfileSealed.Pure(ap, activePlugin)
                     synchronized(cache) {
                         cache.put(rounded, sealed)
@@ -186,7 +186,7 @@ class ProfileFunctionImpl @Inject constructor(
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
     ): PS? {
         val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return null
-        val profileStore = localProfileManager.profile ?: return null
+        val profileStore = profileRepository.profile.value ?: return null
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return null
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
             rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
@@ -207,7 +207,7 @@ class ProfileFunctionImpl @Inject constructor(
     override suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
         val profile = getProfile()
         val eps = (profile as? ProfileSealed.EPS)?.value ?: return false
-        val profileStore = localProfileManager.profile ?: return false
+        val profileStore = profileRepository.profile.value ?: return false
         val profileName = eps.originalProfileName
         val percentage = eps.originalPercentage
         val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()

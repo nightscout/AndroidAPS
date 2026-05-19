@@ -6,7 +6,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.profile.LocalProfileManager
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.getCustomizedName
@@ -52,7 +52,7 @@ fun PS.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: DecimalForma
    "mgdl":98
 }
  */
-fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, localProfileManager: LocalProfileManager, insulinFallback: Insulin): PS? {
+fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, profileRepository: ProfileRepository, insulinFallback: Insulin): PS? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -75,7 +75,7 @@ fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, localProfi
     if (timestamp == 0L) return null
     val pureProfile =
         if (profileJson == null) { // entered through NS, no JSON attached
-            val store = localProfileManager.profile ?: return null
+            val store = profileRepository.profile.value ?: return null
             store.getSpecificProfile(profileName) ?: return null
         } else pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)

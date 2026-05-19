@@ -28,14 +28,13 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
@@ -114,7 +113,8 @@ class NSClientV3Plugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val l: L,
     private val nsClientRepository: NSClientRepository,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val profileRepository: ProfileRepository
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -262,8 +262,8 @@ class NSClientV3Plugin @Inject constructor(
             // HR/SC writes come from the watch; this plugin doesn't upload them — skip to avoid reconnect-flush storm.
             .filter { types -> types.any { it != HR::class && it != SC::class } }
             .onEach { types -> executeUpload("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})", forceNew = false) }.launchIn(scope)
-        rxBus.toFlow(EventProfileStoreChanged::class.java)
-            .onEach { executeUpload("EventProfileStoreChanged", forceNew = false) }.launchIn(scope)
+        profileRepository.profile.drop(1)
+            .onEach { executeUpload("profileRepository.profile changed", forceNew = false) }.launchIn(scope)
 
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()

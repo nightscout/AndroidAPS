@@ -11,8 +11,8 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
@@ -68,7 +68,7 @@ abstract class OmnipodWizardViewModel(
     private val aapsSchedulers: AapsSchedulers,
     protected val pumpEnactResultProvider: Provider<PumpEnactResult>,
     protected val profileFunction: ProfileFunction,
-    protected val localProfileManager: LocalProfileManager
+    protected val profileRepository: ProfileRepository
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     // region Step navigation
@@ -199,10 +199,13 @@ abstract class OmnipodWizardViewModel(
     protected suspend fun resolveProfileGate() {
         _needsProfileGate.value = profileFunction.getRequestedProfile() == null
         if (_needsProfileGate.value) {
-            val names = localProfileManager.profiles.map { it.name }
+            val names = profileRepository.profiles.value.map { it.name }
             _availableProfiles.value = names
             if (_selectedProfile.value !in names) {
-                _selectedProfile.value = names.getOrNull(localProfileManager.currentProfileIndex) ?: names.firstOrNull()
+                // Default to the currently active profile (matches what the user is running).
+                // getOriginalProfileName() returns the clean name without %/timeshift decoration.
+                val activeName = profileFunction.getOriginalProfileName()
+                _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
             }
         }
     }
@@ -213,7 +216,7 @@ abstract class OmnipodWizardViewModel(
 
     override fun activateSelectedProfile() {
         val name = _selectedProfile.value ?: return
-        val store = localProfileManager.profile ?: return
+        val store = profileRepository.profile.value ?: return
         val iCfg = fallbackICfg() ?: return
         viewModelScope.launch {
             val result = profileFunction.createProfileSwitch(

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -136,11 +135,9 @@ fun ProfileManagementScreen(
     var currentPage by remember { mutableStateOf(uiState.currentProfileIndex) }
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarEvent by viewModel.snackbarEvent.collectAsStateWithLifecycle()
-    LaunchedEffect(snackbarEvent) {
-        snackbarEvent?.let { message ->
+    LaunchedEffect(Unit) {
+        viewModel.snackbarEvent.collect { message ->
             snackbarHostState.showSnackbar(message)
-            viewModel.clearSnackbarEvent()
         }
     }
 

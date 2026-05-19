@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.utils.DateUtil
@@ -67,7 +67,7 @@ class NsIncomingDataProcessor @Inject constructor(
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
     private val profileStoreProvider: Provider<ProfileStore>,
@@ -188,7 +188,7 @@ class NsIncomingDataProcessor @Inject constructor(
 
                     is NSProfileSwitch          ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toProfileSwitch(localProfileManager, dateUtil, insulin)?.let { profileSwitch ->
+                            treatment.toProfileSwitch(profileRepository, dateUtil, insulin)?.let { profileSwitch ->
                                 storeDataForDb.addToProfileSwitches(profileSwitch)
                             }
                         }
@@ -278,15 +278,22 @@ class NsIncomingDataProcessor @Inject constructor(
         }
     }
 
-    fun processProfile(profileJson: JSONObject, doFullSync: Boolean) {
+    suspend fun processProfile(profileJson: JSONObject, doFullSync: Boolean) {
         if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.AAPSCLIENT || doFullSync) {
             val store = profileStoreProvider.get().with(profileJson)
             val createdAt = store.getStartDate()
             val lastLocalChange = preferences.get(LongNonKey.LocalProfileLastChange)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
             if (createdAt > lastLocalChange || createdAt % 1000 == 0L) { // whole second means edited in NS
-                localProfileManager.loadFromStore(store)
-                activePlugin.activeNsClient?.dataSyncSelector?.profileReceived(store.getStartDate())
+                // Only acknowledge the profile to NS after a successful import. If the import
+                // fails (storage exception), leave NS believing the profile wasn't synced so it
+                // re-pushes on the next sync round.
+                val result = profileRepository.loadFromNs(store)
+                if (result.isSuccess) {
+                    activePlugin.activeNsClient?.dataSyncSelector?.profileReceived(store.getStartDate())
+                } else {
+                    aapsLogger.error(LTag.PROFILE, "loadFromNs failed; not acknowledging profile to NS", result.exceptionOrNull())
+                }
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
             }
         }

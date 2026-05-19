@@ -24,6 +24,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -36,6 +37,7 @@ import org.mockito.kotlin.argThat
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
 class NsIncomingDataProcessorTest : TestBaseWithProfile() {
@@ -64,7 +66,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             dateUtil = dateUtil,
             activePlugin = activePlugin,
             insulin = insulin,
-            localProfileManager = localProfileManager,
+            profileRepository = profileRepository,
             storeDataForDb = storeDataForDb,
             config = config,
             profileStoreProvider = profileStoreProvider,
@@ -238,18 +240,18 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `processProfile with newer remote profile loads it from store`() {
+    fun `processProfile with newer remote profile loads it from store`() = runTest {
         val localProfileTime = now - T.days(1).msecs()
         val profileJson = JSONObject() // Dummy JSON
         whenever(preferences.get(BooleanKey.NsClientAcceptProfileStore)).thenReturn(true)
         whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(localProfileTime)
 
         processor.processProfile(profileJson, doFullSync = false)
-        verify(localProfileManager).loadFromStore(any())
+        verifyBlocking(profileRepository) { loadFromNs(any()) }
     }
 
     @Test
-    fun `processProfile does not load if preference is disabled`() {
+    fun `processProfile does not load if preference is disabled`() = runTest {
         val localProfileTime = now - T.days(1).msecs()
         val profileJson = JSONObject()
         // Disable accepting profile from NS
@@ -257,7 +259,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(localProfileTime)
 
         processor.processProfile(profileJson, doFullSync = false)
-        verify(localProfileManager, never()).loadFromStore(any())
+        verifyBlocking(profileRepository, never()) { loadFromNs(any()) }
     }
 
     @Test
