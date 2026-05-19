@@ -22,6 +22,8 @@ import javax.inject.Inject
 open class NfcControlActivity : Activity() {
     @Inject lateinit var nfcPlugin: NfcCommandsPlugin
 
+    @Inject lateinit var nfcTagStore: NfcTagStore
+
     @Inject lateinit var aapsLogger: AAPSLogger
 
     @Inject lateinit var rh: ResourceHelper
@@ -111,7 +113,7 @@ open class NfcControlActivity : Activity() {
 
     private fun executeByUid(tagUid: String, showErrorToast: Boolean) {
         aapsLogger.debug(LTag.NFC, "NFC tag scanned, UID: $tagUid")
-        if (NfcTagStore.isJustWritten(tagUid)) return
+        if (nfcTagStore.isJustWritten(tagUid)) return
         when (val prep = nfcPlugin.prepareExecution(tagUid)) {
             is NfcPrepareResult.Error -> if (showErrorToast) showToast(prep.message)
             is NfcPrepareResult.Ready -> {

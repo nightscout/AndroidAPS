@@ -12,6 +12,7 @@
     <string name="nfccommands_write_tag_info">Select a command and tap an NFC tag to register it.</string>
     <string name="nfccommands_tag_written">NFC Tag written successfully</string>
     <string name="nfccommands_tag_write_error">Error writing to NFC Tag</string>
+    <string name="nfccommands_tag_assigned_generic">Could not write NDEF data — tag assigned by UID (generic tag mode)</string>
     <string name="nfccommands_tag_reassigned">Tag reassigned successfully</string>
     <string name="nfccommands_command_executed">NFC Command executed: %1$s</string>
     <string name="nfccommands_scan_to_execute">Scan tag to execute command</string>
@@ -81,6 +82,7 @@
     <string name="nfccommands_empty_state_body">Build a command chain and register an NFC tag.</string>
     <string name="nfccommands_delete_confirm_title">Delete tag?</string>
     <string name="nfccommands_delete_confirm_msg">This tag will be removed from My Tags. The physical NFC tag will no longer trigger any commands.</string>
+    <string name="nfccommands_configure_section">Configure command</string>
     <string name="nfccommands_delete_confirm_ok">Delete</string>
     <string name="nfccommands_decrease">Decrease</string>
     <string name="nfccommands_increase">Increase</string>

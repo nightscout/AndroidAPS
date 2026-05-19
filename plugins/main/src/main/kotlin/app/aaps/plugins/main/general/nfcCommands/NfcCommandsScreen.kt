@@ -71,18 +71,22 @@ class NfcCommandsComposeContent(private val plugin: NfcCommandsPlugin) : Composa
         onSettings: (() -> Unit)?
     ) {
         var route by remember { mutableStateOf<NfcRoute>(NfcRoute.Main) }
+        var initialTab by remember { mutableIntStateOf(0) }
         when (route) {
             is NfcRoute.Main  -> NfcCommandsScreen(
                 plugin = plugin,
+                nfcTagStore = plugin.nfcTagStore,
                 setToolbarConfig = setToolbarConfig,
                 onNavigateBack = onNavigateBack,
                 onSettings = onSettings,
+                initialTab = initialTab,
                 onBuild = { route = NfcRoute.Build },
             )
             is NfcRoute.Build -> NfcBuildScreen(
                 plugin = plugin,
                 setToolbarConfig = setToolbarConfig,
-                onBack = { route = NfcRoute.Main },
+                onBack = { initialTab = 0; route = NfcRoute.Main },
+                onTagWritten = { initialTab = 1; route = NfcRoute.Main },
             )
         }
     }
@@ -91,13 +95,15 @@ class NfcCommandsComposeContent(private val plugin: NfcCommandsPlugin) : Composa
 @Composable
 private fun NfcCommandsScreen(
     plugin: NfcCommandsPlugin,
+    nfcTagStore: NfcTagStore,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
     onSettings: (() -> Unit)?,
+    initialTab: Int,
     onBuild: () -> Unit,
 ) {
     val tabTitles = remember { listOf(R.string.nfccommands_tab_log, R.string.nfccommands_tab_my_tags) }
-    val pagerState = rememberPagerState { tabTitles.size }
+    val pagerState = rememberPagerState(initialPage = initialTab) { tabTitles.size }
     val coroutineScope = rememberCoroutineScope()
 
     val title = stringResource(R.string.nfccommands)
@@ -135,30 +141,24 @@ private fun NfcCommandsScreen(
         }
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
             when (page) {
-                0 -> NfcLogScreen()
-                else -> NfcTagsScreen(plugin = plugin, onBuild = onBuild)
+                0 -> NfcLogScreen(nfcTagStore = nfcTagStore)
+                else -> NfcTagsScreen(plugin = plugin, nfcTagStore = nfcTagStore, onBuild = onBuild)
             }
         }
     }
 }
 
 @Composable
-private fun NfcLogScreen() {
-    val context = LocalContext.current
+private fun NfcLogScreen(nfcTagStore: NfcTagStore) {
     var entries by remember { mutableStateOf<List<NfcLogEntry>>(emptyList()) }
     var refreshKey by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(refreshKey) {
-        entries = NfcTagStore.loadLog(context)
+        entries = nfcTagStore.loadLog()
     }
 
-    DisposableEffect(context) {
-        val prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context)
-        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == NfcTagStore.PREFS_LOG) refreshKey++
-        }
-        prefs.registerOnSharedPreferenceChangeListener(listener)
-        onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    LaunchedEffect(nfcTagStore) {
+        nfcTagStore.logUpdates.collect { refreshKey++ }
     }
 
     if (entries.isEmpty()) {
@@ -233,7 +233,7 @@ private fun NfcLogEntryCard(entry: NfcLogEntry) {
 }
 
 @Composable
-private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
+private fun NfcTagsScreen(plugin: NfcCommandsPlugin, nfcTagStore: NfcTagStore, onBuild: () -> Unit) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var refreshKey by remember { mutableIntStateOf(0) }
@@ -244,7 +244,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
     var executeTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
 
     LaunchedEffect(refreshKey) {
-        tags = NfcTagStore.loadCreatedTags(context)
+        tags = nfcTagStore.loadCreatedTags()
     }
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -263,7 +263,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
             text = { Text(stringResource(R.string.nfccommands_delete_confirm_msg)) },
             confirmButton = {
                 TextButton(onClick = {
-                    NfcTagStore.deleteCreatedTag(context, tag.tagUid)
+                    nfcTagStore.deleteCreatedTag(tag.tagUid)
                     refreshKey++
                     deleteTarget = null
                 }) { Text(stringResource(R.string.nfccommands_delete_confirm_ok)) }
@@ -292,7 +292,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, onBuild: () -> Unit) {
                 TextButton(onClick = {
                     val newName = renameText.trim()
                     if (newName.isNotBlank() && newName != tag.name) {
-                        NfcTagStore.saveCreatedTag(context, tag.copy(name = newName))
+                        nfcTagStore.saveCreatedTag(tag.copy(name = newName))
                         refreshKey++
                     }
                     renameTarget = null

@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test
 
 class NfcTagStoreTest {
     private lateinit var prefs: SharedPreferencesMock
+    private lateinit var store: NfcTagStore
     private val now = 1_700_000_000_000L
     private val tagUid = "aabbccdd"
 
     @BeforeEach
     fun setup() {
         prefs = SharedPreferencesMock()
+        store = NfcTagStore(TestSp(prefs))
     }
 
     private fun makeTag(
@@ -31,9 +33,9 @@ class NfcTagStoreTest {
     @Test
     fun `saveCreatedTag and loadCreatedTags round-trips correctly`() {
         val tag = makeTag()
-        NfcTagStore.saveCreatedTag(prefs, tag)
+        store.saveCreatedTag(tag)
 
-        val loaded = NfcTagStore.loadCreatedTags(prefs)
+        val loaded = store.loadCreatedTags()
         assertThat(loaded).hasSize(1)
         assertThat(loaded.first().tagUid).isEqualTo(tag.tagUid)
         assertThat(loaded.first().name).isEqualTo(tag.name)
@@ -46,11 +48,11 @@ class NfcTagStoreTest {
     fun `saveCreatedTag replaces existing tag with same uid`() {
         val original = makeTag(uid = "same-uid")
         val updated = original.copy(name = "Updated Name")
-        NfcTagStore.saveCreatedTag(prefs, original)
+        store.saveCreatedTag(original)
 
-        NfcTagStore.saveCreatedTag(prefs, updated)
+        store.saveCreatedTag(updated)
 
-        val tags = NfcTagStore.loadCreatedTags(prefs)
+        val tags = store.loadCreatedTags()
         assertThat(tags).hasSize(1)
         assertThat(tags.first().tagUid).isEqualTo("same-uid")
         assertThat(tags.first().name).isEqualTo("Updated Name")
@@ -59,11 +61,11 @@ class NfcTagStoreTest {
     @Test
     fun `saveCreatedTag uid matching is case-insensitive`() {
         val original = makeTag(uid = "AABBCCDD")
-        NfcTagStore.saveCreatedTag(prefs, original)
+        store.saveCreatedTag(original)
         val updated = original.copy(tagUid = "aabbccdd", name = "Lower")
-        NfcTagStore.saveCreatedTag(prefs, updated)
+        store.saveCreatedTag(updated)
 
-        val tags = NfcTagStore.loadCreatedTags(prefs)
+        val tags = store.loadCreatedTags()
         assertThat(tags).hasSize(1)
         assertThat(tags.first().name).isEqualTo("Lower")
     }
@@ -73,23 +75,23 @@ class NfcTagStoreTest {
     @Test
     fun `updateLastScanned sets lastScannedAtMillis on matching tag`() {
         val tag = makeTag(uid = tagUid)
-        NfcTagStore.saveCreatedTag(prefs, tag)
+        store.saveCreatedTag(tag)
         val scannedAt = now + 5000L
 
-        NfcTagStore.updateLastScanned(prefs, tagUid, scannedAt)
+        store.updateLastScanned(tagUid, scannedAt)
 
-        val loaded = NfcTagStore.loadCreatedTags(prefs).first()
+        val loaded = store.loadCreatedTags().first()
         assertThat(loaded.lastScannedAtMillis).isEqualTo(scannedAt)
     }
 
     @Test
     fun `updateLastScanned does nothing for unknown uid`() {
         val tag = makeTag(uid = tagUid)
-        NfcTagStore.saveCreatedTag(prefs, tag)
+        store.saveCreatedTag(tag)
 
-        NfcTagStore.updateLastScanned(prefs, "unknown-uid", now + 1000L)
+        store.updateLastScanned("unknown-uid", now + 1000L)
 
-        assertThat(NfcTagStore.loadCreatedTags(prefs).first().lastScannedAtMillis).isNull()
+        assertThat(store.loadCreatedTags().first().lastScannedAtMillis).isNull()
     }
 
     @Test
@@ -99,7 +101,7 @@ class NfcTagStoreTest {
             """[{"tagUid":"abc","name":"x","commands":["LOOP STOP"],"createdAtMillis":1000}]""",
         ).apply()
 
-        val tag = NfcTagStore.loadCreatedTags(prefs).first()
+        val tag = store.loadCreatedTags().first()
         assertThat(tag.lastScannedAtMillis).isNull()
     }
 
@@ -108,24 +110,24 @@ class NfcTagStoreTest {
     @Test
     fun `deleteCreatedTag removes tag from list`() {
         val tag = makeTag(uid = "uid-to-delete")
-        NfcTagStore.saveCreatedTag(prefs, tag)
-        assertThat(NfcTagStore.loadCreatedTags(prefs)).hasSize(1)
+        store.saveCreatedTag(tag)
+        assertThat(store.loadCreatedTags()).hasSize(1)
 
-        NfcTagStore.deleteCreatedTag(prefs, "uid-to-delete")
+        store.deleteCreatedTag("uid-to-delete")
 
-        assertThat(NfcTagStore.loadCreatedTags(prefs)).isEmpty()
+        assertThat(store.loadCreatedTags()).isEmpty()
     }
 
     @Test
     fun `deleteCreatedTag does not remove other tags`() {
         val tag1 = makeTag(uid = "uid-1")
         val tag2 = makeTag(uid = "uid-2")
-        NfcTagStore.saveCreatedTag(prefs, tag1)
-        NfcTagStore.saveCreatedTag(prefs, tag2)
+        store.saveCreatedTag(tag1)
+        store.saveCreatedTag(tag2)
 
-        NfcTagStore.deleteCreatedTag(prefs, "uid-1")
+        store.deleteCreatedTag("uid-1")
 
-        val remaining = NfcTagStore.loadCreatedTags(prefs)
+        val remaining = store.loadCreatedTags()
         assertThat(remaining).hasSize(1)
         assertThat(remaining.first().tagUid).isEqualTo("uid-2")
     }
@@ -135,9 +137,9 @@ class NfcTagStoreTest {
     @Test
     fun `findTagByUid returns tag when uid matches`() {
         val tag = makeTag(uid = tagUid)
-        NfcTagStore.saveCreatedTag(prefs, tag)
+        store.saveCreatedTag(tag)
 
-        val found = NfcTagStore.findTagByUid(prefs, tagUid)
+        val found = store.findTagByUid(tagUid)
 
         assertThat(found).isNotNull()
         assertThat(found!!.tagUid).isEqualTo(tagUid)
@@ -145,7 +147,7 @@ class NfcTagStoreTest {
 
     @Test
     fun `findTagByUid returns null for unknown uid`() {
-        val found = NfcTagStore.findTagByUid(prefs, "unknown-uid")
+        val found = store.findTagByUid("unknown-uid")
 
         assertThat(found).isNull()
     }
@@ -153,9 +155,9 @@ class NfcTagStoreTest {
     @Test
     fun `findTagByUid is case-insensitive`() {
         val tag = makeTag(uid = "AABBCCDD")
-        NfcTagStore.saveCreatedTag(prefs, tag)
+        store.saveCreatedTag(tag)
 
-        val found = NfcTagStore.findTagByUid(prefs, "aabbccdd")
+        val found = store.findTagByUid("aabbccdd")
 
         assertThat(found).isNotNull()
     }
@@ -166,7 +168,7 @@ class NfcTagStoreTest {
     fun `loadCreatedTags ignores entries without commands array`() {
         prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"abc","name":"x","createdAtMillis":0}]""").apply()
 
-        val tags = NfcTagStore.loadCreatedTags(prefs)
+        val tags = store.loadCreatedTags()
 
         assertThat(tags).isEmpty()
     }
@@ -175,7 +177,7 @@ class NfcTagStoreTest {
     fun `loadCreatedTags ignores entries with blank tagUid`() {
         prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"","name":"x","commands":["LOOP STOP"],"createdAtMillis":0}]""").apply()
 
-        val tags = NfcTagStore.loadCreatedTags(prefs)
+        val tags = store.loadCreatedTags()
 
         assertThat(tags).isEmpty()
     }
@@ -184,7 +186,7 @@ class NfcTagStoreTest {
     fun `loadCreatedTags returns empty list for malformed json`() {
         prefs.edit().putString("nfccommunicator_created_tags_v1", "{not-valid-json").apply()
 
-        val tags = NfcTagStore.loadCreatedTags(prefs)
+        val tags = store.loadCreatedTags()
 
         assertThat(tags).isEmpty()
     }
@@ -246,29 +248,29 @@ class NfcTagStoreTest {
 
     @Test
     fun `isJustWritten returns true immediately after markJustWritten`() {
-        NfcTagStore.markJustWritten("uid-fresh")
+        store.markJustWritten("uid-fresh")
 
-        assertThat(NfcTagStore.isJustWritten("uid-fresh")).isTrue()
+        assertThat(store.isJustWritten("uid-fresh")).isTrue()
     }
 
     @Test
     fun `isJustWritten returns false when cooldown has expired`() {
-        NfcTagStore.markJustWritten("uid-expired")
+        store.markJustWritten("uid-expired")
 
         // cooldownMs = -1 means any real elapsed time exceeds the window
-        assertThat(NfcTagStore.isJustWritten("uid-expired", cooldownMs = -1L)).isFalse()
+        assertThat(store.isJustWritten("uid-expired", cooldownMs = -1L)).isFalse()
     }
 
     @Test
     fun `isJustWritten returns false for uid never written`() {
-        assertThat(NfcTagStore.isJustWritten("uid-never-written")).isFalse()
+        assertThat(store.isJustWritten("uid-never-written")).isFalse()
     }
 
     @Test
     fun `isJustWritten is case-insensitive`() {
-        NfcTagStore.markJustWritten("CASE-WRITTEN")
+        store.markJustWritten("CASE-WRITTEN")
 
-        assertThat(NfcTagStore.isJustWritten("case-written")).isTrue()
+        assertThat(store.isJustWritten("case-written")).isTrue()
     }
 
     // ── log tests ─────────────────────────────────────────────────────────────
@@ -276,9 +278,9 @@ class NfcTagStoreTest {
     @Test
     fun `appendLogEntry persists an entry`() {
         val entry = NfcLogEntry(timestamp = now, tagName = "MyTag", action = "READ", success = true, message = "ok")
-        NfcTagStore.appendLogEntry(prefs, entry)
+        store.appendLogEntry(entry)
 
-        val loaded = NfcTagStore.loadLog(prefs)
+        val loaded = store.loadLog()
         assertThat(loaded).hasSize(1)
         assertThat(loaded.first().tagName).isEqualTo("MyTag")
         assertThat(loaded.first().action).isEqualTo("READ")
@@ -289,10 +291,10 @@ class NfcTagStoreTest {
     fun `loadLog returns entries newest first`() {
         val entry1 = NfcLogEntry(timestamp = now, tagName = "Tag1", action = "READ", success = true, message = "ok")
         val entry2 = NfcLogEntry(timestamp = now + 1000L, tagName = "Tag2", action = "WRITE", success = true, message = "written")
-        NfcTagStore.appendLogEntry(prefs, entry1)
-        NfcTagStore.appendLogEntry(prefs, entry2)
+        store.appendLogEntry(entry1)
+        store.appendLogEntry(entry2)
 
-        val loaded = NfcTagStore.loadLog(prefs)
+        val loaded = store.loadLog()
         assertThat(loaded).hasSize(2)
         assertThat(loaded[0].tagName).isEqualTo("Tag2")
         assertThat(loaded[1].tagName).isEqualTo("Tag1")
@@ -301,10 +303,10 @@ class NfcTagStoreTest {
     @Test
     fun `appendLogEntry prunes to 100 when exceeding max`() {
         repeat(105) { i ->
-            NfcTagStore.appendLogEntry(prefs, NfcLogEntry(now + i, "Tag$i", "READ", true, "msg"))
+            store.appendLogEntry(NfcLogEntry(now + i, "Tag$i", "READ", true, "msg"))
         }
 
-        val loaded = NfcTagStore.loadLog(prefs)
+        val loaded = store.loadLog()
         assertThat(loaded).hasSize(100)
     }
 
@@ -312,7 +314,7 @@ class NfcTagStoreTest {
     fun `loadLog handles malformed JSON gracefully`() {
         prefs.edit().putString("nfccommunicator_log_v1", "not-valid-json").apply()
 
-        val loaded = NfcTagStore.loadLog(prefs)
+        val loaded = store.loadLog()
         assertThat(loaded).isEmpty()
     }
 
@@ -325,9 +327,9 @@ class NfcTagStoreTest {
             success = true,
             message = "Loop disabled\nTemp basal canceled",
         )
-        NfcTagStore.appendLogEntry(prefs, entry)
+        store.appendLogEntry(entry)
 
-        val loaded = NfcTagStore.loadLog(prefs)
+        val loaded = store.loadLog()
         assertThat(loaded).hasSize(1)
         with(loaded.first()) {
             assertThat(tagName).isEqualTo("Morning Routine")
@@ -347,23 +349,23 @@ class NfcTagStoreTest {
             success = false,
             message = "Remote command not allowed",
         )
-        NfcTagStore.appendLogEntry(prefs, entry)
+        store.appendLogEntry(entry)
 
-        val loaded = NfcTagStore.loadLog(prefs)
+        val loaded = store.loadLog()
         assertThat(loaded.first().success).isFalse()
         assertThat(loaded.first().message).isEqualTo("Remote command not allowed")
     }
 
     @Test
     fun `clearLog removes all entries`() {
-        NfcTagStore.appendLogEntry(prefs, NfcLogEntry(1L, "Tag", "READ", true, "ok"))
-        NfcTagStore.clearLog(prefs)
-        assertThat(NfcTagStore.loadLog(prefs)).isEmpty()
+        store.appendLogEntry(NfcLogEntry(1L, "Tag", "READ", true, "ok"))
+        store.clearLog()
+        assertThat(store.loadLog()).isEmpty()
     }
 
     @Test
     fun `clearLog on empty log is a no-op`() {
-        NfcTagStore.clearLog(prefs)
-        assertThat(NfcTagStore.loadLog(prefs)).isEmpty()
+        store.clearLog()
+        assertThat(store.loadLog()).isEmpty()
     }
 }

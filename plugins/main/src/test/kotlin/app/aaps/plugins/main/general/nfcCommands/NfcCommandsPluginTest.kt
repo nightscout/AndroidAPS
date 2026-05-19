@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.main.R
-import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -55,6 +54,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 aapsLogger = aapsLogger,
                 rh = rh,
                 preferences = preferences,
+                nfcTagStore = NfcTagStore(TestSp()),
                 constraintChecker = constraintsChecker,
                 profileFunction = profileFunction,
                 profileUtil = profileUtil,
@@ -140,14 +140,16 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `prepareExecution returns Ready with commands when tag registered`() {
-        val prefs = SharedPreferencesMock()
         val tag = NfcCreatedTag(tagUid = tagUid, name = "Test", commands = listOf("LOOP STOP"), createdAtMillis = 0L)
-        NfcTagStore.saveCreatedTag(prefs, tag)
-        // Use context-based lookup — inject prefs via context mock would be complex,
-        // so test via NfcTagStore.findTagByUid directly using prefs overload
-        val found = NfcTagStore.findTagByUid(prefs, tagUid)
-        assertThat(found).isNotNull()
-        assertThat(found!!.commands).isEqualTo(listOf("LOOP STOP"))
+        plugin.nfcTagStore.saveCreatedTag(tag)
+        whenever(rh.gs(R.string.nfccommands_tag_not_registered)).thenReturn("Not registered")
+
+        val result = plugin.prepareExecution(tagUid)
+
+        assertThat(result).isInstanceOf(NfcPrepareResult.Ready::class.java)
+        val ready = result as NfcPrepareResult.Ready
+        assertThat(ready.commands).isEqualTo(listOf("LOOP STOP"))
+        assertThat(ready.tagName).isEqualTo("Test")
     }
 
     @Test

@@ -109,7 +109,7 @@ ahead of other apps while it is in the foreground.
 | `NfcForegroundDispatch` | Manages `NfcAdapter.enableForegroundDispatch` lifecycle for `ComposeMainActivity`; forwards intercepted intents to `NfcControlActivity` and shows the warning dialog when the setting is enabled |
 | `NfcCommandsScreen` | My Tags and Log UI; manual execution dialog |
 | `NfcBuildScreen` | Command chain builder UI |
-| `NfcTagStore` | SharedPreferences persistence for tags and log; command templates; UID utilities |
+| `NfcTagStore` | `@Singleton` class injected with `SP`; persistence for tags and log; static companion methods for command templates, `buildCommand`, `buildCascade`, and `tagUidHex`; `logUpdates: Flow<Unit>` for reactive UI refresh |
 
 ---
 

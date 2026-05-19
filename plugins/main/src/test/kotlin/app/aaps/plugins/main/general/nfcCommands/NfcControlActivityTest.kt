@@ -20,12 +20,15 @@ import java.nio.charset.StandardCharsets
 class NfcControlActivityTest : TestBaseWithProfile() {
     @Mock lateinit var nfcPlugin: NfcCommandsPlugin
     private lateinit var activity: NfcControlActivity
+    private lateinit var nfcTagStore: NfcTagStore
 
     @BeforeEach
     fun setup() {
-        NfcTagStore.clearJustWrittenForTest()
+        nfcTagStore = NfcTagStore(TestSp())
+        nfcTagStore.clearJustWrittenForTest()
         activity = NfcControlActivity()
         activity.nfcPlugin = nfcPlugin
+        activity.nfcTagStore = nfcTagStore
         activity.aapsLogger = aapsLogger
         activity.rh = rh
         whenever(nfcPlugin.isEnabled()).thenReturn(true)
@@ -169,7 +172,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     @Test
     fun `handleIntent silently ignores just-written tag on NDEF_DISCOVERED`() {
         val uid = NfcTagStore.tagUidHex(fakeUid)!!
-        NfcTagStore.markJustWritten(uid)
+        nfcTagStore.markJustWritten(uid)
 
         activity.handleIntent(createNfcIntent(mockNfcTag(fakeUid)))
 
@@ -180,7 +183,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     @Test
     fun `handleIntent silently ignores just-written tag on TAG_DISCOVERED`() {
         val uid = NfcTagStore.tagUidHex(fakeUid)!!
-        NfcTagStore.markJustWritten(uid)
+        nfcTagStore.markJustWritten(uid)
 
         activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
 

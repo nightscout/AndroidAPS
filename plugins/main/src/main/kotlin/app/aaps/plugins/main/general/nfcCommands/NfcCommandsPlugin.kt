@@ -78,6 +78,7 @@ class NfcCommandsPlugin
         aapsLogger: AAPSLogger,
         rh: ResourceHelper,
         preferences: Preferences,
+        val nfcTagStore: NfcTagStore,
         private val constraintChecker: ConstraintsChecker,
         private val profileFunction: ProfileFunction,
         private val profileUtil: ProfileUtil,
@@ -117,7 +118,7 @@ class NfcCommandsPlugin
                     titleResId = R.string.nfccommands_clear_log,
                     summaryResId = R.string.nfccommands_clear_log_summary,
                     onAction = {
-                        NfcTagStore.clearLog(context)
+                        nfcTagStore.clearLog()
                         showToast(rh.gs(R.string.nfccommands_log_cleared))
                     },
                 ),
@@ -126,14 +127,14 @@ class NfcCommandsPlugin
         )
 
         fun updateLastScanned(tagUid: String) {
-            NfcTagStore.updateLastScanned(context, tagUid)
+            nfcTagStore.updateLastScanned(tagUid)
         }
 
         fun prepareExecution(tagUid: String): NfcPrepareResult {
             if (!isEnabled()) {
                 return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
             }
-            val tag = NfcTagStore.findTagByUid(context, tagUid)
+            val tag = nfcTagStore.findTagByUid(tagUid)
             if (tag == null) {
                 aapsLogger.debug(LTag.NFC, "No registered tag found for UID: $tagUid")
                 return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_tag_not_registered))
@@ -159,8 +160,7 @@ class NfcCommandsPlugin
 
         fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
             val result = executeCascade(commands)
-            NfcTagStore.appendLogEntry(
-                context,
+            nfcTagStore.appendLogEntry(
                 NfcLogEntry(
                     timestamp = System.currentTimeMillis(),
                     tagName = tagName,
