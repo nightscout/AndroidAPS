@@ -101,7 +101,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     override val connected: Boolean = true
     override val status: String = ""
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -114,7 +114,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         }.launchIn(newScope)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         cancelWorker()
         scope?.cancel()

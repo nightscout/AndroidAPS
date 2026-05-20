@@ -64,6 +64,7 @@ import app.aaps.pump.diaconn.service.DiaconnG8Service
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -118,7 +119,7 @@ class DiaconnG8Plugin @Inject constructor(
     var mDeviceName = ""
     override val pumpDescription = PumpDescription().fillFor(PumpType.DIACONN_G8)
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val intent = Intent(context, DiaconnG8Service::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
@@ -141,7 +142,7 @@ class DiaconnG8Plugin @Inject constructor(
         changePump() // load device name on app start
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         context.unbindService(mConnection)
         disposable.clear()
         super.onStop()
@@ -181,7 +182,7 @@ class DiaconnG8Plugin @Inject constructor(
             rh.gs(app.aaps.core.ui.R.string.device_changed)
         else
             rh.gs(R.string.gettingpumpsettings)
-        commandQueue.readStatus(reason, null)
+        pluginScope.launch { commandQueue.readStatus(reason) }
     }
 
     override fun connect(reason: String) {

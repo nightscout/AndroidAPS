@@ -84,13 +84,13 @@ class IntelligoPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
         handler?.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()

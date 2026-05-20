@@ -16,6 +16,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -120,8 +121,10 @@ import app.aaps.pump.insight.keys.InsightIntKey
 import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
@@ -150,6 +153,7 @@ class InsightPlugin @Inject constructor(
     private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
     private val bolusProgressData: BolusProgressData,
+    @ApplicationScope private val appScope: CoroutineScope,
     aapsSchedulers: AapsSchedulers,
     blePreCheck: BlePreCheck
 ) : PumpPluginBase(
@@ -170,7 +174,8 @@ class InsightPlugin @Inject constructor(
                 aapsSchedulers = aapsSchedulers,
                 pumpSync = pumpSync,
                 blePreCheck = blePreCheck,
-                ch = ch
+                ch = ch,
+                appScope = appScope
             )
         },
     ownPreferences = listOf(
@@ -245,7 +250,7 @@ class InsightPlugin @Inject constructor(
     var tBROverNotificationBlock: TBROverNotificationBlock? = null
         private set
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         context.bindService(Intent(context, InsightConnectionService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         context.bindService(Intent(context, InsightAlertService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
@@ -262,7 +267,7 @@ class InsightPlugin @Inject constructor(
         systemNotificationManager.createNotificationChannel(channel)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         context.unbindService(serviceConnection)
     }
@@ -1586,7 +1591,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun onPumpPaired() {
-        commandQueue.readStatus("Pump paired", null)
+        pluginScope.launch { commandQueue.readStatus("Pump paired") }
     }
 
     override fun onTimeoutDuringHandshake() {

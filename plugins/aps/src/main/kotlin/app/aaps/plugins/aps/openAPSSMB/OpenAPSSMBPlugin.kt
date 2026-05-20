@@ -123,7 +123,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     aapsLogger, rh, preferences
 ), APS, PluginConstraints {
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         var count = 0
         val apsResults = runBlocking { persistenceLayer.getApsResults(dateUtil.now() - T.days(1).msecs(), dateUtil.now()) }

@@ -47,6 +47,7 @@ import app.aaps.pump.common.sync.PumpSyncEntriesCreator
 import app.aaps.pump.common.sync.PumpSyncStorage
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.runBlocking
 import javax.inject.Provider
 
 /**
@@ -111,7 +112,7 @@ abstract class PumpPluginAbstract protected constructor(
         return pumpDriverConfigurationInternal.hasService
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         initPumpStatusData()
         if (hasService()) {
@@ -128,7 +129,7 @@ abstract class PumpPluginAbstract protected constructor(
         onStartScheduledPumpActions()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         aapsLogger.debug(LTag.PUMP, model().model + " onStop()")
         if (hasService()) {
             serviceConnection?.let { serviceConnection ->
@@ -364,7 +365,7 @@ abstract class PumpPluginAbstract protected constructor(
                     )
                     if (doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
                         if (!commandQueue.statusInQueue()) {
-                            commandQueue.readStatus("Scheduled Status Refresh", null)
+                            runBlocking { commandQueue.readStatus("Scheduled Status Refresh") }
                         }
                     }
                     doCustomScheduledActions()

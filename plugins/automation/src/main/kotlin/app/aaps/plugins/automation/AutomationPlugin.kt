@@ -180,7 +180,7 @@ class AutomationPlugin @Inject constructor(
         ),
     )
 
-    override fun onStart() {
+    override suspend fun onStart() {
         deferredStart.start { locationServiceHelper.startService(context) }
 
         super.onStart()
@@ -231,7 +231,7 @@ class AutomationPlugin @Inject constructor(
                        }, fabricPrivacy::logException)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         disposable.clear()

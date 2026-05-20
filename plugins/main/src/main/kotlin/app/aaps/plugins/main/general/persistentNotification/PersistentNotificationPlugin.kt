@@ -40,14 +40,14 @@ import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
-import kotlin.math.abs
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
 @Singleton
@@ -99,7 +99,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val deferredStart = DeferredForegroundStart()
     private var lastAutoNotificationContent: String = ""
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         notificationHolder.createNotificationChannel()
         disposable += rxBus
@@ -116,17 +116,17 @@ class PersistentNotificationPlugin @Inject constructor(
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
         /// Android Auto - debounced to prevent rapid pop-ups
         disposable += Observable.merge(
-                rxBus.toObservable(EventRefreshOverview::class.java).map { },
-                rxBus.toObservable(EventInitializationChanged::class.java).map { },
-                rxBus.toObservable(EventAutosensCalculationFinished::class.java).map { }
-            )
+            rxBus.toObservable(EventRefreshOverview::class.java).map { },
+            rxBus.toObservable(EventInitializationChanged::class.java).map { },
+            rxBus.toObservable(EventAutosensCalculationFinished::class.java).map { }
+        )
             .debounce(10, TimeUnit.SECONDS)
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate(includeAuto = true) }, fabricPrivacy::logException)
         /// End Android Auto
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         disposable.clear()
         deferredStart.cancel()
         dummyServiceHelper.stopService(context)
@@ -212,9 +212,9 @@ class PersistentNotificationPlugin @Inject constructor(
             } else {
                 profileFunction.getProfile()?.let { profile ->
                     val targetUsed = when {
-                        config.APS        -> loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                        config.APS -> loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
                         config.AAPSCLIENT -> processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
-                        else              -> 0.0
+                        else -> 0.0
                     }
                     aaTarget = if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                         profileUtil.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)

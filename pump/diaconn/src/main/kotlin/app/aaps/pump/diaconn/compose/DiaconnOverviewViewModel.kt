@@ -56,6 +56,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
 
@@ -151,7 +152,7 @@ class DiaconnOverviewViewModel @Inject constructor(
     fun onRefreshClick() {
         aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
         diaconnG8Pump.lastConnection = 0
-        commandQueue.readStatus(rh.gs(CoreUiR.string.clicked_connect_to_pump), null)
+        viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.clicked_connect_to_pump)) }
     }
 
     fun onHistoryClick() = _events.tryEmit(DiaconnOverviewEvent.StartHistory)
@@ -259,7 +260,7 @@ class DiaconnOverviewViewModel @Inject constructor(
         val reservoirLevel = when {
             ch.fromPump(PumpInsulin(pump.systemRemainInsulin)) <= 20.0 -> StatusLevel.CRITICAL
             ch.fromPump(PumpInsulin(pump.systemRemainInsulin)) <= 50.0 -> StatusLevel.WARNING
-            else                              -> StatusLevel.NORMAL
+            else                                                       -> StatusLevel.NORMAL
         }
 
         val isConfigured = activePump.isConfigured()
@@ -286,9 +287,9 @@ class DiaconnOverviewViewModel @Inject constructor(
                     label = rh.gs(CoreUiR.string.daily_units),
                     value = ch.insulinAmountString(PumpInsulin(todayInsulinAmount)), // "/ $todayInsulinLimitAmount U" removed
                     level = when {
-                        todayInsulinAmount > todayInsulinLimitAmount * 0.9  -> StatusLevel.CRITICAL
+                        todayInsulinAmount > todayInsulinLimitAmount * 0.9 -> StatusLevel.CRITICAL
                         todayInsulinAmount > todayInsulinLimitAmount * 0.75 -> StatusLevel.WARNING
-                        else                                                -> StatusLevel.NORMAL
+                        else -> StatusLevel.NORMAL
                     }
                 )
             )

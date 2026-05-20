@@ -148,7 +148,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     val normalTarget = Constants.NORMAL_TARGET_MGDL
     private val minutesClass; get() = if (preferences.get(IntKey.ApsMaxSmbFrequency) == 1) 6L else 30L  // ga-zelle: later get correct 1 min CGM flag from glucoseStatus ? ... or from apsResults?
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         var count = 0
         val apsResults = runBlocking { persistenceLayer.getApsResults(dateUtil.now() - T.days(1).msecs(), dateUtil.now()) }

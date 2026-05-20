@@ -128,7 +128,7 @@ class XdripPlugin @Inject constructor(
     override val connected: Boolean = true
     override val status: String = ""
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         disposable += rxBus
@@ -151,7 +151,7 @@ class XdripPlugin @Inject constructor(
         eventWorker = Executors.newSingleThreadScheduledExecutor()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         handler?.looper?.quitSafely()
         handler?.removeCallbacksAndMessages(null)

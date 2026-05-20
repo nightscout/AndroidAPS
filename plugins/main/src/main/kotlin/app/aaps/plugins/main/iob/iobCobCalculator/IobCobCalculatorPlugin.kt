@@ -116,7 +116,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     private val dataLock = Any()
     private var thread: Thread? = null
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -193,7 +193,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         historyWorker = Executors.newSingleThreadScheduledExecutor()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         disposable.clear()

@@ -71,14 +71,14 @@ class InstaraPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         // Keep the worker scheduled while this plugin is enabled.
         // The worker itself decides OFF(skip+reschedule) vs ON(run+reschedule).
         InstaraStaleCheckWorker.ensureScheduled(appContext(), enabled = true)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         // Cancel worker when this plugin is disabled.
         InstaraStaleCheckWorker.cancel(appContext())
         super.onStop()

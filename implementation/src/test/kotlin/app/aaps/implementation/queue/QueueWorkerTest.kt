@@ -6,6 +6,7 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -37,6 +38,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var localAlertUtils: LocalAlertUtils
     @Mock lateinit var jobName: CommandQueueName
     @Mock lateinit var workManager: WorkManager
 
@@ -68,7 +70,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, rh, constraintChecker,
             profileFunction, activePlugin, config, dateUtil, fabricPrivacy,
-            uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, jobName, workManager, testScope, bolusProgressData
+            uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, localAlertUtils, jobName, workManager, testScope, bolusProgressData
         )
 
         val pumpDescription = PumpDescription()

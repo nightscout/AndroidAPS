@@ -157,7 +157,7 @@ class LoopPlugin @Inject constructor(
     private var handler: Handler? = null
 
     @OptIn(FlowPreview::class)
-    override fun onStart() {
+    override suspend fun onStart() {
         createNotificationChannel()
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -179,7 +179,7 @@ class LoopPlugin @Inject constructor(
         mNotificationManager.createNotificationChannel(channel)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         disposable.clear()
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()

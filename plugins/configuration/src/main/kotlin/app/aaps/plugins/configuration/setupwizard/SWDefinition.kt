@@ -3,6 +3,7 @@ package app.aaps.plugins.configuration.setupwizard
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
@@ -44,6 +45,8 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWPlugin
 import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
@@ -51,6 +54,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SWDefinition @Inject constructor(
+    @ApplicationScope private val appScope: CoroutineScope,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
@@ -290,7 +294,7 @@ class SWDefinition @Inject constructor(
             .add(
                 swButtonProvider.get()
                     .text(R.string.readstatus)
-                    .action { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.clicked_connect_to_pump), null) }
+                    .action { appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.clicked_connect_to_pump)) } }
                     .visibility {
                         // Hide for Omnipod and Medtrum, because as we don't require a Pod/Patch to be paired in the setup wizard,
                         // Getting the status might not be possible

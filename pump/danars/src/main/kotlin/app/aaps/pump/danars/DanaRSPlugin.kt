@@ -65,6 +65,7 @@ import app.aaps.pump.danars.services.DanaRSService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -127,7 +128,7 @@ class DanaRSPlugin @Inject constructor(
     override val pumpDescription
         get() = PumpDescription().fillFor(danaPump.pumpType())
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val intent = Intent(context, DanaRSService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
@@ -142,7 +143,7 @@ class DanaRSPlugin @Inject constructor(
         changePump() // load device name
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         context.unbindService(mConnection)
         disposable.clear()
         super.onStop()
@@ -167,7 +168,7 @@ class DanaRSPlugin @Inject constructor(
         danaPump.serialNumber = preferences.get(DanaStringNonKey.RsName)
         danaPump.reset()
         if (isConfigured())
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
+            pluginScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed)) }
     }
 
     override fun connect(reason: String) {

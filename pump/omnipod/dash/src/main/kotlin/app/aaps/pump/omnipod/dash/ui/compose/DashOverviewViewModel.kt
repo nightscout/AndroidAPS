@@ -305,9 +305,7 @@ class DashOverviewViewModel @Inject constructor(
                 icon = Icons.Filled.Refresh,
                 enabled = podStateManager.isUniqueIdSet && queueEmpty,
                 onClick = {
-                    commandQueue.readStatus(rh.gs(CoreUiR.string.refresh), object : Callback() {
-                        override fun run() {}
-                    })
+                    viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.refresh)) }
                 }
             ),
             PumpAction(

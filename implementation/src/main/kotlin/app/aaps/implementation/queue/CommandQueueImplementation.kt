@@ -14,6 +14,7 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -78,8 +79,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Provider
@@ -104,6 +103,7 @@ class CommandQueueImplementation @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val pumpSync: PumpSync,
+    private val localAlertUtils: LocalAlertUtils,
     private val jobName: CommandQueueName,
     private val workManager: WorkManager,
     @ApplicationScope private val appScope: CoroutineScope,
@@ -428,14 +428,26 @@ class CommandQueueImplementation @Inject constructor(
         notifyAboutNewCommand()
     }
 
-    override fun stopPump(callback: Callback?) {
-        add(CommandStopPump(injector, callback))
+    override suspend fun stopPump(): PumpEnactResult {
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandStopPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
+            override fun run() {
+                deferred.complete(result)
+            }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
-    override fun startPump(callback: Callback?) {
-        add(CommandStartPump(injector, callback))
+    override suspend fun startPump(): PumpEnactResult {
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandStartPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
+            override fun run() {
+                deferred.complete(result)
+            }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
     override fun setTBROverNotification(callback: Callback?, enable: Boolean) {
@@ -463,7 +475,9 @@ class CommandQueueImplementation @Inject constructor(
         val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandTempBasalAbsolute(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -477,7 +491,9 @@ class CommandQueueImplementation @Inject constructor(
         val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandTempBasalPercent(aapsLogger, rh, activePlugin, pumpEnactResultProvider, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -490,7 +506,9 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.EXTENDEDBOLUS)
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -501,7 +519,9 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.TEMPBASAL)
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandCancelTempBasal(aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider, enforceNew, autoForced, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -512,7 +532,9 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.EXTENDEDBOLUS)
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -548,17 +570,19 @@ class CommandQueueImplementation @Inject constructor(
         return true
     }
 
-    // returns true if command is queued
-    override fun readStatus(reason: String, callback: Callback?) {
+    override suspend fun readStatus(reason: String): PumpEnactResult {
         if (isReadStatusScheduled()) {
             aapsLogger.debug(LTag.PUMPQUEUE, "READSTATUS $reason ignored as duplicated")
-            callback?.result(executingNowError())?.run()
-            return
+            return executingNowError()
         }
-
-        // add new command to queue
-        add(CommandReadStatus(injector, reason, callback))
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandReadStatus(aapsLogger, rh, activePlugin, localAlertUtils, pumpEnactResultProvider, reason, object : Callback() {
+            override fun run() {
+                deferred.complete(result)
+            }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
     @Synchronized
@@ -605,7 +629,9 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.LOAD_TDD)
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -629,7 +655,9 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.CLEAR_ALARMS)
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandClearAlarms(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -640,7 +668,9 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.DEACTIVATE)
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandDeactivate(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()
@@ -651,7 +681,9 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.UPDATE_TIME)
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() { deferred.complete(result) }
+            override fun run() {
+                deferred.complete(result)
+            }
         }))
         notifyAboutNewCommand()
         return deferred.await()

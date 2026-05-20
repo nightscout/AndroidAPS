@@ -13,8 +13,6 @@ import app.aaps.implementation.queue.commands.CommandReadStatus
 import app.aaps.implementation.queue.commands.CommandSMBBolus
 import app.aaps.implementation.queue.commands.CommandSetProfile
 import app.aaps.implementation.queue.commands.CommandSetUserSettings
-import app.aaps.implementation.queue.commands.CommandStartPump
-import app.aaps.implementation.queue.commands.CommandStopPump
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -45,8 +43,6 @@ open class CommandQueueModule {
         @ContributesAndroidInjector fun commandReadStatusInjector(): CommandReadStatus
         @ContributesAndroidInjector fun commandSetProfileInjector(): CommandSetProfile
         @ContributesAndroidInjector fun commandCommandSMBBolusInjector(): CommandSMBBolus
-        @ContributesAndroidInjector fun commandStartPumpInjector(): CommandStartPump
-        @ContributesAndroidInjector fun commandStopPumpInjector(): CommandStopPump
         @ContributesAndroidInjector fun commandSetUserSettingsInjector(): CommandSetUserSettings
         @ContributesAndroidInjector fun commandCustomCommandInjector(): CommandCustomCommand
     }
