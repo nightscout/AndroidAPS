@@ -5,8 +5,9 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-
+import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
@@ -39,6 +40,18 @@ fun AdaptivePreferenceList(
                     key = item,
                     onShowMessage = onShowMessage,
                     visibilityContext = visibilityContext
+                )
+            }
+
+            is PreferenceActionItem -> {
+                Preference(
+                    title = { Text(stringResource(item.titleResId)) },
+                    summary = if (item.summaryResId != 0) {
+                        { Text(stringResource(item.summaryResId)) }
+                    } else {
+                        null
+                    },
+                    onClick = item.onAction,
                 )
             }
 

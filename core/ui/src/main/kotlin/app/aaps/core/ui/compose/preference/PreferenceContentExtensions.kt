@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
@@ -94,6 +96,18 @@ private fun RenderPreferenceItems(
                         visibilityContext = visibilityContext
                     )
                 }
+            }
+
+            is PreferenceActionItem -> {
+                Preference(
+                    title = { Text(stringResource(item.titleResId)) },
+                    summary = if (item.summaryResId != 0) {
+                        { Text(stringResource(item.summaryResId)) }
+                    } else {
+                        null
+                    },
+                    onClick = item.onAction,
+                )
             }
 
             is PreferenceSubScreenDef -> {

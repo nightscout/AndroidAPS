@@ -207,6 +207,8 @@ class ComposeMainActivity : AppCompatActivity() {
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
+    private val nfcForegroundDispatch by lazy { app.aaps.plugins.main.general.nfcCommands.NfcForegroundDispatch(this, preferences) }
+
     // ViewModels (Hilt-provided via @HiltViewModel)
     private val mainViewModel: MainViewModel by viewModels()
     private val manageViewModel: ManageViewModel by viewModels()
@@ -841,8 +843,19 @@ class ComposeMainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        nfcForegroundDispatch.onResume()
         if (!config.appInitialized) return
         refreshOnResume()
+    }
+
+    override fun onPause() {
+        nfcForegroundDispatch.onPause()
+        super.onPause()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        nfcForegroundDispatch.onNewIntent(intent)
     }
 
     private fun updateButtons() {
@@ -870,6 +883,7 @@ class ComposeMainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             preferences.observe(StringKey.GeneralLanguage).drop(1).collect { recreate() }
         }
+        nfcForegroundDispatch.observeWarning(lifecycleScope, rxBus, rh)
     }
 
     private fun setupWakeLock() {

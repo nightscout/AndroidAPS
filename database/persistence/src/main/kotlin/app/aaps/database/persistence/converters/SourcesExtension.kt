@@ -76,6 +76,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.VirtualPump         -> Sources.VirtualPump
         UserEntry.Sources.Random              -> Sources.Random
         UserEntry.Sources.SMS                 -> Sources.SMS
+        UserEntry.Sources.NfcCommands         -> Sources.NfcCommands
         UserEntry.Sources.Treatments          -> Sources.Treatments
         UserEntry.Sources.Wear                -> Sources.Wear
         UserEntry.Sources.Food                -> Sources.Food
@@ -162,6 +163,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.VirtualPump         -> UserEntry.Sources.VirtualPump
         Sources.Random              -> UserEntry.Sources.Random
         Sources.SMS                 -> UserEntry.Sources.SMS
+        Sources.NfcCommands         -> UserEntry.Sources.NfcCommands
         Sources.Treatments          -> UserEntry.Sources.Treatments
         Sources.Wear                -> UserEntry.Sources.Wear
         Sources.Food                -> UserEntry.Sources.Food

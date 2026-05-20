@@ -15,6 +15,7 @@ enum class LTag(val tag: String, val defaultValue: Boolean = true, val requiresR
     GLUCOSE("GLUCOSE", defaultValue = false),
     HTTP("HTTP"),
     LOCATION("LOCATION"),
+    NFC("NFC"),
     NOTIFICATION("NOTIFICATION"),
     NSCLIENT("NSCLIENT"),
     OHUPLOADER("OHUPLOADER"),
