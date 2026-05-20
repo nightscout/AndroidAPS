@@ -73,9 +73,11 @@ class CustomWatchface : BaseWatchFace() {
     private var jsonString = ""
 
     private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
-        1L   -> highColor
-        0L   -> midColor
-        -1L  -> lowColor
+        2L  -> veryHighColor
+        1L  -> highColor
+        0L  -> midColor
+        -1L -> lowColor
+        -2L -> veryLowColor
         else -> midColor
     }
 
@@ -254,9 +256,11 @@ class CustomWatchface : BaseWatchFace() {
                 binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update dayName and month according to format on cwf loading
                 binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
                 val jsonColor = dynPref[json.optString(JsonKeys.DYNPREFCOLOR.key)] ?: json
+                veryHighColor = getColor(jsonColor.optString(JsonKeys.VERYHIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_veryHighColor))
                 highColor = getColor(jsonColor.optString(JsonKeys.HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
                 midColor = getColor(jsonColor.optString(JsonKeys.MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
                 lowColor = getColor(jsonColor.optString(JsonKeys.LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
+                veryLowColor = getColor(jsonColor.optString(JsonKeys.VERYLOWCOLOR.key), ContextCompat.getColor(this, R.color.veryLow))
                 lowBatColor = getColor(jsonColor.optString(JsonKeys.LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
                 carbColor = getColor(jsonColor.optString(JsonKeys.CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
                 basalBackgroundColor = getColor(jsonColor.optString(JsonKeys.BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
@@ -378,9 +382,11 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun setDefaultColors() {
+        veryHighColor = "#FF0000".toColorInt()
         highColor = "#FFFF00".toColorInt()
         midColor = "#00FF00".toColorInt()
-        lowColor = "#FF0000".toColorInt()
+        lowColor = "#FFFF00".toColorInt()
+        veryLowColor = "#FF0000".toColorInt()
         carbColor = ContextCompat.getColor(this, R.color.carbs)
         basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
         basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
@@ -615,9 +621,12 @@ class CustomWatchface : BaseWatchFace() {
         var highCustom: Drawable? = null
         var lowCustom: Drawable? = null
         var textDrawable: Drawable? = null
+
         fun drawable(cwf: CustomWatchface): Drawable? = dynData?.getDrawable(cwf) ?: when (cwf.singleBg[0].sgvLevel) {
+                2L   -> highCustom ?: rangeCustom
                 1L   -> highCustom ?: rangeCustom
                 0L   -> rangeCustom
+                -2L  -> lowCustom ?: rangeCustom
                 -1L  -> lowCustom ?: rangeCustom
                 else -> rangeCustom
             }
@@ -852,7 +861,7 @@ class CustomWatchface : BaseWatchFace() {
     private enum class ValueMap(val key: String, val min: Double, val max: Double) {
         NONE("", 0.0, 0.0),
         SGV(ViewKeys.SGV.key, 39.0, 400.0),
-        SGV_LEVEL(JsonKeyValues.SGV_LEVEL.key, -1.0, 1.0),
+        SGV_LEVEL(JsonKeyValues.SGV_LEVEL.key, -2.0, 2.0),
         DIRECTION(ViewKeys.DIRECTION.key, 1.0, 7.0),
         DELTA(ViewKeys.DELTA.key, -25.0, 25.0),
         AVG_DELTA(ViewKeys.AVG_DELTA.key, -25.0, 25.0),

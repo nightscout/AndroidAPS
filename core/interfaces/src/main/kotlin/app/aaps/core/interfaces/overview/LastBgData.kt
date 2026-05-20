@@ -19,6 +19,13 @@ interface LastBgData {
     fun lastBg(): InMemoryGlucoseValue?
 
     /**
+     * Is last value below display very low target?
+     *
+     * @return true if below
+     */
+    fun isVeryLow(): Boolean
+
+    /**
      * Is last value below display low target?
      *
      * @return true if below
@@ -31,6 +38,13 @@ interface LastBgData {
      * @return true if above
      */
     fun isHigh(): Boolean
+
+    /**
+     * Is last value above display high very target?
+     *
+     * @return true if above
+     */
+    fun isVeryHigh(): Boolean
 
     /**
      * Description for a11y

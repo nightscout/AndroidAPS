@@ -180,17 +180,21 @@ class PrepareGraphDataWorker(
         val newFromTime = newToTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
         data.cache.updateTimeRange(TimeRange(fromTime = newFromTime, toTime = newToTime, endTime = newToTime))
 
+        val veryHighMark = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val highMark = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMark = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val veryLowMark = preferences.get(UnitDoubleKey.OverviewVeryLowMark)
 
         val bucketedDataPoints = bucketedData
             .filter { it.timestamp in newFromTime..newToTime }
             .map { value ->
                 val valueInUnits = profileUtil.fromMgdlToUnits(value.recalculated)
                 val range = when {
-                    valueInUnits > highMark -> BgRange.HIGH
-                    valueInUnits < lowMark  -> BgRange.LOW
-                    else                    -> BgRange.IN_RANGE
+                    valueInUnits > veryHighMark -> BgRange.VERY_HIGH
+                    valueInUnits > highMark     -> BgRange.HIGH
+                    valueInUnits < veryLowMark  -> BgRange.VERY_LOW
+                    valueInUnits < lowMark      -> BgRange.LOW
+                    else                        -> BgRange.IN_RANGE
                 }
                 BgDataPoint(
                     timestamp = value.timestamp,
@@ -210,8 +214,10 @@ class PrepareGraphDataWorker(
         val fromTime = toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
         val bgReadingsArray = persistenceLayer.getBgReadingsDataFromTimeToTime(fromTime, toTime, false)
 
+        val veryHighMarkInUnits = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val highMarkInUnits = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMarkInUnits = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val veryLowMarkInUnits = preferences.get(UnitDoubleKey.OverviewVeryLowMark)
 
         val bgDataPoints = bgReadingsArray
             .filter { it.timestamp in fromTime..toTime }
@@ -221,9 +227,11 @@ class PrepareGraphDataWorker(
                     timestamp = bg.timestamp,
                     value = valueInUnits,
                     range = when {
-                        valueInUnits > highMarkInUnits -> BgRange.HIGH
-                        valueInUnits < lowMarkInUnits  -> BgRange.LOW
-                        else                           -> BgRange.IN_RANGE
+                        valueInUnits > veryHighMarkInUnits -> BgRange.VERY_HIGH
+                        valueInUnits > highMarkInUnits     -> BgRange.HIGH
+                        valueInUnits < veryLowMarkInUnits  -> BgRange.VERY_LOW
+                        valueInUnits < lowMarkInUnits      -> BgRange.LOW
+                        else                               -> BgRange.IN_RANGE
                     },
                     type = BgType.REGULAR
                 )

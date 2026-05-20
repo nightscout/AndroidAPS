@@ -1597,13 +1597,15 @@ class DataHandlerMobile @Inject constructor(
             // Hoist out of the per-bucket map: getGlucoseStatusData copies the bucketed table and runs a polynomial fit on every call.
             val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
             val units = profileFunction.getUnits()
+            val veryLowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewVeryLowMark), units)
             val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
             val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
+            val veryHighLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewVeryHighMark), units)
             val slopeArrow = (trendCalculator.getTrendArrow(iobCobCalculator.ads) ?: TrendArrow.NONE).symbol
             rxBus.send(
                 EventMobileToWear(
                     EventData.GraphData(
-                        ArrayList(bucketedData.map { buildSingleBg(it, glucoseStatus, units, lowLine, highLine, slopeArrow) })
+                        ArrayList(bucketedData.map { buildSingleBg(it, glucoseStatus, units, veryLowLine, lowLine, highLine, veryHighLine, slopeArrow) })
                     )
                 )
             )
@@ -1788,8 +1790,10 @@ class DataHandlerMobile @Inject constructor(
                         timeStamp = bg.timestamp,
                         glucoseUnits = GlucoseUnit.MGDL.asText,
                         sgv = bg.value,
+                        veryHigh = 0.0,
                         high = 0.0,
                         low = 0.0,
+                        veryLow = 0.0,
                         color = predictionColor(bg)
                     )
                 )
@@ -1930,18 +1934,22 @@ class DataHandlerMobile @Inject constructor(
     private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
+        val veryLowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewVeryLowMark), units)
         val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
         val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
+        val veryHighLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewVeryHighMark), units)
         val slopeArrow = (trendCalculator.getTrendArrow(iobCobCalculator.ads) ?: TrendArrow.NONE).symbol
-        return buildSingleBg(glucoseValue, glucoseStatus, units, lowLine, highLine, slopeArrow)
+        return buildSingleBg(glucoseValue, glucoseStatus, units, veryLowLine, lowLine, highLine, veryHighLine, slopeArrow)
     }
 
     private fun buildSingleBg(
         glucoseValue: InMemoryGlucoseValue,
         glucoseStatus: GlucoseStatus?,
         units: GlucoseUnit,
+        veryLowLine: Double,
         lowLine: Double,
         highLine: Double,
+        veryHighLine: Double,
         slopeArrow: String
     ): EventData.SingleBg =
         EventData.SingleBg(
@@ -1954,10 +1962,18 @@ class DataHandlerMobile @Inject constructor(
             deltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDeltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
-            sgvLevel = if (glucoseValue.recalculated > highLine) 1L else if (glucoseValue.recalculated < lowLine) -1L else 0L,
+            sgvLevel = when {
+                glucoseValue.recalculated > veryHighLine -> 2L
+                glucoseValue.recalculated > highLine -> 1L
+                glucoseValue.recalculated < veryLowLine -> -2L
+                glucoseValue.recalculated < lowLine -> -1L
+                else -> 0L
+            },
             sgv = glucoseValue.recalculated,
+            veryHigh = veryHighLine,
             high = highLine,
             low = lowLine,
+            veryLow = veryLowLine,
             color = 0,
             deltaMgdl = glucoseStatus?.delta,
             avgDeltaMgdl = glucoseStatus?.shortAvgDelta

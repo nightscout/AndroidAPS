@@ -156,6 +156,14 @@ class SWDefinition @Inject constructor(
             .skippable(false)
             .add(
                 swEditNumberWithUnitsProvider.get()
+                    .preference(UnitDoubleKey.OverviewVeryLowMark)
+                    .updateDelay(5)
+                    .label(R.string.very_low_mark)
+                    .comment(R.string.very_low_mark_comment)
+            )
+            .add(swBreakProvider.get())
+            .add(
+                swEditNumberWithUnitsProvider.get()
                     .preference(UnitDoubleKey.OverviewLowMark)
                     .updateDelay(5)
                     .label(R.string.low_mark)
@@ -168,6 +176,14 @@ class SWDefinition @Inject constructor(
                     .updateDelay(5)
                     .label(R.string.high_mark)
                     .comment(R.string.high_mark_comment)
+            )
+            .add(swBreakProvider.get())
+            .add(
+                swEditNumberWithUnitsProvider.get()
+                    .preference(UnitDoubleKey.OverviewVeryHighMark)
+                    .updateDelay(5)
+                    .label(R.string.very_high_mark)
+                    .comment(R.string.very_high_mark_comment)
             )
 
     private val screenPermissions

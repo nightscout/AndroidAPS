@@ -24,8 +24,10 @@ data class ComplicationData(
         avgDeltaDetailed = "--",
         sgvLevel = 0L,
         sgv = 0.0,
+        veryHigh = 0.0,
         high = 0.0,
         low = 0.0,
+        veryLow = 0.0,
         color = 0
     ),
     val bgData1: EventData.SingleBg = EventData.SingleBg(
@@ -40,8 +42,10 @@ data class ComplicationData(
         avgDeltaDetailed = "--",
         sgvLevel = 0L,
         sgv = 0.0,
+        veryHigh = 0.0,
         high = 0.0,
         low = 0.0,
+        veryLow = 0.0,
         color = 0
     ),
     val bgData2: EventData.SingleBg = EventData.SingleBg(
@@ -56,8 +60,10 @@ data class ComplicationData(
         avgDeltaDetailed = "--",
         sgvLevel = 0L,
         sgv = 0.0,
+        veryHigh = 0.0,
         high = 0.0,
         low = 0.0,
+        veryLow = 0.0,
         color = 0
     ),
     val statusData: EventData.Status = EventData.Status(
