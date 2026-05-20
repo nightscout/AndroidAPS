@@ -470,6 +470,7 @@
     <string name="arrow_center">Midten</string>
     <!--    Command-->
     <string name="connectiontimedout">Tilkoblingen ble tidsavbrutt</string>
+    <string name="command_replaced">Erstattet av en nyere kommando</string>
     <string name="pump_not_configured">Pumpe ikke konfigurert</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Utført</string>
