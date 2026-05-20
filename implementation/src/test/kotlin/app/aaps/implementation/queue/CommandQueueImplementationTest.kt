@@ -36,12 +36,18 @@ import app.aaps.implementation.queue.commands.CommandClearAlarms
 import app.aaps.implementation.queue.commands.CommandCustomCommand
 import app.aaps.implementation.queue.commands.CommandDeactivate
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
+import app.aaps.implementation.queue.commands.CommandInsightSetTBROverNotification
 import app.aaps.implementation.queue.commands.CommandLoadEvents
 import app.aaps.implementation.queue.commands.CommandLoadHistory
+import app.aaps.implementation.queue.commands.CommandLoadTDDs
 import app.aaps.implementation.queue.commands.CommandReadStatus
 import app.aaps.implementation.queue.commands.CommandSMBBolus
+import app.aaps.implementation.queue.commands.CommandSetProfile
+import app.aaps.implementation.queue.commands.CommandSetUserSettings
+import app.aaps.implementation.queue.commands.CommandStartPump
+import app.aaps.implementation.queue.commands.CommandStopPump
+import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
-import app.aaps.implementation.queue.commands.CommandUpdateTime
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import com.google.common.util.concurrent.ListenableFuture
@@ -111,6 +117,28 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     init {
         addInjector {
+            // pumpEnactResultProvider is required by every Command's default cancel(commentResId)
+            when (it) {
+                is CommandBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandCancelExtendedBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandCancelTempBasal -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandClearAlarms -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandCustomCommand -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandDeactivate -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandExtendedBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandInsightSetTBROverNotification -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandLoadEvents -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandLoadHistory -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandLoadTDDs -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandReadStatus -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandSMBBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandSetProfile -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandSetUserSettings -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandStartPump -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandStopPump -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandTempBasalAbsolute -> it.pumpEnactResultProvider = pumpEnactResultProvider
+                is CommandTempBasalPercent -> it.pumpEnactResultProvider = pumpEnactResultProvider
+            }
             if (it is CommandCancelExtendedBolus) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
@@ -173,11 +201,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 it.rh = rh
                 it.activePlugin = activePlugin
             }
-            if (it is CommandUpdateTime) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-                it.activePlugin = activePlugin
-            }
             if (it is QueueWorker) {
                 it.aapsLogger = aapsLogger
                 it.queue = commandQueue
@@ -228,6 +251,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             val percentageConstraint = ConstraintObject(0, aapsLogger)
             whenever(constraintChecker.applyBasalPercentConstraints(anyOrNull(), anyOrNull())).thenReturn(percentageConstraint)
             whenever(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
+            whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("Replaced by newer command")
             whenever(rh.gs(eq(app.aaps.core.ui.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
             whenever(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
             whenever(workManager.getWorkInfosForUniqueWork(anyOrNull())).thenReturn(infos)
@@ -487,7 +511,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // when
         backgroundScope.launch { commandQueue.updateTime() }
-        yield() // let coroutine reach suspendCancellableCoroutine (command is now queued)
+        yield() // let coroutine enqueue the command and suspend on the result Deferred
 
         // then
         assertThat(commandQueue.isReadStatusScheduled()).isFalse()
@@ -550,12 +574,12 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         testPumpPlugin.isProfileSet = false
         commandQueue.setProfile(effectiveProfile, false, object : Callback() {
             override fun run() {
-                assertThat(result.success).isTrue()
-                assertThat(result.enacted).isTrue()
+                // Will be invoked when the next setProfile call supersedes this queued command.
+                assertThat(result.success).isFalse()
             }
         })
         assertThat(commandQueue.size()).isEqualTo(1)
-        // next should be ignored
+        // next replaces the previously queued command (size stays at 1)
         commandQueue.setProfile(effectiveProfile, false, object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()

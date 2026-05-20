@@ -25,7 +25,7 @@ class CommandBolus(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject override lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
     @Inject lateinit var bolusProgressData: BolusProgressData
 
     override var commandType: Command.CommandType
@@ -64,9 +64,8 @@ class CommandBolus(
             if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(app.aaps.core.ui.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+    override fun cancel(commentResId: Int) {
+        super.cancel(commentResId)
         bolusProgressData.clear()
     }
 }

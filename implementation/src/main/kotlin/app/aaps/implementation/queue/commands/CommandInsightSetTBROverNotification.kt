@@ -21,7 +21,7 @@ class CommandInsightSetTBROverNotification(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject override lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
     init {
         injector.androidInjector().inject(this)
@@ -41,8 +41,4 @@ class CommandInsightSetTBROverNotification(
 
     @Suppress("SpellCheckingInspection")
     override fun log(): String = "INSIGHTSETTBROVERNOTIFICATION"
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
-    }
 }

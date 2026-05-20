@@ -21,7 +21,7 @@ class CommandCustomCommand(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject override lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
     init {
         injector.androidInjector().inject(this)
@@ -39,8 +39,4 @@ class CommandCustomCommand(
     override fun status(): String = customCommand.statusDescription
 
     override fun log(): String = customCommand.statusDescription
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
-    }
 }

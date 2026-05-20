@@ -482,6 +482,7 @@
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
+    <string name="command_replaced">Replaced by newer command</string>
     <string name="pump_not_configured">Pump not configured</string>
 
     <!--    PumpEnactResult-->

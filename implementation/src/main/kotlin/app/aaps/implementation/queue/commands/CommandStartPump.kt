@@ -20,7 +20,7 @@ class CommandStartPump(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject override lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
     init {
         injector.androidInjector().inject(this)
@@ -39,8 +39,4 @@ class CommandStartPump(
     override fun status(): String = rh.gs(app.aaps.core.ui.R.string.start_pump)
 
     override fun log(): String = "START PUMP"
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
-    }
 }

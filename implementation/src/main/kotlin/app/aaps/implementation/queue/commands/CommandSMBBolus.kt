@@ -32,7 +32,7 @@ class CommandSMBBolus(
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var bolusProgressData: BolusProgressData
 
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject override lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
     init {
         injector.androidInjector().inject(this)
@@ -61,9 +61,8 @@ class CommandSMBBolus(
     override fun status(): String = rh.gs(app.aaps.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)
 
     override fun log(): String = "SMB BOLUS ${rh.gs(app.aaps.core.ui.R.string.format_insulin_units, detailedBolusInfo.insulin)}"
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+    override fun cancel(commentResId: Int) {
+        super.cancel(commentResId)
         bolusProgressData.clear()
     }
 }

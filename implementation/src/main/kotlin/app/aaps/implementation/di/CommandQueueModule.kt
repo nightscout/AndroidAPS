@@ -23,7 +23,6 @@ import app.aaps.implementation.queue.commands.CommandStartPump
 import app.aaps.implementation.queue.commands.CommandStopPump
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
-import app.aaps.implementation.queue.commands.CommandUpdateTime
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -55,7 +54,6 @@ open class CommandQueueModule {
         @ContributesAndroidInjector fun commandLoadEventsInjector(): CommandLoadEvents
         @ContributesAndroidInjector fun commandClearAlarmsInjector(): CommandClearAlarms
         @ContributesAndroidInjector fun commandDeactivateInjector(): CommandDeactivate
-        @ContributesAndroidInjector fun commandUpdateTimeInjector(): CommandUpdateTime
         @ContributesAndroidInjector fun commandLoadHistoryInjector(): CommandLoadHistory
         @ContributesAndroidInjector fun commandLoadTDDsInjector(): CommandLoadTDDs
         @ContributesAndroidInjector fun commandReadStatusInjector(): CommandReadStatus

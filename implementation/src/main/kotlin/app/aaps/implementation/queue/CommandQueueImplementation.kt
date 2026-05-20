@@ -71,6 +71,7 @@ import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
 import app.aaps.implementation.queue.commands.CommandUpdateTime
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
@@ -207,6 +208,7 @@ class CommandQueueImplementation @Inject constructor(
         synchronized(queue) {
             for (i in queue.indices.reversed()) {
                 if (queue[i].commandType == type) {
+                    queue[i].cancel(app.aaps.core.ui.R.string.command_replaced)
                     queue.removeAt(i)
                 }
             }
@@ -259,8 +261,7 @@ class CommandQueueImplementation @Inject constructor(
         performing = null
         synchronized(queue) {
             for (i in queue.indices) {
-                queue[i].cancel()
-
+                queue[i].cancel(app.aaps.core.ui.R.string.connectiontimedout)
             }
             queue.clear()
         }
@@ -653,18 +654,16 @@ class CommandQueueImplementation @Inject constructor(
         notifyAboutNewCommand()
     }
 
-    override suspend fun updateTime(): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            if (isRunning(CommandType.UPDATE_TIME)) {
-                cont.resume(executingNowError())
-                return@suspendCancellableCoroutine
-            }
-            removeAll(CommandType.UPDATE_TIME)
-            add(CommandUpdateTime(injector, object : Callback() {
-                override fun run() { cont.resume(result) }
-            }))
-            notifyAboutNewCommand()
-        }
+    override suspend fun updateTime(): PumpEnactResult {
+        if (isRunning(CommandType.UPDATE_TIME)) return executingNowError()
+        removeAll(CommandType.UPDATE_TIME)
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
+            override fun run() { deferred.complete(result) }
+        }))
+        notifyAboutNewCommand()
+        return deferred.await()
+    }
 
     override fun customCommand(customCommand: CustomCommand, callback: Callback?) {
         if (isCustomCommandInQueue(customCommand.javaClass)) {
