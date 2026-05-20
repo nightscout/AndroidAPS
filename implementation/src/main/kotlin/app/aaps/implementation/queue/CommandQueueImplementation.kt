@@ -174,12 +174,13 @@ class CommandQueueImplementation @Inject constructor(
      * Fails open on read errors — the gate is a belt, not the only line; upstream checks already
      * handle most suspended-mode paths in [LoopPlugin.invoke] and [applySMBRequest].
      */
-    private fun rejectedByRunningModeGate(kind: PumpCommandGate.CommandKind, callback: Callback?): Boolean {
+    /** Returns the rejection result if the gate rejects, or null if the command is allowed. */
+    private suspend fun rejectedByRunningModeGate(kind: PumpCommandGate.CommandKind): PumpEnactResult? {
         val mode = try {
-            runBlocking { persistenceLayer.getRunningModeActiveAt(dateUtil.now()) }.mode
+            persistenceLayer.getRunningModeActiveAt(dateUtil.now()).mode
         } catch (e: Throwable) {
             aapsLogger.warn(LTag.PUMPQUEUE, "Running-mode gate: failed to read active mode, allowing command: ${e.message}")
-            return false
+            return null
         }
         val decision = PumpCommandGate.check(mode, kind)
         if (decision is PumpCommandGate.Decision.Reject) {
@@ -194,13 +195,18 @@ class CommandQueueImplementation @Inject constructor(
                 LTag.PUMPQUEUE,
                 "Command rejected by running-mode gate: mode=$mode, kind=$kind, reason=${decision.reason}"
             )
-            callback?.result(
-                pumpEnactResultProvider.get().success(false).enacted(false).comment(commentRes)
-            )?.run()
-            return true
+            return pumpEnactResultProvider.get().success(false).enacted(false).comment(commentRes)
         }
-        return false
+        return null
     }
+
+    /** Callback-style wrapper for un-migrated callers. Removed once bolus/tempBasal* are migrated. */
+    private fun rejectedByRunningModeGate(kind: PumpCommandGate.CommandKind, callback: Callback?): Boolean =
+        runBlocking {
+            val rejection = rejectedByRunningModeGate(kind) ?: return@runBlocking false
+            callback?.result(rejection)?.run()
+            true
+        }
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -449,51 +455,45 @@ class CommandQueueImplementation @Inject constructor(
         Thread { activePlugin.activePump.stopBolusDelivering() }.start()
     }
 
-    // returns true if command is queued
-    override fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?) {
+    override suspend fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val gateKind = if (absoluteRate == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
-        if (rejectedByRunningModeGate(gateKind, callback)) return
-        if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
-            callback?.result(executingNowError())?.run()
-            return
-        }
-        // remove all unfinished
+        rejectedByRunningModeGate(gateKind)?.let { return it }
+        if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
         removeAll(CommandType.TEMPBASAL)
         val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
-        // add new command to queue
-        add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, callback))
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandTempBasalAbsolute(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
+            override fun run() { deferred.complete(result) }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
-    // returns true if command is queued
-    override fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?) {
+    override suspend fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val gateKind = if (percent == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
-        if (rejectedByRunningModeGate(gateKind, callback)) return
-        if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
-            callback?.result(executingNowError())?.run()
-            return
-        }
-        // remove all unfinished
+        rejectedByRunningModeGate(gateKind)?.let { return it }
+        if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
         removeAll(CommandType.TEMPBASAL)
         val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
-        // add new command to queue
-        add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, callback))
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandTempBasalPercent(aapsLogger, rh, activePlugin, pumpEnactResultProvider, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
+            override fun run() { deferred.complete(result) }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
-    // returns true if command is queued
-    override fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?) {
-        if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.EXTENDED_BOLUS, callback)) return
-        if (isRunning(CommandType.EXTENDEDBOLUS)) {
-            callback?.result(executingNowError())?.run()
-            return
-        }
+    override suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+        rejectedByRunningModeGate(PumpCommandGate.CommandKind.EXTENDED_BOLUS)?.let { return it }
+        if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
         val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
-        // remove all unfinished
         removeAll(CommandType.EXTENDEDBOLUS)
-        // add new command to queue
-        add(CommandExtendedBolus(injector, rateAfterConstraints, durationInMinutes, callback))
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, object : Callback() {
+            override fun run() { deferred.complete(result) }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean): PumpEnactResult {

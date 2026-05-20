@@ -26,9 +26,9 @@ interface CommandQueue {
     fun stopPump(callback: Callback?)
     fun startPump(callback: Callback?)
     fun setTBROverNotification(callback: Callback?, enable: Boolean)
-    fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?)
-    fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?)
-    fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?)
+    suspend fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
+    suspend fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
+    suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult
     suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean = false): PumpEnactResult
     suspend fun cancelExtended(): PumpEnactResult
     fun readStatus(reason: String, callback: Callback?)
@@ -65,27 +65,6 @@ interface CommandQueue {
     suspend fun bolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult =
         suspendCancellableCoroutine { cont ->
             bolus(detailedBolusInfo, object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
-    suspend fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            tempBasalAbsolute(absoluteRate, durationInMinutes, enforceNew, profile, tbrType, object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
-    suspend fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            tempBasalPercent(percent, durationInMinutes, enforceNew, profile, tbrType, object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
-    suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            extendedBolus(insulin, durationInMinutes, object : Callback() {
                 override fun run() { cont.resume(result) }
             })
         }

@@ -31,7 +31,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCustomCommand
-import app.aaps.implementation.queue.commands.CommandExtendedBolus
 import app.aaps.implementation.queue.commands.CommandInsightSetTBROverNotification
 import app.aaps.implementation.queue.commands.CommandLoadEvents
 import app.aaps.implementation.queue.commands.CommandLoadHistory
@@ -41,8 +40,6 @@ import app.aaps.implementation.queue.commands.CommandSetProfile
 import app.aaps.implementation.queue.commands.CommandSetUserSettings
 import app.aaps.implementation.queue.commands.CommandStartPump
 import app.aaps.implementation.queue.commands.CommandStopPump
-import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
-import app.aaps.implementation.queue.commands.CommandTempBasalPercent
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import com.google.common.util.concurrent.ListenableFuture
@@ -118,7 +115,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             when (it) {
                 is CommandBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandCustomCommand -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandExtendedBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandInsightSetTBROverNotification -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandLoadEvents -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandLoadHistory -> it.pumpEnactResultProvider = pumpEnactResultProvider
@@ -128,13 +124,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 is CommandSetUserSettings -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandStartPump -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandStopPump -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandTempBasalAbsolute -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandTempBasalPercent -> it.pumpEnactResultProvider = pumpEnactResultProvider
-            }
-            if (it is CommandTempBasalPercent) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-                it.activePlugin = activePlugin
             }
             if (it is CommandBolus) {
                 it.aapsLogger = aapsLogger
@@ -149,11 +138,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 it.bolusProgressData = bolusProgressData
             }
             if (it is CommandCustomCommand) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-                it.activePlugin = activePlugin
-            }
-            if (it is CommandExtendedBolus) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.activePlugin = activePlugin
@@ -288,11 +272,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
 
         // add tempbasal
-        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
+        backgroundScope.launch { commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL) }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(1)
 
         // add tempbasal percent. it should replace previous TEMPBASAL
-        commandQueue.tempBasalPercent(0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
+        backgroundScope.launch { commandQueue.tempBasalPercent(0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL) }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(1)
 
         // cancel tempbasal it should replace previous TEMPBASAL
@@ -301,11 +287,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(1)
 
         // add extended bolus
-        commandQueue.extendedBolus(1.0, 30, null)
+        backgroundScope.launch { commandQueue.extendedBolus(1.0, 30) }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(2)
 
         // add extended should remove previous extended setting
-        commandQueue.extendedBolus(1.0, 30, null)
+        backgroundScope.launch { commandQueue.extendedBolus(1.0, 30) }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(2)
 
         // cancel extended bolus should replace previous extended
@@ -337,7 +325,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(6)
 
         commandQueue.clear()
-        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
+        backgroundScope.launch { commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL) }
+        yield()
         commandQueue.pickup()
         assertThat(commandQueue.size()).isEqualTo(0)
         assertThat(commandQueue.performing).isNotNull()
@@ -677,23 +666,17 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Test
     fun `tempBasalAbsolute non-zero is rejected during DISCONNECTED_PUMP`() = runTest {
         stubActiveMode(app.aaps.core.data.model.RM.Mode.DISCONNECTED_PUMP)
-        var callbackInvoked = false
-        val callback = object : Callback() {
-            override fun run() {
-                callbackInvoked = true
-                assertThat(result.success).isFalse()
-                assertThat(result.enacted).isFalse()
-            }
-        }
-        commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, callback)
-        assertThat(callbackInvoked).isTrue()
+        val result = commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL)
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
     }
 
     @Test
     fun `tempBasalAbsolute rate zero passes during DISCONNECTED_PUMP`() = runTest {
         // The reconciler must be able to enact zero-TBR while DISCONNECTED_PUMP is active.
         stubActiveMode(app.aaps.core.data.model.RM.Mode.DISCONNECTED_PUMP)
-        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, null)
+        backgroundScope.launch { commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND) }
+        yield()
         assertThat(commandQueue.size()).isGreaterThan(0)
     }
 
@@ -715,15 +698,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Test
     fun `extendedBolus is rejected during DISCONNECTED_PUMP`() = runTest {
         stubActiveMode(app.aaps.core.data.model.RM.Mode.DISCONNECTED_PUMP)
-        var callbackInvoked = false
-        val callback = object : Callback() {
-            override fun run() {
-                callbackInvoked = true
-                assertThat(result.success).isFalse()
-            }
-        }
-        commandQueue.extendedBolus(2.0, 30, callback)
-        assertThat(callbackInvoked).isTrue()
+        val result = commandQueue.extendedBolus(2.0, 30)
+        assertThat(result.success).isFalse()
     }
 
     @Test
@@ -740,7 +716,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // SUSPENDED_BY_USER is the temporary counterpart of DISABLED_LOOP — manual delivery stays
         // available; the gate does not block TBR / bolus / EB.
         stubActiveMode(app.aaps.core.data.model.RM.Mode.SUSPENDED_BY_USER)
-        commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
+        backgroundScope.launch { commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL) }
+        yield()
         assertThat(commandQueue.size()).isGreaterThan(0)
     }
 
@@ -755,7 +732,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Test
     fun `working mode allows all commands`() = runTest {
         stubActiveMode(app.aaps.core.data.model.RM.Mode.CLOSED_LOOP)
-        commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
+        backgroundScope.launch { commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL) }
+        yield()
         // cancelTempBasal replaces pending TEMPBASAL commands, so size stays at 1
         backgroundScope.launch { commandQueue.cancelTempBasal(enforceNew = true, autoForced = false) }
         yield()

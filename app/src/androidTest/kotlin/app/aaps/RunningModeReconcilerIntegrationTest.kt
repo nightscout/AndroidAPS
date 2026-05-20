@@ -110,10 +110,8 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
     @Test
     fun `queue gate rejects extended bolus when mode is DISCONNECTED_PUMP`() = runTest {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        val rejection = CaptureCallback()
-        commandQueue.extendedBolus(2.0, 30, rejection)
-        assertThat(rxHelper.waitUntil("eb rejection callback fired", maxSeconds = 5) { rejection.invoked }).isTrue()
-        assertThat(rejection.capturedResult?.success).isFalse()
+        val result = commandQueue.extendedBolus(2.0, 30)
+        assertThat(result.success).isFalse()
     }
 
     @Test
@@ -244,18 +242,15 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         ensureProfile()
         val profile = profileFunction.getProfile() ?: error("profile not available")
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        val rejection = CaptureCallback()
-        commandQueue.tempBasalAbsolute(
+        val result = commandQueue.tempBasalAbsolute(
             absoluteRate = 1.5,
             durationInMinutes = 30,
             enforceNew = true,
             profile = profile,
-            tbrType = PumpSync.TemporaryBasalType.NORMAL,
-            callback = rejection
+            tbrType = PumpSync.TemporaryBasalType.NORMAL
         )
-        assertThat(rxHelper.waitUntil("non-zero TBR rejection callback", maxSeconds = 5) { rejection.invoked }).isTrue()
-        assertThat(rejection.capturedResult?.success).isFalse()
-        assertThat(rejection.capturedResult?.enacted).isFalse()
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
     }
 
     @Test
