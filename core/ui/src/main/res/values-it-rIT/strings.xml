@@ -470,6 +470,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
+    <string name="command_replaced">Sostituito con un nuovo comando</string>
     <string name="pump_not_configured">Micro non configurato</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Emanato</string>
