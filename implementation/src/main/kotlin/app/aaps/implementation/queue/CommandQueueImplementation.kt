@@ -344,9 +344,9 @@ class CommandQueueImplementation @Inject constructor(
                 detailedBolusInfo.carbsDuration != 0L ||
                 (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil.now())*/
         ) {
-            carbsRunnable = Runnable {
+            // Carbs-only path: store and report storage result via callback exactly once.
+            if (detailedBolusInfo.insulin == 0.0) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
-                detailedBolusInfo.carbs = originalCarbs
                 appScope.launch {
                     try {
                         persistenceLayer.insertOrUpdateCarbs(
@@ -359,15 +359,26 @@ class CommandQueueImplementation @Inject constructor(
                         callback?.result(pumpEnactResultProvider.get().enacted(false).success(false))?.run()
                     }
                 }
+                return
+            }
+            // Bolus + carbs path: carbsRunnable persists carbs only; the bolus result drives the callback.
+            carbsRunnable = Runnable {
+                aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
+                detailedBolusInfo.carbs = originalCarbs
+                appScope.launch {
+                    try {
+                        persistenceLayer.insertOrUpdateCarbs(
+                            carbs = detailedBolusInfo.createCarbs(),
+                            action = Action.CARBS,
+                            source = Sources.Database
+                        )
+                    } catch (e: Exception) {
+                        aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs after bolus", e)
+                    }
+                }
             }
             // Do not process carbs anymore
             detailedBolusInfo.carbs = 0.0
-            // if no insulin just exit
-            if (detailedBolusInfo.insulin == 0.0) {
-                carbsRunnable.run() // store carbs
-                return
-            }
-
         }
         // Running-mode gate: reject bolus if current mode forbids new delivery.
         if (rejectedByRunningModeGate(PumpCommandGate.CommandKind.BOLUS, callback)) return
