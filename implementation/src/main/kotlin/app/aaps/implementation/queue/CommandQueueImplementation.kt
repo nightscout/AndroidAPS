@@ -103,6 +103,7 @@ class CommandQueueImplementation @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpSync: PumpSync,
     private val jobName: CommandQueueName,
     private val workManager: WorkManager,
     @ApplicationScope private val appScope: CoroutineScope,
@@ -495,30 +496,26 @@ class CommandQueueImplementation @Inject constructor(
         notifyAboutNewCommand()
     }
 
-    // returns true if command is queued
-    override fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean, callback: Callback?) {
-        if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
-            callback?.result(executingNowError())?.run()
-            return
-        }
-        // remove all unfinished
+    override suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean): PumpEnactResult {
+        if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
         removeAll(CommandType.TEMPBASAL)
-        // add new command to queue
-        add(CommandCancelTempBasal(injector, enforceNew, autoForced = autoForced, callback))
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandCancelTempBasal(aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider, enforceNew, autoForced, object : Callback() {
+            override fun run() { deferred.complete(result) }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
-    // returns true if command is queued
-    override fun cancelExtended(callback: Callback?) {
-        if (isRunning(CommandType.EXTENDEDBOLUS)) {
-            callback?.result(executingNowError())?.run()
-            return
-        }
-        // remove all unfinished
+    override suspend fun cancelExtended(): PumpEnactResult {
+        if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
         removeAll(CommandType.EXTENDEDBOLUS)
-        // add new command to queue
-        add(CommandCancelExtendedBolus(injector, callback))
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
+            override fun run() { deferred.complete(result) }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
     // returns true if command is queued
@@ -603,17 +600,15 @@ class CommandQueueImplementation @Inject constructor(
         notifyAboutNewCommand()
     }
 
-    // returns true if command is queued
-    override fun loadTDDs(callback: Callback?) {
-        if (isRunning(CommandType.LOAD_TDD)) {
-            callback?.result(executingNowError())?.run()
-            return
-        }
-        // remove all unfinished
+    override suspend fun loadTDDs(): PumpEnactResult {
+        if (isRunning(CommandType.LOAD_TDD)) return executingNowError()
         removeAll(CommandType.LOAD_TDD)
-        // add new command to queue
-        add(CommandLoadTDDs(injector, callback))
+        val deferred = CompletableDeferred<PumpEnactResult>()
+        add(CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
+            override fun run() { deferred.complete(result) }
+        }))
         notifyAboutNewCommand()
+        return deferred.await()
     }
 
     // returns true if command is queued

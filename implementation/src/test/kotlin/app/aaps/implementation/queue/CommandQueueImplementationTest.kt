@@ -30,14 +30,11 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
-import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
-import app.aaps.implementation.queue.commands.CommandCancelTempBasal
 import app.aaps.implementation.queue.commands.CommandCustomCommand
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
 import app.aaps.implementation.queue.commands.CommandInsightSetTBROverNotification
 import app.aaps.implementation.queue.commands.CommandLoadEvents
 import app.aaps.implementation.queue.commands.CommandLoadHistory
-import app.aaps.implementation.queue.commands.CommandLoadTDDs
 import app.aaps.implementation.queue.commands.CommandReadStatus
 import app.aaps.implementation.queue.commands.CommandSMBBolus
 import app.aaps.implementation.queue.commands.CommandSetProfile
@@ -76,6 +73,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var jobName: CommandQueueName
     @Mock lateinit var workManager: WorkManager
     @Mock lateinit var infos: ListenableFuture<List<WorkInfo>>
@@ -99,6 +97,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         persistenceLayer: PersistenceLayer,
         decimalFormatter: DecimalFormatter,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
+        pumpSync: PumpSync,
         jobName: CommandQueueName,
         workManager: WorkManager,
         appScope: CoroutineScope,
@@ -106,7 +105,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, rh, constraintChecker, profileFunction,
         activePlugin, config, dateUtil, fabricPrivacy,
-        uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, appScope, bolusProgressData
+        uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, jobName, workManager, appScope, bolusProgressData
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -118,14 +117,11 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             // pumpEnactResultProvider is required by every Command's default cancel(commentResId)
             when (it) {
                 is CommandBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandCancelExtendedBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandCancelTempBasal -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandCustomCommand -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandExtendedBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandInsightSetTBROverNotification -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandLoadEvents -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandLoadHistory -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandLoadTDDs -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandReadStatus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandSMBBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandSetProfile -> it.pumpEnactResultProvider = pumpEnactResultProvider
@@ -135,17 +131,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 is CommandTempBasalAbsolute -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandTempBasalPercent -> it.pumpEnactResultProvider = pumpEnactResultProvider
             }
-            if (it is CommandCancelExtendedBolus) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-                it.activePlugin = activePlugin
-            }
             if (it is CommandTempBasalPercent) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-                it.activePlugin = activePlugin
-            }
-            if (it is CommandCancelTempBasal) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.activePlugin = activePlugin
@@ -209,7 +195,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
             commandQueue = CommandQueueMocked(
                 injector, aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin,
-                config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope, bolusProgressData
+                config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, jobName, workManager, testScope, bolusProgressData
             )
             testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
             testPumpPlugin.connected = true
@@ -257,7 +243,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, rh,
             constraintChecker, profileFunction, activePlugin,
-            config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope, bolusProgressData
+            config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, jobName, workManager, testScope, bolusProgressData
         )
         val handler: Handler = mock()
         whenever(handler.post(anyOrNull())).thenAnswer { invocation: InvocationOnMock ->
@@ -310,7 +296,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(1)
 
         // cancel tempbasal it should replace previous TEMPBASAL
-        commandQueue.cancelTempBasal(enforceNew = false, autoForced = false, callback = null)
+        backgroundScope.launch { commandQueue.cancelTempBasal(enforceNew = false, autoForced = false) }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(1)
 
         // add extended bolus
@@ -322,7 +309,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(2)
 
         // cancel extended bolus should replace previous extended
-        commandQueue.cancelExtended(null)
+        backgroundScope.launch { commandQueue.cancelExtended() }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(2)
 
         // add setProfile
@@ -515,17 +503,19 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun isLoadTDDsCommandInQueue() {
+    fun isLoadTDDsCommandInQueue() = runTest {
         // given
         assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
-        commandQueue.loadTDDs(null)
+        backgroundScope.launch { commandQueue.loadTDDs() }
+        yield()
 
         // then
         assertThat(commandQueue.size()).isEqualTo(1)
-        // next should be ignored
-        commandQueue.loadTDDs(null)
+        // next replaces the previously queued command (size stays at 1)
+        backgroundScope.launch { commandQueue.loadTDDs() }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(1)
     }
 
@@ -740,7 +730,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun `cancelTempBasal is allowed during DISCONNECTED_PUMP`() = runTest {
         // Cancel is always allowed — it is the primitive used by RESUME and startup drift.
         stubActiveMode(app.aaps.core.data.model.RM.Mode.DISCONNECTED_PUMP)
-        commandQueue.cancelTempBasal(enforceNew = true, autoForced = false, callback = null)
+        backgroundScope.launch { commandQueue.cancelTempBasal(enforceNew = true, autoForced = false) }
+        yield()
         assertThat(commandQueue.size()).isGreaterThan(0)
     }
 
@@ -766,7 +757,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         stubActiveMode(app.aaps.core.data.model.RM.Mode.CLOSED_LOOP)
         commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         // cancelTempBasal replaces pending TEMPBASAL commands, so size stays at 1
-        commandQueue.cancelTempBasal(enforceNew = true, autoForced = false, callback = null)
+        backgroundScope.launch { commandQueue.cancelTempBasal(enforceNew = true, autoForced = false) }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(1)
     }
 

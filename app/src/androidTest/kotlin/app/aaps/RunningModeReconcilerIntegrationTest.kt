@@ -27,8 +27,10 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
@@ -117,7 +119,8 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
     @Test
     fun `queue gate allows cancelTempBasal during DISCONNECTED_PUMP`() = runTest {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        commandQueue.cancelTempBasal(enforceNew = true, autoForced = false, callback = null)
+        backgroundScope.launch { commandQueue.cancelTempBasal(enforceNew = true, autoForced = false) }
+        yield()
         assertThat(commandQueue.size()).isGreaterThan(0)
     }
 

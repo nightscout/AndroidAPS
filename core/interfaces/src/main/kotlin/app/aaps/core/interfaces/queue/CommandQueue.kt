@@ -29,13 +29,13 @@ interface CommandQueue {
     fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?)
     fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?)
     fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?)
-    fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean = false, callback: Callback?)
-    fun cancelExtended(callback: Callback?)
+    suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean = false): PumpEnactResult
+    suspend fun cancelExtended(): PumpEnactResult
     fun readStatus(reason: String, callback: Callback?)
     fun statusInQueue(): Boolean
     fun loadHistory(type: Byte, callback: Callback?)
     fun setUserOptions(callback: Callback?)
-    fun loadTDDs(callback: Callback?)
+    suspend fun loadTDDs(): PumpEnactResult
     fun loadEvents(callback: Callback?)
     suspend fun clearAlarms(): PumpEnactResult
     suspend fun deactivate(): PumpEnactResult
@@ -90,20 +90,6 @@ interface CommandQueue {
             })
         }
 
-    suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean = false): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            cancelTempBasal(enforceNew, autoForced, object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
-    suspend fun cancelExtended(): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            cancelExtended(object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
     suspend fun readStatus(reason: String): PumpEnactResult =
         suspendCancellableCoroutine { cont ->
             readStatus(reason, object : Callback() {
@@ -148,13 +134,6 @@ interface CommandQueue {
     suspend fun setUserOptions(): PumpEnactResult =
         suspendCancellableCoroutine { cont ->
             setUserOptions(object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
-    suspend fun loadTDDs(): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            loadTDDs(object : Callback() {
                 override fun run() { cont.resume(result) }
             })
         }

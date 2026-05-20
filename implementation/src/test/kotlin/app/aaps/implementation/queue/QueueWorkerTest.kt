@@ -35,6 +35,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var jobName: CommandQueueName
     @Mock lateinit var workManager: WorkManager
 
@@ -71,7 +72,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, rh, constraintChecker,
             profileFunction, activePlugin, config, dateUtil, fabricPrivacy,
-            uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope, bolusProgressData
+            uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, jobName, workManager, testScope, bolusProgressData
         )
 
         val pumpDescription = PumpDescription()
