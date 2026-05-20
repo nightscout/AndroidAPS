@@ -470,6 +470,7 @@
     <string name="arrow_center">Centru</string>
     <!--    Command-->
     <string name="connectiontimedout">Conexiunea a expirat</string>
+    <string name="command_replaced">Înlocuit de comanda mai nouă</string>
     <string name="pump_not_configured">Pompa nu este configurată</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Executat</string>
