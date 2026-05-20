@@ -1,0 +1,343 @@
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Pump integration for carelevo</string>
+
+    <string name="common_btn_ok">OK</string>
+
+    <string name="carelevo_bluetooth_state_key">Bluetooth status</string>
+    <string name="carelevo_patch_state_key">Connection</string>
+    <string name="carelevo_serial_number_key">Serial No.</string>
+    <string name="carelevo_firmware_version_key">Firmware</string>
+    <string name="carelevo_lot_number_key">Lot No.</string>
+    <string name="carelevo_boot_date_time_key">Activation Time</string>
+    <string name="carelevo_expiration_key">Expiration</string>
+    <string name="carelevo_infusion_status_key">Infusion</string>
+    <string name="carelevo_basal_rate_key">Basal Rate</string>
+    <string name="carelevo_temp_basal_rate_key">Temp basal rate</string>
+    <string name="carelevo_insulin_remain_key">Insulin Remaining</string>
+    <string name="carelevo_total_delivered_basal_key">Basal Delivered</string>
+    <string name="carelevo_total_delivered_bolus_key">Bolus Delivered</string>
+    <string name="carelevo_running_remain_time">Patch Time Remaining</string>
+    <string name="carelevo_bolus_status_key">Bolus</string>
+    <string name="carelevo_imme_bolus_rate_key">Immediate Bolus</string>
+    <string name="carelevo_extend_bolus_rate_key">Extended Bolus</string>
+    <string name="carelevo_bolus_time_range">Delivery Duration</string>
+    <string name="carelevo_total_insulin_key">Total insulin delivered</string>
+
+    <string name="common_label_unit_value_duration_hour_and_minute">%d hrs %d min</string>
+    <string name="common_label_unit_value_date_format_year_month_date_day">(E), MMMM dd, yyyy</string>
+    <string name="common_label_unit_value_duration_day_hour">%d days %d hrs</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d hrs</string>
+    <string name="common_label_unit_dose">U</string>
+    <string name="common_label_unit_value_dose">%sU</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_dose_per_speed">U/hr</string>
+    <string name="common_label_unit_value_dose_per_speed">%sU/hr</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/hr</string>
+
+    <string name="carelevo_pump_resume_title">Would you like to resume infusion?</string>
+    <string name="carelevo_pump_resume_description">Infusion will resume when you press Confirm.</string>
+
+    <string name="carelevo_pump_stop_duration_title">Please set the infusion pause time.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minutes</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 hour</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 hour 30 minutes</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 hours</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 hours 30 minutes</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 hours</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 hours 30 minutes</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 hours</string>
+
+    <string name="common_unit_step_format">%1$d/%2$d</string>
+    <string name="common_unit_value_day_hour_min">%1$d days %2$02d:%3$02d</string>
+    <string name="common_unit_remain_min_sec">%d min %02d sec remaining</string>
+
+    <string name="carelevo_btn_insulin_guide">Insulin Guide</string>
+    <string name="carelevo_btn_patch_expiration">Deactivate Patch</string>
+    <string name="carelevo_btn_input_insulin_amount">Fill Amount</string>
+    <string name="carelevo_btn_input_search_patch">Search Patch</string>
+    <string name="carelevo_btn_retry">try again.</string>
+    <string name="carelevo_btn_next">Next</string>
+    <string name="carelevo_btn_safety_check">Safety Check</string>
+    <string name="carelevo_btn_ready_complete">Ready</string>
+    <string name="carelevo_btn_close">Close</string>
+    <string name="carelevo_btn_cancel">Cancel</string>
+    <string name="carelevo_btn_confirm">Confirm</string>
+    <string name="carelevo_btn_research">Rescan</string>
+    <string name="carelevo_btn_needle_insert_check">Check Insertion</string>
+
+    <string name="carelevo_state_none_value">No Active Patch</string>
+    <string name="carelevo_state_disconnected_value">Disconnected</string>
+    <string name="carelevo_state_connected_value">Connected</string>
+
+    <string name="carelevo_overview_connect_btn_label">Connect Patch</string>
+    <string name="carelevo_overview_communication_btn_label">Communication Error</string>
+    <string name="carelevo_overview_pump_stop_btn_label">Pause Insulin</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Start Insulin</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Patch Expired</string>
+
+    <string name="patch_prepare_dialog_title_insulin_amount">Select filled amount.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range">Range : 50 ~ 300 U</string>
+
+    <string name="carelevo_insulin_refill_guide_title">Patch Insulin Filling Guide</string>
+    <string name="carelevo_insulin_refill_step1">1. Peel off the backing paper from the patch blister.</string>
+    <string name="carelevo_insulin_refill_step2">2. Disinfect the rubber cap of the insulin vial using an alcohol swab.</string>
+    <string name="carelevo_insulin_refill_step3">3. Remove the needle protection cap of the insulin syringe by pulling it straight off.</string>
+    <string name="carelevo_insulin_refill_step4">4. Pull back the syringe plunger to fill it with approximately 2 mL of air.</string>
+    <string name="carelevo_insulin_refill_step5">5. Insert the air-filled syringe into the insulin vial and inject the air into the vial.</string>
+    <string name="carelevo_insulin_refill_step6">6. With the syringe still inserted, flip both the vial and syringe upside down, and use the pressure to fill the syringe with approximately 2 mL of insulin.</string>
+    <string name="carelevo_insulin_refill_step7">7. Insert the syringe needle vertically into the patch\'s insulin fill port (①) until it reaches the bottom. Pull the plunger all the way up, then release it. Remove the syringe from the fill port.</string>
+    <string name="carelevo_insulin_refill_step8">8. Hold the syringe upright and tap the side gently to collect all air bubbles at the top.</string>
+    <string name="carelevo_insulin_refill_step9">9. Insert the needle back into the insulin vial, push all the air into the vial, and then draw the specific amount of insulin you will use for the duration of the patch.</string>
+    <string name="carelevo_insulin_refill_step10">10. Remove the syringe from the vial. If air bubbles are present, hold the syringe upright, tap the side to move bubbles to the top, and expel all air from the syringe.</string>
+    <string name="carelevo_insulin_refill_step11">11. Align the top of the plunger with the scale mark to precisely adjust the insulin dose.</string>
+    <string name="carelevo_insulin_refill_step12">12. Insert the needle vertically into the patch\s insulin fill port (①) until it reaches the bottom, and slowly push the plunger to inject all the insulin into the patch.</string>
+
+    <string name="carelevo_connect_prepare_title">Patch Started</string>
+    <string name="carelevo_connect_patch_title">Connect Patch</string>
+    <string name="carelevo_connect_safety_check_title">Safety Check</string>
+    <string name="carelevo_connect_patch_attach_title">Apply Patch</string>
+    <string name="carelevo_connect_needle_check_title">Insert Needle</string>
+
+    <string name="key_carelevo_low_reservoir_reminders" translatable="false">carelevo_low_reservoir_reminders</string>
+    <string name="carelevo_low_reservoir_reminders_title">Low Insulin Notification</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Patch Info Alarm</string>
+    <string name="carelevo_patch_expiration_reminders_title">Patch Usage Reminder</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Low Insulin Notification Setting</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Patch Usage Notification Setting</string>
+    <string name="carelevo_patch_expiration_reminders_message">A reminder sounds when patch usage time exceeds the set time.</string>
+
+    <string name="carelevo_preferences_category_confirmation_beeps">Confirmation Beeps</string>
+
+    <string name="carelevo_title_fill_insulin">Fill Patch with Insulin</string>
+    <string name="carelevo_notice_fill_insulin_amount">Fill the patch with insulin (50–300 U), considering the usage period (up to 168 hours). Tap the [Fill Amount] for insulin filled.</string>
+
+    <string name="carelevo_patch_step_1">STEP 1.</string>
+    <string name="carelevo_patch_step_2">STEP 2.</string>
+    <string name="carelevo_patch_step_3">STEP 3.</string>
+
+    <string name="carelevo_patch_connect_step_1_title">Remove Needle Cap</string>
+    <string name="carelevo_patch_connect_step_1_desc">Take out patch from blister and remove needle cap.</string>
+    <string name="carelevo_patch_connect_step_2_title">Power On and Connect</string>
+    <string name="carelevo_patch_connect_step_2_desc">Press the power button for more than 1 second. After the beep, Tap the [Search Patch] button below.</string>
+
+    <string name="carelevo_patch_safety_check_start_title">Safety Check</string>
+    <string name="carelevo_patch_safety_check_end_title">Safety Check Completed</string>
+    <string name="carelevo_patch_safety_check_start_desc">The patch has been connected successfully.\nPlease press the [Safety Check] button.</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Safety check in progress.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Safety check completed.\nPlease press the Next button.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Please check whether an insulin droplet has formed at the needle tip.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">If no insulin droplet is visible, please press the [Retry] button.</string>
+
+    <string name="carelevo_patch_attach_step1_title">Disinfect Patch Site</string>
+    <string name="carelevo_patch_attach_step1_desc">Clean thoroughly with an alcohol swab.</string>
+    <string name="carelevo_patch_attach_step2_title">Remove Backing Tape</string>
+    <string name="carelevo_patch_attach_step2_desc">Take out patch from blister and remove needle cap.</string>
+    <string name="carelevo_patch_attach_step3_title">Apply Patch</string>
+    <string name="carelevo_patch_attach_step3_desc">Attach the patch to your skin with the marked dot facing upward.</string>
+    <string name="carelevo_patch_attach_step4_desc">After attaching the patch, press the Ready button.</string>
+
+    <string name="carelevo_patch_needle_insertion_step1_title">Remove Safety Cap</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Turn the safety cap in the direction of the arrow and remove.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Insert Needle</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Press the applicator push button all the way down. A beep will sound upon successful insertion.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Press and hold for 10 seconds.</string>
+
+    <string name="carelevo_dialog_patch_needle_check_title">Needle not inserted?</string>
+    <string name="carelevo_dialog_patch_needle_check_desc">Press the applicator push button all the way down.\nYou will hear a beep sound upon successful insertion.\nTap the <b>[Check Insertion]</b> button below.</string>
+    <string name="carelevo_dialog_patch_needle_check_retry_desc">Press the applicator push button all the way down.\nYou will hear a beep sound upon successful insertion.\nTap the <b>[Retry]</b> button below.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">%d retry attempt(s) left for needle insertion.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Deactivate patch and start new patch?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Pressing the [OK] button will stop insulin.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">If the patch detected below is correct, please tap the Confirm button.</string>
+
+    <string name="carelevo_dialog_patch_connect_needle_injected">Needle insertion complete and applicator removal</string>
+
+    <string name="carelevo_dialog_connect_detached">Removal complete</string>
+
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        Press the grips on both sides of the applicator to detach it from the patch,\n
+        and then press the <b>[Removal Complete]</b> button. Insulin delivery will begin.
+    </string>
+
+    <!-- Connection -->
+    <string name="carelevo_toast_patch_connecting">Patch is connecting…</string>
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth is not enabled. Please check.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">No patch connected.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">The patch is not connected yet. Please try again in a moment.</string>
+    <string name="carelevo_toast_msg_scan_failed">Scan failed. Please try again.</string>
+    <string name="carelevo_toast_msg_scan_in_progress">Scanning in progress. Please wait a moment.</string>
+    <string name="carelevo_toast_msg_patch_not_found">No patch was found. Please try again.</string>
+    <string name="carelevo_toast_msg_connect_failed">Patch connection failed. Please try again.</string>
+    <string name="carelevo_toast_msg_connect_complete">Patch connected successfully.</string>
+
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profile is not set.</string>
+
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_inserted">Needle insertion completed.</string>
+    <string name="carelevo_toast_msg_needle_not_inserted">Needle insertion not completed.</string>
+    <string name="carelevo_toast_msg_needle_check_failed">Needle check failed.</string>
+    <string name="carelevo_toast_msg_needle_retry_count">%d retry attempt(s) left for needle insertion.</string>
+
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_complete">Patch use completed.</string>
+    <string name="carelevo_toast_msg_discard_failed">Patch discard failed. Please try again.</string>
+
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_complete">Patch connection completed.</string>
+    <string name="carelevo_toast_msg_set_basal_failed">Basal delivery request failed. Please try again.</string>
+
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_success">Delivery resumed successfully.</string>
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Failed to resume delivery. Please try again.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_success">Delivery suspended successfully.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Failed to suspend delivery. Please try again.</string>
+
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_success">Safety check completed successfully.</string>
+    <string name="carelevo_toast_msg_safety_check_failed">Safety check failed.</string>
+
+    <string name="carelevo_comm_check_title">Communication Check</string>
+    <string name="carelevo_comm_check_description">Communication with the patch is not stable.\nIf you want to reconnect, tap Communication Check. If you want to stop using it, tap End Use.</string>
+    <string name="carelevo_comm_check_patch_address_invalid">Patch address is unavailable. Please reconnect the patch.</string>
+    <string name="carelevo_comm_check_failed">Communication check failed. Please try again.</string>
+
+
+    <string name="alarm_feat_label_warning">Critical</string>
+    <string name="alarm_feat_label_alert">Advisory</string>
+    <string name="alarm_feat_label_notice">Notification</string>
+    <string name="alarm_feat_label_unknown">Unknown</string>
+
+    <string name="alarm_feat_label_occurrence_time">Alarm Time</string>
+    <string name="alarm_feat_format_occurrence_time">YYYY-MM-dd (E) HH:mm</string>
+
+    <string name="alarm_feat_desc_helper">Unable to connect to patch\nTap the confirm button below to discard the patch.</string>
+
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Low Insulin</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch Expired</string>
+    <string name="alarm_feat_title_warning_low_battery">Low Battery</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">High/Low Temperature</string>
+    <string name="alarm_feat_title_warning_not_used_app">Auto-Off</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE Not Connected</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Patch Application Timeout</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Self-Diagnosis Failed</string>
+    <string name="alarm_feat_title_warning_patch_error">Patch Error</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Occlusion</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Needle Insertion Error</string>
+
+    <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Less than <b>10 U</b> insulin remaining; insulin delivery stopped.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Patch expired; insulin delivery stopped.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Low battery; insulin delivery stopped.<br><b>Tap the [Discard Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Insulin delivery stopped.<br><b>Move to a suitable temperature now (40℉ ~ 99℉).</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Insulin delivery stopped.<br><b>Tap the [Start Insulin] button and restart basal delivery.</b>]]></string>
+    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[Patch application time ran out.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[Self-diagnosis failed.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[Insulin delivery stopped due to unexpected error.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Insulin delivery stopped due to occlusion.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Failed to insert the needle.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Low Insulin</string>
+    <string name="alarm_feat_title_alert_expired_patch_first">Patch Operating Life Expired</string>
+    <string name="alarm_feat_title_alert_expired_patch_second">Patch Will Expire Soon</string>
+    <string name="alarm_feat_title_alert_low_battery">Low Battery</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">High/Low Temperature</string>
+    <string name="alarm_feat_title_alert_not_used_app">Auto-Off</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE Not Connected</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Patch Activation Incomplete</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Start Insulin</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Turn Bluetooth On</string>
+
+    <!-- Alert Descriptions -->
+    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[Less than <b>%s U</b> insulin remaining.<br><b>Prepare to change the patch.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_first"><![CDATA[Patch expired.<br><b>Change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_second"><![CDATA[Patch will expire soon.<br><b>Change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[Battery is low.<br><b>Prepare to change the patch.</b>]]></string>
+    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[Insulin delivery paused due to extreme temperature.</b><br>Move to 40℉–99℉ to resume.]]></string>
+    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[Please tap [OK].<br>If ignored, it escalates to a critical alarm and <b>insulin delivery will be stopped.</b>]]></string>
+    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[Tap the [OK] button to complete the patch activation.]]></string>
+    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[Pause Insulin has ended.<br><b>Tap [Start Insulin] to start.</b>]]></string>
+    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[Bluetooth is required to use the patch.<br><b>Tap [OK] and turn Bluetooth on.</b>]]></string>
+
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Low Insulin</string>
+    <string name="alarm_feat_title_notice_expired_patch">Patch Usage Time Notification</string>
+    <string name="alarm_feat_title_notice_check_patch">Patch Check Notification</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Time Zone Change</string>
+    <string name="alarm_feat_title_notice_check_bg">Check Blood Glucose</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS Started</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS Ended</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS Not Available</string>
+    <string name="alarm_feat_title_notice_unknown">Patch Error</string>
+
+    <!-- Notice Descriptions -->
+    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Less than %s U insulin remaining.<br><b>Prepare to change the patch.</b>]]></string>
+    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Patch usage time is <b>%s days %s hours.</b>.<br>Keep in mind during use.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Time zone has changed from <b>%s(UTC %s) to %s(UTC %s)</b>.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone_same_country"><![CDATA[Time zone has changed from <b>%s/%s(UTC %s) to %s/%s(UTC %s)</b>.]]></string>
+    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[%s have passed since your bolus.<br>Please check your blood glucose.]]></string>
+    <string name="alarm_feat_desc_notice_lgs_started">LGS started.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS ended due to LGS pause.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS ended because scheduled time has elapsed.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS ended because LGS was turned off.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">LGS ended because CGM level exceeded the set threshold.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS ended due to an unknown reason.</string>
+    <string name="alarm_feat_desc_notice_lgs_error">Please check patch and CGM connection.</string>
+
+    <string name="alarm_feat_desc_unknown">Unexpected patch error.</string>
+
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Deactivate Patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Discard Patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Start Insulin</string>
+
+    <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Please check patch connection.</string>
+    <string name="alarm_feat_msg_fail_alarm_clear">Failed to confirm alarm/notification. Please try again.</string>
+
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Less than 10 U insulin remaining; insulin delivery stopped. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patch expired; insulin delivery stopped. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Low battery; insulin delivery stopped. Tap the [Discard Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Insulin delivery stopped. Move to a suitable temperature now (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Insulin delivery stopped. Tap the [Start Insulin] button and restart basal delivery.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Patch application time ran out. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Self-diagnosis failed. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Insulin delivery stopped due to unexpected error. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Insulin delivery stopped due to occlusion. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Failed to insert the needle. Tap the [Deactivate Patch] button and change patch now.</string>
+
+    <string name="alarm_notification_desc_alert_low_insulin">Less than %s U insulin remaining. Prepare to change the patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_first">Patch expired. Change patch now.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_second">Patch will expire soon. Change patch now.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Battery is low. Prepare to change the patch.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Insulin delivery paused due to extreme temperature. Move to 40℉–99℉ to resume.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Please tap [OK]. If ignored, it escalates to a critical alarm and insulin delivery will be stopped.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Tap the [OK] button to complete the patch activation.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Pause Insulin has ended. Tap [Start Insulin] to start.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth is required to use the patch. Tap [OK] and turn Bluetooth on.</string>
+
+    <string name="alarm_notification_desc_notice_low_insulin">Less than %s U insulin remaining. Prepare to change the patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Patch usage time is %s days %s hours. Keep in mind during use.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Time zone has changed from %s(UTC %s) to %s(UTC %s).</string>
+    <string name="alarm_notification_desc_notice_change_time_zone_same_country">Time zone has changed from %s/%s(UTC %s) to %s/%s(UTC %s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">%s have passed since your bolus. Please check your blood glucose.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS started.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS ended due to LGS pause.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS ended because scheduled time has elapsed.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS ended because LGS was turned off.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS ended because CGM level exceeded the set threshold.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS ended due to an unknown reason.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Please check patch and CGM connection.</string>
+
+    <string name="carelevo_profile_update_skip_too_soon">Profile update skipped: wait at least 30 seconds.</string>
+    <string name="carelevo_profile_update_skip_comment">Skipped: update too soon.</string>
+
+</resources>

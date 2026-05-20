@@ -457,6 +457,26 @@ enum class PumpType(
         model = "untested",
         parent = MEDTRUM_NANO
     ),
+
+    CAREMEDI_CARELEVO(
+        description = "Carelevo",
+        manufacturer = ManufacturerType.CareMedi,
+        model = "Carelevo",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 25.0),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 15.0),
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 15.0,
+        baseBasalStep = 0.05,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.CarelevoCapabilities,
+        isPatchPump = true,
+        maxReservoirReading = 300,
+        source = Source.Carelevo
+    ),
     EQUIL(
         description = "Equil",
         manufacturer = ManufacturerType.Equil,
@@ -511,7 +531,8 @@ enum class PumpType(
         MDI,
         VirtualPump,
         Unknown,
-        EQuil
+        EQuil,
+        Carelevo
     }
 
     companion object {

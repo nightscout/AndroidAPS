@@ -13,6 +13,7 @@ enum class ManufacturerType(val description: String) {
     Ypsomed("Ypsomed"),
     G2e("G2e"),
     Eoflow("Eoflow"),
+    CareMedi("CareMedi"),
     Equil("Equil");
 
 }
