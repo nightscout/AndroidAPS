@@ -470,6 +470,7 @@
     <string name="arrow_center">Ở giữa</string>
     <!--    Command-->
     <string name="connectiontimedout">Hết thời gian kết nối</string>
+    <string name="command_replaced">Đã được thay thế bởi lệnh mới hơn</string>
     <string name="pump_not_configured">Bơm chưa được cấu hình</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Đã kích hoạt</string>
