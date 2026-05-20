@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.queue
 
+import app.aaps.core.interfaces.pump.PumpEnactResult
+
 interface Command {
 
     val commandType: CommandType
@@ -26,7 +28,8 @@ interface Command {
         CUSTOM_COMMAND
     }
 
-    suspend fun execute()
+    suspend fun execute(): PumpEnactResult = error("Not implemented")
+    suspend fun executeWithCallback(): Unit = error("Not implemented")
     fun status(): String
     fun log(): String
     fun cancel()

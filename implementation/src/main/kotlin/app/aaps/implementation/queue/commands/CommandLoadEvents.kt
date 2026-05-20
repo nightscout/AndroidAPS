@@ -31,7 +31,7 @@ class CommandLoadEvents(
 
     override val commandType: Command.CommandType = Command.CommandType.LOAD_EVENTS
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val pump = activePlugin.activePumpInternal
         if (pump is Dana) {
             val danaPump = pump as Dana

@@ -41,7 +41,7 @@ class CommandSetProfile(
 
     override val commandType: Command.CommandType = Command.CommandType.BASAL_PROFILE
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         if (commandQueue.isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
             callback?.result(pumpEnactResultProvider.get().success(true).enacted(false))?.run()

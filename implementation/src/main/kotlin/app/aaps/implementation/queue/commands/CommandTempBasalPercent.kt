@@ -33,7 +33,7 @@ class CommandTempBasalPercent(
 
     override val commandType: Command.CommandType = Command.CommandType.TEMPBASAL
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val r =
             if (percent == 100)
                 activePlugin.activePump.cancelTempBasal(enforceNew)

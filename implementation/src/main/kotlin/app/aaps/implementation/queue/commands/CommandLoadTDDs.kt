@@ -27,7 +27,7 @@ class CommandLoadTDDs(
 
     override val commandType: Command.CommandType = Command.CommandType.LOAD_TDD
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val pump = activePlugin.activePump
         val r = pump.loadTDDs()
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: " + r.success + " enacted: " + r.enacted)

@@ -29,7 +29,7 @@ class CommandCustomCommand(
 
     override val commandType: Command.CommandType = Command.CommandType.CUSTOM_COMMAND
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         activePlugin.activePump.executeCustomCommand(customCommand)?.let {
             aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
             callback?.result(it)?.run()

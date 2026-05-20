@@ -40,7 +40,7 @@ class CommandSMBBolus(
 
     override val commandType: Command.CommandType = Command.CommandType.SMB_BOLUS
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val r: PumpEnactResult
         val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         aapsLogger.debug(LTag.PUMPQUEUE, "Last bolus: $lastBolusTime ${dateUtil.dateAndTimeAndSecondsString(lastBolusTime)}")

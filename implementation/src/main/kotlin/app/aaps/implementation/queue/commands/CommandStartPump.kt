@@ -28,7 +28,7 @@ class CommandStartPump(
 
     override val commandType: Command.CommandType = Command.CommandType.START_PUMP
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val pump = activePlugin.activePumpInternal
         if (pump is Insight) {
             val result = pump.startPump()

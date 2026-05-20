@@ -28,7 +28,7 @@ class CommandClearAlarms(
 
     override val commandType: Command.CommandType = Command.CommandType.CLEAR_ALARMS
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val pump = activePlugin.activePumpInternal
 
         if (pump is Medtrum) {

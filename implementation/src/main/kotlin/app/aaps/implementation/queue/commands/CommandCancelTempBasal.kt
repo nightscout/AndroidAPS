@@ -35,7 +35,7 @@ class CommandCancelTempBasal(
 
     override val commandType: Command.CommandType = Command.CommandType.TEMPBASAL
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val r = activePlugin.activePump.cancelTempBasal(enforceNew)
         /*
             If this command is auto-forced, it means pump is in suspended mode

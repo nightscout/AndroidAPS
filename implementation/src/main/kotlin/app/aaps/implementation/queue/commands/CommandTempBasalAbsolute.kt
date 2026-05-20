@@ -32,7 +32,7 @@ class CommandTempBasalAbsolute(
 
     override val commandType: Command.CommandType = Command.CommandType.TEMPBASAL
 
-    override suspend fun execute() {
+    override suspend fun executeWithCallback() {
         val r = activePlugin.activePump.setTempBasalAbsolute(absoluteRate, durationInMinutes, enforceNew, tbrType)
         aapsLogger.debug(LTag.PUMPQUEUE, "Result rate: $absoluteRate durationInMinutes: $durationInMinutes success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()

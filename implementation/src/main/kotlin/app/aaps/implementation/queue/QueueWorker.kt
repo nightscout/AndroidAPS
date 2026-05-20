@@ -156,7 +156,7 @@ class QueueWorker internal constructor(
                             aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.log())
                             rxBus.send(EventQueueChanged())
                             rxBus.send(EventPumpStatusChanged(it.status()))
-                            it.execute()
+                            it.executeWithCallback()
                             queue.resetPerforming()
                             rxBus.send(EventQueueChanged())
                             lastCommandTime = System.currentTimeMillis()
