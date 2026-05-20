@@ -8,34 +8,26 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
 import javax.inject.Provider
 
 class CommandDeactivate(
-    injector: HasAndroidInjector,
+    private val aapsLogger: AAPSLogger,
+    private val rh: ResourceHelper,
+    private val activePlugin: ActivePlugin,
+    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
     override val callback: Callback?,
 ) : Command {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject override lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
-
-    init {
-        injector.androidInjector().inject(this)
-    }
-
     override val commandType: Command.CommandType = Command.CommandType.DEACTIVATE
 
-    override suspend fun executeWithCallback() {
+    override suspend fun execute(): PumpEnactResult {
         val pump = activePlugin.activePumpInternal
-
-        if (pump is Medtrum) {
-            val medtrumPump = pump as Medtrum
-            val r = medtrumPump.deactivate()
-            aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-            callback?.result(r)?.run()
+        return if (pump is Medtrum) {
+            pump.deactivate().also {
+                aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
+            }
+        } else {
+            pumpEnactResultProvider.get().success(true).enacted(false)
         }
     }
 

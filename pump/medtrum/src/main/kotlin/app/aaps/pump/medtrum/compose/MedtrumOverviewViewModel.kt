@@ -131,7 +131,7 @@ class MedtrumOverviewViewModel @Inject constructor(
     }
 
     fun onClickResetAlarms() {
-        commandQueue.clearAlarms(null)
+        viewModelScope.launch { commandQueue.clearAlarms() }
     }
 
     fun onClickChangePatch() {

@@ -37,8 +37,8 @@ interface CommandQueue {
     fun setUserOptions(callback: Callback?)
     fun loadTDDs(callback: Callback?)
     fun loadEvents(callback: Callback?)
-    fun clearAlarms(callback: Callback?)
-    fun deactivate(callback: Callback?)
+    suspend fun clearAlarms(): PumpEnactResult
+    suspend fun deactivate(): PumpEnactResult
     suspend fun updateTime(): PumpEnactResult
     fun customCommand(customCommand: CustomCommand, callback: Callback?)
     fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
@@ -162,20 +162,6 @@ interface CommandQueue {
     suspend fun loadEvents(): PumpEnactResult =
         suspendCancellableCoroutine { cont ->
             loadEvents(object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
-    suspend fun clearAlarms(): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            clearAlarms(object : Callback() {
-                override fun run() { cont.resume(result) }
-            })
-        }
-
-    suspend fun deactivate(): PumpEnactResult =
-        suspendCancellableCoroutine { cont ->
-            deactivate(object : Callback() {
                 override fun run() { cont.resume(result) }
             })
         }

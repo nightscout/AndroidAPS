@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
@@ -447,16 +446,15 @@ class MedtrumPatchViewModel @Inject constructor(
             SystemClock.sleep(1000)
             medtrumPump.pumpState = MedtrumPumpState.STOPPED
         } else {
-            commandQueue.deactivate(object : Callback() {
-                override fun run() {
-                    if (this.result.success) {
-                        // Do nothing, state change will handle this
-                    } else {
-                        aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
-                        updateSetupStep(SetupStep.ERROR)
-                    }
+            scope.launch {
+                val result = commandQueue.deactivate()
+                if (result.success) {
+                    // Do nothing, state change will handle this
+                } else {
+                    aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
+                    updateSetupStep(SetupStep.ERROR)
                 }
-            })
+            }
         }
     }
 

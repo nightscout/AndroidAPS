@@ -32,9 +32,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
 import app.aaps.implementation.queue.commands.CommandCancelTempBasal
-import app.aaps.implementation.queue.commands.CommandClearAlarms
 import app.aaps.implementation.queue.commands.CommandCustomCommand
-import app.aaps.implementation.queue.commands.CommandDeactivate
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
 import app.aaps.implementation.queue.commands.CommandInsightSetTBROverNotification
 import app.aaps.implementation.queue.commands.CommandLoadEvents
@@ -122,9 +120,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 is CommandBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandCancelExtendedBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandCancelTempBasal -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandClearAlarms -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandCustomCommand -> it.pumpEnactResultProvider = pumpEnactResultProvider
-                is CommandDeactivate -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandExtendedBolus -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandInsightSetTBROverNotification -> it.pumpEnactResultProvider = pumpEnactResultProvider
                 is CommandLoadEvents -> it.pumpEnactResultProvider = pumpEnactResultProvider
@@ -187,16 +183,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 it.activePlugin = activePlugin
             }
             if (it is CommandReadStatus) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-                it.activePlugin = activePlugin
-            }
-            if (it is CommandClearAlarms) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-                it.activePlugin = activePlugin
-            }
-            if (it is CommandDeactivate) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.activePlugin = activePlugin
@@ -294,7 +280,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun doTests() {
+    fun doTests() = runTest {
 
         // start with empty queue
         assertThat(commandQueue.size()).isEqualTo(0)
@@ -353,11 +339,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(4)
 
         // add clearAlarms
-        commandQueue.clearAlarms(null)
+        backgroundScope.launch { commandQueue.clearAlarms() }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(5)
 
         // add deactivate
-        commandQueue.deactivate(null)
+        backgroundScope.launch { commandQueue.deactivate() }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(6)
 
         commandQueue.clear()
@@ -473,34 +461,38 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun isClearAlarmsCommandInQueue() {
+    fun isClearAlarmsCommandInQueue() = runTest {
         // given
         assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
-        commandQueue.clearAlarms(null)
+        backgroundScope.launch { commandQueue.clearAlarms() }
+        yield()
 
         // then
         assertThat(commandQueue.isReadStatusScheduled()).isFalse()
         assertThat(commandQueue.size()).isEqualTo(1)
-        // next should be ignored
-        commandQueue.clearAlarms(null)
+        // next replaces the previously queued command (size stays at 1)
+        backgroundScope.launch { commandQueue.clearAlarms() }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
-    fun isDeactivateCommandInQueue() {
+    fun isDeactivateCommandInQueue() = runTest {
         // given
         assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
-        commandQueue.deactivate(null)
+        backgroundScope.launch { commandQueue.deactivate() }
+        yield()
 
         // then
         assertThat(commandQueue.isReadStatusScheduled()).isFalse()
         assertThat(commandQueue.size()).isEqualTo(1)
-        // next should be ignored
-        commandQueue.deactivate(null)
+        // next replaces the previously queued command (size stays at 1)
+        backgroundScope.launch { commandQueue.deactivate() }
+        yield()
         assertThat(commandQueue.size()).isEqualTo(1)
     }
 
