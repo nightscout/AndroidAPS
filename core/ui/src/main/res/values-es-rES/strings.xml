@@ -470,6 +470,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Tiempo de conexión agotado</string>
+    <string name="command_replaced">Reemplazado por un comando más reciente</string>
     <string name="pump_not_configured">Bomba no configurada</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Ejecutado</string>
