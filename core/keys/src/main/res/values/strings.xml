@@ -212,6 +212,8 @@
     <!-- IntKey: Loop preferences -->
     <string name="pref_title_open_mode_min_change">Open mode minimum change</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
+    <string name="pref_title_loop_min_bg_recalc_interval">Loop frequency limit</string>
+    <string name="loop_min_bg_recalc_interval_summary">Minimum minutes between loop iterations triggered by new BG readings. AAPS was designed for 5-minute CGM intervals — sensors that report more frequently can cause hundreds of extra loop cycles per day, increasing battery usage. 0 disables the limit.</string>
 
     <!-- IntKey: APS preferences -->
     <string name="pref_title_smb_frequency">SMB interval</string>

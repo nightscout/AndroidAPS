@@ -447,8 +447,11 @@ class IobCobCalculatorPlugin @Inject constructor(
 
     private var scheduledData: ScheduledHistoryData? = null
 
+    private var lastBgCalcTriggeredAt: Long = 0L
+
     @Synchronized
     fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false) {
+        if (triggeredByNewBG && shouldThrottleBgTriggeredRecalc()) return
         // if there is nothing scheduled or asking reload deeper to the past
         if (scheduledData == null || oldDataTimestamp < (scheduledData?.oldDataTimestamp ?: 0L)) {
             // cancel waiting task to prevent sending multiple posts
@@ -476,6 +479,20 @@ class IobCobCalculatorPlugin @Inject constructor(
                 if (!it.triggeredByNewBG) it.triggeredByNewBG = triggeredByNewBG
             }
         }
+    }
+
+    private fun shouldThrottleBgTriggeredRecalc(): Boolean {
+        val intervalMinutes = preferences.get(IntKey.LoopMinBgRecalcInterval)
+        if (intervalMinutes <= 0) return false
+        val now = dateUtil.now()
+        val intervalMs = intervalMinutes * 60 * 1000L - 10_000L
+        val timeSinceLastCalc = now - lastBgCalcTriggeredAt
+        if (timeSinceLastCalc < intervalMs) {
+            aapsLogger.debug(LTag.AUTOSENS, "Throttled BG-triggered recalc: ${timeSinceLastCalc / 1000}s since last, min=${intervalMs / 1000}s")
+            return true
+        }
+        lastBgCalcTriggeredAt = now
+        return false
     }
 
     // When historical data is changed (coming from NS etc.) finished calculations after this date must be invalidated

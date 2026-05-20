@@ -69,6 +69,11 @@
     <string name="loop_smb_request_time_label">SMB request time</string>
     <string name="loop_smb_execution_time_label">SMB execution time</string>
     <string name="loop_smb_set_by_pump_label">SMB set by pump</string>
+    <string name="loop_recalc_every_sensor_reading">Recalculates every time a sensor reading arrives</string>
+    <string name="loop_recalc_loops_per_day" formatted="false">~%1$d loops/day</string>
+    <string name="loop_recalc_daily_count" formatted="false">Actual usage: %1$d loops in the last 24h</string>
+    <string name="loop_recalc_daily_count_warning" formatted="false">Actual usage: %1$d loops in the last 24h. This may excessively drain battery; a higher frequency limit is recommended.</string>
+    <string name="loop_recalc_high_rate_warning">May noticeably reduce battery life.</string>
     <string name="fallback_smb_no_tdd">Fallback to SMB. Not enough TDD data.</string>
     <string name="fallback_to_isf_no_tdd">Fallback to profile sensitivity. Not enough data. Reason: %1$s</string>
 
