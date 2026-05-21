@@ -470,6 +470,7 @@
     <string name="arrow_center">Uprostřed</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršel čas připojování</string>
+    <string name="command_replaced">Nahrazeno novějším příkazem</string>
     <string name="pump_not_configured">Pumpa není nakonfigurována</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Provedeno</string>
