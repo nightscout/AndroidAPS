@@ -34,6 +34,8 @@
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Save</string>
     <string name="skip">Skip</string>
     <string name="switch_to_edit">Edit</string>
