@@ -34,6 +34,8 @@
     <string name="event_type">事件類型</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">儲存</string>
     <string name="skip">略過</string>
     <string name="switch_to_edit">編輯</string>
