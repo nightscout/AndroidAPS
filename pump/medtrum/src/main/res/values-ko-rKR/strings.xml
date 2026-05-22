@@ -61,8 +61,6 @@
     <string name="step_retry_activation">활성화 진행 중</string>
     <string name="unexpected_state">예상치 못한 상태: %1$s</string>
     <string name="patch_begin_activation">활성화된 patch가 없습니다. 활성화 과정을 시작하려면 <b>다음</b>을 누르세요.</string>
-    <string name="patch_not_active_note">다음 단계까지 펌프 베이스를 patch에 연결하면 안됩니다!</string>
-    <string name="connect_pump_base">새로운 patch에 펌프 베이스를 연결한 뒤, 잔여 공기를 제거하고 인슐린을 채웁니다. 이후 <b>다음</b>을 누르세요.</string>
     <string name="note_min_70_units">참고: 사용을 위해 최소 70 U이 필요합니다.</string>
     <string name="do_not_attach_to_body">아직 몸에 patch를 부착하지 마십시오.</string>
     <string name="half_press_needle">바늘 버튼을 반쯤 누르세요. 그리고나서 <b>다음</b>을 눌러 프라임을 시작하세요.</string>
