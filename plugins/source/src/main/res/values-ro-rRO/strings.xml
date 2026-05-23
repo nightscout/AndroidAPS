@@ -51,4 +51,9 @@
     <string name="aidex">Aplicația MicroTech CGM</string>
     <string name="aidex_short">Aplicație CGM</string>
     <string name="description_source_aidex">Primiți valori CGM din LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 șamd.</string>
+    <string name="aidex_sensor_expired">Senzor expirat, vă rugăm să îl înlocuiți cu un senzor nou</string>
+    <string name="aidex_sensor_error">Eroare senzor, vă rugăm să verificați starea senzorului</string>
+    <string name="aidex_sensor_stabilizing">Senzorul se stabilizează, vă rugăm să așteptați…</string>
+    <string name="aidex_sensor_replace">Este necesară înlocuirea senzorului, înlocuiți cu un senzor nou cât mai curând posibil</string>
+    <string name="aidex_signal_lost">Semnal senzor pierdut, verificați conexiunea</string>
 </resources>
