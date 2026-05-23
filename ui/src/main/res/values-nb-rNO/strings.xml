@@ -12,6 +12,7 @@
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">AAPS BS-graf</string>
     <string name="widget_compact_bg_description">AAPS BS + IOB + COB (kompakt)</string>
+    <string name="widget_small_description">AAPS liten</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsmonitor</string>
     <string name="time_range">Tidsrom</string>
