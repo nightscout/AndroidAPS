@@ -48,4 +48,7 @@
     <string name="permission_dexcom_description">Aplicația are nevoie de permisiunea de a primi date CGM din aplicația Dexcom</string>
     <string name="permission_notification_listener_title">Acces la notificări</string>
     <string name="permission_notification_listener_description">Necesar pentru a citi valorile glicemiei din notificările aplicației CGM</string>
+    <string name="aidex">Aplicația MicroTech CGM</string>
+    <string name="aidex_short">Aplicație CGM</string>
+    <string name="description_source_aidex">Primiți valori CGM din LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 șamd.</string>
 </resources>
