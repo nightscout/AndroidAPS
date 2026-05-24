@@ -11,7 +11,11 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Заполните новый Pod запасом инсулина на 3 дня.\n\nПоступят два звуковых сигнала от помпы во время заправки. Это означает, что минимальное количество 80 ед. заправлено. Не забудьте опустошить заправочный шприц даже после того, как услышите два звуковых сигнала.\n\nПосле заполнения Pod нажмите <b>Next</b>.\n\n<b>Примечание:</b> Пока что не снимайте с помпы колпачок с иглой.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Попытка соединиться с новым подом и активировать его.\n\nКогда процесс инициализации успешно завершен, нажмите &lt;b&gt;Next/b&gt;.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Не удалось подключиться</string>
+    <string name="omnipod_dash_found_too_many_pods">Найдено слишком много подов</string>
+    <string name="omnipod_dash_scan_failed">Ошибка сканирования</string>
     <string name="omnipod_dash_generic_error">Общая ошибка: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Соединение потеряно</string>
     <string name="omnipod_dash_failed_to_send">Не удалось отправить команду</string>
     <string name="omnipod_dash_command_not_sent">Команда не отправлена</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Команда не получена помпой</string>
