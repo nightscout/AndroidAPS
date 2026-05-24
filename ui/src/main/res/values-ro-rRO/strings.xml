@@ -12,6 +12,7 @@
     <string name="widget_description">Widget AAPS</string>
     <string name="widget_bg_graph_description">Grafic glicemie AAPS</string>
     <string name="widget_compact_bg_description">AAPS Glicemie + IOB + COB (compact)</string>
+    <string name="widget_small_description">AAPS mic</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor activitate</string>
     <string name="time_range">Interval de timp</string>
