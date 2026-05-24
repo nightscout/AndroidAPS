@@ -48,4 +48,12 @@
     <string name="permission_dexcom_description">Appen trenger tillatelse til å motta sensor-data fra Dexcom-appen</string>
     <string name="permission_notification_listener_title">Tilgang til varsler</string>
     <string name="permission_notification_listener_description">Kreves for å lese BS-verdier fra sensor-appens varsler</string>
+    <string name="aidex">MicroTech sensorapp</string>
+    <string name="aidex_short">Sensorapp</string>
+    <string name="description_source_aidex">Motta sensor-verdier fra LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 osv.</string>
+    <string name="aidex_sensor_expired">Sensor utløpt, vennligst bytt ut med en ny sensor</string>
+    <string name="aidex_sensor_error">Sensorfeil, vennligst sjekk sensorstatusen</string>
+    <string name="aidex_sensor_stabilizing">Sensoren stabiliserer seg, vennligst vent…</string>
+    <string name="aidex_sensor_replace">Sensorbytte må utføres, vennligst bytt ut med en ny sensor så snart som mulig</string>
+    <string name="aidex_signal_lost">Sensorsignalet er borte. Sjekk forbindelsen</string>
 </resources>
