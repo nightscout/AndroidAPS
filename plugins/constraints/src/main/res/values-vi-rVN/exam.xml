@@ -27,7 +27,7 @@
     <string name="objectives_afterobjective">Hãy xuất cài đặt sau khi bạn hoàn thành một mục tiêu.</string>
     <string name="objectives_afterchange">Hãy xuất cài đặt sau khi bạn thay đổi bất kỳ cài đặt nào.</string>
     <string name="objectives_afterinitialsetup">Hãy xuất cài đặt của bạn sau khi hoàn tất thiết lập ban đầu và đã đặt các tùy chọn.</string>
-    <string name="objectives2_maintenance">Hãy xuất cài đặt của bạn ra máy cục bộ bằng menu bảo trì.</string>
+    <string name="objectives2_maintenance">Hãy xuất cài đặt của bạn ra máy cục bộ bằng menu bảo trì hệ thống.</string>
     <string name="objectives2_internalstorage">Tệp cài đặt của bạn nằm trong thư mục Internal Storage/AAPS/preferences trên điện thoại.</string>
     <string name="objectives2_cloud">Hãy sao chép tệp cài đặt của bạn đến một vị trí an toàn bên ngoài điện thoại (ví dụ: dùng lưu trữ đám mây, kết nối cáp với máy tính, gửi email, v.v.)</string>
     <string name="objectives2_easyrestore">Nếu điện thoại của bạn bị hỏng hoặc mất, vẫn có cách dễ dàng để khôi phục cài đặt từ xa mà không cần bản sao lưu.</string>
