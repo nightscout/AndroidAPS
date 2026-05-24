@@ -48,9 +48,9 @@
     <string name="objectives_exam_objective">Kiểm chứng kiến thức của bạn</string>
     <string name="objectives_exam_gate">Nghiên cứu các câu hỏi. Bạn sẽ được đưa ra bốn câu trả lời có thể cho mỗi câu hỏi. Có thể có nhiều hơn một đáp án đúng. Vui lòng kiểm tra tất cả những đáp án đúng và chọn XÁC MINH (VERIFY).</string>
     <string name="objectives_exam_learned_prerequisites">Bạn không cần phải là nhà phát triển, nhưng bạn cần Nightscout để hoàn thành các Mục tiêu, một bơm tương thích và một máy tính để xây dựng AAPS lần đầu tiên cũng như cho mỗi lần cập nhật.</string>
-    <string name="objectives_exam_learned_prerequisites2">AAPS có thể chạy ở chế độ ngoại tuyến (offline).</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS có thể chạy ở chế độ ngoại tuyến.</string>
     <string name="objectives_exam_learned_basaltest">Cấu hình cần được xem xét và cập nhật. Cấu hình càng tốt = kết quả càng tốt.</string>
-    <string name="objectives_exam_learned_dia">DIA trong chế độ vòng kín (looping) có ý nghĩa khác (thời gian cho đến khi toàn bộ insulin được hấp thụ) so với trong liệu pháp bơm insulin cổ điển (thời gian cho đến khi phần lớn insulin được hấp thụ).</string>
+    <string name="objectives_exam_learned_dia">DIA trong chế độ vòng kín có ý nghĩa khác (thời gian cho đến khi toàn bộ insulin được hấp thụ) so với trong liệu pháp bơm insulin cổ điển (thời gian cho đến khi phần lớn insulin được hấp thụ).</string>
     <string name="objectives_exam_learned_isf">Bạn đã học được ý nghĩa của giá trị ISF và cách nó ảnh hưởng đến lượng insulin được sử dụng để điều chỉnh đường huyết.</string>
     <string name="objectives_exam_learned_ic">Bạn đã học được ý nghĩa của giá trị IC và cách nó ảnh hưởng đến lượng insulin cần thiết để bù cho lượng carbs.</string>
     <string name="objectives_exam_learned_hypott">Mục tiêu tạm thời Hypo (Hypo temp target) chỉ nên được sử dụng để tránh điều chỉnh quá mức sau hạ đường huyết, khi thường có IOB âm tích lũy. Cần xem xét thêm các biện pháp bổ sung để ngăn tình huống này lặp lại trong dự kiến.</string>
@@ -58,7 +58,7 @@
     <string name="objectives_exam_learned_profileswitchtime">Bằng cách sử dụng dịch chuyển thời gian trong chuyển đổi cấu hình, bạn có thể điều chỉnh cấu hình theo nhịp sinh học để thích ứng với những thay đổi bất thường, như việc thức dậy muộn.</string>
     <string name="objectives_exam_learned_profileswitch4">Chỉ chỉnh sửa cấu hình thôi là chưa đủ để áp dụng thay đổi. Bạn vẫn cần thực hiện chuyển đổi cấu hình để kích hoạt các thay đổi.</string>
     <string name="objectives_exam_learned_exercise">Bạn nên giảm lượng insulin trong cơ thể ít nhất 1 giờ trước khi bắt đầu tập thể dục bằng cách chọn cấu hình dưới 100%.</string>
-    <string name="objectives_exam_learned_exercise2">Thiết lập mục tiêu tạm thời cao hơn (higher temp target) ít nhất 1 giờ trước khi tập thể dục cũng giúp giảm lượng insulin trong cơ thể.</string>
+    <string name="objectives_exam_learned_exercise2">Thiết lập mục tiêu tạm thời cao hơn ít nhất 1 giờ trước khi tập thể dục cũng giúp giảm lượng insulin trong cơ thể.</string>
     <string name="objectives_exam_learned_noisycgm">Khi bạn không tin cậy vào giá trị từ CGM, bạn không nên sử dụng chế độ vòng kín mà không giám sát.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS cần biết rằng bơm không được kết nối để tính IOB chính xác.</string>
     <string name="objectives_exam_learned_insulin">Việc cho hệ thống biết loại insulin đang có trong bơm là cần thiết vì nó ảnh hưởng đến việc tính toán IOB.</string>
@@ -85,7 +85,7 @@
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Không kết nối với Internet</string>
     <string name="failedretrievetime">Lấy thời gian thất bại</string>
-    <string name="requirementnotmet">Chưa đáp ứng yêu cầu của Mục tiêu (Objective)</string>
+    <string name="requirementnotmet">Chưa đáp ứng yêu cầu của Mục tiêu</string>
     <string name="what_i_ve_learned">Những gì tôi đã học được:</string>
     <string name="verify_master_password">Xác minh bạn biết mật khẩu chính</string>
     <string name="objectives_collapse">Ẩn bớt</string>
