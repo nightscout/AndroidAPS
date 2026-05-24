@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">Среднее сглаживание</string>
     <string name="description_avg_smoothing">"Алгоритм среднего сглаживания, новейшее значение не затрагивается"</string>
     <string name="no_smoothing_name">Без сглаживания</string>
+    <string name="description_no_smoothing">"Используйте, если ваши данные уже отфильтрованы, например поступают из BYODA G6."</string>
+    <string name="UKF_name">Фильтр Калмана</string>
+    <string name="description_UKF">"Продвинутый алгоритм с автоматическим выравниванием шума и сглаживанием Рауша - Тунга - Штрибеля (RGS)."</string>
 </resources>
