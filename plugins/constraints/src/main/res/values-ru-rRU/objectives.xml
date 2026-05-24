@@ -39,7 +39,10 @@
     <string name="objectives_usage_objective">Научитесь контролировать AAPS</string>
     <string name="objectives_usage_gate">Выполняйте различные действия в AAPS</string>
     <string name="objectives_usage_learned">Вы узнали основы работы с AAPS. Главные элементы управления системой расположены на экране Начало и доступны по короткому или длинному нажатию на них, еще больше элементов управления расположены на вкладке Действия. Следует научится, как расположить экран расширения (плагина) в верхнее прокручиваемое меню вкладок или оставить его в левом списке включённых расширений.</string>
+    <string name="objectives_useprofileswitch">Установите профиль 90% на 10 минут</string>
+    <string name="objectives_usedisconnectpump">Представьте, что идете в душ. Отсоедините помпу на 1 ч</string>
     <string name="objectives_usereconnectpump">... и обратное подключение таким же способом</string>
+    <string name="objectives_usetemptarget">Создайте свою временную цель длительностью 10 минут</string>
     <string name="objectives_useloop">Просмотр содержимого модуля Замкнутый цикл</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
     <string name="objectives_exam_gate">Изучите вопросы. Вам дано четыре возможных варианта ответа на каждый вопрос. Правильных ответов может быть более одного. Отметьте все, которые считаете правильными, и нажмите ПОДТВЕРДИТЬ.</string>
@@ -81,4 +84,13 @@
     <string name="requirementnotmet">Требования к цели не выполнены</string>
     <string name="what_i_ve_learned">Мной усвоено:</string>
     <string name="verify_master_password">Убедитесь, что вы знаете мастер-пароль</string>
+    <string name="objectives_collapse">Свернуть</string>
+    <string name="objectives_expand">Развернуть</string>
+    <string name="objectives_open_exam">Открыть тест</string>
+    <string name="objectives_exam_question_progress">Вопрос %1$d из %2$d</string>
+    <string name="objectives_exam_reset">Сброс</string>
+    <string name="objectives_exam_previous">Предыдущий</string>
+    <string name="objectives_exam_next">Следующий</string>
+    <string name="objectives_exam_next_unanswered">Следующий неотвеченный</string>
+    <string name="objectives_show_hint">Подсказка</string>
 </resources>
