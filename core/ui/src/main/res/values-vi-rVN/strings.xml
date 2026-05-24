@@ -103,7 +103,7 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
-    <string name="objectives">Mục tiêu</string>
+    <string name="objectives">Mục tiêu học tập</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
     <string name="stop_pressed">Đã nhấn DỪNG</string>
