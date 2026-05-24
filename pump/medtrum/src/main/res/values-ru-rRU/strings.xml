@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
-    <string name="medtrum">Medtrum</string>
+    <string name="medtrum">Медтрум</string>
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Интеграция с помпами Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки Medtrum</string>
@@ -93,6 +93,14 @@
     <!-- settings-->
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
+    <string name="alarm_setting_light_vibrate_beep">Подсветка, вибрация и звук</string>
+    <string name="alarm_setting_light_vibrate">Подсветка и вибрация</string>
+    <string name="alarm_setting_light_beep">Подсветка и звук</string>
+    <string name="alarm_setting_light">Подсветка</string>
+    <string name="alarm_setting_vibrate_beep">Вибрация и звук</string>
+    <string name="alarm_setting_vibrate">Вибрация</string>
+    <string name="alarm_setting_beep">Звук</string>
+    <string name="alarm_setting_silent">Без звука</string>
     <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>
     <string name="pump_warning_notification_summary">Показывать уведомления о некритических оповещениях помпы: низком заряде батареи, низком запасе инсулина (20 единиц) и приближающемся истечении срока работы. Рекомендуется оставить включенным, когда звук оповещений выключен.</string>
     <string name="pump_warning_expiry_hour_title">Предупреждение об окончании срока годности помпы [hours]</string>
