@@ -649,6 +649,10 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivitet</string>
+    <string name="isf_for_carbs">Gjennomsnittlig ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
+    <string name="isf_profile">Profil ISF: %1$.1f</string>
+    <string name="isf_variable">Dynamisk ISF: %1$.1f</string>
+    <string name="isf_effective">Effektiv ISF: %1$.1f</string>
     <string name="autosens_long">Autosens-verdi: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Algoritmens sensitivitet: %.0f%%</string>
