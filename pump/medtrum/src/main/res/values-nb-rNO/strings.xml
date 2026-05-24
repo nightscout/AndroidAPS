@@ -51,6 +51,12 @@
     <string name="pump_time_update_failed">Kunne ikke oppdatere tidssone på pumpen. Bekreft meldingen og oppdater manuelt.</string>
     <string name="bolus_error">Bolus feilet</string>
     <!-- Status strings -->
+    <string name="status_idle">Uvirksom</string>
+    <string name="status_filled">Fylt</string>
+    <string name="status_priming">Primer</string>
+    <string name="status_primed">Primet</string>
+    <string name="status_active">Aktiv</string>
+    <string name="status_stopped">Stoppet</string>
     <!-- wizard-->
     <string name="retry">Prøv igjen</string>
     <string name="step_prepare_patch">Aktivere patch</string>
