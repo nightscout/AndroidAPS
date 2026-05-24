@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.annotations.TestOnly
 
 /**
@@ -23,7 +24,7 @@ abstract class PluginBase(
     val rh: ResourceHelper
 ) {
 
-    private val scope = CoroutineScope(Dispatchers.Default + Job())
+    protected val pluginScope = CoroutineScope(Dispatchers.Default + Job())
 
     enum class State {
         NOT_INITIALIZED, ENABLED, DISABLED
@@ -96,13 +97,13 @@ abstract class PluginBase(
                     onStateChange(type, state, State.ENABLED)
                     state = State.ENABLED
                     aapsLogger.debug(LTag.CORE, "Starting: $name")
-                    scope.launch { onStart() }
+                    pluginScope.launch { onStart() }
                 }
             } else { // disabling plugin
                 if (state == State.ENABLED) {
                     onStateChange(type, state, State.DISABLED)
                     state = State.DISABLED
-                    scope.launch { onStop() }
+                    pluginScope.launch { onStop() }
                     aapsLogger.debug(LTag.CORE, "Stopping: $name")
                 }
             }
@@ -121,13 +122,13 @@ abstract class PluginBase(
                     onStateChange(type, state, State.ENABLED)
                     state = State.ENABLED
                     aapsLogger.debug(LTag.CORE, "Starting: $name")
-                    onStart()
+                    runBlocking { onStart() }
                 }
             } else { // disabling plugin
                 if (state == State.ENABLED) {
                     onStateChange(type, state, State.DISABLED)
                     state = State.DISABLED
-                    onStop()
+                    runBlocking { onStop() }
                     aapsLogger.debug(LTag.CORE, "Stopping: $name")
                 }
             }
@@ -147,8 +148,8 @@ abstract class PluginBase(
         return true
     }
 
-    open fun onStart() {}
-    open fun onStop() {}
+    open suspend fun onStart() {}
+    open suspend fun onStop() {}
     protected open fun onStateChange(type: PluginType?, oldState: State?, newState: State?) {}
 
     /**

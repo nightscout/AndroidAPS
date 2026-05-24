@@ -28,6 +28,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.Lazy
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -64,7 +65,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
             Objective9(emulatedPreferences, rh, dateUtil)
         )
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives)
-        objectivesPlugin.onStart()
+        runBlocking { objectivesPlugin.onStart() }
         whenever(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
         whenever(rh.gs(R.string.objectivenotfinished)).thenReturn("Objective %1\$d not finished")
     }

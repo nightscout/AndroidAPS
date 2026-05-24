@@ -11,10 +11,10 @@ import app.aaps.database.entities.UserEntry.Sources
 interface UserEntryDao {
 
     @Insert
-    fun insert(userEntry: UserEntry)
+    suspend fun insert(userEntry: UserEntry)
 
     @Query("DELETE FROM $TABLE_USER_ENTRY WHERE timestamp < :than")
-    fun deleteOlderThan(than: Long): Int
+    suspend fun deleteOlderThan(than: Long): Int
 
     @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE timestamp >= :timestamp ORDER BY timestamp DESC")
     suspend fun getUserEntryDataFromTime(timestamp: Long): List<UserEntry>

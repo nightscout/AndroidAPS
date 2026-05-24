@@ -34,6 +34,8 @@
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Save</string>
     <string name="skip">Skip</string>
     <string name="switch_to_edit">Edit</string>
@@ -484,6 +486,7 @@
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
+    <string name="command_replaced">Replaced by newer command</string>
     <string name="pump_not_configured">Pump not configured</string>
 
     <!--    PumpEnactResult-->
@@ -669,7 +672,10 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivity</string>
-    <string name="isf_for_carbs">ISF for Calculator and Carbs Absorption: %1$.1f</string>
+    <string name="isf_for_carbs">Average ISF for Calculator and Carbs Absorption: %1$.1f</string>
+    <string name="isf_profile">Profile ISF: %1$.1f</string>
+    <string name="isf_variable">Variable ISF: %1$.1f</string>
+    <string name="isf_effective">Effective ISF: %1$.1f</string>
     <string name="autosens_long">Autosens Value: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens in algorithm: %.0f%%</string>

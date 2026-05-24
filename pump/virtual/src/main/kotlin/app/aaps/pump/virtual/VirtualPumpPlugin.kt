@@ -148,7 +148,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun requiredPermissions(): List<PermissionGroup> = emptyList()
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -158,7 +158,7 @@ open class VirtualPumpPlugin @Inject constructor(
         refreshConfiguration()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         super.onStop()
@@ -385,7 +385,7 @@ open class VirtualPumpPlugin @Inject constructor(
         _pumpTypeFlow.value = pumpTypeNew
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "virtual_pump_settings",

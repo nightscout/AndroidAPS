@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.plugins.source.keys.IntelligoLongKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -225,7 +226,7 @@ class IntelligoPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun startStopTest() {
+    fun startStopTest() = runBlocking {
         Assertions.assertNull(intelligoPlugin.handler)
         intelligoPlugin.onStart()
         Assertions.assertNotNull(intelligoPlugin.handler)

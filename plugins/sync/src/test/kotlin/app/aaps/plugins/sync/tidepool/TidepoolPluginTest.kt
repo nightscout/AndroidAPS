@@ -13,6 +13,7 @@ import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import net.openid.appauth.AuthState
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -64,13 +65,13 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             fabricPrivacy, realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
-        plugin.onStart()
+        runBlocking { plugin.onStart() }
         Thread.sleep(500) // Ensure flow collector has started and processed initial value
         connectivityFlow.value = ConnectivityStatus("Connected", allowed = true, connected = true)
         Thread.sleep(1000) // Allow flow collector on Dispatchers.IO to process
 
         verify(authFlowOut).updateConnectionStatus(eq(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN), eq("Connecting"))
-        plugin.onStop()
+        runBlocking { plugin.onStop() }
     }
 
     @Test
@@ -88,11 +89,11 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             fabricPrivacy, realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
-        plugin.onStart()
+        runBlocking { plugin.onStart() }
         connectivityFlow.value = ConnectivityStatus("Blocked", allowed = false, connected = false)
 
         // When connectivity is not allowed, doUpload should return early without attempting login
         verify(authFlowOut, never()).updateConnectionStatus(eq(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN), any())
-        plugin.onStop()
+        runBlocking { plugin.onStop() }
     }
 }

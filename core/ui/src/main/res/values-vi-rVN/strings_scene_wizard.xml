@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Bị ốm</string>
     <string name="scene_wizard_sick_day_desc">Tăng cường cấu hình (150%) để xử lý tình trạng kháng insulin tăng lên khi bị ốm.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Sự ốm yếu, sốt và các hormone căng thẳng có thể làm tăng đáng kể tình trạng kháng insulin — đôi khi lên đến 50% hoặc hơn. Một cấu hình mạnh hơn (ví dụ: 150%) sẽ yêu cầu thuật toán cung cấp nhiều insulin hơn trong mọi phép tính — bao gồm liều nền, gợi ý bolus và hệ số hiệu chỉnh.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Bị ốm — Nôn ói</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Giảm cấu hình kết hợp LGS — ngược lại với chế độ ngày bệnh tiêu chuẩn khi bạn không thể hấp thụ thức ăn.</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Giai đoạn sau rụng trứng</string>
     <string name="scene_wizard_luteal_phase_desc">Tăng cấu hình điều trị để xử lý tình trạng kháng insulin trước kỳ kinh.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Nhiều phụ nữ gặp tình trạng tăng kháng insulin trong giai đoạn hoàng thể (khoảng 1–2 tuần trước kỳ kinh). Điều này xảy ra do nồng độ progesterone tăng lên làm giảm độ nhạy insulin. Mức ảnh hưởng khác nhau rất nhiều giữa từng người — có người cần tăng insulin thêm 10–30%, trong khi người khác hầu như không thay đổi. Hãy bắt đầu với mức tăng nhẹ (115%) rồi điều chỉnh dựa trên xu hướng của riêng bạn qua nhiều chu kỳ. Việc theo dõi trong CarePortal sẽ giúp nhận ra nhịp sinh học cá nhân của bạn.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Thời tiết nóng</string>
     <string name="scene_wizard_hot_weather_desc">Giảm cấu hình điều trị — nhiệt độ cao làm tăng tốc độ hấp thu insulin.</string>
@@ -52,10 +54,11 @@
     <string name="scene_template_blank">Trống</string>
     <string name="scene_wizard_blank_desc">Bắt đầu lại từ đầu, không sử dụng hành động được chọn sẵn.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Việc chuyển đổi cấu hình sẽ thay đổi đồng thời tỷ lệ liều nền, hệ số nhạy insulin (ISF) và tỷ lệ insulin-carb (IC). Bạn có thể điều chỉnh toàn bộ theo phần trăm — ví dụ: 110% sẽ tăng basal, tính toán bolus và tốc độ hấp thụ carb thêm 10%. Bạn cũng có thể chuyển sang một cấu hình hoàn toàn khác nếu đã thiết lập sẵn cho các tình huống cụ thể.</string>
     <string name="scene_wizard_tt_info">Mục tiêu tạm thời cho thuật toán biết rằng cần hướng tới một mức đường huyết khác trong một khoảng thời gian nhất định. Với mục tiêu cao hơn, thuật toán sẽ phản ứng chậm hơn với sự tăng đường huyết và duy trì mức đường huyết cao hơn tổng thể — điều này làm giảm lượng insulin được đưa vào và giúp ngăn hạ đường huyết khi vận động. Với mục tiêu thấp hơn, thuật toán phản ứng sớm hơn và đưa nhiều insulin hơn — hữu ích để kiểm soát trước bữa ăn. Hãy chọn một trong các thiết lập sẵn bên dưới — giá trị mục tiêu và lý do đã được thiết lập sẵn.</string>
     <string name="scene_wizard_smb_info">Super Micro Bolus (SMB) cho phép thuật toán đưa insulin sớm dưới dạng các liều bolus nhỏ, đồng thời tạm dừng insulin nền để bù lại — về cơ bản là “mượn insulin từ tương lai” để phản ứng nhanh hơn. Việc tắt SMB sẽ ngăn cơ chế này và giới hạn thuật toán chỉ điều chỉnh insulin nền. Khi đó phản ứng sẽ chậm hơn và diễn ra từ từ hơn, thường được ưu tiên trong khi tập thể dục hoặc khi ngủ.</string>
     <string name="scene_wizard_loop_mode_info">Chế độ thể dục quyết định mức độ tự động của thuật toán. Ở chế độ vòng lặp kín, hệ thống tự động điều chỉnh việc cung cấp insulin. LGS (Low Glucose Suspend) chỉ giảm hoặc ngừng insulin khi đường huyết đang giảm về mức thấp — và sẽ không tăng insulin. Vòng lặp mở chỉ đưa ra đề xuất và chờ bạn xác nhận từng thay đổi.</string>
-    <string name="scene_wizard_careportal_info">Một sự kiện CarePortal chỉ là một mục ghi nhật ký — nó không thay đổi việc cung cấp insulin hay hành vi của thuật toán. Hãy sử dụng nó để ghi lại các hoạt động, tình huống hoặc ghi chú trong lịch sử điều trị của bạn. Bạn có thể xem lại các bản ghi này trong mục Treatments - CarePortal và trong Nightscout, giúp bạn và bác sĩ nhận ra các xu hướng trong dữ liệu.</string>
+    <string name="scene_wizard_careportal_info">Một sự kiện Thông tin điều trị chỉ là một mục ghi nhật ký — nó không thay đổi việc cung cấp insulin hay hành vi của thuật toán. Hãy sử dụng nó để ghi lại các hoạt động, tình huống hoặc ghi chú trong lịch sử điều trị của bạn. Bạn có thể xem lại các bản ghi này trong mục Treatments - CarePortal và trong Nightscout, giúp bạn và bác sĩ nhận ra các xu hướng trong dữ liệu.</string>
     <string name="scene_wizard_duration_info">Thời lượng kiểm soát thời gian mà ngữ cảnh này được kích hoạt. Khi hết thời gian, các hành động có giới hạn thời gian (mục tiêu tạm thời, chuyển cấu hình, chế độ thể dục) sẽ tự động hết hiệu lực, trong khi các thay đổi mang tính duy trì (như bật/tắt SMB) sẽ tự động được khôi phục về giá trị trước đó. Đặt thời lượng bằng 0 sẽ khiến ngữ cảnh hoạt động vô thời hạn — tất cả các hành động sẽ được giữ nguyên cho đến khi bạn tắt ngữ cảnh thủ công.</string>
     <string name="scene_wizard_name_info">Chọn một tên và biểu tượng giúp bạn dễ nhận ra ngữ cảnh này ngay lập tức. Bạn sẽ thấy chúng trên nút kích hoạt và trên thanh tình huống đang hoạt động ở màn hình tổng quan.</string>
     <!-- Scene wizard: UI labels -->

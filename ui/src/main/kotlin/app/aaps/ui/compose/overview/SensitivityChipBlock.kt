@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.compose.overview.chips.SensitivityChip
-import app.aaps.ui.compose.overview.graphs.SensitivityUiState
+import app.aaps.ui.compose.overview.chips.SensitivityUiState
 
 @Composable
 fun SensitivityChipBlock(

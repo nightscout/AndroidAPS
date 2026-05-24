@@ -17,6 +17,7 @@ enum class LTag(val tag: String, val defaultValue: Boolean = true, val requiresR
     LOCATION("LOCATION"),
     NOTIFICATION("NOTIFICATION"),
     NSCLIENT("NSCLIENT"),
+    NSCLIENT_SYNC("NSCLIENT_SYNC", defaultValue = false),
     OHUPLOADER("OHUPLOADER"),
     PUMP("PUMP"),
     PUMPBTCOMM("PUMPBTCOMM", defaultValue = true),
@@ -30,5 +31,6 @@ enum class LTag(val tag: String, val defaultValue: Boolean = true, val requiresR
     WEAR("WEAR"),
     WIDGET("WIDGET"),
     WORKER("WORKER"),
-    XDRIP("XDRIP")
+    XDRIP("XDRIP"),
+    XDRIP_SYNC("XDRIP_SYNC", defaultValue = false)
 }

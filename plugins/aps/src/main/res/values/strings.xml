@@ -16,7 +16,7 @@
     <string name="description_ama">State of the algorithm in 2017</string>
     <string name="description_smb">Most recent algorithm for advanced users</string>
     <string name="description_smb_dynamic_isf">Most recent algorithm for advanced users with dynamic/automatic ISF</string>
-    <string name="description_auto_isf">Most recent algorithm for advanced users with AutoISF extensions</string>
+    <string name="description_auto_isf">Experimental algorithm for advanced users with AutoISF extensions</string>
 
     <string name="openapsma_last_run_label">Last run</string>
     <string name="openapsma_input_parameters_label">Input parameters</string>

@@ -93,6 +93,12 @@ enum class NotificationId(
 
     // CGM
     BG_READINGS_MISSED(27, URGENT, CGM),
+    // CGM — Aidex
+    AIDEX_SENSOR_EXPIRED(95, URGENT, CGM),
+    AIDEX_SENSOR_ERROR(96, URGENT, CGM),
+    AIDEX_SENSOR_STABILIZING(97, NORMAL, CGM),
+    AIDEX_REPLACE_SENSOR(98, NORMAL, CGM),
+    AIDEX_SIGNAL_LOST(99, NORMAL, CGM),
 
     // Loop / APS
     EASY_MODE_ENABLED(2, URGENT, LOOP),
@@ -142,6 +148,7 @@ enum class NotificationId(
     SCENE_CHAINED(1302, INFO, AUTOMATION, allowMultiple = true),
     SCENE_CHAIN_SKIPPED(1303, NORMAL, AUTOMATION, allowMultiple = true),
     SCENE_CHAIN_ERROR(1300, URGENT, AUTOMATION, allowMultiple = true);
+
 
     companion object {
 

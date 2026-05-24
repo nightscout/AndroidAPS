@@ -24,7 +24,7 @@ import info.nightscout.comboctl.parser.testTimeAndDateSettingsHourTurkishScreen
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeAll
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -44,7 +44,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkSingleDisplayFrame() = runBlocking {
+    fun checkSingleDisplayFrame() = runTest {
         /* Check if a frame is correctly recognized. */
 
         val stream = ParsedDisplayFrameStream()
@@ -55,7 +55,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkNullDisplayFrame() = runBlocking {
+    fun checkNullDisplayFrame() = runTest {
         /* Check if a null frame is handled correctly. */
 
         val stream = ParsedDisplayFrameStream()
@@ -65,7 +65,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkDuplicateDisplayFrameFiltering() = runBlocking {
+    fun checkDuplicateDisplayFrameFiltering() = runTest {
         // Test the duplicate detection by feeding the stream test frames
         // along with unrecognizable ones. We feed duplicates, both recognizable
         // and unrecognizable ones, to check that the stream filters these out.
@@ -166,7 +166,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkDuplicateParsedScreenFiltering() = runBlocking {
+    fun checkDuplicateParsedScreenFiltering() = runTest {
         // Test the duplicate parsed screen detection with 3 time and date hour settings screens.
         // All three are parsed to ParsedScreen.TimeAndDateSettingsHourScreen instances.
         // All three contain different pixels. (This is the crucial difference to the
@@ -214,7 +214,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkDuplicateDetectionReset() = runBlocking {
+    fun checkDuplicateDetectionReset() = runTest {
         // Test that resetting the duplicate detection works correctly.
 
         // Two screens with equal content (both are a TimeAndDateSettingsHourScreen
@@ -242,7 +242,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkDisabledDuplicateDetection() = runBlocking {
+    fun checkDisabledDuplicateDetection() = runTest {
         // Test that getting frames with disabled duplicate detection works correctly.
 
         // Two screens with equal content (both are a TimeAndDateSettingsHourScreen
@@ -286,7 +286,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkAlertScreenDetection() = runBlocking {
+    fun checkAlertScreenDetection() = runTest {
         // Test that alert screens are detected and handled correctly.
 
         val stream = ParsedDisplayFrameStream()
@@ -322,7 +322,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
     }
 
     @Test
-    fun checkSkippingBlinkedOutScreens() = runBlocking {
+    fun checkSkippingBlinkedOutScreens() = runTest {
         // Test that the stream correctly skips blinked-out screens.
 
         // Produce a test feed of 3 frames, with the second frame being blinked out.

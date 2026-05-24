@@ -1,12 +1,18 @@
 package app.aaps.core.ui.compose
 
+import androidx.compose.animation.core.AnimationConstants
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.Offset
@@ -14,6 +20,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.delay
 
 /**
  * Modifier that clears focus when tapping outside of focused text fields.
@@ -73,3 +80,41 @@ fun Modifier.consumeOverscroll(): Modifier = this.nestedScroll(ConsumeOverscroll
 @Composable
 fun Modifier.bottomBarSafeArea(): Modifier =
     this.windowInsetsPadding(WindowInsets.navigationBars.union(WindowInsets.ime))
+
+/**
+ * Returns a [BringIntoViewRequester] that auto-fires `bringIntoView()` whenever
+ * [expanded] flips to true. Attach the requester to the element you want
+ * scrolled into the viewport (typically the outer container of an expandable
+ * section). The scroll animates through the nearest scrollable ancestor.
+ *
+ * Use case: tapping a header to expand a section that sits near the bottom of
+ * a scrolling screen would otherwise reveal content below the fold; the user
+ * has to scroll manually. With this helper, the section is pulled into view
+ * automatically.
+ *
+ * Usage:
+ * ```
+ * var expanded by remember { mutableStateOf(false) }
+ * val requester = rememberBringIntoViewOnExpand(expanded)
+ * Column(Modifier.bringIntoViewRequester(requester)) {
+ *     Header(onClick = { expanded = !expanded })
+ *     AnimatedVisibility(visible = expanded) { /* content */ }
+ * }
+ * ```
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun rememberBringIntoViewOnExpand(expanded: Boolean): BringIntoViewRequester {
+    val requester = remember { BringIntoViewRequester() }
+    LaunchedEffect(expanded) {
+        if (expanded) {
+            // Wait for AnimatedVisibility's expand to settle so the request
+            // operates on the post-expansion bounds. Without this delay the
+            // call fires while the section still has its pre-expand size
+            // (header only, already on-screen) and nothing scrolls.
+            delay(AnimationConstants.DefaultDurationMillis.toLong())
+            requester.bringIntoView()
+        }
+    }
+    return requester
+}

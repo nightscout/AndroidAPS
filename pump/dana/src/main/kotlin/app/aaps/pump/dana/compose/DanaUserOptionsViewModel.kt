@@ -2,6 +2,7 @@ package app.aaps.pump.dana.compose
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -106,14 +108,13 @@ class DanaUserOptionsViewModel @Inject constructor(
         danaPump.shutdownHour = min(state.shutdownHour, 24)
         danaPump.lowReservoirRate = min(max(state.lowReservoir / 10 * 10, 10), 50)
 
-        commandQueue.setUserOptions(object : Callback() {
-            override fun run() {
-                if (!result.success) {
-                    _events.tryEmit(UserOptionsEvent.Error(result.comment))
-                } else {
-                    _events.tryEmit(UserOptionsEvent.Saved)
-                }
+        viewModelScope.launch {
+            val result = commandQueue.setUserOptions()
+            if (!result.success) {
+                _events.tryEmit(UserOptionsEvent.Error(result.comment))
+            } else {
+                _events.tryEmit(UserOptionsEvent.Saved)
             }
-        })
+        }
     }
 }

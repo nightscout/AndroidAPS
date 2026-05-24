@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.delay
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import app.aaps.ui.compose.main.TempTargetChipState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.notificationsSheet.NotificationBottomSheet
 import app.aaps.ui.compose.notificationsSheet.NotificationFab
+import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
 
@@ -56,6 +58,7 @@ fun OverviewScreen(
     isSimpleMode: Boolean,
     calcProgress: Int,
     graphViewModel: GraphViewModel,
+    chipsViewModel: ChipsViewModel,
     manageViewModel: ManageViewModel,
     statusViewModel: StatusViewModel,
     statusLightsDef: PreferenceSubScreenDef,
@@ -84,8 +87,11 @@ fun OverviewScreen(
     var showPumpActivityDialog by remember { mutableStateOf(false) }
     val showPumpFab = isPumpCommunicating || (bolusState != null && bolusState.isSMB)
 
-    LaunchedEffect(bolusState) {
-        if (bolusState == null) showPumpActivityDialog = false
+    LaunchedEffect(showPumpFab) {
+        if (!showPumpFab && showPumpActivityDialog) {
+            delay(3_000)
+            showPumpActivityDialog = false
+        }
     }
 
     LaunchedEffect(autoShowNotificationSheet) {
@@ -125,6 +131,7 @@ fun OverviewScreen(
                 isSimpleMode = isSimpleMode,
                 calcProgress = calcProgress,
                 graphViewModel = graphViewModel,
+                chipsViewModel = chipsViewModel,
                 manageViewModel = manageViewModel,
                 statusViewModel = statusViewModel,
                 statusLightsDef = statusLightsDef,
@@ -158,6 +165,7 @@ fun OverviewScreen(
                     isSimpleMode = isSimpleMode,
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,
+                    chipsViewModel = chipsViewModel,
                     manageViewModel = manageViewModel,
                     statusViewModel = statusViewModel,
                     statusLightsDef = statusLightsDef,
@@ -190,6 +198,7 @@ fun OverviewScreen(
                     isSimpleMode = isSimpleMode,
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,
+                    chipsViewModel = chipsViewModel,
                     manageViewModel = manageViewModel,
                     statusViewModel = statusViewModel,
                     statusLightsDef = statusLightsDef,

@@ -16,8 +16,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -32,6 +32,7 @@ import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
@@ -43,7 +44,7 @@ class LoopTest @Inject constructor() {
     @Inject lateinit var loop: Loop
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxHelper: RxHelper
     @Inject lateinit var l: L
@@ -78,7 +79,7 @@ class LoopTest @Inject constructor() {
     }
 
     @Test
-    fun loopTest() = runBlocking {
+    fun loopTest() = runTest {
         @SuppressLint("CheckResult")
         persistenceLayer.insertOrUpdateRunningMode(
             runningMode = RM(
@@ -121,13 +122,13 @@ class LoopTest @Inject constructor() {
 
         // Set Profile in ProfilePlugin
         nsIncomingDataProcessor.processProfile(JSONObject(profileData), false)
-        assertThat(localProfileManager.profile).isNotNull()
+        assertThat(profileRepository.profile.value).isNotNull()
 
         // Create a profile switch
         assertThat(profileFunction.getProfile()).isNull()
         val result = profileFunction.createProfileSwitch(
-            profileStore = localProfileManager.profile ?: error("No profile"),
-            profileName = localProfileManager.profile?.getDefaultProfileName() ?: error("No profile"),
+            profileStore = profileRepository.profile.value ?: error("No profile"),
+            profileName = profileRepository.profile.value?.getDefaultProfileName() ?: error("No profile"),
             durationInMinutes = 0,
             percentage = 100,
             timeShiftInHours = 0,
@@ -136,7 +137,7 @@ class LoopTest @Inject constructor() {
             source = Sources.ProfileSwitchDialog,
             note = "Test profile switch",
             listValues = listOf(
-                ValueWithUnit.SimpleString(localProfileManager.profile?.getDefaultProfileName() ?: ""),
+                ValueWithUnit.SimpleString(profileRepository.profile.value?.getDefaultProfileName() ?: ""),
                 ValueWithUnit.Percent(100)
             ),
             iCfg = ICfg("Test", insulinEndTime = 5 * 3600 * 1000L, insulinPeakTime = 75 * 60 * 1000L)

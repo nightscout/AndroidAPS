@@ -3,10 +3,10 @@ package app.aaps.pump.eopatch.ble.task
 import android.os.SystemClock
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.eopatch.core.api.GetInternalSuspendTime
@@ -18,7 +18,8 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Predicate
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +28,8 @@ import javax.inject.Singleton
 class InternalSuspendedTask @Inject constructor(
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : BolusTask(TaskFunc.INTERNAL_SUSPEND) {
 
     @Inject lateinit var internalSuspendTimeGet: GetInternalSuspendTime
@@ -63,25 +65,19 @@ class InternalSuspendedTask @Inject constructor(
         }
         bolusCheckSubject.onNext(true)
 
-        if (runBlocking { pumpSync.expectedPumpState() }.extendedBolus != null) {
-            uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList())
-            commandQueue.cancelExtended(object : Callback() {
-                override fun run() {
-                    extendedBolusCheckSubject.onNext(true)
-                }
-            })
-        } else {
+        appScope.launch {
+            if (pumpSync.expectedPumpState().extendedBolus != null) {
+                uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList())
+                commandQueue.cancelExtended()
+            }
             extendedBolusCheckSubject.onNext(true)
         }
 
-        if (runBlocking { pumpSync.expectedPumpState() }.temporaryBasal != null) {
-            uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList())
-            commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
-                override fun run() {
-                    basalCheckSubject.onNext(true)
-                }
-            })
-        } else {
+        appScope.launch {
+            if (pumpSync.expectedPumpState().temporaryBasal != null) {
+                uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList())
+                commandQueue.cancelTempBasal(enforceNew = true)
+            }
             basalCheckSubject.onNext(true)
         }
 

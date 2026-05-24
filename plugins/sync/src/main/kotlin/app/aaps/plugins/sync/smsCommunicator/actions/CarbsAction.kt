@@ -5,7 +5,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
@@ -30,26 +29,23 @@ class CarbsAction(
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.carbs = grams.toDouble()
         detailedBolusInfo.timestamp = timestamp
-        commandQueue.bolus(detailedBolusInfo, object : Callback() {
-            override fun run() {
-                if (result.success) {
-                    var replyText = rh.gs(R.string.smscommunicator_carbs_set, grams)
-                    replyText += "\n" + shortStatusBlocking()
-                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(
-                        Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(R.string.smscommunicator_carbs_set, grams),
-                        ValueWithUnit.Gram(grams)
-                    )
-                } else {
-                    var replyText = rh.gs(R.string.smscommunicator_carbs_failed, grams)
-                    replyText += "\n" + shortStatusBlocking()
-                    smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(
-                        Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(R.string.smscommunicator_carbs_failed, grams),
-                        ValueWithUnit.Gram(grams)
-                    )
-                }
-            }
-        })
+        val result = commandQueue.bolus(detailedBolusInfo)
+        if (result.success) {
+            var replyText = rh.gs(R.string.smscommunicator_carbs_set, grams)
+            replyText += "\n" + shortStatusBlocking()
+            sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+            uel.log(
+                Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(R.string.smscommunicator_carbs_set, grams),
+                ValueWithUnit.Gram(grams)
+            )
+        } else {
+            var replyText = rh.gs(R.string.smscommunicator_carbs_failed, grams)
+            replyText += "\n" + shortStatusBlocking()
+            smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
+            uel.log(
+                Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(R.string.smscommunicator_carbs_failed, grams),
+                ValueWithUnit.Gram(grams)
+            )
+        }
     }
 }

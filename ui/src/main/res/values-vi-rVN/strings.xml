@@ -83,7 +83,7 @@
     <string name="aaps_tbr_icon_label">Liều nền tạm thời</string>
     <string name="aaps_activity_icon_label">Bài tập luyện</string>
     <string name="aaps_note_icon_label">Ghi chú</string>
-    <string name="aaps_automation_icon_label">Tự động hóa</string>
+    <string name="aaps_automation_icon_label">Tự động</string>
     <string name="aaps_calibration_icon_label">Hiệu chuẩn</string>
     <string name="exercise_icon_label">Chạy</string>
     <string name="fitness_icon_label">Tập luyện</string>
@@ -189,6 +189,7 @@
     <string name="active_profile_indicator">ACTIVE</string>
     <string name="confirm_remove_profile">Xóa cấu hình \"%1$s\"?</string>
     <string name="confirm_clone_profile">Nhân bản cấu hình \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">Danh sách cấu hình đã thay đổi trong lúc thao tác — vui lòng thử lại</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>
@@ -282,7 +283,7 @@
     <string name="quick_launch_category_profile">Cấu hình</string>
     <string name="quick_launch_category_temp_target">Các cài đặt sẵn cho mục tiêu tạm thời</string>
     <string name="quick_launch_category_quick_wizard">Hướng dẫn nhanh</string>
-    <string name="quick_launch_category_automation">Tự động hóa</string>
+    <string name="quick_launch_category_automation">Tự động</string>
     <string name="quick_launch_all_selected">Tất cả mục đã chọn</string>
     <string name="quick_launch_no_quick_wizard">Thêm hướng dẫn nhanh để sử dụng tại đây</string>
     <string name="quick_launch_no_automation">Tạo các hành động tự động hóa người dùng để dùng tại đây</string>

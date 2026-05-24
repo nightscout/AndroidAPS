@@ -116,7 +116,7 @@ fun RunningModeScreen(
                     itemContent = { rm ->
                         RunningModeItem(
                             runningMode = rm,
-                            isActive = rm.id == currentlyActiveMode.id,
+                            isActive = rm.id == currentlyActiveMode?.id,
                             isFuture = rm.timestamp > viewModel.dateUtil.now(),
                             isRemovingMode = uiState.isRemovingMode,
                             isSelected = rm in uiState.selectedItems,

@@ -646,7 +646,10 @@
     <string name="basal">Rate bazale</string>
     <string name="basalpct">Bazală %</string>
     <string name="sensitivity">Sensibilitate</string>
-    <string name="isf_for_carbs">ISF pentru Calculator și Absorbția Carbohidraților: %1$.1f</string>
+    <string name="isf_for_carbs">Media ISF pentru calculator și absorbția carbohidraților: %1$.1f</string>
+    <string name="isf_profile">Profil ISF: %1$.1f</string>
+    <string name="isf_variable">ISF variabil: %1$.1f</string>
+    <string name="isf_effective">ISF efectiv: %1$.1f</string>
     <string name="autosens_long">Valoare Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens în algoritm: %.0f%%</string>

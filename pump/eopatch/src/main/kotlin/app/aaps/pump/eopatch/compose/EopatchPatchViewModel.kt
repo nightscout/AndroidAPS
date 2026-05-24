@@ -14,8 +14,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.BooleanKey
@@ -80,7 +80,7 @@ class EopatchPatchViewModel @Inject constructor(
     private val preferences: Preferences,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
@@ -332,11 +332,14 @@ class EopatchPatchViewModel @Inject constructor(
 
     // region ProfileGateStepHost
 
-    private fun loadAvailableProfiles() {
-        val names = localProfileManager.profiles.map { it.name }
+    private suspend fun loadAvailableProfiles() {
+        val names = profileRepository.profiles.value.map { it.name }
         _availableProfiles.value = names
         if (_selectedProfile.value !in names) {
-            _selectedProfile.value = names.getOrNull(localProfileManager.currentProfileIndex) ?: names.firstOrNull()
+            // Default to the active profile — getOriginalProfileName() returns the clean
+            // name without %/timeshift decoration (matches names from the profile store).
+            val activeName = profileFunction.getOriginalProfileName()
+            _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
         }
     }
 
@@ -346,7 +349,7 @@ class EopatchPatchViewModel @Inject constructor(
 
     override fun activateSelectedProfile() {
         val name = _selectedProfile.value ?: return
-        val store = localProfileManager.profile ?: return
+        val store = profileRepository.profile.value ?: return
         val iCfg = insulinManager.insulins.firstOrNull() ?: return
         viewModelScope.launch {
             val result = profileFunction.createProfileSwitch(

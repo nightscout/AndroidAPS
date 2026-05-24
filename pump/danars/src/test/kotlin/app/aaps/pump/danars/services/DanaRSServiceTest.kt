@@ -16,6 +16,8 @@ import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -68,7 +70,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
-        danaRSService.bolusProgressData = BolusProgressData(ch, rh)
+        danaRSService.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
         danaRSService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRSService.danaRSPacketGeneralInitialScreenInformation = danaRSPacketGeneralInitialScreenInformationProvider
         danaRSService.danaRSPacketOptionSetUserOption = danaRSPacketOptionSetUserOptionProvider

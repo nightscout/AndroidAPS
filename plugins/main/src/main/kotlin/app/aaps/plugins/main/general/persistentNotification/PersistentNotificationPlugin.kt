@@ -40,12 +40,14 @@ import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
-import kotlin.math.abs
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
 @Singleton
@@ -95,8 +97,9 @@ class PersistentNotificationPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private val deferredStart = DeferredForegroundStart()
+    private var lastAutoNotificationContent: String = ""
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         notificationHolder.createNotificationChannel()
         disposable += rxBus
@@ -111,21 +114,31 @@ class PersistentNotificationPlugin @Inject constructor(
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        /// Android Auto - debounced to prevent rapid pop-ups
+        disposable += Observable.merge(
+            rxBus.toObservable(EventRefreshOverview::class.java).map { },
+            rxBus.toObservable(EventInitializationChanged::class.java).map { },
+            rxBus.toObservable(EventAutosensCalculationFinished::class.java).map { }
+        )
+            .debounce(10, TimeUnit.SECONDS)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate(includeAuto = true) }, fabricPrivacy::logException)
+        /// End Android Auto
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         disposable.clear()
         deferredStart.cancel()
         dummyServiceHelper.stopService(context)
         super.onStop()
     }
 
-    private fun triggerNotificationUpdate() {
-        runBlocking { updateNotification() }
+    private fun triggerNotificationUpdate(includeAuto: Boolean = false) {
+        runBlocking { updateNotification(includeAuto) }
         deferredStart.start { dummyServiceHelper.startService(context) }
     }
 
-    private suspend fun updateNotification() {
+    private suspend fun updateNotification(includeAuto: Boolean = false) {
         if (!config.appInitialized) return
         val pump = activePlugins.activePump
         var line1: String?
@@ -199,9 +212,9 @@ class PersistentNotificationPlugin @Inject constructor(
             } else {
                 profileFunction.getProfile()?.let { profile ->
                     val targetUsed = when {
-                        config.APS        -> loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                        config.APS -> loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
                         config.AAPSCLIENT -> processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
-                        else              -> 0.0
+                        else -> 0.0
                     }
                     aaTarget = if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                         profileUtil.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
@@ -223,19 +236,22 @@ class PersistentNotificationPlugin @Inject constructor(
         } else {
             line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
         }
+        val content = "$line1|$line2|$line3"
+        if (includeAuto && content == lastAutoNotificationContent) return
+        if (includeAuto) lastAutoNotificationContent = content
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
         builder.setSmallIcon(iconsProvider.getNotificationIcon())
-        builder.setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
         builder.setContentTitle(line1)
         if (line2 != null) builder.setContentText(line2)
         if (line3 != null) builder.setSubText(line3)
         /// Android Auto
-        if (unreadConversationBuilder != null) {
+        if (includeAuto && unreadConversationBuilder != null) {
             builder.extend(
                 NotificationCompat.CarExtender()
+                    .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
                     .setUnreadConversation(unreadConversationBuilder.build())
             )
         }

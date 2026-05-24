@@ -51,6 +51,14 @@
     <string name="pump_time_update_failed">Nepodarilo sa aktualizovať časové pásmo pumpy, odložiť správu a aktualizovať ručne.</string>
     <string name="bolus_error">Chyba bolusu</string>
     <!-- Status strings -->
+    <string name="status_idle">Nečinný</string>
+    <string name="status_filled">Naplnený</string>
+    <string name="status_priming">Plnenie</string>
+    <string name="status_primed">Naplnený</string>
+    <string name="status_ejecting">Vysúvanie</string>
+    <string name="status_ejected">Vysunutý</string>
+    <string name="status_active">Aktívny</string>
+    <string name="status_stopped">Zastavený</string>
     <!-- wizard-->
     <string name="retry">Opakovať</string>
     <string name="step_prepare_patch">Aktivovať Patch</string>

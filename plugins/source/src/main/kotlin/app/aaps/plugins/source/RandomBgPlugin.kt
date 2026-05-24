@@ -97,7 +97,7 @@ class RandomBgPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
 
     @SuppressLint("WakelockTimeout")
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         updateInterval()
@@ -111,7 +111,7 @@ class RandomBgPlugin @Inject constructor(
         wakeLock?.acquire()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()

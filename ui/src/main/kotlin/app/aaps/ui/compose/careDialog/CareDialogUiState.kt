@@ -31,7 +31,8 @@ data class CareDialogUiState(
     val siteLocation: TE.Location = TE.Location.NONE,
     val siteArrow: TE.Arrow = TE.Arrow.NONE,
     val lastSiteLocationString: String? = null,
-    val selectedSiteLocationString: String? = null
+    val selectedSiteLocationString: String? = null,
+    val siteRotationEntries: List<TE> = emptyList()
 )
 
 /** BG section visible for BGCHECK, QUESTION, ANNOUNCEMENT */

@@ -54,6 +54,11 @@
     <string name="status_idle">Inactiv</string>
     <string name="status_filled">Completat</string>
     <string name="status_priming">Se amorsează</string>
+    <string name="status_primed">Amorsat</string>
+    <string name="status_ejecting">Ejectare</string>
+    <string name="status_ejected">Ejectat</string>
+    <string name="status_active">Activ</string>
+    <string name="status_stopped">Oprit</string>
     <!-- wizard-->
     <string name="retry">Reîncercați</string>
     <string name="step_prepare_patch">Activați plasturele</string>

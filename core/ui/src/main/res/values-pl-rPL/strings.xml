@@ -418,7 +418,6 @@
     <string name="basal">Baza</string>
     <string name="basalpct">Baza %</string>
     <string name="sensitivity">Wrażliwość</string>
-    <string name="isf_for_carbs">ISF dla Kalkulatora i Absorpcji węglowodanów: %1$.1f</string>
     <string name="autosens_long">Wartość Autosens: %.0f%%</string>
     <string name="algorithm_long">Autosens w algorytmie: %.0f%%</string>
     <!-- Autotune -->

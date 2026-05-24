@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.keys.IntKey
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -43,7 +44,7 @@ class RandomBgPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun startStopTest() {
+    fun startStopTest() = runBlocking {
         whenever(preferences.get(IntKey.BgSourceRandomInterval)).thenReturn(5)
         Assertions.assertNull(randomBgPlugin.handler)
         randomBgPlugin.onStart()

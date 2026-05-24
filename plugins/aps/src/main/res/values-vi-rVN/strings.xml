@@ -16,7 +16,7 @@
     <string name="description_ama">Trạng thái thuật toán năm 2017</string>
     <string name="description_smb">Thuật toán tiên tiến nhất cho người dùng có kinh nghiệm</string>
     <string name="description_smb_dynamic_isf">Thuật toán mới nhất dành cho người dùng nâng cao với dynamic/automatic ISF</string>
-    <string name="description_auto_isf">Thuật toán mới nhất dành cho người dùng nâng cao với các tiện ích mở rộng AutoISF</string>
+    <string name="description_auto_isf">Thuật toán thử nghiệm dành cho người dùng nâng cao với các tiện ích mở rộng AutoISF</string>
     <string name="openapsma_last_run_label">Lần chạy gần nhất</string>
     <string name="openapsma_input_parameters_label">Tham số đầu vào</string>
     <string name="openapsma_glucose_status_label">Trạng thái đường huyết</string>

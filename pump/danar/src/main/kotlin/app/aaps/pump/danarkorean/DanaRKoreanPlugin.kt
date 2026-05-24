@@ -44,7 +44,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -98,7 +97,7 @@ class DanaRKoreanPlugin @Inject constructor(
         pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         context.bindService(Intent(context, DanaRKoreanExecutionService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -114,7 +113,7 @@ class DanaRKoreanPlugin @Inject constructor(
         super.onStart()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
@@ -170,7 +169,7 @@ class DanaRKoreanPlugin @Inject constructor(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
                 detailedBolusInfo.insulin,
-                delivered,
+                delivered.cU,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
@@ -311,19 +310,17 @@ class DanaRKoreanPlugin @Inject constructor(
 
     override fun model(): PumpType = PumpType.DANA_R_KOREAN
 
-    private fun cancelRealTempBasal(): PumpEnactResult {
+    private suspend fun cancelRealTempBasal(): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
-                runBlocking {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        dateUtil.now(),
-                        dateUtil.now(),
-                        pumpDescription.pumpType,
-                        serialNumber()
-                    )
-                }
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                    dateUtil.now(),
+                    dateUtil.now(),
+                    pumpDescription.pumpType,
+                    serialNumber()
+                )
                 result.success(true).enacted(true).isTempCancel(true)
             } else result.success(false).enacted(false).isTempCancel(true)
         } else {

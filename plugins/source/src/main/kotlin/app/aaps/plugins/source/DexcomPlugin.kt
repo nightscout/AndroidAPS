@@ -91,7 +91,7 @@ class DexcomPlugin @Inject constructor(
             }
         }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         requestPermissionIfNeeded()
     }

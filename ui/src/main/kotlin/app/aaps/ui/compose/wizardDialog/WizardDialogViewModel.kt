@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
@@ -47,22 +46,22 @@ import kotlin.math.abs
 @HiltViewModel
 @Stable
 class WizardDialogViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
-    config: Config,
+    private val config: Config,
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,
-    runningModeGuard: RunningModeGuard
+    private val runningModeGuard: RunningModeGuard
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WizardDialogUiState())
@@ -83,95 +82,98 @@ class WizardDialogViewModel @Inject constructor(
     private var wizard: BolusWizard? = null
 
     init {
+        viewModelScope.launch { initialize() }
+    }
+
+    private suspend fun initialize() {
         val initialCarbs = savedStateHandle.get<String>("carbs")?.toIntOrNull()
         val initialNotes = savedStateHandle.get<String>("notes")
 
-        val profileStore = localProfileManager.profile
-        if (profileStore != null) {
-            val units = profileFunction.getUnits()
+        val profileStore = profileRepository.profile.value ?: return
 
-            val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
-            val maxBolus = constraintChecker.getMaxBolusAllowed().value()
-            val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
-            val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
+        val units = profileFunction.getUnits()
 
-            // Build profile names list: "Active" + profile store names
-            val profileList = mutableListOf(rh.gs(app.aaps.core.ui.R.string.active))
-            profileList.addAll(profileStore.getProfileList().map { it.toString() })
+        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
+        val maxBolus = constraintChecker.getMaxBolusAllowed().value()
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
-            // Load saved preferences
-            val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
-            val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
-            val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
-            val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
+        // Build profile names list: "Active" + profile store names
+        val profileList = mutableListOf(rh.gs(app.aaps.core.ui.R.string.active))
+        profileList.addAll(profileStore.getProfileList().map { it.toString() })
 
-            // Percentage: reset to 100% if last BG is too old
-            var percentage = preferences.get(IntKey.OverviewBolusPercentage)
-            val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
-            runBlocking { persistenceLayer.getLastGlucoseValue() }.let {
-                if (it != null) {
-                    if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
-                        percentage = 100
-                } else percentage = 100
-            }
+        // Load saved preferences
+        val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
+        val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
+        val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
+        val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
 
-            // Current BG
-            val actualBg = iobCobCalculator.ads.actualBg()
-            val hasBgData = actualBg != null
-            val currentBg = actualBg?.valueToUnits(units) ?: 0.0
-            val bgAgeMinutes = if (actualBg != null) ((dateUtil.now() - actualBg.timestamp) / 60000).toInt() else 0
-
-            // IOB for display
-            val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
-            val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
-            val totalIOB = bolusIob.iob + basalIob.basaliob
-
-            val cantDeliverBolus = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS) != null
-            val forcedRecordOnly = cantDeliverBolus || !activePlugin.activePump.isInitialized() || config.AAPSCLIENT
-
-            _uiState.update {
-                WizardDialogUiState(
-                    // User inputs
-                    bg = currentBg,
-                    carbs = initialCarbs ?: 0,
-                    percentage = percentage,
-                    directCorrection = 0.0,
-                    carbTime = 0,
-                    notes = initialNotes ?: "",
-                    selectedProfileIndex = 0,
-                    // Toggles
-                    useBg = true,
-                    useTT = true,
-                    useTrend = useTrend,
-                    useIOB = true,
-                    useCOB = useCOB,
-                    alarmChecked = false,
-                    calculationExpanded = false,
-                    // Config
-                    maxCarbs = maxCarbs,
-                    maxBolus = maxBolus,
-                    bolusStep = bolusStep,
-                    units = units,
-                    profileNames = profileList,
-                    showNotes = showNotes,
-                    hasTempTarget = tempTarget != null,
-                    useBolusAdvisor = useBolusAdvisor,
-                    defaultPercentage = percentage,
-                    simpleMode = preferences.simpleMode,
-                    carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
-                    carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
-                    carbsButtonIncrement3 = preferences.get(IntKey.OverviewCarbsButtonIncrement3),
-                    // BG card
-                    hasBgData = hasBgData,
-                    bgAgeMinutes = bgAgeMinutes,
-                    // Initial IOB display
-                    totalIOB = -totalIOB,
-                    forcedRecordOnly = forcedRecordOnly
-                )
-            }
-
-            recalculate()
+        // Percentage: reset to 100% if last BG is too old
+        var percentage = preferences.get(IntKey.OverviewBolusPercentage)
+        val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
+        persistenceLayer.getLastGlucoseValue().let {
+            if (it != null) {
+                if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
+                    percentage = 100
+            } else percentage = 100
         }
+
+        // Current BG
+        val actualBg = iobCobCalculator.ads.actualBg()
+        val hasBgData = actualBg != null
+        val currentBg = actualBg?.valueToUnits(units) ?: 0.0
+        val bgAgeMinutes = if (actualBg != null) ((dateUtil.now() - actualBg.timestamp) / 60000).toInt() else 0
+
+        // IOB for display
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val totalIOB = bolusIob.iob + basalIob.basaliob
+
+        val cantDeliverBolus = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS) != null
+        val forcedRecordOnly = cantDeliverBolus || !activePlugin.activePump.isInitialized() || config.AAPSCLIENT
+
+        _uiState.update {
+            WizardDialogUiState(
+                // User inputs
+                bg = currentBg,
+                carbs = initialCarbs ?: 0,
+                percentage = percentage,
+                directCorrection = 0.0,
+                carbTime = 0,
+                notes = initialNotes ?: "",
+                selectedProfileIndex = 0,
+                // Toggles
+                useBg = true,
+                useTT = true,
+                useTrend = useTrend,
+                useIOB = true,
+                useCOB = useCOB,
+                alarmChecked = false,
+                calculationExpanded = false,
+                // Config
+                maxCarbs = maxCarbs,
+                maxBolus = maxBolus,
+                bolusStep = bolusStep,
+                units = units,
+                profileNames = profileList,
+                showNotes = showNotes,
+                hasTempTarget = tempTarget != null,
+                useBolusAdvisor = useBolusAdvisor,
+                defaultPercentage = percentage,
+                simpleMode = preferences.simpleMode,
+                carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
+                carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
+                carbsButtonIncrement3 = preferences.get(IntKey.OverviewCarbsButtonIncrement3),
+                // BG card
+                hasBgData = hasBgData,
+                bgAgeMinutes = bgAgeMinutes,
+                // Initial IOB display
+                totalIOB = -totalIOB,
+                forcedRecordOnly = forcedRecordOnly
+            )
+        }
+
+        recalculate()
     }
 
     // --- Input update methods ---
@@ -316,7 +318,7 @@ class WizardDialogViewModel @Inject constructor(
 
     private suspend fun recalculateSuspend() {
         val state = uiState.value
-        val profileStore = localProfileManager.profile ?: return
+        val profileStore = profileRepository.profile.value ?: return
 
         // Resolve profile
         val profileName: String
@@ -388,7 +390,7 @@ class WizardDialogViewModel @Inject constructor(
         val trendDetail = if (state.useTrend) {
             val signedTrendValue = (if (w.trend > 0) "+" else "") +
                 profileUtil.fromMgdlToStringInUnits(w.trend * 3, state.units)
-            rh.gs(app.aaps.core.ui.R.string.wizard_trend_detail, signedTrendValue, state.units.asText)
+            rh.gs(app.aaps.core.ui.R.string.wizard_trend_detail, signedTrendValue, profileUtil.unitLabel)
         } else ""
 
         _uiState.update {
@@ -474,15 +476,17 @@ class WizardDialogViewModel @Inject constructor(
 
     fun executeBolusAdvisor() {
         val state = uiState.value
-        wizard?.executeBolusAdvisor(
-            onError = { comment ->
-                _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
-            },
-            eCarbsGrams = state.eCarbs,
-            eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-            eCarbsDurationHours = state.eCarbsDurationHours,
-            forcedRecordOnly = state.forcedRecordOnly
-        )
+        viewModelScope.launch {
+            wizard?.executeBolusAdvisor(
+                onError = { comment ->
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
+                },
+                eCarbsGrams = state.eCarbs,
+                eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
+                eCarbsDurationHours = state.eCarbsDurationHours,
+                forcedRecordOnly = state.forcedRecordOnly
+            )
+        }
     }
 
     fun savePreferences() {

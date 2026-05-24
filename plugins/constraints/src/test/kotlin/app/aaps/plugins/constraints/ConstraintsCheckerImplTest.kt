@@ -53,6 +53,9 @@ import app.aaps.pump.insight.database.InsightDbHelper
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -64,6 +67,8 @@ import org.mockito.kotlin.whenever
  * Created by mike on 18.03.2018.
  */
 class ConstraintsCheckerImplTest : TestBaseWithProfile() {
+
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
 
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var commandQueue: CommandQueue
@@ -155,7 +160,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             Objective9(preferences, rh, dateUtil)
         )
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, preferences, config, objectives)
-        objectivesPlugin.onStart()
+        runBlocking { objectivesPlugin.onStart() }
         danaRPlugin = DanaRPlugin(
             aapsLogger, rh, preferences, config, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, activePlugin, danaPump, dateUtil, fabricPrivacy, pumpSync,
             notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, pumpEnactResultProvider
@@ -168,7 +173,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             )
         insightPlugin = InsightPlugin(
             aapsLogger, rh, preferences, commandQueue, rxBus,
-            context, dateUtil, insightDbHelper, pumpSync, insightDatabase, pumpEnactResultProvider, notificationManager, ch, bolusProgressData, aapsSchedulers, blePreCheck
+            context, dateUtil, insightDbHelper, pumpSync, insightDatabase, pumpEnactResultProvider, notificationManager, ch, bolusProgressData, testScope, aapsSchedulers, blePreCheck
         )
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(

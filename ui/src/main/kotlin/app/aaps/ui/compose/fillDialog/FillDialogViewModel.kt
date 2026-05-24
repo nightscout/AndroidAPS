@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -139,7 +138,6 @@ class FillDialogViewModel @Inject constructor(
                 val allEntries = persistenceLayer.getTherapyEventDataFromTime(
                     dateUtil.now() - app.aaps.core.data.time.T.days(45).msecs(), false
                 ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
-                siteRotationEntriesCache = allEntries
                 val lastEntry = allEntries
                     .filter { it.type == TE.Type.CANNULA_CHANGE && it.location != null && it.location != TE.Location.NONE }
                     .maxByOrNull { it.timestamp }
@@ -216,8 +214,6 @@ class FillDialogViewModel @Inject constructor(
         _uiState.update { it.copy(siteArrow = arrow) }
     }
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
-
     /**
      * A line in the confirmation summary.
      * @param text The text to display
@@ -293,6 +289,10 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
+        viewModelScope.launch { confirmAndSaveSuspend() }
+    }
+
+    private suspend fun confirmAndSaveSuspend() {
         val state = confirmedState ?: return
         val eventTime = state.eventTime - (state.eventTime % 1000)
         val notes = state.notes
@@ -388,21 +388,18 @@ class FillDialogViewModel @Inject constructor(
     fun decimalFormat(): DecimalFormat =
         decimalFormatter.pumpSupportedBolusFormat(uiState.value.bolusStep)
 
-    private fun requestPrimeBolus(insulin: Double, notes: String, onSuccess: (() -> Unit)? = null) {
+    private suspend fun requestPrimeBolus(insulin: Double, notes: String, onSuccess: (() -> Unit)? = null) {
         if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
         val detailedBolusInfo = DetailedBolusInfo().also {
             it.insulin = insulin
             it.bolusType = BS.Type.PRIMING
             it.notes = notes
         }
-        commandQueue.bolus(detailedBolusInfo, object : Callback() {
-            override fun run() {
-                if (!result.success) {
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                } else {
-                    onSuccess?.invoke()
-                }
-            }
-        })
+        val result = commandQueue.bolus(detailedBolusInfo)
+        if (!result.success) {
+            _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+        } else {
+            onSuccess?.invoke()
+        }
     }
 }

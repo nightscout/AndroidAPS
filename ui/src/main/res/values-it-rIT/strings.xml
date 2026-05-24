@@ -189,6 +189,7 @@
     <string name="active_profile_indicator">ATTIVO</string>
     <string name="confirm_remove_profile">Rimuovere profilo \"%1$s\"?</string>
     <string name="confirm_clone_profile">Clonare profilo \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">Elenco di profili cambiato nel frattempo — si prega di riprovare</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>

@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -119,7 +118,6 @@ class ComboV2Plugin @Inject constructor(
     sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val config: Config,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
@@ -284,7 +282,7 @@ class ComboV2Plugin @Inject constructor(
         _pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO)
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         aapsLogger.info(LTag.PUMP, "Starting combov2 driver")
 
         super.onStart()
@@ -366,7 +364,7 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         aapsLogger.info(LTag.PUMP, "Stopping combov2 driver")
 
         runBlocking {
@@ -1351,7 +1349,7 @@ class ComboV2Plugin @Inject constructor(
 
     override fun canHandleDST() = true
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. Time change type = $timeChangeType")
 
         val reason = when (timeChangeType) {
@@ -1362,7 +1360,7 @@ class ComboV2Plugin @Inject constructor(
         }
         // Updating pump status implicitly also updates the pump's local datetime,
         // which is what we want after the system datetime/timezone/DST changed.
-        commandQueue.readStatus(reason, null)
+        commandQueue.readStatus(reason)
     }
 
     fun clearPumpErrorObservedFlag() {
@@ -1474,7 +1472,7 @@ class ComboV2Plugin @Inject constructor(
                 // queue will contain a pump_driver_changed readstatus
                 // command already. The queue will see that and ignore
                 // this readStatus() call automatically.
-                commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_paired), null)
+                commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_paired))
             } finally {
                 pairingJob = null
                 pairingPINChannel?.close()
@@ -1755,7 +1753,7 @@ class ComboV2Plugin @Inject constructor(
             delay(PUMP_ERROR_TIMEOUT_INTERVAL_MSECS)
             aapsLogger.info(LTag.PUMP, "Clearing pumpErrorObserved flag after timeout was reached")
             pumpErrorObserved = false
-            commandQueue.readStatus(rh.gs(R.string.combov2_refresh_pump_status_after_error), null)
+            commandQueue.readStatus(rh.gs(R.string.combov2_refresh_pump_status_after_error))
         }
     }
 

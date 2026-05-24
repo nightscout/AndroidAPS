@@ -5,23 +5,36 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.R
 import dagger.Reusable
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @Reusable
 class ProfileUtilImpl @Inject constructor(
     private val preferences: Preferences,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val rh: ResourceHelper
 ) : ProfileUtil {
 
     override val units: GlucoseUnit
         get() =
             if (preferences.get(StringKey.GeneralUnits) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
             else GlucoseUnit.MMOL
+
+    override val unitLabel: String
+        get() = rh.gs(if (units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol)
+
+    override fun fromMgdlToStringWithUnits(valueInMgdl: Double?): String =
+        valueInMgdl?.let {
+            if (units == GlucoseUnit.MGDL) rh.gs(R.string.bg_mgdl, it.roundToInt())
+            else rh.gs(R.string.bg_mmol, it * GlucoseUnit.MGDL_TO_MMOLL)
+        } ?: ""
 
     override fun fromMgdlToUnits(valueInMgdl: Double, targetUnits: GlucoseUnit): Double =
         if (targetUnits == GlucoseUnit.MGDL) valueInMgdl else valueInMgdl * GlucoseUnit.MGDL_TO_MMOLL

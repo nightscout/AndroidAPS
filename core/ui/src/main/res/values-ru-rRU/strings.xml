@@ -418,7 +418,6 @@
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
     <string name="sensitivity">Чувствительность</string>
-    <string name="isf_for_carbs">ISF для калькулятора и усвоения углеводов: %1$.1f</string>
     <string name="autosens_long">Значение Autosens: %.0f%%</string>
     <string name="algorithm_long">Autosens в алгоритме: %.0f%%</string>
     <!-- Autotune -->

@@ -9,20 +9,22 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.PureProfile
+import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -69,16 +71,19 @@ data class ProfileUiState(
     val targetMin: Double = 72.0,
     val targetMax: Double = 180.0,
     /** Map of error type to error message for tabs with validation errors */
-    val tabErrors: Map<ProfileErrorType, String> = emptyMap()
+    val tabErrors: Map<ProfileErrorType, String> = emptyMap(),
+    /** Currently-edited profile as a [PureProfile] for graph rendering; null if not yet computed. */
+    val editedProfile: PureProfile? = null,
+    /** Sum of basal rates over 24h, derived from [editedProfile]. */
+    val basalSum: Double = 0.0
 )
 
 @HiltViewModel
 @Stable
 class ProfileEditorViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
     private val rh: ResourceHelper,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
@@ -90,43 +95,74 @@ class ProfileEditorViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
+    // VM-local edit state. The profile here is a deep clone of the repo's version at
+    // selection time; edits mutate this clone and commit via [profileRepository.replace].
+    private var editingIndex: Int = 0
+    private var editingProfile: SingleProfile? = null
+    private var locallyEdited: Boolean = false
+
+    // Set while [saveProfile] is in flight so the [profileRepository.profiles] subscriber
+    // doesn't drop the user's in-flight edits when the save triggers a StateFlow emit.
+    // External changes (NS push, editor reset) still trigger a re-clone. Both writer
+    // (saveProfile coroutine) and reader (StateFlow collector) run on viewModelScope
+    // (Main.immediate by default), so no cross-thread access — plain Boolean is sufficient.
+    private var savePending: Boolean = false
+
     init {
-        loadState()
+        viewModelScope.launch { loadState() }
         subscribeToEvents()
     }
 
     private fun subscribeToEvents() {
-        rxBus.toFlow(EventLocalProfileChanged::class.java)
+        // Drop the StateFlow's replayed initial value — we only care about subsequent changes.
+        profileRepository.profiles.drop(1)
             .onEach {
-                aapsLogger.debug(LTag.PROFILE, "EventLocalProfileChanged received")
-                loadState()
+                aapsLogger.debug(LTag.PROFILE, "profileRepository.profiles changed")
+                if (savePending) {
+                    // Our own save triggered the emit. The repo just persisted the snapshot we
+                    // gave it (a deep clone of `editingProfile`); the live `editingProfile`
+                    // reference is correct as-is. Skip the re-clone, just refresh the UI.
+                    savePending = false
+                    loadState()
+                } else {
+                    // External profile change (e.g. NS push, editor reset). Reload the clone
+                    // — discards in-flight edits.
+                    editingProfile = profileRepository.profiles.value.getOrNull(editingIndex)?.deepClone()
+                    locallyEdited = false
+                    loadState()
+                }
             }.launchIn(viewModelScope)
     }
 
-    fun loadState() {
+    suspend fun loadState() {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val aps = activePlugin.activeAPS
 
-        val profiles = localProfileManager.profile?.getProfileList()?.map { it.toString() } ?: emptyList()
-        val currentProfile = localProfileManager.currentProfile()
+        val profiles = profileRepository.profiles.value.map { it.name }
+        val profile = editingProfile
         val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
 
-        val currentUnits = currentProfile?.mgdl?.let { if (it) GlucoseUnit.MGDL else GlucoseUnit.MMOL } ?: profileFunction.getUnits()
+        val currentUnits = profile?.mgdl?.let { if (it) GlucoseUnit.MGDL else GlucoseUnit.MMOL } ?: profileFunction.getUnits()
         val isMgdl = currentUnits == GlucoseUnit.MGDL
 
-        // Get structured validation errors and build tab error map
-        val validationErrors = localProfileManager.validateProfileStructured()
+        // Validate the local clone (with in-flight edits) — not the persisted snapshot.
+        val validationErrors = profile?.let { profileRepository.validateStructured(it) } ?: emptyList()
         val tabErrors = validationErrors
             .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(app.aaps.core.ui.R.string.profile_name_contains_dot) }
             .associateBy({ it.type }, { it.message })
 
+        // Build the PureProfile from the local clone too, so the graph preview reflects
+        // unsaved edits. Shared extension keeps this in sync with ProfileManagementViewModel.
+        val editedPureProfile = profile?.toPureProfile(dateUtil)
+        val basalSum = editedPureProfile?.let { ProfileSealed.Pure(it, null).baseBasalSum() } ?: 0.0
+
         _uiState.update { state ->
             state.copy(
                 profiles = profiles,
-                currentProfileIndex = localProfileManager.currentProfileIndex,
-                currentProfile = currentProfile?.toState(),
-                isEdited = localProfileManager.isEdited,
-                isValid = localProfileManager.numOfProfiles > 0 && tabErrors.isEmpty(),
+                currentProfileIndex = editingIndex,
+                currentProfile = profile?.toState(),
+                isEdited = locallyEdited,
+                isValid = profile != null && tabErrors.isEmpty(),
                 isLocked = isLocked,
                 units = currentUnits.asText,
                 supportsDynamicIsf = aps?.supportsDynamicIsf() == true,
@@ -139,7 +175,9 @@ class ProfileEditorViewModel @Inject constructor(
                 isfMax = if (isMgdl) HardLimits.MAX_ISF else HardLimits.MAX_ISF / 18.0,
                 targetMin = if (isMgdl) HardLimits.LIMIT_MIN_BG[0] else HardLimits.LIMIT_MIN_BG[0] / 18.0,
                 targetMax = if (isMgdl) HardLimits.LIMIT_MAX_BG[1] else HardLimits.LIMIT_MAX_BG[1] / 18.0,
-                tabErrors = tabErrors
+                tabErrors = tabErrors,
+                editedProfile = editedPureProfile,
+                basalSum = basalSum
             )
         }
     }
@@ -149,43 +187,45 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     /**
-     * Select a profile by index for editing.
-     * Called when navigating to the editor from ProfileManagementScreen.
+     * Select a profile by index for editing. Called from the navigation graph after the
+     * editor opens. Loads a deep clone of the profile at [index] into local edit state;
+     * subsequent edits mutate the clone, and [saveProfile] commits the clone back via the repo.
      */
     fun selectProfile(index: Int) {
-        localProfileManager.currentProfileIndex = index
-        localProfileManager.isEdited = false
-        loadState()
+        editingIndex = index
+        editingProfile = profileRepository.profiles.value.getOrNull(index)?.deepClone()
+        locallyEdited = false
+        viewModelScope.launch { loadState() }
     }
 
     fun updateProfileName(name: String) {
-        localProfileManager.currentProfile()?.name = name
+        editingProfile?.name = name
         markEdited()
     }
 
     fun updateIcEntry(index: Int, timeValue: TimeValue) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             updateJsonArrayEntry(profile.ic, index, timeValue)
             markEdited()
         }
     }
 
     fun updateIsfEntry(index: Int, timeValue: TimeValue) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             updateJsonArrayEntry(profile.isf, index, timeValue)
             markEdited()
         }
     }
 
     fun updateBasalEntry(index: Int, timeValue: TimeValue) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             updateJsonArrayEntry(profile.basal, index, timeValue)
             markEdited()
         }
     }
 
     fun updateTargetEntry(index: Int, low: TimeValue, high: TimeValue) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             updateJsonArrayEntry(profile.targetLow, index, low)
             updateJsonArrayEntry(profile.targetHigh, index, high)
             markEdited()
@@ -193,28 +233,28 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun addIcEntry(afterIndex: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             addJsonArrayEntry(profile.ic, afterIndex)
             markEdited()
         }
     }
 
     fun addIsfEntry(afterIndex: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             addJsonArrayEntry(profile.isf, afterIndex)
             markEdited()
         }
     }
 
     fun addBasalEntry(afterIndex: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             addJsonArrayEntry(profile.basal, afterIndex)
             markEdited()
         }
     }
 
     fun addTargetEntry(afterIndex: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             addJsonArrayEntry(profile.targetLow, afterIndex)
             addJsonArrayEntry(profile.targetHigh, afterIndex)
             markEdited()
@@ -222,7 +262,7 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun removeIcEntry(index: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             if (profile.ic.length() > 1 && index > 0) {
                 profile.ic.remove(index)
                 markEdited()
@@ -231,7 +271,7 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun removeIsfEntry(index: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             if (profile.isf.length() > 1 && index > 0) {
                 profile.isf.remove(index)
                 markEdited()
@@ -240,7 +280,7 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun removeBasalEntry(index: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             if (profile.basal.length() > 1 && index > 0) {
                 profile.basal.remove(index)
                 markEdited()
@@ -249,7 +289,7 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun removeTargetEntry(index: Int) {
-        localProfileManager.currentProfile()?.let { profile ->
+        editingProfile?.let { profile ->
             if (profile.targetLow.length() > 1 && index > 0) {
                 profile.targetLow.remove(index)
                 profile.targetHigh.remove(index)
@@ -309,27 +349,38 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     private fun markEdited() {
-        localProfileManager.isEdited = true
-        loadState()
+        locallyEdited = true
+        viewModelScope.launch { loadState() }
     }
 
     fun saveProfile() {
         viewModelScope.launch {
-            localProfileManager.storeSettings(dateUtil.now())
-            loadState()
+            val profile = editingProfile ?: return@launch
+            // Flag set BEFORE the replace so the event the replace fires is recognised as ours.
+            savePending = true
+            profileRepository.replace(editingIndex, profile)
+                .onSuccess { locallyEdited = false }
+                .onFailure { error ->
+                    // Clear the flag so the NEXT external event isn't mis-attributed to this
+                    // failed save. Surface the error in the log; the user keeps their unsaved
+                    // edits visible in the editor (locallyEdited stays true).
+                    savePending = false
+                    aapsLogger.error(LTag.PROFILE, "saveProfile failed at index $editingIndex", error)
+                }
         }
     }
 
     fun resetProfile() {
-        localProfileManager.loadSettings()
-        loadState()
+        // repo.reset() reloads from preferences and emits a new list on
+        // [profileRepository.profiles]; the subscriber re-clones editingProfile from the
+        // freshly-loaded list and refreshes the UI. Drops any local edits, matching the
+        // legacy "discard changes" semantics.
+        viewModelScope.launch { profileRepository.reset() }
     }
-
-    fun getEditedProfile() = localProfileManager.getEditedProfile()
 
     fun getActiveInsulin() = insulin
 
-    private fun LocalProfileManager.SingleProfile.toState(): SingleProfileState {
+    private fun SingleProfile.toState(): SingleProfileState {
         return SingleProfileState(
             name = name,
             mgdl = mgdl,
@@ -360,9 +411,4 @@ class ProfileEditorViewModel @Inject constructor(
         return String.format("%02d:00", hour)
     }
 
-    fun getBasalSum(): Double {
-        return localProfileManager.getEditedProfile()?.let {
-            ProfileSealed.Pure(it, null).baseBasalSum()
-        } ?: 0.0
-    }
 }

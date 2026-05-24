@@ -32,11 +32,10 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpStatusProvider
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -119,7 +118,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val commandQueue: CommandQueue,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
@@ -190,7 +189,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         )
     )
 
-    override fun onStart() {
+    override suspend fun onStart() {
         processSettings()
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -201,7 +200,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             .launchIn(newScope)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         super.onStop()
@@ -588,17 +587,14 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private suspend fun processPUMP(divided: Array<String>, receivedSms: Sms) {
         if (divided.size == 1) {
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.sms), object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        val reply = shortStatusBlocking()
-                        sendSMS(Sms(receivedSms.phoneNumber, reply))
-                    } else {
-                        val reply = rh.gs(R.string.sms_read_status_failed)
-                        sendSMS(Sms(receivedSms.phoneNumber, reply))
-                    }
-                }
-            })
+            val result = commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.sms))
+            if (result.success) {
+                val reply = shortStatusBlocking()
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+            } else {
+                val reply = rh.gs(R.string.sms_read_status_failed)
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+            }
             receivedSms.processed = true
         } else if ((divided.size == 2) && (divided[1].equals("CONNECT", ignoreCase = true))) {
             if (loop.allowedNextModes().contains(RM.Mode.RESUME)) {
@@ -650,7 +646,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private suspend fun processPROFILE(divided: Array<String>, receivedSms: Sms) { // load profiles
-        val store = localProfileManager.profile
+        val store = profileRepository.profile.value
         if (store == null) {
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.notconfigured)))
             receivedSms.processed = true
@@ -802,7 +798,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun processEXTENDED(divided: Array<String>, receivedSms: Sms) {
+    private suspend fun processEXTENDED(divided: Array<String>, receivedSms: Sms) {
         if (divided[1].uppercase(Locale.getDefault()) == "CANCEL" || divided[1].uppercase(Locale.getDefault()) == "STOP") {
             val passCode = generatePassCode()
             val reply = rh.gs(R.string.smscommunicator_extended_stop_reply_with_code, passCode)
@@ -855,7 +851,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
+    private suspend fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
         var bolus = SafeParse.stringToDouble(divided[1])
         val isMeal = divided.size > 2 && divided[2].equals("MEAL", ignoreCase = true)
         bolus = constraintChecker.applyBolusConstraints(ConstraintObject(bolus, aapsLogger)).value()

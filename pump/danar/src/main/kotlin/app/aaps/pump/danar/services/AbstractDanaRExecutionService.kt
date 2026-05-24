@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -50,6 +51,7 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Provider
@@ -77,6 +79,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
     @Inject lateinit var rfcommTransport: RfcommTransport
     @Inject lateinit var bolusProgressData: BolusProgressData
+    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     private val disposable = CompositeDisposable()
     protected var mRfcommSocket: RfcommSocket? = null

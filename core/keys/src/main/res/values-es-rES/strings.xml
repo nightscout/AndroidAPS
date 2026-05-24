@@ -201,6 +201,7 @@
     <string name="pref_title_carbs_request_threshold">Umbral de carbohidratos requeridos</string>
     <string name="carbs_req_threshold_summary">Umbral mínimo de carbohidratos para mostrar una alerta de sugerencia. Las sugerencias de carbohidratos por debajo de este valor no activarán una notificación</string>
     <string name="pref_title_half_basal_exercise_target">Objetivo de ejercicio con mitad de basal</string>
+    <string name="half_basal_exercise_target_summary">Establezca un valor, por ejemplo 160. Esto significa que cuando el objetivo temporal sea 160 mg/dL y «Objetivo alto aumenta sensibilidad=true», se aplicará un 50% de basal a este nivel (120 = 75%; 140 = 60%)</string>
     <string name="pref_title_iob_threshold_percent">Porcentaje de umbral de IOB</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Porcentaje de maxIOB por encima del cual se desactivan los SMB.\n\Valor por defecto: 100%\nCon un 100%, esta función queda efectivamente desactivada</string>
     <string name="pref_title_dynisf_adjustment_factor">Factor de ajuste de ISF dinámico</string>

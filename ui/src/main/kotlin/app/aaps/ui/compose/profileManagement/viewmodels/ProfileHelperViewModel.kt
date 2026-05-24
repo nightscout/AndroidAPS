@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.profileManagement.viewmodels
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +7,8 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -31,7 +30,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -42,7 +40,7 @@ import javax.inject.Inject
 @Stable
 class ProfileHelperViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
     val rh: ResourceHelper,
@@ -57,8 +55,6 @@ class ProfileHelperViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileHelperUiState())
     val uiState: StateFlow<ProfileHelperUiState> = _uiState.asStateFlow()
 
-    private var cachedCurrentProfile: PureProfile? = null
-
     init {
         loadInitialData()
     }
@@ -67,8 +63,7 @@ class ProfileHelperViewModel @Inject constructor(
         viewModelScope.launch {
             val currentProfileName = profileFunction.getProfileName()
             val currentProfile = profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
-            cachedCurrentProfile = currentProfile
-            val availableProfiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
+            val availableProfiles = profileRepository.profile.value?.getProfileList() ?: ArrayList()
             val profileSwitches = withContext(Dispatchers.IO) {
                 persistenceLayer.getEffectiveProfileSwitchesFromTime(
                     dateUtil.now() - T.months(2).msecs(),
@@ -79,6 +74,7 @@ class ProfileHelperViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     currentProfileName = currentProfileName,
+                    currentProfile = currentProfile,
                     availableProfiles = availableProfiles,
                     profileSwitches = profileSwitches
                 )
@@ -124,20 +120,20 @@ class ProfileHelperViewModel @Inject constructor(
             when (profileType) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
-                ProfileType.CURRENT           -> cachedCurrentProfile
+                ProfileType.CURRENT           -> uiState.value.currentProfile
 
                 ProfileType.AVAILABLE_PROFILE -> {
-                    val list = localProfileManager.profile?.getProfileList()
+                    // Snapshot once so the by-index lookup and the by-name lookup see the
+                    // same store version.
+                    val store = profileRepository.profile.value
+                    val list = store?.getProfileList()
                     if (list != null && profileIndex < list.size)
-                        localProfileManager.profile?.getSpecificProfile(list[profileIndex].toString())
+                        store.getSpecificProfile(list[profileIndex].toString())
                     else null
                 }
 
-                ProfileType.PROFILE_SWITCH    -> runBlocking {
-                    val switches = persistenceLayer.getEffectiveProfileSwitchesFromTime(
-                        dateUtil.now() - T.months(2).msecs(),
-                        true
-                    )
+                ProfileType.PROFILE_SWITCH    -> {
+                    val switches = uiState.value.profileSwitches
                     if (profileSwitchIndex < switches.size)
                         ProfileSealed.EPS(value = switches[profileSwitchIndex], activePlugin = null)
                             .convertToNonCustomizedProfile(dateUtil)
@@ -169,15 +165,12 @@ class ProfileHelperViewModel @Inject constructor(
             ProfileType.CURRENT           -> uiState.value.currentProfileName
 
             ProfileType.AVAILABLE_PROFILE -> {
-                val list = localProfileManager.profile?.getProfileList()
+                val list = profileRepository.profile.value?.getProfileList()
                 if (list != null && profileIndex < list.size) list[profileIndex].toString() else ""
             }
 
-            ProfileType.PROFILE_SWITCH    -> runBlocking {
-                val switches = persistenceLayer.getEffectiveProfileSwitchesFromTime(
-                    dateUtil.now() - T.months(2).msecs(),
-                    true
-                )
+            ProfileType.PROFILE_SWITCH    -> {
+                val switches = uiState.value.profileSwitches
                 if (profileSwitchIndex < switches.size) switches[profileSwitchIndex].originalCustomizedName else ""
             }
         }
@@ -204,12 +197,14 @@ class ProfileHelperViewModel @Inject constructor(
                     title = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
                     message = rh.gs(app.aaps.core.ui.R.string.copytolocalprofile),
                     onOk = {
-                        localProfileManager.addProfile(
-                            localProfileManager.copyFrom(
-                                it,
-                                "DefaultProfile " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()).replace(".", "/")
+                        viewModelScope.launch {
+                            profileRepository.add(
+                                profileRepository.copyFrom(
+                                    it,
+                                    "DefaultProfile " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()).replace(".", "/")
+                                )
                             )
-                        )
+                        }
                     }
                 )
             )
@@ -220,9 +215,10 @@ class ProfileHelperViewModel @Inject constructor(
 /**
  * UI state for ProfileHelperScreen
  */
-@Immutable
+@Stable
 data class ProfileHelperUiState(
     val currentProfileName: String = "",
+    val currentProfile: PureProfile? = null,
     val availableProfiles: List<CharSequence> = emptyList(),
     val profileSwitches: List<EPS> = emptyList(),
     val tddStatsData: TddStatsData? = null,

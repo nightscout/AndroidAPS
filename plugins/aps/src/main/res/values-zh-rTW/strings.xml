@@ -16,7 +16,6 @@
     <string name="description_ama">2017年算法狀態</string>
     <string name="description_smb">針對高級用戶的最新算法</string>
     <string name="description_smb_dynamic_isf">針對高級用戶的最新算法，具備動態/自動ISF</string>
-    <string name="description_auto_isf">最先進的演算法，適用於進階使用者並包含自動ISF擴展功能</string>
     <string name="openapsma_last_run_label">最後執行</string>
     <string name="openapsma_input_parameters_label">輸入參數</string>
     <string name="openapsma_glucose_status_label">血糖狀態</string>

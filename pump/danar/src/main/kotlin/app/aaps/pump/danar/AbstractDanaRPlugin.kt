@@ -104,7 +104,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     override var pumpDescription = PumpDescription()
         protected set
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         disposable += rxBus
             .toObservable(EventConfigBuilderChange::class.java)
@@ -116,12 +116,12 @@ abstract class AbstractDanaRPlugin protected constructor(
         preferences.observe(DanaStringNonKey.RName).drop(1).onEach {
             danaPump.reset()
             pumpSync.connectNewPump(true)
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed))
         }.launchIn(newScope)
         danaPump.serialNumber = preferences.get(DanaStringNonKey.RName) // fill at start to allow password reset
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         scope?.cancel()
         scope = null

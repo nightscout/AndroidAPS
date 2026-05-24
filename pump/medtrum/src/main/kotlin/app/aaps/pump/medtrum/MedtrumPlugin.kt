@@ -33,7 +33,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -122,7 +121,7 @@ class MedtrumPlugin @Inject constructor(
     private var scope: CoroutineScope? = null
     private var medtrumService: MedtrumService? = null
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStart()")
         medtrumPump.loadVarsFromSP()
@@ -142,7 +141,7 @@ class MedtrumPlugin @Inject constructor(
         preferences.put(BooleanKey.AlertPumpUnreachable, true)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStop()")
         scope?.cancel()
         scope = null
@@ -374,18 +373,15 @@ class MedtrumPlugin @Inject constructor(
     override suspend fun loadTDDs(): PumpEnactResult = pumpEnactResultProvider.get() // Note: Can implement this if we implement history fully (no priority)
     override fun canHandleDST(): Boolean = true
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         medtrumPump.needCheckTimeUpdate = true
         if (isInitialized()) {
-            commandQueue.updateTime(object : Callback() {
-                override fun run() {
-                    if (!this.result.success) {
-                        aapsLogger.error(LTag.PUMP, "Medtrum time update failed")
-                        // Only notify here on failure (connection may be failed), service will handle success
-                        medtrumService?.timeUpdateNotification(false)
-                    }
-                }
-            })
+            val result = commandQueue.updateTime()
+            if (!result.success) {
+                aapsLogger.error(LTag.PUMP, "Medtrum time update failed")
+                // Only notify here on failure (connection may be failed), service will handle success
+                medtrumService?.timeUpdateNotification(false)
+            }
         }
     }
 

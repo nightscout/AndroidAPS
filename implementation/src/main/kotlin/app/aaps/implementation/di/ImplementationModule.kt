@@ -16,8 +16,8 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profiling.Profiler
@@ -63,8 +63,8 @@ import app.aaps.implementation.overview.LastBgDataImpl
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.preference.PreferenceVisibilityContextImpl
-import app.aaps.implementation.profile.LocalProfileManagerImpl
 import app.aaps.implementation.profile.ProfileFunctionImpl
+import app.aaps.implementation.profile.ProfileRepositoryImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
 import app.aaps.implementation.profiling.ProfilerImpl
@@ -155,7 +155,7 @@ class ImplementationModule {
         @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
         @Binds fun bindsProfileUtil(profileUtilImpl: ProfileUtilImpl): ProfileUtil
-        @Binds fun bindsLocalProfileManager(localProfileManagerImpl: LocalProfileManagerImpl): LocalProfileManager
+        @Binds fun bindsProfileRepository(profileRepositoryImpl: ProfileRepositoryImpl): ProfileRepository
         @Binds fun bindsStorage(fileStorage: FileStorage): Storage
         @Binds fun bindsReceiverStatusStore(receiverStatusStoreImpl: ReceiverStatusStoreImpl): ReceiverStatusStore
         @Binds fun bindsUserEntryPresentationHelper(userEntryPresentationHelperImpl: UserEntryPresentationHelperImpl): UserEntryPresentationHelper

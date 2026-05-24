@@ -94,7 +94,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker.checkPump()
 
         // Assert
-        verify(commandQueue).readStatus(anyOrNull(), anyOrNull())
+        verify(commandQueue).readStatus(anyOrNull())
     }
 
     @Test
@@ -123,7 +123,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker.doWorkAndLog()
 
         // Assert
-        verify(commandQueue, never()).readStatus(any(), anyOrNull())
+        verify(commandQueue, never()).readStatus(any())
         verify(mockedRxBus, never()).send(any<EventProfileChangeRequested>())
     }
 

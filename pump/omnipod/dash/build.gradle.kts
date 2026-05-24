@@ -31,6 +31,8 @@ dependencies {
     api(libs.androidx.room.runtime)
     implementation(libs.androidx.room.rxjava3)
 
+    implementation(libs.kotlinx.coroutines.rx3)
+
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)

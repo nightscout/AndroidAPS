@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
@@ -365,15 +364,12 @@ class InsulinDialogViewModel @Inject constructor(
                     notes,
                     ValueWithUnit.Insulin(insulinAfterConstraints)
                 )
-                commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                        } else {
-                            automation.removeAutomationEventBolusReminder()
-                        }
-                    }
-                })
+                val result = commandQueue.bolus(detailedBolusInfo)
+                if (!result.success) {
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+                } else {
+                    automation.removeAutomationEventBolusReminder()
+                }
             }
         }
     }

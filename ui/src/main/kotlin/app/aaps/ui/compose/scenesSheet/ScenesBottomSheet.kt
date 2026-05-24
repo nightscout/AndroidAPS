@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -30,7 +31,6 @@ import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.compose.scenes.SceneIcons
-import androidx.compose.material3.HorizontalDivider
 import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,65 +71,76 @@ fun ScenesBottomSheet(
 
             val automationColor = ElementType.AUTOMATION.color()
             automationItems.forEach { item ->
+                val disabled = item.activationReason != null
+                val itemAlpha = if (disabled) 0.5f else 1f
                 ListItem(
                     headlineContent = {
                         Text(
                             text = item.title,
-                            color = automationColor
+                            color = automationColor.copy(alpha = itemAlpha)
                         )
                     },
-                    supportingContent = if (item.triggerIcons.isNotEmpty() || item.actionIcons.isNotEmpty()) {
-                        {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                modifier = Modifier.padding(top = 4.dp)
-                            ) {
-                                item.triggerIcons.forEach { data ->
-                                    Icon(
-                                        imageVector = data.icon,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(20.dp),
-                                        tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                if (item.triggerIcons.isNotEmpty() && item.actionIcons.isNotEmpty()) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(16.dp)
-                                            .padding(horizontal = 2.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                item.actionIcons.forEach { data ->
-                                    Icon(
-                                        imageVector = data.icon,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(20.dp),
-                                        tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                    supportingContent = when {
+                        disabled -> {
+                            { Text(text = item.activationReason.orEmpty(), color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                        }
+
+                        item.triggerIcons.isNotEmpty() || item.actionIcons.isNotEmpty() -> {
+                            {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                    modifier = Modifier.padding(top = 4.dp)
+                                ) {
+                                    item.triggerIcons.forEach { data ->
+                                        Icon(
+                                            imageVector = data.icon,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(20.dp),
+                                            tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                    if (item.triggerIcons.isNotEmpty() && item.actionIcons.isNotEmpty()) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(16.dp)
+                                                .padding(horizontal = 2.dp),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                    item.actionIcons.forEach { data ->
+                                        Icon(
+                                            imageVector = data.icon,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(20.dp),
+                                            tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                         }
-                    } else null,
+
+                        else -> null
+                    },
                     leadingContent = {
                         val firstIcon = item.firstActionIcon
                         if (firstIcon != null) {
                             TonalIcon(
                                 icon = firstIcon.icon,
-                                color = firstIcon.tint ?: automationColor
+                                color = (firstIcon.tint ?: automationColor).copy(alpha = itemAlpha)
                             )
                         } else {
                             TonalIcon(
                                 icon = IcAutomation,
-                                color = automationColor
+                                color = automationColor.copy(alpha = itemAlpha)
                             )
                         }
                     },
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
-                    modifier = Modifier.clickable {
+                    modifier = if (disabled) Modifier
+                    else Modifier.clickable {
                         onDismiss()
                         onItemClick(item)
                     }
@@ -142,26 +153,31 @@ fun ScenesBottomSheet(
 
                 val sceneColor = ElementType.SCENE.color()
                 sceneItems.forEach { item ->
+                    val disabled = item.activationReason != null
+                    val itemAlpha = if (disabled) 0.5f else 1f
                     ListItem(
                         headlineContent = {
                             Text(
                                 text = item.name,
-                                color = sceneColor
+                                color = sceneColor.copy(alpha = itemAlpha)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(CoreUiR.string.scene_action_count, item.actionCount)
+                                text = item.activationReason
+                                    ?: stringResource(CoreUiR.string.scene_action_count, item.actionCount),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
                         leadingContent = {
                             TonalIcon(
                                 icon = SceneIcons.fromKey(item.iconKey).icon,
-                                color = sceneColor
+                                color = sceneColor.copy(alpha = itemAlpha)
                             )
                         },
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
-                        modifier = Modifier.clickable {
+                        modifier = if (disabled) Modifier
+                        else Modifier.clickable {
                             onDismiss()
                             onSceneClick(item.id)
                         }

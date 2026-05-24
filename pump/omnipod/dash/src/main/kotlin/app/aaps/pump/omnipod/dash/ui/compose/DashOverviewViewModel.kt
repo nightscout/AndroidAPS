@@ -22,8 +22,8 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -305,9 +305,7 @@ class DashOverviewViewModel @Inject constructor(
                 icon = Icons.Filled.Refresh,
                 enabled = podStateManager.isUniqueIdSet && queueEmpty,
                 onClick = {
-                    commandQueue.readStatus(rh.gs(CoreUiR.string.refresh), object : Callback() {
-                        override fun run() {}
-                    })
+                    viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.refresh)) }
                 }
             ),
             PumpAction(
@@ -315,27 +313,27 @@ class DashOverviewViewModel @Inject constructor(
                 icon = Icons.Filled.NotificationsOff,
                 enabled = queueEmpty,
                 visible = podStateManager.isPodRunning && (podStateManager.activeAlerts?.isNotEmpty() == true || commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)),
-                onClick = { commandQueue.customCommand(CommandSilenceAlerts(), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_silence_alerts), false)) }
+                onClick = { runCustomCommandWithErrorDialog(CommandSilenceAlerts(), rh.gs(CommonR.string.omnipod_common_error_failed_to_silence_alerts)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery),
                 icon = Icons.Filled.PlayArrow,
                 enabled = queueEmpty,
                 visible = podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class.java)),
-                onClick = { commandQueue.customCommand(CommandResumeDelivery(), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_resume_delivery), false)) }
+                onClick = { runCustomCommandWithErrorDialog(CommandResumeDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_resume_delivery)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_suspend_delivery),
                 icon = Icons.Filled.Pause,
                 visible = false, // Suspend button always hidden for Dash (same as fragment)
-                onClick = { commandQueue.customCommand(CommandSuspendDelivery(), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_suspend_delivery), false)) }
+                onClick = { runCustomCommandWithErrorDialog(CommandSuspendDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_suspend_delivery)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_set_time),
                 icon = Icons.Filled.Schedule,
                 enabled = !podStateManager.isSuspended && queueEmpty,
                 visible = podStateManager.isActivationCompleted && !podStateManager.sameTimeZone,
-                onClick = { commandQueue.customCommand(CommandHandleTimeChange(true), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_set_time), false)) }
+                onClick = { runCustomCommandWithErrorDialog(CommandHandleTimeChange(true), rh.gs(CommonR.string.omnipod_common_error_failed_to_set_time)) }
             )
         )
     }
@@ -365,7 +363,7 @@ class DashOverviewViewModel @Inject constructor(
                 category = ActionCategory.MANAGEMENT,
                 enabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java),
                 visible = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED),
-                onClick = { commandQueue.customCommand(CommandPlayTestBeep(), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_play_test_beep), false)) }
+                onClick = { runCustomCommandWithErrorDialog(CommandPlayTestBeep(), rh.gs(CommonR.string.omnipod_common_error_failed_to_play_test_beep)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_pod_history),
@@ -539,15 +537,10 @@ class DashOverviewViewModel @Inject constructor(
 
     // endregion
 
-    inner class DisplayResultDialogCallback(
-        private val errorMessagePrefix: String,
-        private val withSoundOnError: Boolean
-    ) : Callback() {
-
-        override fun run() {
-            if (result.success) {
-                // Success — no dialog needed, UI will refresh via events
-            } else {
+    private fun runCustomCommandWithErrorDialog(customCommand: CustomCommand, errorMessagePrefix: String) {
+        viewModelScope.launch {
+            val result = commandQueue.customCommand(customCommand)
+            if (!result.success) {
                 _events.tryEmit(
                     OmnipodOverviewEvent.ShowErrorDialog(
                         rh.gs(CoreUiR.string.warning),

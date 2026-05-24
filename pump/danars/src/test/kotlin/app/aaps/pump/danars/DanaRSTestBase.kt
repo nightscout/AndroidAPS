@@ -4,13 +4,15 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.kotlin.whenever
 
 open class DanaRSTestBase : TestBaseWithProfile() {
 
-    val bolusProgressData by lazy { BolusProgressData(ch, rh) }
+    val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
     lateinit var danaPump: DanaPump
 
     @BeforeEach

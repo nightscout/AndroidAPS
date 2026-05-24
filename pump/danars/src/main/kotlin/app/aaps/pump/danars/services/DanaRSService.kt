@@ -7,6 +7,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -22,6 +23,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -112,6 +115,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
     @Inject lateinit var danaRSPacketAPSBasalSetTemporaryBasal: Provider<DanaRSPacketAPSBasalSetTemporaryBasal>
     @Inject lateinit var danaRSPacketAPSHistoryEvents: Provider<DanaRSPacketAPSHistoryEvents>
     @Inject lateinit var danaRSPacketAPSSetEventHistory: Provider<DanaRSPacketAPSSetEventHistory>
@@ -375,15 +379,14 @@ class DanaRSService : DaggerService() {
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                // reread bolus status
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
-                sendMessage(danaRSPacketBolusGetStepBolusInformation.get()) // last bolus
-                bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.disconnecting), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
-                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-            }
-        })
+        appScope.launch {
+            commandQueue.loadEvents()
+            // reread bolus status
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
+            sendMessage(danaRSPacketBolusGetStepBolusInformation.get()) // last bolus
+            bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.disconnecting), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
+        }
         return !start.failed && !connectionBroken
     }
 

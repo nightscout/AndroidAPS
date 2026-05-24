@@ -162,6 +162,8 @@ class BleEncryption @Inject constructor() {
                 val size = 9
                 val array = UByteArray(size)
 
+                array[DANAR_PACKET__START_POS] = DANAR_PACKET__START_PACKET
+                array[DANAR_PACKET__START_POS + 1] = DANAR_PACKET__START_PACKET
                 array[DANAR_PACKET__LENGTH_POS] = (size - 7).toUByte()
                 array[DANAR_PACKET__TYPE_POS] = DANAR_PACKET__TYPE_ENCRYPTION_REQUEST
                 array[DANAR_PACKET__OPCODE_POS] = opcode.toUByte()

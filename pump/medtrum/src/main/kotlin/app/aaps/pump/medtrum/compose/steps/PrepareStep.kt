@@ -132,12 +132,6 @@ internal fun PrepareStepContent(
                     text = stringResource(R.string.patch_begin_activation).stripHtml(),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.patch_not_active_note),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
             }
 
             PrepareState.CONNECTING,

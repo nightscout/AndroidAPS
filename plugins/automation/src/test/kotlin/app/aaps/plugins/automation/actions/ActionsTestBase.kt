@@ -48,7 +48,7 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.insulin = insulin
                 it.profileFunction = profileFunction
                 it.dateUtil = dateUtil
-                it.localProfileManager = localProfileManager
+                it.profileRepository = profileRepository
             }
             if (it is ActionProfileSwitchPercent) {
                 it.profileFunction = profileFunction

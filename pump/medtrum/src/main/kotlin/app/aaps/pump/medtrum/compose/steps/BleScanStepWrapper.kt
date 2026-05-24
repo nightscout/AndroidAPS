@@ -2,8 +2,10 @@ package app.aaps.pump.medtrum.compose.steps
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.BleScanStep
+import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.compose.MedtrumPatchViewModel
 
 @Composable
@@ -19,6 +21,7 @@ internal fun BleScanStepWrapper(
         onStartScan = { viewModel.startDeviceScan() },
         onStopScan = { viewModel.stopDeviceScan() },
         onCancel = onCancel,
-        deviceNameFilter = Regex("^MT")
+        deviceNameFilter = Regex("^MT"),
+        subtitle = stringResource(R.string.ble_scan_connect_pump_base_first)
     )
 }

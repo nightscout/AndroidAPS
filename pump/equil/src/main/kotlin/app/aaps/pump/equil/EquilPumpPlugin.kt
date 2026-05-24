@@ -65,6 +65,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import javax.inject.Inject
@@ -113,7 +114,7 @@ class EquilPumpPlugin @Inject constructor(
 
     private var scope: CoroutineScope? = null
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         equilManager.init()
 
@@ -159,7 +160,7 @@ class EquilPumpPlugin @Inject constructor(
         pumpDescription = PumpDescription().fillFor(pumpType)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin.onStop()")
         scope?.cancel()
@@ -195,8 +196,9 @@ class EquilPumpPlugin @Inject constructor(
 
     override suspend fun getPumpStatus(reason: String) {
         if (equilManager.isActivationCompleted()) {
-            commandQueue.customCommand(CmdModeAndHistoryGet(), null)
-            commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager), null)
+            // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+            pluginScope.launch { commandQueue.customCommand(CmdModeAndHistoryGet()) }
+            pluginScope.launch { commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager)) }
         }
     }
 
@@ -313,9 +315,9 @@ class EquilPumpPlugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.debug(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver")
-        commandQueue.customCommand(CmdTimeSet(aapsLogger, preferences, equilManager), null)
+        commandQueue.customCommand(CmdTimeSet(aapsLogger, preferences, equilManager))
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false

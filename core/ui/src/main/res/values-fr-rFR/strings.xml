@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
     <string name="result">Résultat</string>
     <string name="settings">Paramètres</string>
+    <string name="open_plugin">Ouvrir le plugin</string>
+    <string name="configbuilder_pick_one_hint">Choisissez-en un. Un seul peut être actif à la fois.</string>
+    <string name="configbuilder_pick_many_hint">Choisissez toutes les options qui s\'appliquent.</string>
+    <string name="configbuilder_no_selection_warning">Aucun plugin n\'est sélectionné dans cette catégorie.</string>
     <string name="simple_mode">Mode simple</string>
     <string name="expand">Développer</string>
     <string name="collapse">Replier</string>
@@ -607,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Aucun profil séléctionné</string>
     <string name="missing_profile_name">Nom de profil manquant</string>
+    <string name="profile_not_saved_activate">Profil non enregistré. Veuillez enregistrer le profil avant de l\'activer.</string>
+    <string name="profile_activation_failed">L\'activation du profil a échoué</string>
     <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
     <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
     <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
@@ -640,7 +646,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilité</string>
-    <string name="isf_for_carbs">SI pour l\'Assistant et le calcul GA: %1$.1f</string>
+    <string name="isf_for_carbs">SI moyen pour l\'Assistant et le calcul GA: %1$.1f</string>
     <string name="autosens_long">Valeur Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens dans l\'algorithme: %.0f%%</string>

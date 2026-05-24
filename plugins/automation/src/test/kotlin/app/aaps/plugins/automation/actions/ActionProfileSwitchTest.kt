@@ -49,18 +49,18 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     @Test fun doAction() = runTest {
         //Empty input
         whenever(profileFunction.getProfileName()).thenReturn("Test")
-        sut.inputProfileName = InputProfileName(rh, localProfileManager, "")
+        sut.inputProfileName = InputProfileName("")
         assertThat(sut.doAction().success).isFalse()
 
         //Not initialized profileStore
         whenever(profileFunction.getProfile()).thenReturn(null)
-        sut.inputProfileName = InputProfileName(rh, localProfileManager, "someProfile")
+        sut.inputProfileName = InputProfileName("someProfile")
         assertThat(sut.doAction().success).isFalse()
 
         //profile already set
         whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(profileFunction.getProfileName()).thenReturn("Test")
-        sut.inputProfileName = InputProfileName(rh, localProfileManager, "Test")
+        sut.inputProfileName = InputProfileName("Test")
         sut.doAction().let {
             assertThat(it.success).isTrue()
             assertThat(it.comment).isEqualTo("Already set")
@@ -68,7 +68,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         // profile doesn't exists
         whenever(profileFunction.getProfileName()).thenReturn("Active")
-        sut.inputProfileName = InputProfileName(rh, localProfileManager, "Test")
+        sut.inputProfileName = InputProfileName("Test")
         sut.doAction().let {
             assertThat(it.success).isFalse()
             assertThat(it.comment).isEqualTo("not exists")
@@ -77,7 +77,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         // do profile switch
         whenever(profileFunction.getProfileName()).thenReturn("Test")
         whenever(profileFunction.createProfileSwitch(anyOrNull(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
-        sut.inputProfileName = InputProfileName(rh, localProfileManager, TESTPROFILENAME)
+        sut.inputProfileName = InputProfileName(TESTPROFILENAME)
         sut.doAction().let {
             assertThat(it.success).isTrue()
             assertThat(it.comment).isEqualTo("OK")
@@ -90,7 +90,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     }
 
     @Test fun toJSONTest() = runTest {
-        sut.inputProfileName = InputProfileName(rh, localProfileManager, "Test")
+        sut.inputProfileName = InputProfileName("Test")
         JSONAssert.assertEquals(STRING_JSON, sut.toJSON(), true)
     }
 

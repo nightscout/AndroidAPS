@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">生病日</string>
     <string name="scene_wizard_sick_day_desc">增强配置（150%），以应对患病期间升高的胰岛素抵抗。</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">疾病、发烧和压力激素会显著增加胰岛素抵抗——有时会提高 50% 或更多。使用更强的个人资料/治疗方案（例如 150%）可以让算法在所有计算中输送更多胰岛素，包括基础率、大剂量建议和校正因子。您也可以在后续步骤中添加临时目标或调整运行模式。随着身体状况恢复，请密切监测并相应调整。</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">生病日 — 呕吐</string>
     <string name="scene_wizard_sick_day_vomiting_desc">调低基础率配置并启用低血糖保护（LGS）— 适用于无法正常消化进食时，与标准生病日情景的设置相反。</string>
@@ -42,6 +43,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">黄体期</string>
     <string name="scene_wizard_luteal_phase_desc">上调基础率配置，应对经期前胰岛素抵抗。</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">许多女性在黄体期（大约月经前 1-2 周）会出现胰岛素抵抗增强。这是由于孕酮水平升高会降低胰岛素敏感性。个体之间的差异非常大——有些人胰岛素需要量增加 10-30%，另一些人则变化极小。建议从保守的增量（115%）开始，并根据您自身在几个周期中的模式进行调整。在护理中追踪这一情况有助于识别您个人的生理节律。</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">高温天气</string>
     <string name="scene_wizard_hot_weather_desc">下调基础率配置 — 高温会加快胰岛素吸收速度。</string>
@@ -54,6 +56,7 @@
     <string name="scene_template_blank">空白</string>
     <string name="scene_wizard_blank_desc">从零开始，不预设任何情景动作。</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">配置文件切换会同时改变您的基础率、胰岛素敏感因子（ISF）和胰岛素与碳水化合物比值（IC）。您可以通过百分比来缩放所有参数——例如，设为110% 会使基础输注量、大剂量计算和碳水化合物吸收率增加10%。如果您已针对特定情况设置了不同的配置文件，也可以直接切换到该配置文件。</string>
     <string name="scene_wizard_tt_info">临时血糖目标可让算法在指定时间段内，维持一个自定义的血糖控制水平。调高目标值时，算法对血糖升高的响应会更平缓，整体控制目标更高，从而减少胰岛素输注，有助于预防运动期间发生低血糖。调低目标值时，算法会更早介入、增加胰岛素给药，适合餐前提前压制血糖波动。可直接选用下方预设模板，目标数值和适用场景均已提前配置好。</string>
     <string name="scene_wizard_smb_info">微型大剂量（SMB） 允许算法提前分多次小剂量输注胰岛素，同时暂时暂停基础率输注以做平衡，相当于预支后续的基础胰岛素，实现更快降糖响应。关闭 SMB 后，算法将不再使用这种方式，只能通过调节基础率来控糖。整体降糖响应会变得更平缓、温和，更适合运动或睡眠期间使用。</string>
     <string name="scene_wizard_loop_mode_info">运行模式决定算法拥有多大自主调控权限。闭环模式下，算法可自动调节胰岛素输注。LGS（低血糖暂停） 仅在血糖走低、即将发生低血糖时减少或停止胰岛素输注，不会主动增加给药量。开环模式只会计算控糖建议，每一次调整都需你手动确认后才会执行。</string>

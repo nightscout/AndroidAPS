@@ -13,6 +13,20 @@ interface ProfileUtil {
     val units: GlucoseUnit
 
     /**
+     * Translatable display label for currently selected units ("mg/dl" or "mmol/l")
+     */
+    val unitLabel: String
+
+    /**
+     * Convert value from mg/dl to a formatted string with translatable unit label
+     * in currently selected units. Uses format strings bg_mgdl / bg_mmol so the
+     * number and unit are kept together for correct RTL rendering.
+     *
+     * @param valueInMgdl glucose value in mg/dl, or null → empty string
+     */
+    fun fromMgdlToStringWithUnits(valueInMgdl: Double?): String
+
+    /**
      * Convert value from mg/dl to selected units
      *
      * @param valueInMgdl glucose value in mgdl

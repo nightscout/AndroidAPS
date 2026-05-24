@@ -49,7 +49,7 @@ class RunningModeExpiryWorker(
                 LTag.APS,
                 "RunningModeExpiryWorker: canceling EMULATED_PUMP_SUSPEND TBR at RM expiry (rate=${tbr.rate}, end=${tbr.end})"
             )
-            commandQueue.cancelTempBasal(enforceNew = true, callback = null)
+            commandQueue.cancelTempBasal(enforceNew = true)
         } else {
             aapsLogger.debug(LTag.APS, "RunningModeExpiryWorker: no EMULATED_PUMP_SUSPEND TBR active, no-op")
         }

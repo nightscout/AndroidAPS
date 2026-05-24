@@ -86,7 +86,7 @@ class TizenPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -107,7 +107,7 @@ class TizenPlugin @Inject constructor(
             .launchIn(newScope)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         disposable.clear()
         scope?.cancel()
         scope = null
@@ -211,7 +211,7 @@ class TizenPlugin @Inject constructor(
         bundle.putLong("basalTimeStamp", now)
         bundle.putDouble("baseBasal", profile.getBasal())
         bundle.putString("profile", runBlocking { profileFunction.getProfileName() })
-        processedTbrEbData.getTempBasalIncludingConvertedExtended(now)?.let {
+        runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(now) }?.let {
             bundle.putLong("tempBasalStart", it.timestamp)
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR

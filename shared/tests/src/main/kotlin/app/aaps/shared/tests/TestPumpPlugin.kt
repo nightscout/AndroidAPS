@@ -91,7 +91,7 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override suspend fun loadTDDs(): PumpEnactResult = PumpEnactResultObject(rh).success(true)
     override fun canHandleDST(): Boolean = true
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) { /* not needed */
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) { /* not needed */
     }
 
     override fun selectedActivePump(): Pump = this

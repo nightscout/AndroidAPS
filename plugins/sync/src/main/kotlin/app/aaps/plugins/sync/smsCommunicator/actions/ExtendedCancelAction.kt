@@ -4,7 +4,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
@@ -24,22 +23,19 @@ class ExtendedCancelAction(
 ) : SmsAction(pumpCommand = true) {
 
     override suspend fun run() {
-        commandQueue.cancelExtended(object : Callback() {
-            override fun run() {
-                if (result.success) {
-                    var replyText = rh.gs(R.string.smscommunicator_extended_canceled)
-                    replyText += "\n" + shortStatusBlocking()
-                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                } else {
-                    var replyText = rh.gs(R.string.smscommunicator_extended_cancel_failed)
-                    replyText += "\n" + shortStatusBlocking()
-                    smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(
-                        Action.EXTENDED_BOLUS, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_extended_canceled),
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_extended_canceled))
-                    )
-                }
-            }
-        })
+        val result = commandQueue.cancelExtended()
+        if (result.success) {
+            var replyText = rh.gs(R.string.smscommunicator_extended_canceled)
+            replyText += "\n" + shortStatusBlocking()
+            sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+            uel.log(
+                Action.EXTENDED_BOLUS, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_extended_canceled),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_extended_canceled))
+            )
+        } else {
+            var replyText = rh.gs(R.string.smscommunicator_extended_cancel_failed)
+            replyText += "\n" + shortStatusBlocking()
+            smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
+        }
     }
 }

@@ -18,7 +18,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -129,7 +128,9 @@ class ManageViewModel @Inject constructor(
                 showCancelTempBasal = false
                 cancelTempBasalText = ""
             } else {
-                val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+                val activeTemp = withContext(Dispatchers.IO) {
+                    processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+                }
                 if (activeTemp != null) {
                     showTempBasal = false
                     showCancelTempBasal = true
@@ -167,13 +168,15 @@ class ManageViewModel @Inject constructor(
 
     // Action handlers
     fun cancelTempBasal(onResult: (Boolean, String) -> Unit) {
-        if (processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis()) != null) {
-            uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
-            commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
-                override fun run() {
-                    onResult(result.success, result.comment)
-                }
-            })
+        viewModelScope.launch {
+            val activeTemp = withContext(Dispatchers.IO) {
+                processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+            }
+            if (activeTemp != null) {
+                uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
+                val result = commandQueue.cancelTempBasal(enforceNew = true)
+                onResult(result.success, result.comment)
+            }
         }
     }
 
@@ -184,11 +187,8 @@ class ManageViewModel @Inject constructor(
             }
             if (activeExtended != null) {
                 uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.Actions)
-                commandQueue.cancelExtended(object : Callback() {
-                    override fun run() {
-                        onResult(result.success, result.comment)
-                    }
-                })
+                val result = commandQueue.cancelExtended()
+                onResult(result.success, result.comment)
             }
         }
     }

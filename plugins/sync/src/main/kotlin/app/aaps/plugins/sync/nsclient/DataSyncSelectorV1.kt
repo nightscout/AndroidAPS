@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
@@ -32,7 +32,7 @@ class DataSyncSelectorV1 @Inject constructor(
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
     private val nsClientRepository: NSClientRepository
 ) : DataSyncSelector {
@@ -786,9 +786,10 @@ class DataSyncSelectorV1 @Inject constructor(
         val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
-            if (localProfileManager.profile?.allProfilesValid != true) return
-            val profileStore = localProfileManager.profile
-            val profileJson = profileStore?.getData() ?: return
+            // Snapshot once so the validity check and JSON read see the same store.
+            val profileStore = profileRepository.profile.value ?: return
+            if (!profileStore.allProfilesValid) return
+            val profileJson = profileStore.getData() ?: return
             // add for v3
             if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)
                 profileJson.put("date", profileStore.getStartDate())

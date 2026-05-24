@@ -187,7 +187,7 @@ class MedtronicPumpPlugin @Inject constructor(
     private val busyTimestamps: MutableList<Long> = ArrayList()
     private var isBusy = false
 
-    override fun onStart() {
+    override suspend fun onStart() {
         aapsLogger.debug(LTag.PUMP, deviceID() + " started. (V2.0007)")
         serviceConnection = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName) {
@@ -225,12 +225,12 @@ class MedtronicPumpPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "Medtronic serial number changed, reporting new pump")
             medtronicPumpStatus.serialNumber = preferences.getIfExists(MedtronicStringPreferenceKey.Serial) ?: ""
             pumpSync.connectNewPump()
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed))
         }.launchIn(newScope)
         super.onStart()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         super.onStop()
@@ -1180,7 +1180,7 @@ class MedtronicPumpPlugin @Inject constructor(
         return basalProfile
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.warn(LTag.PUMP, "Time or TimeZone changed. ")
         hasTimeDateOrTimeZoneChanged = true
     }

@@ -7,16 +7,20 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
+
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyDouble
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.any
@@ -38,6 +42,11 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
     fun prepare() {
         whenever(config.APS).thenReturn(true)
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        runBlocking {
+            whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider.get().success(true))
+        }
         reconciler = RunningModeReconciler(
             persistenceLayer = persistenceLayer,
             processedTbrEbData = processedTbrEbData,
@@ -61,9 +70,9 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         val mode = workingMode(RM.Mode.CLOSED_LOOP)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         reconciler.start()
-        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any(), anyOrNull())
-        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any(), anyOrNull())
-        verify(commandQueue, never()).cancelTempBasal(any(), any(), anyOrNull())
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any())
+        verify(commandQueue, never()).cancelTempBasal(any(), any())
     }
 
     // --- Startup: working mode, pump clean ---
@@ -74,8 +83,8 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
         reconciler.start()
-        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any(), anyOrNull())
-        verify(commandQueue, never()).cancelTempBasal(any(), any(), anyOrNull())
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+        verify(commandQueue, never()).cancelTempBasal(any(), any())
     }
 
     // --- Startup: zero-delivery mode, pump not zero ---
@@ -96,7 +105,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
 
         verify(commandQueue).tempBasalAbsolute(
             eq(0.0), eq(60), eq(true), any(),
-            eq(PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND), any<Callback>()
+            eq(PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND)
         )
     }
 
@@ -123,7 +132,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
 
         reconciler.start()
 
-        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any(), anyOrNull())
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
     }
 
     // --- Startup drift: working mode but pump has stale zero-TBR ---
@@ -144,7 +153,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
 
         reconciler.start()
 
-        verify(commandQueue).cancelTempBasal(eq(true), any(), any<Callback>())
+        verify(commandQueue).cancelTempBasal(eq(true), any())
     }
 
     // --- Transition: CLOSED_LOOP -> DISCONNECTED_PUMP ---
@@ -171,7 +180,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
 
         verify(commandQueue).tempBasalAbsolute(
             eq(0.0), eq(60), eq(true), any(),
-            eq(PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND), any<Callback>()
+            eq(PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND)
         )
     }
 
@@ -197,7 +206,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(working)
         flow.emit(listOf(working))
 
-        verify(commandQueue).cancelTempBasal(eq(true), any(), any<Callback>())
+        verify(commandQueue).cancelTempBasal(eq(true), any())
     }
 
     // --- Transition: CLOSED_LOOP -> SUSPENDED_BY_USER with active TBR ---
@@ -222,7 +231,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(suspended)
         flow.emit(listOf(suspended))
 
-        verify(commandQueue).cancelTempBasal(eq(true), any(), any<Callback>())
+        verify(commandQueue).cancelTempBasal(eq(true), any())
     }
 
     // --- Extended bolus cancel on entry to zero-delivery ---
@@ -254,7 +263,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getExtendedBolusActiveAt(anyLong())).thenReturn(activeEb)
         flow.emit(listOf(disconnect))
 
-        verify(commandQueue).cancelExtended(any<Callback>())
+        verify(commandQueue).cancelExtended()
     }
 
     // --- Helpers ---

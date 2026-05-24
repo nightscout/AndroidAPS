@@ -45,7 +45,7 @@
     <string name="omnipod_common_overview_last_connection">Kết nối lần cuối</string>
     <string name="omnipod_common_overview_last_bolus">Liều bolus mới nhất</string>
     <string name="omnipod_common_overview_temp_basal_rate">Tỷ lệ liều nền tạm thời</string>
-    <string name="omnipod_common_overview_base_basal_rate">Tỷ lệ liều nền cơ bản</string>
+    <string name="omnipod_common_overview_base_basal_rate">Tỷ lệ Liều nền Cơ bản</string>
     <string name="omnipod_common_overview_pod_active_alerts">Cảnh báo Pod đang bật</string>
     <string name="omnipod_common_overview_firmware_version">Phiên bản phần mềm</string>
     <string name="omnipod_common_overview_time_on_pod">Thời gian trên Pod</string>

@@ -52,6 +52,8 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
@@ -399,7 +401,7 @@ class BLECommIntegrationTest : TestBase() {
         bleComm.sendMessage(startPacket)
 
         // Stop the bolus
-        val stopPacket = DanaRSPacketBolusSetStepBolusStop(aapsLogger, BolusProgressData(ch, rh), rh, danaPump)
+        val stopPacket = DanaRSPacketBolusSetStepBolusStop(aapsLogger, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), rh, danaPump)
         bleComm.sendMessage(stopPacket)
 
         assertThat(stopPacket.isReceived).isTrue()

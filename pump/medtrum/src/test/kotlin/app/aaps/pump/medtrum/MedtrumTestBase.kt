@@ -6,6 +6,8 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
@@ -19,7 +21,7 @@ open class MedtrumTestBase : TestBaseWithProfile() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
 
-    val bolusProgressData by lazy { BolusProgressData(ch, rh) }
+    val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
     lateinit var medtrumPump: MedtrumPump
 
     @BeforeEach
