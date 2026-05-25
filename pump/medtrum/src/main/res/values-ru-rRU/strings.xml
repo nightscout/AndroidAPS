@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
-    <string name="medtrum">Medtrum</string>
+    <string name="medtrum">Медтрум</string>
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Интеграция с помпами Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки Medtrum</string>
@@ -66,8 +66,6 @@
     <string name="step_retry_activation">Выполняется активация</string>
     <string name="unexpected_state">Непредвиденное состояние: %1$s</string>
     <string name="patch_begin_activation">Активный патч отсутствует. Нажмите <b>Далее</b> для начала процесса активации.</string>
-    <string name="patch_not_active_note">Не соединяйте основание и патч до следующего шага!</string>
-    <string name="connect_pump_base">Соедините основание помпы и новый патч, удалите воздух и заполните инсулином, затем нажмите <b>Далее</b>.</string>
     <string name="note_min_70_units">Примечание: для активации требуется заполнить минимум 70 единиц.</string>
     <string name="reservoir_text_and_level">Резервуар: %.2fед</string>
     <string name="do_not_attach_to_body">Пока не устанавливайте патч на тело.</string>
@@ -95,6 +93,14 @@
     <!-- settings-->
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
+    <string name="alarm_setting_light_vibrate_beep">Подсветка, вибрация и звук</string>
+    <string name="alarm_setting_light_vibrate">Подсветка и вибрация</string>
+    <string name="alarm_setting_light_beep">Подсветка и звук</string>
+    <string name="alarm_setting_light">Подсветка</string>
+    <string name="alarm_setting_vibrate_beep">Вибрация и звук</string>
+    <string name="alarm_setting_vibrate">Вибрация</string>
+    <string name="alarm_setting_beep">Звук</string>
+    <string name="alarm_setting_silent">Без звука</string>
     <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>
     <string name="pump_warning_notification_summary">Показывать уведомления о некритических оповещениях помпы: низком заряде батареи, низком запасе инсулина (20 единиц) и приближающемся истечении срока работы. Рекомендуется оставить включенным, когда звук оповещений выключен.</string>
     <string name="pump_warning_expiry_hour_title">Предупреждение об окончании срока годности помпы [hours]</string>

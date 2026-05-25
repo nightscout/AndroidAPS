@@ -34,6 +34,8 @@
     <string name="event_type">事件類型</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">儲存</string>
     <string name="skip">略過</string>
     <string name="switch_to_edit">編輯</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">中心</string>
     <!--    Command-->
     <string name="connectiontimedout">連線逾時</string>
+    <string name="command_replaced">已被較新的指令取代</string>
     <string name="pump_not_configured">幫浦未設定</string>
     <!--    PumpEnactResult-->
     <string name="enacted">已執行</string>
@@ -646,6 +649,10 @@
     <string name="basal">基礎率</string>
     <string name="basalpct">基礎率 %</string>
     <string name="sensitivity">敏感度</string>
+    <string name="isf_for_carbs">計算機與碳水化合物吸收的平均 ISF：%1$.1f</string>
+    <string name="isf_profile">設定檔 ISF：%1$.1f</string>
+    <string name="isf_variable">可變 ISF：%1$.1f</string>
+    <string name="isf_effective">有效 ISF：%1$.1f</string>
     <string name="autosens_long">自動靈敏值：%.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">演算法中的自動靈敏值：%.0f%%</string>

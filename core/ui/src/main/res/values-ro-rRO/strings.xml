@@ -34,6 +34,8 @@
     <string name="event_type">Tip eveniment</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dL</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Salvați</string>
     <string name="skip">Omiteți</string>
     <string name="switch_to_edit">Editați</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">Centru</string>
     <!--    Command-->
     <string name="connectiontimedout">Conexiunea a expirat</string>
+    <string name="command_replaced">Înlocuit de comanda mai nouă</string>
     <string name="pump_not_configured">Pompa nu este configurată</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Executat</string>

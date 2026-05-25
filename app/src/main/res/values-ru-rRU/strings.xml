@@ -4,4 +4,10 @@
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
     <string name="select">Выбрать</string>
     <string name="set">Задать</string>
+    <string name="migrating_preferences">Перенос настроек…</string>
+    <string name="initializing_plugins">Инициализация плагинов…</string>
+    <string name="initializing">Инициализация…</string>
+    <string name="migrating_profile_switches">Перенос переключателей профиля…</string>
+    <string name="migrating_effective_profile_switches">Перенос эффективных переключателей профиля…</string>
+    <string name="migrating_boluses">Перенос болюсов…</string>
 </resources>

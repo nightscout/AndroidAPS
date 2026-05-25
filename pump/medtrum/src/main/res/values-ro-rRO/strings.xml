@@ -76,9 +76,9 @@
     <string name="unpair_confirm_message">Acest lucru va șterge numărul de serie stocat al pompei și se va deconecta. Activați un nou plasture pentru a scana pentru pompă.</string>
     <string name="step_retry_activation">Activare în curs</string>
     <string name="unexpected_state">Stare neașteptată: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Conectați baza pompei la un nou plasture pentru a-l alimenta, apoi selectați-l din lista de mai jos.</string>
     <string name="patch_begin_activation">Niciun plasture activ. Apăsați <b>Înainte</b> pentru a începe procesul de activare.</string>
-    <string name="patch_not_active_note">Baza pompei nu trebuie conectată la plasture până la pasul următor!</string>
-    <string name="connect_pump_base">Conectați baza pompei la un nou plasture, eliminați aerul rezidual și umpleți cu insulină, apoi apăsați <b>Înainte</b>.</string>
+    <string name="connect_pump_base">Asigurați-vă că baza pompei este conectată la plasture, îndepărtați aerul rămas și umpleți cu insulină, apoi apăsați <b>Următorul</b>.</string>
     <string name="note_min_70_units">Notă: Pentru activare este necesară o cantitate minimă de 70 de unități.</string>
     <string name="reservoir_text_and_level">Rezervor: %.2fU</string>
     <string name="do_not_attach_to_body">Nu atașați plasturele pe corp încă.</string>

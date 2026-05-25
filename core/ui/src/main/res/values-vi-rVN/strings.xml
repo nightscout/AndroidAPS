@@ -34,6 +34,8 @@
     <string name="event_type">Loại sự kiện</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Lưu</string>
     <string name="skip">Bỏ qua</string>
     <string name="switch_to_edit">Sửa</string>
@@ -101,7 +103,7 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
-    <string name="objectives">Mục tiêu</string>
+    <string name="objectives">Mục tiêu học tập</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
     <string name="stop_pressed">Đã nhấn DỪNG</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">Ở giữa</string>
     <!--    Command-->
     <string name="connectiontimedout">Hết thời gian kết nối</string>
+    <string name="command_replaced">Đã được thay thế bởi lệnh mới hơn</string>
     <string name="pump_not_configured">Bơm chưa được cấu hình</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Đã kích hoạt</string>

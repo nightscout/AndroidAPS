@@ -62,8 +62,6 @@
     <string name="step_retry_activation">Aktivering i gang</string>
     <string name="unexpected_state">Uventet status: %1$s</string>
     <string name="patch_begin_activation">Ingen aktiv patch. Tryk på <b>Næste</b> for at starte aktiveringsprocessen.</string>
-    <string name="patch_not_active_note">Pumpebasen må ikke forbindes til Patchen før næste trin!</string>
-    <string name="connect_pump_base">Tilslut pumpebasen til en ny Patch, fjern resterende luft og fyld med insulin, tryk derefter på <b>Næste</b>.</string>
     <string name="note_min_70_units">Bemærk: Der kræves mindst 70 enheder til aktivering.</string>
     <string name="do_not_attach_to_body">Sæt ikke Patchen på kroppen endnu.</string>
     <string name="half_press_needle">Halvtryk på nåleknappen. Tryk derefter på <b>Næste</b> for at starte klargøring.</string>

@@ -76,9 +76,9 @@
     <string name="unpair_confirm_message">Esto borrará el número de serie de la bomba almacenado y se desconectará. Active un nuevo parche para buscar una bomba</string>
     <string name="step_retry_activation">Activación en progreso</string>
     <string name="unexpected_state">Estado inesperado: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Conecte la base de la bomba a un parche nuevo para encenderla y, a continuación, selecciónela en la lista de abajo</string>
     <string name="patch_begin_activation">No hay ningún parche activo. Presiona <b>Siguiente</b> para iniciar el proceso de activación.</string>
-    <string name="patch_not_active_note">¡La base de la bomba no debe conectarse al parche hasta el siguiente paso!</string>
-    <string name="connect_pump_base">Conecta la base de la bomba a un nuevo parche, elimina el aire residual y rellena con insulina. Después pulsa <b>Siguiente</b>.</string>
+    <string name="connect_pump_base">Asegúrese de que la base de la bomba esté conectada al parche, elimine el aire residual y llénelo con insulina; a continuación, pulse <b>Siguiente</b></string>
     <string name="note_min_70_units">Nota: Se necesitan un mínimo de 70 unidades para la activación.</string>
     <string name="reservoir_text_and_level">Reservorio: %.2f U</string>
     <string name="do_not_attach_to_body">No pegues todavía el parche al cuerpo.</string>

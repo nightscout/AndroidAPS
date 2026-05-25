@@ -48,4 +48,12 @@
     <string name="permission_dexcom_description">應用程式需要權限，才能從 Dexcom 應用程式接收 CGM 資料</string>
     <string name="permission_notification_listener_title">通知存取權</string>
     <string name="permission_notification_listener_description">為了從 CGM 應用程式的通知讀取血糖數值所必需</string>
+    <string name="aidex">MicroTech CGM 應用程式</string>
+    <string name="aidex_short">CGM 應用程式</string>
+    <string name="description_source_aidex">從 LinX、LinX vista、Equil G. Smart 2、Diaexpert 2 等裝置接收 CGM 讀取值</string>
+    <string name="aidex_sensor_expired">傳感器已到期，請更換新的傳感器</string>
+    <string name="aidex_sensor_error">傳感器錯誤，請檢查傳感器狀態</string>
+    <string name="aidex_sensor_stabilizing">傳感器正在穩定中，請稍候…</string>
+    <string name="aidex_sensor_replace">需要更換傳感器，請盡快更換新的傳感器</string>
+    <string name="aidex_signal_lost">傳感器訊號遺失，請檢查連線</string>
 </resources>

@@ -34,6 +34,8 @@
     <string name="event_type">Type d\'évènement</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Enregistrer</string>
     <string name="skip">Ignorer</string>
     <string name="switch_to_edit">Éditer</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">Centre</string>
     <!--    Command-->
     <string name="connectiontimedout">Connexion expirée</string>
+    <string name="command_replaced">Remplacé par une commande plus récente</string>
     <string name="pump_not_configured">Pompe non configurée</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Activé</string>
@@ -647,6 +650,9 @@
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilité</string>
     <string name="isf_for_carbs">SI moyen pour l\'Assistant et le calcul GA: %1$.1f</string>
+    <string name="isf_profile">SI Profil : %1$.1f</string>
+    <string name="isf_variable">SI Variable : %1$.1f</string>
+    <string name="isf_effective">SI Effective : %1$.1f</string>
     <string name="autosens_long">Valeur Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens dans l\'algorithme: %.0f%%</string>

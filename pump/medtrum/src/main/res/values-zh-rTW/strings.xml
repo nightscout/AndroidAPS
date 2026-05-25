@@ -76,9 +76,9 @@
     <string name="unpair_confirm_message">這將清除已儲存的幫浦序號並中斷連線。啟用新的貼片以掃描幫浦。</string>
     <string name="step_retry_activation">啟動進行中</string>
     <string name="unexpected_state">意外狀態: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">將幫浦底座接上新的貼片以開機，然後從下方清單中選取它。</string>
     <string name="patch_begin_activation">無可用的貼片。按 <b>下一步</b> 開始啟動過程。</string>
-    <string name="patch_not_active_note">幫浦底座應該在下一步之前不要連線到貼片！</string>
-    <string name="connect_pump_base">連線幫浦底座到新貼片，移除殘餘空氣並填充胰島素，然後按 <b>下一步</b>。</string>
+    <string name="connect_pump_base">請確認幫浦底座已與貼片連接，排出殘留空氣並填充胰島素，然後按一下 <b>下一步</b>。</string>
     <string name="note_min_70_units">注意: 啟動需要至少 70 單位。</string>
     <string name="reservoir_text_and_level">儲存槽: %.2f U</string>
     <string name="do_not_attach_to_body">尚未連線貼片到身體。</string>

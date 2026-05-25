@@ -48,4 +48,12 @@
     <string name="permission_dexcom_description">Ứng dụng cần quyền để nhận dữ liệu CGM từ ứng dụng Dexcom</string>
     <string name="permission_notification_listener_title">Truy cập thông báo</string>
     <string name="permission_notification_listener_description">Cần để đọc đường huyết từ thông báo CGM</string>
+    <string name="aidex">Ứng dụng CGM MicroTech</string>
+    <string name="aidex_short">Ứng dụng CGM</string>
+    <string name="description_source_aidex">Nhận giá trị CGM từ LinX, LinX Vista, Equil G Smart 2, DiaExpert 2, v.v.</string>
+    <string name="aidex_sensor_expired">Cảm biến đã hết hạn, vui lòng thay cảm biến mới</string>
+    <string name="aidex_sensor_error">Lỗi cảm biến, vui lòng kiểm tra trạng thái cảm biến</string>
+    <string name="aidex_sensor_stabilizing">Cảm biến đang ổn định, vui lòng chờ…</string>
+    <string name="aidex_sensor_replace">Cần thay cảm biến, vui lòng thay cảm biến mới sớm nhất có thể</string>
+    <string name="aidex_signal_lost">Mất tín hiệu cảm biến, vui lòng kiểm tra kết nối</string>
 </resources>

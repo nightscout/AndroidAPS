@@ -76,9 +76,9 @@
     <string name="unpair_confirm_message">Thao tác này sẽ xóa số sê-ri bơm đã lưu và ngắt kết nối. Kích hoạt patch mới để quét tìm bơm.</string>
     <string name="step_retry_activation">Đang kích hoạt</string>
     <string name="unexpected_state">Trạng thái không mong đợi: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Gắn đế bơm vào patch mới để bật nguồn, sau đó chọn thiết bị từ danh sách bên dưới.</string>
     <string name="patch_begin_activation">Chưa có patch đang hoạt động. Nhấn <b>Tiếp theo</b> để bắt đầu quá trình kích hoạt.</string>
-    <string name="patch_not_active_note">Không được kết nối Pump Base với patch cho đến bước tiếp theo!</string>
-    <string name="connect_pump_base">Kết nối pump base với Patch mới, loại bỏ bọt khí và nạp insulin, rồi nhấn <b>Tiếp theo</b>.</string>
+    <string name="connect_pump_base">Đảm bảo đế bơm đã được gắn vào patch, loại bỏ không khí còn sót lại và nạp insulin, sau đó nhấn <b>Tiếp theo</b>.</string>
     <string name="note_min_70_units">Lưu ý: Cần ít nhất 70 đơn vị insulin để kích hoạt.</string>
     <string name="reservoir_text_and_level">Bình chứa: %.2f U</string>
     <string name="do_not_attach_to_body">Chưa gắn Patch lên cơ thể lúc này.</string>

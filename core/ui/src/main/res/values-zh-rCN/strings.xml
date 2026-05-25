@@ -34,6 +34,8 @@
     <string name="event_type">事件类型</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">保存</string>
     <string name="skip">跳过</string>
     <string name="switch_to_edit">编辑</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">中心</string>
     <!--    Command-->
     <string name="connectiontimedout">连接超时</string>
+    <string name="command_replaced">由较新的命令替换</string>
     <string name="pump_not_configured">泵没有配置</string>
     <!--    PumpEnactResult-->
     <string name="enacted">设定</string>

@@ -12,6 +12,7 @@
     <string name="widget_description">AAPS 小工具</string>
     <string name="widget_bg_graph_description">AAPS 血糖圖表</string>
     <string name="widget_compact_bg_description">AAPS 血糖 + IOB + COB （精簡）</string>
+    <string name="widget_small_description">AAPS 小型</string>
     <!--     Activities-->
     <string name="activity_monitor">活動監視器</string>
     <string name="time_range">時間範圍</string>
@@ -189,6 +190,7 @@
     <string name="active_profile_indicator">啟用中</string>
     <string name="confirm_remove_profile">要移除設定檔「%1$s」嗎？</string>
     <string name="confirm_clone_profile">要複製設定檔「%1$s」嗎？</string>
+    <string name="profile_no_longer_exists">設定檔清單在此期間已變更 — 請再試一次</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>

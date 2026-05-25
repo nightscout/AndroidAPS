@@ -34,6 +34,8 @@
     <string name="event_type">Tipo de evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Guardar</string>
     <string name="skip">Omitir</string>
     <string name="switch_to_edit">Editar</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Tiempo de conexión agotado</string>
+    <string name="command_replaced">Reemplazado por un comando más reciente</string>
     <string name="pump_not_configured">Bomba no configurada</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Ejecutado</string>

@@ -76,9 +76,9 @@
     <string name="unpair_confirm_message">Cela effacera le numéro de série de la pompe stockée et la déconnectera. Activez un nouveau patch pour rechercher une pompe.</string>
     <string name="step_retry_activation">Activation en cours</string>
     <string name="unexpected_state">État inattendu : %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Connectez la base de la pompe à un nouveau patch pour l\'activer, puis sélectionnez-la dans la liste ci-dessous.</string>
     <string name="patch_begin_activation">Aucun Patch actif. Appuyez sur <b>Suivant</b> pour commencer le processus d\'activation.</string>
-    <string name="patch_not_active_note">La base de la pompe ne doit pas être connectée au Patch avant l\'étape suivante !</string>
-    <string name="connect_pump_base">Connectez la base de la pompe à un nouveau Patch, retirez l\'air résiduel et remplissez avec de l\'insuline, puis appuyez sur <b>Suivant</b>.</string>
+    <string name="connect_pump_base">Assurez-vous que la base de la pompe est connectée au patch, retirez l\'air résiduel et remplissez avec de l\'insuline, puis appuyez sur <b>Suivant</b>.</string>
     <string name="note_min_70_units">Remarque : Un minimum de 70 unités est requis pour l\'activation.</string>
     <string name="reservoir_text_and_level">Réservoir: %.2fU</string>
     <string name="do_not_attach_to_body">Ne fixez pas encore le Patch sur le corps.</string>

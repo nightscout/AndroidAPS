@@ -39,6 +39,8 @@
 3. Повторите процедуру сопряжения заново</string>
     <string name="combov2_enter_pin">Введите PIN-код</string>
     <string name="combov2_cancel_pairing">Отменить сопряжение</string>
+    <string name="combov2_confirm_cancel_pairing_message">Вы действительно хотите отменить сопряжение?</string>
+    <string name="combov2_confirm_unpair_message">Вы действительно хотите удалить сопряжение с помпой?</string>
     <string name="combov2_pin_hint">10-значный PIN-код</string>
     <string name="combov2_pairing_finished_successfully">Сопряжение с Combo завершено успешно</string>
     <string name="combov2_pairing_cancelled">Сопряжение с Combo отменено пользователем</string>
@@ -88,6 +90,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (осталось меньше 1 минуты)</string>
     <string name="combov2_load_tdds_cancelled">Загрузка TDD отменена</string>
     <string name="combov2_retrieving_tdds_failed">Не удалось получить TDD</string>
+    <string name="combov2_battery_empty">Разряжена</string>
+    <string name="combov2_battery_low">Низкий заряд</string>
+    <string name="combov2_battery_full">Полностью заряжена</string>
     <string name="combov2_battery_low_warning">Низкий заряд батареи помпы</string>
     <string name="combov2_reservoir_low_warning">Низкий уровень инсулина в картридже помпы</string>
     <string name="combov2_setting_tbr_succeeded">Настройки TBR выполнены</string>

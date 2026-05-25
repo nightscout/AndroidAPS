@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Journée de maladie</string>
     <string name="scene_wizard_sick_day_desc">Un profil plus fort (150%) pour gérer une résistance accrue à l\'insuline en cas de maladie.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">La maladie, la fièvre et les hormones de stress peuvent augmenter considérablement la résistance à l\'insuline, parfois de 50 % ou plus. Un profil plus fort (par ex. 150%) indique à l\'algorithme d\'injecter plus d\'insuline dans tous les calculs : débits de base, calculs de bolus et facteurs de correction. Vous pouvez également ajouter une cible temporaire ou ajuster le mode de fonctionnement dans les étapes suivantes. Surveiller de près et ajuster au fur et à mesure de la convalescence.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Journée de maladie avec vomissements</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Profil réduit avec AGB — c\'est l\'opposé de la journée de maladie standard quand vous ne pouvez pas absorber de nourriture.</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Phase lutéale</string>
     <string name="scene_wizard_luteal_phase_desc">Profil augmenté pour gérer la résistance à l\'insuline prémenstruelle.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">De nombreuses femmes ont une résistance accrue à l\'insuline pendant la phase lutéale (environ 1 à 2 semaines avant leurs règles). Ceci est dû à la hausse des niveaux de progestérone qui réduisent la sensibilité à l\'insuline. L’effet varie énormément d’une femme à une autre, certaines constatent une augmentation de 10 à 30 % des besoins en insuline, d’autres observent un minimum de changement. Commencez par une augmentation prudente (115 %) et ajustez en fonction de vos propres habitudes sur plusieurs cycles. Le suivi dans CarePortal vous aide à identifier votre rythme personnel.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Météo chaude</string>
     <string name="scene_wizard_hot_weather_desc">Profil réduit — la chaleur accélère l\'absorption d\'insuline.</string>
