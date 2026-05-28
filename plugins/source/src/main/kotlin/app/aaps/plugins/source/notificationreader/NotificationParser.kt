@@ -63,6 +63,7 @@ class NotificationParser(private val packageConfig: PackageConfig) {
             '\u2700'..'\u27BF', // Dingbats
             '\u2900'..'\u297F', // Supplemental Arrows-B
             '\u2B00'..'\u2BFF', // Misc Symbols and Arrows
+            '\uFE00'..'\uFE0F', // Variation Selectors
         )
 
         private val UNIT_LABELS = Regex("m(?:g/d|mol/)l", RegexOption.IGNORE_CASE)

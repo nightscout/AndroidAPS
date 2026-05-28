@@ -235,6 +235,11 @@
       "package": "com.suswel.ai",
       "sensor": "Unknown",
       "intervalMinutes": 5
+    },
+    {
+      "package": "com.eveningoutpost.dexdrip",
+      "sensor": "xDrip",
+      "intervalMinutes": 5
     }
   ]
 }

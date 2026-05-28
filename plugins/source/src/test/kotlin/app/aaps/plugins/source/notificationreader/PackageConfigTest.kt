@@ -14,7 +14,8 @@ class PackageConfigTest {
             { "package": "com.dexcom.g6", "sensor": "AAPS-DexcomG6" },
             { "package": "com.medtronic.diabetes.guardian", "sensor": "MM600Series" },
             { "package": "com.senseonics.gen12androidapp", "sensor": "Eversense" },
-            { "package": "com.unknown.future.app", "sensor": "SomeUnknownSensor" }
+            { "package": "com.unknown.future.app", "sensor": "SomeUnknownSensor" },
+            { "package": "com.eveningoutpost.dexdrip", "sensor": "xDrip" }
           ]
         }
     """.trimIndent()

@@ -19,7 +19,7 @@ class NotificationParserTest {
                 "com.dexcom.dexcomone", "com.dexcom.stelo", "com.camdiab.fx_alert.mmoll",
                 "com.medtronic.diabetes.guardian", "com.medtronic.diabetes.minimedmobile.eu",
                 "com.senseonics.gen12androidapp", "com.microtech.aidexx",
-                "com.ottai.seas", "com.sinocare.cgm.ce",
+                "com.ottai.seas", "com.sinocare.cgm.ce", "com.eveningoutpost.dexdrip"
             ),
             packageToSensor = mapOf(
                 "com.dexcom.g7" to SourceSensor.DEXCOM_G7_NATIVE,
@@ -34,6 +34,7 @@ class NotificationParserTest {
                 "com.microtech.aidexx" to SourceSensor.AIDEX,
                 "com.ottai.seas" to SourceSensor.OTTAI,
                 "com.sinocare.cgm.ce" to SourceSensor.SINO,
+                "com.eveningoutpost.dexdrip" to SourceSensor.XDRIP,
             )
         )
     }
@@ -107,6 +108,13 @@ class NotificationParserTest {
         fun `dingbats removed`() {
             // U+2764 is in Dingbats range
             assertThat(parser.cleanText("142\u2764")).isEqualTo("142")
+        }
+
+        @Test
+        fun `Variation selectors removed`() {
+            // Variation Selectors \uFE00-\uFE0F appear in xDrip notifications
+            assertThat(parser.cleanText("9.3 →\uFE00")).isEqualTo("9.3")
+            assertThat(parser.cleanText("9.1 →\uFE0F")).isEqualTo("9.1")
         }
     }
 
@@ -233,6 +241,14 @@ class NotificationParserTest {
             assertThat(result).isNotNull()
             assertThat(result!!.glucoseMgdl).isIn(149..150)
             assertThat(result.sourceSensor).isEqualTo(SourceSensor.MM_600_SERIES)
+        }
+
+        @Test
+        fun `mmol-L from xDrip`() {
+            val result = parser.extractGlucose(listOf("9.1 →︎", "Delta: -0.2 mmol/l"), "com.eveningoutpost.dexdrip", useMgdl = false)
+            assertThat(result).isNotNull()
+            assertThat(result!!.glucoseMgdl).isIn(163..164)
+            assertThat(result.sourceSensor).isEqualTo(SourceSensor.XDRIP)
         }
 
         @Test
