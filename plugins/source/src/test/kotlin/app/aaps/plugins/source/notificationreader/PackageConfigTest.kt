@@ -28,7 +28,8 @@ class PackageConfigTest {
             "com.dexcom.g6",
             "com.medtronic.diabetes.guardian",
             "com.senseonics.gen12androidapp",
-            "com.unknown.future.app"
+            "com.unknown.future.app",
+            "com.eveningoutpost.dexdrip"
         )
     }
 
@@ -39,6 +40,7 @@ class PackageConfigTest {
         assertThat(config.sensorForPackage("com.dexcom.g6")).isEqualTo(SourceSensor.DEXCOM_G6_NATIVE)
         assertThat(config.sensorForPackage("com.medtronic.diabetes.guardian")).isEqualTo(SourceSensor.MM_600_SERIES)
         assertThat(config.sensorForPackage("com.senseonics.gen12androidapp")).isEqualTo(SourceSensor.EVERSENSE)
+        assertThat(config.sensorForPackage("com.eveningoutpost.dexdrip")).isEqualTo(SourceSensor.XDRIP)
     }
 
     @Test
