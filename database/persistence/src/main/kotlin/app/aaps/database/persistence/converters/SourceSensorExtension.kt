@@ -40,6 +40,7 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.SIBIONIC               -> SourceSensor.SIBIONIC
         GlucoseValue.SourceSensor.SINO                   -> SourceSensor.SINO
         GlucoseValue.SourceSensor.INSTARA                -> SourceSensor.INSTARA
+        GlucoseValue.SourceSensor.XDRIP                  -> SourceSensor.XDRIP
 
         GlucoseValue.SourceSensor.IOB_PREDICTION         -> SourceSensor.IOB_PREDICTION
         GlucoseValue.SourceSensor.A_COB_PREDICTION       -> SourceSensor.A_COB_PREDICTION
@@ -85,6 +86,7 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.SIBIONIC               -> GlucoseValue.SourceSensor.SIBIONIC
         SourceSensor.SINO                   -> GlucoseValue.SourceSensor.SINO
         SourceSensor.INSTARA                -> GlucoseValue.SourceSensor.INSTARA
+        SourceSensor.XDRIP                  -> GlucoseValue.SourceSensor.XDRIP
 
         SourceSensor.IOB_PREDICTION         -> GlucoseValue.SourceSensor.IOB_PREDICTION
         SourceSensor.A_COB_PREDICTION       -> GlucoseValue.SourceSensor.A_COB_PREDICTION
