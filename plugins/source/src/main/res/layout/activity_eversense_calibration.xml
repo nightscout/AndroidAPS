@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Calibration readiness status -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eversense_calibration_status"
+            android:textSize="14sp"
+            android:alpha="0.6" />
+
+        <TextView
+            android:id="@+id/calibration_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="32dp"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- BG value input -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eversense_calibration_bg_value"
+            android:textSize="14sp"
+            android:alpha="0.6" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp">
+
+            <EditText
+                android:id="@+id/calibration_bg_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/eversense_calibration_bg_hint"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/calibration_unit_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+
+
+        <!-- Submit button -->
+        <Button
+            android:id="@+id/calibration_submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:textSize="18sp"
+            android:text="@string/eversense_calibration_submit" />
+
+    </LinearLayout>
+
+</LinearLayout>
