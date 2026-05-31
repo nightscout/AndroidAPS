@@ -9,23 +9,21 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileStore
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.main.R
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -58,7 +56,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 constraintChecker = constraintsChecker,
                 profileFunction = profileFunction,
                 profileUtil = profileUtil,
-                localProfileManager = localProfileManager,
+                profileRepository = profileRepository,
                 insulin = insulin,
                 activePlugin = activePlugin,
                 commandQueue = commandQueue,
@@ -73,6 +71,12 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         runTest {
             whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+            whenever(commandQueue.cancelTempBasal(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.bolus(any())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
         }
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(true)
         whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
@@ -80,6 +84,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
         whenever(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile")
     }
+
+    private fun execute(command: String): NfcExecutionResult = runBlocking { plugin.executeCommand(command) }
+
+    private fun cascade(commands: List<String>): NfcExecutionResult = runBlocking { plugin.executeCascade(commands) }
 
     // ── Template / buildCommand tests ─────────────────────────────────────────
 
@@ -170,7 +178,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
 
-        val result = plugin.executeCommand("LOOP STOP")
+        val result = execute("LOOP STOP")
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
@@ -192,7 +200,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
 
-        val result = plugin.executeCommand("LOOP DISABLE")
+        val result = execute("LOOP DISABLE")
 
         assertThat(result.success).isTrue()
     }
@@ -203,7 +211,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_resumed)).thenReturn("Loop resumed")
 
-        val result = plugin.executeCommand("LOOP RESUME")
+        val result = execute("LOOP RESUME")
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
@@ -226,7 +234,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_resumed)).thenReturn("Loop resumed")
 
-        val result = plugin.executeCommand("LOOP RESUME")
+        val result = execute("LOOP RESUME")
 
         assertThat(result.success).isTrue()
         runTest {
@@ -247,7 +255,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_suspended)).thenReturn("Loop suspended")
 
-        val result = plugin.executeCommand("LOOP SUSPEND 30")
+        val result = execute("LOOP SUSPEND 30")
 
         assertThat(result.success).isTrue()
         runTest {
@@ -260,14 +268,14 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             eq(effectiveProfile),
             )
         }
-        Mockito.verify(commandQueue, Mockito.never()).cancelTempBasal(any(), any(), anyOrNull())
+        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
     }
 
     @Test
     fun `executeCommand LOOP SUSPEND with invalid duration should fail`() {
         whenever(rh.gs(R.string.nfccommands_wrong_duration)).thenReturn("Wrong duration")
 
-        val result = plugin.executeCommand("LOOP SUSPEND 0")
+        val result = execute("LOOP SUSPEND 0")
 
         assertThat(result.success).isFalse()
     }
@@ -278,7 +286,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_suspended)).thenReturn("Loop suspended")
 
-        val result = plugin.executeCommand("LOOP SUSPEND 999")
+        val result = execute("LOOP SUSPEND 999")
 
         assertThat(result.success).isTrue()
         runTest {
@@ -300,7 +308,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("LGS")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("LGS mode")
 
-        val result = plugin.executeCommand("LOOP LGS")
+        val result = execute("LOOP LGS")
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
@@ -323,7 +331,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.closedloop)).thenReturn("Closed")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("Closed loop")
 
-        val result = plugin.executeCommand("LOOP CLOSED")
+        val result = execute("LOOP CLOSED")
 
         assertThat(result.success).isTrue()
         // Positional order: newRM, action, source, listValues, durationInMinutes, profile
@@ -344,7 +352,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
 
-        val result = plugin.executeCommand("LOOP STOP")
+        val result = execute("LOOP STOP")
 
         assertThat(result.success).isFalse()
     }
@@ -355,7 +363,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP RESUME")
+        val result = execute("LOOP RESUME")
 
         assertThat(result.success).isFalse()
     }
@@ -366,7 +374,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP SUSPEND 30")
+        val result = execute("LOOP SUSPEND 30")
 
         assertThat(result.success).isFalse()
     }
@@ -377,7 +385,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP LGS")
+        val result = execute("LOOP LGS")
 
         assertThat(result.success).isFalse()
     }
@@ -388,7 +396,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP CLOSED")
+        val result = execute("LOOP CLOSED")
 
         assertThat(result.success).isFalse()
     }
@@ -399,7 +407,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand AAPSCLIENT RESTART should send restart event`() {
         whenever(rh.gs(R.string.nfccommands_aapsclient_restart_sent)).thenReturn("AAPSClient restart sent")
 
-        val result = plugin.executeCommand("AAPSCLIENT RESTART")
+        val result = execute("AAPSCLIENT RESTART")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("AAPSClient restart sent")
@@ -409,7 +417,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand AAPSCLIENT with invalid subcommand should fail`() {
         whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
 
-        val result = plugin.executeCommand("AAPSCLIENT STOP")
+        val result = execute("AAPSCLIENT STOP")
 
         assertThat(result.success).isFalse()
     }
@@ -419,7 +427,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(false)
         whenever(rh.gs(R.string.nfccommands_remote_command_not_allowed)).thenReturn("Remote commands not allowed")
 
-        val result = plugin.executeCommand("AAPSCLIENT RESTART")
+        val result = execute("AAPSCLIENT RESTART")
 
         assertThat(result.success).isFalse()
         assertThat(result.message).isEqualTo("Remote commands not allowed")
@@ -432,7 +440,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
 
-        val result = plugin.executeCommand("PUMP DISCONNECT 180")
+        val result = execute("PUMP DISCONNECT 180")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Pump disconnected")
@@ -453,7 +461,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
 
-        val result = plugin.executeCommand("PUMP DISCONNECT 240")
+        val result = execute("PUMP DISCONNECT 240")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Pump disconnected")
@@ -474,7 +482,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("PUMP DISCONNECT 60")
+        val result = execute("PUMP DISCONNECT 60")
 
         assertThat(result.success).isFalse()
     }
@@ -485,7 +493,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("PUMP CONNECT")
+        val result = execute("PUMP CONNECT")
 
         assertThat(result.success).isFalse()
     }
@@ -495,7 +503,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(app.aaps.core.interfaces.R.string.connected)).thenReturn("Connected")
 
-        val result = plugin.executeCommand("PUMP CONNECT")
+        val result = execute("PUMP CONNECT")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Connected")
@@ -510,20 +518,20 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand BASAL STOP should cancel temp basal`() {
         whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
 
-        val result = plugin.executeCommand("BASAL STOP")
+        val result = execute("BASAL STOP")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).cancelTempBasal(eq(true), any(), any())
+        runTest { verify(commandQueue).cancelTempBasal(eq(true), any()) }
     }
 
     @Test
     fun `executeCommand BASAL CANCEL should cancel temp basal`() {
         whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
 
-        val result = plugin.executeCommand("BASAL CANCEL")
+        val result = execute("BASAL CANCEL")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).cancelTempBasal(eq(true), any(), any())
+        runTest { verify(commandQueue).cancelTempBasal(eq(true), any()) }
     }
 
     @Test
@@ -535,10 +543,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
         // GENERIC_AAPS has tbrSettings durationStep=30; duration 30 satisfies 30%30==0
-        val result = plugin.executeCommand("BASAL 120% 30")
+        val result = execute("BASAL 120% 30")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).tempBasalPercent(any(), any(), any(), any(), any(), any())
+        runTest { verify(commandQueue).tempBasalPercent(any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -550,10 +558,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
         // GENERIC_AAPS has tbrSettings durationStep=30; duration 30 satisfies 30%30==0
-        val result = plugin.executeCommand("BASAL 1.5 30")
+        val result = execute("BASAL 1.5 30")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).tempBasalAbsolute(any(), any(), any(), any(), any(), any())
+        runTest { verify(commandQueue).tempBasalAbsolute(any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -569,10 +577,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = plugin.executeCommand("BASAL 1.5 30")
+        val result = execute("BASAL 1.5 30")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any(), any())
+        runTest { verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any()) }
     }
 
     @Test
@@ -588,10 +596,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = plugin.executeCommand("BASAL 120% 30")
+        val result = execute("BASAL 120% 30")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).tempBasalPercent(any(), eq(60), any(), any(), any(), any())
+        runTest { verify(commandQueue).tempBasalPercent(any(), eq(60), any(), any(), any()) }
     }
 
     @Test
@@ -606,10 +614,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = plugin.executeCommand("BASAL 1.5 60")
+        val result = execute("BASAL 1.5 60")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any(), any())
+        runTest { verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any()) }
     }
 
     @Test
@@ -622,10 +630,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = plugin.executeCommand("BASAL 120%")
+        val result = execute("BASAL 120%")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).tempBasalPercent(any(), eq(60), any(), any(), any(), any())
+        runTest { verify(commandQueue).tempBasalPercent(any(), eq(60), any(), any(), any()) }
     }
 
     @Test
@@ -638,26 +646,26 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = plugin.executeCommand("BASAL 1.5")
+        val result = execute("BASAL 1.5")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any(), any())
+        runTest { verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any()) }
     }
 
     @Test
     fun `executeCommand BASAL percent with malformed amount should fail`() {
-        val result = plugin.executeCommand("BASAL abc% 30")
+        val result = execute("BASAL abc% 30")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any(), any())
+        runTest { verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any()) }
     }
 
     @Test
     fun `executeCommand BASAL absolute with malformed amount should fail`() {
-        val result = plugin.executeCommand("BASAL abc 30")
+        val result = execute("BASAL abc 30")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any(), any())
+        runTest { verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any()) }
     }
 
     // ── processExtended tests ──────────────────────────────────────────────────
@@ -666,10 +674,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand EXTENDED STOP should cancel extended bolus`() {
         whenever(rh.gs(R.string.nfccommands_extended_canceled)).thenReturn("Extended canceled")
 
-        val result = plugin.executeCommand("EXTENDED STOP")
+        val result = execute("EXTENDED STOP")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).cancelExtended(any())
+        runTest { verify(commandQueue).cancelExtended() }
     }
 
     @Test
@@ -680,10 +688,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_extended_set), any(), any())).thenReturn("Extended set")
 
-        val result = plugin.executeCommand("EXTENDED 2.0 60")
+        val result = execute("EXTENDED 2.0 60")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).extendedBolus(any(), any(), any())
+        runTest { verify(commandQueue).extendedBolus(any(), any()) }
     }
 
     @Test
@@ -693,10 +701,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .ConstraintObject(2.0, aapsLogger),
         )
 
-        val result = plugin.executeCommand("EXTENDED 2.0 -30")
+        val result = execute("EXTENDED 2.0 -30")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, Mockito.never()).extendedBolus(any(), any(), any())
+        runTest { verify(commandQueue, never()).extendedBolus(any(), any()) }
     }
 
     @Test
@@ -706,18 +714,18 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .ConstraintObject(-1.0, aapsLogger),
         )
 
-        val result = plugin.executeCommand("EXTENDED -1.0 60")
+        val result = execute("EXTENDED -1.0 60")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, Mockito.never()).extendedBolus(any(), any(), any())
+        runTest { verify(commandQueue, never()).extendedBolus(any(), any()) }
     }
 
     @Test
     fun `executeCommand EXTENDED without duration should fail`() {
-        val result = plugin.executeCommand("EXTENDED 2.0")
+        val result = execute("EXTENDED 2.0")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).extendedBolus(any(), any(), any())
+        runTest { verify(commandQueue, never()).extendedBolus(any(), any()) }
     }
 
     // ── processBolus tests ─────────────────────────────────────────────────────
@@ -732,10 +740,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = plugin.executeCommand("BOLUS 1.0")
+        val result = execute("BOLUS 1.0")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).bolus(any(), any())
+        runTest { verify(commandQueue).bolus(any()) }
     }
 
     @Test
@@ -747,11 +755,18 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
+            """[{"id":"test","reason":"Eating Soon","targetValue":99.0,"duration":2700000,"isDeletable":false}]"""
+        )
+        runTest {
+            whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
+                .thenReturn(PersistenceLayer.TransactionResult())
+        }
 
-        val result = plugin.executeCommand("BOLUS 1.0 MEAL")
+        val result = execute("BOLUS 1.0 MEAL")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).bolus(any(), any())
+        runTest { verify(commandQueue).bolus(any()) }
     }
 
     @Test
@@ -764,7 +779,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         field.isAccessible = true
         field.set(plugin, now)
 
-        val result = plugin.executeCommand("BOLUS 1.0 MEAL")
+        val result = execute("BOLUS 1.0 MEAL")
 
         assertThat(result.success).isFalse()
     }
@@ -775,7 +790,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.SUSPENDED_BY_USER) }
         whenever(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)).thenReturn("Pump suspended")
 
-        val result = plugin.executeCommand("BOLUS 1.0 MEAL")
+        val result = execute("BOLUS 1.0 MEAL")
 
         assertThat(result.success).isFalse()
     }
@@ -785,7 +800,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(commandQueue.bolusInQueue()).thenReturn(true)
         whenever(rh.gs(R.string.nfccommands_another_bolus_in_queue)).thenReturn("Another bolus in queue")
 
-        val result = plugin.executeCommand("BOLUS 1.0")
+        val result = execute("BOLUS 1.0")
 
         assertThat(result.success).isFalse()
     }
@@ -798,68 +813,54 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
 
-        val result = plugin.executeCommand("BOLUS 1.0 OTHER")
+        val result = execute("BOLUS 1.0 OTHER")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).bolus(any(), any())
+        runTest { verify(commandQueue, never()).bolus(any()) }
     }
 
     @Test
-    fun `successful bolus callback updates last remote bolus time`() {
+    fun `successful bolus updates last remote bolus time`() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
-        val callbackNow = firstNow + 2_345L
+        val afterNow = firstNow + 2_345L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-        whenever(dateUtil.now()).thenReturn(firstNow, callbackNow)
+        whenever(dateUtil.now()).thenReturn(firstNow, afterNow)
 
-        val callbackCaptor = argumentCaptor<Callback>()
-
-        val result = plugin.executeCommand("BOLUS 1.0")
+        val result = execute("BOLUS 1.0")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).bolus(any(), callbackCaptor.capture())
-        val enactResult = mock<PumpEnactResult>()
-        whenever(enactResult.success).thenReturn(true)
-        whenever(enactResult.comment).thenReturn("ok")
-        callbackCaptor.firstValue.result(enactResult).run()
-
         val field = NfcCommandsPlugin::class.java.getDeclaredField("lastRemoteBolusTime")
         field.isAccessible = true
-        assertThat(field.get(plugin) as Long).isEqualTo(callbackNow)
+        assertThat(field.get(plugin) as Long).isEqualTo(afterNow)
     }
 
     @Test
-    fun `failed bolus callback does not update last remote bolus time`() {
+    fun `failed bolus does not update last remote bolus time`() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
+        runTest { whenever(commandQueue.bolus(any())).thenReturn(pumpEnactResultProvider.get().success(false)) }
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
+        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
         whenever(dateUtil.now()).thenReturn(firstNow)
 
-        val callbackCaptor = argumentCaptor<Callback>()
+        val result = execute("BOLUS 1.0")
 
-        plugin.executeCommand("BOLUS 1.0")
-
-        verify(commandQueue).bolus(any(), callbackCaptor.capture())
-        val enactResult = mock<PumpEnactResult>()
-        whenever(enactResult.success).thenReturn(false)
-        whenever(enactResult.comment).thenReturn("failed")
-        callbackCaptor.firstValue.result(enactResult).run()
-
+        assertThat(result.success).isFalse()
         val field = NfcCommandsPlugin::class.java.getDeclaredField("lastRemoteBolusTime")
         field.isAccessible = true
         assertThat(field.get(plugin) as Long).isEqualTo(0L)
     }
 
     @Test
-    fun `successful meal bolus callback creates eating soon target when profile exists`() {
+    fun `successful meal bolus creates eating soon target when profile exists`() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
@@ -876,24 +877,17 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
         whenever(dateUtil.now()).thenReturn(firstNow, firstNow + 1_000L, firstNow + 2_000L)
-        val callbackCaptor = argumentCaptor<Callback>()
 
-        val result = plugin.executeCommand("BOLUS 1.0 MEAL")
+        val result = execute("BOLUS 1.0 MEAL")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).bolus(any(), callbackCaptor.capture())
-        val enactResult = mock<PumpEnactResult>()
-        whenever(enactResult.success).thenReturn(true)
-        whenever(enactResult.comment).thenReturn("ok")
-        callbackCaptor.firstValue.result(enactResult).run()
-
         runTest {
             verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(any(), eq(Action.TT), eq(Sources.NfcCommands), anyOrNull(), any())
         }
     }
 
     @Test
-    fun `successful meal bolus callback skips eating soon target when profile is missing`() {
+    fun `successful meal bolus skips eating soon target when profile is missing`() {
         val firstNow = Constants.remoteBolusMinDistance * 2L
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
@@ -906,16 +900,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(profileFunction.getProfile()).thenReturn(null)
         }
         whenever(dateUtil.now()).thenReturn(firstNow, firstNow + 1_000L)
-        val callbackCaptor = argumentCaptor<Callback>()
 
-        plugin.executeCommand("BOLUS 1.0 MEAL")
+        val result = execute("BOLUS 1.0 MEAL")
 
-        verify(commandQueue).bolus(any(), callbackCaptor.capture())
-        val enactResult = mock<PumpEnactResult>()
-        whenever(enactResult.success).thenReturn(true)
-        whenever(enactResult.comment).thenReturn("ok")
-        callbackCaptor.firstValue.result(enactResult).run()
-
+        assertThat(result.success).isTrue()
         runTest {
             verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
         }
@@ -931,10 +919,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_carbs_set), any())).thenReturn("Carbs set")
 
-        val result = plugin.executeCommand("CARBS 20")
+        val result = execute("CARBS 20")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).bolus(any(), any())
+        runTest { verify(commandQueue).bolus(any()) }
     }
 
     @Test
@@ -944,7 +932,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .ConstraintObject(0, aapsLogger),
         )
 
-        val result = plugin.executeCommand("CARBS 0")
+        val result = execute("CARBS 0")
 
         assertThat(result.success).isFalse()
     }
@@ -960,7 +948,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
 
-        val result = plugin.executeCommand("TARGET MEAL")
+        val result = execute("TARGET MEAL")
 
         assertThat(result.success).isTrue()
     }
@@ -974,7 +962,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
 
-        val result = plugin.executeCommand("TARGET ACTIVITY")
+        val result = execute("TARGET ACTIVITY")
 
         assertThat(result.success).isTrue()
     }
@@ -988,7 +976,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
 
-        val result = plugin.executeCommand("TARGET HYPO")
+        val result = execute("TARGET HYPO")
 
         assertThat(result.success).isTrue()
     }
@@ -1002,7 +990,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
         whenever(rh.gsNotLocalised(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
 
-        val result = plugin.executeCommand("TARGET STOP")
+        val result = execute("TARGET STOP")
 
         assertThat(result.success).isTrue()
     }
@@ -1016,7 +1004,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
         whenever(rh.gsNotLocalised(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
 
-        val result = plugin.executeCommand("TARGET CANCEL")
+        val result = execute("TARGET CANCEL")
 
         assertThat(result.success).isTrue()
         runTest {
@@ -1026,7 +1014,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand TARGET with invalid subcommand should fail`() {
-        val result = plugin.executeCommand("TARGET UNKNOWN")
+        val result = execute("TARGET UNKNOWN")
 
         assertThat(result.success).isFalse()
     }
@@ -1035,44 +1023,44 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PROFILE with invalid non-numeric index should fail`() {
-        val result = plugin.executeCommand("PROFILE abc")
+        val result = execute("PROFILE abc")
 
         assertThat(result.success).isFalse()
     }
 
     @Test
     fun `executeCommand PROFILE with zero percentage should fail`() {
-        whenever(localProfileManager.profile).thenReturn(mockProfileStore)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
 
-        val result = plugin.executeCommand("PROFILE 1 0")
+        val result = execute("PROFILE 1 0")
 
         assertThat(result.success).isFalse()
     }
 
     @Test
     fun `executeCommand PROFILE with negative percentage should fail`() {
-        whenever(localProfileManager.profile).thenReturn(mockProfileStore)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
 
-        val result = plugin.executeCommand("PROFILE 1 -50")
+        val result = execute("PROFILE 1 -50")
 
         assertThat(result.success).isFalse()
     }
 
     @Test
     fun `executeCommand PROFILE with extreme percentage should fail`() {
-        whenever(localProfileManager.profile).thenReturn(mockProfileStore)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
 
-        val result = plugin.executeCommand("PROFILE 1 9999")
+        val result = execute("PROFILE 1 9999")
 
         assertThat(result.success).isFalse()
     }
 
     @Test
     fun `executeCommand PROFILE should create profile switch with default percentage`() {
-        whenever(localProfileManager.profile).thenReturn(mockProfileStore)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
         runTest {
             whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
@@ -1082,7 +1070,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
         whenever(dateUtil.now()).thenReturn(55_000L)
 
-        val result = plugin.executeCommand("PROFILE 1")
+        val result = execute("PROFILE 1")
 
         assertThat(result.success).isTrue()
         runTest {
@@ -1104,10 +1092,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PROFILE should fail when profile source is not configured`() {
-        whenever(localProfileManager.profile).thenReturn(null)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow<ProfileStore?>(null))
         whenever(rh.gs(app.aaps.core.ui.R.string.notconfigured)).thenReturn("Not configured")
 
-        val result = plugin.executeCommand("PROFILE 1")
+        val result = execute("PROFILE 1")
 
         assertThat(result.success).isFalse()
         assertThat(result.message).isEqualTo("Not configured")
@@ -1115,7 +1103,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PROFILE should fail when profile switch creation fails`() {
-        whenever(localProfileManager.profile).thenReturn(mockProfileStore)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
         runTest {
             whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
@@ -1125,7 +1113,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
         whenever(rh.gs(app.aaps.core.ui.R.string.invalid_profile)).thenReturn("Invalid profile")
 
-        val result = plugin.executeCommand("PROFILE 1")
+        val result = execute("PROFILE 1")
 
         assertThat(result.success).isFalse()
         assertThat(result.message).isEqualTo("Invalid profile")
@@ -1137,7 +1125,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand with unknown command should fail`() {
         whenever(rh.gs(R.string.nfccommands_unknown_command)).thenReturn("Unknown command")
 
-        val result = plugin.executeCommand("UNKNOWN")
+        val result = execute("UNKNOWN")
 
         assertThat(result.success).isFalse()
     }
@@ -1147,7 +1135,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(false)
         whenever(rh.gs(R.string.nfccommands_remote_command_not_allowed)).thenReturn("Remote commands not allowed")
 
-        val result = plugin.executeCommand("LOOP STOP")
+        val result = execute("LOOP STOP")
 
         assertThat(result.success).isFalse()
     }
@@ -1156,7 +1144,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand RESTART should exit app`() {
         whenever(rh.gs(R.string.nfccommands_restarting)).thenReturn("Restarting")
 
-        val result = plugin.executeCommand("RESTART")
+        val result = execute("RESTART")
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Restarting")
@@ -1165,7 +1153,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand RESTART with extra argument should fail`() {
-        val result = plugin.executeCommand("RESTART NOW")
+        val result = execute("RESTART NOW")
 
         assertThat(result.success).isFalse()
         verify(configBuilder, never()).exitApp(any(), any(), any())
@@ -1173,7 +1161,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand blank string should fail with wrong format`() {
-        val result = plugin.executeCommand("   ")
+        val result = execute("   ")
 
         assertThat(result.success).isFalse()
         assertThat(result.message).isEqualTo("Wrong format")
@@ -1188,7 +1176,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
         whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
 
-        val result = plugin.executeCascade(listOf("LOOP STOP", "BASAL STOP"))
+        val result = cascade(listOf("LOOP STOP", "BASAL STOP"))
 
         assertThat(result.success).isTrue()
         assertThat(result.message).contains("Loop disabled")
@@ -1200,12 +1188,12 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) } // LOOP STOP will fail
         whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
 
-        val result = plugin.executeCascade(listOf("LOOP STOP", "BASAL STOP"))
+        val result = cascade(listOf("LOOP STOP", "BASAL STOP"))
 
         assertThat(result.success).isFalse()
         assertThat(result.message).contains("Loop is disabled")
         // Second command must not have been attempted
-        verify(commandQueue, Mockito.never()).cancelTempBasal(any(), any(), any())
+        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
     }
 
     // ── additional gap-coverage tests ─────────────────────────────────────────
@@ -1218,7 +1206,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP STOP")
+        val result = execute("LOOP STOP")
 
         assertThat(result.success).isFalse()
     }
@@ -1228,7 +1216,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP SUSPEND 30")
+        val result = execute("LOOP SUSPEND 30")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1241,7 +1229,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP LGS")
+        val result = execute("LOOP LGS")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1254,7 +1242,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP CLOSED")
+        val result = execute("LOOP CLOSED")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1270,7 +1258,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
 
-        val result = plugin.executeCommand("LOOP RESUME")
+        val result = execute("LOOP RESUME")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1280,7 +1268,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand LOOP with unknown subcommand should fail`() {
-        val result = plugin.executeCommand("LOOP BADWORD")
+        val result = execute("LOOP BADWORD")
 
         assertThat(result.success).isFalse()
     }
@@ -1291,7 +1279,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(profileFunction.getProfile()).thenReturn(null)
         }
 
-        val result = plugin.executeCommand("LOOP STOP")
+        val result = execute("LOOP STOP")
 
         assertThat(result.success).isFalse()
         assertThat(result.message).isEqualTo("No profile")
@@ -1301,7 +1289,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PUMP DISCONNECT with zero duration should fail`() {
-        val result = plugin.executeCommand("PUMP DISCONNECT 0")
+        val result = execute("PUMP DISCONNECT 0")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1311,7 +1299,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PUMP with wrong format should fail`() {
-        val result = plugin.executeCommand("PUMP")
+        val result = execute("PUMP")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1323,32 +1311,32 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand BASAL alone should fail`() {
-        val result = plugin.executeCommand("BASAL")
+        val result = execute("BASAL")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).cancelTempBasal(any(), any(), any())
-        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any(), any())
-        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any(), any())
+        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
+        runTest { verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any()) }
+        runTest { verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any()) }
     }
 
     @Test
     fun `executeCommand BASAL percent with zero duration should fail`() {
         whenever(rh.gs(eq(R.string.nfccommands_wrong_tbr_duration), any())).thenReturn("Wrong TBR duration")
 
-        val result = plugin.executeCommand("BASAL 120% 0")
+        val result = execute("BASAL 120% 0")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any(), any())
+        runTest { verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any()) }
     }
 
     @Test
     fun `executeCommand BASAL absolute with zero duration should fail`() {
         whenever(rh.gs(eq(R.string.nfccommands_wrong_tbr_duration), any())).thenReturn("Wrong TBR duration")
 
-        val result = plugin.executeCommand("BASAL 1.5 0")
+        val result = execute("BASAL 1.5 0")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any(), any())
+        runTest { verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any()) }
     }
 
     // processExtended – CANCEL alias
@@ -1357,10 +1345,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand EXTENDED CANCEL should cancel extended bolus`() {
         whenever(rh.gs(R.string.nfccommands_extended_canceled)).thenReturn("Extended canceled")
 
-        val result = plugin.executeCommand("EXTENDED CANCEL")
+        val result = execute("EXTENDED CANCEL")
 
         assertThat(result.success).isTrue()
-        verify(commandQueue).cancelExtended(any())
+        runTest { verify(commandQueue).cancelExtended() }
     }
 
     // processBolus – zero/negative amount
@@ -1373,20 +1361,20 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             app.aaps.core.objects.constraints.ConstraintObject(0.0, aapsLogger),
         )
 
-        val result = plugin.executeCommand("BOLUS 0.0")
+        val result = execute("BOLUS 0.0")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).bolus(any(), any())
+        runTest { verify(commandQueue, never()).bolus(any()) }
     }
 
     // processCarbs – format errors
 
     @Test
     fun `executeCommand CARBS with extra argument should fail`() {
-        val result = plugin.executeCommand("CARBS 20 extra")
+        val result = execute("CARBS 20 extra")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).bolus(any(), any())
+        runTest { verify(commandQueue, never()).bolus(any()) }
     }
 
     @Test
@@ -1395,20 +1383,20 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             app.aaps.core.objects.constraints.ConstraintObject(0, aapsLogger),
         )
 
-        val result = plugin.executeCommand("CARBS abc")
+        val result = execute("CARBS abc")
 
         assertThat(result.success).isFalse()
-        verify(commandQueue, never()).bolus(any(), any())
+        runTest { verify(commandQueue, never()).bolus(any()) }
     }
 
     // processProfile – index boundary errors
 
     @Test
     fun `executeCommand PROFILE with zero index should fail`() {
-        whenever(localProfileManager.profile).thenReturn(mockProfileStore)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
 
-        val result = plugin.executeCommand("PROFILE 0")
+        val result = execute("PROFILE 0")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1418,10 +1406,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand PROFILE with out-of-bounds index should fail`() {
-        whenever(localProfileManager.profile).thenReturn(mockProfileStore)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
 
-        val result = plugin.executeCommand("PROFILE 99")
+        val result = execute("PROFILE 99")
 
         assertThat(result.success).isFalse()
         runTest {
@@ -1433,7 +1421,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand AAPSCLIENT with too many arguments should fail`() {
-        val result = plugin.executeCommand("AAPSCLIENT RESTART EXTRA")
+        val result = execute("AAPSCLIENT RESTART EXTRA")
 
         assertThat(result.success).isFalse()
     }
@@ -1442,7 +1430,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCascade with empty commands list returns success with empty message`() {
-        val result = plugin.executeCascade(emptyList())
+        val result = cascade(emptyList())
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEmpty()
@@ -1454,11 +1442,11 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
         whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
 
-        val result = plugin.executeCascade(listOf("LOOP STOP", "BASAL STOP", "PUMP CONNECT"))
+        val result = cascade(listOf("LOOP STOP", "BASAL STOP", "PUMP CONNECT"))
 
         assertThat(result.success).isFalse()
         assertThat(result.message).doesNotContain("Temp basal canceled")
-        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any(), any()) }
+        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
     }
 
 }

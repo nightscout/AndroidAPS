@@ -13,10 +13,13 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.main.R
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
 import javax.inject.Inject
 
 open class NfcControlActivity : Activity() {
@@ -28,8 +31,7 @@ open class NfcControlActivity : Activity() {
 
     @Inject lateinit var rh: ResourceHelper
 
-    private val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    private var currentTask: Future<*>? = null
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -38,9 +40,9 @@ open class NfcControlActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        currentTask = executor.submit {
+        scope.launch {
             handleIntent(intent)
-            runOnUiThread {
+            withContext(Dispatchers.Main) {
                 packageManager.getLaunchIntentForPackage(packageName)?.apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 }?.let { startActivity(it) }
@@ -50,12 +52,11 @@ open class NfcControlActivity : Activity() {
     }
 
     override fun onDestroy() {
-        currentTask?.cancel(true)
-        executor.shutdown()
+        scope.cancel()
         super.onDestroy()
     }
 
-    fun handleIntent(intent: Intent?) {
+    suspend fun handleIntent(intent: Intent?) {
         if (!nfcPlugin.isEnabled()) {
             aapsLogger.debug(LTag.NFC, "NFC Plugin is disabled. Ignoring tag.")
             showToast(rh.gs(R.string.nfccommands_plugin_disabled))
@@ -81,7 +82,7 @@ open class NfcControlActivity : Activity() {
         }
     }
 
-    private fun handleNdefIntent(intent: Intent, nfcTag: Tag) {
+    private suspend fun handleNdefIntent(intent: Intent, nfcTag: Tag) {
         // getParcelableArrayExtra(String) deprecated in API 33; type-safe overload requires API 33+, minSdk=26
         @Suppress("DEPRECATION")
         val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES) ?: return
@@ -102,7 +103,7 @@ open class NfcControlActivity : Activity() {
         executeByUid(tagUid, showErrorToast = true)
     }
 
-    private fun handleTagIntent(nfcTag: Tag) {
+    private suspend fun handleTagIntent(nfcTag: Tag) {
         val tagUid = NfcTagStore.tagUidHex(nfcTag.id) ?: return
         aapsLogger.debug(LTag.NFC, "TAG_DISCOVERED fallback, UID: $tagUid")
         // Silently ignore tags not registered in My Tags — TAG_DISCOVERED fires for all tags
@@ -111,7 +112,7 @@ open class NfcControlActivity : Activity() {
         executeByUid(tagUid, showErrorToast = false)
     }
 
-    private fun executeByUid(tagUid: String, showErrorToast: Boolean) {
+    private suspend fun executeByUid(tagUid: String, showErrorToast: Boolean) {
         aapsLogger.debug(LTag.NFC, "NFC tag scanned, UID: $tagUid")
         if (nfcTagStore.isJustWritten(tagUid)) return
         when (val prep = nfcPlugin.prepareExecution(tagUid)) {

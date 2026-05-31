@@ -104,8 +104,8 @@ ahead of other apps while it is in the foreground.
 
 | Class | Responsibility |
 |-------|---------------|
-| `NfcCommandsPlugin` | `executeCascade` / `executeCommand` — all execution logic; `executeWithFeedback` — unified entry point that runs the cascade, appends the log entry, vibrates, and shows a toast |
-| `NfcControlActivity` | Handles NFC scan intents (`NDEF_DISCOVERED` and `TAG_DISCOVERED` fallback); calls `prepareExecution` + `executeWithFeedback` |
+| `NfcCommandsPlugin` | `executeCascade` / `executeCommand` — all execution logic (suspend); `executeWithFeedback` — unified entry point that runs the cascade, appends the log entry, vibrates, and shows a toast. Pump commands go through the suspend `CommandQueue` API and report the actual `PumpEnactResult` outcome (success/failure) rather than fire-and-forget |
+| `NfcControlActivity` | Handles NFC scan intents (`NDEF_DISCOVERED` and `TAG_DISCOVERED` fallback); calls `prepareExecution` + `executeWithFeedback` from a `CoroutineScope(Dispatchers.IO)` |
 | `NfcForegroundDispatch` | Manages `NfcAdapter.enableForegroundDispatch` lifecycle for `ComposeMainActivity`; forwards intercepted intents to `NfcControlActivity` and shows the warning dialog when the setting is enabled |
 | `NfcCommandsScreen` | My Tags and Log UI; manual execution dialog |
 | `NfcBuildScreen` | Command chain builder UI |

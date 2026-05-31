@@ -7,6 +7,8 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import app.aaps.plugins.main.R
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -36,30 +38,34 @@ class NfcControlActivityTest : TestBaseWithProfile() {
 
     private val fakeUid = byteArrayOf(0xAA.toByte(), 0xBB.toByte(), 0xCC.toByte(), 0xDD.toByte())
 
+    private fun handle(intent: Intent?) = runBlocking { activity.handleIntent(intent) }
+
     @Test
     fun `handleIntent executes commands when plugin enabled and tag registered`() {
         val mockTag = mockNfcTag(fakeUid)
         val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
             .thenReturn(NfcPrepareResult.Ready(uid, "My Tag", listOf("LOOP STOP")))
-        whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
-            .thenReturn(NfcExecutionResult(true, "ok"))
+        runTest {
+            whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
+                .thenReturn(NfcExecutionResult(true, "ok"))
+        }
         val intent = createNfcIntent(mockTag)
 
-        activity.handleIntent(intent)
+        handle(intent)
 
         verify(nfcPlugin).prepareExecution(uid)
-        verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ")
+        runTest { verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ") }
     }
 
     @Test
     fun `handleIntent does nothing when plugin disabled`() {
         whenever(nfcPlugin.isEnabled()).thenReturn(false)
 
-        activity.handleIntent(createNfcIntent(mockNfcTag(fakeUid)))
+        handle(createNfcIntent(mockNfcTag(fakeUid)))
 
         verify(nfcPlugin, never()).prepareExecution(any())
-        verify(nfcPlugin, never()).executeCascade(any())
+        runTest { verify(nfcPlugin, never()).executeCascade(any()) }
     }
 
     @Test
@@ -68,14 +74,14 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         whenever(nfcPlugin.prepareExecution(uid))
             .thenReturn(NfcPrepareResult.Error("not registered"))
 
-        activity.handleIntent(createNfcIntent(mockNfcTag(fakeUid)))
+        handle(createNfcIntent(mockNfcTag(fakeUid)))
 
-        verify(nfcPlugin, never()).executeCascade(any())
+        runTest { verify(nfcPlugin, never()).executeCascade(any()) }
     }
 
     @Test
     fun `handleIntent does nothing when intent is null`() {
-        activity.handleIntent(null)
+        handle(null)
 
         verify(nfcPlugin, never()).prepareExecution(any())
     }
@@ -85,7 +91,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         val intent = mock<Intent>()
         whenever(intent.action).thenReturn("android.intent.action.MAIN")
 
-        activity.handleIntent(intent)
+        handle(intent)
 
         verify(nfcPlugin, never()).prepareExecution(any())
     }
@@ -94,10 +100,10 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     fun `handleIntent does nothing when intent has no NFC Tag extra`() {
         val intent = createNfcIntent(nfcTag = null)
 
-        activity.handleIntent(intent)
+        handle(intent)
 
         verify(nfcPlugin, never()).prepareExecution(any())
-        verify(nfcPlugin, never()).executeCascade(any())
+        runTest { verify(nfcPlugin, never()).executeCascade(any()) }
     }
 
     @Test
@@ -116,7 +122,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         @Suppress("DEPRECATION")
         whenever(intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)).thenReturn(nfcTag)
 
-        activity.handleIntent(intent)
+        handle(intent)
 
         verify(nfcPlugin, never()).prepareExecution(any())
     }
@@ -126,13 +132,15 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
             .thenReturn(NfcPrepareResult.Ready(uid, "My Tag", listOf("LOOP STOP")))
-        whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
-            .thenReturn(NfcExecutionResult(true, "ok"))
+        runTest {
+            whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
+                .thenReturn(NfcExecutionResult(true, "ok"))
+        }
         val intent = createNfcIntent(mockNfcTag(fakeUid))
 
-        activity.handleIntent(intent)
+        handle(intent)
 
-        verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ")
+        runTest { verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ") }
     }
 
     @Test
@@ -140,13 +148,15 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         val uid = NfcTagStore.tagUidHex(fakeUid)!!
         whenever(nfcPlugin.prepareExecution(uid))
             .thenReturn(NfcPrepareResult.Ready(uid, "My Tag", listOf("LOOP STOP")))
-        whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
-            .thenReturn(NfcExecutionResult(true, "ok"))
+        runTest {
+            whenever(nfcPlugin.executeWithFeedback(any(), any(), any()))
+                .thenReturn(NfcExecutionResult(true, "ok"))
+        }
 
-        activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
+        handle(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
 
         verify(nfcPlugin).prepareExecution(uid)
-        verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ")
+        runTest { verify(nfcPlugin).executeWithFeedback(listOf("LOOP STOP"), "My Tag", "READ") }
     }
 
     @Test
@@ -155,18 +165,18 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         whenever(nfcPlugin.prepareExecution(uid))
             .thenReturn(NfcPrepareResult.Error("not registered"))
 
-        activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
+        handle(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
 
         verify(nfcPlugin).prepareExecution(uid)
-        verify(nfcPlugin, never()).executeCascade(any())
+        runTest { verify(nfcPlugin, never()).executeCascade(any()) }
     }
 
     @Test
     fun `handleIntent does nothing on TAG_DISCOVERED without physical tag extra`() {
-        activity.handleIntent(createTagDiscoveredIntent(nfcTag = null))
+        handle(createTagDiscoveredIntent(nfcTag = null))
 
         verify(nfcPlugin, never()).prepareExecution(any())
-        verify(nfcPlugin, never()).executeCascade(any())
+        runTest { verify(nfcPlugin, never()).executeCascade(any()) }
     }
 
     @Test
@@ -174,10 +184,10 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         val uid = NfcTagStore.tagUidHex(fakeUid)!!
         nfcTagStore.markJustWritten(uid)
 
-        activity.handleIntent(createNfcIntent(mockNfcTag(fakeUid)))
+        handle(createNfcIntent(mockNfcTag(fakeUid)))
 
         verify(nfcPlugin, never()).prepareExecution(any())
-        verify(nfcPlugin, never()).executeWithFeedback(any(), any(), any())
+        runTest { verify(nfcPlugin, never()).executeWithFeedback(any(), any(), any()) }
     }
 
     @Test
@@ -185,10 +195,10 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         val uid = NfcTagStore.tagUidHex(fakeUid)!!
         nfcTagStore.markJustWritten(uid)
 
-        activity.handleIntent(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
+        handle(createTagDiscoveredIntent(mockNfcTag(fakeUid)))
 
         verify(nfcPlugin, never()).prepareExecution(any())
-        verify(nfcPlugin, never()).executeWithFeedback(any(), any(), any())
+        runTest { verify(nfcPlugin, never()).executeWithFeedback(any(), any(), any()) }
     }
 
     // ── helpers ────────────────────────────────────────────────────────────
