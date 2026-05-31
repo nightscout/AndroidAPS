@@ -78,6 +78,9 @@ open class NfcControlActivity : Activity() {
 
         when (intent.action) {
             NfcAdapter.ACTION_NDEF_DISCOVERED -> handleNdefIntent(intent, nfcTag)
+            // TECH_DISCOVERED is dispatched for NfcV (ISO 15693) tags via the manifest tech-filter.
+            // These tags are not NDEF-formatted, so match them by UID like the TAG_DISCOVERED fallback.
+            NfcAdapter.ACTION_TECH_DISCOVERED -> handleTagIntent(nfcTag)
             NfcAdapter.ACTION_TAG_DISCOVERED  -> handleTagIntent(nfcTag)
         }
     }
