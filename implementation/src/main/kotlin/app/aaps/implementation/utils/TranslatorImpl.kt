@@ -65,6 +65,7 @@ class TranslatorImpl @Inject internal constructor(
         Action.TT_NS_REFRESH                   -> rh.gs(R.string.uel_tt_ns_refresh)
         Action.AUTOMATION_REMOVED              -> rh.gs(R.string.uel_automation_removed)
         Action.BG_REMOVED                      -> rh.gs(R.string.uel_bg_removed)
+        Action.CALIBRATION_REMOVED             -> rh.gs(R.string.uel_calibration_removed)
         Action.CAREPORTAL_REMOVED              -> rh.gs(R.string.uel_careportal_removed)
         Action.BOLUS_REMOVED                   -> rh.gs(R.string.uel_bolus_removed)
         Action.CARBS_REMOVED                   -> rh.gs(R.string.uel_carbs_removed)

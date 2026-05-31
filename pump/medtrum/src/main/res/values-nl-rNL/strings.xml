@@ -66,8 +66,6 @@
     <string name="step_retry_activation">Bezig met activatie</string>
     <string name="unexpected_state">Onverwachte staat: %1$s</string>
     <string name="patch_begin_activation">Geen actieve patch. Druk op <b>Volgende</b> om het activeringsproces te starten.</string>
-    <string name="patch_not_active_note">Pomp basis mag niet verbonden zijn met de patch tot de volgende stap!</string>
-    <string name="connect_pump_base">Verbind de pompbasis op een nieuwe patch, ontlucht de patch, vul met insuline en druk op <b>Volgende</b>.</string>
     <string name="note_min_70_units">Opmerking: Voor de activering zijn minimaal 70 eenheden vereist.</string>
     <string name="reservoir_text_and_level">Reservoir: %.2f E</string>
     <string name="do_not_attach_to_body">Plaats de patch nog niet op het lichaam.</string>

@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">Lissage moyen</string>
     <string name="description_avg_smoothing">"Algorithme de lissage moyen, la dernière valeur n'est pas affectée"</string>
     <string name="no_smoothing_name">Pas de lissage</string>
+    <string name="description_no_smoothing">"Utilisez ceci lorsque vous avez déjà des données filtrées, par exemple de BYODA G6."</string>
+    <string name="UKF_name">Filtre de Kalman Unscented</string>
+    <string name="description_UKF">"Algorithme avancé avec réglage automatique du bruit et lissage RTS."</string>
 </resources>

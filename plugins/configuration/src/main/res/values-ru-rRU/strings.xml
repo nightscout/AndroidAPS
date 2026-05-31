@@ -27,9 +27,14 @@
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они отсортированы от старых к новым. Обычно, чем новее алгоритм, тем он мощнее. Не забудьте перед использованием прочитать документацию OpenAPS и сделать необходимые настройки.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
     <string name="startobjective">Начните первую Цель</string>
+    <string name="open_objectives">Открыть Цели</string>
+    <string name="setupwizard_permissions">Разрешения</string>
+    <string name="setupwizard_profile_info">Создайте профиль с указанием БС, УК, ФЧИ и целевой ГК. Вы сможете добавить дополнительные профили позднее.</string>
+    <string name="setupwizard_permissions_info">Для корректной работы AAPS требуется доступ к хранилищу и разрешения. Пожалуйста, предоставьте необходимые разрешения ниже.</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
     <string name="readstatus">Статус \'чтение\'</string>
     <!-- Provider-agnostic cloud export/import strings -->
@@ -37,6 +42,7 @@
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AAPS?</string>
     <string name="configbuilder_aps_description">Какой алгоритм ИПЖ должен выполнять подстройку терапии?</string>
+    <string name="configbuilder_sync_description">Плагины загрузки данных, синхронизации и коммуникации.</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>

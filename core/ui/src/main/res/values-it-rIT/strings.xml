@@ -34,6 +34,8 @@
     <string name="event_type">Tipo evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Salva</string>
     <string name="skip">Salta</string>
     <string name="switch_to_edit">Modifica</string>
@@ -49,6 +51,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
     <string name="result">Risultato</string>
     <string name="settings">Impostazioni</string>
+    <string name="open_plugin">Apri plugin</string>
+    <string name="configbuilder_pick_one_hint">Sceglierne uno. Solo uno alla volta può essere attivo.</string>
+    <string name="configbuilder_pick_many_hint">Scegli tutte le opzioni che si applicano.</string>
+    <string name="configbuilder_no_selection_warning">Nessun plugin selezionato in questa categoria.</string>
     <string name="simple_mode">Modalità semplice</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Contrai</string>
@@ -466,6 +472,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
+    <string name="command_replaced">Sostituito con un nuovo comando</string>
     <string name="pump_not_configured">Micro non configurato</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Emanato</string>
@@ -642,7 +649,10 @@
     <string name="basal">Basale</string>
     <string name="basalpct">% basale</string>
     <string name="sensitivity">Sensibilità</string>
-    <string name="isf_for_carbs">ISF per Calcolatrice e Assorbimento di Carbo: %1$.1f</string>
+    <string name="isf_for_carbs">ISF per Calcolatore e Assorbimento di Carbo: %1$.1f</string>
+    <string name="isf_profile">Profilo ISF: %1$.1f</string>
+    <string name="isf_variable">ISF Variabile: %1$.1f</string>
+    <string name="isf_effective">ISF Effettivo: %1$.1f</string>
     <string name="autosens_long">Valore Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens nell\'algoritmo: %.0f%%</string>

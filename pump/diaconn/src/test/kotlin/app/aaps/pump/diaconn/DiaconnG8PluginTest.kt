@@ -13,6 +13,8 @@ import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,7 +47,7 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         diaconnG8Plugin = DiaconnG8Plugin(
             aapsLogger, rh, preferences, commandQueue, rxBus, context, constraintChecker, diaconnG8Pump,
             pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, aapsSchedulers,
-            notificationManager, diaconnHistoryDatabase, pumpEnactResultProvider, BolusProgressData(ch, rh), blePreCheck
+            notificationManager, diaconnHistoryDatabase, pumpEnactResultProvider, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), blePreCheck
         )
     }
 

@@ -7,8 +7,8 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -40,7 +40,7 @@ import javax.inject.Inject
 @Stable
 class ProfileHelperViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
     val rh: ResourceHelper,
@@ -63,7 +63,7 @@ class ProfileHelperViewModel @Inject constructor(
         viewModelScope.launch {
             val currentProfileName = profileFunction.getProfileName()
             val currentProfile = profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
-            val availableProfiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
+            val availableProfiles = profileRepository.profile.value?.getProfileList() ?: ArrayList()
             val profileSwitches = withContext(Dispatchers.IO) {
                 persistenceLayer.getEffectiveProfileSwitchesFromTime(
                     dateUtil.now() - T.months(2).msecs(),
@@ -123,9 +123,12 @@ class ProfileHelperViewModel @Inject constructor(
                 ProfileType.CURRENT           -> uiState.value.currentProfile
 
                 ProfileType.AVAILABLE_PROFILE -> {
-                    val list = localProfileManager.profile?.getProfileList()
+                    // Snapshot once so the by-index lookup and the by-name lookup see the
+                    // same store version.
+                    val store = profileRepository.profile.value
+                    val list = store?.getProfileList()
                     if (list != null && profileIndex < list.size)
-                        localProfileManager.profile?.getSpecificProfile(list[profileIndex].toString())
+                        store.getSpecificProfile(list[profileIndex].toString())
                     else null
                 }
 
@@ -162,7 +165,7 @@ class ProfileHelperViewModel @Inject constructor(
             ProfileType.CURRENT           -> uiState.value.currentProfileName
 
             ProfileType.AVAILABLE_PROFILE -> {
-                val list = localProfileManager.profile?.getProfileList()
+                val list = profileRepository.profile.value?.getProfileList()
                 if (list != null && profileIndex < list.size) list[profileIndex].toString() else ""
             }
 
@@ -194,12 +197,14 @@ class ProfileHelperViewModel @Inject constructor(
                     title = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
                     message = rh.gs(app.aaps.core.ui.R.string.copytolocalprofile),
                     onOk = {
-                        localProfileManager.addProfile(
-                            localProfileManager.copyFrom(
-                                it,
-                                "DefaultProfile " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()).replace(".", "/")
+                        viewModelScope.launch {
+                            profileRepository.add(
+                                profileRepository.copyFrom(
+                                    it,
+                                    "DefaultProfile " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()).replace(".", "/")
+                                )
                             )
-                        )
+                        }
                     }
                 )
             )

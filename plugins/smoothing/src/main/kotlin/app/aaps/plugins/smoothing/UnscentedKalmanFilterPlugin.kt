@@ -236,7 +236,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         loadPersistedParameters()
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -409,7 +409,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      *
      * Called automatically by the plugin framework.
      */
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         super.onStop()
@@ -589,10 +589,10 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             processSegment(data, segment.startIdx, segment.endIdx, previousTimestamp)
         }
 
-        // Fill any unprocessed points with raw values.
+        // Fill any unprocessed points with calibration-corrected raw values.
         for (i in data.indices) {
             if (data[i].smoothed == 0.0) {  // Not yet processed.
-                data[i].smoothed = max(data[i].value, 39.0)
+                data[i].smoothed = max(data[i].calibratedOrValue, 39.0)
                 data[i].trendArrow = TrendArrow.NONE
             }
         }
@@ -652,19 +652,19 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
     ) {
         val segmentSize = endIdx - startIdx + 1
         if (segmentSize < 2) {
-            data[startIdx].smoothed = max(data[startIdx].value, 39.0)
+            data[startIdx].smoothed = max(data[startIdx].calibratedOrValue, 39.0)
             data[startIdx].trendArrow = TrendArrow.NONE
             return
         }
 
         // Initialize state from the oldest point in the segment.
-        val initialGlucose = data[endIdx].value
+        val initialGlucose = data[endIdx].calibratedOrValue
         var initialRate = 0.0
 
         if (endIdx > 0) {
             val dt = (data[endIdx - 1].timestamp - data[endIdx].timestamp) / millisPerMinute
             if (dt in 3.0..7.0) {
-                initialRate = (data[endIdx - 1].value - data[endIdx].value) / dt
+                initialRate = (data[endIdx - 1].calibratedOrValue - data[endIdx].calibratedOrValue) / dt
                 initialRate = initialRate.coerceIn(-4.0, 4.0)
             }
         }
@@ -706,10 +706,13 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             // One-step prediction with fixed Q (base prediction).
             val (xPredBase, pPredBase) = predict(x, p, q, dtUsed)
 
-            val z = data[i].value
+            // Sentinel check (xDrip error code 38.0) must use raw .value, not calibrated;
+            // the Kalman measurement itself uses .calibratedOrValue.
+            val rawValue = data[i].value
+            val z = data[i].calibratedOrValue
 
             // Skip only error code values (e.g., 38 mg/dL).
-            if (z <= 38.0) {
+            if (rawValue <= 38.0) {
                 // For smoothing, still record the pre-update state and prediction.
                 val stateBefore = FilterState(
                     x.copyOf(),
@@ -1295,7 +1298,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      */
     private fun copyRawToSmoothed(data: MutableList<InMemoryGlucoseValue>) {
         for (reading in data) {
-            reading.smoothed = max(reading.value, 39.0)
+            reading.smoothed = max(reading.calibratedOrValue, 39.0)
             reading.trendArrow = TrendArrow.NONE
         }
     }

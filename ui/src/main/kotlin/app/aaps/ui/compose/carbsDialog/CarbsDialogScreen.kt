@@ -57,6 +57,7 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
@@ -290,6 +291,7 @@ private fun CarbsDialogContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),

@@ -76,8 +76,8 @@
     <string name="unpair_confirm_message">Questo cancellerà il numero di serie del microinfusore memorizzato e si disconnetterà. Attivare una nuova patch per eseguire la scansione di un micro.</string>
     <string name="step_retry_activation">Attivazione in corso</string>
     <string name="unexpected_state">Stato inaspettato: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Collegare la base del micro a una nuova patch per accenderla, quindi selezionarla dalla lista sottostante.</string>
     <string name="patch_begin_activation">Nessuna patch attiva. Premi <b>Avanti</b> per iniziare il processo di attivazione.</string>
-    <string name="patch_not_active_note">La base del micro non deve essere collegata alla patch fino alla fase successiva!</string>
     <string name="connect_pump_base">Collegare la base del micro a una nuova patch, rimuovere l\'aria residua e riempire con insulina, quindi premere <b>Avanti</b>.</string>
     <string name="note_min_70_units">Nota: per l\'attivazione è richiesto un minimo di 70 unità.</string>
     <string name="reservoir_text_and_level">Serbatoio: %.2f U</string>

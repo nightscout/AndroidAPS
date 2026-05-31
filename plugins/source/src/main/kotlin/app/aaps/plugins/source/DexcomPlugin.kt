@@ -34,6 +34,7 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.plugins.source.compose.BgSourceComposeContent
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -91,7 +92,7 @@ class DexcomPlugin @Inject constructor(
             }
         }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         requestPermissionIfNeeded()
     }
@@ -111,14 +112,27 @@ class DexcomPlugin @Inject constructor(
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
-            if (!dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            // Drain first, unconditionally: drain() clears DataInbox's pending-work gate, so every
+            // enqueued worker MUST reach it. If we returned early (plugin disabled) before draining,
+            // the gate would stay set and silently block all future enqueues for this slot until
+            // the process restarts. Bundles drained while disabled are intentionally discarded.
             val bundles = dataInbox.drain(DexcomInbox)
+            if (!dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             if (bundles.isEmpty()) return Result.success(workDataOf("Result" to "no data"))
 
             var hadFailure = false
-            for (bundle in bundles) {
+            for ((index, bundle) in bundles.withIndex()) {
                 try {
                     processBundle(bundle)
+                } catch (e: CancellationException) {
+                    // WorkManager stopped this run. The coroutine contract requires
+                    // CancellationException to propagate, otherwise the loop keeps fighting a
+                    // cancelled Job and spams failures for every remaining bundle. drain() already
+                    // removed the whole batch, so re-queue this bundle plus everything not yet
+                    // processed before propagating — otherwise those readings are lost.
+                    // requeue/enqueue are non-suspending, so they complete despite cancellation.
+                    dataInbox.requeue(DexcomInbox, bundles.subList(index, bundles.size))
+                    throw e
                 } catch (e: Exception) {
                     // processBundle early-returns on malformed-bundle conditions; anything that
                     // reaches the catch is a real exception (typically a DB write). Surface as

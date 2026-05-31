@@ -40,8 +40,8 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -142,7 +142,7 @@ class MainApp : Application(), HasAndroidInjector {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var localInsulinManager: InsulinManager
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
@@ -311,11 +311,11 @@ class MainApp : Application(), HasAndroidInjector {
         fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
         fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
-        fabricPrivacy.setUserProperty("HEAD", BuildConfig.HEAD)
+        fabricPrivacy.setUserProperty("HEAD", BuildConfig.BUILDVERSION)
         fabricPrivacy.setUserProperty("Remote", remote)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
-        activePlugin.activePump.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
+        activePlugin.activePumpInternal.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
         if (!config.AAPSCLIENT && !config.PUMPCONTROL)
             activePlugin.activeAPS?.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
@@ -738,9 +738,9 @@ class MainApp : Application(), HasAndroidInjector {
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)
 
         val label = runningICfg.insulinLabel
-        val end   = runningICfg.insulinEndTime
-        val peak  = runningICfg.insulinPeakTime
-        val conc  = runningICfg.concentration
+        val end = runningICfg.insulinEndTime
+        val peak = runningICfg.insulinPeakTime
+        val conc = runningICfg.concentration
 
         config.updateInitProgress(rh.get().gs(R.string.migrating_profile_switches))
         val migratedPs = repository.bulkMigrateProfileSwitchInsulinConfig(label, end, peak, conc)

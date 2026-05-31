@@ -6,6 +6,8 @@ import app.aaps.database.persistence.di.PersistenceModule
 import app.aaps.implementation.di.ImplementationModule
 import app.aaps.plugins.aps.di.ApsModule
 import app.aaps.plugins.automation.di.AutomationModule
+import app.aaps.plugins.calibration.di.CalibrationDbModule
+import app.aaps.plugins.calibration.di.CalibrationRepositoryModule
 import app.aaps.plugins.configuration.di.ConfigurationModule
 import app.aaps.plugins.constraints.di.PluginsConstraintsModule
 import app.aaps.plugins.main.di.PluginsModule
@@ -40,6 +42,8 @@ import javax.inject.Singleton
         // Gradle modules
         AutomationModule::class,
         ApsModule::class,
+        CalibrationDbModule::class,
+        CalibrationRepositoryModule::class,
         ConfigurationModule::class,
         CoreModule::class,
         // -> DatabaseModule::class, replace by in-memory database

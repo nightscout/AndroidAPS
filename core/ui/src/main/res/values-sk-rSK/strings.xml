@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
     <string name="result">Výsledok</string>
     <string name="settings">Nastavenia</string>
+    <string name="open_plugin">Otvoriť plugin</string>
+    <string name="configbuilder_pick_one_hint">Vyberte jeden. Iba jeden môže byť aktívny.</string>
+    <string name="configbuilder_pick_many_hint">Vyberte, čo sa použije.</string>
+    <string name="configbuilder_no_selection_warning">V tejto kategórii nie je vybraný žiadny plugin.</string>
     <string name="simple_mode">Jednoduchý mód</string>
     <string name="expand">Rozbaliť</string>
     <string name="collapse">Zbaliť</string>
@@ -607,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Nebol vybraný žiadny profil</string>
     <string name="missing_profile_name">Chýba názov profilu</string>
+    <string name="profile_not_saved_activate">Profil nebol uložený. Pred aktiváciou, prosím, uložte profil.</string>
+    <string name="profile_activation_failed">Aktivácie profilu zlyhala</string>
     <string name="error_in_ic_values">Chyba v hodnotách inz./sach. prevodu</string>
     <string name="error_in_isf_values">Chyba v hodnotách citlivosti</string>
     <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
@@ -641,6 +647,9 @@
     <string name="basalpct">Bazál %</string>
     <string name="sensitivity">Citlivosť</string>
     <string name="isf_for_carbs">ISF pre kalkulačku a vstrebávanie sacharidov: %1$.1f</string>
+    <string name="isf_profile">ISF v profile: %1$.1f</string>
+    <string name="isf_variable">Variabilné ISF: %1$.1f</string>
+    <string name="isf_effective">Efektívne ISF: %1$.1f</string>
     <string name="autosens_long">Hodnota Autosense: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Detekcia citlivosti algoritmu: %.0f%%</string>
@@ -840,7 +849,7 @@
     <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
     <string name="ble_permissions_missing">Povolenie Bluetooth nie je udelené. Prosím udeľte ho v nastaveniach aplikácie.</string>
     <!--    Preferences -->
-    <string name="nav_plugin_preferences">Nastavenie modulu</string>
+    <string name="nav_plugin_preferences">Nastavenie pluginu</string>
     <!-- Navigation -->
     <string name="nav_about">O aplikácii</string>
     <string name="nav_about_desc">Zobraz verziu aplikácie a informácie</string>

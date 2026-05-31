@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.plugins.constraints.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +61,7 @@ fun ExamBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
         ) {
             // Progress header

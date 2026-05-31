@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -60,6 +61,7 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.ui.R
 import java.util.Calendar
 
@@ -292,7 +294,8 @@ fun ProfileActivationScreen(
 
                     // Timeshift (collapsible)
                     var timeshiftExpanded by rememberSaveable { mutableStateOf(false) }
-                    Column(modifier = itemModifier) {
+                    val timeshiftExpandRequester = rememberBringIntoViewOnExpand(timeshiftExpanded)
+                    Column(modifier = itemModifier.bringIntoViewRequester(timeshiftExpandRequester)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,

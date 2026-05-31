@@ -27,18 +27,18 @@ class PumpSyncStorage @Inject constructor(
     var pumpSyncStorageBolus: MutableList<PumpDbEntryBolus> = mutableListOf()
     var pumpSyncStorageTBR: MutableList<PumpDbEntryTBR> = mutableListOf()
 
-    private var storageInitialized: Boolean = false
-    private var xstream: XStream = XStream()
+    @Volatile private var storageInitialized: Boolean = false
 
-    init {
-        initStorage()
+    // XStream construction is heavy (Class.forName chain in setupSecurity) — defer it so it
+    // doesn't run on the main thread during Dagger eager-construct in MainApp.onCreate.
+    private val xstream: XStream by lazy {
+        XStream().apply { addPermission(AnyTypePermission.ANY) }
     }
 
+    @Synchronized
     fun initStorage() {
         if (storageInitialized)
             return
-
-        xstream.addPermission(AnyTypePermission.ANY)
 
         preferences.getIfExists(StringNonKey.PumpCommonBolusStorage)?.let { jsonData ->
             if (jsonData.isNotBlank()) {
@@ -71,6 +71,7 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun saveStorageBolus() {
+        if (!storageInitialized) initStorage()
         if (pumpSyncStorageBolus.isNotEmpty()) {
             preferences.put(StringNonKey.PumpCommonBolusStorage, xstream.toXML(pumpSyncStorageBolus))
             aapsLogger.debug(LTag.PUMP, "Saving Pump Sync Storage: boluses=${pumpSyncStorageBolus.size}")
@@ -78,6 +79,7 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun saveStorageTBR() {
+        if (!storageInitialized) initStorage()
         if (pumpSyncStorageTBR.isNotEmpty()) {
             preferences.put(StringNonKey.PumpCommonTbrStorage, xstream.toXML(pumpSyncStorageTBR))
             aapsLogger.debug(LTag.PUMP, "Saving Pump Sync Storage: tbr=${pumpSyncStorageTBR.size}")
@@ -85,14 +87,17 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun getBoluses(): MutableList<PumpDbEntryBolus> {
+        if (!storageInitialized) initStorage()
         return pumpSyncStorageBolus
     }
 
     fun getTBRs(): MutableList<PumpDbEntryTBR> {
+        if (!storageInitialized) initStorage()
         return pumpSyncStorageTBR
     }
 
     fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
+        if (!storageInitialized) initStorage()
         val temporaryId = creator.generateTempId(detailedBolusInfo.timestamp)
         val result = runBlocking {
             pumpSync.addBolusWithTempId(
@@ -150,6 +155,7 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
+        if (!storageInitialized) initStorage()
         val timeNow: Long = System.currentTimeMillis()
         val temporaryId = creator.generateTempId(timeNow)
 
@@ -186,6 +192,7 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun removeBolusWithTemporaryId(temporaryId: Long) {
+        if (!storageInitialized) initStorage()
         var dbEntry: PumpDbEntryBolus? = null
 
         for (pumpDbEntry in pumpSyncStorageBolus) {
@@ -202,6 +209,7 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun removeTemporaryBasalWithTemporaryId(temporaryId: Long) {
+        if (!storageInitialized) initStorage()
         var dbEntry: PumpDbEntryTBR? = null
 
         for (pumpDbEntry in pumpSyncStorageTBR) {

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class InputProfileNameTest : TriggerTestBase() {
 
     @Test fun setValue() {
-        val inputProfileName = InputProfileName(rh, localProfileManager, "Test")
+        val inputProfileName = InputProfileName("Test")
         assertThat(inputProfileName.value).isEqualTo("Test")
         inputProfileName.value = "Test2"
         assertThat(inputProfileName.value).isEqualTo("Test2")

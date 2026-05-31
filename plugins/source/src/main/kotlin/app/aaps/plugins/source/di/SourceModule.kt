@@ -3,6 +3,7 @@ package app.aaps.plugins.source.di
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
@@ -44,6 +45,7 @@ abstract class SourceModule {
 
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
     @ContributesAndroidInjector abstract fun contributesNotificationCollectorService(): NotificationCollectorService
+    @ContributesAndroidInjector abstract fun contributesAidexWorker(): AidexPlugin.AidexWorker
 
     // Instara related worker
     @ContributesAndroidInjector abstract fun contributesInstaraWorker(): InstaraPlugin.InstaraWorker

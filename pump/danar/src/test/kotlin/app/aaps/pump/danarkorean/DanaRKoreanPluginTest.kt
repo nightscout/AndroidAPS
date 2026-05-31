@@ -10,6 +10,8 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,7 +40,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRKoreanPlugin(
             aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, commandQueue, danaPump, dateUtil, fabricPrivacy,
-            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, rh), pumpEnactResultProvider
+            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), pumpEnactResultProvider
         )
     }
 

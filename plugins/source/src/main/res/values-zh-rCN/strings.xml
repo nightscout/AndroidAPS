@@ -48,4 +48,12 @@
     <string name="permission_dexcom_description">应用程序需要权限才能从 Dexcom 应用程序接收CGM 数据</string>
     <string name="permission_notification_listener_title">通知权限</string>
     <string name="permission_notification_listener_description">需要从 CGM 应用通知读取血糖值</string>
+    <string name="aidex">微泰 CGM 应用</string>
+    <string name="aidex_short">CGM 应用</string>
+    <string name="description_source_aidex">从 LinX、LinX vista、Equil G. Smart 2、Diaexpert 2 等设备接收动态血糖值。</string>
+    <string name="aidex_sensor_expired">传感器已过期，请替换为新传感器</string>
+    <string name="aidex_sensor_error">传感器错误，请检查传感器状态</string>
+    <string name="aidex_sensor_stabilizing">传感器正在稳定中，请稍候…</string>
+    <string name="aidex_sensor_replace">需要更换传感器，请尽快替换新传感器</string>
+    <string name="aidex_signal_lost">传感器信号丢失，请检查连接</string>
 </resources>

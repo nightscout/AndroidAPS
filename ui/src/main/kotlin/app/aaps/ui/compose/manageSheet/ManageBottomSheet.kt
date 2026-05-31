@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
 import app.aaps.core.ui.compose.icons.IcTbrCancel
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -300,6 +302,7 @@ internal fun ManageBottomSheetContent(
         // Section: Careportal (hidden in simple mode, collapsed by default)
         if (!isSimpleMode) {
             var careportalExpanded by remember { mutableStateOf(false) }
+            val careportalExpandRequester = rememberBringIntoViewOnExpand(careportalExpanded)
             HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
             CollapsibleSectionHeader(
                 text = stringResource(CoreUiR.string.careportal),
@@ -307,7 +310,10 @@ internal fun ManageBottomSheetContent(
                 onToggle = { careportalExpanded = !careportalExpanded }
             )
 
-            AnimatedVisibility(visible = careportalExpanded) {
+            AnimatedVisibility(
+                visible = careportalExpanded,
+                modifier = Modifier.bringIntoViewRequester(careportalExpandRequester)
+            ) {
                 GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
                     add { modifier ->
                         ManageGridItem(

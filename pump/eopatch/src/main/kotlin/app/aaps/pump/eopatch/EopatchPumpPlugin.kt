@@ -135,7 +135,7 @@ class EopatchPumpPlugin @Inject constructor(
         )
     )
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -174,7 +174,7 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "EOPatchPumpPlugin onStop()")
         scope?.cancel()

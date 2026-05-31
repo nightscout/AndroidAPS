@@ -8,23 +8,30 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
-import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged
+import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,14 +42,12 @@ class SceneListViewModel @Inject constructor(
     private val activeSceneManager: ActiveSceneManager,
     private val sceneExecutor: SceneExecutor,
     private val persistenceLayer: PersistenceLayer,
-    private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    private val localProfileManager: LocalProfileManager,
-    private val loop: Loop,
-    private val activePlugin: ActivePlugin,
+    private val profileRepository: ProfileRepository,
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
-    private val translator: Translator
+    private val translator: Translator,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     /** All defined scenes */
@@ -57,6 +62,22 @@ class SceneListViewModel @Inject constructor(
     private val _invalidSceneIds = MutableStateFlow<Set<String>>(emptySet())
     val invalidSceneIds: StateFlow<Set<String>> = _invalidSceneIds.asStateFlow()
 
+    // Bumped on each runtime-state event so [activationReasons] recomputes.
+    private val activationTick = MutableStateFlow(0)
+
+    /**
+     * Per-scene activation gate: sceneId → localized reason if the scene
+     * cannot be activated right now, or null if it can. Recomputes when
+     * scenes change or pump/loop/profile state events fire.
+     * UI uses this to disable the play button and surface the reason.
+     */
+    val activationReasons: StateFlow<Map<String, String?>> =
+        combine(scenes, activationTick) { sceneList, _ -> sceneList }
+            .map { sceneList ->
+                sceneList.associate { it.id to sceneExecutor.validateActivation(it) }
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
+
     init {
         // Re-validate whenever scenes change
         viewModelScope.launch {
@@ -64,10 +85,19 @@ class SceneListViewModel @Inject constructor(
                 _invalidSceneIds.value = validateScenes(sceneList)
             }
         }
+        // Refresh activationReasons on relevant runtime-state events.
+        rxBus.toFlow(EventPumpStatusChanged::class.java)
+            .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
+        rxBus.toFlow(EventLoopUpdateGui::class.java)
+            .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
+        rxBus.toFlow(EventInitializationChanged::class.java)
+            .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
+        rxBus.toFlow(EventRefreshOverview::class.java)
+            .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
     }
 
     private fun validateScenes(sceneList: List<Scene>): Set<String> {
-        val profileList = localProfileManager.profile?.getProfileList()?.map { it.toString() } ?: emptyList()
+        val profileList = profileRepository.profileNames()
         val knownIds = sceneList.mapTo(mutableSetOf()) { it.id }
         val invalid = mutableSetOf<String>()
         for (scene in sceneList) {
@@ -122,44 +152,17 @@ class SceneListViewModel @Inject constructor(
 
     fun requestActivation(scene: Scene) {
         viewModelScope.launch {
-            // Validation: scene disabled
+            // Scene disabled: ignore — UI already disables the play button.
             if (!scene.isEnabled) return@launch
 
-            // Validation: pump disconnected / loop suspended
-            if (loop.runningMode().pausesLoopExecution()) {
-                _dialogState.value = DialogState.ValidationError(rh.gs(R.string.pump_disconnected))
+            // Shared validator — single source of truth for pump/loop/profile/actions.
+            sceneExecutor.validateActivation(scene)?.let { reason ->
+                _dialogState.value = DialogState.ValidationError(reason)
                 return@launch
             }
 
-            // Validation: pump not ready or no profile
-            if (!activePlugin.activePump.isInitialized() || profileFunction.getProfile() == null) {
-                _dialogState.value = DialogState.ValidationError(rh.gs(R.string.pump_not_initialized_profile_not_set))
-                return@launch
-            }
-
-            // Validation: no actions
-            if (scene.actions.isEmpty()) {
-                _dialogState.value = DialogState.ValidationError(rh.gs(R.string.scene_no_actions))
-                return@launch
-            }
-
-            // Validation: profile exists
-            for (action in scene.actions) {
-                if (action is SceneAction.ProfileSwitch && action.profileName.isNotEmpty()) {
-                    val profileList = localProfileManager.profile?.getProfileList()?.map { it.toString() } ?: emptyList()
-                    if (action.profileName !in profileList) {
-                        _dialogState.value = DialogState.ValidationError(
-                            rh.gs(R.string.scene_profile_not_found, action.profileName)
-                        )
-                        return@launch
-                    }
-                }
-            }
-
-            // Build action summaries
+            // Build action summaries + detect conflicts.
             val summaries = scene.actions.map { buildActionSummary(it) }
-
-            // Detect conflicts
             val conflicts = detectConflicts(scene)
 
             _dialogState.value = DialogState.ConfirmActivation(scene, summaries, conflicts)
@@ -210,8 +213,7 @@ class SceneListViewModel @Inject constructor(
     private fun buildActionSummary(action: SceneAction): String {
         return when (action) {
             is SceneAction.TempTarget      -> {
-                val targetStr = "${profileUtil.fromMgdlToStringInUnits(action.targetMgdl)} ${profileUtil.units.asText}"
-                rh.gs(R.string.scene_action_tt, targetStr)
+                rh.gs(R.string.scene_action_tt, profileUtil.fromMgdlToStringWithUnits(action.targetMgdl))
             }
 
             is SceneAction.ProfileSwitch   -> {

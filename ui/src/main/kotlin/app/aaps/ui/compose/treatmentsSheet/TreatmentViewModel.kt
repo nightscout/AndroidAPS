@@ -91,7 +91,7 @@ class TreatmentViewModel @Inject constructor(
             val showCgm = elementAvailability.isAvailable(ElementType.CGM_XDRIP) && preferences.get(BooleanKey.OverviewShowCgmButton)
             val showCalibration = elementAvailability.isAvailable(ElementType.CALIBRATION)
                 && iobCobCalculator.ads.actualBg() != null
-                && preferences.get(BooleanKey.OverviewShowCalibrationButton)
+                && (elementAvailability.isCalibrationOverrideActive() || preferences.get(BooleanKey.OverviewShowCalibrationButton))
             val showTreatment = preferences.get(BooleanKey.OverviewShowTreatmentButton)
             val showInsulin = preferences.get(BooleanKey.OverviewShowInsulinButton)
             val showCarbs = preferences.get(BooleanKey.OverviewShowCarbsButton)

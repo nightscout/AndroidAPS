@@ -46,7 +46,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
-        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, localProfileManager, persistenceLayer, storeDataForDb, config, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
+        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, profileRepository, persistenceLayer, storeDataForDb, config, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
     }
 
     @Test
@@ -758,8 +758,8 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Setup: new bolus without NS id (should call nsAdd)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
-        // Return 5L first, then 6L after preference is updated
-        whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L, 6L)
+        // Return 5L first (firstId capture), 5L again (startId iter 1), then 6L after preference is updated
+        whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L, 5L, 6L)
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)
 
         // Create test bolus without nightscoutId
@@ -925,7 +925,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Setup: multiple boluses to sync
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
-        whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L, 5L, 6L, 6L, 7L, 7L)
+        whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L, 5L, 5L, 6L, 6L, 7L, 7L)
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)
 
         val bolus1 = BS(id = 6, timestamp = 1000L, amount = 5.0, type = BS.Type.NORMAL, ids = IDs(), iCfg = someICfg)
@@ -950,7 +950,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Setup: new carbs without NS id (should call nsAdd)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
-        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 6L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L, 6L)
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)
 
         val carbs = CA(
@@ -1048,7 +1048,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Setup: multiple carbs entries to sync
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
-        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L, 6L, 6L, 7L, 7L, 8L, 8L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L, 5L, 6L, 6L, 7L, 7L, 8L, 8L)
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)
 
         val carbs1 = CA(id = 6, timestamp = 1000L, amount = 30.0, duration = 0L, ids = IDs())

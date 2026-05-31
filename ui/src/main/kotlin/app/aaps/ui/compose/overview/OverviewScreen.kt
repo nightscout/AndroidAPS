@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.delay
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +64,7 @@ fun OverviewScreen(
     statusLightsDef: PreferenceSubScreenDef,
     onNavigate: (NavigationRequest) -> Unit,
     onTbrChipClick: () -> Unit,
+    onIobChipClick: () -> Unit,
     notifications: List<AapsNotification>,
     onDismissNotification: (AapsNotification) -> Unit,
     onNotificationActionClick: (AapsNotification) -> Unit,
@@ -86,8 +88,11 @@ fun OverviewScreen(
     var showPumpActivityDialog by remember { mutableStateOf(false) }
     val showPumpFab = isPumpCommunicating || (bolusState != null && bolusState.isSMB)
 
-    LaunchedEffect(bolusState) {
-        if (bolusState == null) showPumpActivityDialog = false
+    LaunchedEffect(showPumpFab) {
+        if (!showPumpFab && showPumpActivityDialog) {
+            delay(3_000)
+            showPumpActivityDialog = false
+        }
     }
 
     LaunchedEffect(autoShowNotificationSheet) {
@@ -133,6 +138,7 @@ fun OverviewScreen(
                 statusLightsDef = statusLightsDef,
                 onNavigate = onNavigate,
                 onTbrChipClick = onTbrChipClick,
+                onIobChipClick = onIobChipClick,
                 paddingValues = paddingValues,
                 activeSceneState = activeSceneState,
                 sceneExpired = sceneExpired,
@@ -167,6 +173,7 @@ fun OverviewScreen(
                     statusLightsDef = statusLightsDef,
                     onNavigate = onNavigate,
                     onTbrChipClick = onTbrChipClick,
+                    onIobChipClick = onIobChipClick,
                     paddingValues = paddingValues,
                     activeSceneState = activeSceneState,
                     sceneExpired = sceneExpired,
@@ -200,6 +207,7 @@ fun OverviewScreen(
                     statusLightsDef = statusLightsDef,
                     onNavigate = onNavigate,
                     onTbrChipClick = onTbrChipClick,
+                    onIobChipClick = onIobChipClick,
                     paddingValues = paddingValues,
                     activeSceneState = activeSceneState,
                     sceneExpired = sceneExpired,

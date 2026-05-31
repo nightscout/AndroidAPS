@@ -10,6 +10,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
+import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -111,7 +112,8 @@ class ConfigBuilderImpl @Inject constructor(
                     (if (p.isEnabled(PluginType.LOOP)) " LOOP" else "") +
                     (if (p.isEnabled(PluginType.BGSOURCE)) " BGSOURCE" else "") +
                     (if (p.isEnabled(PluginType.SYNC)) " SYNC" else "") +
-                    if (p.isEnabled(PluginType.SMOOTHING)) " SMOOTHING" else ""
+                    (if (p.isEnabled(PluginType.SMOOTHING)) " SMOOTHING" else "") +
+                    if (p.isEnabled(PluginType.CALIBRATION)) " CALIBRATION" else ""
             )
         }
     }
@@ -187,6 +189,7 @@ class ConfigBuilderImpl @Inject constructor(
         when {
             type == PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
             type == PluginType.SMOOTHING   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Smoothing::class.java)
+            type == PluginType.CALIBRATION -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Calibration::class.java)
             type == PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
             type == PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
             type == PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)

@@ -73,6 +73,7 @@ fun OverviewScreenTablet(
     statusLightsDef: PreferenceSubScreenDef,
     onNavigate: (NavigationRequest) -> Unit,
     onTbrChipClick: () -> Unit,
+    onIobChipClick: () -> Unit,
     paddingValues: PaddingValues,
     activeSceneState: ActiveSceneState? = null,
     sceneExpired: Boolean = false,
@@ -170,7 +171,8 @@ fun OverviewScreenTablet(
                             iobUiState = iobUiState,
                             cobUiState = cobUiState,
                             onNavigate = onNavigate,
-                            onTbrChipClick = onTbrChipClick
+                            onTbrChipClick = onTbrChipClick,
+                            onIobChipClick = onIobChipClick
                         )
                     }
                 }

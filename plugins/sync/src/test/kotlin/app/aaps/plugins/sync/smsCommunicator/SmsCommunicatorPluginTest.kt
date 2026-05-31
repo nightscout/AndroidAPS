@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.PumpStatusProvider
-
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -40,6 +39,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -54,7 +54,6 @@ import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -109,7 +108,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // Without this, the gate sees null mode and PumpCommandGate.check throws NPE.
         runBlocking { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            aapsLogger, rh, smsManager, preferences, constraintChecker, rxBus, profileFunction, profileUtil, activePlugin, insulin, localProfileManager,
+            aapsLogger, rh, smsManager, preferences, constraintChecker, rxBus, profileFunction, profileUtil, activePlugin, insulin, profileRepository,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
             runningModeGuard, testScope, repository
@@ -134,7 +133,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0)) }
         runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0)) }
 
-        whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
         runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         runBlocking { whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true)) }
         whenever(otp.name()).thenReturn("User")
@@ -248,7 +246,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             requester = Sms("1234", "ddd"),
             requestText = "RequestText",
             confirmCode = "ccode",
-            action = object : SmsAction(false) { override suspend fun run() {} },
+            action = object : SmsAction(false) {
+                override suspend fun run() {}
+            },
             aapsLogger = aapsLogger,
             smsCommunicator = smsCommunicatorPlugin,
             rh = rh,
@@ -696,14 +696,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PROFILE LIST (no profile defined)
-        whenever(localProfileManager.profile).thenReturn(null)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(null))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE LIST")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE LIST")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Not configured")
 
-        whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         runBlocking { whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME) }
 
         //PROFILE STATUS

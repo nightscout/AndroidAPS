@@ -51,6 +51,14 @@
     <string name="pump_time_update_failed">Nepodarilo sa aktualizovať časové pásmo pumpy, odložiť správu a aktualizovať ručne.</string>
     <string name="bolus_error">Chyba bolusu</string>
     <!-- Status strings -->
+    <string name="status_idle">Nečinný</string>
+    <string name="status_filled">Naplnený</string>
+    <string name="status_priming">Plnenie</string>
+    <string name="status_primed">Naplnený</string>
+    <string name="status_ejecting">Vysúvanie</string>
+    <string name="status_ejected">Vysunutý</string>
+    <string name="status_active">Aktívny</string>
+    <string name="status_stopped">Zastavený</string>
     <!-- wizard-->
     <string name="retry">Opakovať</string>
     <string name="step_prepare_patch">Aktivovať Patch</string>
@@ -69,8 +77,6 @@
     <string name="step_retry_activation">Aktivácia prebieha</string>
     <string name="unexpected_state">Neočakávaný stav: %1$s</string>
     <string name="patch_begin_activation">Žiadny aktívny Patch. Stlačte <b>Ďalšia</b> pre zahájenie aktivačného procesu.</string>
-    <string name="patch_not_active_note">Základňa by nemala byť pripojená ku kanyle až do dalšieho kroku!</string>
-    <string name="connect_pump_base">Pripojte základňu k novej kanyle, odstráňte zostávajúci vzduch a doplňte inzulínom, potom stlačte tlačítko <b>Ďalšia</b>.</string>
     <string name="note_min_70_units">Poznámka: Pre aktiváciu je potrebných najmenej 70 jednotiek inzulínu.</string>
     <string name="reservoir_text_and_level">Zásobník: %.2f U</string>
     <string name="do_not_attach_to_body">Zatiaľ nepripájajte Patch k telu.</string>

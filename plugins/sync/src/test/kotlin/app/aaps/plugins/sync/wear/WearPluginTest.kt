@@ -7,6 +7,8 @@ import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 
@@ -22,6 +24,6 @@ class WearPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(ch, rh), persistenceLayer, scenes)
+        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), persistenceLayer, scenes)
     }
 }

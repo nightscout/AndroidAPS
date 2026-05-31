@@ -14,11 +14,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -71,12 +70,14 @@ class DashOmnipodWizardViewModel @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val insulinManager: InsulinManager,
     profileFunction: ProfileFunction,
-    localProfileManager: LocalProfileManager,
+    profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
-) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, localProfileManager) {
+) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, profileRepository) {
+
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     init {
         viewModelScope.launch {
@@ -98,8 +99,6 @@ class DashOmnipodWizardViewModel @Inject constructor(
 
     override val showSiteLocationStep: Boolean
         get() = preferences.get(BooleanKey.SiteRotationManagePump)
-
-    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
@@ -236,15 +235,8 @@ class DashOmnipodWizardViewModel @Inject constructor(
         }
     }
 
-    override fun doDeactivatePod(): Single<PumpEnactResult> = Single.create { source ->
-        commandQueue.customCommand(
-            CommandDeactivatePod(),
-            object : Callback() {
-                override fun run() {
-                    source.onSuccess(result)
-                }
-            }
-        )
+    override fun doDeactivatePod(): Single<PumpEnactResult> = rxSingle {
+        commandQueue.customCommand(CommandDeactivatePod())
     }
 
     // endregion

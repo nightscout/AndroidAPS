@@ -550,6 +550,8 @@ class ComposeMainActivity : AppCompatActivity() {
 
         val state by mainViewModel.uiState.collectAsStateWithLifecycle()
         val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
+        val pumpStatusBanner by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
+        val pumpQueueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
 
         NavHost(
             navController = navController,
@@ -708,9 +710,9 @@ class ComposeMainActivity : AppCompatActivity() {
                     treatmentButtonsDef = builtInSearchables.treatmentButtons,
                     // Pump activity
                     bolusState = bolusState,
-                    pumpStatusText = pumpCommunicationStatus.statusBanner()?.text ?: "",
-                    queueStatusText = pumpCommunicationStatus.queueStatus(),
-                    isPumpCommunicating = pumpCommunicationStatus.statusBanner() != null,
+                    pumpStatusText = pumpStatusBanner?.text ?: "",
+                    queueStatusText = pumpQueueStatus,
+                    isPumpCommunicating = pumpStatusBanner != null,
                     onStopBolus = {
                         commandQueue.cancelAllBoluses(null)
                     }
@@ -768,8 +770,8 @@ class ComposeMainActivity : AppCompatActivity() {
         // Modal bolus progress overlay — shown above everything for standard bolus
         bolusState?.let { state ->
             if (!state.isSMB) {
-                val pumpStatus = pumpCommunicationStatus.statusBanner()?.text ?: ""
-                val queueStatus = pumpCommunicationStatus.queueStatus()
+                val pumpStatus = pumpStatusBanner?.text ?: ""
+                val queueStatus = pumpQueueStatus
                 PumpActivityDialog(
                     bolusState = state,
                     pumpStatus = pumpStatus,

@@ -12,6 +12,7 @@ import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
 import app.aaps.plugins.sync.garmin.keys.GarminIntKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -155,7 +156,7 @@ class GarminPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun setupHttpServer_enabled() {
+    fun setupHttpServer_enabled() = runBlocking {
         whenever(preferences.get(GarminStringKey.RequestKey)).thenReturn("")
         whenever(preferences.get(GarminBooleanKey.LocalHttpServer)).thenReturn(true)
         whenever(preferences.get(GarminIntKey.LocalHttpPort)).thenReturn(28892)

@@ -12,6 +12,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +53,7 @@ import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -732,16 +734,24 @@ private fun PluginContentRoute(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            composeContent.Render(
-                setToolbarConfig = { config -> toolbarConfig = config },
-                onNavigateBack = { navController.safePopBackStack() },
-                onSettings = {
-                    onNavigationRequest(
-                        NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
-                        navController
-                    )
-                }
-            )
+            // remember so the lambda identity stays stable across recompositions —
+            // otherwise CompositionLocalProvider invalidates every consumer in the subtree
+            // on every PluginContentRoute recomposition.
+            val navigationRequestLambda = remember(onNavigationRequest, navController) {
+                { request: NavigationRequest -> onNavigationRequest(request, navController) }
+            }
+            CompositionLocalProvider(LocalPluginNavigationRequest provides navigationRequestLambda) {
+                composeContent.Render(
+                    setToolbarConfig = { config -> toolbarConfig = config },
+                    onNavigateBack = { navController.safePopBackStack() },
+                    onSettings = {
+                        onNavigationRequest(
+                            NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
+                            navController
+                        )
+                    }
+                )
+            }
         }
     }
 }

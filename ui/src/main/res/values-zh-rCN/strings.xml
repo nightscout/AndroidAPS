@@ -12,6 +12,7 @@
     <string name="widget_description">AAPS 小部件</string>
     <string name="widget_bg_graph_description">AAPS 血糖图表</string>
     <string name="widget_compact_bg_description">AAPS 血糖 + IOB+COB（紧凑）</string>
+    <string name="widget_small_description">AAPS 小</string>
     <!--     Activities-->
     <string name="activity_monitor">活动监视器</string>
     <string name="time_range">时间范围</string>
@@ -189,6 +190,7 @@
     <string name="active_profile_indicator">激活</string>
     <string name="confirm_remove_profile">删除配置文件 %1$s 吗？</string>
     <string name="confirm_clone_profile">克隆配置文件 \"%1$s\"？</string>
+    <string name="profile_no_longer_exists">配置文件列表已更改—请重试</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>

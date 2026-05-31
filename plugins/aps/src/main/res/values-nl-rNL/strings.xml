@@ -16,7 +16,6 @@
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
-    <string name="description_auto_isf">Meest recente algoritme voor gevorderde gebruikers met AutoISF uitbreidingen</string>
     <string name="openapsma_last_run_label">Laatste berekening</string>
     <string name="openapsma_input_parameters_label">Invoerparameters</string>
     <string name="openapsma_glucose_status_label">Glucose status</string>

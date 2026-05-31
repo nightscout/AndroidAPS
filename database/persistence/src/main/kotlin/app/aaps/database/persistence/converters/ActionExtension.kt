@@ -54,6 +54,7 @@ fun UserEntry.Action.fromDb(): Action =
         UserEntry.Action.TT_NS_REFRESH                   -> Action.TT_NS_REFRESH
         UserEntry.Action.AUTOMATION_REMOVED              -> Action.AUTOMATION_REMOVED
         UserEntry.Action.BG_REMOVED                      -> Action.BG_REMOVED
+        UserEntry.Action.CALIBRATION_REMOVED             -> Action.CALIBRATION_REMOVED
         UserEntry.Action.CAREPORTAL_REMOVED              -> Action.CAREPORTAL_REMOVED
         UserEntry.Action.EXTENDED_BOLUS_REMOVED          -> Action.EXTENDED_BOLUS_REMOVED
         UserEntry.Action.FOOD_REMOVED                    -> Action.FOOD_REMOVED
@@ -159,6 +160,7 @@ fun Action.toDb(): UserEntry.Action =
         Action.TT_NS_REFRESH                   -> UserEntry.Action.TT_NS_REFRESH
         Action.AUTOMATION_REMOVED              -> UserEntry.Action.AUTOMATION_REMOVED
         Action.BG_REMOVED                      -> UserEntry.Action.BG_REMOVED
+        Action.CALIBRATION_REMOVED             -> UserEntry.Action.CALIBRATION_REMOVED
         Action.CAREPORTAL_REMOVED              -> UserEntry.Action.CAREPORTAL_REMOVED
         Action.EXTENDED_BOLUS_REMOVED          -> UserEntry.Action.EXTENDED_BOLUS_REMOVED
         Action.FOOD_REMOVED                    -> UserEntry.Action.FOOD_REMOVED

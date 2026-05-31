@@ -16,6 +16,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
@@ -27,6 +29,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -75,7 +78,8 @@ class ChipsViewModel @AssistedInject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     @AssistedFactory
@@ -207,5 +211,23 @@ class ChipsViewModel @AssistedInject constructor(
             isEnabled = isEnabled,
             hasData = lastAutosensData != null
         )
+    }
+
+    fun showIobInfo() {
+        viewModelScope.launch {
+            val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+            val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+            val total = bolusIob.iob + basalIob.basaliob
+            val message =
+                rh.gs(R.string.bolus_iob_label) + ": " + rh.gs(R.string.format_insulin_units, bolusIob.iob) + "\n" +
+                    rh.gs(R.string.treatments_wizard_basaliob_label) + ": " + rh.gs(R.string.format_insulin_units, basalIob.basaliob) + "\n" +
+                    rh.gs(R.string.iob) + ": " + rh.gs(R.string.format_insulin_units, total)
+            rxBus.send(
+                EventShowDialog.Ok(
+                    title = rh.gs(R.string.iob),
+                    message = message
+                )
+            )
+        }
     }
 }

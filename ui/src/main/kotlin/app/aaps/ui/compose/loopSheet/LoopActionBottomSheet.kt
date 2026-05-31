@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +46,7 @@ fun LoopActionBottomSheet(
                 .fillMaxWidth()
                 .padding(horizontal = AapsSpacing.xxLarge)
                 .padding(bottom = AapsSpacing.xxLarge)
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
         ) {
             Text(

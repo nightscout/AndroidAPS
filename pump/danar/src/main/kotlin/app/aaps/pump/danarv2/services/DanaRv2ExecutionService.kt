@@ -54,6 +54,7 @@ import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -295,14 +296,13 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                // load last bolus status
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
-                mSerialIOThread?.sendMessage(MsgStatus(injector))
-                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
-            }
-        })
+        appScope.launch {
+            commandQueue.loadEvents()
+            // load last bolus status
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
+            mSerialIOThread?.sendMessage(MsgStatus(injector))
+            rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
+        }
         return !start.failed && !connectionBroken
     }
 

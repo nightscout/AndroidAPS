@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.di.TestApplication
@@ -64,7 +64,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxHelper: RxHelper
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -122,7 +122,7 @@ class CobExtendedCarbsTest @Inject constructor() {
 
         (profileFunction as ProfileFunctionImpl).cache.clear()
         nsIncomingDataProcessor.processProfile(JSONObject(profileData), false)
-        assertThat(localProfileManager.profile).isNotNull()
+        assertThat(profileRepository.profile.value).isNotNull()
 
         // Start collecting EPS changes before creating profile switch
         val epsDeferred = CoroutineScope(Dispatchers.IO).async {
@@ -131,7 +131,7 @@ class CobExtendedCarbsTest @Inject constructor() {
             }
         }
 
-        val store = localProfileManager.profile ?: error("No profile")
+        val store = profileRepository.profile.value ?: error("No profile")
         val profileName = store.getDefaultProfileName() ?: error("No profile")
         val iCfg = store.getSpecificProfile(profileName)?.iCfg ?: ICfg("Insulin", peak = 75, dia = 5.0, concentration = 1.0)
         val result = profileFunction.createProfileSwitch(

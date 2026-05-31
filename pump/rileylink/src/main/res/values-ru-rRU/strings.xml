@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">Ошибка связи</string>
     <string name="pump_status_timeout_comm">Таймаут связи</string>
     <string name="pump_status_invalid_config">Недопустимая конфигурация</string>
+    <string name="medtronic_pump_encoding_title">Кодировка Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Программное кодирование 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Аппаратное кодирование 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">США &amp; Канада (916 МГц)</string>
@@ -75,4 +76,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Использовать сканирование</string>
     <string name="orange_use_scanning_level_summary">Используйте сканирование перед сопряжением с OrangeLink, это должно улучшить качество связи (при необходимости можно применять и в других клонах RileyLink)</string>
+    <string name="rileylink_pair">Привязать RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink успешно привязан</string>
+    <string name="rileylink_config_reset">Конфигурация RileyLink сброшена</string>
 </resources>

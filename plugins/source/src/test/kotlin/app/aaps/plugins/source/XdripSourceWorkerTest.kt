@@ -13,6 +13,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -65,6 +66,24 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `When plugin disabled the inbox is still drained so the pending-work gate clears`() {
+        runTest {
+            whenever(xdripSourcePlugin.isEnabled()).thenReturn(false)
+            val bundle = validBundle(now - 60000, 150.0)
+            whenever(dataInbox.drain(eq(XdripInbox))).thenReturn(listOf(bundle))
+
+            val result = worker.doWork()
+
+            Assertions.assertEquals(ListenableWorker.Result.success(workDataOf("Result" to "Plugin not enabled")), result)
+            // Regression: drain() MUST run even when disabled, otherwise DataInbox's pending-work
+            // flag stays set and silently wedges all future enqueues until the process restarts.
+            verify(dataInbox).drain(XdripInbox)
+            // Data drained while disabled is intentionally discarded, not stored.
+            verify(persistenceLayer, never()).insertCgmSourceData(any(), any(), any(), any())
+        }
+    }
+
+    @Test
     fun `When plugin enabled then insert G6 data`() {
         val timestamp = now - 60000
         runTest {
@@ -110,6 +129,28 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `When processing is cancelled then unprocessed bundles are re-queued and cancellation propagates`() {
+        runTest {
+            whenever(xdripSourcePlugin.isEnabled()).thenReturn(true)
+            whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
+            val bundle1 = validBundle(now - 120000, 150.0)
+            val bundle2 = validBundle(now - 60000, 151.0)
+            val bundles = listOf(bundle1, bundle2)
+            whenever(dataInbox.drain(eq(XdripInbox))).thenReturn(bundles)
+            // Simulate WorkManager cancelling the coroutine during the first DB write.
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenThrow(CancellationException("Job was cancelled"))
+
+            val thrown = runCatching { worker.doWork() }.exceptionOrNull()
+
+            // Cancellation must propagate, not be swallowed as a per-bundle failure.
+            Assertions.assertTrue(thrown is CancellationException)
+            // Nothing was committed, so the whole drained batch is re-queued for the next run.
+            verify(dataInbox).requeue(eq(XdripInbox), eq(bundles))
+        }
+    }
+
+    @Test
     fun `When glucoseValues are missing the bundle is skipped`() {
         runTest {
             whenever(xdripSourcePlugin.isEnabled()).thenReturn(true)
@@ -124,5 +165,14 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
             Assertions.assertEquals(ListenableWorker.Result.success(), result)
             verify(persistenceLayer, never()).insertCgmSourceData(any(), any(), any(), any())
         }
+    }
+
+    private fun validBundle(timestamp: Long, bg: Double) = BundleMock.mocked().apply {
+        putString(Intents.XDRIP_DATA_SOURCE, "G6 Native")
+        putLong(Intents.EXTRA_TIMESTAMP, timestamp)
+        putLong(Intents.EXTRA_SENSOR_STARTED_AT, timestamp)
+        putDouble(Intents.EXTRA_BG_ESTIMATE, bg)
+        putDouble(Intents.EXTRA_RAW, bg)
+        putString(Intents.EXTRA_BG_SLOPE_NAME, "Flat")
     }
 }

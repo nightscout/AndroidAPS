@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsSpacing
@@ -23,11 +25,14 @@ import app.aaps.core.ui.compose.navigation.icon
 @Composable
 internal fun IobChip(
     state: IobUiState,
+    onClick: () -> Unit,
     showIcon: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val hasValue = state.iobTotal != 0.0
+    val haptic = LocalHapticFeedback.current
     Surface(
+        onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onClick() },
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
         color = if (hasValue) ElementType.INSULIN.color().copy(alpha = 0.2f) else Color.Transparent,
         modifier = modifier.heightIn(min = AapsSpacing.chipHeight)
@@ -57,7 +62,7 @@ internal fun IobChip(
 @Composable
 private fun IobChipPreview() {
     MaterialTheme {
-        IobChip(state = IobUiState(text = "1.25 U", iobTotal = 1.25))
+        IobChip(state = IobUiState(text = "1.25 U", iobTotal = 1.25), onClick = {})
     }
 }
 
@@ -65,6 +70,6 @@ private fun IobChipPreview() {
 @Composable
 private fun IobChipZeroPreview() {
     MaterialTheme {
-        IobChip(state = IobUiState(text = "0.00 U", iobTotal = 0.0))
+        IobChip(state = IobUiState(text = "0.00 U", iobTotal = 0.0), onClick = {})
     }
 }

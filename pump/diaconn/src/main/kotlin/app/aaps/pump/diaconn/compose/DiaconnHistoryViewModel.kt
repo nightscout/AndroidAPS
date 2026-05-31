@@ -2,6 +2,7 @@ package app.aaps.pump.diaconn.compose
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -27,6 +28,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,12 +81,11 @@ class DiaconnHistoryViewModel @Inject constructor(
     fun reload() {
         val type = _uiState.value.selectedType ?: return
         _uiState.update { it.copy(isLoading = true, statusMessage = "") }
-        commandQueue.loadHistory(type.type, object : Callback() {
-            override fun run() {
-                loadRecords(type.type)
-                _uiState.update { it.copy(isLoading = false, statusMessage = "") }
-            }
-        })
+        viewModelScope.launch {
+            commandQueue.loadHistory(type.type)
+            loadRecords(type.type)
+            _uiState.update { it.copy(isLoading = false, statusMessage = "") }
+        }
     }
 
     fun formatValue(record: DiaconnHistoryRecord): String =

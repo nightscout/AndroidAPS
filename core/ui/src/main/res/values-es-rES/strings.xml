@@ -34,6 +34,8 @@
     <string name="event_type">Tipo de evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Guardar</string>
     <string name="skip">Omitir</string>
     <string name="switch_to_edit">Editar</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Tiempo de conexión agotado</string>
+    <string name="command_replaced">Reemplazado por un comando más reciente</string>
     <string name="pump_not_configured">Bomba no configurada</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Ejecutado</string>
@@ -611,6 +614,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Ningún perfil seleccionado</string>
     <string name="missing_profile_name">Falta el nombre del perfil</string>
+    <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
+    <string name="profile_activation_failed">Error al activar el perfil</string>
     <string name="error_in_ic_values">Error en los valores de Ratio de Hidratos (IC)</string>
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
     <string name="error_in_basal_values">Error en los valores de basal</string>
@@ -644,7 +649,10 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilidad</string>
-    <string name="isf_for_carbs">ISF para Calculadora y Absorción de Carbohidratos: %1$.1f</string>
+    <string name="isf_for_carbs">ISF promedio para la calculadora y la absorción de carbohidratos: %1$.1f</string>
+    <string name="isf_profile">ISF del perfil: %1$.1f</string>
+    <string name="isf_variable">ISF variable: %1$.1f</string>
+    <string name="isf_effective">ISF efectivo: %1$.1f</string>
     <string name="autosens_long">Valor de Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens en algoritmo: %.0f%%</string>

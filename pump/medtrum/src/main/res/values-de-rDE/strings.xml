@@ -60,8 +60,6 @@
     <string name="step_retry_activation">Aktivierung wird ausgeführt</string>
     <string name="unexpected_state">Unerwarteter Zustand: %1$s</string>
     <string name="patch_begin_activation">Kein aktiver Patch. Drücken Sie <b>Weiter</b> um den Aktivierungsprozess zu starten.</string>
-    <string name="patch_not_active_note">Die Pumpenbasis darf erst im nächsten Schritt mit dem Pflaster verbunden werden!</string>
-    <string name="connect_pump_base">Verbinde die Pumpenbasis mit einem neuen Patch, entferne die Restluft, fülle das Insulin und drücke dann <b>Next</b>.</string>
     <string name="note_min_70_units">Hinweis: Für die Aktivierung ist mindestens 70 Einheiten erforderlich.</string>
     <string name="do_not_attach_to_body">Den Patch noch nicht an den Körper anhängen.</string>
     <string name="half_press_needle">Nadelknopf halb durchdrücken. Drücke dann <b>Weiter</b> um das Füllen zu starten.</string>

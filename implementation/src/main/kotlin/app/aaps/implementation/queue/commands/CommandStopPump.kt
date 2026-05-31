@@ -8,39 +8,30 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
 import javax.inject.Provider
 
 class CommandStopPump(
-    injector: HasAndroidInjector,
+    private val aapsLogger: AAPSLogger,
+    private val rh: ResourceHelper,
+    private val activePlugin: ActivePlugin,
+    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
     override val callback: Callback?,
 ) : Command {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
-
-    init {
-        injector.androidInjector().inject(this)
-    }
-
     override val commandType: Command.CommandType = Command.CommandType.STOP_PUMP
 
-    override suspend fun execute() {
+    override suspend fun execute(): PumpEnactResult {
         val pump = activePlugin.activePumpInternal
-        if (pump is Insight) {
-            val result = pump.stopPump()
-            callback?.result(result)?.run()
+        return if (pump is Insight) {
+            pump.stopPump().also {
+                aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
+            }
+        } else {
+            pumpEnactResultProvider.get().success(true).enacted(false)
         }
     }
 
     override fun status(): String = rh.gs(app.aaps.core.ui.R.string.stop_pump)
 
     override fun log(): String = "STOP PUMP"
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
-    }
 }

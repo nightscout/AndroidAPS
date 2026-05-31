@@ -51,8 +51,8 @@ import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.ui.compose.alertDialogs.AboutAlertDialog
-import app.aaps.ui.compose.alertDialogs.AboutDialogData
+import app.aaps.ui.compose.aboutDialog.AboutAlertDialog
+import app.aaps.ui.compose.aboutDialog.AboutDialogData
 import app.aaps.ui.compose.maintenance.ImportSource
 import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
@@ -253,6 +253,7 @@ fun MainScreen(
                         statusLightsDef = statusLightsDef,
                         onNavigate = onNavigate,
                         onTbrChipClick = mainViewModel::showTbrInfo,
+                        onIobChipClick = chipsViewModel::showIobInfo,
                         notifications = notifications,
                         onDismissNotification = onDismissNotification,
                         onNotificationActionClick = onNotificationActionClick,
@@ -364,7 +365,12 @@ fun MainScreen(
                                 scenesViewModel.refreshState()
                                 showAutomationSheet = true
                             },
-                            automationCount = automationState.items.size + automationState.sceneItems.size,
+                            // Total drives nav-button visibility (button stays visible whenever
+                            // scenes/automation exist, even if currently un-activatable).
+                            // Count drives the badge — only items the user can act on right now.
+                            automationTotal = automationState.items.size + automationState.sceneItems.size,
+                            automationCount = automationState.items.count { it.activationReason == null } +
+                                automationState.sceneItems.count { it.activationReason == null },
                             pumpSetupPlugin = pumpSetupPlugin,
                             bgSetupPlugin = bgSetupPlugin,
                             bgQualityBadgeIcon = bgQualityBadgeIcon,

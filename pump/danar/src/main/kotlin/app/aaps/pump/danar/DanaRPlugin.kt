@@ -111,7 +111,7 @@ class DanaRPlugin @Inject constructor(
         pumpDescription.fillFor(PumpType.DANA_R)
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         val intent = Intent(context, DanaRExecutionService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -128,7 +128,7 @@ class DanaRPlugin @Inject constructor(
         super.onStart()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
@@ -169,7 +169,7 @@ class DanaRPlugin @Inject constructor(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
                 detailedBolusInfo.insulin,
-                delivered,
+                delivered.cU,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)

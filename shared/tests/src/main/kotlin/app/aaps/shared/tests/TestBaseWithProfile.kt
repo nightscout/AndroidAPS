@@ -17,8 +17,8 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -82,7 +82,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var theme: Resources.Theme
     @Mock lateinit var typedArray: TypedArray
-    @Mock lateinit var localProfileManager: LocalProfileManager
+    @Mock lateinit var profileRepository: ProfileRepository
     @Mock lateinit var insulin: Insulin
     @Mock lateinit var ch: ConcentrationHelper
 
@@ -140,7 +140,7 @@ open class TestBaseWithProfile : TestBase() {
 
         dateUtil = spy(DateUtilImpl(context))
         decimalFormatter = DecimalFormatterImpl(rh)
-        profileUtil = ProfileUtilImpl(preferences, decimalFormatter)
+        profileUtil = ProfileUtilImpl(preferences, decimalFormatter, rh)
         testPumpPlugin = TestPumpPlugin(rh)
         hardLimits = HardLimitsMock(preferences, rh)
         whenever(context.applicationContext).thenReturn(context)
@@ -157,7 +157,8 @@ open class TestBaseWithProfile : TestBase() {
         whenever(preferences.observe(any<UnitDoublePreferenceKey>())).thenReturn(MutableStateFlow(0.0))
         whenever(preferences.observe(any<IntNonPreferenceKey>())).thenReturn(MutableStateFlow(0))
         whenever(preferences.observe(any<LongNonPreferenceKey>())).thenReturn(MutableStateFlow(0L))
-        whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
+        whenever(profileRepository.profiles).thenReturn(MutableStateFlow(emptyList()))
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         deltaCalculator = DeltaCalculator(aapsLogger)
         apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!, activePlugin)
@@ -193,6 +194,8 @@ open class TestBaseWithProfile : TestBase() {
 
         whenever(rh.gs(R.string.ok)).thenReturn("OK")
         whenever(rh.gs(R.string.error)).thenReturn("Error")
+        whenever(rh.gs(R.string.mgdl)).thenReturn("mg/dl")
+        whenever(rh.gs(R.string.mmol)).thenReturn("mmol/l")
 
         // Default ConcentrationHelper stubs so BolusProgressData.updateProgress() doesn't NPE
         // when pump tests trigger progress updates with a mocked ch.

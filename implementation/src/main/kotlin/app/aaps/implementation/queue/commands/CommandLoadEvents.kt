@@ -10,56 +10,31 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
 import javax.inject.Provider
 
 class CommandLoadEvents(
-    injector: HasAndroidInjector,
+    private val aapsLogger: AAPSLogger,
+    private val rh: ResourceHelper,
+    private val activePlugin: ActivePlugin,
+    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
     override val callback: Callback?,
 ) : Command {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePlugin
-
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
-
-    init {
-        injector.androidInjector().inject(this)
-    }
-
     override val commandType: Command.CommandType = Command.CommandType.LOAD_EVENTS
 
-    override suspend fun execute() {
+    override suspend fun execute(): PumpEnactResult {
         val pump = activePlugin.activePumpInternal
-        if (pump is Dana) {
-            val danaPump = pump as Dana
-            val r = danaPump.loadEvents()
-            aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-            callback?.result(r)?.run()
+        val result = when (pump) {
+            is Dana    -> pump.loadEvents()
+            is Diaconn -> pump.loadHistory()
+            is Medtrum -> pump.loadEvents()
+            else       -> pumpEnactResultProvider.get().success(true).enacted(false)
         }
-
-        if (pump is Diaconn) {
-            val diaconnPump = pump as Diaconn
-            val r = diaconnPump.loadHistory()
-            aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-            callback?.result(r)?.run()
-        }
-
-        if (pump is Medtrum) {
-            val medtrumPump = pump as Medtrum
-            val r = medtrumPump.loadEvents()
-            aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-            callback?.result(r)?.run()
-        }
+        aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${result.success} enacted: ${result.enacted}")
+        return result
     }
 
     override fun status(): String = rh.gs(app.aaps.core.ui.R.string.load_events)
 
     override fun log(): String = "LOAD EVENTS"
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
-    }
 }

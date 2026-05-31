@@ -16,7 +16,7 @@
     <string name="description_ama">Starea algoritmului în 2017</string>
     <string name="description_smb">Cel mai recent algoritm destinat utilizatorilor avansați</string>
     <string name="description_smb_dynamic_isf">Cel mai recent algoritm pentru utilizatorii avansați cu ISF dinamic/automat</string>
-    <string name="description_auto_isf">Cel mai recent algoritm pentru utilizatori avansați cu extensii AutoISF</string>
+    <string name="description_auto_isf">Algoritm experimental pentru utilizatorii avansați cu extensii AutoISF</string>
     <string name="openapsma_last_run_label">Ultima execuție</string>
     <string name="openapsma_input_parameters_label">Parametrii de intrare</string>
     <string name="openapsma_glucose_status_label">Stare glicemie</string>

@@ -76,9 +76,9 @@
     <string name="unpair_confirm_message">这将清除保存的泵序列号并断开连接。请启动一个新的贴片来扫描泵。</string>
     <string name="step_retry_activation">正在激活</string>
     <string name="unexpected_state">意外状态：%1$s</string>
+    <string name="ble_scan_connect_pump_base_first">将泵底座连接到新的贴片上以启动电源，然后从下方列表中选择它。</string>
     <string name="patch_begin_activation">无有效贴片。按<b>下一步</b>开始激活过程。</string>
-    <string name="patch_not_active_note">在下一步之前，泵库不应连接到贴片！</string>
-    <string name="connect_pump_base">将泵底座连接到新的贴片，排出残留空气并注入胰岛素，然后按<b>下一步</b>。</string>
+    <string name="connect_pump_base">请确保泵底座已连接到贴片，排尽残余空气并充满胰岛素，然后点击<b>下一步</b>。</string>
     <string name="note_min_70_units">注意：激活至少需要 70 个单位。</string>
     <string name="reservoir_text_and_level">储药器： %.2f U</string>
     <string name="do_not_attach_to_body">请勿将贴片贴到身体上。</string>

@@ -6,6 +6,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.PureProfile
+import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.profile.ProfileSealed
@@ -24,6 +25,24 @@ fun PS.getCustomizedName(decimalFormatter: DecimalFormatter): String {
         name += ")"
     }
     return name
+}
+
+/**
+ * Convert a [SingleProfile] to a [PureProfile] for graph rendering, validation, or
+ * activation. Single source of truth for the JSON-build pattern that was previously
+ * duplicated across ProfileManagementViewModel and ProfileEditorViewModel.
+ */
+fun SingleProfile.toPureProfile(dateUtil: DateUtil): PureProfile? {
+    val json = JSONObject().apply {
+        put("carbratio", ic)
+        put("sens", isf)
+        put("basal", basal)
+        put("target_low", targetLow)
+        put("target_high", targetHigh)
+        put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
+        put("timezone", TimeZone.getDefault().id)
+    }
+    return pureProfileFromJson(json, dateUtil)
 }
 
 /**

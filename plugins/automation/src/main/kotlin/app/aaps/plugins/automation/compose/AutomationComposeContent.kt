@@ -34,11 +34,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.automation.AutomationPlugin
@@ -59,8 +60,7 @@ class AutomationComposeContent(
     private val fabricPrivacy: FabricPrivacy,
     private val injector: HasAndroidInjector,
     private val uel: UserEntryLogger,
-    @Suppress("unused") private val rh: ResourceHelper,
-    private val localProfileManager: app.aaps.core.interfaces.profile.LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val sceneApi: SceneAutomationApi
 ) : ComposablePluginContent {
 
@@ -460,8 +460,7 @@ class AutomationComposeContent(
         k.primaryConstructor?.call(injector) as? app.aaps.plugins.automation.actions.Action
     }.getOrNull()
 
-    private fun localProfileNames(): List<String> =
-        localProfileManager.profile?.getProfileList()?.map { it.toString() } ?: emptyList()
+    private fun localProfileNames(): List<String> = profileRepository.profileNames()
 }
 
 private fun buildListToolbar(

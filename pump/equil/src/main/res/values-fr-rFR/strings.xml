@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
     <string name="equil_pump_description">Equil 5.3 ou pompe Patch plus récente</string>
     <!--  start  -->
     <string name="equil_basal_speed">Basale normale</string>

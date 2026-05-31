@@ -34,6 +34,8 @@
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Save</string>
     <string name="skip">Skip</string>
     <string name="switch_to_edit">Edit</string>
@@ -66,6 +68,7 @@
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_smoothing">Smoothing</string>
+    <string name="configbuilder_calibration">Calibration</string>
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="configbuilder_aps">APS</string>
@@ -482,6 +485,7 @@
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
+    <string name="command_replaced">Replaced by newer command</string>
     <string name="pump_not_configured">Pump not configured</string>
 
     <!--    PumpEnactResult-->
@@ -549,6 +553,7 @@
     <string name="uel_tt_ns_refresh">TEMP TARGET NS REFRESH</string>
     <string name="uel_automation_removed">AUTOMATION REMOVED</string>
     <string name="uel_bg_removed">BG REMOVED</string>
+    <string name="uel_calibration_removed">CALIBRATION REMOVED</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVED</string>
     <string name="uel_bolus_removed">BOLUS REMOVED</string>
     <string name="uel_carbs_removed">CARBS REMOVED</string>

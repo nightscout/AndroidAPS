@@ -10,6 +10,7 @@ Zvýšenie dočasného cieľa vopred dáva algoritmu náskok – začne včas zn
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Choroba</string>
     <string name="scene_wizard_sick_day_desc">Silnejší profil (150 %) na zvládnutie zvýšenej inzulínovej rezistencie počas choroby.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Ochorenie, horúčka a stresové hormóny môžu dramaticky zvýšiť inzulínovú rezistenciu - niekedy o 50% alebo viac. Silnejší profil (napr. 150%) hovorí algoritmu, aby dodal viac inzulínu vo všetkých výpočtoch - bazály, návrhy bolusov a korekčné faktory. Môžete tiež pridať dočasný cieľ, alebo upraviť prevádzkový režim v nasledujúcich krokoch. Dôsledne sledujte a upravujte až kým sa telo nezotaví.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Choroba - Zvracanie</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Znížený profil s LGS - opak štandardného dňa choroby, keď nemôžete vstrebávať jedlo.</string>

@@ -121,7 +121,7 @@ class MedtrumPlugin @Inject constructor(
     private var scope: CoroutineScope? = null
     private var medtrumService: MedtrumService? = null
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStart()")
         medtrumPump.loadVarsFromSP()
@@ -141,7 +141,7 @@ class MedtrumPlugin @Inject constructor(
         preferences.put(BooleanKey.AlertPumpUnreachable, true)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStop()")
         scope?.cancel()
         scope = null

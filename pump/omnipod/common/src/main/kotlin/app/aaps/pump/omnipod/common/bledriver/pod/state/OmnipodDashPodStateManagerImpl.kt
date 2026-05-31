@@ -49,12 +49,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private val config: Config
 ) : OmnipodDashPodStateManager {
 
-    /** Internal (rather than private) to allow unit testing within this module. */
-    internal var podState: PodState
+    private val gson = Gson()
 
-    init {
-        podState = load()
-    }
+    private var _podState: PodState? = null
+
+    /** Internal (rather than private) to allow unit testing within this module.
+     *  Lazily deserialized on first access to keep Gson reflection off the main thread
+     *  during app startup (Dagger constructs this @Singleton eagerly). */
+    internal var podState: PodState
+        get() = _podState ?: synchronized(this) { _podState ?: load().also { _podState = it } }
+        set(value) {
+            synchronized(this) { _podState = value }
+        }
 
     override var activationProgress: ActivationProgress
         get() = podState.activationProgress
@@ -984,9 +990,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private fun store() {
         try {
             val cleanPodState = podState.copy(ltk = byteArrayOf()) // do not log ltk
-            logger.debug(LTag.PUMPCOMM, "Storing Pod state: ${Gson().toJson(cleanPodState)}")
+            logger.debug(LTag.PUMPCOMM, "Storing Pod state: ${gson.toJson(cleanPodState)}")
 
-            val serialized = Gson().toJson(podState)
+            val serialized = gson.toJson(podState)
             preferences.put(DashStringNonPreferenceKey.PodState, serialized)
         } catch (ex: Exception) {
             logger.error(LTag.PUMPCOMM, "Failed to store Pod state", ex)
@@ -996,7 +1002,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private fun load(): PodState {
         if (preferences.getIfExists(DashStringNonPreferenceKey.PodState) != null) {
             try {
-                return Gson().fromJson(preferences.get(DashStringNonPreferenceKey.PodState), PodState::class.java)
+                return gson.fromJson(preferences.get(DashStringNonPreferenceKey.PodState), PodState::class.java)
             } catch (ex: Exception) {
                 logger.error(LTag.PUMPCOMM, "Failed to deserialize Pod state", ex)
             }

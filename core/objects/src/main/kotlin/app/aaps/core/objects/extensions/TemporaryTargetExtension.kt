@@ -21,5 +21,5 @@ fun TT.target(): Double =
 
 fun TT.friendlyDescription(units: GlucoseUnit, rh: ResourceHelper, profileUtil: ProfileUtil): String =
     profileUtil.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units) +
-        units.asText +
+        profileUtil.unitLabel +
         "@" + rh.gs(app.aaps.core.ui.R.string.format_mins, TimeUnit.MILLISECONDS.toMinutes(duration)) + "(" + reason.text + ")"

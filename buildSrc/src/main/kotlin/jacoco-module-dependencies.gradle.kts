@@ -4,15 +4,30 @@ import java.io.File
 import java.util.Locale
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.withType
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlin.math.roundToInt
 
 plugins {
     id("com.android.library")
     id("jacoco")
+}
+
+// Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
+// JaCoCo on-the-fly agent records no coverage for the classes those tests exercise (e.g. Compose
+// screens). includeNoLocationClasses lets JaCoCo account for the Robolectric-loaded classes.
+// No-op for modules without Robolectric tests, so it's safe to apply to every jacoco module.
+tasks.withType<Test>().configureEach {
+    extensions.configure(JacocoTaskExtension::class) {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
 }
 
 private val limits = mutableMapOf(

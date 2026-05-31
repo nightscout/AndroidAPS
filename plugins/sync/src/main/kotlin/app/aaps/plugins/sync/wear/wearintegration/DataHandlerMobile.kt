@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -48,7 +49,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -97,6 +97,8 @@ import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.rxCompletable
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -150,6 +152,7 @@ class DataHandlerMobile @Inject constructor(
     private val pumpStatusProvider: PumpStatusProvider,
     private val ch: ConcentrationHelper,
     private val runningModeGuard: RunningModeGuard,
+    @ApplicationScope private val appScope: CoroutineScope,
 ) {
 
     @Inject lateinit var automation: Automation
@@ -2173,12 +2176,11 @@ class DataHandlerMobile @Inject constructor(
                     ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 }
                 )
             )
-            commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                override fun run() {
-                    if (!result.success)
-                        sendError(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
-                }
-            })
+            appScope.launch {
+                val result = commandQueue.bolus(detailedBolusInfo)
+                if (!result.success)
+                    sendError(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
+            }
             bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) }
             lastQuickWizardEntry?.let { lastQuickWizardEntry ->
                 if (lastQuickWizardEntry.useSuperBolus() == QuickWizardEntry.YES) {
@@ -2207,13 +2209,12 @@ class DataHandlerMobile @Inject constructor(
             action = Action.PRIME_BOLUS, source = Sources.Wear,
             listValues = listOfNotNull(ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
         )
-        commandQueue.bolus(detailedBolusInfo, object : Callback() {
-            override fun run() {
-                if (!result.success) {
-                    sendError(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
-                }
+        appScope.launch {
+            val result = commandQueue.bolus(detailedBolusInfo)
+            if (!result.success) {
+                sendError(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
             }
-        })
+        }
     }
 
     private suspend fun doECarbs(carbs: Int, carbsTime: Long, duration: Int, notes: String? = null) {

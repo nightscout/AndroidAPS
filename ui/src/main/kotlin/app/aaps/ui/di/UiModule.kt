@@ -14,9 +14,9 @@ import app.aaps.ui.compose.scenes.SceneAutomationApiImpl
 
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.DialogSearchables
-import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.widget.BgGraphWidget
 import app.aaps.ui.widget.CompactBgWidget
+import app.aaps.ui.widget.SmallWidget
 import app.aaps.ui.widget.Widget
 import app.aaps.ui.widget.WidgetConfigureActivity
 import app.aaps.ui.widget.WidgetUpdaterImpl
@@ -61,11 +61,10 @@ abstract class UiModule {
         ): OverviewDataCache = factory.create({ iobCobCalculator.get() }, signals, observeDatabase = true)
     }
 
-    @ContributesAndroidInjector abstract fun contributesAlarmSoundService(): AlarmSoundService
-
     @ContributesAndroidInjector abstract fun contributesWidget(): Widget
     @ContributesAndroidInjector abstract fun contributesBgGraphWidget(): BgGraphWidget
     @ContributesAndroidInjector abstract fun contributesCompactBgWidget(): CompactBgWidget
+    @ContributesAndroidInjector abstract fun contributesSmallWidget(): SmallWidget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
 
     @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity

@@ -48,6 +48,7 @@ import app.aaps.pump.danar.comm.MsgStatusBasic
 import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -265,7 +266,8 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                     return false
                 }
             } else {
-                commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok), null)
+                // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+                appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok)) }
             }
         }
         return !start.failed

@@ -65,8 +65,6 @@
     <string name="step_retry_activation">Įjungiama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
     <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Toliau</b> ir pradėkite aktyvavimą.</string>
-    <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
-    <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Toliau</b>.</string>
     <string name="note_min_70_units">Svarbu: būtina užpildyti bent 70 v.</string>
     <string name="reservoir_text_and_level">Rezervuaras: %.2f vv</string>
     <string name="do_not_attach_to_body">Kol kas neklijuokite pompos prie kūno.</string>

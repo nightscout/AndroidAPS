@@ -58,11 +58,12 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -312,6 +313,7 @@ private fun FillDialogContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),

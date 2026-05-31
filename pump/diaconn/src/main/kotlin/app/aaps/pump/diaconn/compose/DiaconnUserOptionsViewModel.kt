@@ -2,6 +2,7 @@ package app.aaps.pump.diaconn.compose
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.Callback
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class DiaconnUserOptionsUiState(
@@ -107,14 +109,13 @@ class DiaconnUserOptionsViewModel @Inject constructor(
     }
 
     private fun saveToCommandQueue() {
-        commandQueue.setUserOptions(object : Callback() {
-            override fun run() {
-                if (result.success) {
-                    _events.tryEmit(DiaconnUserOptionsEvent.Saved)
-                } else {
-                    _events.tryEmit(DiaconnUserOptionsEvent.Error(result.comment))
-                }
+        viewModelScope.launch {
+            val result = commandQueue.setUserOptions()
+            if (result.success) {
+                _events.tryEmit(DiaconnUserOptionsEvent.Saved)
+            } else {
+                _events.tryEmit(DiaconnUserOptionsEvent.Error(result.comment))
             }
-        })
+        }
     }
 }

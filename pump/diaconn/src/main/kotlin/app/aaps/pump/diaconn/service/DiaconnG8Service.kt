@@ -85,6 +85,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -543,14 +544,13 @@ class DiaconnG8Service : DaggerService() {
         diaconnG8Pump.isReadyToBolus = false
 
         // do not call loadHistory() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                // reread bolus status
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
-                sendMessage(InjectionSnackInquirePacket(injector), 2000) // last bolus
-                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
-            }
-        })
+        scope?.launch {
+            commandQueue.loadEvents()
+            // reread bolus status
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
+            sendMessage(InjectionSnackInquirePacket(injector), 2000) // last bolus
+            rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
+        }
         diaconnG8Pump.bolusingDetailedBolusInfo = null
         return !start.failed
     }
@@ -613,11 +613,10 @@ class DiaconnG8Service : DaggerService() {
 
         sendMessage(TempBasalInquirePacket(injector))
         // do not call loadHistory() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventDiaconnG8NewStatus())
-            }
-        })
+        scope?.launch {
+            commandQueue.loadEvents()
+            rxBus.send(EventDiaconnG8NewStatus())
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return result.success()
     }
@@ -667,11 +666,10 @@ class DiaconnG8Service : DaggerService() {
 
         sendMessage(TempBasalInquirePacket(injector))
         // do not call loadHistory() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventDiaconnG8NewStatus())
-            }
-        })
+        scope?.launch {
+            commandQueue.loadEvents()
+            rxBus.send(EventDiaconnG8NewStatus())
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return result.success()
     }
@@ -702,11 +700,10 @@ class DiaconnG8Service : DaggerService() {
         }
 
         // do not call loadHistory() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventDiaconnG8NewStatus())
-            }
-        })
+        scope?.launch {
+            commandQueue.loadEvents()
+            rxBus.send(EventDiaconnG8NewStatus())
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return true
     }
@@ -730,11 +727,10 @@ class DiaconnG8Service : DaggerService() {
         }
 
         // do not call loadHistory() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventDiaconnG8NewStatus())
-            }
-        })
+        scope?.launch {
+            commandQueue.loadEvents()
+            rxBus.send(EventDiaconnG8NewStatus())
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgExtended.success()
     }
@@ -755,11 +751,10 @@ class DiaconnG8Service : DaggerService() {
         aapsLogger.debug(LTag.PUMPCOMM, "EB stopped and state cleared directly")
 
         // do not call loadHistory() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventDiaconnG8NewStatus())
-            }
-        })
+        scope?.launch {
+            commandQueue.loadEvents()
+            rxBus.send(EventDiaconnG8NewStatus())
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgStop.success()
     }

@@ -65,6 +65,7 @@ fun SceneListScreen(
     val activeState by viewModel.activeSceneState.collectAsStateWithLifecycle()
     val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
     val invalidSceneIds by viewModel.invalidSceneIds.collectAsStateWithLifecycle()
+    val activationReasons by viewModel.activationReasons.collectAsStateWithLifecycle()
 
     // Dialog handling
     when (val state = dialogState) {
@@ -157,6 +158,7 @@ fun SceneListScreen(
                         isInvalid = isInvalid,
                         chainTargetName = chainTargetName,
                         chainMissing = chainTargetId != null && chainTargetName == null,
+                        activationReason = activationReasons[scene.id],
                         onActivate = { viewModel.requestActivation(scene) },
                         onDeactivate = { viewModel.requestDeactivation() },
                         onEdit = { onNavigateToEditor(scene.id) },
@@ -177,6 +179,7 @@ internal fun SceneCard(
     isInvalid: Boolean = false,
     chainTargetName: String? = null,
     chainMissing: Boolean = false,
+    activationReason: String? = null,
     onActivate: () -> Unit,
     onDeactivate: () -> Unit,
     onEdit: () -> Unit,
@@ -237,6 +240,15 @@ internal fun SceneCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                // Surface the activation gate reason (pump disconnected / no profile / etc.)
+                // so the user understands why the play button is disabled.
+                if (activationReason != null && !isActive) {
+                    Text(
+                        text = activationReason,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
             Row {
                 if (isActive) {
@@ -244,7 +256,10 @@ internal fun SceneCard(
                         Icon(Icons.Default.Stop, contentDescription = stringResource(R.string.scene_deactivate))
                     }
                 } else {
-                    IconButton(onClick = onActivate, enabled = scene.isEnabled) {
+                    IconButton(
+                        onClick = onActivate,
+                        enabled = scene.isEnabled && activationReason == null
+                    ) {
                         Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.scene_activate))
                     }
                 }

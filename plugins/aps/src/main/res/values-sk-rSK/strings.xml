@@ -16,7 +16,7 @@
     <string name="description_ama">Stav algoritmu v roku 2017</string>
     <string name="description_smb">Najnovší algoritmus pre pokročilých užívateľov</string>
     <string name="description_smb_dynamic_isf">Najnovší algoritmus pre pokročilých užívateľov s dynamickým/automatickým ISF</string>
-    <string name="description_auto_isf">Najnovší algoritmus pre pokročilých užívateľov s rozšírením AutoISF</string>
+    <string name="description_auto_isf">Experimentálny algoritmus pre pokročilých používateľov s rozšírením AutoISF</string>
     <string name="openapsma_last_run_label">Posledné spustenie</string>
     <string name="openapsma_input_parameters_label">Vstupné parametre</string>
     <string name="openapsma_glucose_status_label">Stav glykémie</string>

@@ -64,6 +64,7 @@ fun OverviewScreenSplit(
     statusLightsDef: PreferenceSubScreenDef,
     onNavigate: (NavigationRequest) -> Unit,
     onTbrChipClick: () -> Unit,
+    onIobChipClick: () -> Unit,
     paddingValues: PaddingValues,
     activeSceneState: ActiveSceneState? = null,
     sceneExpired: Boolean = false,
@@ -151,6 +152,7 @@ fun OverviewScreenSplit(
                         cobUiState = cobUiState,
                         onNavigate = onNavigate,
                         onTbrChipClick = onTbrChipClick,
+                        onIobChipClick = onIobChipClick,
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 8.dp),

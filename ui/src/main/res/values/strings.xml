@@ -14,6 +14,7 @@
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">AAPS BG graph</string>
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compact)</string>
+    <string name="widget_small_description">AAPS Small</string>
 
     <!--     Activities-->
     <string name="activity_monitor">Activity monitor</string>
@@ -204,6 +205,7 @@
     <string name="active_profile_indicator">ACTIVE</string>
     <string name="confirm_remove_profile">Remove profile \"%1$s\"?</string>
     <string name="confirm_clone_profile">Clone profile \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">Profile list changed in the meantime — please try again</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>
@@ -325,5 +327,18 @@
     <string name="widget_rm_disabled">Disabled</string>
     <string name="widget_rm_suspended">Suspended</string>
     <string name="widget_rm_resume">Resume</string>
+
+    <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Calibration not saved: BG is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Try again when glucose is stable.</string>
+    <string name="cal_reject_no_pair">Calibration not saved: no CGM reading found in the 10 minutes before now.</string>
+    <string name="cal_reject_warmup">Calibration not saved: sensor is still in the 2-hour warm-up window.</string>
+    <string name="cal_reject_no_session">Calibration not saved: no sensor session is active. Mark a sensor change first.</string>
+
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Sensor still in warm-up. Calibration available at %1$s.</string>
+    <string name="cal_precheck_no_session">No sensor session is active.</string>
+    <string name="cal_precheck_no_pair">No CGM reading in the last 10 minutes. Check sensor connection.</string>
+    <string name="cal_precheck_delta_too_high">Glucose is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Wait for stability.</string>
+    <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
 
 </resources>

@@ -48,4 +48,12 @@
     <string name="permission_dexcom_description">L\'application a besoin d\'une autorisation pour recevoir les données MGC de l\'application Dexcom</string>
     <string name="permission_notification_listener_title">Accès aux notifications</string>
     <string name="permission_notification_listener_description">Requis pour lire les valeurs de glycémie à partir des notifications de l\'application MGC</string>
+    <string name="aidex">Application MGC MicroTech</string>
+    <string name="aidex_short">Application MGC</string>
+    <string name="description_source_aidex">Recevez les valeurs MGC de LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 etc.</string>
+    <string name="aidex_sensor_expired">Capteur expiré, veuillez remplacer par un nouveau capteur</string>
+    <string name="aidex_sensor_error">Erreur de capteur, veuillez vérifier l\'état du capteur</string>
+    <string name="aidex_sensor_stabilizing">Le capteur est en cours de stabilisation, veuillez patienter…</string>
+    <string name="aidex_sensor_replace">Remplacement du capteur requis, veuillez le remplacer par un nouveau capteur dès que possible</string>
+    <string name="aidex_signal_lost">Signal capteur perdu, veuillez vérifier la connexion</string>
 </resources>

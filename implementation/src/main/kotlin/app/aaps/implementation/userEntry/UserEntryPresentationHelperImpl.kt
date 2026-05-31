@@ -293,15 +293,9 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         is ValueWithUnit.TEArrow              -> translator.translate(valueWithUnit.value)
         is ValueWithUnit.Timestamp            -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-        is ValueWithUnit.Mgdl                 -> {
-            if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueWithUnit.value) + rh.gs(R.string.mgdl)
-            else decimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + rh.gs(R.string.mmol)
-        }
+        is ValueWithUnit.Mgdl                 -> profileUtil.fromMgdlToStringWithUnits(valueWithUnit.value)
 
-        is ValueWithUnit.Mmoll                -> {
-            if (profileUtil.units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(valueWithUnit.value) + rh.gs(R.string.mmol)
-            else decimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + rh.gs(R.string.mgdl)
-        }
+        is ValueWithUnit.Mmoll                -> profileUtil.fromMgdlToStringWithUnits(valueWithUnit.value * Constants.MMOLL_TO_MGDL)
 
         ValueWithUnit.UNKNOWN                 -> ""
         null                                  -> ""

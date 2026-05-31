@@ -34,7 +34,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -494,14 +493,14 @@ class BolusWizard @Inject constructor(
                     )
                 )
                 if (insulin > 0) {
-                    commandQueue.bolus(this, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            } else
-                                automation.scheduleAutomationEventEatReminder()
-                        }
-                    })
+                    val info = this
+                    appScope.launch {
+                        val result = commandQueue.bolus(info)
+                        if (!result.success) {
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                        } else
+                            automation.scheduleAutomationEventEatReminder()
+                    }
                 }
             }
         }))
@@ -588,13 +587,13 @@ class BolusWizard @Inject constructor(
                         if (useAlarm && carbs > 0 && carbTime > 0) {
                             automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                         }
-                        commandQueue.bolus(this, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                                }
+                        val info = this
+                        appScope.launch {
+                            val result = commandQueue.bolus(info)
+                            if (!result.success) {
+                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                             }
-                        })
+                        }
                     }
                     bolusCalculatorResult?.let { appScope.launch { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
                 }
@@ -633,17 +632,12 @@ class BolusWizard @Inject constructor(
                         ValueWithUnit.Hour(duration).takeIf { duration != 0 }
                     )
                 )
-                commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            /* } else {
-                                 val messageECarbs =
-                                     rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs) + "\n" + "@" + dateUtil.timeString(eventTime) + " " + carbs2 + "g/" + duration + "h"
-                                 ToastUtils.Long.infoToast(result.context, messageECarbs)*/
-                        }
+                appScope.launch {
+                    val result = commandQueue.bolus(detailedBolusInfo)
+                    if (!result.success) {
+                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     }
-                })
+                }
             }
 
         }
@@ -829,13 +823,13 @@ class BolusWizard @Inject constructor(
                             )
                         }
                     } else {
-                        commandQueue.bolus(this, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    onError(result.comment)
-                                }
+                        val info = this
+                        appScope.launch {
+                            val result = commandQueue.bolus(info)
+                            if (!result.success) {
+                                onError(result.comment)
                             }
-                        })
+                        }
                     }
                 }
                 bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) }
@@ -900,14 +894,14 @@ class BolusWizard @Inject constructor(
                     }
                     automation.scheduleAutomationEventEatReminder()
                 } else {
-                    commandQueue.bolus(this, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                onError(result.comment)
-                            } else
-                                automation.scheduleAutomationEventEatReminder()
-                        }
-                    })
+                    val info = this
+                    appScope.launch {
+                        val result = commandQueue.bolus(info)
+                        if (!result.success) {
+                            onError(result.comment)
+                        } else
+                            automation.scheduleAutomationEventEatReminder()
+                    }
                 }
             }
         }
@@ -946,13 +940,13 @@ class BolusWizard @Inject constructor(
                     )
                 }
             } else {
-                commandQueue.bolus(this, object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            onError(result.comment)
-                        }
+                val info = this
+                appScope.launch {
+                    val result = commandQueue.bolus(info)
+                    if (!result.success) {
+                        onError(result.comment)
                     }
-                })
+                }
             }
         }
     }
@@ -996,13 +990,12 @@ class BolusWizard @Inject constructor(
                         )
                     }
                 } else {
-                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                onError(result.comment)
-                            }
+                    appScope.launch {
+                        val result = commandQueue.bolus(detailedBolusInfo)
+                        if (!result.success) {
+                            onError(result.comment)
                         }
-                    })
+                    }
                 }
             }
         }

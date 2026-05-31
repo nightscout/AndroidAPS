@@ -36,6 +36,9 @@ fun MainNavigationBar(
     modifier: Modifier = Modifier,
     quickWizardCount: Int = 0,
     onAutomationClick: () -> Unit = {},
+    /** Total scenes + automation items defined — drives whether the nav button is shown at all. */
+    automationTotal: Int = 0,
+    /** Subset of [automationTotal] that the user can activate right now — drives the badge. */
     automationCount: Int = 0,
     pumpSetupPlugin: PluginBase? = null,
     bgSetupPlugin: PluginBase? = null,
@@ -89,16 +92,20 @@ fun MainNavigationBar(
             colors = navColors
         )
 
-        // Automation action button (visible only when actions are available)
-        if (automationCount > 0) {
+        // Scenes/automation button — visible whenever scenes or automation items exist
+        // (regardless of pump/loop/profile state). The badge counts only items the user
+        // can act on right now; gated items are visible inside the sheet, dimmed with reason.
+        if (automationTotal > 0) {
             NavigationBarItem(
                 selected = false,
                 onClick = onAutomationClick,
                 icon = {
                     BadgedBox(
                         badge = {
-                            Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
-                                Text(text = automationCount.toString())
+                            if (automationCount > 0) {
+                                Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
+                                    Text(text = automationCount.toString())
+                                }
                             }
                         }
                     ) {

@@ -17,11 +17,9 @@ dependencies {
     testImplementationFromCatalog("org-skyscreamer-jsonassert")
     testImplementationFromCatalog("kotlinx-coroutines-test")
 
-    androidTestImplementationFromCatalog("androidx-espresso-core")
     androidTestImplementationFromCatalog("androidx-test-ext")
     androidTestImplementationFromCatalog("androidx-test-rules")
     androidTestImplementationFromCatalog("com-google-truth")
-    androidTestImplementationFromCatalog("androidx-uiautomator")
     androidTestImplementationFromCatalog("org-mockito-android")
     androidTestImplementationFromCatalog("org-mockito-kotlin")
     androidTestImplementationFromCatalog("kotlinx-coroutines-test")

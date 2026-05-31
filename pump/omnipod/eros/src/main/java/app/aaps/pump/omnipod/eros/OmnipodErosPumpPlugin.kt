@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.fillFor
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -111,6 +110,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.Duration
@@ -208,8 +208,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     if (podStateManager.isPodRunning && !podStateManager.isSuspended) aapsOmnipodErosManager.cancelSuspendedFakeTbrIfExists()
                     else aapsOmnipodErosManager.createSuspendedFakeTbrIfNotExists()
 
-                    if (this@OmnipodErosPumpPlugin.hasTimeDateOrTimeZoneChanged) commandQueue.customCommand(CommandHandleTimeChange(false), null)
-                    if (!this@OmnipodErosPumpPlugin.verifyPodAlertConfiguration()) commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
+                    if (this@OmnipodErosPumpPlugin.hasTimeDateOrTimeZoneChanged) pluginScope.launch { commandQueue.customCommand(CommandHandleTimeChange(false)) }
+                    if (!this@OmnipodErosPumpPlugin.verifyPodAlertConfiguration()) pluginScope.launch { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
                     if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodActivationCompleted &&
                         !podStateManager.isPodDead && podStateManager.activeAlerts.size() > 0 && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
                     ) queueAcknowledgeAlertsCommand()
@@ -221,7 +221,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         }
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
 
         serviceConnection = object : ServiceConnection {
@@ -309,7 +309,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
         ).onEach {
             if (!verifyPodAlertConfiguration()) {
-                commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
+                commandQueue.customCommand(CommandUpdateAlertConfiguration())
             }
         }.launchIn(newScope)
         disposable += rxBus
@@ -401,7 +401,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "OmnipodPumpPlugin.onStop()")
         scope?.cancel()
@@ -415,11 +415,10 @@ class OmnipodErosPumpPlugin @Inject constructor(
     }
 
     private fun queueAcknowledgeAlertsCommand() {
-        commandQueue.customCommand(CommandSilenceAlerts(), object : Callback() {
-            override fun run() {
-                aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment)
-            }
-        })
+        pluginScope.launch {
+            val result = commandQueue.customCommand(CommandSilenceAlerts())
+            aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment)
+        }
     }
 
     private fun updatePodWarningNotifications() {

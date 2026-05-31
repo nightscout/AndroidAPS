@@ -48,4 +48,12 @@
     <string name="permission_dexcom_description">L\'applicazione ha bisogno dell\'autorizzazione per ricevere i dati CGM dall\'app Dexcom</string>
     <string name="permission_notification_listener_title">Accesso notifiche</string>
     <string name="permission_notification_listener_description">Richiesto per leggere i valori di glucosio dalle notifiche delle app CGM</string>
+    <string name="aidex">MicroTech CGM App</string>
+    <string name="aidex_short">App CGM</string>
+    <string name="description_source_aidex">Ricevi valori CGM da LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 ecc.</string>
+    <string name="aidex_sensor_expired">Sensore scaduto, sostituire con un nuovo sensore</string>
+    <string name="aidex_sensor_error">Errore del sensore, controllare lo stato del sensore</string>
+    <string name="aidex_sensor_stabilizing">Il sensore si sta stabilizzando, attendere…</string>
+    <string name="aidex_sensor_replace">Sostituzione del sensore necessaria, sostituire con un nuovo sensore il prima possibile</string>
+    <string name="aidex_signal_lost">Segnale sensore perso, controlla la connessione</string>
 </resources>

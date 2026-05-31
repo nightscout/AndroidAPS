@@ -161,6 +161,7 @@ class ConfigurationViewModel @Inject constructor(
         if (!config.AAPSCLIENT) {
             addCategory(PluginType.BGSOURCE, app.aaps.core.ui.R.string.configbuilder_bgsource)
             addCategory(PluginType.SMOOTHING, app.aaps.core.ui.R.string.configbuilder_smoothing)
+            addCategory(PluginType.CALIBRATION, app.aaps.core.ui.R.string.configbuilder_calibration)
             addCategory(PluginType.PUMP, app.aaps.core.ui.R.string.configbuilder_pump)
         }
         if (config.APS || config.PUMPCONTROL || config.isEngineeringMode()) {

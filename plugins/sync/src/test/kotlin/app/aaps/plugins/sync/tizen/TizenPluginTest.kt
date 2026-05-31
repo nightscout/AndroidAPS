@@ -20,6 +20,8 @@ import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,7 +39,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
 
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
     private lateinit var sut: TizenPlugin
 
     @BeforeEach

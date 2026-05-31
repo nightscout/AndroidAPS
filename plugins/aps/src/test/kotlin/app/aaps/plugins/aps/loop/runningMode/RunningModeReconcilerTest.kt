@@ -71,7 +71,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         reconciler.start()
         verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
-        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any(), anyOrNull())
+        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any())
         verify(commandQueue, never()).cancelTempBasal(any(), any())
     }
 

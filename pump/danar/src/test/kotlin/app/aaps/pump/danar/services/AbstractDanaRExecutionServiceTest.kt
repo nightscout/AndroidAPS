@@ -13,6 +13,8 @@ import app.aaps.pump.danar.comm.MessageHashTableBase
 import app.aaps.pump.danar.comm.MsgBolusStop
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,7 +39,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
                 injector.aapsLogger = aapsLogger
                 injector.rh = rh
                 injector.danaPump = danaPump
-                injector.bolusProgressData = BolusProgressData(ch, rh)
+                injector.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
             }
         }
     }
@@ -79,10 +81,11 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.pumpSync = pumpSync
         testService.activePlugin = activePlugin
         testService.notificationManager = notificationManager
-        testService.bolusProgressData = BolusProgressData(ch, rh)
+        testService.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
         testService.pumpEnactResultProvider = pumpEnactResultProvider
         testService.rfcommTransport = mock()
         testService.injector = injector
+        testService.appScope = CoroutineScope(Dispatchers.Unconfined)
     }
 
     @Test

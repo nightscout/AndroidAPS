@@ -32,11 +32,10 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpStatusProvider
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -89,6 +88,7 @@ import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorOtpScreen
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.smsCommunicator.keys.SmsIntentKey
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -119,7 +119,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
-    private val localProfileManager: LocalProfileManager,
+    private val profileRepository: ProfileRepository,
     private val commandQueue: CommandQueue,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
@@ -190,7 +190,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         )
     )
 
-    override fun onStart() {
+    override suspend fun onStart() {
         processSettings()
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -201,7 +201,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             .launchIn(newScope)
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         super.onStop()
@@ -223,6 +223,14 @@ class SmsCommunicatorPlugin @Inject constructor(
             for (bundle in bundles) {
                 try {
                     processBundle(bundle)
+                } catch (e: CancellationException) {
+                    // WorkManager stopped this run. The coroutine contract requires
+                    // CancellationException to propagate, otherwise the loop keeps fighting a
+                    // cancelled Job and spams failures for every remaining bundle. Unlike the CGM
+                    // workers we deliberately do NOT re-queue: SMS bundles carry non-idempotent
+                    // remote commands, so re-processing risks double-execution. A cancelled command
+                    // is dropped (the user re-sends) rather than re-run.
+                    throw e
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.SMS, "Failed processing SMS bundle", e)
                     hadFailure = true
@@ -647,7 +655,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private suspend fun processPROFILE(divided: Array<String>, receivedSms: Sms) { // load profiles
-        val store = localProfileManager.profile
+        val store = profileRepository.profile.value
         if (store == null) {
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.notconfigured)))
             receivedSms.processed = true

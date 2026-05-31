@@ -2043,6 +2043,40 @@ class Pump(
 
     private fun packetReceiverExceptionThrown(e: TransportLayer.PacketReceiverException) {
         parsedDisplayFrameStream.abortDueToError(e)
+
+        // CancellationException is the normal disconnect path — the receive
+        // loop's coroutine was cancelled by disconnect(), not a real failure.
+        // Without this, every clean disconnect flips Ready → Error and the
+        // UI flow gets stuck at Error (setDriverState() does not downgrade
+        // Error → Disconnected for the UI).
+        if (e.cause is CancellationException) return
+
+        // If the receive loop dies asynchronously while the pump is idle
+        // (ReadyForCommands or Suspended), there is no in-flight suspend call
+        // to observe the closed channel — the failure is silently swallowed
+        // and the driver state stays at "Ready" until something forces a
+        // reconnect (typically the user restarting the app). Surface it as
+        // an Error so observers (ComboV2Plugin → pump queue) can drive a
+        // reconnect via EventPumpStatusChanged.
+        //
+        // For Connecting / CheckingPump / ExecutingCommand, the in-flight
+        // receive() call will throw on its own once the receiver channel is
+        // closed, and connect() / executeCommand() already handle that path
+        // — touching the state here would race with them.
+        //
+        // Use compareAndSet so a concurrent transition (e.g. disconnect()
+        // moving us to Disconnected, or another error path setting Error)
+        // wins instead of being clobbered. PacketReceiverException always
+        // wraps a non-null cause per its constructor.
+        val newError = State.Error(throwable = e.cause, message = "Packet receiver failed asynchronously")
+        val transitioned = _stateFlow.compareAndSet(State.ReadyForCommands, newError) ||
+            _stateFlow.compareAndSet(State.Suspended, newError)
+        if (transitioned) {
+            logger(LogLevel.ERROR) {
+                "Packet receiver failed asynchronously while pump was idle; " +
+                    "transitioned to Error to trigger reconnect"
+            }
+        }
     }
 
     private inline fun <reified ProgressStageSubtype : ProgressStage> createBasalProgressReporter() =

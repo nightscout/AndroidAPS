@@ -12,6 +12,7 @@ import app.aaps.core.ui.compose.AapsSpacing
 fun IobCobChipsRow(
     iobUiState: IobUiState,
     cobUiState: CobUiState,
+    onIobChipClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val spacingDp = AapsSpacing.small
@@ -24,7 +25,7 @@ fun IobCobChipsRow(
 
         // First pass: measure intrinsic widths with icons
         val withIcons = subcompose("withIcons") {
-            IobChip(state = iobUiState, showIcon = true)
+            IobChip(state = iobUiState, onClick = onIobChipClick, showIcon = true)
             CobChip(state = cobUiState, showIcon = true)
         }
         val intrinsicsWithIcons = withIcons.map { it.minIntrinsicWidth(constraints.maxHeight) }
@@ -37,7 +38,7 @@ fun IobCobChipsRow(
             withIcons
         } else {
             subcompose("withoutIcons") {
-                IobChip(state = iobUiState, showIcon = false)
+                IobChip(state = iobUiState, onClick = onIobChipClick, showIcon = false)
                 CobChip(state = cobUiState, showIcon = false)
             }
         }
@@ -76,7 +77,8 @@ private fun IobCobChipsRowPreview() {
     MaterialTheme {
         IobCobChipsRow(
             iobUiState = IobUiState(text = "1.25 U", iobTotal = 1.25),
-            cobUiState = CobUiState(text = "24g", cobValue = 24.0)
+            cobUiState = CobUiState(text = "24g", cobValue = 24.0),
+            onIobChipClick = {}
         )
     }
 }
@@ -87,7 +89,8 @@ private fun IobCobChipsRowCarbsReqPreview() {
     MaterialTheme {
         IobCobChipsRow(
             iobUiState = IobUiState(text = "1.25 U", iobTotal = 1.25),
-            cobUiState = CobUiState(text = "12g\n45 required", carbsReq = 45, cobValue = 12.0)
+            cobUiState = CobUiState(text = "12g\n45 required", carbsReq = 45, cobValue = 12.0),
+            onIobChipClick = {}
         )
     }
 }

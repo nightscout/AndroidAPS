@@ -148,7 +148,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun requiredPermissions(): List<PermissionGroup> = emptyList()
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -158,7 +158,7 @@ open class VirtualPumpPlugin @Inject constructor(
         refreshConfiguration()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         super.onStop()

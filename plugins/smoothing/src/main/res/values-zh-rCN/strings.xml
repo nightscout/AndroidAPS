@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">平均平滑</string>
     <string name="description_avg_smoothing">"平均平滑算法，最新值不受影响"</string>
     <string name="no_smoothing_name">无平滑</string>
+    <string name="description_no_smoothing">"当您已有过滤后的数据时，例如来自 BYODA G6，请使用此选项。"</string>
+    <string name="UKF_name">无迹卡尔曼滤波器</string>
+    <string name="description_UKF">"具有自动噪声调谐和 RTS 平滑功能的高级算法。"</string>
 </resources>

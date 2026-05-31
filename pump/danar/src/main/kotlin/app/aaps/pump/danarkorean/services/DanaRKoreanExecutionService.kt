@@ -42,6 +42,7 @@ import app.aaps.pump.danarkorean.comm.MessageHashTableRKorean
 import app.aaps.pump.danarkorean.comm.MsgCheckValueK
 import app.aaps.pump.danarkorean.comm.MsgSettingBasal_k
 import app.aaps.pump.danarkorean.comm.MsgStatusBasic_k
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -215,7 +216,8 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
             }
             SystemClock.sleep(300)
             danaPump.bolusingDetailedBolusInfo = null
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok), null)
+            // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+            appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok)) }
         }
         return !start.failed && !connectionBroken
     }

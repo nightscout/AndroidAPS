@@ -60,8 +60,6 @@
     <string name="step_retry_activation">Активация в ход</string>
     <string name="unexpected_state">Неочаквано състояние: %1$s</string>
     <string name="patch_begin_activation">Няма активна пач помпа. Натиснете <b>Следващ</b>, за да започнете процеса по активация.</string>
-    <string name="patch_not_active_note">Основата на помпата не трябва да се свързва с пач помпата преди следващата стъпка!</string>
-    <string name="connect_pump_base">Сържете основата към нова пач помпа, отстранете остатъчния въздух и напълнете с инсулин, след което натиснете <b>Следващ</b>.</string>
     <string name="note_min_70_units">Забележка: За активация са необходими най-малко 70 единици.</string>
     <string name="do_not_attach_to_body">Все още не прикрепяйте пач помпата към тялото.</string>
     <string name="half_press_needle">Натиснете бутона на иглата до средата. След това натиснете <b>Следващ</b>, за да започнете пълнене.</string>

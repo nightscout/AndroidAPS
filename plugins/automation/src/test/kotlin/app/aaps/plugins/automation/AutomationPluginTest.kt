@@ -29,7 +29,7 @@ class AutomationPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         automationPlugin = AutomationPlugin(
             injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
-            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore, uel, localProfileManager, sceneApi
+            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore, uel, profileRepository, sceneApi
         )
     }
 

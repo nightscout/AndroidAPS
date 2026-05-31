@@ -282,7 +282,7 @@ class ComboV2Plugin @Inject constructor(
         _pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO)
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         aapsLogger.info(LTag.PUMP, "Starting combov2 driver")
 
         super.onStart()
@@ -364,7 +364,7 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         aapsLogger.info(LTag.PUMP, "Stopping combov2 driver")
 
         runBlocking {

@@ -16,7 +16,6 @@
     <string name="description_ama">Состояние алгоритма в 2017 году</string>
     <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
     <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
-    <string name="description_auto_isf">Новейший алгоритм для опытных пользователей с динамическим изменением чувствительности к инсулину ISF</string>
     <string name="openapsma_last_run_label">Предыдущее выполнение</string>
     <string name="openapsma_input_parameters_label">Параметры ввода</string>
     <string name="openapsma_glucose_status_label">Состояние гликемии</string>

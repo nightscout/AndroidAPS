@@ -4,6 +4,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.launch
 
 class MsgInitConnStatusTime(
     injector: HasAndroidInjector
@@ -25,7 +26,8 @@ class MsgInitConnStatusTime(
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaDriver")
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
+            // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+            appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change)) } // force new connection
             failed = false
             return
         } else {

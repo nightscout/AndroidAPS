@@ -38,4 +38,5 @@
     <!-- Instara preferences -->
     <!-- Notification Reader -->
     <!-- Permission rationales -->
+    <string name="permission_notification_listener_title">Доступ к уведомлениям</string>
 </resources>

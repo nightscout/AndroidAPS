@@ -110,7 +110,7 @@ class DanaRv2Plugin @Inject constructor(
         pumpDescription.fillFor(PumpType.DANA_RV2)
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         val intent = Intent(context, DanaRv2ExecutionService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable += rxBus
@@ -120,7 +120,7 @@ class DanaRv2Plugin @Inject constructor(
         super.onStart()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         context.unbindService(mConnection)
         disposable.clear()
         super.onStop()
@@ -168,7 +168,7 @@ class DanaRv2Plugin @Inject constructor(
             .bolusDelivered(delivered.cU)
         if (!result.success) result.comment(
             rh.gs(
-                R.string.boluserrorcode, detailedBolusInfo.insulin, delivered,
+                R.string.boluserrorcode, detailedBolusInfo.insulin, delivered.cU,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)

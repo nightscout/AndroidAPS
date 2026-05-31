@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
+import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -116,7 +117,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     private val dataLock = Any()
     private var thread: Thread? = null
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -125,6 +126,19 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ resetDataAndRunCalculation("onEventConfigBuilderChange") }, fabricPrivacy::logException)
+        // EventCalibrationChanged → the fit changed, so bucketed data needs to be re-smoothed
+        // with the new calibration applied. scheduleHistoryDataChange has its own 5s debounce
+        // so bursts (delete-many, bulk-add) collapse into one workflow run.
+        disposable += rxBus
+            .toObservable(EventCalibrationChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe(
+                {
+                    val invalidateFrom = System.currentTimeMillis() - T.hours(24).msecs()
+                    scheduleHistoryDataChange(invalidateFrom, reloadBgData = true, triggeredByNewBG = false)
+                },
+                fabricPrivacy::logException
+            )
         // EffectiveProfileSwitch changes
         persistenceLayer.observeChanges(EPS::class.java)
             .onEach { epsList ->
@@ -193,7 +207,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         historyWorker = Executors.newSingleThreadScheduledExecutor()
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         scope?.cancel()
         scope = null
         disposable.clear()

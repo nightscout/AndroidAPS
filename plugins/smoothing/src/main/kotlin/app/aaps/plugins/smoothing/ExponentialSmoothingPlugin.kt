@@ -83,11 +83,11 @@ class ExponentialSmoothingPlugin @Inject constructor(
         o1_sBG.clear() // MP reset smoothed bg array
 
         if (windowSize >= 4) { //MP: Require a valid windowSize of at least 4 readings
-            o1_sBG.add(data[windowSize - 1].value) //MP: Initialise smoothing with the oldest valid data point
+            o1_sBG.add(data[windowSize - 1].calibratedOrValue) //MP: Initialise smoothing with the oldest valid data point
             for (i in 0 until windowSize) { //MP calculate smoothed bg window of valid readings
                 o1_sBG.add(
                     0,
-                    o1_sBG[0] + o1_a * (data[windowSize - 1 - i].value - o1_sBG[0])
+                    o1_sBG[0] + o1_a * (data[windowSize - 1 - i].calibratedOrValue - o1_sBG[0])
                 ) //MP build array of 1st order smoothed bgs
             }
         } else {
@@ -96,12 +96,12 @@ class ExponentialSmoothingPlugin @Inject constructor(
 
         // CALCULATE SMOOTHING WINDOW - 2nd order exponential smoothing
         if (windowSize >= 4) { //MP: Require a valid windowSize of at least 4 readings
-            o2_sBG.add(data[windowSize - 1].value) //MP Start 2nd order exponential data smoothing with the oldest valid bg
-            o2_sD.add(data[windowSize - 2].value - data[windowSize - 1].value) //MP Start 2nd order exponential data smoothing with the oldest valid delta
+            o2_sBG.add(data[windowSize - 1].calibratedOrValue) //MP Start 2nd order exponential data smoothing with the oldest valid bg
+            o2_sD.add(data[windowSize - 2].calibratedOrValue - data[windowSize - 1].calibratedOrValue) //MP Start 2nd order exponential data smoothing with the oldest valid delta
             for (i in 0 until windowSize - 1) { //MP calculated smoothed bg window of last 1 h
                 o2_sBG.add(
                     0,
-                    o2_a * data[windowSize - 2 - i].value + (1 - o2_a) * (o2_sBG[0] + o2_sD[0])
+                    o2_a * data[windowSize - 2 - i].calibratedOrValue + (1 - o2_a) * (o2_sBG[0] + o2_sD[0])
                 ) //MP build array of 2nd order smoothed bgs; windowSize-1 is the oldest valid bg value, so windowSize-2 is from when on the smoothing begins;
                 o2_sD.add(
                     0,
@@ -127,7 +127,7 @@ class ExponentialSmoothingPlugin @Inject constructor(
             }
         } else {
             for (i in 0 until data.size) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
-                data[i].smoothed = max(data[i].value, 39.0) // if insufficient smoothing data, copy 'value' into 'smoothed' data column so that it isn't empty; Make 39 the smallest value as smaller
+                data[i].smoothed = max(data[i].calibratedOrValue, 39.0) // if insufficient smoothing data, copy 'value' into 'smoothed' data column so that it isn't empty; Make 39 the smallest value as smaller
                 // values trigger errors (xDrip error state = 38)
                 data[i].trendArrow = TrendArrow.NONE
             }
