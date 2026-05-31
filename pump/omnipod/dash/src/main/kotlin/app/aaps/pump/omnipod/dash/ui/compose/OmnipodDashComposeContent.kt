@@ -75,9 +75,9 @@ class OmnipodDashComposeContent(
             }
         }
 
-        // Restore overview toolbar when not in wizard
-        LaunchedEffect(showWizard) {
-            if (!showWizard) {
+        // Restore overview toolbar when not in wizard or history
+        LaunchedEffect(showWizard, showHistory) {
+            if (!showWizard && !showHistory) {
                 setToolbarConfig(ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction))
             }
         }
