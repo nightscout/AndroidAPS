@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
@@ -41,8 +42,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -100,11 +99,11 @@ class TidepoolPlugin @Inject constructor(
         scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         receiverDelegate.connectivityStatusFlow
             .drop(1) // skip initial value
-            .onEach { ev ->
+            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { ev ->
                 rxBus.send(EventTidepoolStatus("● CONNECTIVITY ${ev.blockingReason}"))
                 tidepoolUploader.resetInstance()
                 if (isAllowed) doUpload("CONNECTIVITY")
-            }.launchIn(scope)
+            }
         disposable += rxBus
             .toObservable(EventTidepoolDoUpload::class.java)
             .observeOn(aapsSchedulers.io)
@@ -119,18 +118,18 @@ class TidepoolPlugin @Inject constructor(
                            rxBus.send(EventSWSyncStatus(event.status))
                        }, fabricPrivacy::logException)
         persistenceLayer.observeChanges(GV::class.java)
-            .onEach { gvList ->
+            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { gvList ->
                 gvList.maxByOrNull { it.timestamp }?.let { gv ->
                     if (gv.timestamp < uploadChunk.getLastEnd())
                         uploadChunk.setLastEnd(gv.timestamp)
                     if (isAllowed && rateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
                         doUpload("GlucoseValue")
                 }
-            }.launchIn(scope)
-        preferences.observe(TidepoolBooleanKey.UseTestServers).drop(1).onEach {
+            }
+        preferences.observe(TidepoolBooleanKey.UseTestServers).drop(1).collectResilient(scope, aapsLogger, LTag.TIDEPOOL) {
             authFlowOut.clearAllSavedData()
             tidepoolUploader.resetInstance()
-        }.launchIn(scope)
+        }
         authFlowOut.initAuthState()
     }
 

@@ -7,6 +7,7 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -25,9 +26,13 @@ import app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfileDPV
 import app.aaps.ui.compose.stats.TddStatsData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,13 +62,36 @@ class ProfileHelperViewModel @Inject constructor(
 
     init {
         loadInitialData()
+        observeProfileChanges()
     }
 
     private fun loadInitialData() {
+        refreshCurrentProfile()
+        viewModelScope.launch {
+            val availableProfiles = profileRepository.profile.value?.getProfileList() ?: ArrayList()
+            _uiState.update { it.copy(availableProfiles = availableProfiles) }
+            loadTddStats()
+        }
+    }
+
+    /**
+     * Re-read the current profile whenever effective profile switches change so the screen does not
+     * keep showing a previous EPS after a profile switch. Debounced to collapse rapid changes; the
+     * delay also lets ProfileFunction's (undebounced) cache invalidation run first, so the reads
+     * below see a fresh cache.
+     */
+    @OptIn(FlowPreview::class)
+    private fun observeProfileChanges() {
+        persistenceLayer.observeChanges<EPS>()
+            .debounce(500L)
+            .onEach { refreshCurrentProfile() }
+            .launchIn(viewModelScope)
+    }
+
+    private fun refreshCurrentProfile() {
         viewModelScope.launch {
             val currentProfileName = profileFunction.getProfileName()
             val currentProfile = profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
-            val availableProfiles = profileRepository.profile.value?.getProfileList() ?: ArrayList()
             val profileSwitches = withContext(Dispatchers.IO) {
                 persistenceLayer.getEffectiveProfileSwitchesFromTime(
                     dateUtil.now() - T.months(2).msecs(),
@@ -75,12 +103,9 @@ class ProfileHelperViewModel @Inject constructor(
                 it.copy(
                     currentProfileName = currentProfileName,
                     currentProfile = currentProfile,
-                    availableProfiles = availableProfiles,
                     profileSwitches = profileSwitches
                 )
             }
-
-            loadTddStats()
         }
     }
 

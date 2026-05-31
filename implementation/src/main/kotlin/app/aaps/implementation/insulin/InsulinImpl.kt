@@ -14,17 +14,17 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromJsonObject
 import app.aaps.core.objects.extensions.toJsonObject
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -68,8 +68,7 @@ class InsulinImpl @Inject constructor(
     init {
         loadSettings()
         persistenceLayer.observeChanges<EPS>()
-            .onEach { updateCachedICfg() }
-            .launchIn(appScope)
+            .collectResilient(appScope, aapsLogger, LTag.CORE) { updateCachedICfg() }
     }
 
     private suspend fun updateCachedICfg() {

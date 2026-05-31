@@ -34,6 +34,7 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
@@ -52,8 +53,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -152,9 +151,9 @@ open class VirtualPumpPlugin @Inject constructor(
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        preferences.observe(StringKey.VirtualPumpType).drop(1).onEach { refreshConfiguration() }.launchIn(newScope)
-        batteryPercentFlow.onEach { _batteryLevel.value = it }.launchIn(newScope)
-        reservoirInUnitsFlow.onEach { _reservoirLevel.value = PumpInsulin(it.toDouble()) }.launchIn(newScope)
+        preferences.observe(StringKey.VirtualPumpType).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) { refreshConfiguration() }
+        batteryPercentFlow.collectResilient(newScope, aapsLogger, LTag.PUMP) { _batteryLevel.value = it }
+        reservoirInUnitsFlow.collectResilient(newScope, aapsLogger, LTag.PUMP) { _reservoirLevel.value = PumpInsulin(it.toDouble()) }
         refreshConfiguration()
     }
 

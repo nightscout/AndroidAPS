@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -83,10 +84,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx3.await
@@ -502,7 +501,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             preferences.observe(OmnipodIntPreferenceKey.ExpirationAlarmHours).drop(1).map {},
             preferences.observe(OmnipodBooleanPreferenceKey.LowReservoirAlert).drop(1).map {},
             preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
-        ).onEach { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }.launchIn(newScope)
+        ).collectResilient(newScope, aapsLogger, LTag.PUMP) { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
     }
 
     override suspend fun onStop() {

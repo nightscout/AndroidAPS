@@ -32,8 +32,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -81,7 +79,6 @@ class EopatchPumpPlugin @Inject constructor(
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
-    private val rxBus: RxBus,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
@@ -139,6 +136,16 @@ class EopatchPumpPlugin @Inject constructor(
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+
+        // Restore persisted patch state synchronously on start. Other pump plugins (e.g. Medtrum)
+        // load their state directly in onStart() instead of waiting for EventAppInitialized; none of
+        // these calls depend on other plugins being started, and deferring them to the one-shot
+        // event was racy under the suspend onStart() migration (the event could fire before the
+        // subscription was registered), causing the patch to appear deactivated after an app update.
+        preferenceManager.init()
+        patchManager.init()
+        alarmManager.init()
+
         merge(
             preferences.observe(EopatchIntKey.LowReservoirReminder).drop(1).map {},
             preferences.observe(EopatchIntKey.ExpirationReminder).drop(1).map {},
@@ -147,24 +154,13 @@ class EopatchPumpPlugin @Inject constructor(
             patchManager.changeBuzzerSetting()
         }.launchIn(newScope)
 
+        // Subscribe after preferenceManager.init() so we observe the restored patchState instance.
         mDisposables += preferenceManager.patchState.observe()
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            _reservoirLevel.value = PumpInsulin(if (!patchConfig.isActivated) 0.0 else it.remainedInsulin.toDouble())
                            _batteryLevel.value = if (patchConfig.isActivated) it.batteryLevel() else null
                        }, fabricPrivacy::logException)
-
-        mDisposables += rxBus
-            .toObservable(EventAppInitialized::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           preferenceManager.init()
-                           patchManager.init()
-                           alarmManager.init()
-                       }, fabricPrivacy::logException)
-
-        // following was moved from specialEnableCondition()
-        // specialEnableCondition() is called too often to add there executive code
 
         // This is a required code for maintaining the patch activation phase and maintaining the alarm. It should not be deleted.
         //BG -> FG, restart patch activation and trigger unhandled alarm

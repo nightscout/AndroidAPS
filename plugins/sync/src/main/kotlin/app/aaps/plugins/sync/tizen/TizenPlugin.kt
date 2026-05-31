@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -45,8 +46,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -99,12 +98,11 @@ class TizenPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendData(it) }, fabricPrivacy::logException)
         bolusProgressData.state
-            .onEach { state ->
+            .collectResilient(newScope, aapsLogger, LTag.CORE) { state ->
                 if (state != null && !state.isSMB) {
                     sendBolusProgressData(state)
                 }
             }
-            .launchIn(newScope)
     }
 
     override suspend fun onStop() {

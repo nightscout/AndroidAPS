@@ -43,6 +43,7 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
@@ -106,10 +107,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
@@ -301,17 +300,17 @@ class OmnipodErosPumpPlugin @Inject constructor(
             preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification).drop(1).map {},
             preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification).drop(1).map {},
             preferences.observe(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts).drop(1).map {},
-        ).onEach { aapsOmnipodErosManager.reloadSettings() }.launchIn(newScope)
+        ).collectResilient(newScope, aapsLogger, LTag.PUMP) { aapsOmnipodErosManager.reloadSettings() }
         merge(
             preferences.observe(OmnipodBooleanPreferenceKey.ExpirationReminder).drop(1).map {},
             preferences.observe(OmnipodIntPreferenceKey.ExpirationAlarmHours).drop(1).map {},
             preferences.observe(OmnipodBooleanPreferenceKey.LowReservoirAlert).drop(1).map {},
             preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
-        ).onEach {
+        ).collectResilient(newScope, aapsLogger, LTag.PUMP) {
             if (!verifyPodAlertConfiguration()) {
                 commandQueue.customCommand(CommandUpdateAlertConfiguration())
             }
-        }.launchIn(newScope)
+        }
         disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)

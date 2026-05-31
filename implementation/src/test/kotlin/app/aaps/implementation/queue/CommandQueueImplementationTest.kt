@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -50,6 +51,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Calendar
 import javax.inject.Provider
@@ -238,6 +241,26 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Thread.sleep(3000)
 
         assertThat(commandQueue.size()).isEqualTo(0)
+    }
+
+    @Test
+    fun profileChangeCollectorSurvivesException() = runTest {
+        // Regression: a throwable during one profile change must not permanently wedge the
+        // profile-change collector. Before hardening, the first failure cancelled the flow and every
+        // later ProfileSwitch was silently dropped (no pump push, no EffectiveProfileSwitch created,
+        // isProfileChangePending() stuck true). See onProfileChanged() try/catch + retryWhen backstop.
+
+        // First emission blows up inside onProfileChanged(); the second must still be processed.
+        whenever(profileFunction.getRequestedProfile())
+            .thenThrow(RuntimeException("induced failure"))
+            .thenReturn(profileSwitch)
+
+        rxBus.send(EventProfileChangeRequested())
+        rxBus.send(EventProfileChangeRequested())
+
+        // Collector reacted to BOTH events. With the old (unguarded) collector the first throw would
+        // have cancelled the flow and the second event would never reach getRequestedProfile() (== 1).
+        verify(profileFunction, times(2)).getRequestedProfile()
     }
 
     @Test

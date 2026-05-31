@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginGarmin
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -25,8 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -131,19 +130,15 @@ class GarminPlugin @Inject constructor(
         scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         preferences.observe(GarminBooleanKey.LocalHttpServer)
             .drop(1)
-            .onEach { setupHttpServer() }
-            .launchIn(scope)
+            .collectResilient(scope, aapsLogger, LTag.GARMIN) { setupHttpServer() }
         preferences.observe(GarminIntKey.LocalHttpPort)
             .drop(1)
-            .onEach { setupHttpServer() }
-            .launchIn(scope)
+            .collectResilient(scope, aapsLogger, LTag.GARMIN) { setupHttpServer() }
         preferences.observe(GarminStringKey.RequestKey)
             .drop(1)
-            .onEach { sendPhoneAppMessage() }
-            .launchIn(scope)
+            .collectResilient(scope, aapsLogger, LTag.GARMIN) { sendPhoneAppMessage() }
         persistenceLayer.observeChanges(GV::class.java)
-            .onEach(::onNewBloodGlucose)
-            .launchIn(scope)
+            .collectResilient(scope, aapsLogger, LTag.GARMIN, block = ::onNewBloodGlucose)
         setupHttpServer()
         if (garminAapsKey.isNotEmpty())
             setupGarminMessenger()

@@ -38,6 +38,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -75,9 +76,8 @@ import app.aaps.implementation.queue.commands.CommandTempBasalPercent
 import app.aaps.implementation.queue.commands.CommandUpdateTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Provider
@@ -117,13 +117,22 @@ class CommandQueueImplementation @Inject constructor(
 
     @Volatile var performing: Command? = null
 
+    // Upper bound for a single pump profile push. A normal connection failure resolves the command
+    // (and the awaited deferred) on its own; this only guards the pathological lost-callback case so a
+    // hung set can't block the sequential profile-change collector forever. Tune if pumps legitimately
+    // need longer.
+    private val PROFILE_SET_TIMEOUT_MS = 10 * 60 * 1000L
+
     init {
+        // collectResilient guarantees a single failed onProfileChanged() can never permanently wedge
+        // profile switching (an unguarded collector would be cancelled for the whole process lifetime,
+        // after which every later ProfileSwitch is silently dropped: no pump push, no
+        // EffectiveProfileSwitch, isProfileChangePending() stuck true). The hang vector is handled
+        // separately by the withTimeoutOrNull() inside onProfileChanged().
         merge(
             rxBus.toFlow(EventProfileChangeRequested::class.java),
             persistenceLayer.observeChanges(PS::class.java)
-        )
-            .onEach { onProfileChanged() }
-            .launchIn(appScope)
+        ).collectResilient(appScope, aapsLogger, LTag.PROFILE) { onProfileChanged() }
         /*
          * Clear old WorkManager jobs, because they survive restart
          */
@@ -133,6 +142,7 @@ class CommandQueueImplementation @Inject constructor(
     private suspend fun onProfileChanged() {
         if (config.AAPSCLIENT) return // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
         aapsLogger.debug(LTag.PROFILE, "onProfileChanged")
+        // Exceptions are handled by collectResilient at the call site; here we only guard the hang vector.
         profileFunction.getRequestedProfile()?.let {
             // Skip if the active EPS was already triggered by this PS (e.g. NSClient updating PS with nsId
             // retriggers observeChanges(PS)). The previous onProfileChanged already pushed the profile to the pump.
@@ -141,7 +151,22 @@ class CommandQueueImplementation @Inject constructor(
                 aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active.id} already represents PS id=${it.id}")
                 return@let
             }
-            val result = setProfile(ProfileSealed.PS(it, activePlugin), it.ids.nightscoutId != null)
+            // Bound the pump round-trip. setProfile() awaits a CommandSetProfile callback; if that
+            // callback is ever lost the deferred never completes, and because the collector processes
+            // emissions sequentially that single hang would block every future ProfileSwitch. On
+            // timeout we treat it as a failed update so the collector stays alive.
+            val result = withTimeoutOrNull(PROFILE_SET_TIMEOUT_MS) {
+                setProfile(ProfileSealed.PS(it, activePlugin), it.ids.nightscoutId != null)
+            }
+            if (result == null) {
+                aapsLogger.error(LTag.PROFILE, "setProfile timed out after $PROFILE_SET_TIMEOUT_MS ms for PS id=${it.id}")
+                uiInteraction.runAlarm(
+                    rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile),
+                    rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile),
+                    app.aaps.core.ui.R.raw.boluserror
+                )
+                return@let
+            }
             if (!result.success) {
                 uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), app.aaps.core.ui.R.raw.boluserror)
             } else {

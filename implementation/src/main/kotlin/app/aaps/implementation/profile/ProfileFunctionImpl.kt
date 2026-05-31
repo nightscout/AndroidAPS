@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -20,14 +21,13 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,11 +52,16 @@ class ProfileFunctionImpl @Inject constructor(
 
     init {
         persistenceLayer.observeChanges(EPS::class.java)
-            .onEach { epsList ->
+            .collectResilient(appScope, aapsLogger, LTag.PROFILE) { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
-                    synchronized(cache) { cache.keys.removeIf { key -> key > timestamp } }
+                    // Cache keys are rounded down to the second (see getProfile), so compare against
+                    // the rounded timestamp with >= to also invalidate the entry for the second in
+                    // which the change happened. A strict > against the raw ms timestamp would leave
+                    // the current-second entry stale and getProfile() would keep returning the old EPS.
+                    val rounded = timestamp - timestamp % 1000
+                    synchronized(cache) { cache.keys.removeIf { key -> key >= rounded } }
                 }
-            }.launchIn(appScope)
+            }
     }
 
     override suspend fun getProfileName(): String =

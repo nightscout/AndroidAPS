@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -70,13 +71,12 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -137,31 +137,21 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ stopSelf() }, fabricPrivacy::logException)
-        preferences.observe(MedtrumStringNonKey.SnInput).drop(1).onEach {
+        preferences.observe(MedtrumStringNonKey.SnInput).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
             aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
             medtrumPump.loadUserSettingsFromSP()
             medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN).value
             medtrumPump.resetPatchParameters()
             pumpSync.connectNewPump()
             medtrumPump.setFakeTBRIfNotSet()
-        }.launchIn(scope)
-        preferences.observe(MedtrumBooleanKey.MedtrumWarningNotification).drop(1).onEach {
+        }
+        preferences.observe(MedtrumBooleanKey.MedtrumWarningNotification).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
             medtrumPump.loadUserSettingsFromSP()
-        }.launchIn(scope)
-        preferences.observe(MedtrumIntKey.MedtrumPumpExpiryWarningHours).drop(1).onEach {
+        }
+        preferences.observe(MedtrumIntKey.MedtrumPumpExpiryWarningHours).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
             medtrumPump.loadUserSettingsFromSP()
-        }.launchIn(scope)
-        preferences.observe(MedtrumStringKey.MedtrumAlarmSettings).drop(1).onEach {
-            medtrumPump.loadUserSettingsFromSP()
-            val r = commandQueue.setUserOptions()
-            if (medtrumPlugin.isInitialized() && !r.success) {
-                notificationManager.post(
-                    NotificationId.PUMP_SETTINGS_FAILED,
-                    R.string.pump_setting_failed,
-                )
-            }
-        }.launchIn(scope)
-        preferences.observe(MedtrumBooleanKey.MedtrumPatchExpiration).drop(1).onEach {
+        }
+        preferences.observe(MedtrumStringKey.MedtrumAlarmSettings).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
             medtrumPump.loadUserSettingsFromSP()
             val r = commandQueue.setUserOptions()
             if (medtrumPlugin.isInitialized() && !r.success) {
@@ -169,46 +159,58 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                     NotificationId.PUMP_SETTINGS_FAILED,
                     R.string.pump_setting_failed,
                 )
-            }
-        }.launchIn(scope)
-        preferences.observe(MedtrumIntKey.MedtrumHourlyMaxInsulin).drop(1).onEach {
-            medtrumPump.loadUserSettingsFromSP()
-            val r = commandQueue.setUserOptions()
-            if (medtrumPlugin.isInitialized() && !r.success) {
-                notificationManager.post(
-                    NotificationId.PUMP_SETTINGS_FAILED,
-                    R.string.pump_setting_failed,
-                )
-            }
-        }.launchIn(scope)
-        preferences.observe(MedtrumIntKey.MedtrumDailyMaxInsulin).drop(1).onEach {
-            medtrumPump.loadUserSettingsFromSP()
-            val r = commandQueue.setUserOptions()
-            if (medtrumPlugin.isInitialized() && !r.success) {
-                notificationManager.post(
-                    NotificationId.PUMP_SETTINGS_FAILED,
-                    R.string.pump_setting_failed,
-                )
-            }
-        }.launchIn(scope)
-        scope.launch {
-            medtrumPump.pumpStateFlow.collect { pumpState ->
-                handlePumpStateUpdate(pumpState)
             }
         }
-        scope.launch {
-            medtrumPump.connectionStateFlow.collect { connectionState ->
-                handleConnectionStateChange(connectionState)
+        preferences.observe(MedtrumBooleanKey.MedtrumPatchExpiration).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
+            medtrumPump.loadUserSettingsFromSP()
+            val r = commandQueue.setUserOptions()
+            if (medtrumPlugin.isInitialized() && !r.success) {
+                notificationManager.post(
+                    NotificationId.PUMP_SETTINGS_FAILED,
+                    R.string.pump_setting_failed,
+                )
             }
         }
-        scope.launch {
-            medtrumPump.pumpWarningFlow.collect { pumpWarning ->
-                notifyPumpWarning(pumpWarning)
+        preferences.observe(MedtrumIntKey.MedtrumHourlyMaxInsulin).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
+            medtrumPump.loadUserSettingsFromSP()
+            val r = commandQueue.setUserOptions()
+            if (medtrumPlugin.isInitialized() && !r.success) {
+                notificationManager.post(
+                    NotificationId.PUMP_SETTINGS_FAILED,
+                    R.string.pump_setting_failed,
+                )
             }
+        }
+        preferences.observe(MedtrumIntKey.MedtrumDailyMaxInsulin).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
+            medtrumPump.loadUserSettingsFromSP()
+            val r = commandQueue.setUserOptions()
+            if (medtrumPlugin.isInitialized() && !r.success) {
+                notificationManager.post(
+                    NotificationId.PUMP_SETTINGS_FAILED,
+                    R.string.pump_setting_failed,
+                )
+            }
+        }
+        medtrumPump.pumpStateFlow.collectResilient(scope, aapsLogger, LTag.PUMP) { pumpState ->
+            handlePumpStateUpdate(pumpState)
+        }
+        medtrumPump.connectionStateFlow.collectResilient(scope, aapsLogger, LTag.PUMP) { connectionState ->
+            handleConnectionStateChange(connectionState)
+        }
+        medtrumPump.pumpWarningFlow.collectResilient(scope, aapsLogger, LTag.PUMP) { pumpWarning ->
+            notifyPumpWarning(pumpWarning)
         }
         scope.launch {
             while (true) {
-                checkExpiryWarning()
+                // Not a Flow, so collectResilient doesn't apply; guard the poll body so a single failure
+                // can't kill the loop and stop expiry checks for the rest of the service lifetime.
+                try {
+                    checkExpiryWarning()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.PUMP, "checkExpiryWarning failed", e)
+                }
                 kotlinx.coroutines.delay(CHECK_EXPIRY_WARNING_TIME_MS)
             }
         }

@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
@@ -64,8 +65,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
@@ -138,10 +137,10 @@ class XdripPlugin @Inject constructor(
         persistenceLayer.observeAnyChange()
             // HR/SC writes come from the watch; this plugin doesn't broadcast them — skip to avoid reconnect-flush storm.
             .filter { types -> types.any { it != HR::class && it != SC::class } }
-            .onEach { types ->
+            .collectResilient(scope, aapsLogger, LTag.XDRIP) { types ->
                 sendStatusLine()
                 delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
-            }.launchIn(scope)
+            }
         disposable += rxBus.toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendStatusLine() }, fabricPrivacy::logException)
