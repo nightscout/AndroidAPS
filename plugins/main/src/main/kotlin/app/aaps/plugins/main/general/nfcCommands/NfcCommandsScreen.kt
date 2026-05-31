@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 
 package app.aaps.plugins.main.general.nfcCommands
 
@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -18,18 +22,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,7 +48,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -56,44 +60,67 @@ import app.aaps.plugins.main.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.text.DateFormat
+import app.aaps.core.ui.R as CoreUiR
 
 private sealed class NfcRoute {
     object Main : NfcRoute()
     object Build : NfcRoute()
 }
 
-class NfcCommandsComposeContent(private val plugin: NfcCommandsPlugin) : ComposablePluginContent {
+class NfcCommandsComposeContent(val plugin: NfcCommandsPlugin) : ComposablePluginContent {
     @Composable
     override fun Render(
         setToolbarConfig: (ToolbarConfig) -> Unit,
         onNavigateBack: () -> Unit,
-        onSettings: (() -> Unit)?
+        onSettings: (() -> Unit)?,
     ) {
         var route by remember { mutableStateOf<NfcRoute>(NfcRoute.Main) }
-        var initialTab by remember { mutableIntStateOf(0) }
+        var initialTab by remember { mutableIntStateOf(1) } // Default to My Tags tab
+        var editTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
+
         when (route) {
-            is NfcRoute.Main  -> NfcCommandsScreen(
-                plugin = plugin,
-                nfcTagStore = plugin.nfcTagStore,
-                setToolbarConfig = setToolbarConfig,
-                onNavigateBack = onNavigateBack,
-                onSettings = onSettings,
-                initialTab = initialTab,
-                onBuild = { route = NfcRoute.Build },
-            )
-            is NfcRoute.Build -> NfcBuildScreen(
-                plugin = plugin,
-                setToolbarConfig = setToolbarConfig,
-                onBack = { initialTab = 0; route = NfcRoute.Main },
-                onTagWritten = { initialTab = 1; route = NfcRoute.Main },
-            )
+            NfcRoute.Main ->
+                NfcCommandsScreen(
+                    plugin = plugin,
+                    nfcTagStore = plugin.nfcTagStore,
+                    setToolbarConfig = setToolbarConfig,
+                    onNavigateBack = onNavigateBack,
+                    onSettings = onSettings,
+                    initialTab = initialTab,
+                    onBuild = {
+                        editTarget = null
+                        initialTab = 1
+                        route = NfcRoute.Build
+                    },
+                    onEdit = { tag ->
+                        editTarget = tag
+                        initialTab = 1
+                        route = NfcRoute.Build
+                    },
+                    onTabChanged = { initialTab = it }
+                )
+            NfcRoute.Build ->
+                NfcBuildScreen(
+                    plugin = plugin,
+                    setToolbarConfig = setToolbarConfig,
+                    onBack = {
+                        initialTab = 1
+                        route = NfcRoute.Main
+                    },
+                    onTagWritten = {
+                        initialTab = 1
+                        route = NfcRoute.Main
+                    },
+                    initialTag = editTarget
+                )
         }
     }
 }
 
 @Composable
-private fun NfcCommandsScreen(
+fun NfcCommandsScreen(
     plugin: NfcCommandsPlugin,
     nfcTagStore: NfcTagStore,
     setToolbarConfig: (ToolbarConfig) -> Unit,
@@ -101,14 +128,24 @@ private fun NfcCommandsScreen(
     onSettings: (() -> Unit)?,
     initialTab: Int,
     onBuild: () -> Unit,
+    onEdit: (NfcCreatedTag) -> Unit,
+    onTabChanged: (Int) -> Unit,
 ) {
-    val tabTitles = remember { listOf(R.string.nfccommands_tab_log, R.string.nfccommands_tab_my_tags) }
+    val tabTitles = listOf(
+        stringResource(R.string.nfccommands_tab_log),
+        stringResource(R.string.nfccommands),
+    )
+
     val pagerState = rememberPagerState(initialPage = initialTab) { tabTitles.size }
     val coroutineScope = rememberCoroutineScope()
 
+    LaunchedEffect(pagerState.currentPage) {
+        onTabChanged(pagerState.currentPage)
+    }
+
     val title = stringResource(R.string.nfccommands)
-    val backDesc = stringResource(app.aaps.core.ui.R.string.back)
-    val settingsDesc = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
+    val backDesc = stringResource(CoreUiR.string.back)
+
     LaunchedEffect(Unit) {
         setToolbarConfig(
             ToolbarConfig(
@@ -121,28 +158,37 @@ private fun NfcCommandsScreen(
                 actions = {
                     if (onSettings != null) {
                         IconButton(onClick = onSettings) {
-                            Icon(Icons.Filled.Settings, contentDescription = settingsDesc)
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(CoreUiR.string.settings))
                         }
                     }
                 },
-            )
+            ),
         )
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
-            tabTitles.forEachIndexed { index, titleResId ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                    text = { Text(stringResource(titleResId)) },
-                )
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
+                tabTitles.forEachIndexed { index, title ->
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                        text = { Text(title) },
+                    )
+                }
             }
-        }
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-            when (page) {
-                0 -> NfcLogScreen(nfcTagStore = nfcTagStore)
-                else -> NfcTagsScreen(plugin = plugin, nfcTagStore = nfcTagStore, onBuild = onBuild)
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                when (page) {
+                    0 -> NfcLogScreen(nfcTagStore = nfcTagStore)
+                    1 -> NfcTagsScreen(plugin = plugin, nfcTagStore = nfcTagStore, onBuild = onBuild, onEdit = onEdit)
+                }
             }
         }
     }
@@ -151,21 +197,22 @@ private fun NfcCommandsScreen(
 @Composable
 private fun NfcLogScreen(nfcTagStore: NfcTagStore) {
     var entries by remember { mutableStateOf<List<NfcLogEntry>>(emptyList()) }
-    var refreshKey by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(refreshKey) {
-        entries = nfcTagStore.loadLog()
+    LaunchedEffect(Unit) {
+        nfcTagStore.logUpdates.collect {
+            entries = nfcTagStore.loadLog()
+        }
     }
 
-    LaunchedEffect(nfcTagStore) {
-        nfcTagStore.logUpdates.collect { refreshKey++ }
+    LaunchedEffect(Unit) {
+        entries = nfcTagStore.loadLog()
     }
 
     if (entries.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(R.string.nfccommands_log_empty_title),
@@ -179,11 +226,7 @@ private fun NfcLogScreen(nfcTagStore: NfcTagStore) {
             }
         }
     } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp, vertical = 4.dp),
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(entries) { entry ->
                 NfcLogEntryCard(entry)
             }
@@ -193,54 +236,61 @@ private fun NfcLogScreen(nfcTagStore: NfcTagStore) {
 
 @Composable
 private fun NfcLogEntryCard(entry: NfcLogEntry) {
-    val formatter = remember { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) }
+    val dateFormatter = remember { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) }
+    val color = if (entry.success) Color(0xFF4CAF50) else Color(0xFFF44336)
     val actionLabel = when (entry.action) {
-        "WRITE" -> stringResource(R.string.nfccommands_log_action_write)
         "READ" -> stringResource(R.string.nfccommands_log_action_read)
+        "WRITE" -> stringResource(R.string.nfccommands_log_action_write)
         "MANUAL" -> stringResource(R.string.nfccommands_log_action_manual)
-        else -> null
+        else -> entry.action
     }
 
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 1.dp)) {
-        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (actionLabel != null) {
-                    SuggestionChip(
-                        onClick = {},
-                        label = { Text(actionLabel) },
-                        modifier = Modifier.padding(end = 8.dp),
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(text = entry.tagName, style = MaterialTheme.typography.titleSmall)
+                Text(text = dateFormatter.format(entry.timestamp), style = MaterialTheme.typography.bodySmall)
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 4.dp),
+            ) {
+                Surface(
+                    color = color.copy(alpha = 0.1f),
+                    shape = MaterialTheme.shapes.extraSmall,
+                ) {
+                    Text(
+                        text = actionLabel,
+                        color = color,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                     )
                 }
-                Text(
-                    text = entry.tagName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(1f),
-                )
-                Text(
-                    text = formatter.format(entry.timestamp),
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = entry.message, style = MaterialTheme.typography.bodySmall)
             }
-            Text(
-                text = entry.message,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(top = 4.dp),
-            )
         }
     }
 }
 
 @Composable
-private fun NfcTagsScreen(plugin: NfcCommandsPlugin, nfcTagStore: NfcTagStore, onBuild: () -> Unit) {
-    val context = LocalContext.current
+private fun NfcTagsScreen(
+    plugin: NfcCommandsPlugin,
+    nfcTagStore: NfcTagStore,
+    onBuild: () -> Unit,
+    onEdit: (NfcCreatedTag) -> Unit,
+) {
     val coroutineScope = rememberCoroutineScope()
     var refreshKey by remember { mutableIntStateOf(0) }
     var tags by remember { mutableStateOf<List<NfcCreatedTag>>(emptyList()) }
     var deleteTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
-    var renameTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
-    var renameText by remember { mutableStateOf("") }
     var executeTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
 
     LaunchedEffect(refreshKey) {
@@ -266,7 +316,7 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, nfcTagStore: NfcTagStore, o
                     nfcTagStore.deleteCreatedTag(tag.tagUid)
                     refreshKey++
                     deleteTarget = null
-                }) { Text(stringResource(R.string.nfccommands_delete_confirm_ok)) }
+                }) { Text(stringResource(CoreUiR.string.delete)) }
             },
             dismissButton = {
                 TextButton(onClick = { deleteTarget = null }) {
@@ -276,60 +326,20 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, nfcTagStore: NfcTagStore, o
         )
     }
 
-    renameTarget?.let { tag ->
-        AlertDialog(
-            onDismissRequest = { renameTarget = null },
-            title = { Text(stringResource(R.string.nfccommands_rename_tag_title)) },
-            text = {
-                OutlinedTextField(
-                    value = renameText,
-                    onValueChange = { renameText = it },
-                    label = { Text(stringResource(R.string.nfccommands_rename_tag)) },
-                    singleLine = true,
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    val newName = renameText.trim()
-                    if (newName.isNotBlank() && newName != tag.name) {
-                        nfcTagStore.saveCreatedTag(tag.copy(name = newName))
-                        refreshKey++
-                    }
-                    renameTarget = null
-                }) { Text(stringResource(R.string.nfccommands_rename_ok)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { renameTarget = null }) {
-                    Text(stringResource(android.R.string.cancel))
-                }
-            },
-        )
-    }
-
     executeTarget?.let { tag ->
-        val commandsText = tag.commands.mapIndexed { i, cmd ->
-            context.getString(R.string.nfccommands_cascade_step_label, i + 1, cmd)
-        }.joinToString("\n")
-        AlertDialog(
-            onDismissRequest = { executeTarget = null },
-            title = { Text(stringResource(R.string.nfccommands_execute_confirm_title, tag.name)) },
-            text = { Text(stringResource(R.string.nfccommands_execute_confirm_msg, commandsText)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    val commands = tag.commands
-                    val tagName = tag.name
-                    executeTarget = null
-                    coroutineScope.launch {
-                        withContext(Dispatchers.IO) { plugin.executeWithFeedback(commands, tagName, action = "MANUAL") }
-                        refreshKey++
-                    }
-                }) { Text(stringResource(R.string.nfccommands_execute_ok)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { executeTarget = null }) {
-                    Text(stringResource(android.R.string.cancel))
+        NfcExecutionConfirmationDialog(
+            tag = tag,
+            plugin = plugin,
+            onConfirm = {
+                val commands = tag.commands
+                val tagName = tag.name
+                executeTarget = null
+                coroutineScope.launch {
+                    withContext(Dispatchers.IO) { plugin.executeWithFeedback(commands, tagName, action = "MANUAL") }
+                    refreshKey++
                 }
             },
+            onDismiss = { executeTarget = null }
         )
     }
 
@@ -352,14 +362,13 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, nfcTagStore: NfcTagStore, o
                 )
             }
         } else {
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 72.dp)) {
-                items(tags, key = { it.tagUid }) { tag ->
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = 72.dp)) {
+                items(tags, key = { it.tagUid + it.createdAtMillis }) { tag ->
                     NfcTagCard(
+                        plugin = plugin,
                         tag = tag,
                         onExecute = { executeTarget = tag },
-                        onRename = { renameTarget = tag; renameText = tag.name },
+                        onEdit = { onEdit(tag) },
                         onDelete = { deleteTarget = tag },
                     )
                 }
@@ -379,58 +388,75 @@ private fun NfcTagsScreen(plugin: NfcCommandsPlugin, nfcTagStore: NfcTagStore, o
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NfcTagCard(
+    plugin: NfcCommandsPlugin,
     tag: NfcCreatedTag,
     onExecute: () -> Unit,
-    onRename: () -> Unit,
+    onEdit: () -> Unit,
     onDelete: () -> Unit,
 ) {
-    val context = LocalContext.current
     val dateFormatter = remember { DateFormat.getDateInstance(DateFormat.SHORT) }
 
-    val commandsText = tag.commands.mapIndexed { i, cmd ->
-        context.getString(R.string.nfccommands_cascade_step_label, i + 1, cmd)
-    }.joinToString("\n")
-
     Card(
+        onClick = onEdit,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(text = tag.name, style = MaterialTheme.typography.titleMedium)
-                    Text(
-                        text = commandsText,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(top = 2.dp),
-                    )
-                }
-                IconButton(onClick = onExecute) {
-                    Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nfccommands_execute_tag))
-                }
-                IconButton(onClick = onRename) {
-                    Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.nfccommands_rename_tag))
-                }
-                IconButton(onClick = onDelete) {
-                    Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.nfccommands_disable_tag))
-                }
-            }
+        Column(modifier = Modifier.padding(8.dp)) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                SuggestionChip(onClick = {}, label = { Text(tag.tagUid) })
+                Text(
+                    text = tag.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
                 if (tag.lastScannedAtMillis != null) {
                     Text(
                         text = dateFormatter.format(tag.lastScannedAtMillis),
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    tag.commands.forEach { cmdJson ->
+                        NfcIconOnlyDisplay(commandJson = cmdJson)
+                    }
+                }
+                IconButton(onClick = onExecute, modifier = Modifier.size(32.dp)) {
+                    Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nfccommands_execute_tag))
+                }
+                IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
+                    Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.nfccommands_disable_tag))
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun NfcIconOnlyDisplay(commandJson: String) {
+    val json = remember(commandJson) { runCatching { JSONObject(commandJson) }.getOrNull() }
+    val codeName = json?.optString("code")
+    val code = remember(codeName) { if (codeName != null) runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull() else null }
+
+    if (code != null) {
+        Icon(
+            imageVector = code.icon,
+            contentDescription = null,
+            tint = code.getIconColor(),
+            modifier = Modifier.size(20.dp)
+        )
     }
 }
