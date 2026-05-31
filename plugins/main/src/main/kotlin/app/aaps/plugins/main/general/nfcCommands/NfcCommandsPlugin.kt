@@ -24,12 +24,11 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -46,7 +45,6 @@ import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.preference.PreferenceActionItem
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.main.R
-import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.Strings
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -82,7 +80,7 @@ class NfcCommandsPlugin
         private val constraintChecker: ConstraintsChecker,
         private val profileFunction: ProfileFunction,
         private val profileUtil: ProfileUtil,
-        private val localProfileManager: LocalProfileManager,
+        private val profileRepository: ProfileRepository,
         private val insulin: Insulin,
         private val activePlugin: ActivePlugin,
         private val commandQueue: CommandQueue,
@@ -146,7 +144,7 @@ class NfcCommandsPlugin
             )
         }
 
-        fun executeCascade(commands: List<String>): NfcExecutionResult {
+        suspend fun executeCascade(commands: List<String>): NfcExecutionResult {
             val results = mutableListOf<NfcExecutionResult>()
             for (command in commands) {
                 val result = executeCommand(command)
@@ -158,7 +156,7 @@ class NfcCommandsPlugin
             return NfcExecutionResult(success = allSuccess, message = message)
         }
 
-        fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
+        suspend fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
             val result = executeCascade(commands)
             nfcTagStore.appendLogEntry(
                 NfcLogEntry(
@@ -201,7 +199,7 @@ class NfcCommandsPlugin
                 .tbrSettings()
                 ?.durationStep ?: 60
 
-        fun executeCommand(command: String): NfcExecutionResult {
+        suspend fun executeCommand(command: String): NfcExecutionResult {
             aapsLogger.debug(LTag.NFC, "Executing NFC command: $command")
             val divided = command.trim().split(Regex("\\s+")).filter { it.isNotBlank() }
             if (divided.isEmpty()) {
@@ -225,7 +223,7 @@ class NfcCommandsPlugin
             }
         }
 
-        private fun requireRemoteCommands(block: () -> NfcExecutionResult): NfcExecutionResult {
+        private suspend fun requireRemoteCommands(block: suspend () -> NfcExecutionResult): NfcExecutionResult {
             val remoteAllowed = preferences.get(BooleanKey.NfcAllowRemoteCommands)
             if (!remoteAllowed) {
                 return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_allowed))
@@ -235,24 +233,24 @@ class NfcCommandsPlugin
 
         private fun invalidFormat(): NfcExecutionResult = NfcExecutionResult(false, rh.gs(R.string.wrong_format))
 
-        private fun processLoop(divided: List<String>): NfcExecutionResult {
+        private fun commandNotPossible(): NfcExecutionResult = NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
+
+        private suspend fun processLoop(divided: List<String>): NfcExecutionResult {
             if (divided.size !in 2..3) return invalidFormat()
-            val profile = runBlocking { profileFunction.getProfile() } ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
+            val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
             return when (divided[1].uppercase(Locale.ROOT)) {
                 "DISABLE", "STOP" -> {
-                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.DISABLED_LOOP)) {
+                    if (!loop.allowedNextModes().contains(RM.Mode.DISABLED_LOOP)) {
                         NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.loopisdisabled))
                     } else {
                         val result =
-                            runBlocking {
-                                loop.handleRunningModeChange(
-                                    newRM = RM.Mode.DISABLED_LOOP,
-                                    durationInMinutes = Int.MAX_VALUE,
-                                    action = Action.LOOP_DISABLED,
-                                    source = Sources.NfcCommands,
-                                    profile = profile,
-                                )
-                            }
+                            loop.handleRunningModeChange(
+                                newRM = RM.Mode.DISABLED_LOOP,
+                                durationInMinutes = Int.MAX_VALUE,
+                                action = Action.LOOP_DISABLED,
+                                source = Sources.NfcCommands,
+                                profile = profile,
+                            )
                         val messageId =
                             if (result) {
                                 R.string.nfccommands_loop_has_been_disabled
@@ -263,18 +261,16 @@ class NfcCommandsPlugin
                     }
                 }
                 "RESUME" -> {
-                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.RESUME) && runBlocking { loop.runningMode() } != RM.Mode.DISABLED_LOOP) {
+                    if (!loop.allowedNextModes().contains(RM.Mode.RESUME) && loop.runningMode() != RM.Mode.DISABLED_LOOP) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            runBlocking {
-                                loop.handleRunningModeChange(
-                                    newRM = RM.Mode.RESUME,
-                                    action = Action.RESUME,
-                                    source = Sources.NfcCommands,
-                                    profile = profile,
-                                )
-                            }
+                            loop.handleRunningModeChange(
+                                newRM = RM.Mode.RESUME,
+                                action = Action.RESUME,
+                                source = Sources.NfcCommands,
+                                profile = profile,
+                            )
                         val messageId = if (result) R.string.nfccommands_loop_resumed else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
@@ -284,36 +280,32 @@ class NfcCommandsPlugin
                     val normalizedDuration = duration.coerceIn(0, 180)
                     if (normalizedDuration == 0) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_wrong_duration))
-                    } else if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.SUSPENDED_BY_USER)) {
+                    } else if (!loop.allowedNextModes().contains(RM.Mode.SUSPENDED_BY_USER)) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            runBlocking {
-                                loop.handleRunningModeChange(
-                                    newRM = RM.Mode.SUSPENDED_BY_USER,
-                                    durationInMinutes = normalizedDuration,
-                                    action = Action.SUSPEND,
-                                    source = Sources.NfcCommands,
-                                    profile = profile,
-                                )
-                            }
+                            loop.handleRunningModeChange(
+                                newRM = RM.Mode.SUSPENDED_BY_USER,
+                                durationInMinutes = normalizedDuration,
+                                action = Action.SUSPEND,
+                                source = Sources.NfcCommands,
+                                profile = profile,
+                            )
                         val messageId = if (result) R.string.nfccommands_loop_suspended else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
                 }
                 "LGS" -> {
-                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.CLOSED_LOOP_LGS)) {
+                    if (!loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP_LGS)) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            runBlocking {
-                                loop.handleRunningModeChange(
-                                    newRM = RM.Mode.CLOSED_LOOP_LGS,
-                                    action = Action.LGS_LOOP_MODE,
-                                    source = Sources.NfcCommands,
-                                    profile = profile,
-                                )
-                            }
+                            loop.handleRunningModeChange(
+                                newRM = RM.Mode.CLOSED_LOOP_LGS,
+                                action = Action.LGS_LOOP_MODE,
+                                source = Sources.NfcCommands,
+                                profile = profile,
+                            )
                         val message =
                             if (result) {
                                 rh.gs(R.string.nfccommands_current_loop_mode, rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend))
@@ -324,18 +316,16 @@ class NfcCommandsPlugin
                     }
                 }
                 "CLOSED" -> {
-                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.CLOSED_LOOP)) {
+                    if (!loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP)) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
                     } else {
                         val result =
-                            runBlocking {
-                                loop.handleRunningModeChange(
-                                    newRM = RM.Mode.CLOSED_LOOP,
-                                    action = Action.CLOSED_LOOP_MODE,
-                                    source = Sources.NfcCommands,
-                                    profile = profile,
-                                )
-                            }
+                            loop.handleRunningModeChange(
+                                newRM = RM.Mode.CLOSED_LOOP,
+                                action = Action.CLOSED_LOOP_MODE,
+                                source = Sources.NfcCommands,
+                                profile = profile,
+                            )
                         val message =
                             if (result) {
                                 rh.gs(R.string.nfccommands_current_loop_mode, rh.gs(app.aaps.core.ui.R.string.closedloop))
@@ -357,23 +347,21 @@ class NfcCommandsPlugin
                 invalidFormat()
             }
 
-        private fun processPump(divided: List<String>): NfcExecutionResult {
+        private suspend fun processPump(divided: List<String>): NfcExecutionResult {
             return when {
                 divided.size == 2 && divided[1].equals("CONNECT", ignoreCase = true) -> {
                     val profile =
-                        runBlocking { profileFunction.getProfile() } ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
-                    if (!runBlocking { loop.allowedNextModes() }.contains(RM.Mode.RESUME)) {
+                        profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
+                    if (!loop.allowedNextModes().contains(RM.Mode.RESUME)) {
                         NfcExecutionResult(true, rh.gs(app.aaps.core.interfaces.R.string.connected))
                     } else {
                         val result =
-                            runBlocking {
-                                loop.handleRunningModeChange(
-                                    newRM = RM.Mode.RESUME,
-                                    action = Action.RECONNECT,
-                                    source = Sources.NfcCommands,
-                                    profile = profile,
-                                )
-                            }
+                            loop.handleRunningModeChange(
+                                newRM = RM.Mode.RESUME,
+                                action = Action.RECONNECT,
+                                source = Sources.NfcCommands,
+                                profile = profile,
+                            )
                         val messageId = if (result) R.string.nfccommands_reconnect else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
@@ -381,20 +369,18 @@ class NfcCommandsPlugin
                 divided.size == 3 && divided[1].equals("DISCONNECT", ignoreCase = true) -> {
                     val duration = SafeParse.stringToInt(divided[2]).coerceIn(0, 180)
                     val profile =
-                        runBlocking { profileFunction.getProfile() } ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
+                        profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
                     if (duration == 0) {
                         NfcExecutionResult(false, rh.gs(R.string.nfccommands_wrong_duration))
                     } else {
                         val result =
-                            runBlocking {
-                                loop.handleRunningModeChange(
-                                    durationInMinutes = duration,
-                                    profile = profile,
-                                    newRM = RM.Mode.DISCONNECTED_PUMP,
-                                    action = Action.DISCONNECT,
-                                    source = Sources.NfcCommands,
-                                )
-                            }
+                            loop.handleRunningModeChange(
+                                durationInMinutes = duration,
+                                profile = profile,
+                                newRM = RM.Mode.DISCONNECTED_PUMP,
+                                action = Action.DISCONNECT,
+                                source = Sources.NfcCommands,
+                            )
                         val messageId = if (result) R.string.nfccommands_pump_disconnected else R.string.nfccommands_remote_command_not_possible
                         NfcExecutionResult(result, rh.gs(messageId))
                     }
@@ -403,32 +389,30 @@ class NfcCommandsPlugin
             }
         }
 
-        private fun processProfile(divided: List<String>): NfcExecutionResult {
+        private suspend fun processProfile(divided: List<String>): NfcExecutionResult {
             if (divided.size !in 2..3) return invalidFormat()
             val indexToken = divided[1]
             if (indexToken.any { !it.isDigit() }) return invalidFormat()
             val index = SafeParse.stringToInt(indexToken)
             val percentage = divided.getOrNull(2)?.let { SafeParse.stringToInt(it) } ?: 100
-            val profileStore = localProfileManager.profile ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.notconfigured))
+            val profileStore = profileRepository.profile.value ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.notconfigured))
             val list = profileStore.getProfileList()
             if (index <= 0 || percentage !in 10..500 || index > list.size) return invalidFormat()
             val name = list[index - 1] as String
             val created =
-                runBlocking {
-                    profileFunction.createProfileSwitch(
-                        profileStore = profileStore,
-                        profileName = name,
-                        durationInMinutes = 0,
-                        percentage = percentage,
-                        timeShiftInHours = 0,
-                        timestamp = dateUtil.now(),
-                        action = Action.PROFILE_SWITCH,
-                        source = Sources.NfcCommands,
-                        note = rh.gs(R.string.nfccommands_profile_switch_created),
-                        listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created))),
-                        iCfg = insulin.iCfg,
-                    )
-                }
+                profileFunction.createProfileSwitch(
+                    profileStore = profileStore,
+                    profileName = name,
+                    durationInMinutes = 0,
+                    percentage = percentage,
+                    timeShiftInHours = 0,
+                    timestamp = dateUtil.now(),
+                    action = Action.PROFILE_SWITCH,
+                    source = Sources.NfcCommands,
+                    note = rh.gs(R.string.nfccommands_profile_switch_created),
+                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created))),
+                    iCfg = insulin.iCfg,
+                )
             return if (created != null) {
                 NfcExecutionResult(true, rh.gs(R.string.nfccommands_profile_switch_created))
             } else {
@@ -436,24 +420,21 @@ class NfcCommandsPlugin
             }
         }
 
-        private fun processBasal(divided: List<String>): NfcExecutionResult {
+        private suspend fun processBasal(divided: List<String>): NfcExecutionResult {
             if (divided.size !in 2..3) return invalidFormat()
             return when {
                 divided[1].equals("STOP", ignoreCase = true) || divided[1].equals("CANCEL", ignoreCase = true) -> {
-                    commandQueue.cancelTempBasal(
-                        enforceNew = true,
-                        callback =
-                            object : Callback() {
-                                override fun run() {
-                                    if (!result.success) aapsLogger.error(LTag.NFC, "cancelTempBasal failed: ${result.comment}")
-                                }
-                            },
-                    )
-                    NfcExecutionResult(true, rh.gs(R.string.nfccommands_tempbasal_canceled))
+                    val result = commandQueue.cancelTempBasal(enforceNew = true)
+                    if (result.success) {
+                        NfcExecutionResult(true, rh.gs(R.string.nfccommands_tempbasal_canceled))
+                    } else {
+                        aapsLogger.error(LTag.NFC, "cancelTempBasal failed: ${result.comment}")
+                        commandNotPossible()
+                    }
                 }
                 divided[1].endsWith("%") -> {
                     val profile =
-                        runBlocking { profileFunction.getProfile() } ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
+                        profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
                     var tempBasalPct = SafeParse.stringToInt(Strings.CS.removeEnd(divided[1], "%"))
                     val durationStep =
                         activePlugin.activePump
@@ -468,23 +449,24 @@ class NfcCommandsPlugin
                     val duration = roundUpToStep(rawDuration, durationStep)
                     tempBasalPct =
                         constraintChecker.applyBasalPercentConstraints(ConstraintObject(tempBasalPct, aapsLogger), profile).value()
-                    commandQueue.tempBasalPercent(
-                        tempBasalPct,
-                        duration,
-                        true,
-                        profile,
-                        PumpSync.TemporaryBasalType.NORMAL,
-                        object : Callback() {
-                            override fun run() {
-                                if (!result.success) aapsLogger.error(LTag.NFC, "tempBasalPercent failed: ${result.comment}")
-                            }
-                        },
-                    )
-                    NfcExecutionResult(true, rh.gs(R.string.nfccommands_command_executed, "BASAL ${divided.drop(1).joinToString(" ")}"))
+                    val result =
+                        commandQueue.tempBasalPercent(
+                            tempBasalPct,
+                            duration,
+                            true,
+                            profile,
+                            PumpSync.TemporaryBasalType.NORMAL,
+                        )
+                    if (result.success) {
+                        NfcExecutionResult(true, rh.gs(R.string.nfccommands_command_executed, "BASAL ${divided.drop(1).joinToString(" ")}"))
+                    } else {
+                        aapsLogger.error(LTag.NFC, "tempBasalPercent failed: ${result.comment}")
+                        commandNotPossible()
+                    }
                 }
                 else -> {
                     val profile =
-                        runBlocking { profileFunction.getProfile() } ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
+                        profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.noprofile))
                     var tempBasal = SafeParse.stringToDouble(divided[1])
                     val durationStep =
                         activePlugin.activePump
@@ -498,35 +480,35 @@ class NfcCommandsPlugin
                     }
                     val duration = roundUpToStep(rawDuration, durationStep)
                     tempBasal = constraintChecker.applyBasalConstraints(ConstraintObject(tempBasal, aapsLogger), profile).value()
-                    commandQueue.tempBasalAbsolute(
-                        tempBasal,
-                        duration,
-                        true,
-                        profile,
-                        PumpSync.TemporaryBasalType.NORMAL,
-                        object : Callback() {
-                            override fun run() {
-                                if (!result.success) aapsLogger.error(LTag.NFC, "tempBasalAbsolute failed: ${result.comment}")
-                            }
-                        },
-                    )
-                    NfcExecutionResult(true, rh.gs(R.string.nfccommands_command_executed, "BASAL ${divided.drop(1).joinToString(" ")}"))
+                    val result =
+                        commandQueue.tempBasalAbsolute(
+                            tempBasal,
+                            duration,
+                            true,
+                            profile,
+                            PumpSync.TemporaryBasalType.NORMAL,
+                        )
+                    if (result.success) {
+                        NfcExecutionResult(true, rh.gs(R.string.nfccommands_command_executed, "BASAL ${divided.drop(1).joinToString(" ")}"))
+                    } else {
+                        aapsLogger.error(LTag.NFC, "tempBasalAbsolute failed: ${result.comment}")
+                        commandNotPossible()
+                    }
                 }
             }
         }
 
-        private fun processExtended(divided: List<String>): NfcExecutionResult {
+        private suspend fun processExtended(divided: List<String>): NfcExecutionResult {
             if (divided.size !in 2..3) return invalidFormat()
             return when {
                 divided[1].equals("STOP", ignoreCase = true) || divided[1].equals("CANCEL", ignoreCase = true) -> {
-                    commandQueue.cancelExtended(
-                        object : Callback() {
-                            override fun run() {
-                                if (!result.success) aapsLogger.error(LTag.NFC, "cancelExtended failed: ${result.comment}")
-                            }
-                        },
-                    )
-                    NfcExecutionResult(true, rh.gs(R.string.nfccommands_extended_canceled))
+                    val result = commandQueue.cancelExtended()
+                    if (result.success) {
+                        NfcExecutionResult(true, rh.gs(R.string.nfccommands_extended_canceled))
+                    } else {
+                        aapsLogger.error(LTag.NFC, "cancelExtended failed: ${result.comment}")
+                        commandNotPossible()
+                    }
                 }
                 divided.size != 3 -> invalidFormat()
                 else -> {
@@ -534,21 +516,18 @@ class NfcCommandsPlugin
                     val duration = SafeParse.stringToInt(divided[2])
                     extended = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(extended, aapsLogger)).value()
                     if (extended <= 0.0 || duration <= 0) return invalidFormat()
-                    commandQueue.extendedBolus(
-                        extended,
-                        duration,
-                        object : Callback() {
-                            override fun run() {
-                                if (!result.success) aapsLogger.error(LTag.NFC, "extendedBolus failed: ${result.comment}")
-                            }
-                        },
-                    )
-                    NfcExecutionResult(true, rh.gs(R.string.nfccommands_extended_set, extended, duration))
+                    val result = commandQueue.extendedBolus(extended, duration)
+                    if (result.success) {
+                        NfcExecutionResult(true, rh.gs(R.string.nfccommands_extended_set, extended, duration))
+                    } else {
+                        aapsLogger.error(LTag.NFC, "extendedBolus failed: ${result.comment}")
+                        commandNotPossible()
+                    }
                 }
             }
         }
 
-        private fun processBolus(divided: List<String>): NfcExecutionResult {
+        private suspend fun processBolus(divided: List<String>): NfcExecutionResult {
             if (divided.size !in 2..3) return invalidFormat()
             if (commandQueue.bolusInQueue()) {
                 return NfcExecutionResult(false, rh.gs(R.string.nfccommands_another_bolus_in_queue))
@@ -556,7 +535,7 @@ class NfcCommandsPlugin
             if (dateUtil.now() - lastRemoteBolusTime < Constants.remoteBolusMinDistance) {
                 return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
             }
-            if (runBlocking { loop.runningMode() }.pausesLoopExecution()) {
+            if (loop.runningMode().pausesLoopExecution()) {
                 return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
             }
             var bolus = SafeParse.stringToDouble(divided[1])
@@ -565,62 +544,52 @@ class NfcCommandsPlugin
             if (divided.size == 3 && !isMeal) return invalidFormat()
             if (bolus <= 0.0) return invalidFormat()
             val detailedBolusInfo = DetailedBolusInfo().apply { insulin = bolus }
-            commandQueue.bolus(
-                detailedBolusInfo,
-                object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            aapsLogger.error(LTag.NFC, "bolus failed: ${result.comment}")
-                            return
-                        }
-                        if (result.success) {
-                            lastRemoteBolusTime = dateUtil.now()
-                            if (isMeal) {
-                                runBlocking { profileFunction.getProfile() }?.let { currentProfile ->
-                                    val eatingSoonTTDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
-                                    val eatingSoonTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), profileUtil.units)
-                                    runBlocking {
-                                        persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                                            temporaryTarget =
-                                                TT(
-                                                    timestamp = dateUtil.now(),
-                                                    duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                                    reason = TT.Reason.EATING_SOON,
-                                                    lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
-                                                    highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
-                                                ),
-                                            action = Action.TT,
-                                            source = Sources.NfcCommands,
-                                            note = null,
-                                            listValues =
-                                                listOf(
-                                                    ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
-                                                    ValueWithUnit.Mgdl(profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)),
-                                                    ValueWithUnit.Minute(
-                                                        TimeUnit.MILLISECONDS
-                                                            .toMinutes(
-                                                                TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                                            ).toInt(),
-                                                    ),
-                                                ),
-                                        )
-                                    }
-                                    val tt = if (currentProfile.units == GlucoseUnit.MMOL) {
-                                        decimalFormatter.to1Decimal(eatingSoonTT)
-                                    } else {
-                                        decimalFormatter.to0Decimal(eatingSoonTT)
-                                    }
-                                    aapsLogger.debug(LTag.NFC, "Meal bolus temp target applied: $tt for $eatingSoonTTDuration min")
-                                }
-                            }
-                        }
+            val result = commandQueue.bolus(detailedBolusInfo)
+            if (!result.success) {
+                aapsLogger.error(LTag.NFC, "bolus failed: ${result.comment}")
+                return commandNotPossible()
+            }
+            lastRemoteBolusTime = dateUtil.now()
+            if (isMeal) {
+                profileFunction.getProfile()?.let { currentProfile ->
+                    val eatingSoonTTDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
+                    val eatingSoonTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), profileUtil.units)
+                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        temporaryTarget =
+                            TT(
+                                timestamp = dateUtil.now(),
+                                duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
+                                reason = TT.Reason.EATING_SOON,
+                                lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
+                                highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
+                            ),
+                        action = Action.TT,
+                        source = Sources.NfcCommands,
+                        note = null,
+                        listValues =
+                            listOf(
+                                ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                                ValueWithUnit.Mgdl(profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)),
+                                ValueWithUnit.Minute(
+                                    TimeUnit.MILLISECONDS
+                                        .toMinutes(
+                                            TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
+                                        ).toInt(),
+                                ),
+                            ),
+                    )
+                    val tt = if (currentProfile.units == GlucoseUnit.MMOL) {
+                        decimalFormatter.to1Decimal(eatingSoonTT)
+                    } else {
+                        decimalFormatter.to0Decimal(eatingSoonTT)
                     }
-                },
-            )
+                    aapsLogger.debug(LTag.NFC, "Meal bolus temp target applied: $tt for $eatingSoonTTDuration min")
+                }
+            }
             return NfcExecutionResult(true, rh.gs(R.string.nfccommands_command_executed, "BOLUS ${divided.drop(1).joinToString(" ")}"))
         }
 
-        private fun processCarbs(divided: List<String>): NfcExecutionResult {
+        private suspend fun processCarbs(divided: List<String>): NfcExecutionResult {
             if (divided.size != 2) return invalidFormat()
             var grams = SafeParse.stringToInt(divided[1])
             grams = constraintChecker.applyCarbsConstraints(ConstraintObject(grams, aapsLogger)).value()
@@ -630,18 +599,16 @@ class NfcCommandsPlugin
                     carbs = grams.toDouble()
                     timestamp = dateUtil.now()
                 }
-            commandQueue.bolus(
-                detailedBolusInfo,
-                object : Callback() {
-                    override fun run() {
-                        if (!result.success) aapsLogger.error(LTag.NFC, "carbs bolus failed: ${result.comment}")
-                    }
-                },
-            )
-            return NfcExecutionResult(true, rh.gs(R.string.nfccommands_carbs_set, grams))
+            val result = commandQueue.bolus(detailedBolusInfo)
+            return if (result.success) {
+                NfcExecutionResult(true, rh.gs(R.string.nfccommands_carbs_set, grams))
+            } else {
+                aapsLogger.error(LTag.NFC, "carbs bolus failed: ${result.comment}")
+                commandNotPossible()
+            }
         }
 
-        private fun processTarget(divided: List<String>): NfcExecutionResult {
+        private suspend fun processTarget(divided: List<String>): NfcExecutionResult {
             if (divided.size != 2) return invalidFormat()
             val isMeal = divided[1].equals("MEAL", ignoreCase = true)
             val isActivity = divided[1].equals("ACTIVITY", ignoreCase = true)
@@ -670,39 +637,35 @@ class NfcCommandsPlugin
                             reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }
-                    runBlocking {
-                        persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                            temporaryTarget =
-                                TT(
-                                    timestamp = dateUtil.now(),
-                                    duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
-                                    reason = reason,
-                                    lowTarget = profileUtil.convertToMgdl(tt, profileUtil.units),
-                                    highTarget = profileUtil.convertToMgdl(tt, profileUtil.units),
-                                ),
-                            action = Action.TT,
-                            source = Sources.NfcCommands,
-                            note = null,
-                            listValues =
-                                listOf(
-                                    ValueWithUnit.fromGlucoseUnit(tt, units),
-                                    ValueWithUnit.Minute(ttDuration),
-                                ),
-                        )
-                    }
+                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        temporaryTarget =
+                            TT(
+                                timestamp = dateUtil.now(),
+                                duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
+                                reason = reason,
+                                lowTarget = profileUtil.convertToMgdl(tt, profileUtil.units),
+                                highTarget = profileUtil.convertToMgdl(tt, profileUtil.units),
+                            ),
+                        action = Action.TT,
+                        source = Sources.NfcCommands,
+                        note = null,
+                        listValues =
+                            listOf(
+                                ValueWithUnit.fromGlucoseUnit(tt, units),
+                                ValueWithUnit.Minute(ttDuration),
+                            ),
+                    )
                     val ttString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(tt) else decimalFormatter.to0Decimal(tt)
                     NfcExecutionResult(true, rh.gs(R.string.nfccommands_tt_set, ttString, ttDuration))
                 }
                 isStop -> {
-                    runBlocking {
-                        persistenceLayer.cancelCurrentTemporaryTargetIfAny(
-                            timestamp = dateUtil.now(),
-                            action = Action.CANCEL_TT,
-                            source = Sources.NfcCommands,
-                            note = rh.gs(R.string.nfccommands_tt_canceled),
-                            listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.nfccommands_tt_canceled))),
-                        )
-                    }
+                    persistenceLayer.cancelCurrentTemporaryTargetIfAny(
+                        timestamp = dateUtil.now(),
+                        action = Action.CANCEL_TT,
+                        source = Sources.NfcCommands,
+                        note = rh.gs(R.string.nfccommands_tt_canceled),
+                        listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.nfccommands_tt_canceled))),
+                    )
                     NfcExecutionResult(true, rh.gs(R.string.nfccommands_tt_canceled))
                 }
                 else -> invalidFormat()
