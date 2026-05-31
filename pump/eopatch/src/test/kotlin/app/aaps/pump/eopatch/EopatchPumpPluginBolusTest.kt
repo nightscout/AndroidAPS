@@ -56,7 +56,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         patchConfig.macAddress = "00:11:22:33:44:55"
 
         plugin = EopatchPumpPlugin(
-            aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
+            aapsLogger, rh, preferences, commandQueue, aapsSchedulers, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
             protectionCheck, blePreCheck, bolusProgressData
         )
