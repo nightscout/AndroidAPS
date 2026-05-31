@@ -192,13 +192,24 @@ class AppRepository @Inject internal constructor(
         removed
             .filter { it.second > 0 }
             .forEach { ret.append(it.first + " " + it.second + "<br>") }
+        // VACUUM is intentionally NOT run here. It is memory heavy and crashed (SQLITE_NOMEM) when
+        // it overlapped live DB activity; defragmenting VACUUM now runs only at startup while the
+        // DB is quiescent (see vacuumDatabase / MainApp.vacuumDatabaseIfDue).
         database.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(TRUNCATE)").use { }
-        try {
-            database.openHelper.writableDatabase.execSQL("VACUUM")
-        } catch (e: android.database.sqlite.SQLiteException) {
-            ret.append("VACUUM failed: ${e.message}<br>")
-        }
         return ret.toString()
+    }
+
+    /**
+     * Full VACUUM: defragments the DB file and returns free pages to the OS. Heavy and memory
+     * intensive, so call only when nothing else is using the DB (e.g. at app startup before
+     * plugins/loop/sync start). [cleanupDatabase] only deletes; this reclaims and defragments.
+     * May throw if the DB is busy/locked; callers must handle that and treat only a clean return
+     * as success.
+     */
+    fun vacuumDatabase() {
+        val db = database.openHelper.writableDatabase
+        db.query("PRAGMA wal_checkpoint(TRUNCATE)").use { }
+        db.execSQL("VACUUM")
     }
 
     suspend fun clearCachedTddData(from: Long) = database.totalDailyDoseDao.deleteNewerThan(from, InterfaceIDs.PumpType.CACHE)

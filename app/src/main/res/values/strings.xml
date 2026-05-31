@@ -5,6 +5,7 @@
     <string name="select">Select</string>
     <string name="set">Set</string>
     <string name="migrating_preferences">Migrating preferences…</string>
+    <string name="optimizing_database">Optimizing database…</string>
     <string name="initializing_plugins">Initializing plugins…</string>
     <string name="initializing">Initializing…</string>
     <string name="migrating_profile_switches">Migrating profile switches…</string>
