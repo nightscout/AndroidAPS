@@ -53,7 +53,10 @@ class NfcForegroundDispatch(
 
     fun onNewIntent(intent: Intent) {
         val action = intent.action ?: return
-        if (action != NfcAdapter.ACTION_NDEF_DISCOVERED && action != NfcAdapter.ACTION_TAG_DISCOVERED) return
+        if (action != NfcAdapter.ACTION_NDEF_DISCOVERED &&
+            action != NfcAdapter.ACTION_TECH_DISCOVERED &&
+            action != NfcAdapter.ACTION_TAG_DISCOVERED
+        ) return
         activity.startActivity(Intent(activity, NfcControlActivity::class.java).apply {
             this.action = action
             intent.extras?.let { putExtras(it) }

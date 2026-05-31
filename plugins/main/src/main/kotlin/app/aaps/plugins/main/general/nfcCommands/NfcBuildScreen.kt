@@ -217,7 +217,9 @@ fun NfcBuildScreen(
         nfcAdapter.enableReaderMode(
             activity,
             callback,
-            NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B,
+            NfcAdapter.FLAG_READER_NFC_A or
+                NfcAdapter.FLAG_READER_NFC_B or
+                NfcAdapter.FLAG_READER_NFC_V,
             null,
         )
         onDispose { nfcAdapter.disableReaderMode(activity) }
