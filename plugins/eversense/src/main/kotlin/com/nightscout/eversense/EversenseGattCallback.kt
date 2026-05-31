@@ -1,4 +1,4 @@
-package com.nightscout.eversense
+﻿package com.nightscout.eversense
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGatt
@@ -560,7 +560,18 @@ class EversenseGattCallback(
                 val whoAmI = writePacket<AuthWhoAmIPacket.Response>(AuthWhoAmIPacket(clientId))
 
                 // Dispatch HTTP work to the network executor and block bleExecutor until complete.
-                val authSession = networkExecutor.submit<Any?> {
+                                // Sync credentials from AAPS layer into SECURE_STATE before login
+                // Guaranteed same-thread write immediately before network call
+                if (plugin.username.isNotEmpty() && plugin.password.isNotEmpty()) {
+                    val stateJson = preferences.getString(com.nightscout.eversense.util.StorageKeys.SECURE_STATE, null) ?: "{}"
+                    val secState = kotlinx.serialization.json.Json.decodeFromString<com.nightscout.eversense.models.EversenseSecureState>(stateJson)
+                    secState.username = plugin.username
+                    secState.password = plugin.password
+                    preferences.edit().putString(com.nightscout.eversense.util.StorageKeys.SECURE_STATE,
+                        kotlinx.serialization.json.Json.encodeToString(com.nightscout.eversense.models.EversenseSecureState.serializer(), secState)).apply()
+                    EversenseLogger.info(TAG, "[365] Credentials synced to SECURE_STATE before login")
+                }
+val authSession = networkExecutor.submit<Any?> {
                     EversenseHttp365Util.login(preferences)
                 }.get() ?: run {
                     bluetoothGatt?.disconnect()
@@ -616,29 +627,35 @@ class EversenseGattCallback(
 
             EversenseLogger.info(TAG, "365 auth complete — ready for full sync")
             Eversense365Communicator.fullSync(this, preferences, plugin.watchers, force = true)
-            EversenseLogger.info(TAG, "365 transmitter ready — notifying watchers")
+                        // Read glucose immediately after auth so readings don't wait for next Keep Alive
+            // This prevents late readings after reconnect from fullSync disconnect fix
+            try {
+                Eversense365Communicator.readGlucose(this, preferences, plugin.watchers)
+            } catch (e: Exception) {
+                EversenseLogger.warning(TAG, "[365] readGlucose after auth failed (non-fatal): $e")
+            }
+EversenseLogger.info(TAG, "365 transmitter ready — notifying watchers")
             handler.post { plugin.watchers.forEach { it.onTransmitterReady() } }
 
         } catch (exception: Exception) {
             EversenseLogger.error(TAG, "[365] authV2 failed: $exception")
             exception.printStackTrace()
 
-            // FIX 12: Track consecutive shortcut failures. After SHORTCUT_FAIL_THRESHOLD
-            // failures, force a full re-auth on the next connection. This recovers from
-            // BLE stack resets (e.g. charger plug-in) that invalidate the session key.
-            // We do NOT immediately disallow on the first failure — transient BLE glitches
-            // often recover on the next attempt without needing internet.
+            // After first successful auth, never call DMS server again.
+            // DMS login only happens on fresh install, app update, or phone reboot
+            // (all of which clear SharedPreferences and reset canUseShortcut to false).
+            // On shortcut failure just log and retry — do NOT fall back to DMS.
             if (cryptoUtil.canUseShortcut()) {
                 shortcutFailCount++
-                EversenseLogger.warning(TAG, "Shortcut auth failed ($shortcutFailCount/$SHORTCUT_FAIL_THRESHOLD)")
+                EversenseLogger.warning(TAG, "Shortcut auth failed () — will retry shortcut on next connect (no DMS re-auth)")
+                // Reset counter after threshold but keep canUseShortcut=true
+                // so DMS is never called again after first successful auth
                 if (shortcutFailCount >= SHORTCUT_FAIL_THRESHOLD) {
-                    EversenseLogger.warning(TAG, "Shortcut fail threshold reached — forcing full re-auth on next connection")
-                    cryptoUtil.disallowUseShortcut()
+                    EversenseLogger.warning(TAG, "Shortcut fail threshold reached — resetting counter, keeping shortcut enabled")
                     shortcutFailCount = 0
                 }
             }
-
-            bluetoothGatt?.disconnect()
+        bluetoothGatt?.disconnect()
         }
     }
 

@@ -441,9 +441,6 @@ class MainApp : Application(), HasAndroidInjector {
         }
         // Clear SmsOtpPassword if wrongly replaced
         if (preferences.get(StringKey.SmsOtpPassword).length > 10) preferences.put(StringKey.SmsOtpPassword, "")
-        // Raise sensor battery thresholds from old defaults (25/5) to new defaults (40/20)
-        if (preferences.get(IntKey.OverviewSbatWarning) == 25) preferences.put(IntKey.OverviewSbatWarning, 40)
-        if (preferences.get(IntKey.OverviewSbatCritical) == 5) preferences.put(IntKey.OverviewSbatCritical, 20)
 
         val keys: Map<String, *> = sp.getAll()
         // Migrate ActivityMonitor

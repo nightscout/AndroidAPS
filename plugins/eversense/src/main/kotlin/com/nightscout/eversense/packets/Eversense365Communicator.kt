@@ -1,4 +1,4 @@
-package com.nightscout.eversense.packets
+﻿package com.nightscout.eversense.packets
 
 import android.content.SharedPreferences
 import android.os.Handler
@@ -176,8 +176,8 @@ class Eversense365Communicator {
                 // Send app version — iOS sends "8.0.4" in every fullSync
                 try { gatt.writePacket<SetAppVersion365Packet.Response>(SetAppVersion365Packet()) } catch (e: Exception) { EversenseLogger.warning(TAG, "SetAppVersion failed: $e") }
 
-                // Set BLE disconnect timeout to 5 minutes matching iOS default
-                try { gatt.writePacket<SetBleDisconnect365Packet.Response>(SetBleDisconnect365Packet(300)) } catch (e: Exception) { EversenseLogger.warning(TAG, "SetBleDisconnect failed: $e") }
+                // Set BLE disconnect timeout to 0 = never disconnect
+                try { gatt.writePacket<SetBleDisconnect365Packet.Response>(SetBleDisconnect365Packet(0)) } catch (e: Exception) { EversenseLogger.warning(TAG, "SetBleDisconnect failed: $e") }
 
                 // Read active alarms
                 try {
@@ -200,6 +200,10 @@ class Eversense365Communicator {
             } catch (exception: Exception) {
                 EversenseLogger.error(TAG, "Failed to do full sync: $exception")
                 exception.printStackTrace()
+                // Disconnect on fullSync failure so BLE session resets cleanly
+                // rather than looping with broken GATT state
+                EversenseLogger.warning(TAG, "Disconnecting after fullSync failure to reset BLE session")
+                gatt.disconnect()
             }
         }
 

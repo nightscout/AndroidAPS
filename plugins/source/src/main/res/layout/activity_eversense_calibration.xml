@@ -16,24 +16,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Calibration readiness status -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/eversense_calibration_status"
-            android:textSize="14sp"
-            android:alpha="0.6" />
-
-        <TextView
-            android:id="@+id/calibration_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="32dp"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <!-- BG value input -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,9 +48,6 @@
 
         </LinearLayout>
 
-
-
-        <!-- Submit button -->
         <Button
             android:id="@+id/calibration_submit_button"
             android:layout_width="match_parent"

@@ -14,72 +14,76 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize" />
 
-        <TextView android:id="@+id/eversense_status_connected"
+        <TextView
+            android:id="@+id/eversense_status_connected"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_battery"
+        <TextView
+            android:id="@+id/eversense_status_battery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_insertion"
+        <TextView
+            android:id="@+id/eversense_status_insertion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_last_sync"
+        <TextView
+            android:id="@+id/eversense_status_last_sync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_phase"
+        <TextView
+            android:id="@+id/eversense_status_phase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_readiness"
+        <TextView
+            android:id="@+id/eversense_status_last_cal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_last_cal"
+        <TextView
+            android:id="@+id/eversense_status_next_cal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_next_cal"
+        <TextView
+            android:id="@+id/eversense_status_signal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="16sp" />
 
-        <TextView android:id="@+id/eversense_status_signal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="16sp" />
-
-        <Button android:id="@+id/eversense_btn_connect"
+        <Button
+            android:id="@+id/eversense_btn_connect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/eversense_information_connected" />
 
-        <Button android:id="@+id/eversense_btn_sync"
+        <Button
+            android:id="@+id/eversense_btn_sync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/eversense_information_last_sync" />
 
     </LinearLayout>
-</ScrollView>
 
+</ScrollView>

@@ -1,4 +1,4 @@
-﻿package app.aaps.di
+package app.aaps.di
 
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase

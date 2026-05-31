@@ -15,6 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import app.aaps.plugins.source.R
 import com.nightscout.eversense.EversenseCGMPlugin
 import com.nightscout.eversense.callbacks.EversenseScanCallback
+import com.nightscout.eversense.callbacks.EversenseWatcher
+import com.nightscout.eversense.models.ActiveAlarm
+import com.nightscout.eversense.models.EversenseState
 import com.nightscout.eversense.models.EversenseScanResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,12 +28,31 @@ import java.util.Date
 import java.util.Locale
 
 @AndroidEntryPoint
-class EversenseStatusActivity : AppCompatActivity() {
+class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
     private val eversense get() = EversenseCGMPlugin.instance
+
+    override fun onResume() {
+        super.onResume()
+        eversense.addWatcher(this)
+        updateStatus()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        eversense.removeWatcher(this)
+    }
+
+    // EversenseWatcher: update button instantly on connection/state change
+    override fun onConnectionChanged(connected: Boolean) { mainHandler.post { updateStatus() } }
+    override fun onStateChanged(state: EversenseState) { mainHandler.post { updateStatus() } }
+    override fun onTransmitterReady() {}
+    override fun onTransmitterNotPlaced() {}
+    override fun onAlarmReceived(alarm: ActiveAlarm) {}
+    override fun onCGMRead(type: com.nightscout.eversense.enums.EversenseType, readings: List<com.nightscout.eversense.models.EversenseCGMResult>) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,15 +94,6 @@ class EversenseStatusActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.eversense_status_phase).text =
             "Calibration phase: " + (state?.calibrationPhase?.name ?: notConnected)
-
-        // Calibration readiness is only shown for E3 — the E365 does not expose this field.
-        val readinessView = findViewById<TextView>(R.id.eversense_status_readiness)
-        if (eversense.is365()) {
-            readinessView.visibility = View.GONE
-        } else {
-            readinessView.visibility = View.VISIBLE
-            readinessView.text = "Calibration readiness: " + (state?.calibrationReadiness?.name ?: notConnected)
-        }
 
         findViewById<TextView>(R.id.eversense_status_last_cal).text =
             "Last calibration: " + (state?.let { if (it.lastCalibrationDate > 0) dateFormatter.format(Date(it.lastCalibrationDate)) else notConnected } ?: notConnected)

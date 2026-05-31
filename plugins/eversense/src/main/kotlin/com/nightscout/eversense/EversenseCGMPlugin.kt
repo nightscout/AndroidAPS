@@ -1,4 +1,4 @@
-package com.nightscout.eversense
+﻿package com.nightscout.eversense
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
@@ -40,6 +40,9 @@ class EversenseCGMPlugin {
 
     private var scanner: EversenseScanner? = null
     var watchers: List<EversenseWatcher> = listOf()
+    // Credentials set by AAPS layer before any login attempt
+    var username: String = ""
+    var password: String = ""
 
     fun setContext(context: Context, loggingEnabled: Boolean) {
         // FIX 1: Always store applicationContext.
@@ -215,10 +218,6 @@ class EversenseCGMPlugin {
         }
         val state = getCurrentState() ?: run {
             EversenseLogger.error(TAG, "Cannot calibrate: state is null")
-            return false
-        }
-        if (state.calibrationReadiness != com.nightscout.eversense.enums.CalibrationReadiness.READY) {
-            EversenseLogger.error(TAG, "Transmitter is not ready for calibration: ${state.calibrationReadiness}")
             return false
         }
         return try {
