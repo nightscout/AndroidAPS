@@ -1,4 +1,4 @@
-package app.aaps.core.interfaces.notifications
+﻿package app.aaps.core.interfaces.notifications
 
 import app.aaps.core.interfaces.notifications.NotificationCategory.AUTOMATION
 import app.aaps.core.interfaces.notifications.NotificationCategory.CGM
@@ -101,6 +101,12 @@ enum class NotificationId(
     AIDEX_SENSOR_STABILIZING(97, NORMAL, CGM),
     AIDEX_REPLACE_SENSOR(98, NORMAL, CGM),
     AIDEX_SIGNAL_LOST(99, NORMAL, CGM),
+    // CGM — Eversense
+    EVERSENSE_ALARM(100, URGENT, CGM, allowMultiple = true),
+    EVERSENSE_FIRMWARE(101, INFO, CGM),
+    EVERSENSE_RELEASE(102, INFO, CGM),
+    EVERSENSE_PLACEMENT(103, URGENT, CGM),
+    EVERSENSE_CREDENTIALS(104, URGENT, CGM),
 
     // Loop / APS
     EASY_MODE_ENABLED(2, URGENT, LOOP),
@@ -160,3 +166,4 @@ enum class NotificationId(
         fun fromLegacyId(id: Int): NotificationId? = legacyIdMap[id]
     }
 }
+

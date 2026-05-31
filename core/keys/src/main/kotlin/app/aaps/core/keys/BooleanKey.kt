@@ -156,6 +156,8 @@ enum class BooleanKey(
     WearNotifyOnSmb(key = "wear_notifySMB", defaultValue = true, titleResId = R.string.pref_title_wear_notify_on_smb, summaryResId = R.string.pref_summary_wear_notify_on_smb),
     WearBroadcastData(key = "wear_broadcast_data", defaultValue = false, titleResId = R.string.pref_title_wear_broadcast_data, summaryResId = R.string.pref_summary_wear_broadcast_data, showInApsMode = false, showInPumpControlMode = false),
 
+    EversenseCloudUploadEnabled("eversense_cloud_upload_enabled", true, R.string.eversense_cloud_upload_enabled),
+    EversenseCloudUploadToast("eversense_notif_cloud_upload_toast", true, R.string.eversense_cloud_upload_toast),
     @Deprecated("remove after migration")
     WizardCalculationVisible("wizard_calculation_visible", defaultValue = false, titleResId = R.string.pref_title_wizard_calculation_visible),
     WizardCorrectionPercent("wizard_correction_percent", defaultValue = false, titleResId = R.string.pref_title_wizard_correction_percent),
@@ -163,3 +165,5 @@ enum class BooleanKey(
     SiteRotationManageCgm("site_rotation_manage_cgm", defaultValue = false, titleResId = R.string.pref_title_site_rotation_manage_cgm),
 
 }
+
+
