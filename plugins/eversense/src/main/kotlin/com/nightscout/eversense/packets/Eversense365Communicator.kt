@@ -46,11 +46,11 @@ import kotlin.math.abs
 
 class Eversense365Communicator {
     companion object {
-        private const val TAG = "EversenseE3Communicator"
+        private const val TAG = "Eversense365Communicator"
         private val JSON = Json { ignoreUnknownKeys = true }
         private val handler = Handler(Looper.getMainLooper())
 
-        private var sensorIdLength = 10
+        @Volatile private var sensorIdLength = 10
 
         fun readGlucose(gatt: EversenseGattCallback, preferences: SharedPreferences, watchers: List<EversenseWatcher>) {
             val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"

@@ -59,7 +59,9 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class EversensePlugin @Inject constructor(
     rh: ResourceHelper,
     private val context: Context,
@@ -89,7 +91,8 @@ class EversensePlugin @Inject constructor(
     override var sensorBatteryLevel = -1
 
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val ioJob = SupervisorJob()
+    private val ioScope = CoroutineScope(ioJob + Dispatchers.IO)
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -141,6 +144,8 @@ class EversensePlugin @Inject constructor(
 
     override suspend fun onStop() {
         super.onStop()
+        mainHandler.removeCallbacksAndMessages(null)
+        ioJob.cancel()
         eversense.removeWatcher(this)
     }
 
@@ -232,7 +237,6 @@ class EversensePlugin @Inject constructor(
     )
 
     private fun startOfficialAppReleaseReconnectLoop() {
-        if (false) return
         if (!releaseForOfficialApp) return
         aapsLogger.info(LTag.BGSOURCE, "Release mode — attempting reconnect")
         ioScope.launch {
