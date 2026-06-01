@@ -5,11 +5,15 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
@@ -17,6 +21,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.extensions.onlyNsIdAdded
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
@@ -35,6 +40,8 @@ class DataSyncSelectorV3 @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
+    private val rh: ResourceHelper,
+    private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,
     private val nsClientV3Plugin: Lazy<NSClientV3Plugin>
 ) : DataSyncSelector {
@@ -869,7 +876,13 @@ class DataSyncSelectorV3 @Inject constructor(
         if (lastChange > lastSync) {
             // Snapshot once so the validity check and JSON read see the same store.
             val profileStore = profileRepository.profile.value ?: return
-            if (!profileStore.allProfilesValid) return
+            if (!profileStore.allProfilesValid) {
+                // A single invalid profile blocks the whole store from uploading. Surface it instead of failing silently.
+                aapsLogger.debug(LTag.NSCLIENT, "Profile store not uploaded to Nightscout: a profile is invalid")
+                notificationManager.post(NotificationId.PROFILE_NOT_SYNCED_INVALID, rh.gs(R.string.profile_not_synced_invalid), NotificationLevel.NORMAL)
+                return
+            }
+            notificationManager.dismiss(NotificationId.PROFILE_NOT_SYNCED_INVALID)
             val profileJson = profileStore.getData()
             // add for v3
             if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)

@@ -4,6 +4,9 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.IDs
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
@@ -12,6 +15,8 @@ import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongNonKey
+import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
@@ -20,6 +25,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,6 +35,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -46,7 +53,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
-        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, profileRepository, persistenceLayer, storeDataForDb, config, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
+        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, profileRepository, persistenceLayer, storeDataForDb, config, rh, notificationManager, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
     }
 
     @Test
@@ -748,6 +755,37 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedProfileStore()
 
         verify(activePlugin, Times(0)).activeNsClient?.nsAdd(any(), any(), any())
+        Unit
+    }
+
+    @Test
+    fun processChangedProfileStoreNotifiesAndDoesNotUploadWhenInvalidTest() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)).thenReturn(0L)
+        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(1000L)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(getInvalidProfileStore1()))
+        whenever(rh.gs(R.string.profile_not_synced_invalid)).thenReturn("invalid profile")
+
+        sut.processChangedProfileStore()
+
+        // One invalid profile must surface a notification so the user isn't left in the dark...
+        verify(notificationManager).post(eq(NotificationId.PROFILE_NOT_SYNCED_INVALID), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
+        // ...and must NOT upload anything, since the whole store is blocked.
+        verify(activePlugin, never()).activeNsClient
+        Unit
+    }
+
+    @Test
+    fun processChangedProfileStoreDismissesNotificationWhenValidTest() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)).thenReturn(0L)
+        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(1000L)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
+
+        sut.processChangedProfileStore()
+
+        // Once every profile is valid again the warning clears itself.
+        verify(notificationManager).dismiss(NotificationId.PROFILE_NOT_SYNCED_INVALID)
         Unit
     }
 

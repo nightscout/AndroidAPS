@@ -11,6 +11,7 @@
     <string name="no_connectivity">No connectivity</string>
     <string name="unsupported_ns_version">Unsupported version of Nightscout</string>
     <string name="ns_malfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
+    <string name="profile_not_synced_invalid">A profile is invalid, so none of your profiles are being uploaded to Nightscout. Open the Profile editor and fix the one shown in red.</string>
 
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT has no write permission. Wrong API secret?</string>
