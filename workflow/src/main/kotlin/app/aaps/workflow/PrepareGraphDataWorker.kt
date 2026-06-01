@@ -2,6 +2,7 @@ package app.aaps.workflow
 
 import android.content.Context
 import android.os.SystemClock
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.aps.SMBDefaults
@@ -15,6 +16,7 @@ import app.aaps.core.interfaces.calibration.CalibrationContext
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
@@ -46,6 +48,7 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
@@ -54,10 +57,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.workflow.iob.fromCarbs
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
@@ -72,25 +76,27 @@ import kotlin.math.roundToLong
  * [emitFinalProgress] is set when this worker is the last in the chain (HISTORY);
  * otherwise [PostCalculationWorker] emits the final signal.
  */
-class PrepareGraphDataWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.Default) {
-
-    @Inject lateinit var workflowChainData: WorkflowChainData
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var config: Config
-    @Inject lateinit var profiler: Profiler
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var decimalFormatter: DecimalFormatter
-    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
-    @Inject lateinit var autosensDataProvider: Provider<AutosensData>
+@HiltWorker
+class PrepareGraphDataWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val workflowChainData: WorkflowChainData,
+    private val dateUtil: DateUtil,
+    private val rxBus: RxBus,
+    private val persistenceLayer: PersistenceLayer,
+    private val activePlugin: ActivePlugin,
+    private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
+    private val preferences: Preferences,
+    private val config: Config,
+    private val profiler: Profiler,
+    private val rh: ResourceHelper,
+    private val decimalFormatter: DecimalFormatter,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val autosensDataProvider: Provider<AutosensData>
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     class PrepareGraphData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance

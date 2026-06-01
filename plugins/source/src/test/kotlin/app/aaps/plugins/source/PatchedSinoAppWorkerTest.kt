@@ -30,19 +30,9 @@ class PatchedSinoAppWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector { injector ->
-            if (injector is PatchedSinoAppPlugin.PatchedSinoAppWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.patchedSinoAppPlugin = patchedSinoAppPlugin
-                injector.persistenceLayer = persistenceLayer
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
-        worker = PatchedSinoAppPlugin.PatchedSinoAppWorker(context, workerParameters)
+        worker = PatchedSinoAppPlugin.PatchedSinoAppWorker(context, workerParameters, aapsLogger, fabricPrivacy, patchedSinoAppPlugin, persistenceLayer)
     }
 
     @Test

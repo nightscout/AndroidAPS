@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.PowerManager
 import androidx.work.ListenableWorker
 import androidx.work.WorkManager
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -50,22 +52,6 @@ class QueueWorkerTest : TestBaseWithProfile() {
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private val bolusProgressData by lazy { BolusProgressData(ch, rh, testScope) }
 
-    init {
-        addInjector {
-            if (it is QueueWorker) {
-                it.aapsLogger = aapsLogger
-                it.queue = commandQueue
-                it.context = context
-                it.rxBus = rxBus
-                it.activePlugin = activePlugin
-                it.rh = rh
-                it.preferences = preferences
-                it.config = config
-                it.bolusProgressData = bolusProgressData
-            }
-        }
-    }
-
     private lateinit var commandQueue: CommandQueueImplementation
     private lateinit var sut: QueueWorker
 
@@ -96,7 +82,17 @@ class QueueWorkerTest : TestBaseWithProfile() {
             .thenReturn(percentageConstraint)
         whenever(rh.gs(ArgumentMatchers.eq(app.aaps.core.ui.R.string.temp_basal_absolute), anyOrNull(), anyOrNull())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
-        sut = TestListenableWorkerBuilder<QueueWorker>(context).build()
+        // QueueWorker now uses constructor injection (@HiltWorker). Supply a WorkerFactory that
+        // builds it with the test mocks instead of relying on field injection.
+        sut = TestListenableWorkerBuilder<QueueWorker>(context)
+            .setWorkerFactory(object : WorkerFactory() {
+                override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker =
+                    QueueWorker(
+                        appContext, workerParameters, aapsLogger, fabricPrivacy, commandQueue,
+                        rxBus, activePlugin, rh, preferences, config, bolusProgressData
+                    )
+            })
+            .build()
     }
 
     @Test

@@ -3,9 +3,12 @@ package app.aaps.implementation.queue
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
+import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -108,22 +111,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     }
 
-    init {
-        addInjector {
-            if (it is QueueWorker) {
-                it.aapsLogger = aapsLogger
-                it.queue = commandQueue
-                it.context = context
-                it.rxBus = rxBus
-                it.activePlugin = activePlugin
-                it.rh = rh
-                it.preferences = preferences
-                it.config = config
-                it.bolusProgressData = bolusProgressData
-            }
-        }
-    }
-
     private lateinit var commandQueue: CommandQueueImplementation
 
     @BeforeEach
@@ -187,7 +174,15 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(workManager.getWorkInfosForUniqueWork(anyOrNull())).thenReturn(infos)
             doAnswer { _: InvocationOnMock ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    val work = TestListenableWorkerBuilder<QueueWorker>(context).build()
+                    val work = TestListenableWorkerBuilder<QueueWorker>(context)
+                        .setWorkerFactory(object : WorkerFactory() {
+                            override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker =
+                                QueueWorker(
+                                    appContext, workerParameters, aapsLogger, fabricPrivacy, commandQueue,
+                                    rxBus, activePlugin, rh, preferences, config, bolusProgressData
+                                )
+                        })
+                        .build()
                     work.doWorkAndLog()
                 }
                 null

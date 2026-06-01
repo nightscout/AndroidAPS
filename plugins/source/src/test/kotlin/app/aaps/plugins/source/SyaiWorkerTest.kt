@@ -30,19 +30,9 @@ class SyaiWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector { injector ->
-            if (injector is SyaiPlugin.SyaiWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.syaiPlugin = syaiPlugin
-                injector.persistenceLayer = persistenceLayer
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
-        worker = SyaiPlugin.SyaiWorker(context, workerParameters)
+        worker = SyaiPlugin.SyaiWorker(context, workerParameters, aapsLogger, fabricPrivacy, syaiPlugin, persistenceLayer)
     }
 
     @Test

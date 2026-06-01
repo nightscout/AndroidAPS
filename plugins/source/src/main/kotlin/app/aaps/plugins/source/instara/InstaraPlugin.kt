@@ -2,6 +2,7 @@ package app.aaps.plugins.source.instara
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.configuration.Constants
@@ -20,6 +21,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
@@ -27,7 +29,8 @@ import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.source.AbstractBgSourcePlugin
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import dagger.android.HasAndroidInjector
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -85,20 +88,19 @@ class InstaraPlugin @Inject constructor(
         super.onStop()
     }
 
-    class InstaraWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.IO) {
-
-        @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var instaraPlugin: InstaraPlugin
-        @Inject lateinit var persistenceLayer: PersistenceLayer
-
+    @HiltWorker
+    class InstaraWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val instaraPlugin: InstaraPlugin,
+        private val persistenceLayer: PersistenceLayer,
         // Request Overview refresh after successful insert/update.
-        @Inject lateinit var rxBus: RxBus
-
+        private val rxBus: RxBus,
         // Persist per-device Instara meta into preferences
-        @Inject lateinit var preferences: Preferences
+        private val preferences: Preferences
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
         @Suppress("SameParameterValue")
         private fun readDouble(json: JSONObject, vararg keys: String): Double {

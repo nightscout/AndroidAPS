@@ -3,11 +3,9 @@ package app.aaps.implementation.di
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.implementation.queue.CommandQueueImplementation
 import app.aaps.implementation.queue.CommandQueueName
-import app.aaps.implementation.queue.QueueWorker
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
@@ -25,8 +23,7 @@ open class CommandQueueModule {
     interface Bindings {
 
         @Binds fun bindCommandQueueInjector(commandQueueImplementation: CommandQueueImplementation): CommandQueue
-
-        @ContributesAndroidInjector fun queueWorkerInjector(): QueueWorker
+        // QueueWorker migrated to @HiltWorker (constructed by HiltWorkerFactory).
     }
 
     @Provides

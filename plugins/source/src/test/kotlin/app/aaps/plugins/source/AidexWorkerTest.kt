@@ -38,14 +38,6 @@ class AidexWorkerTest : TestBaseWithProfile() {
     private lateinit var aidexPlugin: AidexPlugin
     private lateinit var worker: AidexPlugin.AidexWorker
 
-    init {
-        addInjector {
-            if (it is AidexPlugin.AidexWorker) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
-
     private fun inputDataOf(
         timestamp: Long = 1_700_000_000_000L,
         bgType: String = "mg/dl",
@@ -80,18 +72,12 @@ class AidexWorkerTest : TestBaseWithProfile() {
             notificationManager = notificationManager,
         )
         whenever(workerParameters.inputData).thenReturn(inputDataOf())
-        worker = AidexPlugin.AidexWorker(context, workerParameters)
-        worker.aidexPlugin = aidexPlugin
-        worker.persistenceLayer = persistenceLayer
-        worker.rxBus = rxBusMock
+        worker = AidexPlugin.AidexWorker(context, workerParameters, aapsLogger, fabricPrivacy, aidexPlugin, persistenceLayer, rxBusMock)
     }
 
     private fun reMockInput(data: androidx.work.Data) {
         whenever(workerParameters.inputData).thenReturn(data)
-        worker = AidexPlugin.AidexWorker(context, workerParameters)
-        worker.aidexPlugin = aidexPlugin
-        worker.persistenceLayer = persistenceLayer
-        worker.rxBus = rxBusMock
+        worker = AidexPlugin.AidexWorker(context, workerParameters, aapsLogger, fabricPrivacy, aidexPlugin, persistenceLayer, rxBusMock)
     }
 
     @Test

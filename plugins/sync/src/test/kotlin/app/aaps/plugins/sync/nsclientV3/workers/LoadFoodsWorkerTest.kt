@@ -1,9 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
+import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
@@ -59,19 +62,13 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
     private lateinit var receiverDelegate: ReceiverDelegate
     private lateinit var sut: LoadFoodsWorker
 
-    init {
-        addInjector {
-            if (it is LoadFoodsWorker) {
-                it.aapsLogger = aapsLogger
-                it.fabricPrivacy = fabricPrivacy
-                it.dateUtil = dateUtil
-                it.nsClientV3Plugin = nsClientV3Plugin
-                it.storeDataForDb = storeDataForDb
-                it.nsIncomingDataProcessor = nsIncomingDataProcessor
-                it.nsClientRepository = nsClientRepository
-            }
-        }
-    }
+    private fun buildSut(): LoadFoodsWorker =
+        TestListenableWorkerBuilder<LoadFoodsWorker>(context)
+            .setWorkerFactory(object : WorkerFactory() {
+                override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
+                    LoadFoodsWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, dateUtil, storeDataForDb, nsIncomingDataProcessor, nsClientRepository)
+            })
+            .build()
 
     @BeforeEach
     fun setUp() {
@@ -90,7 +87,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `notInitializedAndroidClient returns failure`() = runTest(timeout = 30.seconds) {
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
 
         val result = sut.doWorkAndLog()
 
@@ -104,7 +101,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 5 // Next increment will be 5, which % 5 == 0
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
 
         val food = NSFood(
             name = "Apple",
@@ -139,7 +136,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 0 // 0 % 5 == 0
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
 
         whenever(nsAndroidClient.getFoods(anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
@@ -156,7 +153,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 9 // Next increment will be 10, which % 5 == 0
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
 
         whenever(nsAndroidClient.getFoods(anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
@@ -174,7 +171,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 5
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
         val errorMessage = "Network error"
         whenever(nsAndroidClient.getFoods(anyInt()))
             .thenThrow(RuntimeException(errorMessage))
@@ -193,7 +190,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 4
         nsClientV3Plugin.lastOperationError = "Previous error"
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getFoods(anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -209,7 +206,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 5
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getFoods(anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -225,7 +222,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 5
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
 
         val food1 = NSFood(
             name = "Apple",
@@ -272,7 +269,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.foods = 5
-        sut = TestListenableWorkerBuilder<LoadFoodsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getFoods(anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 

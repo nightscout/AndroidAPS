@@ -148,6 +148,19 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <!-- WorkManager on-demand initialization: remove the default initializer so MainApp's
+             Configuration.Provider (with HiltWorkerFactory) is used instead. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
     </application>
 
 </manifest>

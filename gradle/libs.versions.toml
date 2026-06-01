@@ -4,6 +4,7 @@ gradlePlugin = "9.2.1"
 googleServices = "4.4.4"
 kotlin = "2.3.21"
 room = "2.8.4"
+sqlite = "2.6.2"
 dagger = "2.59.2"
 mockito = "5.23.0"
 junit = "6.1.0"
@@ -13,6 +14,7 @@ retrofit = "3.0.0"
 kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.11.0"
 work = "2.11.2"
+androidxHilt = "1.2.0"
 datastorePreferences = "1.2.1"
 
 # Compose
@@ -44,6 +46,7 @@ com-google-dagger-android-processor = { group = "com.google.dagger", name = "dag
 com-google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
 com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
+com-google-dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.7" }
 com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.14.0" }
@@ -99,9 +102,12 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "room" }
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version = "1.7.0" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHilt" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHilt" }
 androidx-wear = { group = "androidx.wear", name = "wear", version = "1.4.0" }
 androidx-wear-tiles = { group = "androidx.wear.tiles", name = "tiles", version = "1.6.0" }
 androidx-wear-protolayout = { group = "androidx.wear.protolayout", name = "protolayout", version = "1.4.0" }

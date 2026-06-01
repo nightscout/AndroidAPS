@@ -1,7 +1,7 @@
 package app.aaps
 
 import android.annotation.SuppressLint
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GV
@@ -24,12 +24,12 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.di.TestApplication
 import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -40,8 +40,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import org.json.JSONObject
 import org.junit.After
-import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import javax.inject.Inject
 
 /**
@@ -58,7 +58,9 @@ import javax.inject.Inject
  * The fix (issue #4596): the IOB/COB autosens pass queries carbs with exclusive start
  * (bgTime - 5min + 1ms) to prevent double-counting at window boundaries.
  */
-class CobExtendedCarbsTest @Inject constructor() {
+@HiltAndroidTest
+@RunWith(AndroidJUnit4::class)
+class CobExtendedCarbsTest : HiltInstrumentedTest() {
 
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -73,15 +75,8 @@ class CobExtendedCarbsTest @Inject constructor() {
     @Inject lateinit var loop: Loop
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
 
-    private val context = ApplicationProvider.getApplicationContext<TestApplication>()
-
     private val profileData = "{\"_id\":\"653f90bc89f99714b4635b33\",\"defaultProfile\":\"U200_32\",\"date\":1695655201449,\"created_at\":\"2023-09-25T15:20:01.449Z\"," +
         "\"startDate\":\"2023-09-25T15:20:01.4490000Z\",\"store\":{\"U200_32\":{\"dia\":8,\"carbratio\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":10}],\"sens\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"basal\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0.3}],\"target_low\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"target_high\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"units\":\"mmol\",\"timezone\":\"GMT\"}},\"app\":\"AAPS\",\"utcOffset\":0}"
-
-    @Before
-    fun inject() {
-        context.androidInjector().inject(this)
-    }
 
     @After
     fun tearDown() {

@@ -48,6 +48,13 @@ interface PersistenceLayer {
      */
     suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
 
+    /**
+     * Full VACUUM of the database: defragments the file and returns free pages to the OS.
+     * Heavy and memory intensive — only call when nothing else is using the DB (e.g. on startup
+     * before plugins/loop/sync start). May throw if the DB is busy/locked.
+     */
+    suspend fun vacuumDatabase()
+
     // Flow-based change observation
     /**
      * Observe changes for a specific domain type

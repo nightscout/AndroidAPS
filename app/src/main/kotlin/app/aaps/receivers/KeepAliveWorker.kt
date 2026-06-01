@@ -2,6 +2,7 @@ package app.aaps.receivers
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import androidx.hilt.work.HiltWorker
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -39,33 +40,36 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import com.google.common.util.concurrent.ListenableFuture
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import javax.inject.Inject
 import kotlin.math.abs
 
-class KeepAliveWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.Default) {
-
-    @Inject lateinit var localAlertUtils: LocalAlertUtils
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var config: Config
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var maintenance: Maintenance
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var dstHelperPlugin: DstHelperPlugin
-    @Inject lateinit var workManager: WorkManager
-    @Inject lateinit var ch: ConcentrationHelper
+@HiltWorker
+class KeepAliveWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val localAlertUtils: LocalAlertUtils,
+    private val persistenceLayer: PersistenceLayer,
+    private val config: Config,
+    private val iobCobCalculator: IobCobCalculator,
+    private val loop: Loop,
+    private val dateUtil: DateUtil,
+    private val activePlugin: ActivePlugin,
+    private val profileFunction: ProfileFunction,
+    private val rxBus: RxBus,
+    private val commandQueue: CommandQueue,
+    private val maintenance: Maintenance,
+    private val rh: ResourceHelper,
+    private val preferences: Preferences,
+    private val dstHelperPlugin: DstHelperPlugin,
+    private val workManager: WorkManager,
+    private val ch: ConcentrationHelper
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     companion object {
 

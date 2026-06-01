@@ -2,8 +2,10 @@ package app.aaps.plugins.sync.nsclient.workers
 
 import android.content.Context
 import android.os.SystemClock
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -20,25 +22,29 @@ import app.aaps.core.interfaces.sync.DataSyncSelector.PairProfileSwitch
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTemporaryBasal
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTemporaryTarget
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTherapyEvent
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.sync.nsclient.acks.NSAddAck
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
-class NSClientAddAckWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.Default) {
-
-    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var storeDataForDb: StoreDataForDb
-    @Inject lateinit var nsClientRepository: NSClientRepository
+@HiltWorker
+class NSClientAddAckWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val dataWorkerStorage: DataWorkerStorage,
+    private val aapsSchedulers: AapsSchedulers,
+    private val preferences: Preferences,
+    private val storeDataForDb: StoreDataForDb,
+    private val nsClientRepository: NSClientRepository
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAddAck?

@@ -1,6 +1,6 @@
 package app.aaps
 
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.AutosensResult
@@ -21,7 +21,6 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
-import app.aaps.di.TestApplication
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -34,9 +33,10 @@ import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamic
 import app.aaps.plugins.aps.utils.ScriptReader
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.json.JSONObject
-import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.skyscreamer.jsonassert.Customization
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
@@ -46,7 +46,9 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.floor
 
-class ReplayApsResultsTest @Inject constructor() {
+@HiltAndroidTest
+@RunWith(AndroidJUnit4::class)
+class ReplayApsResultsTest : HiltInstrumentedTest() {
 
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var storage: Storage
@@ -58,15 +60,8 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var preferences: Preferences
 
-    private val context = ApplicationProvider.getApplicationContext<TestApplication>()
-
     private var ktTime = 0L
     private var jsTime = 0L
-
-    @Before
-    fun inject() {
-        context.androidInjector().inject(this)
-    }
 
     @Test
     fun replayTest() {

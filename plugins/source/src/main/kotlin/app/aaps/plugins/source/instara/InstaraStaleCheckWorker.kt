@@ -2,8 +2,7 @@ package app.aaps.plugins.source.instara
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import androidx.work.CoroutineWorker
+import androidx.hilt.work.HiltWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -12,52 +11,30 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import dagger.android.HasAndroidInjector
+import app.aaps.core.objects.workflow.LoggingWorker
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class InstaraStaleCheckWorker(
-    ctx: Context,
-    params: WorkerParameters
-) : CoroutineWorker(ctx, params) {
+@HiltWorker
+class InstaraStaleCheckWorker @AssistedInject constructor(
+    @Assisted ctx: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val persistenceLayer: PersistenceLayer,
+    private val preferences: Preferences
+) : LoggingWorker(ctx, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var preferences: Preferences
-
-    // Guard so worker never crashes if injection fails
-    private var injectedOk: Boolean = false
-
-    init {
-        try {
-            (applicationContext as? HasAndroidInjector)
-                ?.androidInjector()
-                ?.inject(this)
-            // Mark injection success only if no exception
-            injectedOk = true
-        } catch (t: Throwable) {
-            injectedOk = false
-            Log.e("InstaraStaleCheckWorker", "Injection failed", t)
-        }
-    }
-
-    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        // If injection failed, do NOT touch lateinit fields; reschedule and exit safely
-        if (!injectedOk) {
-            Log.e("InstaraStaleCheckWorker", "Skipping run because injection failed; will reschedule.")
-            scheduleNext(applicationContext)
-            return@withContext Result.success()
-        }
-
-        // Ensure Instara plugin-local keys are registered even if worker starts before plugin init
-        preferences.registerPreferences(InstaraBooleanKey::class.java)
-        preferences.registerPreferences(InstaraStringKey::class.java)
-
+    override suspend fun doWorkAndLog(): Result = withContext(Dispatchers.IO) {
         val enabledNow = preferences.get(InstaraBooleanKey.HistoryRequestEnabled)
         val now = System.currentTimeMillis()
 
@@ -203,7 +180,7 @@ class InstaraStaleCheckWorker(
     }
 
     private fun Long.toInstaraSgvIdString(): String =
-        if (this == 0L) "0" else String.format("%013d", this)
+        if (this == 0L) "0" else String.format(Locale.getDefault(), "%013d", this)
 
     private fun sendHistoryRequestBroadcast(idStart: Long) {
         // NOTE: action name is still called Teljane.

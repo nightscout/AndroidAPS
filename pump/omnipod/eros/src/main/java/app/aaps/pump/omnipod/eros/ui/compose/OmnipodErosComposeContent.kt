@@ -85,8 +85,8 @@ class OmnipodErosComposeContent(
         }
 
         // Restore overview toolbar when not in wizard
-        LaunchedEffect(showWizard, showRileyLinkPairWizard, showRileyLinkStats) {
-            if (!showWizard && !showRileyLinkPairWizard && !showRileyLinkStats) {
+        LaunchedEffect(showWizard, showRileyLinkPairWizard, showRileyLinkStats, showHistory) {
+            if (!showWizard && !showRileyLinkPairWizard && !showRileyLinkStats && !showHistory) {
                 setToolbarConfig(ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction))
             } else if (showRileyLinkStats) {
                 setToolbarConfig(

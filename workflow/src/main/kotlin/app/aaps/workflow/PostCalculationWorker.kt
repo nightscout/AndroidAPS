@@ -1,6 +1,7 @@
 package app.aaps.workflow
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.configuration.Constants
@@ -9,6 +10,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
@@ -16,15 +18,17 @@ import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
-import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -36,19 +40,21 @@ import kotlin.math.min
  * Used by [CalculationWorkflow.runCalculation] (MAIN only, full phases) and by
  * [CalculationWorkflow.runOnReceivedPredictions] (predictions only).
  */
-class PostCalculationWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.Default) {
-
-    @Inject lateinit var workflowChainData: WorkflowChainData
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var widgetUpdater: WidgetUpdater
-    @Inject lateinit var config: Config
-    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var preferences: Preferences
+@HiltWorker
+class PostCalculationWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val workflowChainData: WorkflowChainData,
+    private val iobCobCalculator: IobCobCalculator,
+    private val loop: Loop,
+    private val widgetUpdater: WidgetUpdater,
+    private val config: Config,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val profileUtil: ProfileUtil,
+    private val preferences: Preferences
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     class PostCalculationData(
         val overviewData: OverviewData,

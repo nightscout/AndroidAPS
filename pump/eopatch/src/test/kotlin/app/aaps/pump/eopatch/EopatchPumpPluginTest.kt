@@ -52,7 +52,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         whenever(profile.getBasal(org.mockito.kotlin.any())).thenReturn(1.0)
 
         plugin = EopatchPumpPlugin(
-            aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
+            aapsLogger, rh, preferences, commandQueue, aapsSchedulers, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
             protectionCheck, blePreCheck, bolusProgressData
         )

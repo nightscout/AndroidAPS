@@ -2,6 +2,7 @@ package app.aaps.database.transactions
 
 import android.content.Context
 import androidx.room.Room
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.aaps.database.AppDatabase
@@ -26,7 +27,9 @@ class InsertOrUpdateHeartRatesTransactionTest {
 
     @Before
     fun setupUp() {
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .setDriver(BundledSQLiteDriver())
+            .build()
         repo = AppRepository(db)
     }
 

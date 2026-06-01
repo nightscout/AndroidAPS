@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
@@ -26,6 +27,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
@@ -34,6 +36,8 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.plugins.source.compose.BgSourceComposeContent
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -98,17 +102,19 @@ class DexcomPlugin @Inject constructor(
     }
 
     // cannot be inner class because of needed injection
-    class DexcomWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.IO) {
-
-        @Inject lateinit var dexcomPlugin: DexcomPlugin
-        @Inject lateinit var preferences: Preferences
-        @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var dataInbox: DataInbox
-        @Inject lateinit var persistenceLayer: PersistenceLayer
-        @Inject lateinit var profileUtil: ProfileUtil
+    @HiltWorker
+    class DexcomWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val dexcomPlugin: DexcomPlugin,
+        private val preferences: Preferences,
+        private val dateUtil: DateUtil,
+        private val dataInbox: DataInbox,
+        private val persistenceLayer: PersistenceLayer,
+        private val profileUtil: ProfileUtil
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {

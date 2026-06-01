@@ -6,10 +6,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -20,6 +22,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -27,23 +30,25 @@ import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.R
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeEnable
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
-class QueueWorker internal constructor(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.IO) {
-
-    @Inject lateinit var queue: CommandQueue
-    @Inject lateinit var context: Context
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var config: Config
-    @Inject lateinit var bolusProgressData: BolusProgressData
+@HiltWorker
+class QueueWorker @AssistedInject internal constructor(
+    @Assisted private val context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val queue: CommandQueue,
+    private val rxBus: RxBus,
+    private val activePlugin: ActivePlugin,
+    private val rh: ResourceHelper,
+    private val preferences: Preferences,
+    private val config: Config,
+    private val bolusProgressData: BolusProgressData
+) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
     private var connectLogged = false
 

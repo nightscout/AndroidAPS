@@ -1,8 +1,10 @@
 package app.aaps.plugins.sync.nsclient.workers
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.sync.DataSyncSelector
@@ -17,21 +19,25 @@ import app.aaps.core.interfaces.sync.DataSyncSelector.PairProfileSwitch
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTemporaryBasal
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTemporaryTarget
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTherapyEvent
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.sync.nsclient.acks.NSUpdateAck
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
-class NSClientUpdateRemoveAckWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.Default) {
-
-    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var nsClientRepository: NSClientRepository
+@HiltWorker
+class NSClientUpdateRemoveAckWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val dataWorkerStorage: DataWorkerStorage,
+    private val aapsSchedulers: AapsSchedulers,
+    private val nsClientRepository: NSClientRepository
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         var ret = Result.success()

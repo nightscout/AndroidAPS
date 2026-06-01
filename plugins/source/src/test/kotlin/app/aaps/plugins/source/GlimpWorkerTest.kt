@@ -27,16 +27,6 @@ class GlimpWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector {
-            if (it is GlimpPlugin.GlimpWorker) {
-                it.aapsLogger = aapsLogger
-                it.glimpPlugin = this.glimpPlugin
-                it.persistenceLayer = this.persistenceLayer
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
         whenever(workerParameters.inputData).thenReturn(
@@ -46,9 +36,7 @@ class GlimpWorkerTest : TestBaseWithProfile() {
                 "myTrend" to "FortyFiveDown"
             )
         )
-        worker = GlimpPlugin.GlimpWorker(context, workerParameters)
-        worker.glimpPlugin = glimpPlugin
-        worker.persistenceLayer = persistenceLayer
+        worker = GlimpPlugin.GlimpWorker(context, workerParameters, aapsLogger, fabricPrivacy, glimpPlugin, persistenceLayer)
     }
 
     @Test

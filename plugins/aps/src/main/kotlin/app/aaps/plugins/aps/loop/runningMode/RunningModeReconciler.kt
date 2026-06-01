@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.loop.runningMode
 
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -19,6 +20,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,6 +58,7 @@ class RunningModeReconciler @Inject constructor(
     private var lastReconciledRowId: Long? = null
     private var lastReconciledDuration: Long = -1L
     @Volatile private var started = false
+    private var observerJob: Job? = null
 
     fun start() {
         if (started) return
@@ -64,12 +67,33 @@ class RunningModeReconciler @Inject constructor(
             aapsLogger.debug(LTag.APS, "RunningModeReconciler: config.APS=false, pump-side path disabled")
             return
         }
-        appScope.launch {
+        observerJob = appScope.launch {
             reconcileStartup()
             persistenceLayer.observeChanges(RM::class.java).collect { _ ->
                 onAnyChange()
             }
         }
+    }
+
+    /**
+     * Reset all in-memory state so the next [start] re-baselines from scratch. Test-only.
+     *
+     * The reconciler is a process-wide @Singleton, so a single instance is shared across every
+     * instrumented test in the process while each test's `@Before` wipes the DB. Without this
+     * reset the stale dedup baseline ([lastReconciledMode] / [lastReconciledRowId] /
+     * [lastReconciledDuration]) and the still-running observer coroutine leak across tests: a
+     * freshly inserted mode can collide with the previous test's baseline and [onAnyChange]
+     * de-duplicates it, so the expected pump action is never issued. Cancels the observer and
+     * clears `started` so the following [start] launches a clean observer + startup reconcile.
+     */
+    @VisibleForTesting
+    fun resetState() {
+        observerJob?.cancel()
+        observerJob = null
+        started = false
+        lastReconciledMode = null
+        lastReconciledRowId = null
+        lastReconciledDuration = -1L
     }
 
     private suspend fun reconcileStartup() {

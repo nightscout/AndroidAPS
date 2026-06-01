@@ -9,8 +9,10 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -18,6 +20,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -62,6 +65,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.ProfileComposedBooleanKey
 import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.StringKey
@@ -113,10 +117,20 @@ import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 
 @HiltAndroidApp
-class MainApp : Application(), HasAndroidInjector {
+class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
+
+    // WorkManager on-demand initialization. HiltWorkerFactory constructs @HiltWorker workers via
+    // assisted injection; workers not yet migrated return null from it and fall back to WorkManager's
+    // default reflective factory (which self-injects through HasAndroidInjector). The default
+    // androidx.startup WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
+    @Inject lateinit var hiltWorkerFactory: HiltWorkerFactory
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(hiltWorkerFactory)
+            .build()
 
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -210,6 +224,10 @@ class MainApp : Application(), HasAndroidInjector {
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
 
+                // Defragment the DB while it is quiescent: plugins, loop, sync and UI all start
+                // later, so the (memory heavy) VACUUM has the DB to itself. Runs at most monthly.
+                vacuumDatabaseIfDue()
+
                 // Register and initialize plugins
                 config.updateInitProgress(getString(R.string.initializing_plugins))
                 pluginStore.plugins = plugins
@@ -229,6 +247,28 @@ class MainApp : Application(), HasAndroidInjector {
             } catch (e: Exception) {
                 aapsLogger.error(LTag.CORE, "Fatal initialization error", e)
                 config.initFailed(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    // Perform a full VACUUM at most once a month. VACUUM defragments the DB file and reclaims
+    // space, restoring query performance that degrades after long use. It is heavy and memory
+    // intensive, so it runs only here at startup while nothing else touches the DB (this avoids
+    // the SQLITE_NOMEM crash seen when VACUUM overlapped live DB activity).
+    private suspend fun vacuumDatabaseIfDue() {
+        val lastRun = preferences.get(LongNonKey.LastVacuumRun)
+        if (lastRun < dateUtil.now() - T.days(30).msecs()) {
+            config.updateInitProgress(getString(R.string.optimizing_database))
+            try {
+                persistenceLayer.vacuumDatabase()
+                // Only advance the timestamp on success, so a transient failure (e.g. DB busy
+                // because a persisted worker is running) is retried on a future launch instead
+                // of being suppressed for a month.
+                preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
+                aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
+            } catch (e: Exception) {
+                // DB maintenance must never abort app initialization.
+                aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)
             }
         }
     }
