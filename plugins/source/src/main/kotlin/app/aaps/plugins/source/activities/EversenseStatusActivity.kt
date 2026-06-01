@@ -63,7 +63,7 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Eversense Status"
+        supportActionBar?.title = getString(R.string.eversense_status_title)
 
         updateStatus()
 
@@ -84,25 +84,25 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
         val notConnected = getString(R.string.eversense_not_connected)
 
         findViewById<TextView>(R.id.eversense_status_connected).text =
-            "Connected: " + if (eversense.isConnected()) "✅" else "❌"
+            getString(R.string.eversense_status_connected_label, if (eversense.isConnected()) "✅" else "❌")
         findViewById<TextView>(R.id.eversense_status_battery).text =
-            "Battery: " + ("${state.batteryPercentage}%")
+            getString(R.string.eversense_status_battery_label, state.batteryPercentage)
         findViewById<TextView>(R.id.eversense_status_insertion).text =
-            "Insertion date: " + (dateFormatter.format(Date(state.insertionDate)))
+            getString(R.string.eversense_status_insertion_label, dateFormatter.format(Date(state.insertionDate)))
         findViewById<TextView>(R.id.eversense_status_last_sync).text =
-            "Last sync: " + (if (state.lastSync > 0) dateFormatter.format(Date(state.lastSync)) else "Never")
+            getString(R.string.eversense_status_last_sync_label, if (state.lastSync > 0) dateFormatter.format(Date(state.lastSync)) else getString(R.string.eversense_status_never))
         findViewById<TextView>(R.id.eversense_status_signal).text =
-            "Placement signal: " + (signalToLabel(state.sensorSignalStrength))
+            getString(R.string.eversense_status_signal_label, signalToLabel(state.sensorSignalStrength))
 
         findViewById<TextView>(R.id.eversense_status_phase).text =
-            "Calibration phase: " + (state.calibrationPhase.name)
+            getString(R.string.eversense_status_phase_label, state.calibrationPhase.name)
 
         findViewById<TextView>(R.id.eversense_status_last_cal).text =
-            "Last calibration: " + (if (state.lastCalibrationDate > 0) dateFormatter.format(Date(state.lastCalibrationDate)) else notConnected)
+            getString(R.string.eversense_status_last_cal_label, if (state.lastCalibrationDate > 0) dateFormatter.format(Date(state.lastCalibrationDate)) else notConnected)
         findViewById<TextView>(R.id.eversense_status_next_cal).text =
-            "Next calibration: " + (if (state.nextCalibrationDate > 0) dateFormatter.format(Date(state.nextCalibrationDate)) else notConnected)
+            getString(R.string.eversense_status_next_cal_label, if (state.nextCalibrationDate > 0) dateFormatter.format(Date(state.nextCalibrationDate)) else notConnected)
         findViewById<Button>(R.id.eversense_btn_connect).text =
-            if (eversense.isConnected()) "Disconnect" else "Connect"
+            if (eversense.isConnected()) getString(R.string.eversense_status_disconnect) else getString(R.string.eversense_status_connect)
         findViewById<Button>(R.id.eversense_btn_sync).isEnabled = eversense.isConnected()
     }
 

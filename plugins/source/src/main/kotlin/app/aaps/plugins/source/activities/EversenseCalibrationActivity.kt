@@ -21,6 +21,12 @@ import com.nightscout.eversense.models.ActiveAlarm
 import com.nightscout.eversense.models.EversenseCGMResult
 import com.nightscout.eversense.models.EversenseState
 import com.nightscout.eversense.util.EversenseLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,6 +34,8 @@ class EversenseCalibrationActivity : AppCompatActivity() {
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var eversense: EversenseCGMPlugin
+
+    private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     companion object {
         private const val TAG = "EversenseCalibration"
@@ -122,32 +130,33 @@ class EversenseCalibrationActivity : AppCompatActivity() {
     }
 
     private fun sendCalibration(bgMgDl: Int, submitButton: Button) {
-        Thread {
+        ioScope.launch {
             connectionWatcher?.let {
                 eversense.removeWatcher(it)
                 connectionWatcher = null
             }
-            EversenseLogger.info(TAG, "Calibration thread started — sending $bgMgDl mg/dL to transmitter")
+            EversenseLogger.info(TAG, "Calibration started — sending $bgMgDl mg/dL to transmitter")
             val success = eversense.sendCalibration(bgMgDl)
             EversenseLogger.info(TAG, "Calibration result — success: $success")
             if (success) {
                 EversenseLogger.info(TAG, "Triggering fullSync after successful calibration")
                 eversense.triggerFullSync(force = true)
             }
-            runOnUiThread {
+            withContext(Dispatchers.Main) {
                 if (success) {
-                    Toast.makeText(this, getString(R.string.eversense_calibration_success), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EversenseCalibrationActivity, getString(R.string.eversense_calibration_success), Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
                     submitButton.isEnabled = true
-                    Toast.makeText(this, getString(R.string.eversense_calibration_failed), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@EversenseCalibrationActivity, getString(R.string.eversense_calibration_failed), Toast.LENGTH_LONG).show()
                 }
             }
-        }.start()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        ioScope.cancel()
         connectionWatcher?.let {
             eversense.removeWatcher(it)
             connectionWatcher = null

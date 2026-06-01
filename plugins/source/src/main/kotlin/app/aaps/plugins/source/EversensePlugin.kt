@@ -313,21 +313,21 @@ class EversensePlugin @Inject constructor(
                 setSensorExpiryDismissed(state.insertionDate, 60)
                 notificationManager.post(
                     NotificationId.EVERSENSE_ALARM,
-                    "Eversense sensor expires in $daysRemaining days — plan your sensor replacement.",
+                    rh.gs(R.string.eversense_sensor_expiry_plan, daysRemaining),
                     level = NotificationLevel.INFO
                 )
             } else if (isAfterNoon && daysRemaining in 11..30 && !isSensorExpiryDismissed(state.insertionDate, 30)) {
                 setSensorExpiryDismissed(state.insertionDate, 30)
                 notificationManager.post(
                     NotificationId.EVERSENSE_ALARM,
-                    "Eversense sensor expires in $daysRemaining days — replace your sensor soon.",
+                    rh.gs(R.string.eversense_sensor_expiry_soon, daysRemaining),
                     level = NotificationLevel.NORMAL
                 )
             } else if (isAfterNoon && daysRemaining in 1..10 && !isSensorExpiryDismissed(state.insertionDate, daysRemaining)) {
                 setSensorExpiryDismissed(state.insertionDate, daysRemaining)
                 notificationManager.post(
                     NotificationId.EVERSENSE_ALARM,
-                    "Eversense sensor expires in $daysRemaining days — replace your sensor immediately.",
+                    rh.gs(R.string.eversense_sensor_expiry_urgent, daysRemaining),
                     level = NotificationLevel.URGENT
                 )
             }
@@ -339,7 +339,7 @@ class EversensePlugin @Inject constructor(
             setBatteryLowDismissed()
             notificationManager.post(
                 NotificationId.EVERSENSE_ALARM,
-                "Eversense transmitter battery low: ${state.batteryPercentage}% — please charge your transmitter.",
+                rh.gs(R.string.eversense_battery_low, state.batteryPercentage),
                 level = NotificationLevel.NORMAL
             )
         }
@@ -353,7 +353,7 @@ class EversensePlugin @Inject constructor(
             setCalibrationDueDismissed(calDueDay)
             notificationManager.post(
                 NotificationId.EVERSENSE_ALARM,
-                "Eversense calibration is due — open AAPS to calibrate your sensor.",
+                rh.gs(R.string.eversense_calibration_due),
                 level = NotificationLevel.NORMAL
             )
         }
@@ -364,7 +364,7 @@ class EversensePlugin @Inject constructor(
             aapsLogger.info(LTag.BGSOURCE, "Transmitter firmware: ${state.firmwareVersion}")
             notificationManager.post(
                 NotificationId.EVERSENSE_FIRMWARE,
-                "Eversense firmware: ${state.firmwareVersion} — open the official Eversense app to check for updates",
+                rh.gs(R.string.eversense_firmware_update, state.firmwareVersion),
                 level = NotificationLevel.INFO
             )
         }
@@ -402,7 +402,7 @@ class EversensePlugin @Inject constructor(
             val stateJson = securePrefs.getString(StorageKeys.STATE, null)
             val state = stateJson?.let { json.decodeFromString<EversenseState>(it) }
             if (state != null && state.nextCalibrationDate > 0 && state.nextCalibrationDate < System.currentTimeMillis()) {
-                "Eversense Calibration Due Now"
+                rh.gs(R.string.eversense_calibration_due_now)
             } else {
                 alarm.code.title
             }
@@ -583,7 +583,7 @@ class EversensePlugin @Inject constructor(
             if (foundDevices.isEmpty()) {
                 AlertDialog.Builder(context)
                     .setTitle(rh.gs(R.string.eversense_scan_title))
-                    .setMessage("No Eversense transmitters found. Make sure the transmitter is nearby and try again.")
+                    .setMessage(rh.gs(R.string.eversense_no_transmitters_found))
                     .setPositiveButton("OK", null)
                     .show()
             } else {

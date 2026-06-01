@@ -15,6 +15,13 @@ import com.nightscout.eversense.enums.EversenseType
 import com.nightscout.eversense.models.EversenseCGMResult
 import com.nightscout.eversense.models.EversenseState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Date
 import javax.inject.Inject
@@ -25,6 +32,7 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
     @Inject lateinit var eversense: EversenseCGMPlugin
 
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private lateinit var bar1: ImageView
     private lateinit var bar2: ImageView
@@ -38,26 +46,23 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
     private val timeFormatter: DateFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM)
 
-    @Volatile private var polling = false
+    private var pollingJob: Job? = null
 
-    // Mirrors iOS PlacementGuideViewModel.updateSignalStrength(): a single background
-    // thread that reads signal, sleeps 500ms, then loops. Chained (not Handler-scheduled)
-    // so each read completes before the next starts — prevents GATT queue pile-up.
     private fun startPolling() {
-        if (polling) return
-        polling = true
-        Thread {
-            while (polling) {
+        if (pollingJob?.isActive == true) return
+        pollingJob = ioScope.launch {
+            while (true) {
                 if (eversense.isConnected()) {
                     eversense.readSignalStrength()
                 }
-                Thread.sleep(500)
+                delay(500)
             }
-        }.start()
+        }
     }
 
     private fun stopPolling() {
-        polling = false
+        pollingJob?.cancel()
+        pollingJob = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,11 +97,11 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
         // Mirrors iOS PlacementGuideViewModel.init: enable diagnostic mode on open
         // so the transmitter increases its signal-strength broadcast frequency.
-        Thread {
-            Thread.sleep(500)
+        ioScope.launch {
+            delay(500)
             eversense.setDiagnosticMode(true)
             startPolling()
-        }.start()
+        }
     }
 
     override fun onDestroy() {
@@ -104,7 +109,8 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         stopPolling()
         eversense.removeWatcher(this)
         // Mirrors iOS PlacementGuideViewModel.stop(): disable diagnostic mode on close
-        Thread { eversense.setDiagnosticMode(false) }.start()
+        ioScope.launch { eversense.setDiagnosticMode(false) }
+        ioScope.cancel()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

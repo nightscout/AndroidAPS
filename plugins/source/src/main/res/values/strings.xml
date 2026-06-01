@@ -120,6 +120,27 @@
     <string name="eversense_transmitter_not_placed">Eversense transmitter not detecting — check placement</string>
     <string name="eversense_transmitter_not_placed_summary">Make sure the transmitter is placed directly over the sensor site and secured with the adhesive patch.</string>
     <string name="eversense_reconnecting">Reconnecting…</string>
+    <!-- Notification strings -->
+    <string name="eversense_sensor_expiry_plan">Eversense sensor expires in %1$d days — plan your sensor replacement.</string>
+    <string name="eversense_sensor_expiry_soon">Eversense sensor expires in %1$d days — replace your sensor soon.</string>
+    <string name="eversense_sensor_expiry_urgent">Eversense sensor expires in %1$d days — replace your sensor immediately.</string>
+    <string name="eversense_battery_low">Eversense transmitter battery low: %1$d%% — please charge your transmitter.</string>
+    <string name="eversense_calibration_due">Eversense calibration is due — open AAPS to calibrate your sensor.</string>
+    <string name="eversense_calibration_due_now">Eversense Calibration Due Now</string>
+    <string name="eversense_firmware_update">Eversense firmware: %1$s — open the official Eversense app to check for updates</string>
+    <string name="eversense_no_transmitters_found">No Eversense transmitters found. Make sure the transmitter is nearby and try again.</string>
+    <!-- Status activity -->
+    <string name="eversense_status_connected_label">Connected: %1$s</string>
+    <string name="eversense_status_battery_label">Battery: %1$d%%</string>
+    <string name="eversense_status_insertion_label">Insertion date: %1$s</string>
+    <string name="eversense_status_last_sync_label">Last sync: %1$s</string>
+    <string name="eversense_status_signal_label">Placement signal: %1$s</string>
+    <string name="eversense_status_phase_label">Calibration phase: %1$s</string>
+    <string name="eversense_status_last_cal_label">Last calibration: %1$s</string>
+    <string name="eversense_status_next_cal_label">Next calibration: %1$s</string>
+    <string name="eversense_status_never">Never</string>
+    <string name="eversense_status_disconnect">Disconnect</string>
+    <string name="eversense_status_connect">Connect</string>
 
 
 
