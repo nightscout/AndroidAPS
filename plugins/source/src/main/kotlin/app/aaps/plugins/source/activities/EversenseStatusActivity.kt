@@ -26,14 +26,16 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
 
+    @Inject lateinit var eversense: EversenseCGMPlugin
+
     private val mainHandler = Handler(Looper.getMainLooper())
     private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-    private val eversense get() = EversenseCGMPlugin.instance
 
     override fun onResume() {
         super.onResume()

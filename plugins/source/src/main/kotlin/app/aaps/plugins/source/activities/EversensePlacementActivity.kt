@@ -14,13 +14,17 @@ import com.nightscout.eversense.callbacks.EversenseWatcher
 import com.nightscout.eversense.enums.EversenseType
 import com.nightscout.eversense.models.EversenseCGMResult
 import com.nightscout.eversense.models.EversenseState
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
 import java.util.Date
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
+    @Inject lateinit var eversense: EversenseCGMPlugin
+
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val eversense get() = EversenseCGMPlugin.instance
 
     private lateinit var bar1: ImageView
     private lateinit var bar2: ImageView

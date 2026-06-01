@@ -27,6 +27,7 @@ import javax.inject.Inject
 class EversenseCalibrationActivity : AppCompatActivity() {
 
     @Inject lateinit var profileUtil: ProfileUtil
+    @Inject lateinit var eversense: EversenseCGMPlugin
 
     companion object {
         private const val TAG = "EversenseCalibration"
@@ -45,7 +46,7 @@ class EversenseCalibrationActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.eversense_calibration_action)
 
-        EversenseLogger.info(TAG, "Activity opened — connected: ${EversenseCGMPlugin.instance.isConnected()}")
+        EversenseLogger.info(TAG, "Activity opened — connected: ${eversense.isConnected()}")
 
         val unitLabel = findViewById<TextView>(R.id.calibration_unit_label)
         unitLabel.text = profileUtil.units.asText
@@ -76,7 +77,7 @@ class EversenseCalibrationActivity : AppCompatActivity() {
 
             submitButton.isEnabled = false
 
-            if (EversenseCGMPlugin.instance.isConnected()) {
+            if (eversense.isConnected()) {
                 sendCalibration(bgMgDl, submitButton)
             } else {
                 EversenseLogger.info(TAG, "Not connected — triggering reconnect before calibration")
@@ -104,13 +105,13 @@ class EversenseCalibrationActivity : AppCompatActivity() {
         }
 
         connectionWatcher = watcher
-        EversenseCGMPlugin.instance.addWatcher(watcher)
-        EversenseCGMPlugin.instance.connect(null)
+        eversense.addWatcher(watcher)
+        eversense.connect(null)
 
         mainHandler.postDelayed({
             if (!reconnected) {
                 EversenseLogger.warning(TAG, "Reconnect timed out — calibration aborted")
-                EversenseCGMPlugin.instance.removeWatcher(watcher)
+                eversense.removeWatcher(watcher)
                 connectionWatcher = null
                 mainHandler.post {
                     submitButton.isEnabled = true
@@ -123,15 +124,15 @@ class EversenseCalibrationActivity : AppCompatActivity() {
     private fun sendCalibration(bgMgDl: Int, submitButton: Button) {
         Thread {
             connectionWatcher?.let {
-                EversenseCGMPlugin.instance.removeWatcher(it)
+                eversense.removeWatcher(it)
                 connectionWatcher = null
             }
             EversenseLogger.info(TAG, "Calibration thread started — sending $bgMgDl mg/dL to transmitter")
-            val success = EversenseCGMPlugin.instance.sendCalibration(bgMgDl)
+            val success = eversense.sendCalibration(bgMgDl)
             EversenseLogger.info(TAG, "Calibration result — success: $success")
             if (success) {
                 EversenseLogger.info(TAG, "Triggering fullSync after successful calibration")
-                EversenseCGMPlugin.instance.triggerFullSync(force = true)
+                eversense.triggerFullSync(force = true)
             }
             runOnUiThread {
                 if (success) {
@@ -148,7 +149,7 @@ class EversenseCalibrationActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         connectionWatcher?.let {
-            EversenseCGMPlugin.instance.removeWatcher(it)
+            eversense.removeWatcher(it)
             connectionWatcher = null
         }
     }

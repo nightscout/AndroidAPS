@@ -25,13 +25,16 @@ import app.aaps.plugins.source.instara.InstaraStaleCheckWorker
 import app.aaps.plugins.source.notificationreader.NotificationCollectorService
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module(
     includes = [
-        SourceModule.Bindings::class
+        SourceModule.Bindings::class,
+        SourceModule.Providers::class
     ]
 )
 @InstallIn(SingletonComponent::class)
@@ -65,5 +68,15 @@ abstract class SourceModule {
         @Binds fun bindNSClientSource(nsClientSourcePlugin: NSClientSourcePlugin): NSClientSource
         @Binds fun bindDexcomBoyda(dexcomPlugin: DexcomPlugin): DexcomBoyda
         @Binds fun bindXDrip(xdripSourcePlugin: XdripSourcePlugin): XDripSource
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    class Providers {
+        @Provides
+        @Singleton
+        fun provideEversenseCGMPlugin(@dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context): com.nightscout.eversense.EversenseCGMPlugin {
+            return com.nightscout.eversense.EversenseCGMPlugin(context)
+        }
     }
 }

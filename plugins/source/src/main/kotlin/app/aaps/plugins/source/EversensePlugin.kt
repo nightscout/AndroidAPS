@@ -69,7 +69,8 @@ class EversensePlugin @Inject constructor(
     preferences: Preferences,
     config: Config,
     private val notificationManager: NotificationManager,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val eversense: EversenseCGMPlugin
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -120,10 +121,6 @@ class EversensePlugin @Inject constructor(
     private val NO_SIGNAL_WARNING_THRESHOLD = 3
     private var releaseForOfficialApp: Boolean = false
     @Volatile private var placementNotificationSnoozed: Boolean = false
-
-    init {
-        eversense.setContext(context, true)
-    }
 
     override suspend fun onStart() {
         super.onStart()
@@ -612,9 +609,5 @@ class EversensePlugin @Inject constructor(
             }
             .setCancelable(false)
             .show()
-    }
-
-    companion object {
-        private val eversense get() = EversenseCGMPlugin.instance
     }
 }
