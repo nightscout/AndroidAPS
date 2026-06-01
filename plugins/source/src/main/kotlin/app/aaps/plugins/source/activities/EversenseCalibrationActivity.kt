@@ -97,11 +97,11 @@ class EversenseCalibrationActivity : AppCompatActivity() {
                     sendCalibration(bgMgDl, submitButton)
                 }
             }
-            override fun onConnectionChanged(connected: Boolean) {}
-            override fun onStateChanged(state: EversenseState) {}
-            override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {}
-            override fun onAlarmReceived(alarm: ActiveAlarm) {}
-            override fun onTransmitterNotPlaced() {}
+            override fun onConnectionChanged(connected: Boolean) { /* No-op: only onTransmitterReady is needed for calibration */ }
+            override fun onStateChanged(state: EversenseState) { /* No-op */ }
+            override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) { /* No-op */ }
+            override fun onAlarmReceived(alarm: ActiveAlarm) { /* No-op */ }
+            override fun onTransmitterNotPlaced() { /* No-op */ }
         }
 
         connectionWatcher = watcher

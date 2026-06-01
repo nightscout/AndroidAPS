@@ -292,19 +292,19 @@ class EversenseE3Communicator {
                 // Get firmware version ΓÇö aligns with iOS GetVersionPacket
                 try {
                     val version = gatt.writePacket<GetVersionPacket.Response>(GetVersionPacket())
-                    if (version != null) state.firmwareVersion = version.version
+                    state.firmwareVersion = version.version
                 } catch (e: Exception) { EversenseLogger.warning(TAG, "GetVersion failed: $e") }
 
                 // Get extended firmware version
                 try {
                     val extVersion = gatt.writePacket<GetVersionExtendedPacket.Response>(GetVersionExtendedPacket())
-                    if (extVersion != null) state.extFirmwareVersion = extVersion.extVersion
+                    state.extFirmwareVersion = extVersion.extVersion
                 } catch (e: Exception) { EversenseLogger.warning(TAG, "GetVersionExtended failed: $e") }
 
                 // Get MMA features
                 try {
                     val mma = gatt.writePacket<GetMmaFeaturesPacket.Response>(GetMmaFeaturesPacket())
-                    if (mma != null) state.mmaFeatures = mma.value
+                    state.mmaFeatures = mma.value
                 } catch (e: Exception) { EversenseLogger.warning(TAG, "GetMmaFeatures failed: $e") }
 
                 // Set app version ΓÇö iOS sends 8.0.4 in every fullSync

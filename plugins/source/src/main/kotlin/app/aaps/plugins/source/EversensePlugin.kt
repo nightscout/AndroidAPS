@@ -440,7 +440,7 @@ class EversensePlugin @Inject constructor(
 
         ioScope.launch {
             val state = eversense.getCurrentState()
-            val insertionDate = state?.insertionDate?.takeIf { it > 0 }
+            val insertionDate = state.insertionDate.takeIf { it > 0 }
             val result = persistenceLayer.insertCgmSourceData(
                 Sources.Eversense,
                 glucoseValues,
@@ -450,7 +450,7 @@ class EversensePlugin @Inject constructor(
             aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}")
 
             // Upload readings to Eversense cloud so official app sees data without needing BLE
-            if ((type == EversenseType.EVERSENSE_365 || type == EversenseType.EVERSENSE_E3) && state != null && cloudUploadEnabled()) {
+            if ((type == EversenseType.EVERSENSE_365 || type == EversenseType.EVERSENSE_E3) && cloudUploadEnabled()) {
                 val prefs = context.getSharedPreferences("EversenseCGMManager", android.content.Context.MODE_PRIVATE)
                 // Sync credentials from AAPS preferences into SECURE_STATE so EversenseHttp365Util can read them
                 val username = preferences.get(EversenseStringKey.EversenseUsername)

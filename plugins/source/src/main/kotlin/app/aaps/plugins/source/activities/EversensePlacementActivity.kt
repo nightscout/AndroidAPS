@@ -82,7 +82,7 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         eversense.addWatcher(this)
 
         val state = eversense.getCurrentState()
-        if (state != null && state.sensorSignalStrength > 0) {
+        if (state.sensorSignalStrength > 0) {
             updateSignalUI(state.sensorSignalStrength)
         } else if (!eversense.isConnected()) {
             showNotConnected()
@@ -127,7 +127,7 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         mainHandler.post { if (!connected) showNotConnected() }
     }
 
-    override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {}
+    override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) { /* No-op: placement only uses signal strength */ }
 
     private fun updateSignalUI(strength: Int) {
         val bars = strengthToBars(strength)

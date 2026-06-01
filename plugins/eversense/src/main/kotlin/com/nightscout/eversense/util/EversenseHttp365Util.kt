@@ -25,6 +25,8 @@ class EversenseHttp365Util {
     companion object {
         private val TAG = "EversenseHttp365Util"
         private val JSON = Json { ignoreUnknownKeys = true }
+        private const val HEADER_CONTENT_TYPE = "Content-Type"
+        private const val CONTENT_TYPE_JSON = "application/json"
 
         // OAuth2 client credentials embedded in the official Eversense Android app (publicly
         // extractable from the APK). Not a personal secret — same value ships to all users.
@@ -55,7 +57,7 @@ class EversenseHttp365Util {
                 conn.doOutput = true
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                conn.setRequestProperty(HEADER_CONTENT_TYPE, "application/x-www-form-urlencoded")
 
                 OutputStreamWriter(conn.outputStream, "UTF-8").use { writer ->
                     writer.write(formBody)
@@ -208,7 +210,7 @@ class EversenseHttp365Util {
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
                 conn.setRequestProperty("Authorization", "Bearer $token")
-                conn.setRequestProperty("Content-Type", "application/json")
+                conn.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 conn.doOutput = true
 
                 val writer = OutputStreamWriter(conn.outputStream, "UTF-8")
@@ -282,7 +284,7 @@ class EversenseHttp365Util {
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
                 conn.setRequestProperty("Authorization", "Bearer $token")
-                conn.setRequestProperty("Content-Type", "application/json")
+                conn.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 conn.doOutput = true
 
                 OutputStreamWriter(conn.outputStream, "UTF-8").use { it.write(jsonBody); it.flush() }
@@ -340,7 +342,7 @@ class EversenseHttp365Util {
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
                 conn.setRequestProperty("Authorization", "Bearer $token")
-                conn.setRequestProperty("Content-Type", "application/json")
+                conn.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 conn.doOutput = true
 
                 OutputStreamWriter(conn.outputStream, "UTF-8").use { it.write(jsonBody); it.flush() }

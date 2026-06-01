@@ -192,7 +192,6 @@ class EversenseCGMPlugin(context: Context, loggingEnabled: Boolean = true) {
             EversenseLogger.error(TAG, "Transmitter is not connected")
             return false
         }
-        val state = getCurrentState()
         return try {
             // Submit calibration to bleExecutor so it runs on the same thread as BLE callbacks.
             // Calling writePacket directly from a foreign thread races with Keep Alive cycles
