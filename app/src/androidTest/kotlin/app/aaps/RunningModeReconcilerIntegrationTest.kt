@@ -70,6 +70,11 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         WorkManager.getInstance(context).cancelAllWork()
         runBlocking { persistenceLayer.clearDatabases() }
         (profileFunction as ProfileFunctionImpl).cache.clear()
+        // The reconciler is a process-wide @Singleton shared across all tests; clear its stale
+        // in-memory dedup baseline and observer coroutine (from the previous test) so start()
+        // below re-baselines against the just-wiped DB. Without this, a freshly inserted mode can
+        // collide with the previous test's baseline and be de-duplicated, so no pump action fires.
+        runningModeReconciler.resetState()
         // TestApplication does not start the reconciler / scheduler on its own — start them here.
         runningModeReconciler.start()
         runningModeExpiryScheduler.start()
