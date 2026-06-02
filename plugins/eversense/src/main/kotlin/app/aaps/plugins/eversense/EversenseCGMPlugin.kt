@@ -26,7 +26,7 @@ import app.aaps.plugins.eversense.util.EversenseScanner
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
 
-class EversenseCGMPlugin(context: Context, loggingEnabled: Boolean = true) {
+class EversenseCGMPlugin(context: Context) {
 
     private val context: Context = context.applicationContext
     private val bluetoothManager: BluetoothManager =
@@ -45,7 +45,6 @@ class EversenseCGMPlugin(context: Context, loggingEnabled: Boolean = true) {
     var password: String = ""
 
     init {
-        EversenseLogger.instance.enableLogging(loggingEnabled)
         gattCallback = EversenseGattCallback(this, preferences)
     }
 

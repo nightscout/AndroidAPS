@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversenseCGMPlugin
+import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.callbacks.EversenseScanCallback
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.source.compose.BgSourceComposeContent
@@ -123,6 +124,7 @@ class EversensePlugin @Inject constructor(
     @Volatile private var placementNotificationSnoozed: Boolean = false
 
     override suspend fun onStart() {
+        EversenseLogger.init(aapsLogger)
         super.onStart()
         eversense.addWatcher(this)
         if (hasBluetoothPermissions()) {
