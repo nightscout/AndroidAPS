@@ -79,7 +79,8 @@ class InsulinImpl @Inject constructor(
         InsulinType.OREF_RAPID_ACTING,
         InsulinType.OREF_ULTRA_RAPID_ACTING,
         InsulinType.OREF_LYUMJEV,
-        InsulinType.OREF_FREE_PEAK
+        InsulinType.OREF_FREE_PEAK,
+        InsulinType.OREF_INHALED_AFREZZA
     )
 
     override fun concentrationList(): List<ConcentrationType> = listOf(
