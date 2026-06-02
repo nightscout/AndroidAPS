@@ -423,6 +423,22 @@ fun MainScreen(
         }
     }
 
+        // Treatment bottom sheet
+        if (showTreatmentSheet) {
+            val treatmentState by treatmentViewModel.uiState.collectAsStateWithLifecycle()
+            TreatmentBottomSheet(
+                onDismiss = { showTreatmentSheet = false },
+                showCgm = treatmentState.showCgm,
+                showCalibration = treatmentState.showCalibration,
+                showTreatment = treatmentState.showTreatment,
+                showInsulin = treatmentState.showInsulin,
+                showCarbs = treatmentState.showCarbs,
+                showCalculator = treatmentState.showCalculator,
+                isDexcomSource = treatmentState.isDexcomSource,
+                showSettingsIcon = treatmentState.showSettingsIcon,
+                quickWizardItems = treatmentState.quickWizardItems,
+                onNavigate = onNavigate,
+                treatmentButtonsDef = treatmentButtonsDef,
     // Treatment bottom sheet
     if (showTreatmentSheet) {
         val treatmentState by treatmentViewModel.uiState.collectAsStateWithLifecycle()
@@ -432,6 +448,7 @@ fun MainScreen(
             showCalibration = treatmentState.showCalibration,
             showTreatment = treatmentState.showTreatment,
             showInsulin = treatmentState.showInsulin,
+            showAfrezza = treatmentState.showAfrezza,
             showCarbs = treatmentState.showCarbs,
             showCalculator = treatmentState.showCalculator,
             isDexcomSource = treatmentState.isDexcomSource,

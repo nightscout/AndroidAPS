@@ -8,6 +8,8 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
@@ -56,7 +58,8 @@ class TreatmentViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val dexcomBoyda: DexcomBoyda,
-    private val elementAvailability: ElementAvailability
+    private val elementAvailability: ElementAvailability,
+    private val insulinManager: InsulinManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TreatmentUiState())
@@ -96,6 +99,10 @@ class TreatmentViewModel @Inject constructor(
             val showInsulin = preferences.get(BooleanKey.OverviewShowInsulinButton)
             val showCarbs = preferences.get(BooleanKey.OverviewShowCarbsButton)
             val showCalculator = preferences.get(BooleanKey.OverviewShowWizardButton)
+            // Show Afrezza button if user has configured an inhaled insulin
+            val showAfrezza = insulinManager.insulins.any {
+                InsulinType.fromPeak(it.insulinPeakTime).isInhaled
+            }
 
             val showSettingsIcon = !preferences.simpleMode
 
@@ -105,6 +112,7 @@ class TreatmentViewModel @Inject constructor(
                     showCalibration = showCalibration,
                     showTreatment = showTreatment,
                     showInsulin = showInsulin,
+                    showAfrezza = showAfrezza,
                     showCarbs = showCarbs,
                     showCalculator = showCalculator,
                     isDexcomSource = isDexcomSource,

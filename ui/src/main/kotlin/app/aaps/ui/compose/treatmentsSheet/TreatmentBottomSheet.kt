@@ -56,6 +56,7 @@ fun TreatmentBottomSheet(
     showCalibration: Boolean,
     showTreatment: Boolean,
     showInsulin: Boolean,
+    showAfrezza: Boolean,
     showCarbs: Boolean,
     showCalculator: Boolean,
     isDexcomSource: Boolean,
@@ -89,6 +90,7 @@ fun TreatmentBottomSheet(
                 showCalibration = showCalibration,
                 showTreatment = showTreatment,
                 showInsulin = showInsulin,
+                showAfrezza = showAfrezza,
                 showCarbs = showCarbs,
                 showCalculator = showCalculator,
                 isDexcomSource = isDexcomSource,
@@ -108,6 +110,7 @@ private fun TreatmentSelectionContent(
     showCalibration: Boolean,
     showTreatment: Boolean,
     showInsulin: Boolean,
+    showAfrezza: Boolean,
     showCarbs: Boolean,
     showCalculator: Boolean,
     isDexcomSource: Boolean,
@@ -249,6 +252,17 @@ private fun TreatmentSelectionContent(
             )
         }
 
+        // Afrezza (inhaled insulin)
+        if (showAfrezza) {
+            TreatmentItem(
+                elementType = ElementType.AFREZZA,
+                enabled = true,
+                disabledAlpha = disabledAlpha,
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.AFREZZA)) }
+            )
+        }
+
         // Carbs
         if (showCarbs) {
             TreatmentItem(
@@ -368,6 +382,7 @@ private fun TreatmentBottomSheetPreview() {
             showCalibration = true,
             showTreatment = true,
             showInsulin = true,
+            showAfrezza = true,
             showCarbs = true,
             showCalculator = true,
             isDexcomSource = false,
