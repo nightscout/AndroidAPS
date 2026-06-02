@@ -102,6 +102,41 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Aidex               -> IcXDrip
         Sources.Announcement        -> IcAnnouncement
         Sources.Automation          -> IcPluginAutomation
+        Sources.BatteryChange       -> IcPumpBattery
+        Sources.BgCheck             -> IcBgCheck
+        Sources.CalibrationDialog   -> IcCalibration
+        Sources.CarbDialog          -> IcCarbs
+        Sources.Exercise            -> IcActivity
+        Sources.FillDialog          -> IcCannulaChange
+        Sources.InsulinDialog       -> IcBolus
+        Sources.AfrezzaDialog       -> IcBolus
+        Sources.Intelligo           -> IcPluginIntelligo
+        Sources.LocalProfile        -> IcProfile
+        Sources.Loop                -> IcLoopClosed
+        Sources.LoopDialog          -> IcLoopClosed
+        Sources.MDI                 -> IcMdi
+        Sources.MM640g              -> IcPluginMM640G
+        Sources.Maintenance         -> IcPluginMaintenance
+        Sources.Medtronic           -> IcPluginMedtronic
+        Sources.Medtrum             -> IcPluginMedtrum
+        Sources.NSClient            -> IcPluginNsClient
+        Sources.NSClientSource      -> IcPluginNsClientBg
+        Sources.NSProfile           -> IcPluginNsClient
+        Sources.Note                -> IcNote
+        Sources.Question            -> IcQuestion
+        Sources.QuickWizard         -> IcQuickwizard
+        Sources.SensorInsert        -> IcCgmInsert
+        Sources.SiteRotationDialog  -> IcSiteRotation
+        Sources.Treatments          -> IcClinicalNotes
+        Sources.WizardDialog        -> IcCalculator
+        Sources.ExtendedBolusDialog -> IcExtendedBolus
+        Sources.TTDialog            -> IcTtHigh
+        Sources.ProfileSwitchDialog -> IcProfile
+        Sources.LoopDialog          -> IcLoopClosed
+        Sources.TempBasalDialog     -> IcTbrHigh
+        Sources.ConcentrationDialog -> IcPluginInsulin
+        Sources.SettingsExport      -> IcAutomation
+        Sources.Automation          -> IcAutomation
         Sources.Autotune            -> IcPluginAutotune
         Sources.BG                  -> IcGenericCgm
         Sources.BatteryChange       -> IcPumpBattery
@@ -182,6 +217,74 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Xdrip               -> IcXDrip
     }
 
+    @Deprecated("use fun icon(source: Sources): ImageVector?")
+    override fun iconId(source: Sources): Int = when (source) {
+        //Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
+        //Sources.ExtendedBolusDialog -> R.drawable.ic_actions_start_extended_bolus
+        //Sources.TTDialog            -> R.drawable.ic_temptarget_high
+        //Sources.ProfileSwitchDialog -> app.aaps.core.ui.R.drawable.ic_actions_profileswitch
+        //Sources.LoopDialog          -> R.drawable.ic_loop_closed
+        //Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
+        //Sources.ConcentrationDialog -> R.drawable.ic_insulin
+        //Sources.SettingsExport      -> R.drawable.ic_automation
+        Sources.Actions    -> R.drawable.ic_action
+        //Sources.Automation          -> R.drawable.ic_automation
+        //Sources.Autotune            -> R.drawable.ic_autotune
+        //Sources.BG                  -> R.drawable.ic_generic_cgm
+        //Sources.Aidex               -> R.drawable.ic_blooddrop_48
+        //Sources.Dexcom              -> R.drawable.ic_dexcom_g6
+        //Sources.Eversense           -> R.drawable.ic_eversense
+        //Sources.Glimp               -> R.drawable.ic_glimp
+        //Sources.MM640g              -> R.drawable.ic_generic_cgm
+        //Sources.NSClientSource      -> R.drawable.ic_nsclient_bg
+        //Sources.PocTech             -> R.drawable.ic_poctech
+        //Sources.Tomato              -> R.drawable.ic_sensor
+        //Sources.Glunovo             -> R.drawable.ic_glunovo
+        //Sources.Intelligo           -> app.aaps.core.ui.R.drawable.ic_intelligo
+        //Sources.Xdrip               -> R.drawable.ic_blooddrop_48
+        //Sources.Ottai               -> R.drawable.ic_syai_tag
+        //Sources.SyaiTag             -> R.drawable.ic_syai_tag
+        //Sources.SiBionic            -> R.drawable.ic_generic_cgm
+        //Sources.Sino                -> R.drawable.ic_generic_cgm
+        //Sources.LocalProfile        -> R.drawable.ic_local_profile
+        //Sources.Loop                -> R.drawable.ic_loop_closed_white
+        //Sources.Maintenance         -> app.aaps.core.ui.R.drawable.ic_maintenance
+        //Sources.NSClient            -> app.aaps.core.ui.R.drawable.ic_nightscout_syncs
+        //Sources.NSProfile           -> R.drawable.ic_nightscout_profile
+        //Sources.Objectives          -> app.aaps.core.ui.R.drawable.ic_graduation
+        Sources.Pump       -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        //Sources.Dana                -> app.aaps.core.ui.R.drawable.ic_danars_128
+        //Sources.DanaR               -> app.aaps.core.ui.R.drawable.ic_danars_128
+        //Sources.DanaRC              -> app.aaps.core.ui.R.drawable.ic_danars_128
+        //Sources.DanaRv2             -> app.aaps.core.ui.R.drawable.ic_danars_128
+        //Sources.DanaRS              -> app.aaps.core.ui.R.drawable.ic_danars_128
+        //Sources.DanaI               -> app.aaps.core.ui.R.drawable.ic_danai_128
+        //Sources.DiaconnG8           -> app.aaps.core.ui.R.drawable.ic_diaconn_g8
+        //Sources.Insight             -> app.aaps.core.ui.R.drawable.ic_insight_128
+        //Sources.Combo               -> app.aaps.core.ui.R.drawable.ic_combo_128
+        //Sources.Medtronic           -> app.aaps.core.ui.R.drawable.ic_veo_128
+        //Sources.Omnipod             -> R.drawable.ic_patch_pump_outline
+        //Sources.OmnipodEros         -> R.drawable.ic_patch_pump_outline
+        //Sources.OmnipodDash         -> R.drawable.ic_patch_pump_outline
+        Sources.EOPatch2   -> app.aaps.core.ui.R.drawable.ic_eopatch2_128
+        Sources.Equil      -> app.aaps.core.ui.R.drawable.ic_equil_128
+        //Sources.Medtrum             -> app.aaps.core.ui.R.drawable.ic_medtrum_128
+        Sources.MDI        -> R.drawable.ic_ict
+        //Sources.VirtualPump         -> R.drawable.ic_virtual_pump
+        //Sources.SMS                 -> R.drawable.ic_sms
+        //Sources.Wear                -> R.drawable.ic_watch
+        //Sources.Food                -> R.drawable.ic_food
+        //Sources.Stats               -> R.drawable.ic_cp_stats
+        //Sources.ConfigBuilder       -> app.aaps.core.ui.R.drawable.ic_cogs
+        Sources.Overview   -> app.aaps.core.ui.R.drawable.ic_home
+        Sources.Aaps       -> R.drawable.ic_aaps
+        //Sources.Garmin              -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Database   -> app.aaps.core.ui.R.drawable.ic_database_cleanup
+        //Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        //Sources.Random              -> R.drawable.ic_aaps
+        Sources.BgFragment -> R.drawable.ic_aaps
+        //Sources.Insulin             -> R.drawable.ic_insulin
+        else               -> error("Missing resource")
     @Composable
     override fun iconColor(source: Sources): Color = when (source) {
         Sources.Aaps                -> ElementType.AAPS.color()
@@ -222,6 +325,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Instara             -> ElementType.CGM_DEX.color()
         Sources.Insulin             -> ElementType.INSULIN_MANAGEMENT.color()
         Sources.InsulinDialog       -> ElementType.INSULIN.color()
+        Sources.AfrezzaDialog       -> ElementType.AFREZZA.color()
         Sources.Intelligo           -> ElementType.CGM_DEX.color()
         Sources.LocalProfile        -> ElementType.PROFILE_MANAGEMENT.color()
         Sources.Loop                -> ElementType.LOOP.color()
