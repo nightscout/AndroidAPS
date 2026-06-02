@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nightscout.eversense"
+    namespace = "app.aaps.plugins.eversense"
 }
 
 dependencies {

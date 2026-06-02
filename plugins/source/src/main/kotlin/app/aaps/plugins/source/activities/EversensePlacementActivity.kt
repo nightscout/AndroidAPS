@@ -9,11 +9,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import app.aaps.plugins.source.R
-import com.nightscout.eversense.EversenseCGMPlugin
-import com.nightscout.eversense.callbacks.EversenseWatcher
-import com.nightscout.eversense.enums.EversenseType
-import com.nightscout.eversense.models.EversenseCGMResult
-import com.nightscout.eversense.models.EversenseState
+import app.aaps.plugins.eversense.EversenseCGMPlugin
+import app.aaps.plugins.eversense.callbacks.EversenseWatcher
+import app.aaps.plugins.eversense.enums.EversenseType
+import app.aaps.plugins.eversense.models.EversenseCGMResult
+import app.aaps.plugins.eversense.models.EversenseState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

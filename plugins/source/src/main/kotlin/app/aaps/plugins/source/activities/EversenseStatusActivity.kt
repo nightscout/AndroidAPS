@@ -13,12 +13,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import app.aaps.plugins.source.R
-import com.nightscout.eversense.EversenseCGMPlugin
-import com.nightscout.eversense.callbacks.EversenseScanCallback
-import com.nightscout.eversense.callbacks.EversenseWatcher
-import com.nightscout.eversense.models.ActiveAlarm
-import com.nightscout.eversense.models.EversenseState
-import com.nightscout.eversense.models.EversenseScanResult
+import app.aaps.plugins.eversense.EversenseCGMPlugin
+import app.aaps.plugins.eversense.callbacks.EversenseScanCallback
+import app.aaps.plugins.eversense.callbacks.EversenseWatcher
+import app.aaps.plugins.eversense.models.ActiveAlarm
+import app.aaps.plugins.eversense.models.EversenseState
+import app.aaps.plugins.eversense.models.EversenseScanResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -54,7 +54,7 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
     override fun onTransmitterReady() { /* No-op: status refreshes via onStateChanged */ }
     override fun onTransmitterNotPlaced() { /* No-op: status refreshes via onStateChanged */ }
     override fun onAlarmReceived(alarm: ActiveAlarm) { /* No-op: status refreshes via onStateChanged */ }
-    override fun onCGMRead(type: com.nightscout.eversense.enums.EversenseType, readings: List<com.nightscout.eversense.models.EversenseCGMResult>) { /* No-op */ }
+    override fun onCGMRead(type: app.aaps.plugins.eversense.enums.EversenseType, readings: List<app.aaps.plugins.eversense.models.EversenseCGMResult>) { /* No-op */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

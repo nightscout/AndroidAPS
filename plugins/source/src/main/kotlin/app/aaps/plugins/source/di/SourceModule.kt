@@ -53,8 +53,8 @@ abstract class SourceModule {
     class Providers {
         @Provides
         @Singleton
-        fun provideEversenseCGMPlugin(@dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context): com.nightscout.eversense.EversenseCGMPlugin {
-            return com.nightscout.eversense.EversenseCGMPlugin(context)
+        fun provideEversenseCGMPlugin(@dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context): app.aaps.plugins.eversense.EversenseCGMPlugin {
+            return app.aaps.plugins.eversense.EversenseCGMPlugin(context)
         }
     }
 }
