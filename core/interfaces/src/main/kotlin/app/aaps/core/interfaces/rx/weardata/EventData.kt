@@ -97,6 +97,9 @@ sealed class EventData : Event() {
     data class ActionBolusPreCheck(val insulin: Double, val carbs: Int) : EventData()
 
     @Serializable
+    data class ActionAfrezzaPreCheck(val units: Int) : EventData()
+
+    @Serializable
     data class ActionFillPreCheck(val insulin: Double) : EventData()
 
     @Serializable
@@ -214,6 +217,9 @@ sealed class EventData : Event() {
 
     @Serializable
     data class ActionBolusConfirmed(val insulin: Double, val carbs: Int) : EventData()
+
+    @Serializable
+    data class ActionAfrezzaConfirmed(val units: Int) : EventData()
 
     @Serializable
     data class ActionECarbsConfirmed(val carbs: Int, val carbsTime: Long, val duration: Int) : EventData()

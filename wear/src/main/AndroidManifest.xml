@@ -716,6 +716,11 @@
             android:label="@string/action_insulin"
             android:theme="@style/WearAppCompatDark" />
         <activity
+            android:name=".interaction.actions.AfrezzaActivity"
+            android:exported="true"
+            android:label="@string/action_afrezza"
+            android:theme="@style/WearAppCompatDark" />
+        <activity
             android:name=".interaction.actions.ProfileSwitchActivity"
             android:exported="true"
             android:label="@string/status_profile_switch"

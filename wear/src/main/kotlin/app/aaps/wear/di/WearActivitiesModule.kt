@@ -7,6 +7,7 @@ import app.aaps.wear.tile.ActionsTileSettingsActivity
 import app.aaps.wear.tile.BgGraphTileSettingsActivity
 import app.aaps.wear.tile.TempTargetTileSettingsActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
+import app.aaps.wear.interaction.actions.AfrezzaActivity
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.interaction.actions.BolusActivity
 import app.aaps.wear.interaction.actions.CarbActivity
@@ -43,6 +44,7 @@ abstract class WearActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesBackgroundActionActivity(): BackgroundActionActivity
 
     @ContributesAndroidInjector abstract fun contributesAcceptActivity(): AcceptActivity
+    @ContributesAndroidInjector abstract fun contributesAfrezzaActivity(): AfrezzaActivity
     @ContributesAndroidInjector abstract fun contributesBolusActivity(): BolusActivity
     @ContributesAndroidInjector abstract fun contributesCarbActivity(): CarbActivity
     @ContributesAndroidInjector abstract fun contributesProfileSwitchActivity(): ProfileSwitchActivity
