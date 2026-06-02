@@ -68,6 +68,7 @@ import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.extendedBolusDialog.ExtendedBolusDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
 import app.aaps.ui.compose.history.HistoryScreen
+import app.aaps.ui.compose.afrezzaDialog.AfrezzaDialogScreen
 import app.aaps.ui.compose.insulinDialog.InsulinDialogScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -304,6 +305,15 @@ fun NavGraphBuilder.appNavGraph(
             onNavigateBack = { navController.safePopBackStack() },
             onShowDeliveryError = { comment ->
                 onShowDeliveryError(comment, app.aaps.core.ui.R.string.treatmentdeliveryerror)
+            }
+        )
+    }
+
+    composable(route = AppRoute.AfrezzaDialog.route) {
+        AfrezzaDialogScreen(
+            onNavigateBack = { navController.safePopBackStack() },
+            onShowMessage = { message ->
+                // Toast or Snackbar handled by caller
             }
         )
     }

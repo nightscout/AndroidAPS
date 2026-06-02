@@ -73,6 +73,7 @@ sealed class AppRoute(val route: String) {
     data object CalibrationDialog : AppRoute("calibration_dialog")
     data object CarbsDialog : AppRoute("carbs_dialog")
     data object InsulinDialog : AppRoute("insulin_dialog")
+    data object AfrezzaDialog : AppRoute("afrezza_dialog")
     data object TreatmentDialog : AppRoute("treatment_dialog")
     data object TempBasalDialog : AppRoute("temp_basal_dialog")
     data object ExtendedBolusDialog : AppRoute("extended_bolus_dialog")
