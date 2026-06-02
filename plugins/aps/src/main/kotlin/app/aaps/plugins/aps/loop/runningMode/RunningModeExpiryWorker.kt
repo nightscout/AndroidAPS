@@ -1,16 +1,20 @@
 package app.aaps.plugins.aps.loop.runningMode
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 /**
  * Fires when a temporary running mode reaches its declared end.
@@ -27,15 +31,17 @@ import javax.inject.Inject
  * Idempotent and safe to fire even if the RM was already canceled by the user — the pump state
  * check ensures we only cancel if there is actually a zero-TBR to clean up.
  */
-class RunningModeExpiryWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.Default) {
-
-    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var config: Config
+@HiltWorker
+class RunningModeExpiryWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val processedTbrEbData: ProcessedTbrEbData,
+    private val commandQueue: CommandQueue,
+    private val dateUtil: DateUtil,
+    private val config: Config
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         if (!config.APS) {

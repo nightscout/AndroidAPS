@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.telephony.SmsManager
 import android.telephony.SmsMessage
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.configuration.Constants
@@ -46,6 +47,7 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -88,6 +90,8 @@ import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorOtpScreen
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.smsCommunicator.keys.SmsIntentKey
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -208,13 +212,15 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     // cannot be inner class because of needed injection
-    class SmsCommunicatorWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.IO) {
-
-        @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-        @Inject lateinit var dataInbox: DataInbox
+    @HiltWorker
+    class SmsCommunicatorWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val smsCommunicatorPlugin: SmsCommunicatorPlugin,
+        private val dataInbox: DataInbox
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
         override suspend fun doWorkAndLog(): Result {
             val bundles = dataInbox.drain(SmsInbox)

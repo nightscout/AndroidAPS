@@ -23,8 +23,7 @@ import dagger.multibindings.IntoSet
 @Suppress("unused")
 abstract class MaintenanceImplModule {
 
-    @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
-    @ContributesAndroidInjector abstract fun contributesApsResultExportWorker(): ImportExportPrefsImpl.ApsResultExportWorker
+    // CsvExportWorker and ApsResultExportWorker migrated to @HiltWorker (constructed by HiltWorkerFactory).
     @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
     @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): FileListProvider
 

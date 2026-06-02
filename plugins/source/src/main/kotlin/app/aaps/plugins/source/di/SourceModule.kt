@@ -3,20 +3,10 @@ package app.aaps.plugins.source.di
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
-import app.aaps.plugins.source.GlimpPlugin
-import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
-import app.aaps.plugins.source.PatchedSiAppPlugin
-import app.aaps.plugins.source.PatchedSinoAppPlugin
-import app.aaps.plugins.source.PoctechPlugin
-import app.aaps.plugins.source.SyaiPlugin
-import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
-import app.aaps.plugins.source.instara.InstaraPlugin
-import app.aaps.plugins.source.instara.InstaraStaleCheckWorker
 import app.aaps.plugins.source.notificationreader.NotificationCollectorService
 import dagger.Binds
 import dagger.Module
@@ -33,23 +23,9 @@ import dagger.hilt.components.SingletonComponent
 @Suppress("unused")
 abstract class SourceModule {
 
-    @ContributesAndroidInjector abstract fun contributesXdripWorker(): XdripSourcePlugin.XdripSourceWorker
-    @ContributesAndroidInjector abstract fun contributesDexcomWorker(): DexcomPlugin.DexcomWorker
-    @ContributesAndroidInjector abstract fun contributesMM640gWorker(): MM640gPlugin.MM640gWorker
-    @ContributesAndroidInjector abstract fun contributesGlimpWorker(): GlimpPlugin.GlimpWorker
-    @ContributesAndroidInjector abstract fun contributesPoctechWorker(): PoctechPlugin.PoctechWorker
-    @ContributesAndroidInjector abstract fun contributesTomatoWorker(): TomatoPlugin.TomatoWorker
-    @ContributesAndroidInjector abstract fun contributesSyaiWorker(): SyaiPlugin.SyaiWorker
-    @ContributesAndroidInjector abstract fun contributesSiAppWorker(): PatchedSiAppPlugin.PatchedSiAppWorker
-    @ContributesAndroidInjector abstract fun contributesSinoAppWorker(): PatchedSinoAppPlugin.PatchedSinoAppWorker
-
+    // All BG-source workers migrated to @HiltWorker (constructed by HiltWorkerFactory).
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
     @ContributesAndroidInjector abstract fun contributesNotificationCollectorService(): NotificationCollectorService
-    @ContributesAndroidInjector abstract fun contributesAidexWorker(): AidexPlugin.AidexWorker
-
-    // Instara related worker
-    @ContributesAndroidInjector abstract fun contributesInstaraWorker(): InstaraPlugin.InstaraWorker
-    @ContributesAndroidInjector abstract fun contributesInstaraStaleCheckWorker(): InstaraStaleCheckWorker
 
     @Module
     @InstallIn(SingletonComponent::class)

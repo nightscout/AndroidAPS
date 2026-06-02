@@ -31,6 +31,7 @@ dependencies {
 
     api(libs.androidx.room.runtime)
     api(libs.androidx.room.rxjava3)
+    implementation(libs.androidx.sqlite.bundled)
 
     api(libs.com.google.dagger.android)
     api(libs.com.google.dagger.android.support)

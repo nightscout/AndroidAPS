@@ -34,23 +34,10 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var workerParameters: WorkerParameters
     @Mock lateinit var dataInbox: DataInbox
 
-    init {
-        addInjector { injector ->
-            if (injector is XdripSourcePlugin.XdripSourceWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.xdripSourcePlugin = xdripSourcePlugin
-                injector.persistenceLayer = persistenceLayer
-                injector.dataInbox = dataInbox
-                injector.dateUtil = dateUtil
-                injector.preferences = preferences
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
         whenever(workerParameters.inputData).thenReturn(workDataOf())
-        worker = XdripSourcePlugin.XdripSourceWorker(context, workerParameters)
+        worker = XdripSourcePlugin.XdripSourceWorker(context, workerParameters, aapsLogger, fabricPrivacy, xdripSourcePlugin, persistenceLayer, preferences, dateUtil, dataInbox)
     }
 
     @Test

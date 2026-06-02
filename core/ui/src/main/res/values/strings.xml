@@ -464,6 +464,8 @@
     <string name="location_front_left_lower_abdomen">Lower Left Front Abdomen</string>
     <string name="location_back_right_buttock">Right Buttock</string>
     <string name="location_back_left_buttock">Left Buttock</string>
+    <string name="location_back_right_lower_back">Right Lower Back</string>
+    <string name="location_back_left_lower_back">Left Lower Back</string>
     <string name="location_side_right_upper_thigh">Upper Right Outer Thigh</string>
     <string name="location_side_left_upper_thigh">Upper Left Outer Thigh</string>
     <string name="location_side_right_lower_thigh">Lower Right Outer Thigh</string>

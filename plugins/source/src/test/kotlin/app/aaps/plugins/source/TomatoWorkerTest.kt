@@ -27,16 +27,6 @@ class TomatoWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector {
-            if (it is TomatoPlugin.TomatoWorker) {
-                it.aapsLogger = aapsLogger
-                it.tomatoPlugin = tomatoPlugin
-                it.persistenceLayer = persistenceLayer
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
         whenever(workerParameters.inputData).thenReturn(
@@ -45,9 +35,7 @@ class TomatoWorkerTest : TestBaseWithProfile() {
                 "com.fanqies.tomatofn.Extras.BgEstimate" to 150.0
             )
         )
-        worker = TomatoPlugin.TomatoWorker(context, workerParameters)
-        worker.tomatoPlugin = tomatoPlugin
-        worker.persistenceLayer = persistenceLayer
+        worker = TomatoPlugin.TomatoWorker(context, workerParameters, aapsLogger, fabricPrivacy, tomatoPlugin, persistenceLayer)
     }
 
     @Test

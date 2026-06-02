@@ -27,6 +27,8 @@ import app.aaps.wear.utils.toVisibilityKeepSpace
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.data.bgDataArray
+import app.aaps.wear.data.statusDataArray
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import dagger.android.AndroidInjection
@@ -70,11 +72,7 @@ abstract class BaseWatchFace : WatchFace() {
      * Each entry contains current BG, trend arrow, delta, and range info.
      */
     protected val singleBg
-        get() = arrayOf(
-            complicationData.bgData,
-            complicationData.bgData1,
-            complicationData.bgData2
-        )
+        get() = complicationData.bgDataArray(sp.getBoolean(R.string.key_switch_external, false))
 
     /**
      * Status data for all three datasets (primary + 2 followers).
@@ -87,11 +85,7 @@ abstract class BaseWatchFace : WatchFace() {
      * Each entry contains IOB, COB, basal rate, battery, loop status, etc.
      */
     protected val status
-        get() = arrayOf(
-            complicationData.statusData,
-            complicationData.statusData1,
-            complicationData.statusData2
-        )
+        get() = complicationData.statusDataArray(sp.getBoolean(R.string.key_switch_external, false))
 
     /**
      * Treatment history (boluses, temp basals, extended boluses).

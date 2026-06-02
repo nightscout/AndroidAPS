@@ -2,6 +2,7 @@ package app.aaps.plugins.source
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
@@ -16,10 +17,13 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.plugins.source.compose.BgSourceComposeContent
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -48,13 +52,15 @@ class PatchedSinoAppPlugin @Inject constructor(
     aapsLogger, rh, preferences, config
 ), BgSource {
 
-    class PatchedSinoAppWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.IO) {
-
-        @Inject lateinit var patchedSinoAppPlugin: PatchedSinoAppPlugin
-        @Inject lateinit var persistenceLayer: PersistenceLayer
+    @HiltWorker
+    class PatchedSinoAppWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val patchedSinoAppPlugin: PatchedSinoAppPlugin,
+        private val persistenceLayer: PersistenceLayer
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {

@@ -134,6 +134,8 @@ data class TE(
         FRONT_LEFT_LOWER_ABDOMEN("Front Left Lower Abdomen"),
         BACK_RIGHT_BUTTOCK("Back Right Buttock"),
         BACK_LEFT_BUTTOCK("Back Left Buttock"),
+        BACK_RIGHT_LOWER_BACK("Back Right Lower Back"),
+        BACK_LEFT_LOWER_BACK("Back Left Lower Back"),
         FRONT_RIGHT_UPPER_THIGH("Front Right Upper Thigh"),
         FRONT_LEFT_UPPER_THIGH("Front Left Upper Thigh"),
         FRONT_RIGHT_LOWER_THIGH("Front Right Lower Thigh"),

@@ -9,8 +9,10 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -115,10 +117,20 @@ import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 
 @HiltAndroidApp
-class MainApp : Application(), HasAndroidInjector {
+class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
+
+    // WorkManager on-demand initialization. HiltWorkerFactory constructs @HiltWorker workers via
+    // assisted injection; workers not yet migrated return null from it and fall back to WorkManager's
+    // default reflective factory (which self-injects through HasAndroidInjector). The default
+    // androidx.startup WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
+    @Inject lateinit var hiltWorkerFactory: HiltWorkerFactory
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(hiltWorkerFactory)
+            .build()
 
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var aapsLogger: AAPSLogger

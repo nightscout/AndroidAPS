@@ -2,6 +2,7 @@ package app.aaps.plugins.source
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
@@ -17,10 +18,13 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcPluginMM640G
 import app.aaps.plugins.source.compose.BgSourceComposeContent
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -50,14 +54,16 @@ class MM640gPlugin @Inject constructor(
 ), BgSource {
 
     // cannot be inner class because of needed injection
-    class MM640gWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.IO) {
-
-        @Inject lateinit var mM640gPlugin: MM640gPlugin
-        @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var persistenceLayer: PersistenceLayer
+    @HiltWorker
+    class MM640gWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val mM640gPlugin: MM640gPlugin,
+        private val dateUtil: DateUtil,
+        private val persistenceLayer: PersistenceLayer
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {

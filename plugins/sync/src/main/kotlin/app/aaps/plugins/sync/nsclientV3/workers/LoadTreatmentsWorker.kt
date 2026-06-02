@@ -1,32 +1,38 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 import kotlin.math.max
 
-class LoadTreatmentsWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.IO) {
-
-    @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var storeDataForDb: StoreDataForDb
-    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var nsClientRepository: NSClientRepository
+@HiltWorker
+class LoadTreatmentsWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val nsClientV3Plugin: NSClientV3Plugin,
+    private val dateUtil: DateUtil,
+    private val storeDataForDb: StoreDataForDb,
+    private val nsIncomingDataProcessor: NsIncomingDataProcessor,
+    private val nsClientRepository: NSClientRepository
+) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))

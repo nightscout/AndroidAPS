@@ -30,20 +30,9 @@ class MM640gWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector { injector ->
-            if (injector is MM640gPlugin.MM640gWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.mM640gPlugin = mM640gPlugin
-                injector.persistenceLayer = persistenceLayer
-                injector.dateUtil = dateUtil
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
-        worker = MM640gPlugin.MM640gWorker(context, workerParameters)
+        worker = MM640gPlugin.MM640gWorker(context, workerParameters, aapsLogger, fabricPrivacy, mM640gPlugin, dateUtil, persistenceLayer)
     }
 
     @Test

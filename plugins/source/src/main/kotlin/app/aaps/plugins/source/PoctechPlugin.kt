@@ -2,6 +2,7 @@ package app.aaps.plugins.source
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.configuration.Constants
@@ -18,11 +19,14 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcPluginPocTec
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.source.compose.BgSourceComposeContent
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -52,13 +56,15 @@ class PoctechPlugin @Inject constructor(
 ), BgSource {
 
     // cannot be inner class because of needed injection
-    class PoctechWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.IO) {
-
-        @Inject lateinit var poctechPlugin: PoctechPlugin
-        @Inject lateinit var persistenceLayer: PersistenceLayer
+    @HiltWorker
+    class PoctechWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val poctechPlugin: PoctechPlugin,
+        private val persistenceLayer: PersistenceLayer
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {

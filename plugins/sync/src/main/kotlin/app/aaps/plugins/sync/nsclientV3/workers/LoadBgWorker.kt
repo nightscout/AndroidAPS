@@ -1,14 +1,17 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
@@ -16,21 +19,25 @@ import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 import kotlin.math.max
 
-class LoadBgWorker(
-    context: Context, params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.IO) {
-
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var nsClientSource: NSClientSource
-    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var storeDataForDb: StoreDataForDb
-    @Inject lateinit var nsClientRepository: NSClientRepository
+@HiltWorker
+class LoadBgWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val preferences: Preferences,
+    private val dateUtil: DateUtil,
+    private val nsClientV3Plugin: NSClientV3Plugin,
+    private val nsClientSource: NSClientSource,
+    private val nsIncomingDataProcessor: NsIncomingDataProcessor,
+    private val storeDataForDb: StoreDataForDb,
+    private val nsClientRepository: NSClientRepository
+) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !nsClientV3Plugin.doingFullSync)

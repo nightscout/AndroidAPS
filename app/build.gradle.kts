@@ -95,8 +95,8 @@ android {
         buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
 
-        // For Dagger injected instrumentation tests in app module
-        testInstrumentationRunner = "app.aaps.runners.InjectedTestRunner"
+        // For Hilt injected instrumentation tests in app module
+        testInstrumentationRunner = "app.aaps.runners.HiltTestRunner"
     }
 
     flavorDimensions += "standard"
@@ -224,6 +224,9 @@ dependencies {
     testImplementation(project(":shared:tests"))
     androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(libs.androidx.test.rules)
+    // Initializes WorkManager for instrumented tests (BaseTestApp), since the production
+    // Configuration.Provider/manifest initializer don't apply under the Hilt test application.
+    androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     // Rhino is needed by the openAPS adapter test fixtures under app/src/androidTest
@@ -240,6 +243,14 @@ dependencies {
     ksp(libs.com.google.dagger.compiler)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
+    // Hilt WorkManager integration: HiltWorkerFactory + @HiltWorker assisted-injection glue.
+    // androidx.hilt:hilt-compiler is a SEPARATE annotation processor from the dagger hilt-compiler above.
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+    // Hilt instrumentation testing: lets androidTest reuse the production @InstallIn graph
+    // (single source of truth) with @TestInstallIn overrides instead of a hand-maintained component.
+    androidTestImplementation(libs.com.google.dagger.hilt.android.testing)
+    kspAndroidTest(libs.com.google.dagger.hilt.compiler)
 
     // MainApp
     implementation(libs.com.uber.rxdogtag2.rxdogtag)

@@ -23,6 +23,8 @@ import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
+import app.aaps.wear.data.bgDataArray
+import app.aaps.wear.data.statusDataArray
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.watchfaces.utils.WatchFace
 import app.aaps.wear.watchfaces.utils.WatchFaceTime
@@ -57,17 +59,9 @@ class CircleWatchface : WatchFace() {
     private var complicationData: app.aaps.wear.data.ComplicationData = app.aaps.wear.data.ComplicationData()
 
     private val singleBg
-        get() = arrayOf(
-            complicationData.bgData,
-            complicationData.bgData1,
-            complicationData.bgData2
-        )
+        get() = complicationData.bgDataArray(sp.getBoolean(R.string.key_switch_external, false))
     private val status
-        get() = arrayOf(
-            complicationData.statusData,
-            complicationData.statusData1,
-            complicationData.statusData2
-        )
+        get() = complicationData.statusDataArray(sp.getBoolean(R.string.key_switch_external, false))
     private val graphData get() = complicationData.graphData
 
     companion object {

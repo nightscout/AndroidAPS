@@ -1,44 +1,50 @@
 package app.aaps.receivers
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.awaitInitialized
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.R
 import app.aaps.ui.compose.scenes.ActiveSceneManager
 import app.aaps.ui.compose.scenes.SceneExecutor
 import app.aaps.ui.compose.scenes.SceneRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 /**
  * WorkManager worker that fires when a scene's duration expires.
  * Reverts non-duration actions (SMB), marks scene as expired, and either
  * auto-activates a chained follow-up scene or posts an "ended" notification.
  */
-class SceneExpiryWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.Default) {
-
-    @Inject lateinit var activeSceneManager: ActiveSceneManager
-    @Inject lateinit var sceneExecutor: SceneExecutor
-    @Inject lateinit var sceneRepository: SceneRepository
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var config: Config
+@HiltWorker
+class SceneExpiryWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val activeSceneManager: ActiveSceneManager,
+    private val sceneExecutor: SceneExecutor,
+    private val sceneRepository: SceneRepository,
+    private val loop: Loop,
+    private val activePlugin: ActivePlugin,
+    private val profileFunction: ProfileFunction,
+    private val rh: ResourceHelper,
+    private val notificationManager: NotificationManager,
+    private val config: Config
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         if (!config.awaitInitialized()) {

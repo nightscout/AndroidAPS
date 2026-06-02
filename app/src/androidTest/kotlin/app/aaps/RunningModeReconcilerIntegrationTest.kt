@@ -1,6 +1,8 @@
 package app.aaps
 
+import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.aaps.core.data.model.ICfg
@@ -17,7 +19,6 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.di.TestApplication
 import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
@@ -25,6 +26,7 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -34,6 +36,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import org.junit.runner.RunWith
 import javax.inject.Inject
 
 /**
@@ -48,7 +51,9 @@ import javax.inject.Inject
  * The pure logic (transition table, gate predicate, duration rounding) is exhaustively covered
  * by the JVM unit tests in core:objects and plugins:aps.
  */
-class RunningModeReconcilerIntegrationTest @Inject constructor() {
+@HiltAndroidTest
+@RunWith(AndroidJUnit4::class)
+class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
 
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var commandQueue: CommandQueue
@@ -62,11 +67,10 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Inject lateinit var pumpSync: PumpSync
 
-    private val context = ApplicationProvider.getApplicationContext<TestApplication>()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
 
     @Before
     fun setUp() {
-        context.androidInjector().inject(this)
         WorkManager.getInstance(context).cancelAllWork()
         runBlocking { persistenceLayer.clearDatabases() }
         (profileFunction as ProfileFunctionImpl).cache.clear()
@@ -75,7 +79,7 @@ class RunningModeReconcilerIntegrationTest @Inject constructor() {
         // below re-baselines against the just-wiped DB. Without this, a freshly inserted mode can
         // collide with the previous test's baseline and be de-duplicated, so no pump action fires.
         runningModeReconciler.resetState()
-        // TestApplication does not start the reconciler / scheduler on its own — start them here.
+        // The test application does not start the reconciler / scheduler on its own — start them here.
         runningModeReconciler.start()
         runningModeExpiryScheduler.start()
         // Drain late-arriving commands from the previous test's appScope coroutines (e.g. the

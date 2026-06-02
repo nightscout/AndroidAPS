@@ -24,14 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.lifecycleScope
-import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -43,7 +39,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -51,7 +46,6 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.ln
 import kotlin.math.pow
@@ -60,7 +54,6 @@ class ErrorActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var uiInteraction: UiInteraction
@@ -155,19 +148,6 @@ class ErrorActivity : DaggerAppCompatActivity() {
                 }
             }
         }
-
-        // Create announcement if configured
-        if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS)
-            lifecycleScope.launch {
-                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                    therapyEvent = TE.asAnnouncement(status),
-                    timestamp = dateUtil.now(),
-                    action = Action.CAREPORTAL,
-                    source = Sources.Aaps,
-                    note = status,
-                    listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
-                )
-            }
     }
 
     override fun onNewIntent(intent: Intent) {

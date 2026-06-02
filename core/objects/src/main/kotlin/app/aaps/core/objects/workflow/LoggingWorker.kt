@@ -6,19 +6,22 @@ import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-abstract class LoggingWorker(context: Context, workerParams: WorkerParameters, private val dispatcher: CoroutineDispatcher) : CoroutineWorker(context, workerParams) {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
+/**
+ * Base class for WorkManager workers. Subclasses are `@HiltWorker`s whose `@AssistedInject`
+ * constructor supplies [aapsLogger] and [fabricPrivacy] (plus the worker's own dependencies) and
+ * are instantiated by `HiltWorkerFactory`. [doWork] runs [doWorkAndLog] on [dispatcher] and logs
+ * the result.
+ */
+abstract class LoggingWorker(
+    context: Context,
+    workerParams: WorkerParameters,
+    private val dispatcher: CoroutineDispatcher,
+    val aapsLogger: AAPSLogger,
+    val fabricPrivacy: FabricPrivacy
+) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result =
         withContext(dispatcher) {

@@ -1,9 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
+import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.IDs
@@ -58,19 +61,13 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
     private lateinit var receiverDelegate: ReceiverDelegate
     private lateinit var sut: LoadTreatmentsWorker
 
-    init {
-        addInjector {
-            if (it is LoadTreatmentsWorker) {
-                it.aapsLogger = aapsLogger
-                it.fabricPrivacy = fabricPrivacy
-                it.dateUtil = dateUtil
-                it.nsClientV3Plugin = nsClientV3Plugin
-                it.storeDataForDb = storeDataForDb
-                it.nsIncomingDataProcessor = nsIncomingDataProcessor
-                it.nsClientRepository = nsClientRepository
-            }
-        }
-    }
+    private fun buildSut(): LoadTreatmentsWorker =
+        TestListenableWorkerBuilder<LoadTreatmentsWorker>(context)
+            .setWorkerFactory(object : WorkerFactory() {
+                override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
+                    LoadTreatmentsWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, dateUtil, storeDataForDb, nsIncomingDataProcessor, nsClientRepository)
+            })
+            .build()
 
     @BeforeEach
     fun setUp() {
@@ -89,7 +86,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `notInitializedAndroidClient returns failure`() = runTest(timeout = 30.seconds) {
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
 
         val result = sut.doWorkAndLog()
 
@@ -104,7 +101,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -129,7 +126,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         val nsTreatment = carbs.toNSCarbs()
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, listOf(nsTreatment)))
@@ -146,7 +143,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
         nsClientV3Plugin.newestDataOnServer?.collections?.treatments = now - 2000
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -171,7 +168,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = now - 2000 // Not first load
         nsClientV3Plugin.newestDataOnServer?.collections?.treatments = now
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         val nsTreatment = carbs.toNSCarbs()
         whenever(nsAndroidClient.getTreatmentsModifiedSince(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, listOf(nsTreatment)))
@@ -189,7 +186,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = now - 2000 // Not first load
         nsClientV3Plugin.newestDataOnServer?.collections?.treatments = now
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsModifiedSince(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, emptyList()))
 
@@ -206,7 +203,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
         nsClientV3Plugin.newestDataOnServer?.collections?.treatments = Long.MAX_VALUE
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         val errorMessage = "Network error"
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenThrow(RuntimeException(errorMessage))
@@ -226,7 +223,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
         nsClientV3Plugin.lastOperationError = "Previous error"
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -243,7 +240,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -261,7 +258,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
         nsClientV3Plugin.doingFullSync = true
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -286,7 +283,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.treatments = now
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         val nsTreatment = carbs.toNSCarbs()
         // 304 = Not Modified response
         whenever(nsAndroidClient.getTreatmentsModifiedSince(anyLong(), anyInt()))
@@ -307,7 +304,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
         nsClientV3Plugin.newestDataOnServer?.collections?.treatments = Long.MAX_VALUE
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -325,7 +322,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = now - 2000 // Not first load
         nsClientV3Plugin.newestDataOnServer?.collections?.treatments = now
-        sut = TestListenableWorkerBuilder<LoadTreatmentsWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getTreatmentsModifiedSince(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, emptyList()))
 

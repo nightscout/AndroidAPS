@@ -30,19 +30,9 @@ class PoctechWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector { injector ->
-            if (injector is PoctechPlugin.PoctechWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.poctechPlugin = poctechPlugin
-                injector.persistenceLayer = persistenceLayer
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
-        worker = PoctechPlugin.PoctechWorker(context, workerParameters)
+        worker = PoctechPlugin.PoctechWorker(context, workerParameters, aapsLogger, fabricPrivacy, poctechPlugin, persistenceLayer)
     }
 
     @Test

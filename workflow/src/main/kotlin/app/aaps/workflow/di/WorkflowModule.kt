@@ -5,12 +5,9 @@ import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.workflow.CalculationSignalsImpl
 import app.aaps.workflow.CalculationWorkflowImpl
-import app.aaps.workflow.PostCalculationWorker
-import app.aaps.workflow.PrepareGraphDataWorker
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -38,6 +35,5 @@ abstract class WorkflowModule {
         @Provides @Singleton fun provideMainSignalsEmitter(impl: CalculationSignalsImpl): CalculationSignalsEmitter = impl
     }
 
-    @ContributesAndroidInjector abstract fun prepareGraphDataWorkerInjector(): PrepareGraphDataWorker
-    @ContributesAndroidInjector abstract fun postCalculationWorkerInjector(): PostCalculationWorker
+    // PostCalculationWorker and PrepareGraphDataWorker migrated to @HiltWorker (constructed by HiltWorkerFactory).
 }

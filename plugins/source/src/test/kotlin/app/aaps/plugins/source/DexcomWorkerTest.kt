@@ -34,24 +34,10 @@ class DexcomWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var workerParameters: WorkerParameters
     @Mock lateinit var dataInbox: DataInbox
 
-    init {
-        addInjector { injector ->
-            if (injector is DexcomPlugin.DexcomWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.dexcomPlugin = dexcomPlugin
-                injector.persistenceLayer = persistenceLayer
-                injector.dataInbox = dataInbox
-                injector.dateUtil = dateUtil
-                injector.preferences = preferences
-                injector.profileUtil = profileUtil
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
         whenever(workerParameters.inputData).thenReturn(workDataOf())
-        worker = DexcomPlugin.DexcomWorker(context, workerParameters)
+        worker = DexcomPlugin.DexcomWorker(context, workerParameters, aapsLogger, fabricPrivacy, dexcomPlugin, preferences, dateUtil, dataInbox, persistenceLayer, profileUtil)
     }
 
     @Test

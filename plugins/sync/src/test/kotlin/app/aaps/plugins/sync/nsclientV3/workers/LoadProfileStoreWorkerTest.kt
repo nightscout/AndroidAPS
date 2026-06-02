@@ -1,9 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
+import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
@@ -59,18 +62,13 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
     private lateinit var receiverDelegate: ReceiverDelegate
     private lateinit var sut: LoadProfileStoreWorker
 
-    init {
-        addInjector {
-            if (it is LoadProfileStoreWorker) {
-                it.aapsLogger = aapsLogger
-                it.fabricPrivacy = fabricPrivacy
-                it.dateUtil = dateUtil
-                it.nsClientV3Plugin = nsClientV3Plugin
-                it.nsIncomingDataProcessor = nsIncomingDataProcessor
-                it.nsClientRepository = nsClientRepository
-            }
-        }
-    }
+    private fun buildSut(): LoadProfileStoreWorker =
+        TestListenableWorkerBuilder<LoadProfileStoreWorker>(context)
+            .setWorkerFactory(object : WorkerFactory() {
+                override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
+                    LoadProfileStoreWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, dateUtil, nsIncomingDataProcessor, nsClientRepository)
+            })
+            .build()
 
     @BeforeEach
     fun setUp() {
@@ -89,7 +87,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `notInitializedAndroidClient returns failure`() = runTest(timeout = 30.seconds) {
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val result = sut.doWorkAndLog()
 
@@ -104,7 +102,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = 0L // First load
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = Long.MAX_VALUE
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val profile = JSONObject().apply {
             put("defaultProfile", "Default")
@@ -128,7 +126,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000 // Not first load
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val profile = JSONObject().apply {
             put("defaultProfile", "Default")
@@ -151,7 +149,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val profile = JSONObject().apply {
             put("defaultProfile", "Default")
@@ -173,7 +171,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val profile = JSONObject().apply {
             put("defaultProfile", "Default")
@@ -196,7 +194,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val createdAt = dateUtil.toISOString(now - 300)
         val profile = JSONObject().apply {
@@ -220,7 +218,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 1000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now - 2000 // Older than lastLoaded
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val result = sut.doWorkAndLog()
 
@@ -236,7 +234,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
             .thenReturn(NSAndroidClient.ReadResponse(200, null, emptyList()))
@@ -254,7 +252,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val profile1 = JSONObject().apply {
             put("defaultProfile", "Profile1")
@@ -287,7 +285,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
         val errorMessage = "Network error"
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
             .thenThrow(RuntimeException(errorMessage))
@@ -306,7 +304,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.profile = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
         nsClientV3Plugin.doingFullSync = true
-        sut = TestListenableWorkerBuilder<LoadProfileStoreWorker>(context).build()
+        sut = buildSut()
 
         val profile = JSONObject().apply {
             put("defaultProfile", "Default")

@@ -1,9 +1,7 @@
 package app.aaps.plugins.sync.di
 
-import app.aaps.plugins.sync.openhumans.OpenHumansWorker
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
@@ -13,8 +11,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class OpenHumansModule {
 
     // OHLoginActivity is now @AndroidEntryPoint (Hilt-injected)
-
-    @ContributesAndroidInjector abstract fun contributesOpenHumansWorker(): OpenHumansWorker
+    // OpenHumansWorker migrated to @HiltWorker (constructed by HiltWorkerFactory).
 
     companion object {
 

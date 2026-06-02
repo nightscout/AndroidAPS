@@ -1,28 +1,34 @@
 package app.aaps.plugins.sync.nsclient.workers
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.sync.nsclient.data.NSMbg
 import app.aaps.plugins.sync.nsclient.extensions.therapyEventFromNsMbg
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
-class NSClientMbgWorker(
-    context: Context,
-    params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.IO) {
-
-    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var config: Config
-    @Inject lateinit var storeDataForDb: StoreDataForDb
+@HiltWorker
+class NSClientMbgWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val dataWorkerStorage: DataWorkerStorage,
+    private val preferences: Preferences,
+    private val config: Config,
+    private val storeDataForDb: StoreDataForDb
+) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         val ret = Result.success()

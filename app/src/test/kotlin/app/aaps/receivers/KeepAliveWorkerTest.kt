@@ -57,28 +57,31 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         whenever(config.appInitialized).thenReturn(true)
     }
 
-    // Helper to create the worker instance directly
+    // Helper to create the worker instance directly. Worker now uses constructor injection
+    // (@HiltWorker / @AssistedInject), so dependencies are passed as constructor arguments.
     private fun createWorker(): KeepAliveWorker =
-        KeepAliveWorker(context, workerParameters).also {
-            // Manually inject all mocks.
-            it.persistenceLayer = persistenceLayer
-            it.config = config
-            it.iobCobCalculator = iobCobCalculator
-            it.loop = loop
-            it.dateUtil = dateUtil
-            it.activePlugin = activePlugin
-            it.profileFunction = profileFunction
-            it.rxBus = mockedRxBus
-            it.commandQueue = commandQueue
-            it.maintenance = maintenance
-            it.preferences = preferences
-            it.dstHelperPlugin = dstHelperPlugin
-            it.aapsLogger = aapsLogger
-            it.localAlertUtils = localAlertUtils
-            it.workManager = workManager
-            it.rh = rh
-            it.ch = ch
-        }
+        KeepAliveWorker(
+            context = context,
+            params = workerParameters,
+            aapsLogger = aapsLogger,
+            fabricPrivacy = fabricPrivacy,
+            localAlertUtils = localAlertUtils,
+            persistenceLayer = persistenceLayer,
+            config = config,
+            iobCobCalculator = iobCobCalculator,
+            loop = loop,
+            dateUtil = dateUtil,
+            activePlugin = activePlugin,
+            profileFunction = profileFunction,
+            rxBus = mockedRxBus,
+            commandQueue = commandQueue,
+            maintenance = maintenance,
+            rh = rh,
+            preferences = preferences,
+            dstHelperPlugin = dstHelperPlugin,
+            workManager = workManager,
+            ch = ch
+        )
 
     @Test
     fun `checkPump requests status when connection is outdated`() = runTest {

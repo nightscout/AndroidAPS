@@ -1,9 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
+import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
@@ -55,16 +58,13 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
     private lateinit var receiverDelegate: ReceiverDelegate
     private lateinit var sut: LoadStatusWorker
 
-    init {
-        addInjector {
-            if (it is LoadStatusWorker) {
-                it.aapsLogger = aapsLogger
-                it.fabricPrivacy = fabricPrivacy
-                it.nsClientV3Plugin = nsClientV3Plugin
-                it.nsClientRepository = nsClientMvvmRepository
-            }
-        }
-    }
+    private fun buildSut(): LoadStatusWorker =
+        TestListenableWorkerBuilder<LoadStatusWorker>(context)
+            .setWorkerFactory(object : WorkerFactory() {
+                override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
+                    LoadStatusWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, nsClientMvvmRepository)
+            })
+            .build()
 
     @BeforeEach
     fun setUp() {
@@ -84,7 +84,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `notInitializedAndroidClient returns failure`() = runTest(timeout = 30.seconds) {
-        sut = TestListenableWorkerBuilder<LoadStatusWorker>(context).build()
+        sut = buildSut()
 
         val result = sut.doWorkAndLog()
 
@@ -97,7 +97,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         whenever(workManager.beginUniqueWork(anyString(), anyOrNull(), anyOrNull<OneTimeWorkRequest>())).thenReturn(workContinuation)
         whenever(workContinuation.then(org.mockito.kotlin.any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
-        sut = TestListenableWorkerBuilder<LoadStatusWorker>(context).build()
+        sut = buildSut()
 
         val status = Status(
             version = "15.0.0",
@@ -125,7 +125,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         whenever(workManager.beginUniqueWork(anyString(), anyOrNull(), anyOrNull<OneTimeWorkRequest>())).thenReturn(workContinuation)
         whenever(workContinuation.then(org.mockito.kotlin.any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
-        sut = TestListenableWorkerBuilder<LoadStatusWorker>(context).build()
+        sut = buildSut()
         val errorMessage = "Network error"
         whenever(nsAndroidClient.getStatus())
             .thenThrow(RuntimeException(errorMessage))
@@ -143,7 +143,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(org.mockito.kotlin.any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastOperationError = "Previous error"
-        sut = TestListenableWorkerBuilder<LoadStatusWorker>(context).build()
+        sut = buildSut()
 
         val status = Status(
             version = "15.0.0",
@@ -172,7 +172,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         whenever(workManager.beginUniqueWork(anyString(), anyOrNull(), anyOrNull<OneTimeWorkRequest>())).thenReturn(workContinuation)
         whenever(workContinuation.then(org.mockito.kotlin.any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
-        sut = TestListenableWorkerBuilder<LoadStatusWorker>(context).build()
+        sut = buildSut()
 
         val errorMessage = "Connection timeout"
         whenever(nsAndroidClient.getStatus())
@@ -190,7 +190,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         whenever(workManager.beginUniqueWork(anyString(), anyOrNull(), anyOrNull<OneTimeWorkRequest>())).thenReturn(workContinuation)
         whenever(workContinuation.then(org.mockito.kotlin.any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
-        sut = TestListenableWorkerBuilder<LoadStatusWorker>(context).build()
+        sut = buildSut()
 
         val status = Status(
             version = "14.2.6",

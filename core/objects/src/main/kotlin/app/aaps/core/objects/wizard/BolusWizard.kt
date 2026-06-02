@@ -319,7 +319,7 @@ class BolusWizard @Inject constructor(
             wasCOBUsed = useCob,
             cobInsulin = insulinFromCOB,
             carbs = carbs.toDouble(),
-            wereCarbsUsed = cob > 0,
+            wereCarbsUsed = carbs > 0,
             carbsInsulin = insulinFromCarbs,
             otherCorrection = correction,
             wasSuperbolusUsed = useSuperBolus,
