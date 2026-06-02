@@ -23,6 +23,7 @@ enum class ElementType(
     BOLUS_WIZARD(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
     QUICK_WIZARD(protection = ProtectionCheck.Protection.BOLUS),
     TREATMENT(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
+    AFREZZA(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
 
     // CGM
     CGM_XDRIP(category = ElementCategory.CGM, searchable = true),
