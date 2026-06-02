@@ -114,6 +114,8 @@
     <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="inhaled_afrezza">Afrezza (Inhaled)</string>
+    <string name="inhaled_afrezza_comment">Technosphere inhaled insulin — peak ~40 min, duration ~2.5 h</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
 
     <!-- Concentration -->
