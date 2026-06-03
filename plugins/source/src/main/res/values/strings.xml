@@ -110,6 +110,8 @@
     <string name="eversense_placement_instruction_not_connected">Connect to your transmitter to view signal strength.</string>
     <string name="eversense_placement_last_update">Last update: %1$s</string>
     <string name="eversense_placement_reading">Reading&#8230;</string>`n    <string name="eversense_placement_connected">Transmitter Connected</string>
+    <string name="eversense_placement_not_on_sensor">Searching for sensor&#8230;</string>
+    <string name="eversense_placement_instruction_not_on_sensor">Place the transmitter on your skin directly above the sensor. Signal will stabilize when positioned correctly.</string>
     <string name="eversense_placement_connected_instruction">Your transmitter is connected. Make sure it is positioned directly over your sensor site and secured with the adhesive patch.</string>
     <string name="eversense_calibration_sending">Sending calibration&#8230;</string>
     <string name="eversense_release_for_official_app">Release for Official App</string>

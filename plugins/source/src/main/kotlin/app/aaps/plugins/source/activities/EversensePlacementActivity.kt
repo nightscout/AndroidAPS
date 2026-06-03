@@ -47,6 +47,11 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
     private val timeFormatter: DateFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM)
 
     private var pollingJob: Job? = null
+    private val signalBuffer = mutableListOf<Int>()
+    private companion object {
+        const val BUFFER_SIZE = 5
+        const val MIN_STABLE_SIGNAL = 25
+    }
 
     private fun startPolling() {
         if (pollingJob?.isActive == true) return
@@ -120,10 +125,32 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
     override fun onStateChanged(state: EversenseState) {
         mainHandler.post {
-            if (state.sensorSignalStrength > 0) {
-                updateSignalUI(state.sensorSignalStrength)
+            val raw = state.sensorSignalStrength
+            if (raw > 0) {
+                signalBuffer.add(raw)
+                if (signalBuffer.size > BUFFER_SIZE) signalBuffer.removeAt(0)
+
+                // Require at least 3 readings before displaying
+                if (signalBuffer.size < 3) {
+                    showWaiting()
+                    return@post
+                }
+
+                // Use median to filter spikes
+                val sorted = signalBuffer.sorted()
+                val median = sorted[sorted.size / 2]
+
+                // Check stability: if range exceeds 40%, signal is noise (transmitter not on sensor)
+                val range = sorted.last() - sorted.first()
+                if (range > 40) {
+                    showNotOnSensor()
+                    return@post
+                }
+
+                updateSignalUI(median)
                 lastUpdateText.text = getString(R.string.eversense_placement_last_update, timeFormatter.format(Date()))
             } else {
+                signalBuffer.clear()
                 showWaiting()
             }
         }
@@ -175,6 +202,14 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         signalLabel.text = getString(R.string.eversense_placement_reading)
         signalValue.text = ""
         instructionText.text = ""
+    }
+
+    private fun showNotOnSensor() {
+        val inactiveColor = ContextCompat.getColor(this, R.color.signal_inactive)
+        listOf(bar1, bar2, bar3, bar4, bar5).forEach { it.setColorFilter(inactiveColor) }
+        signalLabel.text = getString(R.string.eversense_placement_not_on_sensor)
+        signalValue.text = ""
+        instructionText.text = getString(R.string.eversense_placement_instruction_not_on_sensor)
     }
 
     private fun strengthToBars(strength: Int): Int = when {
