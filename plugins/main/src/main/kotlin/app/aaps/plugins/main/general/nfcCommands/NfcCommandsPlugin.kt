@@ -33,7 +33,6 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.nfcCommands.actions.*
 import org.json.JSONObject
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -193,7 +192,6 @@ class NfcCommandsPlugin
         suspend fun executeCommand(command: String): NfcExecutionResult {
             aapsLogger.debug(LTag.NFC, "Executing NFC command: $command")
             
-            // Try structured JSON format first
             runCatching { JSONObject(command) }.onSuccess { json ->
                 val codeString = json.optString("code")
                 val code = runCatching { NfcCommandCode.valueOf(codeString) }.getOrNull()
@@ -203,8 +201,7 @@ class NfcCommandsPlugin
                 }
             }
 
-            // Fallback to legacy string format
-            return executeLegacyCommand(command)
+            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_unknown_command))
         }
 
         private suspend fun routeAction(code: NfcCommandCode, params: JSONObject): NfcExecutionResult {
@@ -241,103 +238,6 @@ class NfcCommandsPlugin
                 return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_allowed))
             }
             return block()
-        }
-
-        private suspend fun executeLegacyCommand(command: String): NfcExecutionResult {
-            val divided = command.trim().split(Regex("\\s+")).filter { it.isNotBlank() }
-            if (divided.isEmpty()) {
-                return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            }
-            val codeString = divided[0].uppercase(Locale.ROOT)
-            
-            // Re-route legacy strings to modern actions by constructing temporary JSON params
-            return when (codeString) {
-                "LOOP" -> processLegacyLoop(divided)
-                "AAPSCLIENT" -> routeAction(NfcCommandCode.AAPSCLIENT_RESTART, JSONObject())
-                "PUMP" -> processLegacyPump(divided)
-                "PROFILE" -> processLegacyProfile(divided)
-                "BASAL" -> processLegacyBasal(divided)
-                "EXTENDED" -> processLegacyExtended(divided)
-                "BOLUS" -> processLegacyBolus(divided)
-                "CARBS" -> processLegacyCarbs(divided)
-                "TARGET" -> processLegacyTarget(divided)
-                "RESTART" -> routeAction(NfcCommandCode.RESTART, JSONObject())
-                else -> NfcExecutionResult(false, rh.gs(R.string.nfccommands_unknown_command))
-            }
-        }
-
-        private suspend fun processLegacyLoop(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            return when (divided[1].uppercase(Locale.ROOT)) {
-                "DISABLE", "STOP" -> routeAction(NfcCommandCode.LOOP_STOP, JSONObject())
-                "RESUME" -> routeAction(NfcCommandCode.LOOP_RESUME, JSONObject())
-                "SUSPEND" -> routeAction(NfcCommandCode.LOOP_SUSPEND, JSONObject().put("duration", divided.getOrNull(2)?.toIntOrNull() ?: 60))
-                "LGS" -> routeAction(NfcCommandCode.LOOP_LGS, JSONObject())
-                "CLOSED" -> routeAction(NfcCommandCode.LOOP_CLOSED, JSONObject())
-                else -> NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            }
-        }
-
-        private suspend fun processLegacyPump(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            return when (divided[1].uppercase(Locale.ROOT)) {
-                "CONNECT" -> routeAction(NfcCommandCode.PUMP_CONNECT, JSONObject())
-                "DISCONNECT" -> routeAction(NfcCommandCode.PUMP_DISCONNECT, JSONObject().put("duration", divided.getOrNull(2)?.toIntOrNull() ?: 30))
-                else -> NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            }
-        }
-
-        private suspend fun processLegacyProfile(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            val index = divided[1].toIntOrNull() ?: return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            val percentage = divided.getOrNull(2)?.toIntOrNull() ?: 100
-            val profileStore = profileRepository.profile.value ?: return NfcExecutionResult(false, rh.gs(app.aaps.core.ui.R.string.notconfigured))
-            val list = profileStore.getProfileList()
-            if (index <= 0 || index > list.size) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            return routeAction(NfcCommandCode.PROFILE_SWITCH, JSONObject().put("profileName", list[index - 1]).put("percentage", percentage))
-        }
-
-        private suspend fun processLegacyBasal(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            val sub = divided[1].uppercase(Locale.ROOT)
-            return when {
-                sub in listOf("STOP", "CANCEL") -> routeAction(NfcCommandCode.BASAL_STOP, JSONObject())
-                sub.endsWith("%") -> routeAction(NfcCommandCode.BASAL_PCT, JSONObject().put("percent", sub.removeSuffix("%").toIntOrNull() ?: 100).put("duration", divided.getOrNull(2)?.toIntOrNull() ?: 60))
-                else -> routeAction(NfcCommandCode.BASAL_ABS, JSONObject().put("rate", sub.toDoubleOrNull() ?: 0.0).put("duration", divided.getOrNull(2)?.toIntOrNull() ?: 60))
-            }
-        }
-
-        private suspend fun processLegacyExtended(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            val sub = divided[1].uppercase(Locale.ROOT)
-            return when {
-                sub in listOf("STOP", "CANCEL") -> routeAction(NfcCommandCode.EXTENDED_STOP, JSONObject())
-                else -> routeAction(NfcCommandCode.EXTENDED_SET, JSONObject().put("amount", sub.toDoubleOrNull() ?: 0.0).put("duration", divided.getOrNull(2)?.toIntOrNull() ?: 30))
-            }
-        }
-
-        private suspend fun processLegacyBolus(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            val amount = divided[1].toDoubleOrNull() ?: 0.0
-            val isMeal = divided.getOrNull(2)?.uppercase(Locale.ROOT) == "MEAL"
-            return routeAction(NfcCommandCode.BOLUS, JSONObject().put("amount", amount).put("isMeal", isMeal))
-        }
-
-        private suspend fun processLegacyCarbs(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            val amount = divided[1].toIntOrNull() ?: 0
-            return routeAction(NfcCommandCode.CARBS, JSONObject().put("amount", amount))
-        }
-
-        private suspend fun processLegacyTarget(divided: List<String>): NfcExecutionResult {
-            if (divided.size < 2) return NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            return when (divided[1].uppercase(Locale.ROOT)) {
-                "MEAL" -> routeAction(NfcCommandCode.TARGET_MEAL, JSONObject())
-                "ACTIVITY" -> routeAction(NfcCommandCode.TARGET_ACTIVITY, JSONObject())
-                "HYPO" -> routeAction(NfcCommandCode.TARGET_HYPO, JSONObject())
-                "STOP", "CANCEL" -> routeAction(NfcCommandCode.TARGET_STOP, JSONObject())
-                else -> NfcExecutionResult(false, rh.gs(R.string.wrong_format))
-            }
         }
 
         // NFC tags are written ahead of time and may be scanned on any supported pump.
