@@ -1,19 +1,12 @@
 package app.aaps.plugins.main.general.nfcCommands
 
-import androidx.annotation.StringRes
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.plugins.main.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
-
-data class NfcCommandTemplate(
-    @StringRes val labelResId: Int,
-    val code: NfcCommandCode,
-)
 
 data class NfcCreatedTag(
     val tagUid: String,
@@ -41,43 +34,16 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
         private const val LOG_MAX_ENTRIES = 100
 
         fun buildCommand(
-            template: NfcCommandTemplate,
+            code: NfcCommandCode,
             params: JSONObject = JSONObject(),
         ): String {
             return JSONObject()
-                .put("code", template.code.name)
+                .put("code", code.name)
                 .put("params", params)
                 .toString()
         }
 
         fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
-
-        fun availableCommands(): List<NfcCommandTemplate> = commandTemplates
-
-        private val commandTemplates =
-            listOf(
-                NfcCommandTemplate(R.string.nfccommands_cmd_loop_stop, NfcCommandCode.LOOP_STOP),
-                NfcCommandTemplate(R.string.nfccommands_cmd_loop_resume, NfcCommandCode.LOOP_RESUME),
-                NfcCommandTemplate(R.string.nfccommands_cmd_loop_closed, NfcCommandCode.LOOP_CLOSED),
-                NfcCommandTemplate(R.string.nfccommands_cmd_loop_lgs, NfcCommandCode.LOOP_LGS),
-                NfcCommandTemplate(R.string.nfccommands_cmd_loop_suspend, NfcCommandCode.LOOP_SUSPEND),
-                NfcCommandTemplate(R.string.nfccommands_cmd_aapsclient_restart, NfcCommandCode.AAPSCLIENT_RESTART),
-                NfcCommandTemplate(R.string.nfccommands_cmd_pump_connect, NfcCommandCode.PUMP_CONNECT),
-                NfcCommandTemplate(R.string.nfccommands_cmd_pump_disconnect, NfcCommandCode.PUMP_DISCONNECT),
-                NfcCommandTemplate(R.string.nfccommands_cmd_basal_stop, NfcCommandCode.BASAL_STOP),
-                NfcCommandTemplate(R.string.nfccommands_cmd_basal_absolute, NfcCommandCode.BASAL_ABS),
-                NfcCommandTemplate(R.string.nfccommands_cmd_basal_percent, NfcCommandCode.BASAL_PCT),
-                NfcCommandTemplate(R.string.nfccommands_cmd_bolus, NfcCommandCode.BOLUS),
-                NfcCommandTemplate(R.string.nfccommands_cmd_extended_stop, NfcCommandCode.EXTENDED_STOP),
-                NfcCommandTemplate(R.string.nfccommands_cmd_extended_bolus, NfcCommandCode.EXTENDED_SET),
-                NfcCommandTemplate(R.string.nfccommands_cmd_profile_switch, NfcCommandCode.PROFILE_SWITCH),
-                NfcCommandTemplate(R.string.nfccommands_cmd_target_meal, NfcCommandCode.TARGET_MEAL),
-                NfcCommandTemplate(R.string.nfccommands_cmd_target_activity, NfcCommandCode.TARGET_ACTIVITY),
-                NfcCommandTemplate(R.string.nfccommands_cmd_target_hypo, NfcCommandCode.TARGET_HYPO),
-                NfcCommandTemplate(R.string.nfccommands_cmd_target_stop, NfcCommandCode.TARGET_STOP),
-                NfcCommandTemplate(R.string.nfccommands_cmd_carbs, NfcCommandCode.CARBS),
-                NfcCommandTemplate(R.string.nfccommands_cmd_restart_aaps, NfcCommandCode.RESTART),
-            )
     }
 
     private val _logUpdates = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
