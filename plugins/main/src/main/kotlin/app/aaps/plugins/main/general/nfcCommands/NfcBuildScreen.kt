@@ -92,6 +92,7 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.plugins.main.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
@@ -114,7 +115,7 @@ fun NfcBuildScreen(
         profileStore?.getProfileList()?.map { it.toString() } ?: emptyList()
     }
 
-    val chain = remember { mutableStateListOf<NfcAction>() }
+    val chain = remember { mutableStateListOf<NfcUiAction>() }
     var tagName by remember { mutableStateOf("") }
     var isWritingMode by remember { mutableStateOf(false) }
     var showBlankNameDialog by remember { mutableStateOf(false) }
@@ -157,7 +158,7 @@ fun NfcBuildScreen(
         val callback =
             NfcAdapter.ReaderCallback { tag ->
                 val uid = NfcTagStore.tagUidHex(tag.id) ?: return@ReaderCallback
-                val commands = chain.mapNotNull { it.buildCommand(profileNames) }
+                val commands = chain.mapNotNull { it.buildCommand() }
                 val name = tagName.ifBlank { chain.firstOrNull()?.shortDescription() ?: "" }
                 val alreadyAssigned = plugin.nfcTagStore.findTagByUid(uid) != null
                 val ndefWritten = !alreadyAssigned && buildAndWriteNdef(tag, plugin)
@@ -226,14 +227,14 @@ fun NfcBuildScreen(
     }
 
     if (isWritingMode) {
-        NfcWriteDialog(chain = chain.map { it.command.template.commandPrefix }, onCancel = { isWritingMode = false })
+        NfcWriteDialog(chain = chain.map { it.command.template.code.name }, onCancel = { isWritingMode = false })
     }
 
     if (showActionPicker) {
         ChooseActionSheet(
             categories = categories,
             onPick = { cmd ->
-                chain.add(createNfcAction(plugin, cmd, plugin.pumpBasalDurationStep()))
+                chain.add(createNfcUiAction(plugin, cmd, plugin.pumpBasalDurationStep()))
             },
             onDismiss = { showActionPicker = false }
         )
@@ -329,7 +330,7 @@ private fun SectionDivider(label: String) {
 
 @Composable
 private fun InlineActionCard(
-    action: NfcAction,
+    action: NfcUiAction,
     profileNames: List<String>,
     onRemove: () -> Unit
 ) {
@@ -428,16 +429,16 @@ private fun ChooseActionSheet(
 }
 
 @Composable
-private fun getNfcUiCommandColor(cmd: NfcUiCommand): Color = when (cmd.template.commandPrefix) {
-    "LOOP STOP" -> AapsTheme.elementColors.loopDisabled
-    "LOOP RESUME", "LOOP CLOSED" -> AapsTheme.elementColors.loopClosed
-    "LOOP LGS" -> AapsTheme.elementColors.loopLgs
-    "LOOP SUSPEND" -> AapsTheme.elementColors.loopSuspended
-    "PUMP DISCONNECT" -> AapsTheme.elementColors.loopDisconnected
-    "TARGET MEAL" -> AapsTheme.elementColors.tempTarget
-    "TARGET ACTIVITY" -> AapsTheme.elementColors.exercise
-    "TARGET HYPO", "TARGET STOP" -> AapsTheme.elementColors.loopDisabled
-    "PROFILE SWITCH" -> Color.White
+private fun getNfcUiCommandColor(cmd: NfcUiCommand): Color = when (cmd.template.code) {
+    NfcCommandCode.LOOP_STOP -> AapsTheme.elementColors.loopDisabled
+    NfcCommandCode.LOOP_RESUME, NfcCommandCode.LOOP_CLOSED -> AapsTheme.elementColors.loopClosed
+    NfcCommandCode.LOOP_LGS -> AapsTheme.elementColors.loopLgs
+    NfcCommandCode.LOOP_SUSPEND -> AapsTheme.elementColors.loopSuspended
+    NfcCommandCode.PUMP_DISCONNECT -> AapsTheme.elementColors.loopDisconnected
+    NfcCommandCode.TARGET_MEAL -> AapsTheme.elementColors.tempTarget
+    NfcCommandCode.TARGET_ACTIVITY -> AapsTheme.elementColors.exercise
+    NfcCommandCode.TARGET_HYPO, NfcCommandCode.TARGET_STOP -> AapsTheme.elementColors.loopDisabled
+    NfcCommandCode.PROFILE_SWITCH -> Color.White
     else -> cmd.elementType.color()
 }
 
@@ -576,11 +577,11 @@ internal fun resolveWriteOutcome(alreadyAssigned: Boolean, ndefWritten: Boolean)
     else            -> WriteOutcome.GENERIC_ASSIGNED
 }
 
-// ---------- NFC Action Models ----------
+// ---------- NFC UI Action Models ----------
 
-interface NfcAction {
+interface NfcUiAction {
     val command: NfcUiCommand
-    fun buildCommand(profileNames: List<String>): String?
+    fun buildCommand(): String?
     fun shortDescription(): String
     @Composable
     fun EditContent(profileNames: List<String>, onChange: () -> Unit)
@@ -589,20 +590,20 @@ interface NfcAction {
     fun getIconColor(): Color = getNfcUiCommandColor(command)
 }
 
-private fun createNfcAction(plugin: NfcCommandsPlugin, cmd: NfcUiCommand, durationStep: Int): NfcAction = when (cmd.argType) {
-    ArgType.NONE -> SimpleNfcAction(cmd)
-    ArgType.SUSPEND -> SuspendNfcAction(cmd)
-    ArgType.PUMP_DISCONNECT -> PumpDisconnectNfcAction(cmd)
-    ArgType.BOLUS -> BolusNfcAction(plugin, cmd)
-    ArgType.BASAL_ABS -> BasalAbsNfcAction(cmd, durationStep)
-    ArgType.BASAL_PCT -> BasalPctNfcAction(cmd, durationStep)
-    ArgType.EXTENDED -> ExtendedNfcAction(cmd)
-    ArgType.CARBS -> CarbsNfcAction(plugin, cmd)
-    ArgType.PROFILE -> ProfileNfcAction(cmd)
+private fun createNfcUiAction(plugin: NfcCommandsPlugin, cmd: NfcUiCommand, durationStep: Int): NfcUiAction = when (cmd.argType) {
+    ArgType.NONE -> SimpleNfcUiAction(cmd)
+    ArgType.SUSPEND -> SuspendNfcUiAction(cmd)
+    ArgType.PUMP_DISCONNECT -> PumpDisconnectNfcUiAction(cmd)
+    ArgType.BOLUS -> BolusNfcUiAction(plugin, cmd)
+    ArgType.BASAL_ABS -> BasalAbsNfcUiAction(cmd, durationStep)
+    ArgType.BASAL_PCT -> BasalPctNfcUiAction(cmd, durationStep)
+    ArgType.EXTENDED -> ExtendedNfcUiAction(cmd)
+    ArgType.CARBS -> CarbsNfcUiAction(plugin, cmd)
+    ArgType.PROFILE -> ProfileNfcUiAction(cmd)
 }
 
-class SimpleNfcAction(override val command: NfcUiCommand) : NfcAction {
-    override fun buildCommand(profileNames: List<String>) = NfcTagStore.buildCommand(command.template, "")
+class SimpleNfcUiAction(override val command: NfcUiCommand) : NfcUiAction {
+    override fun buildCommand() = NfcTagStore.buildCommand(command.template)
     override fun shortDescription() = "" 
 
     @Composable
@@ -615,9 +616,9 @@ class SimpleNfcAction(override val command: NfcUiCommand) : NfcAction {
     }
 }
 
-class SuspendNfcAction(override val command: NfcUiCommand) : NfcAction {
+class SuspendNfcUiAction(override val command: NfcUiCommand) : NfcUiAction {
     var minutes by mutableIntStateOf(60)
-    override fun buildCommand(profileNames: List<String>) = NfcTagStore.buildCommand(command.template, minutes.toString())
+    override fun buildCommand() = NfcTagStore.buildCommand(command.template, JSONObject().put("duration", minutes))
     override fun shortDescription() = ""
 
     @Composable
@@ -634,9 +635,9 @@ class SuspendNfcAction(override val command: NfcUiCommand) : NfcAction {
     }
 }
 
-class PumpDisconnectNfcAction(override val command: NfcUiCommand) : NfcAction {
-    var minutes by mutableIntStateOf(15)
-    override fun buildCommand(profileNames: List<String>) = NfcTagStore.buildCommand(command.template, minutes.toString())
+class PumpDisconnectNfcUiAction(override val command: NfcUiCommand) : NfcUiAction {
+    var minutes by mutableIntStateOf(30)
+    override fun buildCommand() = NfcTagStore.buildCommand(command.template, JSONObject().put("duration", minutes))
     override fun shortDescription() = ""
 
     @Composable
@@ -653,12 +654,11 @@ class PumpDisconnectNfcAction(override val command: NfcUiCommand) : NfcAction {
     }
 }
 
-class BolusNfcAction(val plugin: NfcCommandsPlugin, override val command: NfcUiCommand) : NfcAction {
-    var units by mutableDoubleStateOf(0.0)
+class BolusNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcUiCommand) : NfcUiAction {
+    var units by mutableDoubleStateOf(1.0)
     var meal by mutableStateOf(false)
-    override fun buildCommand(profileNames: List<String>): String? {
-        val args = if (meal) "%.2f MEAL".format(units) else "%.2f".format(units)
-        return NfcTagStore.buildCommand(command.template, args)
+    override fun buildCommand(): String {
+        return NfcTagStore.buildCommand(command.template, JSONObject().put("amount", units).put("isMeal", meal))
     }
     override fun shortDescription() = ""
     @Composable
@@ -688,10 +688,10 @@ class BolusNfcAction(val plugin: NfcCommandsPlugin, override val command: NfcUiC
     }
 }
 
-class BasalAbsNfcAction(override val command: NfcUiCommand, val step: Int) : NfcAction {
-    var rate by mutableDoubleStateOf(0.0)
+class BasalAbsNfcUiAction(override val command: NfcUiCommand, val step: Int) : NfcUiAction {
+    var rate by mutableDoubleStateOf(1.0)
     var duration by mutableIntStateOf(30)
-    override fun buildCommand(profileNames: List<String>) = NfcTagStore.buildCommand(command.template, "%.2f %d".format(rate, duration))
+    override fun buildCommand() = NfcTagStore.buildCommand(command.template, JSONObject().put("rate", rate).put("duration", duration))
     override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
@@ -718,10 +718,10 @@ class BasalAbsNfcAction(override val command: NfcUiCommand, val step: Int) : Nfc
     }
 }
 
-class BasalPctNfcAction(override val command: NfcUiCommand, val step: Int) : NfcAction {
+class BasalPctNfcUiAction(override val command: NfcUiCommand, val step: Int) : NfcUiAction {
     var percent by mutableIntStateOf(100)
     var duration by mutableIntStateOf(30)
-    override fun buildCommand(profileNames: List<String>) = NfcTagStore.buildCommand(command.template, "$percent% $duration")
+    override fun buildCommand() = NfcTagStore.buildCommand(command.template, JSONObject().put("percent", percent).put("duration", duration))
     override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
@@ -748,10 +748,10 @@ class BasalPctNfcAction(override val command: NfcUiCommand, val step: Int) : Nfc
     }
 }
 
-class ExtendedNfcAction(override val command: NfcUiCommand) : NfcAction {
-    var units by mutableDoubleStateOf(0.0)
+class ExtendedNfcUiAction(override val command: NfcUiCommand) : NfcUiAction {
+    var units by mutableDoubleStateOf(1.0)
     var duration by mutableIntStateOf(30)
-    override fun buildCommand(profileNames: List<String>) = NfcTagStore.buildCommand(command.template, "%.2f %d".format(units, duration))
+    override fun buildCommand() = NfcTagStore.buildCommand(command.template, JSONObject().put("amount", units).put("duration", duration))
     override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
@@ -778,9 +778,9 @@ class ExtendedNfcAction(override val command: NfcUiCommand) : NfcAction {
     }
 }
 
-class CarbsNfcAction(val plugin: NfcCommandsPlugin, override val command: NfcUiCommand) : NfcAction {
-    var grams by mutableIntStateOf(0)
-    override fun buildCommand(profileNames: List<String>) = NfcTagStore.buildCommand(command.template, grams.toString())
+class CarbsNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcUiCommand) : NfcUiAction {
+    var grams by mutableIntStateOf(20)
+    override fun buildCommand() = NfcTagStore.buildCommand(command.template, JSONObject().put("amount", grams))
     override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
@@ -804,13 +804,12 @@ class CarbsNfcAction(val plugin: NfcCommandsPlugin, override val command: NfcUiC
     }
 }
 
-class ProfileNfcAction(override val command: NfcUiCommand) : NfcAction {
+class ProfileNfcUiAction(override val command: NfcUiCommand) : NfcUiAction {
     var profileName by mutableStateOf("")
     var percent by mutableIntStateOf(100)
-    override fun buildCommand(profileNames: List<String>): String? {
-        val idx = profileNames.indexOf(profileName) + 1
-        if (idx <= 0) return null
-        return NfcTagStore.buildCommand(command.template, "$idx $percent")
+    override fun buildCommand(): String? {
+        if (profileName.isBlank()) return null
+        return NfcTagStore.buildCommand(command.template, JSONObject().put("profileName", profileName).put("percentage", percent))
     }
     override fun shortDescription() = ""
 
@@ -821,7 +820,7 @@ class ProfileNfcAction(override val command: NfcUiCommand) : NfcAction {
                 value = profileName.ifEmpty { profileNames.firstOrNull() ?: "" },
                 options = profileNames,
                 onValueChange = { profileName = it; onChange() },
-                label = stringResource(app.aaps.plugins.main.R.string.nfccommands_cat_profile)
+                label = stringResource(R.string.nfccommands_cat_profile)
             )
             NumberInputRow(
                 labelResId = CoreUiR.string.percent,

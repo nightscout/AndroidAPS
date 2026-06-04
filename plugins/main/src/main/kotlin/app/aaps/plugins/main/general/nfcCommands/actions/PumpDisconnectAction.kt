@@ -3,19 +3,16 @@ package app.aaps.plugins.main.general.nfcCommands.actions
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.general.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.main.R
+import org.json.JSONObject
 
 class PumpDisconnectAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    override suspend fun execute(divided: List<String>): NfcExecutionResult {
-        if (divided.size != 3) return invalidFormat()
-        val duration = SafeParse.stringToInt(divided[2]).coerceIn(0, 180)
+    override suspend fun execute(params: JSONObject): NfcExecutionResult {
+        val duration = params.optInt("duration", 30).coerceIn(1, 180)
         val profile = plugin.profileFunction.getProfile() ?: return NfcExecutionResult(false, plugin.rh.gs(app.aaps.core.ui.R.string.noprofile))
-        if (duration == 0) {
-            return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_wrong_duration))
-        }
+
         val result = plugin.loop.handleRunningModeChange(
             durationInMinutes = duration,
             profile = profile,

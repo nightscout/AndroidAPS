@@ -6,9 +6,10 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.general.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.main.R
+import org.json.JSONObject
 
 class TempTargetCancelAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    override suspend fun execute(divided: List<String>): NfcExecutionResult {
+    override suspend fun execute(params: JSONObject): NfcExecutionResult {
         plugin.persistenceLayer.cancelCurrentTemporaryTargetIfAny(
             timestamp = plugin.dateUtil.now(),
             action = Action.CANCEL_TT,

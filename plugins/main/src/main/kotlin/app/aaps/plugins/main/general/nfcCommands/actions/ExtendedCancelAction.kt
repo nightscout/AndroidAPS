@@ -4,9 +4,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.general.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.main.R
+import org.json.JSONObject
 
 class ExtendedCancelAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    override suspend fun execute(divided: List<String>): NfcExecutionResult {
+    override suspend fun execute(params: JSONObject): NfcExecutionResult {
         val result = plugin.commandQueue.cancelExtended()
         return if (result.success) {
             NfcExecutionResult(true, plugin.rh.gs(R.string.nfccommands_extended_canceled))

@@ -10,14 +10,15 @@ import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.general.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.main.R
+import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 class TempTargetSetAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    override suspend fun execute(divided: List<String>): NfcExecutionResult {
-        if (divided.size != 2) return invalidFormat()
-        val isMeal = divided[1].equals("MEAL", ignoreCase = true)
-        val isActivity = divided[1].equals("ACTIVITY", ignoreCase = true)
-        val isHypo = divided[1].equals("HYPO", ignoreCase = true)
+    override suspend fun execute(params: JSONObject): NfcExecutionResult {
+        val type = params.optString("type")
+        val isMeal = type.equals("MEAL", ignoreCase = true)
+        val isActivity = type.equals("ACTIVITY", ignoreCase = true)
+        val isHypo = type.equals("HYPO", ignoreCase = true)
         
         if (!isMeal && !isActivity && !isHypo) return invalidFormat()
         

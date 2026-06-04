@@ -12,10 +12,7 @@ import javax.inject.Singleton
 
 data class NfcCommandTemplate(
     @StringRes val labelResId: Int,
-    val commandPrefix: String,
-    val fixedCommand: String? = null,
-    @StringRes val argumentsHintResId: Int = 0,
-    val requiresArguments: Boolean = false,
+    val code: NfcCommandCode,
 )
 
 data class NfcCreatedTag(
@@ -45,22 +42,12 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
 
         fun buildCommand(
             template: NfcCommandTemplate,
-            args: String,
-        ): String? {
-            template.fixedCommand?.let { return it }
-            val cleanArgs = args.trim()
-            if (template.requiresArguments && cleanArgs.isEmpty()) return null
-            return if (template.requiresArguments) "${template.commandPrefix} $cleanArgs" else template.commandPrefix
-        }
-
-        fun buildCascade(steps: List<Pair<NfcCommandTemplate, String>>): List<String>? {
-            if (steps.isEmpty()) return null
-            val result = mutableListOf<String>()
-            for ((template, args) in steps) {
-                val cmd = buildCommand(template, args) ?: return null
-                result.add(cmd)
-            }
-            return result
+            params: JSONObject = JSONObject(),
+        ): String {
+            return JSONObject()
+                .put("code", template.code.name)
+                .put("params", params)
+                .toString()
         }
 
         fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
@@ -69,67 +56,27 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
 
         private val commandTemplates =
             listOf(
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_stop, commandPrefix = "LOOP STOP"),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_resume, commandPrefix = "LOOP RESUME"),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_closed, commandPrefix = "LOOP CLOSED"),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_loop_lgs, commandPrefix = "LOOP LGS"),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_loop_suspend,
-                    commandPrefix = "LOOP SUSPEND",
-                    argumentsHintResId = R.string.nfccommands_hint_minutes,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_aapsclient_restart, commandPrefix = "AAPSCLIENT RESTART"),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_pump_connect, commandPrefix = "PUMP CONNECT"),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_pump_disconnect,
-                    commandPrefix = "PUMP DISCONNECT",
-                    argumentsHintResId = R.string.nfccommands_hint_minutes,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_basal_stop, commandPrefix = "BASAL STOP"),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_basal_absolute,
-                    commandPrefix = "BASAL",
-                    argumentsHintResId = R.string.nfccommands_hint_basal_abs,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_basal_percent,
-                    commandPrefix = "BASAL",
-                    argumentsHintResId = R.string.nfccommands_hint_basal_pct,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_bolus,
-                    commandPrefix = "BOLUS",
-                    argumentsHintResId = R.string.nfccommands_hint_bolus,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_extended_stop, commandPrefix = "EXTENDED STOP"),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_extended_bolus,
-                    commandPrefix = "EXTENDED",
-                    argumentsHintResId = R.string.nfccommands_hint_extended,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_profile_switch,
-                    commandPrefix = "PROFILE",
-                    argumentsHintResId = R.string.nfccommands_hint_profile,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_meal, commandPrefix = "TARGET MEAL"),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_activity, commandPrefix = "TARGET ACTIVITY"),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_hypo, commandPrefix = "TARGET HYPO"),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_target_stop, commandPrefix = "TARGET STOP"),
-                NfcCommandTemplate(
-                    labelResId = R.string.nfccommands_cmd_carbs,
-                    commandPrefix = "CARBS",
-                    argumentsHintResId = R.string.nfccommands_hint_grams,
-                    requiresArguments = true,
-                ),
-                NfcCommandTemplate(labelResId = R.string.nfccommands_cmd_restart_aaps, commandPrefix = "RESTART"),
+                NfcCommandTemplate(R.string.nfccommands_cmd_loop_stop, NfcCommandCode.LOOP_STOP),
+                NfcCommandTemplate(R.string.nfccommands_cmd_loop_resume, NfcCommandCode.LOOP_RESUME),
+                NfcCommandTemplate(R.string.nfccommands_cmd_loop_closed, NfcCommandCode.LOOP_CLOSED),
+                NfcCommandTemplate(R.string.nfccommands_cmd_loop_lgs, NfcCommandCode.LOOP_LGS),
+                NfcCommandTemplate(R.string.nfccommands_cmd_loop_suspend, NfcCommandCode.LOOP_SUSPEND),
+                NfcCommandTemplate(R.string.nfccommands_cmd_aapsclient_restart, NfcCommandCode.AAPSCLIENT_RESTART),
+                NfcCommandTemplate(R.string.nfccommands_cmd_pump_connect, NfcCommandCode.PUMP_CONNECT),
+                NfcCommandTemplate(R.string.nfccommands_cmd_pump_disconnect, NfcCommandCode.PUMP_DISCONNECT),
+                NfcCommandTemplate(R.string.nfccommands_cmd_basal_stop, NfcCommandCode.BASAL_STOP),
+                NfcCommandTemplate(R.string.nfccommands_cmd_basal_absolute, NfcCommandCode.BASAL_ABS),
+                NfcCommandTemplate(R.string.nfccommands_cmd_basal_percent, NfcCommandCode.BASAL_PCT),
+                NfcCommandTemplate(R.string.nfccommands_cmd_bolus, NfcCommandCode.BOLUS),
+                NfcCommandTemplate(R.string.nfccommands_cmd_extended_stop, NfcCommandCode.EXTENDED_STOP),
+                NfcCommandTemplate(R.string.nfccommands_cmd_extended_bolus, NfcCommandCode.EXTENDED_SET),
+                NfcCommandTemplate(R.string.nfccommands_cmd_profile_switch, NfcCommandCode.PROFILE_SWITCH),
+                NfcCommandTemplate(R.string.nfccommands_cmd_target_meal, NfcCommandCode.TARGET_MEAL),
+                NfcCommandTemplate(R.string.nfccommands_cmd_target_activity, NfcCommandCode.TARGET_ACTIVITY),
+                NfcCommandTemplate(R.string.nfccommands_cmd_target_hypo, NfcCommandCode.TARGET_HYPO),
+                NfcCommandTemplate(R.string.nfccommands_cmd_target_stop, NfcCommandCode.TARGET_STOP),
+                NfcCommandTemplate(R.string.nfccommands_cmd_carbs, NfcCommandCode.CARBS),
+                NfcCommandTemplate(R.string.nfccommands_cmd_restart_aaps, NfcCommandCode.RESTART),
             )
     }
 

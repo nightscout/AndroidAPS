@@ -6,10 +6,10 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.general.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.main.R
+import org.json.JSONObject
 
 class PumpConnectAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    override suspend fun execute(divided: List<String>): NfcExecutionResult {
-        if (divided.size != 2) return invalidFormat()
+    override suspend fun execute(params: JSONObject): NfcExecutionResult {
         val profile = plugin.profileFunction.getProfile() ?: return NfcExecutionResult(false, plugin.rh.gs(app.aaps.core.ui.R.string.noprofile))
         if (!plugin.loop.allowedNextModes().contains(RM.Mode.RESUME)) {
             return NfcExecutionResult(true, plugin.rh.gs(app.aaps.core.interfaces.R.string.connected))
