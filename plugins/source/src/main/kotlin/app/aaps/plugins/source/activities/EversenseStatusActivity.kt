@@ -1,4 +1,4 @@
-﻿package app.aaps.plugins.source.activities
+package app.aaps.plugins.source.activities
 
 import android.content.Context
 import android.os.Bundle
@@ -26,16 +26,14 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
 
-    @Inject lateinit var eversense: EversenseCGMPlugin
-
     private val mainHandler = Handler(Looper.getMainLooper())
     private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+    private val eversense get() = EversenseCGMPlugin.instance
 
     override fun onResume() {
         super.onResume()
@@ -51,10 +49,10 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
     // EversenseWatcher: update button instantly on connection/state change
     override fun onConnectionChanged(connected: Boolean) { mainHandler.post { updateStatus() } }
     override fun onStateChanged(state: EversenseState) { mainHandler.post { updateStatus() } }
-    override fun onTransmitterReady() { /* No-op: status refreshes via onStateChanged */ }
-    override fun onTransmitterNotPlaced() { /* No-op: status refreshes via onStateChanged */ }
-    override fun onAlarmReceived(alarm: ActiveAlarm) { /* No-op: status refreshes via onStateChanged */ }
-    override fun onCGMRead(type: app.aaps.plugins.eversense.enums.EversenseType, readings: List<app.aaps.plugins.eversense.models.EversenseCGMResult>) { /* No-op */ }
+    override fun onTransmitterReady() {}
+    override fun onTransmitterNotPlaced() {}
+    override fun onAlarmReceived(alarm: ActiveAlarm) {}
+    override fun onCGMRead(type: app.aaps.plugins.eversense.enums.EversenseType, readings: List<app.aaps.plugins.eversense.models.EversenseCGMResult>) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +61,7 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.eversense_status_title)
+        supportActionBar?.title = "Eversense Status"
 
         updateStatus()
 
@@ -84,25 +82,25 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
         val notConnected = getString(R.string.eversense_not_connected)
 
         findViewById<TextView>(R.id.eversense_status_connected).text =
-            getString(R.string.eversense_status_connected_label, if (eversense.isConnected()) "✅" else "❌")
+            "Connected: " + if (eversense.isConnected()) "✅" else "❌"
         findViewById<TextView>(R.id.eversense_status_battery).text =
-            getString(R.string.eversense_status_battery_label, state.batteryPercentage)
+            "Battery: " + (state?.let { "${it.batteryPercentage}%" } ?: notConnected)
         findViewById<TextView>(R.id.eversense_status_insertion).text =
-            getString(R.string.eversense_status_insertion_label, dateFormatter.format(Date(state.insertionDate)))
+            "Insertion date: " + (state?.let { dateFormatter.format(Date(it.insertionDate)) } ?: notConnected)
         findViewById<TextView>(R.id.eversense_status_last_sync).text =
-            getString(R.string.eversense_status_last_sync_label, if (state.lastSync > 0) dateFormatter.format(Date(state.lastSync)) else getString(R.string.eversense_status_never))
+            "Last sync: " + (state?.let { if (it.lastSync > 0) dateFormatter.format(Date(it.lastSync)) else "Never" } ?: notConnected)
         findViewById<TextView>(R.id.eversense_status_signal).text =
-            getString(R.string.eversense_status_signal_label, signalToLabel(state.sensorSignalStrength))
+            "Placement signal: " + (state?.let { signalToLabel(it.sensorSignalStrength) } ?: notConnected)
 
         findViewById<TextView>(R.id.eversense_status_phase).text =
-            getString(R.string.eversense_status_phase_label, state.calibrationPhase.name)
+            "Calibration phase: " + (state?.calibrationPhase?.name ?: notConnected)
 
         findViewById<TextView>(R.id.eversense_status_last_cal).text =
-            getString(R.string.eversense_status_last_cal_label, if (state.lastCalibrationDate > 0) dateFormatter.format(Date(state.lastCalibrationDate)) else notConnected)
+            "Last calibration: " + (state?.let { if (it.lastCalibrationDate > 0) dateFormatter.format(Date(it.lastCalibrationDate)) else notConnected } ?: notConnected)
         findViewById<TextView>(R.id.eversense_status_next_cal).text =
-            getString(R.string.eversense_status_next_cal_label, if (state.nextCalibrationDate > 0) dateFormatter.format(Date(state.nextCalibrationDate)) else notConnected)
+            "Next calibration: " + (state?.let { if (it.nextCalibrationDate > 0) dateFormatter.format(Date(it.nextCalibrationDate)) else notConnected } ?: notConnected)
         findViewById<Button>(R.id.eversense_btn_connect).text =
-            if (eversense.isConnected()) getString(R.string.eversense_status_disconnect) else getString(R.string.eversense_status_connect)
+            if (eversense.isConnected()) "Disconnect" else "Connect"
         findViewById<Button>(R.id.eversense_btn_sync).isEnabled = eversense.isConnected()
     }
 

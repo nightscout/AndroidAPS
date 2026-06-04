@@ -25,14 +25,8 @@ class EversenseHttp365Util {
     companion object {
         private val TAG = "EversenseHttp365Util"
         private val JSON = Json { ignoreUnknownKeys = true }
-        private const val HEADER_CONTENT_TYPE = "Content-Type"
-        private const val CONTENT_TYPE_JSON = "application/json"
 
-        // OAuth2 client credentials embedded in the official Eversense Android app (publicly
-        // extractable from the APK). Not a personal secret — same value ships to all users.
-        @Suppress("kotlin:S6418") // Public OAuth2 client ID from official Eversense APK — not a personal secret
         private val CLIENT_ID = "eversenseMMAAndroid"
-        @Suppress("kotlin:S6418") // Public OAuth2 client secret from official Eversense APK — not a personal secret
         private val CLIENT_SECRET = "6ksPx#]~wQ3U"
         private val CLIENT_NO = 2
         private val CLIENT_TYPE = 128
@@ -59,7 +53,7 @@ class EversenseHttp365Util {
                 conn.doOutput = true
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
-                conn.setRequestProperty(HEADER_CONTENT_TYPE, "application/x-www-form-urlencoded")
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
 
                 OutputStreamWriter(conn.outputStream, "UTF-8").use { writer ->
                     writer.write(formBody)
@@ -212,7 +206,7 @@ class EversenseHttp365Util {
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
                 conn.setRequestProperty("Authorization", "Bearer $token")
-                conn.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
+                conn.setRequestProperty("Content-Type", "application/json")
                 conn.doOutput = true
 
                 val writer = OutputStreamWriter(conn.outputStream, "UTF-8")
@@ -286,7 +280,7 @@ class EversenseHttp365Util {
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
                 conn.setRequestProperty("Authorization", "Bearer $token")
-                conn.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
+                conn.setRequestProperty("Content-Type", "application/json")
                 conn.doOutput = true
 
                 OutputStreamWriter(conn.outputStream, "UTF-8").use { it.write(jsonBody); it.flush() }
@@ -344,7 +338,7 @@ class EversenseHttp365Util {
                 conn.connectTimeout = 30_000
                 conn.readTimeout = 30_000
                 conn.setRequestProperty("Authorization", "Bearer $token")
-                conn.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
+                conn.setRequestProperty("Content-Type", "application/json")
                 conn.doOutput = true
 
                 OutputStreamWriter(conn.outputStream, "UTF-8").use { it.write(jsonBody); it.flush() }

@@ -26,51 +26,60 @@ import app.aaps.plugins.eversense.util.EversenseScanner
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
 
-class EversenseCGMPlugin(context: Context) {
+class EversenseCGMPlugin {
 
-    private val context: Context = context.applicationContext
-    private val bluetoothManager: BluetoothManager =
-        context.applicationContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val preferences: SharedPreferences =
-        context.applicationContext.getSharedPreferences(TAG, Context.MODE_PRIVATE)
-    private val gattCallback: EversenseGattCallback
+    // FIX 1: Use ApplicationContext to avoid leaking Activity context.
+    private var context: Context? = null
+
+    private var bluetoothManager: BluetoothManager? = null
+    private var preferences: SharedPreferences? = null
+    private var gattCallback: EversenseGattCallback? = null
 
     // FIX 2: Lock object for synchronized access to connection state.
     private val connectionLock = Any()
 
     private var scanner: EversenseScanner? = null
-    var watchers: MutableList<EversenseWatcher> = java.util.concurrent.CopyOnWriteArrayList()
-    // Flag to track positioning mode state for safe diagnostic mode toggling
-    var isPositioningMode: Boolean = false
+    var watchers: List<EversenseWatcher> = listOf()
     // Credentials set by AAPS layer before any login attempt
     var username: String = ""
     var password: String = ""
 
-    init {
-        gattCallback = EversenseGattCallback(this, preferences)
+    fun setContext(context: Context, loggingEnabled: Boolean) {
+        // FIX 1: Always store applicationContext.
+        this.context = context.applicationContext
+        EversenseLogger.instance.enableLogging(loggingEnabled)
+
+        val preference = context.applicationContext.getSharedPreferences(TAG, Context.MODE_PRIVATE)
+        bluetoothManager = context.applicationContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        preferences = preference
+        gattCallback = EversenseGattCallback(this, preference)
     }
 
 
     fun addWatcher(watcher: EversenseWatcher) {
-        this.watchers.add(watcher)
+        this.watchers += watcher
     }
 
     fun removeWatcher(watcher: EversenseWatcher) {
-        this.watchers.remove(watcher)
+        this.watchers -= watcher
     }
 
-    fun isConnected(): Boolean = gattCallback.isConnected()
-    fun is365(): Boolean = gattCallback.is365()
+    fun isConnected(): Boolean = gattCallback?.isConnected() ?: false
+    fun is365(): Boolean = gattCallback?.is365() ?: false
 
-    fun getCurrentState(): EversenseState {
+    fun getCurrentState(): EversenseState? {
+        val preferences = preferences ?: run {
+            EversenseLogger.error(TAG, "No preferences available. Make sure setContext has been called")
+            return null
+        }
         val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
         return JSON.decodeFromString<EversenseState>(stateJson)
     }
 
     @SuppressLint("MissingPermission")
     fun startScan(callback: EversenseScanCallback) {
-        val bluetoothScanner = bluetoothManager.adapter?.bluetoothLeScanner ?: run {
-            EversenseLogger.error(TAG, "Bluetooth adapter or scanner not available")
+        val bluetoothScanner = bluetoothManager?.adapter?.bluetoothLeScanner ?: run {
+            EversenseLogger.error(TAG, "No bluetooth manager available. Make sure setContext has been called")
             return
         }
         scanner = EversenseScanner(callback)
@@ -81,7 +90,7 @@ class EversenseCGMPlugin(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun stopScan() {
-        val bluetoothScanner = bluetoothManager.adapter?.bluetoothLeScanner ?: run {
+        val bluetoothScanner = bluetoothManager?.adapter?.bluetoothLeScanner ?: run {
             EversenseLogger.error(TAG, "No bluetooth scanner available when trying to stop scan")
             return
         }
@@ -94,6 +103,15 @@ class EversenseCGMPlugin(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun connect(device: BluetoothDevice? = null): Boolean {
+        val bluetoothManager = this.bluetoothManager ?: run {
+            EversenseLogger.error(TAG, "No bluetooth manager available. Make sure setContext has been called")
+            return false
+        }
+        val gattCallback = this.gattCallback ?: run {
+            EversenseLogger.error(TAG, "No gattCallback available. Make sure setContext has been called")
+            return false
+        }
+
         stopScan()
 
         synchronized(connectionLock) {
@@ -106,12 +124,12 @@ class EversenseCGMPlugin(context: Context) {
 
             return if (device != null) {
                 EversenseLogger.info(TAG, "Connecting to supplied device: ${device.name}")
-                preferences.edit()?.putString(StorageKeys.REMOTE_DEVICE_KEY, device.address)?.apply()
+                preferences?.edit()?.putString(StorageKeys.REMOTE_DEVICE_KEY, device.address)?.apply()
                 EversenseLogger.info(TAG, "Saved device address for auto-reconnect: ${device.address}")
                 device.connectGatt(context, true, gattCallback, android.bluetooth.BluetoothDevice.TRANSPORT_LE)
                 true
             } else {
-                val address = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null) ?: run {
+                val address = preferences?.getString(StorageKeys.REMOTE_DEVICE_KEY, null) ?: run {
                     EversenseLogger.error(TAG, "No device supplied and no stored device address found.")
                     return false
                 }
@@ -127,11 +145,15 @@ class EversenseCGMPlugin(context: Context) {
     }
 
     fun clearStoredDevice() {
-        preferences.edit()?.remove(StorageKeys.REMOTE_DEVICE_KEY)?.apply()
+        preferences?.edit()?.remove(StorageKeys.REMOTE_DEVICE_KEY)?.apply()
         EversenseLogger.info(TAG, "Cleared stored device address")
     }
 
     fun disconnect() {
+        val gattCallback = this.gattCallback ?: run {
+            EversenseLogger.info(TAG, "disconnect() called but no gattCallback exists")
+            return
+        }
         if (!gattCallback.isConnected()) {
             EversenseLogger.info(TAG, "disconnect() called but not currently connected")
             return
@@ -140,69 +162,62 @@ class EversenseCGMPlugin(context: Context) {
         EversenseLogger.info(TAG, "Disconnected from transmitter")
     }
 
-    fun enterPositioningMode() {
-        isPositioningMode = true
-        setDiagnosticMode(true)
-        EversenseLogger.info(TAG, "Diagnostic Mode ENABLED: Positioning active")
-    }
-
-    fun exitPositioningMode() {
-        isPositioningMode = false
-        setDiagnosticMode(false)
-        EversenseLogger.info(TAG, "Diagnostic Mode DISABLED: Power saving active")
-    }
-
     fun setDiagnosticMode(isEnabled: Boolean) {
-        if (!gattCallback.isConnected()) {
+        if (gattCallback?.isConnected() != true) {
             EversenseLogger.warning(TAG, "Cannot set diagnostic mode — not connected")
             return
         }
-        gattCallback.submitToExecutor {
-            try {
-                if (gattCallback.is365()) {
-                    if (isEnabled) {
-                        gattCallback.writePacket<EnterDiagnosticMode365Packet.Response>(EnterDiagnosticMode365Packet())
-                    } else {
-                        gattCallback.writePacket<ExitDiagnosticMode365Packet.Response>(ExitDiagnosticMode365Packet())
-                    }
-                    EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (365)")
+        try {
+            if (gattCallback?.is365() == true) {
+                if (isEnabled) {
+                    gattCallback!!.writePacket<EnterDiagnosticMode365Packet.Response>(EnterDiagnosticMode365Packet())
                 } else {
-                    if (isEnabled) {
-                        gattCallback.writePacket<EnterDiagnosticModePacket.Response>(EnterDiagnosticModePacket())
-                    } else {
-                        gattCallback.writePacket<ExitDiagnosticModePacket.Response>(ExitDiagnosticModePacket())
-                    }
-                    EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (E3)")
+                    gattCallback!!.writePacket<ExitDiagnosticMode365Packet.Response>(ExitDiagnosticMode365Packet())
                 }
-            } catch (e: Exception) {
-                EversenseLogger.warning(TAG, "setDiagnosticMode failed: $e")
+                EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (365)")
+            } else {
+                if (isEnabled) {
+                    gattCallback!!.writePacket<EnterDiagnosticModePacket.Response>(EnterDiagnosticModePacket())
+                } else {
+                    gattCallback!!.writePacket<ExitDiagnosticModePacket.Response>(ExitDiagnosticModePacket())
+                }
+                EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (E3)")
             }
+        } catch (e: Exception) {
+            EversenseLogger.warning(TAG, "setDiagnosticMode failed: $e")
         }
     }
 
     fun writeSettings(settings: EversenseTransmitterSettings): Boolean {
+        val preferences = preferences ?: run {
+            EversenseLogger.error(TAG, "No preferences available. Make sure setContext has been called")
+            return false
+        }
+        val gattCallback = this.gattCallback ?: run {
+            EversenseLogger.error(TAG, "No gattCallback available. Make sure transmitter is connected before writing settings")
+            return false
+        }
         if (!gattCallback.isConnected()) {
             EversenseLogger.error(TAG, "Transmitter is not connected")
             return false
         }
-        return try {
-            val future = gattCallback.submitToExecutor {
-                EversenseE3Communicator.writeSettings(gattCallback, preferences, settings)
-            }
-            future.get(30000, java.util.concurrent.TimeUnit.MILLISECONDS)
-            true
-        } catch (e: Exception) {
-            EversenseLogger.error(TAG, "writeSettings failed: $e")
-            false
-        }
+        return EversenseE3Communicator.writeSettings(gattCallback, preferences, settings)
     }
 
     // Send a blood glucose calibration value to the transmitter.
     // Requires CalibrationReadiness.READY state and an active connection.
     // Returns true if the packet was sent successfully, false otherwise.
     fun sendCalibration(glucoseMgDl: Int, timestampMs: Long = System.currentTimeMillis()): Boolean {
+        val gattCallback = this.gattCallback ?: run {
+            EversenseLogger.error(TAG, "No gattCallback available. Make sure transmitter is connected before calibrating")
+            return false
+        }
         if (!gattCallback.isConnected()) {
             EversenseLogger.error(TAG, "Transmitter is not connected")
+            return false
+        }
+        val state = getCurrentState() ?: run {
+            EversenseLogger.error(TAG, "Cannot calibrate: state is null")
             return false
         }
         return try {
@@ -221,12 +236,13 @@ class EversenseCGMPlugin(context: Context) {
             future.get(20000, java.util.concurrent.TimeUnit.MILLISECONDS)
 
             // Update state immediately after successful calibration submission.
-            val stateJson = preferences.getString(app.aaps.plugins.eversense.util.StorageKeys.STATE, null) ?: "{}"
+            val prefs = preferences ?: return true
+            val stateJson = prefs.getString(app.aaps.plugins.eversense.util.StorageKeys.STATE, null) ?: "{}"
             val updatedState = JSON.decodeFromString<app.aaps.plugins.eversense.models.EversenseState>(stateJson)
             updatedState.lastCalibrationDate = timestampMs
             updatedState.nextCalibrationDate = timestampMs + 24 * 60 * 60 * 1000L // +24 hours
             updatedState.calibrationReadiness = app.aaps.plugins.eversense.enums.CalibrationReadiness.WAITING_POST_CALIBRATION
-            preferences.edit(commit = true) {
+            prefs.edit(commit = true) {
                 putString(app.aaps.plugins.eversense.util.StorageKeys.STATE, JSON.encodeToString(updatedState))
             }
             EversenseLogger.info(TAG, "Updated calibration state: lastCalibrationDate=$timestampMs, readiness=WAITING_POST_CALIBRATION")
@@ -239,10 +255,10 @@ class EversenseCGMPlugin(context: Context) {
                 gattCallback.submitToExecutor {
                     try {
                         val readinessResponse = gattCallback.writePacket<GetCalibrationReadinessPacket.Response>(GetCalibrationReadinessPacket())
-                        val currentStateJson = preferences.getString(app.aaps.plugins.eversense.util.StorageKeys.STATE, null) ?: "{}"
+                        val currentStateJson = prefs.getString(app.aaps.plugins.eversense.util.StorageKeys.STATE, null) ?: "{}"
                         val currentState = JSON.decodeFromString<app.aaps.plugins.eversense.models.EversenseState>(currentStateJson)
                         currentState.calibrationReadiness = readinessResponse.readiness
-                        preferences.edit(commit = true) {
+                        prefs.edit(commit = true) {
                             putString(app.aaps.plugins.eversense.util.StorageKeys.STATE, JSON.encodeToString(currentState))
                         }
                         EversenseLogger.info(TAG, "Post-calibration readiness re-read: ${readinessResponse.readiness}")
@@ -266,6 +282,14 @@ class EversenseCGMPlugin(context: Context) {
     // This prevents races between fullSync and handleCharacteristicChanged/writePacket.
     // Called from onConnectionChanged to run immediately on connect without waiting for Keep Alive.
     fun submitToExecutorAndSync(force: Boolean = false) {
+        val gattCallback = this.gattCallback ?: run {
+            EversenseLogger.error(TAG, "Cannot sync — no gattCallback available")
+            return
+        }
+        val preferences = preferences ?: run {
+            EversenseLogger.error(TAG, "Cannot sync — no preferences available")
+            return
+        }
         if (!gattCallback.isConnected()) {
             EversenseLogger.error(TAG, "Cannot sync — not connected")
             return
@@ -284,25 +308,32 @@ class EversenseCGMPlugin(context: Context) {
     }
 
     fun triggerFullSync(force: Boolean = false) {
+        val gattCallback = this.gattCallback ?: run {
+            EversenseLogger.error(TAG, "Cannot sync — no gattCallback available")
+            return
+        }
+        val preferences = preferences ?: run {
+            EversenseLogger.error(TAG, "Cannot sync — no preferences available")
+            return
+        }
         if (!gattCallback.isConnected()) {
             EversenseLogger.error(TAG, "Cannot sync — not connected")
             return
         }
         EversenseLogger.info(TAG, "Triggering full sync on user request")
-        gattCallback.submitToExecutor {
-            if (gattCallback.is365()) {
-                Eversense365Communicator.fullSync(gattCallback, preferences, watchers.toList(), force)
-                Eversense365Communicator.readGlucose(gattCallback, preferences, watchers.toList())
-            } else {
-                EversenseE3Communicator.fullSync(gattCallback, preferences, watchers.toList(), force)
-                EversenseE3Communicator.readGlucose(gattCallback, preferences, watchers.toList())
-            }
-            gattCallback.readRssi()
+        if (gattCallback.is365()) {
+            Eversense365Communicator.fullSync(gattCallback, preferences, watchers.toList(), force)
+            Eversense365Communicator.readGlucose(gattCallback, preferences, watchers.toList())
+        } else {
+            EversenseE3Communicator.fullSync(gattCallback, preferences, watchers.toList(), force)
+            EversenseE3Communicator.readGlucose(gattCallback, preferences, watchers.toList())
         }
+        gattCallback.readRssi()
     }
 
     // Called by EversenseGattCallback when RSSI is read
     fun onRssiRead(rssi: Int) {
+        val preferences = preferences ?: return
         val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
         val state = JSON.decodeFromString<EversenseState>(stateJson)
         state.placementSignalRssi = rssi
@@ -313,27 +344,27 @@ class EversenseCGMPlugin(context: Context) {
     }
 
     fun readSignalStrength() {
+        val gattCallback = this.gattCallback ?: run { EversenseLogger.error(TAG, "Cannot read signal strength — no gattCallback"); return }
+        val preferences = this.preferences ?: run { EversenseLogger.error(TAG, "Cannot read signal strength — no preferences"); return }
         if (!gattCallback.isConnected()) { EversenseLogger.warning(TAG, "Cannot read signal strength — not connected"); return }
-        gattCallback.submitToExecutor {
-            try {
-                val signalStrength = if (gattCallback.is365()) {
-                    val response = gattCallback.writePacket<app.aaps.plugins.eversense.packets.e365.GetSignalStrengthPacket.Response>(app.aaps.plugins.eversense.packets.e365.GetSignalStrengthPacket())
-                    response.signalStrength
-                } else {
-                    val response = gattCallback.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket())
-                    EversenseLogger.info(TAG, "E3 signal raw: ${response.rawValue} -> ${response.signalStrength}%")
-                    response.signalStrength
-                }
-                val stateJson = preferences.getString(app.aaps.plugins.eversense.util.StorageKeys.STATE, null) ?: "{}"
-                val state = JSON.decodeFromString<EversenseState>(stateJson)
-                state.sensorSignalStrength = signalStrength
-                preferences.edit()?.putString(app.aaps.plugins.eversense.util.StorageKeys.STATE, JSON.encodeToString(state))?.apply()
-                EversenseLogger.info(TAG, "Signal strength: $signalStrength%")
-                watchers.forEach { it.onStateChanged(state) }
-            } catch (e: Exception) {
-                EversenseLogger.warning(TAG, "readSignalStrength failed: $e")
-                gattCallback.readRssi()
+        try {
+            val signalStrength = if (gattCallback.is365()) {
+                val response = gattCallback.writePacket<app.aaps.plugins.eversense.packets.e365.GetSignalStrengthPacket.Response>(app.aaps.plugins.eversense.packets.e365.GetSignalStrengthPacket())
+                response.signalStrength
+            } else {
+                val response = gattCallback.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket())
+                EversenseLogger.info(TAG, "E3 signal raw: ${response.rawValue} -> ${response.signalStrength}%")
+                response.signalStrength
             }
+            val stateJson = preferences.getString(app.aaps.plugins.eversense.util.StorageKeys.STATE, null) ?: "{}"
+            val state = JSON.decodeFromString<EversenseState>(stateJson)
+            state.sensorSignalStrength = signalStrength
+            preferences.edit()?.putString(app.aaps.plugins.eversense.util.StorageKeys.STATE, JSON.encodeToString(state))?.apply()
+            EversenseLogger.info(TAG, "Signal strength: $signalStrength%")
+            watchers.forEach { it.onStateChanged(state) }
+        } catch (e: Exception) {
+            EversenseLogger.warning(TAG, "readSignalStrength failed: $e")
+            gattCallback.readRssi()
         }
     }
 
@@ -347,7 +378,7 @@ class EversenseCGMPlugin(context: Context) {
     }
 
     fun readRssi() {
-        gattCallback.readRssi()
+        gattCallback?.readRssi()
     }
 
     companion object {
@@ -355,6 +386,9 @@ class EversenseCGMPlugin(context: Context) {
 
         // ignoreUnknownKeys: tolerates firmware version differences between E3 and 365 transmitters.
         private val JSON = Json { ignoreUnknownKeys = true }
+
+        val instance: EversenseCGMPlugin by lazy {
+            EversenseCGMPlugin()
+        }
     }
 }
-

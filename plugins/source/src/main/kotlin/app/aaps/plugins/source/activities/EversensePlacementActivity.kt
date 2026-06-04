@@ -14,25 +14,13 @@ import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Date
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
-    @Inject lateinit var eversense: EversenseCGMPlugin
-
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val eversense get() = EversenseCGMPlugin.instance
 
     private lateinit var bar1: ImageView
     private lateinit var bar2: ImageView
@@ -46,28 +34,26 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
     private val timeFormatter: DateFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM)
 
-    private var pollingJob: Job? = null
-    private val signalBuffer = mutableListOf<Int>()
-    private companion object {
-        const val BUFFER_SIZE = 5
-        const val MIN_STABLE_SIGNAL = 25
-    }
+    @Volatile private var polling = false
 
+    // Mirrors iOS PlacementGuideViewModel.updateSignalStrength(): a single background
+    // thread that reads signal, sleeps 500ms, then loops. Chained (not Handler-scheduled)
+    // so each read completes before the next starts — prevents GATT queue pile-up.
     private fun startPolling() {
-        if (pollingJob?.isActive == true) return
-        pollingJob = ioScope.launch {
-            while (true) {
+        if (polling) return
+        polling = true
+        Thread {
+            while (polling) {
                 if (eversense.isConnected()) {
                     eversense.readSignalStrength()
                 }
-                delay(500)
+                Thread.sleep(500)
             }
-        }
+        }.start()
     }
 
     private fun stopPolling() {
-        pollingJob?.cancel()
-        pollingJob = null
+        polling = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,34 +78,29 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         eversense.addWatcher(this)
 
         val state = eversense.getCurrentState()
-        if (state.sensorSignalStrength > 0) {
+        if (state != null && state.sensorSignalStrength > 0) {
             updateSignalUI(state.sensorSignalStrength)
         } else if (!eversense.isConnected()) {
             showNotConnected()
         } else {
             showWaiting()
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        ioScope.launch {
-            delay(500)
-            eversense.enterPositioningMode()
+        // Mirrors iOS PlacementGuideViewModel.init: enable diagnostic mode on open
+        // so the transmitter increases its signal-strength broadcast frequency.
+        Thread {
+            Thread.sleep(500)
+            eversense.setDiagnosticMode(true)
             startPolling()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopPolling()
-        CoroutineScope(Dispatchers.IO).launch { eversense.exitPositioningMode() }
+        }.start()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        ioScope.cancel()
+        stopPolling()
         eversense.removeWatcher(this)
+        // Mirrors iOS PlacementGuideViewModel.stop(): disable diagnostic mode on close
+        Thread { eversense.setDiagnosticMode(false) }.start()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -129,32 +110,10 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
     override fun onStateChanged(state: EversenseState) {
         mainHandler.post {
-            val raw = state.sensorSignalStrength
-            if (raw > 0) {
-                signalBuffer.add(raw)
-                if (signalBuffer.size > BUFFER_SIZE) signalBuffer.removeAt(0)
-
-                // Require at least 3 readings before displaying
-                if (signalBuffer.size < 3) {
-                    showWaiting()
-                    return@post
-                }
-
-                // Use median to filter spikes
-                val sorted = signalBuffer.sorted()
-                val median = sorted[sorted.size / 2]
-
-                // Check stability: if range exceeds 40%, signal is noise (transmitter not on sensor)
-                val range = sorted.last() - sorted.first()
-                if (range > 40) {
-                    showNotOnSensor()
-                    return@post
-                }
-
-                updateSignalUI(median)
+            if (state.sensorSignalStrength > 0) {
+                updateSignalUI(state.sensorSignalStrength)
                 lastUpdateText.text = getString(R.string.eversense_placement_last_update, timeFormatter.format(Date()))
             } else {
-                signalBuffer.clear()
                 showWaiting()
             }
         }
@@ -164,7 +123,7 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         mainHandler.post { if (!connected) showNotConnected() }
     }
 
-    override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) { /* No-op: placement only uses signal strength */ }
+    override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {}
 
     private fun updateSignalUI(strength: Int) {
         val bars = strengthToBars(strength)
@@ -206,14 +165,6 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         signalLabel.text = getString(R.string.eversense_placement_reading)
         signalValue.text = ""
         instructionText.text = ""
-    }
-
-    private fun showNotOnSensor() {
-        val inactiveColor = ContextCompat.getColor(this, R.color.signal_inactive)
-        listOf(bar1, bar2, bar3, bar4, bar5).forEach { it.setColorFilter(inactiveColor) }
-        signalLabel.text = getString(R.string.eversense_placement_not_on_sensor)
-        signalValue.text = ""
-        instructionText.text = getString(R.string.eversense_placement_instruction_not_on_sensor)
     }
 
     private fun strengthToBars(strength: Int): Int = when {

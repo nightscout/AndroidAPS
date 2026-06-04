@@ -9,7 +9,7 @@ interface EversenseWatcher {
     fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>)
     fun onStateChanged(state: EversenseState)
     fun onConnectionChanged(connected: Boolean)
-    fun onAlarmReceived(alarm: ActiveAlarm) { /* No-op: optional callback */ }
-    fun onTransmitterNotPlaced() { /* No-op: optional callback */ }
-    fun onTransmitterReady() { /* No-op: optional callback */ }
+    fun onAlarmReceived(alarm: ActiveAlarm) {}
+    fun onTransmitterNotPlaced() {}
+    fun onTransmitterReady() {}
 }
