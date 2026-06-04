@@ -97,6 +97,18 @@ class EversenseGattCallback(
     @Volatile
     private var reconnectAttempts: Int = 0
 
+    // Persistent reconnect: retries every 60s indefinitely while disconnected.
+    // Android autoConnect gives up silently after ~30 min on Samsung devices.
+    private val persistentReconnectRunnable = object : Runnable {
+        override fun run() {
+            if (!connected) {
+                EversenseLogger.info(TAG, "Persistent reconnect tick — still disconnected, retrying...")
+                plugin.connect(null)
+                handler.postDelayed(this, 60_000L)
+            }
+        }
+    }
+
     // FIX 12: Tracks consecutive authV2flow failures while using the shortcut path.
     // After SHORTCUT_FAIL_THRESHOLD failures, disallowUseShortcut() is called to force
     // a full re-auth on the next connection. This handles BLE stack resets (e.g. charger
@@ -159,6 +171,7 @@ class EversenseGattCallback(
             // Reset backoff counters on successful connection
             reconnectAttempts = 0
             failedConnectionAttempts = 0
+            handler.removeCallbacks(persistentReconnectRunnable)
 
             preferences.edit(commit = true) {
                 putString(StorageKeys.REMOTE_DEVICE_KEY, gatt.device.address)
@@ -240,6 +253,9 @@ class EversenseGattCallback(
                     EversenseLogger.info(TAG, "Attempting auto-reconnect (attempt $reconnectAttempts)...")
                     plugin.connect(null)
                 }, delayMs)
+                // Also start persistent 60s retry loop in case autoConnect gives up
+                handler.removeCallbacks(persistentReconnectRunnable)
+                handler.postDelayed(persistentReconnectRunnable, 60_000L)
             } else {
                 EversenseLogger.warning(TAG, "No stored device address — skipping auto-reconnect")
             }
