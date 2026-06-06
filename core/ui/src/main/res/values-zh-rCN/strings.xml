@@ -833,6 +833,7 @@
     <string name="clear_cloud_action">清除设置</string>
     <string name="clear_cloud_settings">清除云设置</string>
     <string name="clear_cloud_settings_message">这将切换到本地存储并清除授权。是否继续？</string>
+    <string name="cloud_revoke_incomplete">此设备上的云端设置已清除，但无法连接到帐户以完全撤销访问。 建议您在账户设置中手动移除此设备。</string>
     <string name="cloud_connection_failed">云存储连接失败</string>
     <string name="cloud_reauthorize_message">云存储连接失败。您想要重新验证吗？</string>
     <string name="reauthorize">重新验证</string>
