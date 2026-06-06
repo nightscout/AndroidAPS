@@ -1,12 +1,81 @@
 package app.aaps.plugins.main.general.nfcCommands
 
 import androidx.annotation.StringRes
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.*
 import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.plugins.main.R
+import org.json.JSONObject
+import app.aaps.core.keys.R as KeysR
+import app.aaps.core.ui.R as CoreUiR
 
-enum class ArgType { NONE, SUSPEND, PUMP_DISCONNECT, BOLUS, BASAL_ABS, BASAL_PCT, EXTENDED, CARBS, PROFILE }
+enum class ArgType {
+    NONE,
+    SUSPEND,
+    PUMP_DISCONNECT,
+    BOLUS,
+    BASAL_ABS,
+    BASAL_PCT,
+    EXTENDED,
+    CARBS,
+    PROFILE;
+
+    @Composable
+    fun formatParams(params: JSONObject, plugin: NfcCommandsPlugin): String {
+        return when (this) {
+            BOLUS -> {
+                val amount = params.optDouble("amount")
+                val isMeal = params.optBoolean("isMeal")
+                val unit = stringResource(CoreUiR.string.insulin_unit_shortname)
+                val mealText = if (isMeal) " (${stringResource(R.string.nfccommands_meal_bolus)})" else ""
+                "${plugin.decimalFormatter.to2Decimal(amount)} $unit$mealText"
+            }
+            CARBS -> {
+                val amount = params.optInt("amount")
+                val unit = stringResource(CoreUiR.string.shortgramm)
+                "$amount $unit"
+            }
+            SUSPEND, PUMP_DISCONNECT -> {
+                val duration = params.optInt("duration")
+                val unit = stringResource(KeysR.string.units_min)
+                "$duration $unit"
+            }
+            BASAL_ABS -> {
+                val rate = params.optDouble("rate")
+                val duration = params.optInt("duration")
+                val unitRate = stringResource(CoreUiR.string.profile_ins_units_per_hour)
+                val unitDur = stringResource(KeysR.string.units_min)
+                "${plugin.decimalFormatter.to2Decimal(rate)} $unitRate $duration $unitDur"
+            }
+            BASAL_PCT -> {
+                val percent = params.optInt("percent")
+                val duration = params.optInt("duration")
+                val unitDur = stringResource(KeysR.string.units_min)
+                "$percent% $duration $unitDur"
+            }
+            EXTENDED -> {
+                val amount = params.optDouble("amount")
+                val duration = params.optInt("duration")
+                val unitAmt = stringResource(CoreUiR.string.insulin_unit_shortname)
+                val unitDur = stringResource(KeysR.string.units_min)
+                "${plugin.decimalFormatter.to2Decimal(amount)} $unitAmt $duration $unitDur"
+            }
+            PROFILE -> {
+                val name = params.optString("profileName")
+                val pct = params.optInt("percentage")
+                "$name $pct%"
+            }
+            NONE -> ""
+        }
+    }
+}
 
 enum class NfcCategory(@StringRes val labelResId: Int, @StringRes val docAnchorResId: Int) {
     LOOP(R.string.nfccommands_cat_loop, R.string.nfccommands_doc_anchor_loop),
@@ -23,16 +92,17 @@ enum class NfcCommandCode(
     val category: NfcCategory,
     val elementType: ElementType,
     val argType: ArgType,
-    val icon: ImageVector
+    val icon: ImageVector,
+    private val customIconColor: (@Composable () -> Color)? = null
 ) {
-    LOOP_STOP(R.string.nfccommands_cmd_loop_stop, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopDisabled),
-    LOOP_RESUME(R.string.nfccommands_cmd_loop_resume, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopClosed),
-    LOOP_SUSPEND(R.string.nfccommands_cmd_loop_suspend, NfcCategory.LOOP, ElementType.LOOP, ArgType.SUSPEND, IcLoopPaused),
-    LOOP_CLOSED(R.string.nfccommands_cmd_loop_closed, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopClosed),
-    LOOP_LGS(R.string.nfccommands_cmd_loop_lgs, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopLgs),
+    LOOP_STOP(R.string.nfccommands_cmd_loop_stop, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopDisabled, { AapsTheme.elementColors.loopDisabled }),
+    LOOP_RESUME(R.string.nfccommands_cmd_loop_resume, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopClosed, { AapsTheme.elementColors.loopClosed }),
+    LOOP_SUSPEND(R.string.nfccommands_cmd_loop_suspend, NfcCategory.LOOP, ElementType.LOOP, ArgType.SUSPEND, IcLoopPaused, { AapsTheme.elementColors.loopSuspended }),
+    LOOP_CLOSED(R.string.nfccommands_cmd_loop_closed, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopClosed, { AapsTheme.elementColors.loopClosed }),
+    LOOP_LGS(R.string.nfccommands_cmd_loop_lgs, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopLgs, { AapsTheme.elementColors.loopLgs }),
     
     PUMP_CONNECT(R.string.nfccommands_cmd_pump_connect, NfcCategory.PUMP, ElementType.PUMP, ArgType.NONE, IcLoopReconnect),
-    PUMP_DISCONNECT(R.string.nfccommands_cmd_pump_disconnect, NfcCategory.PUMP, ElementType.PUMP, ArgType.PUMP_DISCONNECT, IcLoopDisconnected),
+    PUMP_DISCONNECT(R.string.nfccommands_cmd_pump_disconnect, NfcCategory.PUMP, ElementType.PUMP, ArgType.PUMP_DISCONNECT, IcLoopDisconnected, { AapsTheme.elementColors.loopDisconnected }),
     
     BASAL_STOP(R.string.nfccommands_cmd_basal_stop, NfcCategory.BASAL, ElementType.TEMP_BASAL, ArgType.NONE, IcTbrCancel),
     BASAL_ABS(R.string.nfccommands_cmd_basal_absolute, NfcCategory.BASAL, ElementType.TEMP_BASAL, ArgType.BASAL_ABS, IcTbrHigh),
@@ -43,13 +113,19 @@ enum class NfcCommandCode(
     EXTENDED_SET(R.string.nfccommands_cmd_extended_bolus, NfcCategory.BOLUS, ElementType.EXTENDED_BOLUS, ArgType.EXTENDED, IcExtendedBolus),
     CARBS(R.string.nfccommands_cmd_carbs, NfcCategory.BOLUS, ElementType.CARBS, ArgType.CARBS, IcCarbs),
     
-    PROFILE_SWITCH(R.string.nfccommands_cmd_profile_switch, NfcCategory.PROFILE, ElementType.PROFILE_MANAGEMENT, ArgType.PROFILE, IcProfile),
+    PROFILE_SWITCH(R.string.nfccommands_cmd_profile_switch, NfcCategory.PROFILE, ElementType.PROFILE_MANAGEMENT, ArgType.PROFILE, IcProfile, { if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White }),
     
-    TARGET_MEAL(R.string.nfccommands_cmd_target_meal, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtEatingSoon),
-    TARGET_ACTIVITY(R.string.nfccommands_cmd_target_activity, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtActivity),
-    TARGET_HYPO(R.string.nfccommands_cmd_target_hypo, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtHypo),
-    TARGET_STOP(R.string.nfccommands_cmd_target_stop, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtCancel),
+    TARGET_MEAL(R.string.nfccommands_cmd_target_meal, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtEatingSoon, { AapsTheme.elementColors.tempTarget }),
+    TARGET_ACTIVITY(R.string.nfccommands_cmd_target_activity, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtActivity, { AapsTheme.elementColors.exercise }),
+    TARGET_HYPO(R.string.nfccommands_cmd_target_hypo, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtHypo, { AapsTheme.elementColors.loopDisabled }),
+    TARGET_STOP(R.string.nfccommands_cmd_target_stop, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtCancel, { AapsTheme.elementColors.loopDisabled }),
     
     AAPSCLIENT_RESTART(R.string.nfccommands_cmd_aapsclient_restart, NfcCategory.SYSTEM, ElementType.SETTINGS, ArgType.NONE, IcPluginNsClient),
-    RESTART(R.string.nfccommands_cmd_restart_aaps, NfcCategory.SYSTEM, ElementType.AAPS, ArgType.NONE, IcAaps)
+    RESTART(R.string.nfccommands_cmd_restart_aaps, NfcCategory.SYSTEM, ElementType.AAPS, ArgType.NONE, IcAaps);
+
+    @Composable
+    fun getIconColor(): Color = customIconColor?.invoke() ?: elementType.color()
+
+    @Composable
+    fun formatParams(params: JSONObject, plugin: NfcCommandsPlugin): String = argType.formatParams(params, plugin)
 }

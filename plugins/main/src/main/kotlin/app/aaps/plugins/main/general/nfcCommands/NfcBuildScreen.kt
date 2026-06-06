@@ -415,7 +415,7 @@ private fun ChooseActionSheet(
                                 Icon(
                                     imageVector = code.icon,
                                     contentDescription = null,
-                                    tint = getNfcUiCommandColor(code),
+                                    tint = code.getIconColor(),
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -426,20 +426,6 @@ private fun ChooseActionSheet(
             }
         }
     }
-}
-
-@Composable
-private fun getNfcUiCommandColor(code: NfcCommandCode): Color = when (code) {
-    NfcCommandCode.LOOP_STOP -> AapsTheme.elementColors.loopDisabled
-    NfcCommandCode.LOOP_RESUME, NfcCommandCode.LOOP_CLOSED -> AapsTheme.elementColors.loopClosed
-    NfcCommandCode.LOOP_LGS -> AapsTheme.elementColors.loopLgs
-    NfcCommandCode.LOOP_SUSPEND -> AapsTheme.elementColors.loopSuspended
-    NfcCommandCode.PUMP_DISCONNECT -> AapsTheme.elementColors.loopDisconnected
-    NfcCommandCode.TARGET_MEAL -> AapsTheme.elementColors.tempTarget
-    NfcCommandCode.TARGET_ACTIVITY -> AapsTheme.elementColors.exercise
-    NfcCommandCode.TARGET_HYPO, NfcCommandCode.TARGET_STOP -> AapsTheme.elementColors.loopDisabled
-    NfcCommandCode.PROFILE_SWITCH -> Color.White
-    else -> code.elementType.color()
 }
 
 @Composable
@@ -587,7 +573,7 @@ interface NfcUiAction {
     fun EditContent(profileNames: List<String>, onChange: () -> Unit)
 
     @Composable
-    fun getIconColor(): Color = getNfcUiCommandColor(command)
+    fun getIconColor(): Color = command.getIconColor()
 }
 
 private fun createNfcUiAction(plugin: NfcCommandsPlugin, code: NfcCommandCode, durationStep: Int): NfcUiAction = when (code.argType) {
