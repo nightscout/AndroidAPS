@@ -833,6 +833,7 @@
     <string name="clear_cloud_action">Effacer les paramètres</string>
     <string name="clear_cloud_settings">Effacer les paramètres du Cloud</string>
     <string name="clear_cloud_settings_message">Cela passera au stockage local et effacera les autorisations. Continuer ?</string>
+    <string name="cloud_revoke_incomplete">Les paramètres du cloud ont été effacés sur cet appareil, mais le compte n\'a pas pu être atteint pour révoquer complètement l\'accès. Vous pouvez le supprimer manuellement dans les paramètres de votre compte.</string>
     <string name="cloud_connection_failed">Échec de la connexion au stockage cloud</string>
     <string name="cloud_reauthorize_message">La connexion au stockage cloud a échoué. Voulez-vous vous authentifier à nouveau ?</string>
     <string name="reauthorize">Se réauthentifier</string>
