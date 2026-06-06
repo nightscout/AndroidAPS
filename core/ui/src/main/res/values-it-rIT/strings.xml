@@ -833,6 +833,7 @@
     <string name="clear_cloud_action">Cancella impostazioni</string>
     <string name="clear_cloud_settings">Cancella Impostazioni Cloud</string>
     <string name="clear_cloud_settings_message">Questo passerà alla memoria locale e cancellerà l\'autenticazione. Continuare?</string>
+    <string name="cloud_revoke_incomplete">Impostazioni cloud cancellate su questo dispositivo, ma non è stato possibile raggiungere l\'account per revocare completamente l\'accesso. Potresti voler rimuoverlo manualmente nelle impostazioni del tuo account.</string>
     <string name="cloud_connection_failed">Connessione all\'archiviazione cloud fallita</string>
     <string name="cloud_reauthorize_message">Connessione all\'archiviazione cloud non riuscita. Vuoi ri-autenticarti?</string>
     <string name="reauthorize">Ri-autenticazione</string>
