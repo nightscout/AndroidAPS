@@ -32,7 +32,7 @@ class MsgSettingMeal(
             danaPump.basalStep = 0.01
         }
         if (danaPump.basalStep != 0.01) {
-            notificationManager.post(NotificationId.WRONG_BASAL_STEP, app.aaps.pump.dana.R.string.danar_setbasalstep001, level = NotificationLevel.URGENT)
+            notificationManager.post(NotificationId.WRONG_BASAL_STEP, app.aaps.pump.dana.R.string.danar_setbasalstep001, level = NotificationLevel.IMPORTANT)
         } else {
             notificationManager.dismiss(NotificationId.WRONG_BASAL_STEP)
         }

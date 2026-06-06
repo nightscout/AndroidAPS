@@ -777,7 +777,7 @@ class ComboV2Plugin @Inject constructor(
         if (!isInitialized()) {
             aapsLogger.error(LTag.PUMP, "Cannot set profile since driver is not initialized")
 
-            notificationManager.post(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED, app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set, level = NotificationLevel.URGENT)
+            notificationManager.post(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED, app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set, level = NotificationLevel.IMPORTANT)
 
             return pumpEnactResultProvider.get().apply {
                 success = false
@@ -836,7 +836,7 @@ class ComboV2Plugin @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.error("Exception thrown during basal profile update: $e")
 
-            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
+            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
 
             pumpEnactResult.apply {
                 success = false
@@ -1888,7 +1888,7 @@ class ComboV2Plugin @Inject constructor(
                     R.string.combov2_unknown_tbr_detected,
                     event.tbrPercentage,
                     remainingDurationString,
-                    level = NotificationLevel.URGENT
+                    level = NotificationLevel.IMPORTANT
                 )
             }
 
@@ -2167,7 +2167,7 @@ class ComboV2Plugin @Inject constructor(
         notificationManager.post(
             NotificationId.COMBO_PUMP_ALARM,
             text = "${rh.gs(R.string.combov2_combo_alert)}: ${getAlertDescription(alert)}",
-            level = if (alert is AlertScreenContent.Warning) NotificationLevel.NORMAL else NotificationLevel.URGENT
+            level = if (alert is AlertScreenContent.Warning) NotificationLevel.NORMAL else NotificationLevel.IMPORTANT
         )
     }
 

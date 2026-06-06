@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ue.Action
@@ -59,7 +60,7 @@ class RunningModeManagementViewModel @Inject constructor(
 
     init {
         loadState()
-        observeRunningModeChanges()
+        observeStateChanges()
     }
 
     /**
@@ -93,13 +94,23 @@ class RunningModeManagementViewModel @Inject constructor(
     }
 
     /**
-     * Subscribe to running mode changes to auto-refresh UI
+     * Subscribe to changes that affect the screen state and auto-refresh.
+     * - Running mode (RM) changes: the current mode / reasons.
+     * - Profile (EffectiveProfileSwitch / EPS) changes: [Loop.allowedNextModes] requires an active
+     *   profile, so without this the screen can stay stuck on "no profile set" after a profile
+     *   becomes active (the overview observes EPS, this screen previously did not).
      */
     @OptIn(FlowPreview::class)
-    private fun observeRunningModeChanges() {
+    private fun observeStateChanges() {
         persistenceLayer
             .observeChanges<RM>()
             .compensateForClockSkew(config, dateUtil)
+            .debounce(500L)
+            .onEach { loadState() }
+            .launchIn(viewModelScope)
+
+        persistenceLayer
+            .observeChanges<EPS>()
             .debounce(500L)
             .onEach { loadState() }
             .launchIn(viewModelScope)

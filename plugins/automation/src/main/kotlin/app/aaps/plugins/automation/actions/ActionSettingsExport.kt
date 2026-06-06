@@ -85,14 +85,14 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                     aapsLogger.error(LTag.AUTOMATION, "ERROR: exportSharedPreferencesNonInteractive() failed to export settings")
                     exportResultComment = app.aaps.core.ui.R.string.export_failed
                     exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_failed)
-                    exportResultLevel = NotificationLevel.URGENT // URGENT -> e.g. color RED
+                    exportResultLevel = NotificationLevel.IMPORTANT // URGENT -> e.g. color RED
                     announceAlert = true
                 }
             } else {
                 // No password or was expired and needs re-entering by user
                 exportResultComment = app.aaps.core.ui.R.string.export_expired
                 exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_expired)
-                exportResultLevel = NotificationLevel.URGENT  // URGENT -> e.g. color RED
+                exportResultLevel = NotificationLevel.IMPORTANT  // URGENT -> e.g. color RED
                 // Clear password in datastore, then notify user
                 aapsLogger.info(LTag.AUTOMATION, "No password or was expired and needs re-entering by user")
                 exportPasswordDataStore.clearPasswordDataStore(context)
@@ -102,7 +102,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
             // Not enabled, do nothing and notify user
             exportResultComment = app.aaps.core.ui.R.string.export_disabled
             exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_disabled)
-            exportResultLevel = NotificationLevel.URGENT
+            exportResultLevel = NotificationLevel.IMPORTANT
             aapsLogger.info(LTag.AUTOMATION, "Settings export ignored: unattended settings export is disabled")
         }
         // send notification

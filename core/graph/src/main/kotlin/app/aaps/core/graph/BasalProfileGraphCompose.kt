@@ -18,7 +18,7 @@ import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -90,7 +90,7 @@ fun BasalProfileGraphCompose(
                 profile2.getBasalTimeFromMidnight((hour.coerceAtMost(23)) * 60 * 60)
             }
             modelProducer.runTransaction {
-                lineSeries {
+                lineModel {
                     series(y = basalValues2)
                     series(y = basalValues1)
                 }
@@ -98,7 +98,7 @@ fun BasalProfileGraphCompose(
             }
         } else {
             modelProducer.runTransaction {
-                lineSeries {
+                lineModel {
                     series(y = basalValues1)
                 }
             }

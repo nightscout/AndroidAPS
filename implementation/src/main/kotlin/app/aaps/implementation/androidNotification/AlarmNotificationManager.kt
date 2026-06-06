@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.implementation.androidNotification.AlarmNotificationManager.Companion.CHANNEL_FULL_SCREEN_SILENT
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -67,8 +68,10 @@ class AlarmNotificationManager @Inject constructor(
 
         /**
          * Base offset for per-AAPS-notification sound alarm IDs. The system notification ID is
-         * `SOUND_ID_OFFSET + notificationKey` (typically the AapsNotification's legacyId, which
-         * is in the 0..200 range — well clear of NotificationHolder=4711 and FULL_SCREEN=4712).
+         * `SOUND_ID_OFFSET + notificationKey`, where notificationKey is the `AapsNotification`'s
+         * instanceKey (the `NotificationId.ordinal`, 0..~80, for single notifications; 10000+ for
+         * `allowMultiple` ones). The 100_000 offset keeps both ranges well clear of
+         * NotificationHolder=4711 and FULL_SCREEN=4712.
          */
         const val SOUND_ID_OFFSET = 100_000
 
@@ -283,42 +286,30 @@ class AlarmNotificationManager @Inject constructor(
     }
 
     /**
-     * Post an alarm notification that plays sound through the channel.
-     * Channel choice (alarm stream vs notification stream) follows
-     * [BooleanKey.AlertOverrideDoNotDisturb].
+     * Post a **silent** alarm notification on the [CHANNEL_FULL_SCREEN_SILENT] channel
+     * (heads-up + vibration, no channel sound). The audio is owned by [AlarmSoundPlayer]; this
+     * notification provides shade/lock-screen visibility and a tap target to open the app.
      *
-     * Subsumes both the old `AlarmSoundService` audio path AND the legacy
-     * `NotificationManagerImpl.raiseSystemNotification` rich-visual path when sound is involved —
-     * a single rich notification carries both audio and content.
+     * Tracked in [activeSoundKeys] exactly like [postSoundAlarmNotification], so
+     * [cancelSoundAlarm] / [cancelAlarm] clear it.
      *
-     * Each call uses a per-AAPS-notification system notification id derived from
-     * [notificationKey], so multiple sound alarms can coexist in the shade and cancelling one
-     * doesn't stomp on others (see [cancelSoundAlarm]).
-     *
-     * @param notificationKey unique-per-AAPS-notification identifier, typically the
-     *                        `AapsNotification.id.legacyId`
-     * @param title           short notification title (e.g. "Urgent alarm")
-     * @param body            notification body text
-     * @param urgent          true for URGENT-level alerts (max priority, vibration)
+     * @param notificationKey unique-per-AAPS-notification identifier (the `AapsNotification.instanceKey`)
+     * @param urgent          true for URGENT-level alerts (stronger vibration)
      */
-    fun postSoundAlarmNotification(
+    fun postSilentAlarmNotification(
         notificationKey: Int,
-        @RawRes soundId: Int,
         title: String,
         body: String,
         urgent: Boolean
     ) {
-        val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
-        val channelId = channelIdForSound(soundId, overrideDnd)
-
-        val builder = NotificationCompat.Builder(context, channelId)
+        val builder = NotificationCompat.Builder(context, CHANNEL_FULL_SCREEN_SILENT)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
-            .setCategory(if (overrideDnd) NotificationCompat.CATEGORY_ALARM else NotificationCompat.CATEGORY_REMINDER)
-            .setPriority(if (urgent) NotificationCompat.PRIORITY_MAX else NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setOngoing(true)
             .setAutoCancel(false)
             .setContentIntent(openAppPendingIntent())
@@ -330,28 +321,25 @@ class AlarmNotificationManager @Inject constructor(
 
         val systemId = SOUND_ID_OFFSET + notificationKey
         try {
-            // notify + add must be one atomic step relative to cancelAlarm/cancelSoundAlarm —
-            // see the doc on activeSoundKeys for the race this prevents.
+            // notify + add must be atomic relative to cancelAlarm/cancelSoundAlarm — see activeSoundKeys.
             synchronized(activeSoundKeys) {
                 mgr.notify(systemId, builder.build())
                 activeSoundKeys.add(notificationKey)
             }
-            aapsLogger.debug(LTag.NOTIFICATION, "Posted sound alarm key=$notificationKey on $channelId: $title - $body")
+            aapsLogger.debug(LTag.NOTIFICATION, "Posted silent alarm key=$notificationKey: $title - $body")
         } catch (ex: SecurityException) {
-            // POST_NOTIFICATIONS revoked at runtime (Android 13+) — see postFullScreenAlarm
-            // for recovery flow. The AAPS in-app notification (separate state, not Android-level)
-            // still shows in the overview screen, so the user is not entirely blind to the alert.
+            // POST_NOTIFICATIONS revoked at runtime (Android 13+) — see postFullScreenAlarm.
             aapsLogger.error(
                 LTag.NOTIFICATION,
-                "Failed to post sound alarm \"$title\" key=$notificationKey — POST_NOTIFICATIONS likely revoked",
+                "Failed to post silent alarm \"$title\" key=$notificationKey — POST_NOTIFICATIONS likely revoked",
                 ex
             )
         }
     }
 
     /**
-     * Cancel a specific sound alarm by its [notificationKey] (typically `legacyId`). No-op if
-     * that key has no active notification. Use this when an individual AAPS notification is
+     * Cancel a specific sound alarm by its [notificationKey] (the `AapsNotification.instanceKey`).
+     * No-op if that key has no active notification. Use this when an individual AAPS notification is
      * dismissed/replaced/expired so we only cancel its own sound, not any concurrently active
      * alarms.
      */

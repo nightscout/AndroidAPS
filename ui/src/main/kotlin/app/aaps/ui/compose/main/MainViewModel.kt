@@ -180,6 +180,7 @@ class MainViewModel @Inject constructor(
             tempTargetRecordId = chip.tempTargetRecordId,
             runningMode = chip.runningMode,
             runningModeText = chip.runningModeText,
+            runningModeRemaining = chip.runningModeRemaining,
             runningModeProgress = chip.runningModeProgress,
             runningModeRecordId = chip.runningModeRecordId,
             tbrState = chip.tbrState,
@@ -264,9 +265,16 @@ class MainViewModel @Inject constructor(
             (elapsed.toFloat() / rmData.duration.toFloat()).coerceIn(0f, 1f)
         } else 0f
 
+        val rmIsTemporaryFinite = rmData != null && rmData.mode.mustBeTemporary() && rmIsFinite && !rmExpired
+        // Short remaining time shown on the (label-less) running mode chip, e.g. "30'".
+        val rmRemaining = if (rmIsTemporaryFinite) {
+            dateUtil.untilString(rmData.timestamp + rmData.duration, rh, withParentheses = false)
+        } else ""
+
         val rmText = if (rmData != null) {
             val modeName = getModeNameString(rmData.mode)
-            if (rmData.mode.mustBeTemporary() && rmIsFinite && !rmExpired) {
+            // Full text kept for the icon's content description (accessibility).
+            if (rmIsTemporaryFinite) {
                 "$modeName ${dateUtil.untilString(rmData.timestamp + rmData.duration, rh)}"
             } else {
                 modeName
@@ -287,6 +295,7 @@ class MainViewModel @Inject constructor(
             tempTargetRecordId = if (ttExpired) 0 else ttData?.recordId ?: 0,
             runningMode = rmData?.mode ?: RM.Mode.DISABLED_LOOP,
             runningModeText = rmText,
+            runningModeRemaining = rmRemaining,
             runningModeProgress = rmProgress,
             runningModeRecordId = if (rmExpired) 0 else rmData?.recordId ?: 0,
             tbrState = if (tbrExpired) TbrState.NONE else tbrData?.state ?: TbrState.NONE,
@@ -869,6 +878,7 @@ private data class ChipState(
     val tempTargetRecordId: Long = 0,
     val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
     val runningModeText: String = "",
+    val runningModeRemaining: String = "",
     val runningModeProgress: Float = 0f,
     val runningModeRecordId: Long = 0,
     val tbrState: TbrState = TbrState.NONE,

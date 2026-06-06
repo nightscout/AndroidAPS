@@ -24,7 +24,7 @@ wearCompose = "1.6.2"
 hiltNavigationCompose = "1.3.0"
 navigationCompose = "2.9.8"
 lifecycleRuntimeKtx = "2.10.0"
-vico = "3.2.1"
+vico = "3.2.2"
 composeUi = "1.11.2"
 glance = "1.1.1"
 

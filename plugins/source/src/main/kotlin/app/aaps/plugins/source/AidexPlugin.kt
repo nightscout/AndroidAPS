@@ -159,7 +159,7 @@ class AidexPlugin @Inject constructor(
                 notificationManager.post(
                     id = NotificationId.AIDEX_SENSOR_EXPIRED,
                     textRes = R.string.aidex_sensor_expired,
-                    level = NotificationLevel.URGENT,
+                    level = NotificationLevel.IMPORTANT,
                     validMinutes = 60
                 )
             }
@@ -191,7 +191,7 @@ class AidexPlugin @Inject constructor(
                 notificationManager.post(
                     id = NotificationId.AIDEX_SENSOR_ERROR,
                     textRes = R.string.aidex_sensor_error,
-                    level = NotificationLevel.URGENT,
+                    level = NotificationLevel.IMPORTANT,
                     validMinutes = 60
                 )
             }

@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 
@@ -85,6 +87,44 @@ fun aapsTypography(scale: Float = 1f): AapsTypography {
  * Returns a [Typography] with every font size and line height multiplied by [scale].
  * Used to scale Material 3 typography uniformly on tablets while keeping defaults on phones.
  */
+/**
+ * Returns a [Typography] that vertically centers glyphs within their line box on every style.
+ *
+ * Two parts of the standard recipe:
+ *  - `includeFontPadding = false` removes the legacy padding above the glyphs (per font ascent).
+ *  - `lineHeightStyle = Center` distributes the remaining line-height leading evenly above and
+ *    below the glyph (default distribution biases it downward).
+ *
+ * Together they make single-line text sit centered — e.g. aligned with an icon in a
+ * `Row(verticalAlignment = CenterVertically)`. `Trim.None` keeps paragraph block spacing intact.
+ */
+fun Typography.withoutFontPadding(): Typography {
+    fun TextStyle.noPad() = copy(
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None
+        )
+    )
+    return copy(
+        displayLarge = displayLarge.noPad(),
+        displayMedium = displayMedium.noPad(),
+        displaySmall = displaySmall.noPad(),
+        headlineLarge = headlineLarge.noPad(),
+        headlineMedium = headlineMedium.noPad(),
+        headlineSmall = headlineSmall.noPad(),
+        titleLarge = titleLarge.noPad(),
+        titleMedium = titleMedium.noPad(),
+        titleSmall = titleSmall.noPad(),
+        bodyLarge = bodyLarge.noPad(),
+        bodyMedium = bodyMedium.noPad(),
+        bodySmall = bodySmall.noPad(),
+        labelLarge = labelLarge.noPad(),
+        labelMedium = labelMedium.noPad(),
+        labelSmall = labelSmall.noPad(),
+    )
+}
+
 fun Typography.scaled(scale: Float): Typography {
     if (scale == 1f) return this
     fun TextStyle.s() = copy(

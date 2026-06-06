@@ -35,7 +35,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalBox
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
@@ -68,8 +68,9 @@ private fun interpolateBgAtTimestamp(timestamp: Long, sortedPoints: List<BgDataP
     val after = sortedPoints.firstOrNull { it.timestamp > timestamp }
     return when {
         before == null -> after!!.value
-        after == null -> before.value
-        else -> {
+        after == null  -> before.value
+
+        else           -> {
             val t = (timestamp - before.timestamp).toDouble() / (after.timestamp - before.timestamp).toDouble()
             before.value + t * (after.value - before.value)
         }
@@ -169,11 +170,13 @@ fun BgGraphCompose(
         val regularPoints = seriesRegistry[SERIES_REGULAR] ?: emptyList()
         val bucketedPoints = seriesRegistry[SERIES_BUCKETED] ?: emptyList()
 
-        if (regularPoints.isEmpty() && bucketedPoints.isEmpty()) return
+        // Note: do NOT early-return when there are no BG points. With a clean DB the chart must
+        // still build its frame (axes, now-line, in-range belt) via the normalizer + dummy layers,
+        // matching the COB graph. The per-layer logic below already handles empty series.
 
         modelProducer.runTransaction {
             // Block 1 → BG layer (layer 0, start axis)
-            lineSeries {
+            lineModel {
                 val activeSeries = mutableListOf<String>()
 
                 if (regularPoints.isNotEmpty()) {
@@ -211,7 +214,7 @@ fun BgGraphCompose(
             }
 
             // Block 2 → Basal layer (layer 1, end axis)
-            lineSeries {
+            lineModel {
                 if (currentBasalData.profileBasal.size >= 2) {
                     val pts = currentBasalData.profileBasal
                         .map { timestampToX(it.timestamp, minTimestamp) to it.value }
@@ -234,7 +237,7 @@ fun BgGraphCompose(
             }
 
             // Block 3 → Target line layer (layer 2, start axis)
-            lineSeries {
+            lineModel {
                 if (currentTargetData.targets.size >= 2) {
                     val pts = currentTargetData.targets
                         .map { timestampToX(it.timestamp, minTimestamp) to it.value }
@@ -247,7 +250,7 @@ fun BgGraphCompose(
             }
 
             // Block 4 → EPS layer (layer 3, start axis — Y at interpolated BG value at switch timestamp)
-            lineSeries {
+            lineModel {
                 if (currentEpsPoints.isNotEmpty()) {
                     val allBgPoints = (regularPoints + bucketedPoints).sortedBy { it.timestamp }
                     val pts = currentEpsPoints
@@ -266,13 +269,13 @@ fun BgGraphCompose(
 
             // Block 5 → Activity layer (layer 4, start axis — Y-values normalized to BG coordinate space)
             // Scale so maxActivity maps to 80% of maxBgY (same as legacy: maxY * 0.8 / maxIAValue)
-            lineSeries {
+            lineModel {
                 val maxAct = currentActivityData.maxActivity
                 if (!showActivity || maxAct <= 0.0 || currentActivityData.activity.size < 2) {
                     // Activity disabled or no data — emit dummy series (history + prediction)
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    return@lineSeries
+                    return@lineModel
                 }
                 val scaleFactor = currentMaxBgY * 0.8 / maxAct
 
@@ -571,7 +574,7 @@ fun BgGraphCompose(
                 guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
             ),
             decorations = decorations,
-            getXStep = { 1.0 }
+            getXStep = { _, _, _ -> 1.0 }
         ),
         modelProducer = modelProducer,
         modifier = modifier.fillMaxWidth(),

@@ -280,20 +280,21 @@ class DateUtilImpl @Inject constructor(
         return t
     }
 
-    override fun timeFrameString(timeInMillis: Long, rh: ResourceHelper): String {
+    override fun timeFrameString(timeInMillis: Long, rh: ResourceHelper, withParentheses: Boolean): String {
         val duration = timeInMillis.milliseconds
         val totalHours = duration.inWholeHours
         val remainingMinutes = (duration - totalHours.hours).inWholeMinutes
         val hoursPart = if (totalHours > 0) "$totalHours${rh.gs(R.string.shorthour)} " else ""
-        return "($hoursPart$remainingMinutes')"
+        val body = "$hoursPart$remainingMinutes'"
+        return if (withParentheses) "($body)" else body
     }
 
     override fun sinceString(timestamp: Long, rh: ResourceHelper): String =
         timeFrameString(now() - timestamp, rh)
 
-    override fun untilString(timestamp: Long, rh: ResourceHelper): String {
+    override fun untilString(timestamp: Long, rh: ResourceHelper, withParentheses: Boolean): String {
         val durationMillis = timestamp - now()
-        return timeFrameString(durationMillis, rh)
+        return timeFrameString(durationMillis, rh, withParentheses)
     }
 
     override fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String {

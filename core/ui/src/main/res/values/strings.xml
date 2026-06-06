@@ -874,6 +874,7 @@
     <string name="clear_cloud_action">Clear Settings</string>
     <string name="clear_cloud_settings">Clear Cloud Settings</string>
     <string name="clear_cloud_settings_message">This will switch to local storage and clear authorization. Continue?</string>
+    <string name="cloud_revoke_incomplete">Cloud settings cleared on this device, but the account could not be reached to fully revoke access. You may want to remove it manually in your account settings.</string>
     <string name="cloud_connection_failed">Cloud storage connection failed</string>
     <string name="cloud_reauthorize_message">Cloud storage connection failed. Would you like to re-authenticate?</string>
     <string name="reauthorize">Re-authenticate</string>
