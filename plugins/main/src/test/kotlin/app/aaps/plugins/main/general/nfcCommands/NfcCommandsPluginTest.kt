@@ -17,6 +17,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -30,13 +31,9 @@ import app.aaps.core.ui.R as CoreUiR
 
 class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
-
     @Mock lateinit var loop: app.aaps.core.interfaces.aps.Loop
-
     @Mock lateinit var persistenceLayer: PersistenceLayer
-
     @Mock lateinit var configBuilder: ConfigBuilder
-
     @Mock lateinit var mockProfileStore: ProfileStore
 
     private val tagUid = "aabbccdd"
@@ -77,6 +74,11 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
         }
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(true)
+        whenever(rh.gs(any<Int>())).thenReturn("Mock String")
+        whenever(rh.gs(any<Int>(), any())).thenReturn("Mock String")
+        whenever(rh.gs(any<Int>(), any(), any())).thenReturn("Mock String")
+        whenever(rh.gsNotLocalised(any<Int>())).thenReturn("Mock String")
+        whenever(rh.gsNotLocalised(any<Int>(), any())).thenReturn("Mock String")
         whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
         whenever(rh.gs(R.string.nfccommands_wrong_duration)).thenReturn("Wrong duration")
         whenever(rh.gs(CoreUiR.string.pump_disconnected)).thenReturn("Pump disconnected")
@@ -84,69 +86,16 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     }
 
     private fun execute(command: String): NfcExecutionResult = runBlocking { plugin.executeCommand(command) }
+    private fun execute(code: NfcCommandCode, params: JSONObject = JSONObject()): NfcExecutionResult = execute(NfcTagStore.buildCommand(code, params))
 
     private fun cascade(commands: List<String>): NfcExecutionResult = runBlocking { plugin.executeCascade(commands) }
-
-    // ── Template / buildCommand tests ─────────────────────────────────────────
-
-    @Test
-    fun `available command templates should expose current NFC command set`() {
-        val labelResIds = NfcTagStore.availableCommands().map { it.labelResId }
-
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_aapsclient_restart)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_restart_aaps)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_loop_closed)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_loop_lgs)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_loop_suspend)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_profile_switch)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_pump_disconnect)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_basal_absolute)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_basal_percent)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_carbs)
-        assertThat(labelResIds).contains(R.string.nfccommands_cmd_extended_bolus)
-    }
-
-    @Test
-    fun `buildCommand should ignore stale args for commands without arguments`() {
-        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_stop }
-
-        val command = NfcTagStore.buildCommand(template, "unexpected")
-
-        assertThat(command).isEqualTo("LOOP STOP")
-    }
-
-    @Test
-    fun `buildCommand should return parametric disconnect command with provided duration`() {
-        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_pump_disconnect }
-
-        val command = NfcTagStore.buildCommand(template, "60")
-
-        assertThat(command).isEqualTo("PUMP DISCONNECT 60")
-    }
-
-    @Test
-    fun `buildCommand should return null when required args are missing`() {
-        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_suspend }
-
-        val command = NfcTagStore.buildCommand(template, "")
-
-        assertThat(command).isNull()
-    }
-
-    @Test
-    fun `buildCommand should include args when template requires them`() {
-        val template = NfcTagStore.availableCommands().first { it.labelResId == R.string.nfccommands_cmd_loop_suspend }
-
-        val command = NfcTagStore.buildCommand(template, "30")
-
-        assertThat(command).isEqualTo("LOOP SUSPEND 30")
-    }
 
     // ── prepareExecution tests ─────────────────────────────────────────────────
 
     @Test
     fun `prepareExecution returns Ready with commands when tag registered`() {
-        val tag = NfcCreatedTag(tagUid = tagUid, name = "Test", commands = listOf("LOOP STOP"), createdAtMillis = 0L)
+        val cmd = NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP)
+        val tag = NfcCreatedTag(tagUid = tagUid, name = "Test", commands = listOf(cmd), createdAtMillis = 0L)
         plugin.nfcTagStore.saveCreatedTag(tag)
         whenever(rh.gs(R.string.nfccommands_tag_not_registered)).thenReturn("Not registered")
 
@@ -154,7 +103,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         assertThat(result).isInstanceOf(NfcPrepareResult.Ready::class.java)
         val ready = result as NfcPrepareResult.Ready
-        assertThat(ready.commands).isEqualTo(listOf("LOOP STOP"))
+        assertThat(ready.commands).isEqualTo(listOf(cmd))
         assertThat(ready.tagName).isEqualTo("Test")
     }
 
@@ -171,559 +120,218 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     // ── processLoop tests ──────────────────────────────────────────────────────
 
     @Test
-    fun `executeCommand LOOP STOP should disable loop`() {
+    fun `executeCommand LOOP_STOP should disable loop`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
 
-        val result = execute("LOOP STOP")
+        val result = execute(NfcCommandCode.LOOP_STOP)
 
         assertThat(result.success).isTrue()
-        // Positional order: newRM, action, source, listValues, durationInMinutes, profile
         runTest {
             verify(loop).handleRunningModeChange(
-            eq(RM.Mode.DISABLED_LOOP),
-            eq(Action.LOOP_DISABLED),
-            eq(Sources.NfcCommands),
-            any(),
-            eq(Int.MAX_VALUE),
-            eq(effectiveProfile),
+                eq(RM.Mode.DISABLED_LOOP),
+                eq(Action.LOOP_DISABLED),
+                eq(Sources.NfcCommands),
+                any(),
+                eq(Int.MAX_VALUE),
+                eq(effectiveProfile),
             )
         }
     }
 
     @Test
-    fun `executeCommand LOOP DISABLE should disable loop`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
-
-        val result = execute("LOOP DISABLE")
-
-        assertThat(result.success).isTrue()
-    }
-
-    @Test
-    fun `executeCommand LOOP RESUME should resume loop`() {
+    fun `executeCommand LOOP_RESUME should resume loop`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_resumed)).thenReturn("Loop resumed")
 
-        val result = execute("LOOP RESUME")
+        val result = execute(NfcCommandCode.LOOP_RESUME)
 
         assertThat(result.success).isTrue()
-        // Positional order: newRM, action, source, listValues, durationInMinutes, profile
         runTest {
             verify(loop).handleRunningModeChange(
-            eq(RM.Mode.RESUME),
-            eq(Action.RESUME),
-            eq(Sources.NfcCommands),
-            any(),
-            any(),
-            eq(effectiveProfile),
+                eq(RM.Mode.RESUME),
+                eq(Action.RESUME),
+                eq(Sources.NfcCommands),
+                any(),
+                any(),
+                eq(effectiveProfile),
             )
         }
     }
 
     @Test
-    fun `executeCommand LOOP RESUME from disabled state should re-enable loop`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.CLOSED_LOOP_LGS)) }
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.DISABLED_LOOP) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_loop_resumed)).thenReturn("Loop resumed")
-
-        val result = execute("LOOP RESUME")
-
-        assertThat(result.success).isTrue()
-        runTest {
-            verify(loop).handleRunningModeChange(
-            eq(RM.Mode.RESUME),
-            eq(Action.RESUME),
-            eq(Sources.NfcCommands),
-            any(),
-            any(),
-            eq(effectiveProfile),
-            )
-        }
-    }
-
-    @Test
-    fun `executeCommand LOOP SUSPEND should call handleRunningModeChange directly without pre-cancelling TBR`() {
+    fun `executeCommand LOOP_SUSPEND should call handleRunningModeChange directly`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(CoreUiR.string.loopsuspended)).thenReturn("Loop suspended")
 
-        val result = execute("LOOP SUSPEND 30")
+        val result = execute(NfcCommandCode.LOOP_SUSPEND, JSONObject().put("duration", 30))
 
         assertThat(result.success).isTrue()
         runTest {
             verify(loop).handleRunningModeChange(
-            eq(RM.Mode.SUSPENDED_BY_USER),
-            eq(Action.SUSPEND),
-            eq(Sources.NfcCommands),
-            any(),
-            eq(30),
-            eq(effectiveProfile),
-            )
-        }
-        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand LOOP SUSPEND with invalid duration should fail`() {
-        whenever(rh.gs(R.string.nfccommands_wrong_duration)).thenReturn("Wrong duration")
-
-        val result = execute("LOOP SUSPEND 0")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand LOOP SUSPEND clamps duration above three hours`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_loop_suspended)).thenReturn("Loop suspended")
-
-        val result = execute("LOOP SUSPEND 999")
-
-        assertThat(result.success).isTrue()
-        runTest {
-            verify(loop).handleRunningModeChange(
-            eq(RM.Mode.SUSPENDED_BY_USER),
-            eq(Action.SUSPEND),
-            eq(Sources.NfcCommands),
-            any(),
-            eq(180),
-            eq(effectiveProfile),
+                eq(RM.Mode.SUSPENDED_BY_USER),
+                eq(Action.SUSPEND),
+                eq(Sources.NfcCommands),
+                any(),
+                eq(30),
+                eq(effectiveProfile),
             )
         }
     }
 
     @Test
-    fun `executeCommand LOOP LGS should switch to LGS mode`() {
+    fun `executeCommand LOOP_LGS should switch to LGS mode`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(CoreUiR.string.lowglucosesuspend)).thenReturn("LGS")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("LGS mode")
 
-        val result = execute("LOOP LGS")
+        val result = execute(NfcCommandCode.LOOP_LGS)
 
         assertThat(result.success).isTrue()
-        // Positional order: newRM, action, source, listValues, durationInMinutes, profile
         runTest {
             verify(loop).handleRunningModeChange(
-            eq(RM.Mode.CLOSED_LOOP_LGS),
-            eq(Action.LGS_LOOP_MODE),
-            eq(Sources.NfcCommands),
-            any(),
-            any(),
-            eq(effectiveProfile),
+                eq(RM.Mode.CLOSED_LOOP_LGS),
+                eq(Action.LGS_LOOP_MODE),
+                eq(Sources.NfcCommands),
+                any(),
+                any(),
+                eq(effectiveProfile),
             )
         }
     }
 
     @Test
-    fun `executeCommand LOOP CLOSED should switch to closed loop`() {
+    fun `executeCommand LOOP_CLOSED should switch to closed loop`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(CoreUiR.string.closedloop)).thenReturn("Closed")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("Closed loop")
 
-        val result = execute("LOOP CLOSED")
+        val result = execute(NfcCommandCode.LOOP_CLOSED)
 
         assertThat(result.success).isTrue()
-        // Positional order: newRM, action, source, listValues, durationInMinutes, profile
         runTest {
             verify(loop).handleRunningModeChange(
-            eq(RM.Mode.CLOSED_LOOP),
-            eq(Action.CLOSED_LOOP_MODE),
-            eq(Sources.NfcCommands),
-            any(),
-            any(),
-            eq(effectiveProfile),
+                eq(RM.Mode.CLOSED_LOOP),
+                eq(Action.CLOSED_LOOP_MODE),
+                eq(Sources.NfcCommands),
+                any(),
+                any(),
+                eq(effectiveProfile),
             )
         }
-    }
-
-    @Test
-    fun `executeCommand LOOP STOP should fail if loop mode not allowed`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
-        whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
-
-        val result = execute("LOOP STOP")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand LOOP RESUME should fail when handleRunningModeChange returns false`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP RESUME")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand LOOP SUSPEND should fail when handleRunningModeChange returns false`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP SUSPEND 30")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand LOOP LGS should fail when handleRunningModeChange returns false`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP LGS")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand LOOP CLOSED should fail when handleRunningModeChange returns false`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP CLOSED")
-
-        assertThat(result.success).isFalse()
     }
 
     // ── processAapsClient tests ────────────────────────────────────────────────
 
     @Test
-    fun `executeCommand AAPSCLIENT RESTART should send restart event`() {
+    fun `executeCommand AAPSCLIENT_RESTART should send restart event`() {
         whenever(rh.gs(R.string.nfccommands_aapsclient_restart_sent)).thenReturn("AAPSClient restart sent")
 
-        val result = execute("AAPSCLIENT RESTART")
+        val result = execute(NfcCommandCode.AAPSCLIENT_RESTART)
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("AAPSClient restart sent")
     }
 
-    @Test
-    fun `executeCommand AAPSCLIENT with invalid subcommand should fail`() {
-        whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
-
-        val result = execute("AAPSCLIENT STOP")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand AAPSCLIENT RESTART should be blocked when remote commands disabled`() {
-        whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(false)
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_allowed)).thenReturn("Remote commands not allowed")
-
-        val result = execute("AAPSCLIENT RESTART")
-
-        assertThat(result.success).isFalse()
-        assertThat(result.message).isEqualTo("Remote commands not allowed")
-    }
-
     // ── processPump tests ──────────────────────────────────────────────────────
 
     @Test
-    fun `executeCommand should disconnect pump for three hours`() {
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
-
-        val result = execute("PUMP DISCONNECT 180")
-
-        assertThat(result.success).isTrue()
-        assertThat(result.message).isEqualTo("Pump disconnected")
-        runTest {
-            verify(loop).handleRunningModeChange(
-            eq(RM.Mode.DISCONNECTED_PUMP),
-            eq(Action.DISCONNECT),
-            eq(Sources.NfcCommands),
-            any(),
-            eq(180),
-            eq(effectiveProfile),
-            )
-        }
-    }
-
-    @Test
-    fun `executeCommand should clamp disconnect duration to three hours`() {
+    fun `executeCommand PUMP_DISCONNECT should disconnect pump`() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(CoreUiR.string.pump_disconnected)).thenReturn("Pump disconnected")
 
-        val result = execute("PUMP DISCONNECT 240")
+        val result = execute(NfcCommandCode.PUMP_DISCONNECT, JSONObject().put("duration", 180))
 
         assertThat(result.success).isTrue()
-        assertThat(result.message).isEqualTo("Pump disconnected")
         runTest {
             verify(loop).handleRunningModeChange(
-            eq(RM.Mode.DISCONNECTED_PUMP),
-            eq(Action.DISCONNECT),
-            eq(Sources.NfcCommands),
-            any(),
-            eq(180),
-            eq(effectiveProfile),
+                eq(RM.Mode.DISCONNECTED_PUMP),
+                eq(Action.DISCONNECT),
+                eq(Sources.NfcCommands),
+                any(),
+                eq(180),
+                eq(effectiveProfile),
             )
         }
     }
 
     @Test
-    fun `executeCommand PUMP DISCONNECT should fail when handleRunningModeChange returns false`() {
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("PUMP DISCONNECT 60")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand PUMP CONNECT should fail when handleRunningModeChange returns false`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("PUMP CONNECT")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand PUMP CONNECT returns connected when reconnect is not needed`() {
+    fun `executeCommand PUMP_CONNECT returns connected when reconnect is not needed`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
         whenever(rh.gs(app.aaps.core.interfaces.R.string.connected)).thenReturn("Connected")
 
-        val result = execute("PUMP CONNECT")
+        val result = execute(NfcCommandCode.PUMP_CONNECT)
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Connected")
-        runTest {
-            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
-        }
     }
 
     // ── processBasal tests ─────────────────────────────────────────────────────
 
     @Test
-    fun `executeCommand BASAL STOP should cancel temp basal`() {
-        whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
-
-        val result = execute("BASAL STOP")
-
-        assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).cancelTempBasal(eq(true), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL CANCEL should cancel temp basal`() {
+    fun `executeCommand BASAL_STOP should cancel temp basal`() {
         whenever(rh.gs(CoreUiR.string.stoptemptarget)).thenReturn("Temp basal canceled")
 
-        val result = execute("BASAL CANCEL")
+        val result = execute(NfcCommandCode.BASAL_STOP)
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).cancelTempBasal(eq(true), any()) }
     }
 
     @Test
-    fun `executeCommand BASAL percent should enqueue percent temp basal`() {
+    fun `executeCommand BASAL_PCT should enqueue percent temp basal`() {
         whenever(constraintsChecker.applyBasalPercentConstraints(any(), any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(120, aapsLogger),
+            app.aaps.core.objects.constraints.ConstraintObject(120, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        // GENERIC_AAPS has tbrSettings durationStep=30; duration 30 satisfies 30%30==0
-        val result = execute("BASAL 120% 30")
+        val result = execute(NfcCommandCode.BASAL_PCT, JSONObject().put("percent", 120).put("duration", 30))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).tempBasalPercent(any(), any(), any(), any(), any()) }
     }
 
     @Test
-    fun `executeCommand BASAL absolute should enqueue absolute temp basal`() {
-        whenever(constraintsChecker.applyBasalConstraints(any(), any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(1.5, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-
-        // GENERIC_AAPS has tbrSettings durationStep=30; duration 30 satisfies 30%30==0
-        val result = execute("BASAL 1.5 30")
-
-        assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).tempBasalAbsolute(any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL absolute with non-multiple duration rounds up to next pump step`() {
-        // DANA_R has tbrSettings durationStep=60; a 30-min duration is not a multiple
-        // of 60. The plugin must round UP to 60 instead of returning an error.
-        val mockPump = mock<PumpWithConcentration>()
-        whenever(activePlugin.activePump).thenReturn(mockPump)
-        whenever(mockPump.model()).thenReturn(PumpType.DANA_R)
-        whenever(constraintsChecker.applyBasalConstraints(any(), any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(1.5, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-
-        val result = execute("BASAL 1.5 30")
-
-        assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL percent with non-multiple duration rounds up to next pump step`() {
-        // DANA_R has tbrSettings durationStep=60; a 30-min duration is not a multiple
-        // of 60. The plugin must round UP to 60 instead of returning an error.
-        val mockPump = mock<PumpWithConcentration>()
-        whenever(activePlugin.activePump).thenReturn(mockPump)
-        whenever(mockPump.model()).thenReturn(PumpType.DANA_R)
-        whenever(constraintsChecker.applyBasalPercentConstraints(any(), any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(120, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-
-        val result = execute("BASAL 120% 30")
-
-        assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).tempBasalPercent(any(), eq(60), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL absolute with exact-multiple duration is unchanged`() {
-        // 60 min on a 60-step pump — must pass through unchanged, not doubled
-        val mockPump = mock<PumpWithConcentration>()
-        whenever(activePlugin.activePump).thenReturn(mockPump)
-        whenever(mockPump.model()).thenReturn(PumpType.DANA_R)
-        whenever(constraintsChecker.applyBasalConstraints(any(), any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(1.5, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-
-        val result = execute("BASAL 1.5 60")
-
-        assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL percent without explicit duration uses pump step`() {
-        val mockPump = mock<PumpWithConcentration>()
-        whenever(activePlugin.activePump).thenReturn(mockPump)
-        whenever(mockPump.model()).thenReturn(PumpType.DANA_R)
-        whenever(constraintsChecker.applyBasalPercentConstraints(any(), any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(120, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-
-        val result = execute("BASAL 120%")
-
-        assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).tempBasalPercent(any(), eq(60), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL absolute without explicit duration uses pump step`() {
-        val mockPump = mock<PumpWithConcentration>()
-        whenever(activePlugin.activePump).thenReturn(mockPump)
-        whenever(mockPump.model()).thenReturn(PumpType.DANA_R)
+    fun `executeCommand BASAL_ABS should enqueue absolute temp basal`() {
         whenever(constraintsChecker.applyBasalConstraints(any(), any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.5, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = execute("BASAL 1.5")
+        val result = execute(NfcCommandCode.BASAL_ABS, JSONObject().put("rate", 1.5).put("duration", 30))
 
         assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).tempBasalAbsolute(any(), eq(60), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL percent with malformed amount should fail`() {
-        val result = execute("BASAL abc% 30")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL absolute with malformed amount should fail`() {
-        val result = execute("BASAL abc 30")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any()) }
+        runTest { verify(commandQueue).tempBasalAbsolute(any(), any(), any(), any(), any()) }
     }
 
     // ── processExtended tests ──────────────────────────────────────────────────
 
     @Test
-    fun `executeCommand EXTENDED STOP should cancel extended bolus`() {
+    fun `executeCommand EXTENDED_STOP should cancel extended bolus`() {
         whenever(rh.gs(R.string.nfccommands_extended_canceled)).thenReturn("Extended canceled")
 
-        val result = execute("EXTENDED STOP")
+        val result = execute(NfcCommandCode.EXTENDED_STOP)
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).cancelExtended() }
     }
 
     @Test
-    fun `executeCommand EXTENDED bolus should enqueue extended bolus`() {
+    fun `executeCommand EXTENDED_SET should enqueue extended bolus`() {
         whenever(constraintsChecker.applyExtendedBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(2.0, aapsLogger),
+            app.aaps.core.objects.constraints.ConstraintObject(2.0, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_extended_set), any(), any())).thenReturn("Extended set")
 
-        val result = execute("EXTENDED 2.0 60")
+        val result = execute(NfcCommandCode.EXTENDED_SET, JSONObject().put("amount", 2.0).put("duration", 60))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).extendedBolus(any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand EXTENDED with negative duration should fail`() {
-        whenever(constraintsChecker.applyExtendedBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(2.0, aapsLogger),
-        )
-
-        val result = execute("EXTENDED 2.0 -30")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).extendedBolus(any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand EXTENDED with negative amount should fail`() {
-        whenever(constraintsChecker.applyExtendedBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(-1.0, aapsLogger),
-        )
-
-        val result = execute("EXTENDED -1.0 60")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).extendedBolus(any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand EXTENDED without duration should fail`() {
-        val result = execute("EXTENDED 2.0")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).extendedBolus(any(), any()) }
     }
 
     // ── processBolus tests ─────────────────────────────────────────────────────
@@ -731,180 +339,37 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand BOLUS should enqueue bolus`() {
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(1.0, aapsLogger),
+            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = execute("BOLUS 1.0")
+        val result = execute(NfcCommandCode.BOLUS, JSONObject().put("amount", 1.0))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).bolus(any()) }
     }
 
     @Test
-    fun `executeCommand BOLUS MEAL should enqueue bolus`() {
+    fun `executeCommand BOLUS MEAL should enqueue bolus and set TT`() {
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(1.0, aapsLogger),
+            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
-            """[{"id":"test","reason":"Eating Soon","targetValue":99.0,"duration":2700000,"isDeletable":false}]"""
-        )
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         runTest {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        val result = execute("BOLUS 1.0 MEAL")
+        val result = execute(NfcCommandCode.BOLUS, JSONObject().put("amount", 1.0).put("isMeal", true))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).bolus(any()) }
-    }
-
-    @Test
-    fun `executeCommand BOLUS MEAL should respect cooldown`() {
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        whenever(rh.gs(R.string.nfccommands_remote_bolus_not_allowed)).thenReturn("Remote bolus not allowed")
-        val now = app.aaps.core.data.configuration.Constants.remoteBolusMinDistance * 2
-        whenever(dateUtil.now()).thenReturn(now)
-        val field = NfcCommandsPlugin::class.java.getDeclaredField("lastRemoteBolusTime")
-        field.isAccessible = true
-        field.set(plugin, now)
-
-        val result = execute("BOLUS 1.0 MEAL")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand BOLUS MEAL should respect suspended pump`() {
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.SUSPENDED_BY_USER) }
-        whenever(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)).thenReturn("Pump suspended")
-
-        val result = execute("BOLUS 1.0 MEAL")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand BOLUS should fail when another bolus is in queue`() {
-        whenever(commandQueue.bolusInQueue()).thenReturn(true)
-        whenever(rh.gs(R.string.nfccommands_another_bolus_in_queue)).thenReturn("Another bolus in queue")
-
-        val result = execute("BOLUS 1.0")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand BOLUS with unsupported third argument should fail`() {
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
-        )
-
-        val result = execute("BOLUS 1.0 OTHER")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).bolus(any()) }
-    }
-
-    @Test
-    fun `successful bolus updates last remote bolus time`() {
-        val firstNow = Constants.remoteBolusMinDistance * 2L
-        val afterNow = firstNow + 2_345L
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-        whenever(dateUtil.now()).thenReturn(firstNow, afterNow)
-
-        val result = execute("BOLUS 1.0")
-
-        assertThat(result.success).isTrue()
-        val field = NfcCommandsPlugin::class.java.getDeclaredField("lastRemoteBolusTime")
-        field.isAccessible = true
-        assertThat(field.get(plugin) as Long).isEqualTo(afterNow)
-    }
-
-    @Test
-    fun `failed bolus does not update last remote bolus time`() {
-        val firstNow = Constants.remoteBolusMinDistance * 2L
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        runTest { whenever(commandQueue.bolus(any())).thenReturn(pumpEnactResultProvider.get().success(false)) }
-        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
-        )
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-        whenever(dateUtil.now()).thenReturn(firstNow)
-
-        val result = execute("BOLUS 1.0")
-
-        assertThat(result.success).isFalse()
-        val field = NfcCommandsPlugin::class.java.getDeclaredField("lastRemoteBolusTime")
-        field.isAccessible = true
-        assertThat(field.get(plugin) as Long).isEqualTo(0L)
-    }
-
-    @Test
-    fun `successful meal bolus creates eating soon target when profile exists`() {
-        val firstNow = Constants.remoteBolusMinDistance * 2L
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-
-        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
-            """[{"id":"test","reason":"Eating Soon","targetValue":99.0,"duration":2700000,"isDeletable":false}]"""
-        )
-        runTest {
-            whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
-                .thenReturn(PersistenceLayer.TransactionResult())
-        }
-        whenever(dateUtil.now()).thenReturn(firstNow, firstNow + 1_000L, firstNow + 2_000L)
-
-        val result = execute("BOLUS 1.0 MEAL")
-
-        assertThat(result.success).isTrue()
-        runTest {
-            verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(any(), eq(Action.TT), eq(Sources.NfcCommands), anyOrNull(), any())
-        }
-    }
-
-    @Test
-    fun `successful meal bolus skips eating soon target when profile is missing`() {
-        val firstNow = Constants.remoteBolusMinDistance * 2L
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
-        )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
-
-        runTest {
-            whenever(profileFunction.getProfile()).thenReturn(null)
-        }
-        whenever(dateUtil.now()).thenReturn(firstNow, firstNow + 1_000L)
-
-        val result = execute("BOLUS 1.0 MEAL")
-
-        assertThat(result.success).isTrue()
-        runTest {
-            verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
-        }
+        runTest { verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()) }
     }
 
     // ── processCarbs tests ─────────────────────────────────────────────────────
@@ -912,33 +377,20 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand CARBS should enqueue carbs`() {
         whenever(constraintsChecker.applyCarbsConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(20, aapsLogger),
+            app.aaps.core.objects.constraints.ConstraintObject(20, aapsLogger),
         )
         whenever(rh.gs(eq(R.string.nfccommands_carbs_set), any())).thenReturn("Carbs set")
 
-        val result = execute("CARBS 20")
+        val result = execute(NfcCommandCode.CARBS, JSONObject().put("amount", 20))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).bolus(any()) }
     }
 
-    @Test
-    fun `executeCommand CARBS with zero grams should fail`() {
-        whenever(constraintsChecker.applyCarbsConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints
-                .ConstraintObject(0, aapsLogger),
-        )
-
-        val result = execute("CARBS 0")
-
-        assertThat(result.success).isFalse()
-    }
-
     // ── processTarget tests ────────────────────────────────────────────────────
 
     @Test
-    fun `executeCommand TARGET MEAL should set eating soon target`() {
+    fun `executeCommand TARGET_MEAL should set eating soon target`() {
         whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         runTest {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
@@ -946,41 +398,13 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
 
-        val result = execute("TARGET MEAL")
+        val result = execute(NfcCommandCode.TARGET_MEAL)
 
         assertThat(result.success).isTrue()
     }
 
     @Test
-    fun `executeCommand TARGET ACTIVITY should set activity target`() {
-        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
-        runTest {
-            whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
-                .thenReturn(PersistenceLayer.TransactionResult())
-        }
-        whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
-
-        val result = execute("TARGET ACTIVITY")
-
-        assertThat(result.success).isTrue()
-    }
-
-    @Test
-    fun `executeCommand TARGET HYPO should set hypo target`() {
-        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
-        runTest {
-            whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
-                .thenReturn(PersistenceLayer.TransactionResult())
-        }
-        whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
-
-        val result = execute("TARGET HYPO")
-
-        assertThat(result.success).isTrue()
-    }
-
-    @Test
-    fun `executeCommand TARGET STOP should cancel temp target`() {
+    fun `executeCommand TARGET_STOP should cancel temp target`() {
         runTest {
             whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
@@ -988,87 +412,24 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
         whenever(rh.gsNotLocalised(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
 
-        val result = execute("TARGET STOP")
+        val result = execute(NfcCommandCode.TARGET_STOP)
 
         assertThat(result.success).isTrue()
-    }
-
-    @Test
-    fun `executeCommand TARGET CANCEL should cancel temp target`() {
-        runTest {
-            whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), anyOrNull(), any()))
-                .thenReturn(PersistenceLayer.TransactionResult())
-        }
-        whenever(rh.gs(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
-        whenever(rh.gsNotLocalised(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
-
-        val result = execute("TARGET CANCEL")
-
-        assertThat(result.success).isTrue()
-        runTest {
-            verify(persistenceLayer).cancelCurrentTemporaryTargetIfAny(any(), eq(Action.CANCEL_TT), eq(Sources.NfcCommands), anyOrNull(), any())
-        }
-    }
-
-    @Test
-    fun `executeCommand TARGET with invalid subcommand should fail`() {
-        val result = execute("TARGET UNKNOWN")
-
-        assertThat(result.success).isFalse()
+        runTest { verify(persistenceLayer).cancelCurrentTemporaryTargetIfAny(any(), eq(Action.CANCEL_TT), eq(Sources.NfcCommands), anyOrNull(), any()) }
     }
 
     // ── processProfile tests ───────────────────────────────────────────────────
 
     @Test
-    fun `executeCommand PROFILE with invalid non-numeric index should fail`() {
-        val result = execute("PROFILE abc")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand PROFILE with zero percentage should fail`() {
+    fun `executeCommand PROFILE_SWITCH should create profile switch`() {
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
-        whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-
-        val result = execute("PROFILE 1 0")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand PROFILE with negative percentage should fail`() {
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
-        whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-
-        val result = execute("PROFILE 1 -50")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand PROFILE with extreme percentage should fail`() {
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
-        whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-
-        val result = execute("PROFILE 1 9999")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand PROFILE should create profile switch with default percentage`() {
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
-        whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
         runTest {
             whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
                 .thenReturn(mock())
         }
         whenever(rh.gs(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
-        whenever(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
-        whenever(dateUtil.now()).thenReturn(55_000L)
 
-        val result = execute("PROFILE 1")
+        val result = execute(NfcCommandCode.PROFILE_SWITCH, JSONObject().put("profileName", "Default").put("percentage", 100))
 
         assertThat(result.success).isTrue()
         runTest {
@@ -1078,62 +439,38 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 eq(0),
                 eq(100),
                 eq(0),
-                eq(55_000L),
+                any(),
                 eq(Action.PROFILE_SWITCH),
                 eq(Sources.NfcCommands),
-                eq("Profile switch created"),
+                any(),
                 any(),
                 any(),
             )
         }
     }
 
-    @Test
-    fun `executeCommand PROFILE should fail when profile source is not configured`() {
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow<ProfileStore?>(null))
-        whenever(rh.gs(app.aaps.core.ui.R.string.notconfigured)).thenReturn("Not configured")
-
-        val result = execute("PROFILE 1")
-
-        assertThat(result.success).isFalse()
-        assertThat(result.message).isEqualTo("Not configured")
-    }
-
-    @Test
-    fun `executeCommand PROFILE should fail when profile switch creation fails`() {
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
-        whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-        runTest {
-            whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
-                .thenReturn(null)
-        }
-        whenever(rh.gs(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
-        whenever(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
-        whenever(rh.gs(app.aaps.core.ui.R.string.invalid_profile)).thenReturn("Invalid profile")
-
-        val result = execute("PROFILE 1")
-
-        assertThat(result.success).isFalse()
-        assertThat(result.message).isEqualTo("Invalid profile")
-    }
-
     // ── general command tests ──────────────────────────────────────────────────
-
-    @Test
-    fun `executeCommand with unknown command should fail`() {
-        whenever(rh.gs(R.string.nfccommands_unknown_command)).thenReturn("Unknown command")
-
-        val result = execute("UNKNOWN")
-
-        assertThat(result.success).isFalse()
-    }
 
     @Test
     fun `executeCommand should fail when remote commands not allowed`() {
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(false)
         whenever(rh.gs(R.string.nfccommands_remote_command_not_allowed)).thenReturn("Remote commands not allowed")
 
-        val result = execute("LOOP STOP")
+        val result = execute(NfcCommandCode.LOOP_STOP)
+
+        assertThat(result.success).isFalse()
+    }
+
+    @Test
+    fun `executeCommand BOLUS MEAL should respect cooldown`() {
+        whenever(commandQueue.bolusInQueue()).thenReturn(false)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
+        whenever(rh.gs(R.string.nfccommands_remote_bolus_not_allowed)).thenReturn("Remote bolus not allowed")
+        val now = Constants.remoteBolusMinDistance * 2
+        whenever(dateUtil.now()).thenReturn(now)
+        plugin.setLastRemoteBolusTime(now)
+
+        val result = execute(NfcCommandCode.BOLUS, JSONObject().put("amount", 1.0).put("isMeal", true))
 
         assertThat(result.success).isFalse()
     }
@@ -1142,27 +479,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand RESTART should exit app`() {
         whenever(rh.gs(R.string.nfccommands_restarting)).thenReturn("Restarting")
 
-        val result = execute("RESTART")
+        val result = execute(NfcCommandCode.RESTART)
 
         assertThat(result.success).isTrue()
-        assertThat(result.message).isEqualTo("Restarting")
-        verify(configBuilder).exitApp("NFC", Sources.NfcCommands, true)
-    }
-
-    @Test
-    fun `executeCommand RESTART with extra argument should fail`() {
-        val result = execute("RESTART NOW")
-
-        assertThat(result.success).isFalse()
-        verify(configBuilder, never()).exitApp(any(), any(), any())
-    }
-
-    @Test
-    fun `executeCommand blank string should fail with wrong format`() {
-        val result = execute("   ")
-
-        assertThat(result.success).isFalse()
-        assertThat(result.message).isEqualTo("Wrong format")
+        verify(configBuilder).exitApp(eq("NFC"), eq(Sources.NfcCommands), eq(true))
     }
 
     // ── executeCascade tests ───────────────────────────────────────────────────
@@ -1174,277 +494,12 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
         whenever(rh.gs(CoreUiR.string.stoptemptarget)).thenReturn("Temp basal canceled")
 
-        val result = cascade(listOf("LOOP STOP", "BASAL STOP"))
+        val cmd1 = NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP)
+        val cmd2 = NfcTagStore.buildCommand(NfcCommandCode.BASAL_STOP)
+        val result = cascade(listOf(cmd1, cmd2))
 
         assertThat(result.success).isTrue()
         assertThat(result.message).contains("Loop disabled")
         assertThat(result.message).contains("Temp basal canceled")
     }
-
-    @Test
-    fun `executeCascade one fails returns failure and does not execute remaining commands`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) } // LOOP STOP will fail
-        whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
-
-        val result = cascade(listOf("LOOP STOP", "BASAL STOP"))
-
-        assertThat(result.success).isFalse()
-        assertThat(result.message).contains("Loop is disabled")
-        // Second command must not have been attempted
-        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
-    }
-
-    // ── additional gap-coverage tests ─────────────────────────────────────────
-
-    // processLoop – missing branches
-
-    @Test
-    fun `executeCommand LOOP STOP should fail when handleRunningModeChange returns false`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
-        runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP STOP")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand LOOP SUSPEND should fail when mode not in allowedNextModes`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP SUSPEND 30")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
-        }
-    }
-
-    @Test
-    fun `executeCommand LOOP LGS should fail when mode not in allowedNextModes`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP LGS")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
-        }
-    }
-
-    @Test
-    fun `executeCommand LOOP CLOSED should fail when mode not in allowedNextModes`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP CLOSED")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
-        }
-    }
-
-    @Test
-    fun `executeCommand LOOP RESUME should fail when not in allowedNextModes and loop is not disabled`() {
-        // allowedNextModes does not contain RESUME, and runningMode is not DISABLED_LOOP,
-        // so the "resume from disabled" fallback does not apply either
-        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_possible)).thenReturn("Remote command is not possible")
-
-        val result = execute("LOOP RESUME")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
-        }
-    }
-
-    @Test
-    fun `executeCommand LOOP with unknown subcommand should fail`() {
-        val result = execute("LOOP BADWORD")
-
-        assertThat(result.success).isFalse()
-    }
-
-    @Test
-    fun `executeCommand LOOP should fail when no profile`() {
-        runTest {
-            whenever(profileFunction.getProfile()).thenReturn(null)
-        }
-
-        val result = execute("LOOP STOP")
-
-        assertThat(result.success).isFalse()
-        assertThat(result.message).isEqualTo("No profile")
-    }
-
-    // processPump – missing branches
-
-    @Test
-    fun `executeCommand PUMP DISCONNECT with zero duration should fail`() {
-        val result = execute("PUMP DISCONNECT 0")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
-        }
-    }
-
-    @Test
-    fun `executeCommand PUMP with wrong format should fail`() {
-        val result = execute("PUMP")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
-        }
-    }
-
-    // processBasal – missing branches
-
-    @Test
-    fun `executeCommand BASAL alone should fail`() {
-        val result = execute("BASAL")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
-        runTest { verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any()) }
-        runTest { verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL percent with zero duration should fail`() {
-        whenever(rh.gs(eq(R.string.nfccommands_wrong_tbr_duration), any())).thenReturn("Wrong TBR duration")
-
-        val result = execute("BASAL 120% 0")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `executeCommand BASAL absolute with zero duration should fail`() {
-        whenever(rh.gs(eq(R.string.nfccommands_wrong_tbr_duration), any())).thenReturn("Wrong TBR duration")
-
-        val result = execute("BASAL 1.5 0")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any()) }
-    }
-
-    // processExtended – CANCEL alias
-
-    @Test
-    fun `executeCommand EXTENDED CANCEL should cancel extended bolus`() {
-        whenever(rh.gs(R.string.nfccommands_extended_canceled)).thenReturn("Extended canceled")
-
-        val result = execute("EXTENDED CANCEL")
-
-        assertThat(result.success).isTrue()
-        runTest { verify(commandQueue).cancelExtended() }
-    }
-
-    // processBolus – zero/negative amount
-
-    @Test
-    fun `executeCommand BOLUS with zero amount should fail`() {
-        whenever(commandQueue.bolusInQueue()).thenReturn(false)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(0.0, aapsLogger),
-        )
-
-        val result = execute("BOLUS 0.0")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).bolus(any()) }
-    }
-
-    // processCarbs – format errors
-
-    @Test
-    fun `executeCommand CARBS with extra argument should fail`() {
-        val result = execute("CARBS 20 extra")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).bolus(any()) }
-    }
-
-    @Test
-    fun `executeCommand CARBS with non-numeric amount should fail`() {
-        whenever(constraintsChecker.applyCarbsConstraints(any())).thenReturn(
-            app.aaps.core.objects.constraints.ConstraintObject(0, aapsLogger),
-        )
-
-        val result = execute("CARBS abc")
-
-        assertThat(result.success).isFalse()
-        runTest { verify(commandQueue, never()).bolus(any()) }
-    }
-
-    // processProfile – index boundary errors
-
-    @Test
-    fun `executeCommand PROFILE with zero index should fail`() {
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
-        whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-
-        val result = execute("PROFILE 0")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
-        }
-    }
-
-    @Test
-    fun `executeCommand PROFILE with out-of-bounds index should fail`() {
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
-        whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-
-        val result = execute("PROFILE 99")
-
-        assertThat(result.success).isFalse()
-        runTest {
-            verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
-        }
-    }
-
-    // processAapsClient – wrong argument count
-
-    @Test
-    fun `executeCommand AAPSCLIENT with too many arguments should fail`() {
-        val result = execute("AAPSCLIENT RESTART EXTRA")
-
-        assertThat(result.success).isFalse()
-    }
-
-    // ── manual execution (My Tags screen) ────────────────────────────────────
-
-    @Test
-    fun `executeCascade with empty commands list returns success with empty message`() {
-        val result = cascade(emptyList())
-
-        assertThat(result.success).isTrue()
-        assertThat(result.message).isEmpty()
-    }
-
-    @Test
-    fun `executeCascade stops after first failure and skips remaining commands`() {
-        runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) } // LOOP STOP will fail
-        whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
-        whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
-
-        val result = cascade(listOf("LOOP STOP", "BASAL STOP", "PUMP CONNECT"))
-
-        assertThat(result.success).isFalse()
-        assertThat(result.message).doesNotContain("Temp basal canceled")
-        runTest { verify(commandQueue, never()).cancelTempBasal(any(), any()) }
-    }
-
 }

@@ -2,6 +2,7 @@ package app.aaps.plugins.main.general.nfcCommands
 
 import app.aaps.shared.tests.SharedPreferencesMock
 import com.google.common.truth.Truth.assertThat
+import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -24,7 +25,7 @@ class NfcTagStoreTest {
         NfcCreatedTag(
             tagUid = uid,
             name = name,
-            commands = listOf("LOOP STOP"),
+            commands = listOf(NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP)),
             createdAtMillis = now,
         )
 
@@ -98,7 +99,7 @@ class NfcTagStoreTest {
     fun `lastScannedAtMillis is null when loaded from JSON without the field`() {
         prefs.edit().putString(
             "nfccommunicator_created_tags_v1",
-            """[{"tagUid":"abc","name":"x","commands":["LOOP STOP"],"createdAtMillis":1000}]""",
+            """[{"tagUid":"abc","name":"x","commands":["{\"code\":\"LOOP_STOP\"}"],"createdAtMillis":1000}]""",
         ).apply()
 
         val tag = store.loadCreatedTags().first()
@@ -175,7 +176,7 @@ class NfcTagStoreTest {
 
     @Test
     fun `loadCreatedTags ignores entries with blank tagUid`() {
-        prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"","name":"x","commands":["LOOP STOP"],"createdAtMillis":0}]""").apply()
+        prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"","name":"x","commands":["{\"code\":\"LOOP_STOP\"}"],"createdAtMillis":0}]""").apply()
 
         val tags = store.loadCreatedTags()
 
@@ -189,53 +190,6 @@ class NfcTagStoreTest {
         val tags = store.loadCreatedTags()
 
         assertThat(tags).isEmpty()
-    }
-
-    // ── buildCascade tests ────────────────────────────────────────────────────
-
-    @Test
-    fun `buildCascade returns null if any step has missing required args`() {
-        val suspendTemplate =
-            NfcTagStore.availableCommands().first {
-                it.labelResId ==
-                    app.aaps.plugins.main.R.string.nfccommands_cmd_loop_suspend
-            }
-        val stopTemplate =
-            NfcTagStore.availableCommands().first {
-                it.labelResId ==
-                    app.aaps.plugins.main.R.string.nfccommands_cmd_loop_stop
-            }
-        val steps = listOf(stopTemplate to "", suspendTemplate to "") // suspend requires args
-
-        val result = NfcTagStore.buildCascade(steps)
-
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `buildCascade returns list of commands for valid steps`() {
-        val stopTemplate =
-            NfcTagStore.availableCommands().first {
-                it.labelResId ==
-                    app.aaps.plugins.main.R.string.nfccommands_cmd_loop_stop
-            }
-        val resumeTemplate =
-            NfcTagStore.availableCommands().first {
-                it.labelResId ==
-                    app.aaps.plugins.main.R.string.nfccommands_cmd_loop_resume
-            }
-        val steps = listOf(stopTemplate to "", resumeTemplate to "")
-
-        val result = NfcTagStore.buildCascade(steps)
-
-        assertThat(result).isEqualTo(listOf("LOOP STOP", "LOOP RESUME"))
-    }
-
-    @Test
-    fun `buildCascade returns null for empty list`() {
-        val result = NfcTagStore.buildCascade(emptyList())
-
-        assertThat(result).isNull()
     }
 
     @Test
