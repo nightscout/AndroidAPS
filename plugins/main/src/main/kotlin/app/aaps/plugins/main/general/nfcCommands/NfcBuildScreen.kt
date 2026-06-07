@@ -8,6 +8,7 @@ import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -35,6 +36,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
@@ -105,6 +107,7 @@ fun NfcBuildScreen(
     onBack: () -> Unit,
     onTagWritten: () -> Unit = onBack,
     initialTagUid: String? = null,
+    initialTag: NfcCreatedTag? = null,
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -120,30 +123,154 @@ fun NfcBuildScreen(
     var isWritingMode by remember { mutableStateOf(false) }
     var showBlankNameDialog by remember { mutableStateOf(false) }
     var showActionPicker by remember { mutableStateOf(false) }
+    var showDiscardConfirm by remember { mutableStateOf(false) }
 
-    LaunchedEffect(initialTagUid) {
-        if (initialTagUid != null) {
+    // Track initial state for "dirty" check
+    var initialCommandsSnap by remember { mutableStateOf<List<String>>(emptyList()) }
+    var initialTagNameSnap by remember { mutableStateOf("") }
+    var isInitialized by remember { mutableStateOf(false) }
+
+    val currentCommands = chain.mapNotNull { it.buildCommand() }
+    val isDirty = isInitialized && (tagName != initialTagNameSnap || currentCommands != initialCommandsSnap)
+
+    val isEditMode = initialTag != null
+
+    LaunchedEffect(initialTagUid, initialTag) {
+        if (initialTag != null) {
+            tagName = initialTag.name
+            chain.clear()
+            initialTag.commands.forEach { cmdJson ->
+                runCatching { JSONObject(cmdJson) }.onSuccess { json ->
+                    val codeName = json.optString("code")
+                    val code = runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull()
+                    val params = json.optJSONObject("params") ?: JSONObject()
+                    if (code != null) {
+                        val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
+                        // Restore params
+                        when (action) {
+                            is SuspendNfcUiAction -> action.minutes = params.optInt("duration", 60)
+                            is PumpDisconnectNfcUiAction -> action.minutes = params.optInt("duration", 30)
+                            is BolusNfcUiAction -> {
+                                action.units = params.optDouble("amount", 1.0)
+                                action.meal = params.optBoolean("isMeal", false)
+                            }
+                            is BasalAbsNfcUiAction -> {
+                                action.rate = params.optDouble("rate", 1.0)
+                                action.duration = params.optInt("duration", 30)
+                            }
+                            is BasalPctNfcUiAction -> {
+                                action.percent = params.optInt("percent", 100)
+                                action.duration = params.optInt("duration", 30)
+                            }
+                            is ExtendedNfcUiAction -> {
+                                action.units = params.optDouble("amount", 1.0)
+                                action.duration = params.optInt("duration", 30)
+                            }
+                            is CarbsNfcUiAction -> action.grams = params.optInt("amount", 20)
+                            is ProfileNfcUiAction -> {
+                                action.profileName = params.optString("profileName", "")
+                                action.percent = params.optInt("percentage", 100)
+                            }
+                        }
+                        chain.add(action)
+                    }
+                }
+            }
+            initialTagNameSnap = initialTag.name
+            initialCommandsSnap = chain.mapNotNull { it.buildCommand() }
+            isInitialized = true
+        } else if (initialTagUid != null) {
             val tag = plugin.nfcTagStore.findTagByUid(initialTagUid)
             if (tag != null) {
                 tagName = tag.name
-                chain.clear()
+                // population logic same as above if needed, but usually creation starts empty
             }
+            initialTagNameSnap = tagName
+            initialCommandsSnap = emptyList()
+            isInitialized = true
+        } else {
+            initialTagNameSnap = ""
+            initialCommandsSnap = emptyList()
+            isInitialized = true
         }
     }
 
-    val title = stringResource(R.string.nfccommands_write_tag)
+    val title = if (isEditMode) stringResource(R.string.nfccommands_rename_tag_title) else stringResource(R.string.nfccommands_write_tag)
     val backDesc = stringResource(CoreUiR.string.back)
-    LaunchedEffect(Unit) {
+    val saveDesc = stringResource(CoreUiR.string.save)
+
+    val onSave: () -> Unit = {
+        if (initialTag != null) {
+            val uid = initialTag.tagUid
+            val commands = chain.mapNotNull { it.buildCommand() }
+            val name = tagName.ifBlank { chain.firstOrNull()?.shortDescription() ?: "" }
+            plugin.nfcTagStore.saveCreatedTag(
+                NfcCreatedTag(
+                    tagUid = uid,
+                    name = name,
+                    commands = commands,
+                    createdAtMillis = initialTag.createdAtMillis,
+                    lastScannedAtMillis = initialTag.lastScannedAtMillis,
+                ),
+            )
+            onTagWritten()
+        }
+    }
+
+    val attemptClose: () -> Unit = {
+        if (isDirty) showDiscardConfirm = true else onBack()
+    }
+
+    BackHandler { attemptClose() }
+
+    LaunchedEffect(title, isDirty, chain.size) {
         setToolbarConfig(
             ToolbarConfig(
                 title = title,
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = attemptClose) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDesc)
                     }
                 },
-                actions = {},
+                actions = {
+                    if (isEditMode) {
+                        IconButton(
+                            onClick = {
+                                focusManager.clearFocus()
+                                onSave()
+                            },
+                            enabled = isDirty && chain.isNotEmpty()
+                        ) {
+                            Icon(Icons.Default.Save, contentDescription = saveDesc)
+                        }
+                    }
+                },
             ),
+        )
+    }
+
+    if (showDiscardConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDiscardConfirm = false },
+            title = { Text(stringResource(R.string.nfccommands_discard_title)) },
+            text = { Text(stringResource(R.string.nfccommands_discard_message)) },
+            confirmButton = {
+                Row {
+                    TextButton(onClick = {
+                        showDiscardConfirm = false
+                        onBack()
+                    }) { Text(stringResource(R.string.nfccommands_discard_confirm)) }
+                    TextButton(onClick = {
+                        showDiscardConfirm = false
+                        onSave()
+                    }) { Text(stringResource(CoreUiR.string.save)) }
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDiscardConfirm = false }) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+            },
         )
     }
 
@@ -259,6 +386,22 @@ fun NfcBuildScreen(
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         )
 
+        if (initialTag != null) {
+            Text(
+                text = "${stringResource(R.string.nfccommands_tag_id_label)} ${initialTag.tagUid}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+        } else if (initialTagUid != null) {
+            Text(
+                text = "${stringResource(R.string.nfccommands_tag_id_label)} $initialTagUid",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+        }
+
         SectionDivider(label = stringResource(R.string.nfccommands_chain_title))
 
         // Section 2: Command chain (Editable list)
@@ -297,14 +440,16 @@ fun NfcBuildScreen(
         Spacer(Modifier.height(16.dp))
 
         // Section 4: Register button
-        Button(
-            onClick = {
-                if (tagName.isBlank()) showBlankNameDialog = true else isWritingMode = true
-            },
-            enabled = chain.isNotEmpty(),
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(stringResource(R.string.nfccommands_write_tag))
+        if (!isEditMode) {
+            Button(
+                onClick = {
+                    if (tagName.isBlank()) showBlankNameDialog = true else isWritingMode = true
+                },
+                enabled = chain.isNotEmpty(),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(R.string.nfccommands_write_tag))
+            }
         }
 
         Spacer(Modifier.height(16.dp))

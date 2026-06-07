@@ -168,7 +168,11 @@
     <string name="nfccommands_set_name">Set name</string>
     <string name="nfccommands_skip_name">Skip</string>
     <string name="nfccommands_rename_ok">OK</string>
-    <string name="nfccommands_rename_tag_title">Rename tag</string>
+    <string name="nfccommands_rename_tag_title">Modify Command</string>
+    <string name="nfccommands_discard_title">Discard changes?</string>
+    <string name="nfccommands_discard_message">You have unsaved changes. Do you want to save them before leaving?</string>
+    <string name="nfccommands_discard_confirm">Discard</string>
+    <string name="nfccommands_tag_id_label">Tag ID:</string>
     <string name="nfccommands_execute_confirm_title">Execute %1$s?</string>
     <string name="nfccommands_execute_confirm_msg">Commands:\n%1$s</string>
     <string name="nfccommands_execute_ok">Execute</string>
