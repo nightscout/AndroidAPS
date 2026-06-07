@@ -1,6 +1,11 @@
 package app.aaps.plugins.main.general.nfcCommands
 
 import android.content.Context
+import android.content.Intent
+import android.nfc.NdefMessage
+import android.nfc.NdefRecord
+import android.nfc.NfcAdapter
+import android.nfc.Tag
 import android.os.Handler
 import android.os.Looper
 import android.os.VibrationEffect
@@ -33,6 +38,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.nfcCommands.actions.*
 import org.json.JSONObject
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -247,4 +253,62 @@ class NfcCommandsPlugin
             value: Int,
             step: Int,
         ): Int = if (value % step == 0) value else ((value / step) + 1) * step
+
+        fun processIntent(intent: Intent?): NfcPrepareResult {
+            if (!isEnabled()) {
+                return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
+            }
+
+            if (intent == null) return NfcPrepareResult.Error("")
+
+            @Suppress("DEPRECATION")
+            val nfcTag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
+            if (nfcTag == null) {
+                aapsLogger.debug(LTag.NFC, "Rejected intent without physical NFC tag")
+                return NfcPrepareResult.Error("")
+            }
+
+            return when (intent.action) {
+                NfcAdapter.ACTION_NDEF_DISCOVERED -> processNdefIntent(intent, nfcTag)
+                NfcAdapter.ACTION_TECH_DISCOVERED, NfcAdapter.ACTION_TAG_DISCOVERED -> processTagIntent(nfcTag)
+                else -> NfcPrepareResult.Error("")
+            }
+        }
+
+        private fun processNdefIntent(intent: Intent, nfcTag: Tag): NfcPrepareResult {
+            @Suppress("DEPRECATION")
+            val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
+            if (rawMsgs.isNullOrEmpty()) {
+                return NfcPrepareResult.Error("")
+            }
+            val message = rawMsgs[0] as? NdefMessage ?: return NfcPrepareResult.Error("")
+            val record = message.records?.firstOrNull() ?: return NfcPrepareResult.Error("")
+
+            if (record.tnf != NdefRecord.TNF_MIME_MEDIA ||
+                String(record.type, StandardCharsets.US_ASCII) != NfcTagStore.MIME_TYPE
+            ) {
+                aapsLogger.debug(LTag.NFC, "Rejected NFC record with unexpected TNF/type")
+                return NfcPrepareResult.Error("")
+            }
+
+            val tagUid = NfcTagStore.tagUidHex(nfcTag.id) ?: return NfcPrepareResult.Error("")
+            return prepareExecutionByUid(tagUid)
+        }
+
+        private fun processTagIntent(nfcTag: Tag): NfcPrepareResult {
+            val tagUid = NfcTagStore.tagUidHex(nfcTag.id) ?: return NfcPrepareResult.Error("")
+            aapsLogger.debug(LTag.NFC, "TAG_DISCOVERED fallback, UID: $tagUid")
+            return prepareExecutionByUid(tagUid)
+        }
+
+        private fun prepareExecutionByUid(tagUid: String): NfcPrepareResult {
+            if (nfcTagStore.isJustWritten(tagUid)) return NfcPrepareResult.Error("")
+            
+            val prep = prepareExecution(tagUid)
+            if (prep is NfcPrepareResult.Error) {
+                // Silently ignore if not found in My Tags screen
+                aapsLogger.debug(LTag.NFC, "Tag not registered: $tagUid")
+            }
+            return prep
+        }
     }
