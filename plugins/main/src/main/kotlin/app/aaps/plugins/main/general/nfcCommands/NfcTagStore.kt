@@ -75,7 +75,11 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
         for (index in 0 until array.length()) {
             val item = array.optJSONObject(index) ?: continue
             val commandsJson = item.optJSONArray("commands") ?: JSONArray()
-            val commands = (0 until commandsJson.length()).map { commandsJson.optString(it) }.filter { it.isNotBlank() }
+            val commands = (0 until commandsJson.length())
+                .asSequence()
+                .map { commandsJson.optString(it) }
+                .filter { it.isNotBlank() }
+                .toList()
             if (commands.isEmpty()) continue
             val tagUid = item.optString("tagUid")
             if (tagUid.isBlank()) continue

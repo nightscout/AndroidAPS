@@ -89,7 +89,6 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.core.ui.compose.navigation.color
 import app.aaps.plugins.main.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -655,20 +654,16 @@ private fun buildAndWriteNdef(
         val ndef = Ndef.get(tag)
         if (ndef != null) {
             ndef.connect()
-            try {
-                ndef.writeNdefMessage(message)
+            ndef.use {
+                it.writeNdefMessage(message)
                 true
-            } finally {
-                ndef.close()
             }
         } else {
             val formatable = NdefFormatable.get(tag) ?: return false
             formatable.connect()
-            try {
-                formatable.format(message)
+            formatable.use {
+                it.format(message)
                 true
-            } finally {
-                formatable.close()
             }
         }
     } catch (e: Exception) {

@@ -219,7 +219,7 @@ open class NfcControlActivity : FragmentActivity() {
     private suspend fun handleNdefIntent(intent: Intent, nfcTag: Tag) {
         @Suppress("DEPRECATION")
         val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
-        if (rawMsgs == null || rawMsgs.isEmpty()) {
+        if (rawMsgs.isNullOrEmpty()) {
             finish()
             return
         }

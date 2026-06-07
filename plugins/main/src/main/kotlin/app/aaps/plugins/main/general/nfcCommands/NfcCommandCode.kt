@@ -114,7 +114,7 @@ enum class NfcCommandCode(
     val elementType: ElementType,
     val argType: ArgType,
     val icon: ImageVector,
-    private val customIconColor: (@Composable () -> Color)? = null
+    private val customIconColor: (@Composable () -> Color)? = null,
 ) {
     LOOP_STOP(R.string.nfccommands_cmd_loop_stop, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopDisabled, { AapsTheme.elementColors.loopDisabled }),
     LOOP_RESUME(R.string.nfccommands_cmd_loop_resume, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopClosed, { AapsTheme.elementColors.loopClosed }),
