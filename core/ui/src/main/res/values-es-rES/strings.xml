@@ -657,7 +657,7 @@
     <string name="isf_profile">ISF del perfil: %1$.1f</string>
     <string name="isf_variable">ISF variable: %1$.1f</string>
     <string name="isf_effective">ISF efectivo: %1$.1f</string>
-    <string name="autosens_long">Valor de Autosens: %.0f%%</string>
+    <string name="autosens_long">Valor de autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens en algoritmo: %.0f%%</string>
     <!-- Autotune -->
@@ -833,6 +833,7 @@
     <string name="clear_cloud_action">Restablecer ajustes</string>
     <string name="clear_cloud_settings">Borrar ajustes en la nube</string>
     <string name="clear_cloud_settings_message">Se cambiará al almacenamiento local y se eliminará la autorización. ¿Continuar?</string>
+    <string name="cloud_revoke_incomplete">Configuración de la nube eliminada en este dispositivo, pero no se pudo conectar con la cuenta para revocar el acceso por completo. Es posible que desees eliminarlo manualmente en los ajustes de tu cuenta</string>
     <string name="cloud_connection_failed">Error de conexión con el almacenamiento en la nube</string>
     <string name="cloud_reauthorize_message">Error de conexión con el almacenamiento en la nube. ¿Te gustaría volver a autenticarte?</string>
     <string name="reauthorize">Volver a autenticar</string>
