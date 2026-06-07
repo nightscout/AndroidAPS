@@ -833,6 +833,7 @@
     <string name="clear_cloud_action">Xóa cài đặt</string>
     <string name="clear_cloud_settings">Xóa cài đặt đám mây</string>
     <string name="clear_cloud_settings_message">Hành động này sẽ chuyển sang lưu trữ cục bộ và xóa quyền truy cập. Tiếp tục?</string>
+    <string name="cloud_revoke_incomplete">Cài đặt Cloud đã được xóa trên thiết bị này, nhưng không thể kết nối đến tài khoản để thu hồi hoàn toàn quyền truy cập. Bạn có thể cần xóa thủ công trong phần cài đặt tài khoản của mình.</string>
     <string name="cloud_connection_failed">Kết nối lưu trữ đám mây thất bại</string>
     <string name="cloud_reauthorize_message">Kết nối lưu trữ đám mây thất bại. Bạn có muốn xác thực lại không?</string>
     <string name="reauthorize">Xác thực lại</string>
