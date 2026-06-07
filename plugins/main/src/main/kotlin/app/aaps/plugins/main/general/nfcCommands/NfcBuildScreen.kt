@@ -85,7 +85,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -146,32 +145,7 @@ fun NfcBuildScreen(
                     val params = json.optJSONObject("params") ?: JSONObject()
                     if (code != null) {
                         val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
-                        // Restore params
-                        when (action) {
-                            is SuspendNfcUiAction -> action.minutes = params.optInt("duration", 60)
-                            is PumpDisconnectNfcUiAction -> action.minutes = params.optInt("duration", 30)
-                            is BolusNfcUiAction -> {
-                                action.units = params.optDouble("amount", 1.0)
-                                action.meal = params.optBoolean("isMeal", false)
-                            }
-                            is BasalAbsNfcUiAction -> {
-                                action.rate = params.optDouble("rate", 1.0)
-                                action.duration = params.optInt("duration", 30)
-                            }
-                            is BasalPctNfcUiAction -> {
-                                action.percent = params.optInt("percent", 100)
-                                action.duration = params.optInt("duration", 30)
-                            }
-                            is ExtendedNfcUiAction -> {
-                                action.units = params.optDouble("amount", 1.0)
-                                action.duration = params.optInt("duration", 30)
-                            }
-                            is CarbsNfcUiAction -> action.grams = params.optInt("amount", 20)
-                            is ProfileNfcUiAction -> {
-                                action.profileName = params.optString("profileName", "")
-                                action.percent = params.optInt("percentage", 100)
-                            }
-                        }
+                        action.applyParams(params)
                         chain.add(action)
                     }
                 }
@@ -183,7 +157,6 @@ fun NfcBuildScreen(
             val tag = plugin.nfcTagStore.findTagByUid(initialTagUid)
             if (tag != null) {
                 tagName = tag.name
-                // population logic same as above if needed, but usually creation starts empty
             }
             initialTagNameSnap = tagName
             initialCommandsSnap = emptyList()
@@ -361,7 +334,11 @@ fun NfcBuildScreen(
         ChooseActionSheet(
             categories = categories,
             onPick = { code ->
-                chain.add(createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep()))
+                coroutineScope.launch {
+                    val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
+                    action.applyParams(code.argType.getDefaultParams(plugin))
+                    chain.add(action)
+                }
             },
             onDismiss = { showActionPicker = false }
         )
@@ -717,6 +694,8 @@ interface NfcUiAction {
     @Composable
     fun EditContent(profileNames: List<String>, onChange: () -> Unit)
 
+    fun applyParams(params: JSONObject)
+
     @Composable
     fun getIconColor(): Color = command.getIconColor()
 }
@@ -745,6 +724,8 @@ class SimpleNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
+
+    override fun applyParams(params: JSONObject) {}
 }
 
 class SuspendNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
@@ -764,6 +745,10 @@ class SuspendNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
             unitLabel = stringResource(KeysR.string.units_min)
         )
     }
+
+    override fun applyParams(params: JSONObject) {
+        minutes = params.optInt("duration", 60)
+    }
 }
 
 class PumpDisconnectNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
@@ -782,6 +767,10 @@ class PumpDisconnectNfcUiAction(override val command: NfcCommandCode) : NfcUiAct
             valueFormat = DecimalFormat("0"),
             unitLabel = stringResource(KeysR.string.units_min)
         )
+    }
+
+    override fun applyParams(params: JSONObject) {
+        minutes = params.optInt("duration", 30)
     }
 }
 
@@ -817,6 +806,11 @@ class BolusNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcC
             }
         }
     }
+
+    override fun applyParams(params: JSONObject) {
+        units = params.optDouble("amount", 1.0)
+        meal = params.optBoolean("isMeal", false)
+    }
 }
 
 class BasalAbsNfcUiAction(override val command: NfcCommandCode, val step: Int) : NfcUiAction {
@@ -846,6 +840,11 @@ class BasalAbsNfcUiAction(override val command: NfcCommandCode, val step: Int) :
                 unitLabel = stringResource(KeysR.string.units_min)
             )
         }
+    }
+
+    override fun applyParams(params: JSONObject) {
+        rate = params.optDouble("rate", 1.0)
+        duration = params.optInt("duration", 30)
     }
 }
 
@@ -877,6 +876,11 @@ class BasalPctNfcUiAction(override val command: NfcCommandCode, val step: Int) :
             )
         }
     }
+
+    override fun applyParams(params: JSONObject) {
+        percent = params.optInt("percent", 100)
+        duration = params.optInt("duration", 30)
+    }
 }
 
 class ExtendedNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
@@ -907,6 +911,11 @@ class ExtendedNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
             )
         }
     }
+
+    override fun applyParams(params: JSONObject) {
+        units = params.optDouble("amount", 1.0)
+        duration = params.optInt("duration", 30)
+    }
 }
 
 class CarbsNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcCommandCode) : NfcUiAction {
@@ -932,6 +941,10 @@ class CarbsNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcC
                 onAddCarbs = { grams = (grams + it).coerceIn(0, 200); onChange() }
             )
         }
+    }
+
+    override fun applyParams(params: JSONObject) {
+        grams = params.optInt("amount", 20)
     }
 }
 
@@ -962,6 +975,11 @@ class ProfileNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
                 unitLabel = "%"
             )
         }
+    }
+
+    override fun applyParams(params: JSONObject) {
+        profileName = params.optString("profileName", "")
+        percent = params.optInt("percentage", 100)
     }
 }
 

@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -52,10 +51,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -68,7 +63,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.text.DateFormat
-import java.util.Locale
 import app.aaps.core.ui.R as CoreUiR
 
 private sealed class NfcRoute {
@@ -334,32 +328,19 @@ private fun NfcTagsScreen(
     }
 
     executeTarget?.let { tag ->
-        AlertDialog(
-            onDismissRequest = { executeTarget = null },
-            title = { Text(stringResource(R.string.nfccommands_execute_confirm_title, tag.name)) },
-            text = {
-                Column {
-                    tag.commands.forEach { cmdJson ->
-                        NfcCommandDisplay(commandJson = cmdJson, plugin = plugin)
-                    }
+        NfcExecutionConfirmationDialog(
+            tag = tag,
+            plugin = plugin,
+            onConfirm = {
+                val commands = tag.commands
+                val tagName = tag.name
+                executeTarget = null
+                coroutineScope.launch {
+                    withContext(Dispatchers.IO) { plugin.executeWithFeedback(commands, tagName, action = "MANUAL") }
+                    refreshKey++
                 }
             },
-            confirmButton = {
-                TextButton(onClick = {
-                    val commands = tag.commands
-                    val tagName = tag.name
-                    executeTarget = null
-                    coroutineScope.launch {
-                        withContext(Dispatchers.IO) { plugin.executeWithFeedback(commands, tagName, action = "MANUAL") }
-                        refreshKey++
-                    }
-                }) { Text(stringResource(R.string.nfccommands_execute_ok)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { executeTarget = null }) {
-                    Text(stringResource(android.R.string.cancel))
-                }
-            },
+            onDismiss = { executeTarget = null }
         )
     }
 
@@ -405,53 +386,6 @@ private fun NfcTagsScreen(
                 contentDescription = stringResource(R.string.nfccommands_add_tag),
             )
         }
-    }
-}
-
-@Composable
-private fun NfcCommandDisplay(
-    commandJson: String,
-    plugin: NfcCommandsPlugin
-) {
-    val json = remember(commandJson) { runCatching { JSONObject(commandJson) }.getOrNull() }
-    if (json == null) {
-        Text(text = commandJson, style = MaterialTheme.typography.bodySmall)
-        return
-    }
-
-    val codeName = json.optString("code")
-    val code = remember(codeName) { runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull() }
-    val params = json.optJSONObject("params") ?: JSONObject()
-
-    if (code == null) {
-        Text(text = commandJson, style = MaterialTheme.typography.bodySmall)
-        return
-    }
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(vertical = 2.dp)
-    ) {
-        Icon(
-            imageVector = code.icon,
-            contentDescription = null,
-            tint = code.getIconColor(),
-            modifier = Modifier.size(16.dp)
-        )
-        Text(
-            text = buildAnnotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(stringResource(code.labelResId))
-                }
-                val detail = code.formatParams(params, plugin)
-                if (detail.isNotEmpty()) {
-                    append(" ")
-                    append(detail)
-                }
-            },
-            style = MaterialTheme.typography.bodySmall
-        )
     }
 }
 

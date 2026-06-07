@@ -31,48 +31,69 @@ enum class ArgType {
     fun formatParams(params: JSONObject, plugin: NfcCommandsPlugin): String {
         return when (this) {
             BOLUS -> {
-                val amount = params.optDouble("amount")
-                val isMeal = params.optBoolean("isMeal")
+                val amount = params.optDouble("amount", 0.0)
+                val isMeal = params.optBoolean("isMeal", false)
                 val unit = stringResource(CoreUiR.string.insulin_unit_shortname)
                 val mealText = if (isMeal) " (${stringResource(R.string.nfccommands_meal_bolus)})" else ""
                 "${plugin.decimalFormatter.to2Decimal(amount)} $unit$mealText"
             }
             CARBS -> {
-                val amount = params.optInt("amount")
+                val amount = params.optInt("amount", 0)
                 val unit = stringResource(CoreUiR.string.shortgramm)
                 "$amount $unit"
             }
             SUSPEND, PUMP_DISCONNECT -> {
-                val duration = params.optInt("duration")
+                val duration = params.optInt("duration", 0)
                 val unit = stringResource(KeysR.string.units_min)
                 "$duration $unit"
             }
             BASAL_ABS -> {
-                val rate = params.optDouble("rate")
-                val duration = params.optInt("duration")
+                val rate = params.optDouble("rate", 0.0)
+                val duration = params.optInt("duration", 0)
                 val unitRate = stringResource(CoreUiR.string.profile_ins_units_per_hour)
                 val unitDur = stringResource(KeysR.string.units_min)
                 "${plugin.decimalFormatter.to2Decimal(rate)} $unitRate $duration $unitDur"
             }
             BASAL_PCT -> {
-                val percent = params.optInt("percent")
-                val duration = params.optInt("duration")
+                val percent = params.optInt("percent", 100)
+                val duration = params.optInt("duration", 0)
                 val unitDur = stringResource(KeysR.string.units_min)
                 "$percent% $duration $unitDur"
             }
             EXTENDED -> {
-                val amount = params.optDouble("amount")
-                val duration = params.optInt("duration")
+                val amount = params.optDouble("amount", 0.0)
+                val duration = params.optInt("duration", 0)
                 val unitAmt = stringResource(CoreUiR.string.insulin_unit_shortname)
                 val unitDur = stringResource(KeysR.string.units_min)
                 "${plugin.decimalFormatter.to2Decimal(amount)} $unitAmt $duration $unitDur"
             }
             PROFILE -> {
-                val name = params.optString("profileName")
-                val pct = params.optInt("percentage")
-                "$name $pct%"
+                val name = params.optString("profileName", "")
+                val pct = params.optInt("percentage", 100)
+                if (name.isNotEmpty()) "$name $pct%"
+                else {
+                    val fallback = plugin.profileRepository.profile.value?.getDefaultProfileName() ?: ""
+                    "$fallback $pct%"
+                }
             }
             NONE -> ""
+        }
+    }
+
+    suspend fun getDefaultParams(plugin: NfcCommandsPlugin): JSONObject {
+        return when (this) {
+            BOLUS -> JSONObject().put("amount", 0.0).put("isMeal", false)
+            CARBS -> JSONObject().put("amount", 0)
+            SUSPEND -> JSONObject().put("duration", 60)
+            PUMP_DISCONNECT -> JSONObject().put("duration", 30)
+            BASAL_ABS -> JSONObject().put("rate", 0.0).put("duration", plugin.pumpBasalDurationStep())
+            BASAL_PCT -> JSONObject().put("percent", 100).put("duration", plugin.pumpBasalDurationStep())
+            EXTENDED -> JSONObject().put("amount", 0.0).put("duration", 30)
+            PROFILE -> {
+                val profileName = plugin.profileFunction.getOriginalProfileName()
+                JSONObject().put("profileName", profileName).put("percentage", 100)
+            }
+            NONE -> JSONObject()
         }
     }
 }
