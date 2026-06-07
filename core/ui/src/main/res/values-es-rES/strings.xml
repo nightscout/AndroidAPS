@@ -194,8 +194,8 @@
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
     <string name="wear_wizard_settings">Ajustes del asistente en el reloj</string>
-    <string name="bolus_iob_label">IOB de Bolo</string>
-    <string name="treatments_wizard_basaliob_label">IOB de Basal</string>
+    <string name="bolus_iob_label">IOB de bolo</string>
+    <string name="treatments_wizard_basaliob_label">IOB de basal</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Inicio de sesión</string>
     <string name="logout">Cerrar sesión</string>
@@ -296,7 +296,7 @@
     <!--    Translator-->
     <string name="careportal">Portal de cuidados</string>
     <string name="careportal_bgcheck">Medir glucosa</string>
-    <string name="careportal_mbg">Calibración o BG Manual</string>
+    <string name="careportal_mbg">Glucemia manual o calibración</string>
     <string name="careportal_announcement">Aviso</string>
     <string name="careportal_settings_export">Exportación de configuraciones</string>
     <string name="careportal_note">Nota</string>
