@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="authorizationfailed">Autorización errónea</string>
-    <string name="identification_not_set">Identificación no establecida en el modo dev</string>
+    <string name="identification_not_set">Identificación no configurada en modo de desarrollo</string>
     <string name="select">Seleccionar</string>
     <string name="set">Establecer</string>
     <string name="migrating_preferences">Migrando preferencias…</string>
