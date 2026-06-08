@@ -620,6 +620,9 @@
     <string name="missing_profile_name">Nome profilo mancante</string>
     <string name="profile_not_saved_activate">Profilo non salvato. Si prega di salvare il profilo prima di attivarlo.</string>
     <string name="profile_activation_failed">Attivazione del profilo fallita</string>
+    <string name="profile_switch_save_failed">Il cambio del profilo non può essere salvato. Per favore riprova.</string>
+    <string name="profile_basal_not_compatible_with_pump">La velocità basale non è compatibile col micro corrente e non può essere attivata. Ridurre la percentuale o regolare la velocità basale.</string>
+    <string name="profile_pump_incompatible_label">Limite micro</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
     <string name="error_in_basal_values">Errore nei valori della basale</string>
