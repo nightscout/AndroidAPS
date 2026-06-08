@@ -640,6 +640,9 @@
     <string name="missing_profile_name">Missing profile name</string>
     <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
     <string name="profile_activation_failed">Profile activation failed</string>
+    <string name="profile_switch_save_failed">Profile switch could not be saved. Please try again.</string>
+    <string name="profile_basal_not_compatible_with_pump">Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.</string>
+    <string name="profile_pump_incompatible_label">Pump limit</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
     <string name="error_in_basal_values">Error in basal values</string>
