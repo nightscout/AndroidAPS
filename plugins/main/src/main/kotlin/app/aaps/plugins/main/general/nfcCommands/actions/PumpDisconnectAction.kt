@@ -7,6 +7,7 @@ import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.general.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.main.R
 import org.json.JSONObject
+import app.aaps.core.ui.R as CoreUiR
 
 class PumpDisconnectAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
     override suspend fun execute(params: JSONObject): NfcExecutionResult {
@@ -20,7 +21,7 @@ class PumpDisconnectAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             action = Action.DISCONNECT,
             source = Sources.NfcCommands,
         )
-        val messageId = if (result) R.string.nfccommands_pump_disconnected else R.string.nfccommands_remote_command_not_possible
+        val messageId = if (result) CoreUiR.string.pump_disconnected else R.string.nfccommands_remote_command_not_possible
         return NfcExecutionResult(result, plugin.rh.gs(messageId))
     }
 }

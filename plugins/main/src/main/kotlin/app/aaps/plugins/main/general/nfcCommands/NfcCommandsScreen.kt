@@ -316,7 +316,7 @@ private fun NfcTagsScreen(
                     nfcTagStore.deleteCreatedTag(tag.tagUid)
                     refreshKey++
                     deleteTarget = null
-                }) { Text(stringResource(R.string.nfccommands_delete_confirm_ok)) }
+                }) { Text(stringResource(CoreUiR.string.delete)) }
             },
             dismissButton = {
                 TextButton(onClick = { deleteTarget = null }) {

@@ -3,13 +3,11 @@ package app.aaps.plugins.main.general.nfcCommands
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileStore
-import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
@@ -27,9 +25,9 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import app.aaps.core.ui.R as CoreUiR
 
 class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
@@ -83,8 +81,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gsNotLocalised(any<Int>(), any())).thenReturn("Mock String")
         whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
         whenever(rh.gs(R.string.nfccommands_wrong_duration)).thenReturn("Wrong duration")
-        whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
-        whenever(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile")
+        whenever(rh.gs(CoreUiR.string.pump_disconnected)).thenReturn("Pump disconnected")
+        whenever(rh.gs(CoreUiR.string.noprofile)).thenReturn("No profile")
     }
 
     private fun execute(command: String): NfcExecutionResult = runBlocking { plugin.executeCommand(command) }
@@ -167,7 +165,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_SUSPEND should call handleRunningModeChange directly`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_loop_suspended)).thenReturn("Loop suspended")
+        whenever(rh.gs(CoreUiR.string.loopsuspended)).thenReturn("Loop suspended")
 
         val result = execute(NfcCommandCode.LOOP_SUSPEND, JSONObject().put("duration", 30))
 
@@ -188,7 +186,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_LGS should switch to LGS mode`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("LGS")
+        whenever(rh.gs(CoreUiR.string.lowglucosesuspend)).thenReturn("LGS")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("LGS mode")
 
         val result = execute(NfcCommandCode.LOOP_LGS)
@@ -210,7 +208,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_CLOSED should switch to closed loop`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(app.aaps.core.ui.R.string.closedloop)).thenReturn("Closed")
+        whenever(rh.gs(CoreUiR.string.closedloop)).thenReturn("Closed")
         whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("Closed loop")
 
         val result = execute(NfcCommandCode.LOOP_CLOSED)
@@ -245,7 +243,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand PUMP_DISCONNECT should disconnect pump`() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_pump_disconnected)).thenReturn("Pump disconnected")
+        whenever(rh.gs(CoreUiR.string.pump_disconnected)).thenReturn("Pump disconnected")
 
         val result = execute(NfcCommandCode.PUMP_DISCONNECT, JSONObject().put("duration", 180))
 
@@ -277,7 +275,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand BASAL_STOP should cancel temp basal`() {
-        whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
+        whenever(rh.gs(CoreUiR.string.stoptemptarget)).thenReturn("Temp basal canceled")
 
         val result = execute(NfcCommandCode.BASAL_STOP)
 
@@ -494,7 +492,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
-        whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
+        whenever(rh.gs(CoreUiR.string.stoptemptarget)).thenReturn("Temp basal canceled")
 
         val cmd1 = NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP)
         val cmd2 = NfcTagStore.buildCommand(NfcCommandCode.BASAL_STOP)

@@ -231,7 +231,7 @@ fun NfcBuildScreen(
                     TextButton(onClick = {
                         showDiscardConfirm = false
                         onBack()
-                    }) { Text(stringResource(R.string.nfccommands_discard_confirm)) }
+                    }) { Text(stringResource(CoreUiR.string.confirm)) }
                     TextButton(onClick = {
                         showDiscardConfirm = false
                         onSave()
@@ -959,7 +959,7 @@ class ProfileNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
                 value = profileName.ifEmpty { profileNames.firstOrNull() ?: "" },
                 options = profileNames,
                 onValueChange = { profileName = it; onChange() },
-                label = stringResource(R.string.nfccommands_cat_profile)
+                label = stringResource(CoreUiR.string.profile)
             )
             NumberInputRow(
                 labelResId = CoreUiR.string.percent,
