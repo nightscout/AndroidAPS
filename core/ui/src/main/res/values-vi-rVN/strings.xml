@@ -620,6 +620,9 @@
     <string name="missing_profile_name">Thiếu tên cấu hình</string>
     <string name="profile_not_saved_activate">Cấu hình điều trị chưa được lưu. Vui lòng lưu trước khi kích hoạt.</string>
     <string name="profile_activation_failed">Kích hoạt cấu hình thất bại</string>
+    <string name="profile_switch_save_failed">Không thể lưu thay đổi cấu hình. Vui lòng thử lại.</string>
+    <string name="profile_basal_not_compatible_with_pump">Tỷ lệ liều nền không tương thích với máy bơm hiện tại và không thể được kích hoạt. Hãy giảm tỷ lệ phần trăm hoặc điều chỉnh tỷ lệ liều nền.</string>
+    <string name="profile_pump_incompatible_label">Giới hạn Bơm</string>
     <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
     <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
     <string name="error_in_basal_values">Lỗi ở các giá trị liều nền</string>
