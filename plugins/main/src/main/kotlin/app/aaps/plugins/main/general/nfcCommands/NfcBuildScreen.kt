@@ -109,7 +109,7 @@ fun NfcBuildScreen(
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    val categories = remember { NfcCategories.build() }
+    val categories = remember { NfcCategories.build(plugin) }
     
     val profileStore by plugin.profileRepository.profile.collectAsStateWithLifecycle()
     val profileNames = remember(profileStore) {

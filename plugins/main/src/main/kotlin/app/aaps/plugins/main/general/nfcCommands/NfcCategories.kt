@@ -6,8 +6,9 @@ data class NfcUiCategory(
 )
 
 object NfcCategories {
-    fun build(): List<NfcUiCategory> {
+    fun build(plugin: NfcCommandsPlugin): List<NfcUiCategory> {
         return NfcCommandCode.entries
+            .filter { it.isSupported(plugin) }
             .groupBy { it.category }
             .map { (cat, cmds) ->
                 NfcUiCategory(

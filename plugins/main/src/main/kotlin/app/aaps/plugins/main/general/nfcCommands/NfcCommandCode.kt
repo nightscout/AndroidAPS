@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.*
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -102,7 +103,7 @@ enum class NfcCategory(@StringRes val labelResId: Int) {
     LOOP(CoreUiR.string.loop),
     PUMP(CoreUiR.string.pump),
     BASAL(CoreUiR.string.basal),
-    BOLUS(CoreUiR.string.bolus),
+    BOLUS(CoreUiR.string.treatments),
     PROFILE(CoreUiR.string.profile),
     TARGETS(R.string.nfccommands_cat_targets),
     SYSTEM(R.string.nfccommands_cat_system)
@@ -130,9 +131,9 @@ enum class NfcCommandCode(
     BASAL_PCT(R.string.nfccommands_cmd_basal_percent, NfcCategory.BASAL, ElementType.TEMP_BASAL, ArgType.BASAL_PCT, IcTbrLow),
     
     BOLUS(CoreUiR.string.bolus, NfcCategory.BOLUS, ElementType.INSULIN, ArgType.BOLUS, IcBolus),
+    CARBS(CoreUiR.string.carbs, NfcCategory.BOLUS, ElementType.CARBS, ArgType.CARBS, IcCarbs),
     EXTENDED_STOP(R.string.nfccommands_cmd_extended_stop, NfcCategory.BOLUS, ElementType.EXTENDED_BOLUS, ArgType.NONE, IcCancelExtendedBolus),
     EXTENDED_SET(CoreUiR.string.extended_bolus, NfcCategory.BOLUS, ElementType.EXTENDED_BOLUS, ArgType.EXTENDED, IcExtendedBolus),
-    CARBS(CoreUiR.string.carbs, NfcCategory.BOLUS, ElementType.CARBS, ArgType.CARBS, IcCarbs),
     
     PROFILE_SWITCH(CoreUiR.string.careportal_profileswitch, NfcCategory.PROFILE, ElementType.PROFILE_MANAGEMENT, ArgType.PROFILE, IcProfile, { if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White }),
     
@@ -149,4 +150,10 @@ enum class NfcCommandCode(
 
     @Composable
     fun formatParams(params: JSONObject, plugin: NfcCommandsPlugin): String = argType.formatParams(params, plugin)
+
+    fun isSupported(plugin: NfcCommandsPlugin): Boolean = when (this) {
+        BASAL_ABS -> plugin.activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE
+        BASAL_PCT -> plugin.activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT
+        else -> true
+    }
 }
