@@ -11,9 +11,11 @@
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
     <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
+    <string name="largetimedifftitle">Голяма разлика във времето</string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
     <string name="startingbolus">Стартира доставка на болус</string>
     <string name="waitingforestimatedbolusend">Изчакване за очакван край на болус</string>
+    <string name="gettingbolusstatus">Взема болус статус</string>
     <string name="stoppingtempbasal">Спира временен базал</string>
     <string name="settingtempbasal">Настройва временен базал</string>
     <string name="settingextendedbolus">Настойва удължен болус</string>
@@ -124,4 +126,14 @@
     <string name="diaconn_g8_errorcode_36">Спирането на временния базал се отхвърля, когато временният базал не е активиран</string>
     <string name="diaconn_g8_cloudsend_summary">Изпрати логовете на помпата до Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Синхронизиране</string>
+    <string name="bolus_speed_1">1 Е/мин</string>
+    <string name="bolus_speed_2">2 Е/мин</string>
+    <string name="bolus_speed_3">3 Е/мин</string>
+    <string name="bolus_speed_4">4 Е/мин</string>
+    <string name="bolus_speed_5">5 Е/мин</string>
+    <string name="bolus_speed_6">6 Е/мин</string>
+    <string name="bolus_speed_7">7 Е/мин</string>
+    <string name="bolus_speed_8">8 Е/мин</string>
+    <string name="diaconn_pairing_successful">Успешно свързване!</string>
+    <string name="diaconn_pairing_successful_message">Помпата е свързана и готова за употреба,</string>
 </resources>

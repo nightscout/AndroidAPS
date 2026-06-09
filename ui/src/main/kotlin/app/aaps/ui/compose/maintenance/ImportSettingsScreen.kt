@@ -182,7 +182,7 @@ private fun ImportFilePickerContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
             ) {
-                items(state.files, key = { "${it.source}_${it.prefsFile.name}" }) { item ->
+                items(state.files, key = { "${it.source}_${it.prefsFile.id ?: it.prefsFile.name}" }) { item ->
                     ImportFileCard(
                         item = item,
                         showSourceBadge = state.source == ImportSource.BOTH,

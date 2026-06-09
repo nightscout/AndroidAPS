@@ -303,4 +303,15 @@
     <string name="widget_rm_disabled">Désactivé</string>
     <string name="widget_rm_suspended">Suspendu</string>
     <string name="widget_rm_resume">Reprendre</string>
+    <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Calibration non sauvegardée : la glycémie change trop vite (Δ %1$s %3$s par 5 min, limite %2$s). Réessayez lorsque la glycémie est stable.</string>
+    <string name="cal_reject_no_pair">Calibration non sauvegardée : aucune lecture MGC trouvée dans les 10 minutes précédentes.</string>
+    <string name="cal_reject_warmup">Calibration non sauvegardée : le capteur est toujours dans la fenêtre pré-chauffage de 2 heures.</string>
+    <string name="cal_reject_no_session">Calibration non enregistrée: aucune session de capteur n\'est active. Effectuez d\'abord un changement de capteur.</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Capteur toujours en échauffement. Calibration disponible à %1$s.</string>
+    <string name="cal_precheck_no_session">Aucune session de capteur n\'est active.</string>
+    <string name="cal_precheck_no_pair">Aucune lecture MGC au cours des 10 dernières minutes. Vérifiez la connexion du capteur.</string>
+    <string name="cal_precheck_delta_too_high">La glycémie change trop vite (Δ %1$s %3$s par 5 min, limite %2$s). Attendez que ce soit stabe.</string>
+    <string name="cal_precheck_mark_sensor_change">Enregistrer le changement de capteur</string>
 </resources>

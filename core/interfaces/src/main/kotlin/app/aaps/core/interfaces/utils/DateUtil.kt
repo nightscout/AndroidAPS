@@ -326,9 +326,10 @@ interface DateUtil {
      * Formats a duration in milliseconds into a human-readable string with hours and minutes.
      * @param timeInMillis The duration in milliseconds.
      * @param rh Resource helper for localized units (e.g., "h").
-     * @return A formatted duration string like "(1h 30m)".
+     * @param withParentheses Whether to wrap the result in parentheses (e.g. "(30')" vs "30'"). Defaults to true.
+     * @return A formatted duration string like "(1h 30')".
      */
-    fun timeFrameString(timeInMillis: Long, rh: ResourceHelper): String
+    fun timeFrameString(timeInMillis: Long, rh: ResourceHelper, withParentheses: Boolean = true): String
 
     /**
      * Calculates the elapsed time since a given timestamp and formats it as a duration.
@@ -342,9 +343,10 @@ interface DateUtil {
      * Calculates the time remaining until a future timestamp and formats it as a duration.
      * @param timestamp The future timestamp in milliseconds.
      * @param rh Resource helper.
+     * @param withParentheses Whether to wrap the result in parentheses (e.g. "(30')" vs "30'"). Defaults to true.
      * @return A formatted duration string of the remaining time.
      */
-    fun untilString(timestamp: Long, rh: ResourceHelper): String
+    fun untilString(timestamp: Long, rh: ResourceHelper, withParentheses: Boolean = true): String
 
     /**
      * Formats a remaining duration as a localized "time remaining" string.

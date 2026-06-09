@@ -291,21 +291,42 @@ class MaintenanceViewModel @Inject constructor(
         }
     }
 
+    // Guards against re-entrant clears: the confirm dialog stays visible during the async
+    // revoke network call, so a second tap must not launch another deauthorize coroutine.
+    private var clearingCloud = false
+
     fun requestClearCloud() {
         val info = cloudDirectoryManager.getCloudDirectoryInfo()
         if (info.isCloudActive) {
             _cloudDirectoryState.value = CloudDirectoryState.ConfirmClear
         } else {
-            cloudDirectoryManager.clearCloudSettings()
-            refreshExportConfig()
-            _cloudDirectoryState.value = CloudDirectoryState.Hidden
+            performClearCloud()
         }
     }
 
     fun confirmClearCloud() {
-        cloudDirectoryManager.clearCloudSettings()
-        refreshExportConfig()
-        _cloudDirectoryState.value = CloudDirectoryState.Hidden
+        performClearCloud()
+    }
+
+    private fun performClearCloud() {
+        if (clearingCloud) return
+        clearingCloud = true
+        viewModelScope.launch {
+            var revoked = true
+            try {
+                revoked = cloudDirectoryManager.deauthorizeAndClearCloudSettings()
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.CORE, "Failed to clear cloud settings", e)
+            } finally {
+                // Always dismiss the dialog and refresh, even if the revoke/clear threw.
+                refreshExportConfig()
+                _cloudDirectoryState.value = CloudDirectoryState.Hidden
+                clearingCloud = false
+            }
+            if (!revoked) {
+                _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiR.string.cloud_revoke_incomplete)))
+            }
+        }
     }
 
     fun cancelClearCloud() {

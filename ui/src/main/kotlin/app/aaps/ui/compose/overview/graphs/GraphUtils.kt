@@ -1,11 +1,11 @@
 package app.aaps.ui.compose.overview.graphs
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.GenericShape
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
@@ -34,7 +34,7 @@ import kotlin.time.Instant
  * **Graph Alignment (3 pillars):**
  * All graphs MUST have identical x-axis configuration for pixel-based scroll/zoom sync:
  * 1. `rangeProvider = CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)` — same X range
- * 2. `getXStep = { 1.0 }` — same xStep (1 minute per unit)
+ * 2. `getXStep = { _, _, _ -> 1.0 }` — same xStep (1 minute per unit)
  * 3. Normalizer line ([createNormalizerLine] + [NORMALIZER_X]/[NORMALIZER_Y] dummy series) —
  *    ensures identical maxPointSize across all charts → same xSpacing and unscalable padding
  *
@@ -175,7 +175,7 @@ fun createNormalizerLine(): LineCartesianLayer.Line =
     )
 
 /**
- * Y data for the normalizer dummy series. Always add this to every chart's lineSeries block.
+ * Y data for the normalizer dummy series. Always add this to every chart's lineModel block.
  * Two points at y=0, invisible, just to occupy a series slot for the normalizer line.
  */
 val NORMALIZER_Y = listOf(0.0, 0.0)

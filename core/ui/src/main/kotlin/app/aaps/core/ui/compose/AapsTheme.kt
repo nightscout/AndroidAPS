@@ -2,6 +2,7 @@ package app.aaps.core.ui.compose
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Typography
@@ -18,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.core.view.WindowInsetsControllerCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -252,7 +255,7 @@ fun AapsTheme(
     // Scale typography up on tablets. Orientation-independent (smallest-width signal).
     val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= TABLET_MIN_SW_DP
     val typographyScale = if (isTablet) 1.5f else 1f
-    val scaledMaterialTypography = remember(typographyScale) { Typography().scaled(typographyScale) }
+    val scaledMaterialTypography = remember(typographyScale) { Typography().withoutFontPadding().scaled(typographyScale) }
 
     CompositionLocalProvider(
         LocalProfileHelperColors provides profileViewerColors,
@@ -267,6 +270,15 @@ fun AapsTheme(
         ) {
             CompositionLocalProvider(
                 LocalAapsTypography provides aapsTypography(typographyScale),
+                // Bare `Text()` (e.g. the overview chips) reads LocalTextStyle, not the typography,
+                // so disable font padding here too — keeps the default size, just metric-centers glyphs.
+                LocalTextStyle provides LocalTextStyle.current.copy(
+                    platformStyle = PlatformTextStyle(includeFontPadding = false),
+                    lineHeightStyle = LineHeightStyle(
+                        alignment = LineHeightStyle.Alignment.Center,
+                        trim = LineHeightStyle.Trim.None
+                    )
+                ),
                 content = content
             )
         }

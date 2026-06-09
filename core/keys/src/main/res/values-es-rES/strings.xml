@@ -31,6 +31,8 @@
     <string name="pref_title_alert_carbs_required">Alerta de carbohidratos necesarios</string>
     <string name="pref_title_alert_urgent_as_android_notification">Emitir alarmas urgentes como notificaciones de Android</string>
     <string name="pref_title_alert_increase_volume">Aumentar gradualmente el volumen de las notificaciones</string>
+    <string name="pref_title_alert_override_dnd">Anular el modo \"No molestar\"</string>
+    <string name="pref_summary_alert_override_dnd">Si se activa, las alarmas de AAPS sonarán aunque el móvil esté en silencio o en modo \"No molestar\". Si se desactiva, las alarmas se silenciarán según la configuración del teléfono</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Subir datos de glucemia a Nightscout</string>
     <string name="pref_title_bg_source_create_sensor_change">Registrar cambio de sensor</string>
@@ -221,6 +223,8 @@
     <string name="pref_title_sms_remote_bolus_distance">Distancia mínima para bolo remoto</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Intervalo de glucemia aleatorio</string>
+    <string name="pref_title_random_bg_randomize">Aleatorizar datos de glucemia</string>
+    <string name="pref_summary_random_bg_randomize">Añadir ruido, alterar marcas de tiempo, aleatorizar flechas de tendencia y emitir carbohidratos aleatorios ocasionalmente. Desactívalo para obtener una onda senoidal limpia y determinante con la flecha de tendencia calculada según la pendiente</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Umbral de alarma por datos desactualizados</string>
     <string name="pref_title_urgent_alarm_stale_data">Umbral de alarma urgente por datos desactualizados</string>

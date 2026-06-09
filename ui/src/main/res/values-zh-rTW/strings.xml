@@ -303,4 +303,15 @@
     <string name="widget_rm_disabled">停用</string>
     <string name="widget_rm_suspended">已暫停</string>
     <string name="widget_rm_resume">恢復</string>
+    <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">校正未儲存：血糖變化過快（Δ 每 5 分鐘 %1$s %3$s，限制 %2$s）。請在血糖穩定時再試一次。</string>
+    <string name="cal_reject_no_pair">校正未儲存：在過去 10 分鐘內未找到 CGM 讀取值。</string>
+    <string name="cal_reject_warmup">校正未儲存：傳感器仍在 2 小時預熱時間內。</string>
+    <string name="cal_reject_no_session">校正未儲存：目前沒有啟動任何傳感器工作階段。請先標記傳感器更換。</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">傳感器仍在預熱中。可在 %1$s 進行校正。</string>
+    <string name="cal_precheck_no_session">目前沒有啟動任何傳感器工作階段。</string>
+    <string name="cal_precheck_no_pair">過去 10 分鐘內沒有 CGM 讀取值。請檢查傳感器連線。</string>
+    <string name="cal_precheck_delta_too_high">血糖變化過快（Δ 每 5 分鐘 %1$s %3$s，限制 %2$s）。請等待穩定。</string>
+    <string name="cal_precheck_mark_sensor_change">標記傳感器更換</string>
 </resources>

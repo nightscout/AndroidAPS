@@ -27,6 +27,17 @@ interface CloudDirectoryManager {
 
     fun getCloudDirectoryInfo(): CloudDirectoryInfo
     fun clearCloudSettings()
+
+    /**
+     * Revoke the OAuth grant server-side (true deauthorize) and then clear all local cloud
+     * settings. Use this for the explicit "Clear Settings" action so the app's access is
+     * actually removed from the user's account, not just forgotten locally.
+     * Local settings are always cleared; the return value reports whether the server-side
+     * revoke was confirmed.
+     * @return true if the grant was revoked (or there was nothing to revoke); false if the
+     *         revoke could not be confirmed (local settings are still cleared).
+     */
+    suspend fun deauthorizeAndClearCloudSettings(): Boolean
     fun resetExportToLocal()
     fun enableAllCloudExport()
     fun enableLocalStorage()

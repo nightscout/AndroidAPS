@@ -100,4 +100,8 @@
     <string name="num1pin">1: (12 цифри)</string>
     <string name="num2pin">2: (8 цифри)</string>
     <string name="basal_bolus_step">Базал/Болус стъпка</string>
+    <string name="password_hint">4-цифрена парола (0–9999)</string>
+    <string name="connecting_verifying">Проверявам паролата…</string>
+    <string name="password_ok">Паролата е правилна!</string>
+    <string name="password_wrong">Грешна парола. Върнете се и я променете.</string>
 </resources>

@@ -6,11 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +16,6 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.icons.IcSettingsOff
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.ui.compose.main.TempTargetChipState
@@ -29,6 +24,7 @@ import app.aaps.ui.compose.overview.chips.IobCobChipsRow
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.chips.ProfileChip
 import app.aaps.ui.compose.overview.chips.RunningModeChip
+import app.aaps.ui.compose.overview.chips.SensitivityUiState
 import app.aaps.ui.compose.overview.chips.TbrChip
 import app.aaps.ui.compose.overview.chips.TempTargetChip
 
@@ -36,10 +32,10 @@ import app.aaps.ui.compose.overview.chips.TempTargetChip
 fun OverviewChipsColumn(
     runningMode: RM.Mode,
     runningModeText: String,
+    runningModeRemaining: String,
     runningModeProgress: Float,
     runningModeSceneManaged: Boolean = false,
     smbEnabled: Boolean = false,
-    isSimpleMode: Boolean,
     profileName: String,
     isProfileModified: Boolean,
     profileProgress: Float,
@@ -52,6 +48,7 @@ fun OverviewChipsColumn(
     tbrState: TbrState,
     iobUiState: IobUiState,
     cobUiState: CobUiState,
+    sensitivityUiState: SensitivityUiState,
     onNavigate: (NavigationRequest) -> Unit,
     onTbrChipClick: () -> Unit,
     onIobChipClick: () -> Unit,
@@ -76,10 +73,10 @@ fun OverviewChipsColumn(
                         NarrowChips(
                             runningMode = runningMode,
                             runningModeText = runningModeText,
+                            runningModeRemaining = runningModeRemaining,
                             runningModeProgress = runningModeProgress,
                             runningModeSceneManaged = runningModeSceneManaged,
                             smbEnabled = smbEnabled,
-                            isSimpleMode = isSimpleMode,
                             profileName = profileName,
                             isProfileModified = isProfileModified,
                             profileProgress = profileProgress,
@@ -104,10 +101,10 @@ fun OverviewChipsColumn(
             NarrowChips(
                 runningMode = runningMode,
                 runningModeText = runningModeText,
+                runningModeRemaining = runningModeRemaining,
                 runningModeProgress = runningModeProgress,
                 runningModeSceneManaged = runningModeSceneManaged,
                 smbEnabled = smbEnabled,
-                isSimpleMode = isSimpleMode,
                 profileName = profileName,
                 isProfileModified = isProfileModified,
                 profileProgress = profileProgress,
@@ -127,6 +124,10 @@ fun OverviewChipsColumn(
             cobUiState = cobUiState,
             onIobChipClick = onIobChipClick
         )
+        SensitivityChipBlock(
+            state = sensitivityUiState,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -134,10 +135,10 @@ fun OverviewChipsColumn(
 private fun NarrowChips(
     runningMode: RM.Mode,
     runningModeText: String,
+    runningModeRemaining: String,
     runningModeProgress: Float,
     runningModeSceneManaged: Boolean,
     smbEnabled: Boolean,
-    isSimpleMode: Boolean,
     profileName: String,
     isProfileModified: Boolean,
     profileProgress: Float,
@@ -151,37 +152,30 @@ private fun NarrowChips(
     onNavigate: (NavigationRequest) -> Unit,
     onTbrChipClick: () -> Unit
 ) {
-    if (runningModeText.isNotEmpty()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (runningModeText.isNotEmpty()) {
             RunningModeChip(
                 mode = runningMode,
                 text = runningModeText,
                 progress = runningModeProgress,
-                modifier = Modifier.weight(1f),
+                remaining = runningModeRemaining,
                 sceneManaged = runningModeSceneManaged,
                 smbEnabled = smbEnabled,
                 onClick = { onNavigate(NavigationRequest.Element(ElementType.RUNNING_MODE)) }
             )
-            if (isSimpleMode) {
-                Icon(
-                    imageVector = IcSettingsOff,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.simple_mode),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .padding(start = 4.dp)
-                        .size(20.dp)
-                )
-            }
         }
+        ProfileChip(
+            profileName = profileName.ifEmpty { stringResource(app.aaps.core.ui.R.string.no_profile_set) },
+            isModified = isProfileModified,
+            progress = profileProgress,
+            onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT)) },
+            sceneManaged = profileSceneManaged,
+            isNoProfile = profileName.isEmpty(),
+            modifier = Modifier.weight(1f)
+        )
     }
-    ProfileChip(
-        profileName = profileName.ifEmpty { stringResource(app.aaps.core.ui.R.string.no_profile_set) },
-        isModified = isProfileModified,
-        progress = profileProgress,
-        onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT)) },
-        sceneManaged = profileSceneManaged,
-        isNoProfile = profileName.isEmpty()
-    )
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)

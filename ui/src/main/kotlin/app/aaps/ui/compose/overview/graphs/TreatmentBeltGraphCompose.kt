@@ -40,7 +40,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisTickComponent
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
@@ -73,7 +73,7 @@ private val modeSegmentsKey = ExtraStore.Key<List<Triple<Double, Double, RM.Mode
  * - Therapy events: point markers grouped by type
  * - Duration events: 2-point line series per event
  * - No axis labels (clean belt appearance)
- * - Same 3 pillars as other graphs: fixed X range, getXStep = { 1.0 }, normalizer line
+ * - Same 3 pillars as other graphs: fixed X range, getXStep = { _, _, _ -> 1.0 }, normalizer line
  *
  * Dynamic series order (must match lines list):
  *   1. Running mode segments (0..N, each = 2-point at Y=1.0 with area fill)
@@ -160,7 +160,7 @@ fun TreatmentBeltGraphCompose(
         if (!hasRealTimeRange && lastRunningModeData.value.segments.isEmpty() && lastTreatmentData.value.therapyEvents.isEmpty()) {
             // No data at all — just populate normalizer so chart renders
             modelProducer.runTransaction {
-                lineSeries { series(x = normalizerX(maxX), y = NORMALIZER_Y) }
+                lineModel { series(x = normalizerX(maxX), y = NORMALIZER_Y) }
             }
             modeSegmentCountState.intValue = 0
             hasMbgState.value = false
@@ -241,7 +241,7 @@ fun TreatmentBeltGraphCompose(
         var hasGeneral = false
 
         modelProducer.runTransaction {
-            lineSeries {
+            lineModel {
                 // 1. Running mode segments — colored background rectangles
                 for ((start, end, _) in modeSegmentSeries) {
                     series(x = listOf(start, end), y = listOf(1.0, 1.0))
@@ -501,7 +501,7 @@ fun TreatmentBeltGraphCompose(
                 label = null,
                 tick = null
             ),
-            getXStep = { 1.0 }
+            getXStep = { _, _, _ -> 1.0 }
         ),
         modelProducer = modelProducer,
         modifier = modifier

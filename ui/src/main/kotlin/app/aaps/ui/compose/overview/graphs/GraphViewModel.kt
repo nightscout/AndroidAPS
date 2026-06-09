@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
@@ -183,6 +184,11 @@ class GraphViewModel @AssistedInject constructor(
             cacheTimeRange?.let {
                 val upper = if (showPredictions) it.endTime else it.toTime
                 Pair(it.fromTime, upper)
+            } ?: run {
+                // Clean DB: no data and no cached range (worker never ran) — fall back to the
+                // default window so the axis frame still renders instead of staying blank.
+                val now = dateUtil.now()
+                Pair(now - Constants.GRAPH_TIME_RANGE_HOURS * 3600_000L, now)
             }
         } else {
             val minTime = allTimestamps.minOrNull() ?: return@combine null

@@ -51,6 +51,14 @@ class CloudDirectoryManagerImpl @Inject constructor(
         resetToLocalSettings()
     }
 
+    override suspend fun deauthorizeAndClearCloudSettings(): Boolean {
+        // Revoke the OAuth grant first (this needs the stored tokens), then always wipe local
+        // settings regardless of whether the revoke could be confirmed.
+        val revoked = cloudStorageManager.revokeAllCredentials()
+        clearCloudSettings()
+        return revoked
+    }
+
     override fun resetExportToLocal() = resetToLocalSettings()
 
     override fun enableAllCloudExport() {

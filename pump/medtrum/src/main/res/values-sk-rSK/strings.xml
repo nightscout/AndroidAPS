@@ -76,7 +76,9 @@
     <string name="unpair_confirm_message">Toto vymaže uložené sériové číslo pumpy a odpojí ju. Pre vyhľadanie pumpy aktivuj nový Patch.</string>
     <string name="step_retry_activation">Aktivácia prebieha</string>
     <string name="unexpected_state">Neočakávaný stav: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Pripojte základňu pumpy k novému Patchu, aby sa zapla, potom ju zvoľte na zozname nižšie.</string>
     <string name="patch_begin_activation">Žiadny aktívny Patch. Stlačte <b>Ďalšia</b> pre zahájenie aktivačného procesu.</string>
+    <string name="connect_pump_base">Uistite sa, že je základňa pumpy pripojená k Patchu, odstráňte prebytočný vzduch a naplňte inzulínom, potom stlačte <b>Ďalej</b>.</string>
     <string name="note_min_70_units">Poznámka: Pre aktiváciu je potrebných najmenej 70 jednotiek inzulínu.</string>
     <string name="reservoir_text_and_level">Zásobník: %.2f U</string>
     <string name="do_not_attach_to_body">Zatiaľ nepripájajte Patch k telu.</string>

@@ -62,6 +62,9 @@ fun RunningModeScreen(
     var pendingAction by remember { mutableStateOf<PendingRunningModeAction?>(null) }
 
     LaunchedEffect(Unit) {
+        // Reload immediately on open: the ViewModel is Activity-scoped, so its cached state may be
+        // stale (e.g. "no profile set" captured at app start before a profile was active).
+        viewModel.loadState()
         while (true) {
             delay(15_000L)
             viewModel.loadState()

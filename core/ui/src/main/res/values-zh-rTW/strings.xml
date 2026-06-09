@@ -68,6 +68,7 @@
     <string name="configbuilder_insulin">胰島素</string>
     <string name="configbuilder_bgsource">血糖來源</string>
     <string name="configbuilder_smoothing">平滑處理</string>
+    <string name="configbuilder_calibration">校正</string>
     <string name="configbuilder_pump">幫浦</string>
     <string name="configbuilder_sensitivity">敏感度偵測</string>
     <string name="configbuilder_aps">APS</string>
@@ -453,6 +454,8 @@
     <string name="location_front_left_lower_abdomen">左下腹部前側</string>
     <string name="location_back_right_buttock">右臀部</string>
     <string name="location_back_left_buttock">左臀部</string>
+    <string name="location_back_right_lower_back">右下背部</string>
+    <string name="location_back_left_lower_back">左下背部</string>
     <string name="location_side_right_upper_thigh">右大腿外側上部</string>
     <string name="location_side_left_upper_thigh">左大腿外側上部</string>
     <string name="location_side_right_lower_thigh">右大腿外側下部</string>
@@ -535,6 +538,7 @@
     <string name="uel_tt_ns_refresh">臨時目標 NS 重新整理</string>
     <string name="uel_automation_removed">自動化已移除</string>
     <string name="uel_bg_removed">血糖已移除</string>
+    <string name="uel_calibration_removed">校正已移除</string>
     <string name="uel_careportal_removed">照護已移除</string>
     <string name="uel_bolus_removed">注射已移除</string>
     <string name="uel_carbs_removed">碳水化合物已移除</string>
@@ -829,6 +833,7 @@
     <string name="clear_cloud_action">清除設定</string>
     <string name="clear_cloud_settings">清除雲端設定</string>
     <string name="clear_cloud_settings_message">這將切換為本機儲存並清除授權。要繼續嗎？</string>
+    <string name="cloud_revoke_incomplete">此裝置上的雲端設定已清除，但無法連線至該帳號以完全撤銷存取權限。您可能需要在帳號設定中手動移除該存取權限。</string>
     <string name="cloud_connection_failed">雲端儲存連線失敗</string>
     <string name="cloud_reauthorize_message">雲端儲存連線失敗。要重新驗證嗎？</string>
     <string name="reauthorize">重新驗證</string>

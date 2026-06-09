@@ -38,7 +38,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -191,7 +191,7 @@ private fun TddCycleChart(
     LaunchedEffect(cycles, average) {
         if (cycles.isEmpty()) return@LaunchedEffect
         modelProducer.runTransaction {
-            lineSeries {
+            lineModel {
                 for (cycle in cycles) {
                     series(x = xValues, y = cycle.dayValues)
                 }

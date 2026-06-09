@@ -825,7 +825,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private fun refreshOnResume() {
         manageViewModel.refreshState()
         permissionsViewModel.refresh()
-        if (notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT }) {
+        if (notificationManager.notifications.value.any { it.level.priority <= NotificationLevel.IMPORTANT.priority }) {
             _autoShowNotifications.value = true
         }
         if (!isProtectionCheckActive) {

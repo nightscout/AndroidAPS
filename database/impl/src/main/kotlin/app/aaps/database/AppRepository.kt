@@ -27,6 +27,7 @@ import app.aaps.database.transactions.Transaction
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.Closeable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -95,19 +97,26 @@ class AppRepository @Inject internal constructor(
      * Emits to BOTH RxJava (existing) AND Flow (new)
      */
     suspend fun <T> runTransactionSuspend(transaction: Transaction<T>) {
-        val changes = mutableListOf<DBEntry>()
-        database.useWriterConnection { connection ->
-            connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
-                transaction.database = DelegatedAppDatabase(changes, database)
-                transaction.run()
+        // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
+        // caller (e.g. a WorkManager worker being stopped by Doze/standby/resource pressure) is
+        // cancelled in the window between the SQLite COMMIT and the emit below, the row would be
+        // durably persisted while observers (loop/overview/sync via observeChanges) never fire —
+        // a silently dropped reading with no loop run. NonCancellable closes that window.
+        withContext(NonCancellable) {
+            val changes = mutableListOf<DBEntry>()
+            database.useWriterConnection { connection ->
+                connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
+                    transaction.database = DelegatedAppDatabase(changes, database)
+                    transaction.run()
+                }
             }
-        }
-        // Emit to RxJava (existing) - for backwards compatibility
-        changeSubject.onNext(changes)
+            // Emit to RxJava (existing) - for backwards compatibility
+            changeSubject.onNext(changes)
 
-        // Emit to Flow (new)
-        if (changes.isNotEmpty()) {
-            _changeFlow.emit(changes)
+            // Emit to Flow (new)
+            if (changes.isNotEmpty()) {
+                _changeFlow.emit(changes)
+            }
         }
     }
 
@@ -116,23 +125,29 @@ class AppRepository @Inject internal constructor(
      * Uses Room's suspend withTransaction API for proper coroutine support
      * Emits to BOTH RxJava (existing) AND Flow (new)
      */
-    suspend fun <T : Any> runTransactionForResultSuspend(transaction: Transaction<T>): T {
-        val changes = mutableListOf<DBEntry>()
-        val result = database.useWriterConnection { connection ->
-            connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
-                transaction.database = DelegatedAppDatabase(changes, database)
-                transaction.run()
+    suspend fun <T : Any> runTransactionForResultSuspend(transaction: Transaction<T>): T =
+        // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
+        // caller (e.g. a WorkManager worker being stopped by Doze/standby/resource pressure) is
+        // cancelled in the window between the SQLite COMMIT and the emit below, the row would be
+        // durably persisted while observers (loop/overview/sync via observeChanges) never fire —
+        // a silently dropped reading with no loop run. NonCancellable closes that window.
+        withContext(NonCancellable) {
+            val changes = mutableListOf<DBEntry>()
+            val result = database.useWriterConnection { connection ->
+                connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
+                    transaction.database = DelegatedAppDatabase(changes, database)
+                    transaction.run()
+                }
             }
-        }
-        // Emit to RxJava (existing) - for backwards compatibility
-        changeSubject.onNext(changes)
+            // Emit to RxJava (existing) - for backwards compatibility
+            changeSubject.onNext(changes)
 
-        // Emit to Flow (new)
-        if (changes.isNotEmpty()) {
-            _changeFlow.emit(changes)
+            // Emit to Flow (new)
+            if (changes.isNotEmpty()) {
+                _changeFlow.emit(changes)
+            }
+            result
         }
-        return result
-    }
 
     fun clearDatabases() {
         database.clearAllTables()

@@ -34,6 +34,8 @@
     <string name="event_type">Typ udalosti</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Uložiť</string>
     <string name="skip">Preskočiť</string>
     <string name="switch_to_edit">Upraviť</string>
@@ -470,6 +472,7 @@
     <string name="arrow_center">V strede</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršal čas na pripojenie</string>
+    <string name="command_replaced">Nahradené novším príkazom</string>
     <string name="pump_not_configured">Pumpa nie je nakonfigurovaná</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Vykonané</string>

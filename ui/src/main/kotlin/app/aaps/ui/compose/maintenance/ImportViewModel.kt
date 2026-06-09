@@ -3,12 +3,10 @@ package app.aaps.ui.compose.maintenance
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -59,8 +57,7 @@ class ImportViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val importExportPrefs: ImportExportPrefs,
     private val prefFileList: FileListProvider,
-    private val configBuilder: ConfigBuilder,
-    private val uel: UserEntryLogger
+    private val configBuilder: ConfigBuilder
 ) : ViewModel() {
 
     private val _importStep = MutableStateFlow<ImportStep>(ImportStep.Idle)
@@ -73,15 +70,13 @@ class ImportViewModel @Inject constructor(
     private var cloudPageToken: String? = null
 
     fun startImport(source: ImportSource) {
-        // Don't reload if already showing files for same source
-        val current = importStep.value
-        if (current is ImportStep.FilePicker && cachedSource == source && cachedFiles.isNotEmpty()) return
-
+        // Always reload on a fresh entry so newly exported files appear in the list.
+        // Returning from the Review step uses goBackToFilePicker(), which keeps the cache —
+        // Review is an internal ImportStep, not a nav route, so it never re-enters here.
         cachedSource = source
         cachedFiles = emptyList()
+        cachedHasMoreCloud = false
         cloudPageToken = null
-
-        uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
 
         val needsLocal = source == ImportSource.LOCAL || source == ImportSource.BOTH
         val needsCloud = source == ImportSource.CLOUD || source == ImportSource.BOTH

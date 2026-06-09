@@ -2066,13 +2066,12 @@ class PersistenceLayerImpl @Inject constructor(
         try {
             val result = repository.runTransactionForResultSuspend(InvalidateTherapyEventsWithNoteTransaction(note))
             val transactionResult = PersistenceLayer.TransactionResult<TE>()
-            val ueValues = mutableListOf<UE>()
             result.invalidated.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${source.name} $it")
                 transactionResult.invalidated.add(it.fromDb())
-                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note, values = emptyList()))
             }
-            log(ueValues)
+            if (result.invalidated.isNotEmpty())
+                log(listOf(UE(timestamp = dateUtil.now(), action = action, source = source, note = note, values = emptyList())))
             transactionResult
         } catch (e: Exception) {
             aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", e)

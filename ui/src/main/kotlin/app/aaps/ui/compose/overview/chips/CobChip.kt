@@ -5,6 +5,8 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -26,13 +28,16 @@ import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun CobChip(
     state: CobUiState,
     showIcon: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    val alphaModifier = if (state.carbsReq > 0) {
+    // When carbs are required, flash only the icon (attention cue) and let the text scroll
+    // (basicMarquee) instead of wrapping — so the numbers stay crisp/readable while the icon blinks.
+    val iconAlphaModifier = if (state.carbsReq > 0) {
         val infiniteTransition = rememberInfiniteTransition(label = "cobBlink")
         val alphaState = infiniteTransition.animateFloat(
             initialValue = 1f,
@@ -54,7 +59,6 @@ internal fun CobChip(
         color = if (hasValue) ElementType.COB.color().copy(alpha = 0.2f) else Color.Transparent,
         modifier = modifier
             .heightIn(min = AapsSpacing.chipHeight)
-            .then(alphaModifier)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -65,13 +69,19 @@ internal fun CobChip(
                     imageVector = ElementType.COB.icon(),
                     contentDescription = null,
                     tint = ElementType.COB.color(),
-                    modifier = Modifier.size(AapsSpacing.chipIconSize)
+                    modifier = Modifier
+                        .size(AapsSpacing.chipIconSize)
+                        .then(iconAlphaModifier)
                 )
             }
             Text(
                 text = state.text,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(start = if (showIcon) AapsSpacing.medium else 0.dp)
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(start = if (showIcon) AapsSpacing.medium else 0.dp)
+                    .basicMarquee()
             )
         }
     }
@@ -97,6 +107,6 @@ private fun CobChipZeroPreview() {
 @Composable
 private fun CobChipBlinkingPreview() {
     MaterialTheme {
-        CobChip(state = CobUiState(text = "12g\n45 required", carbsReq = 45, cobValue = 12.0))
+        CobChip(state = CobUiState(text = "12g 45req", carbsReq = 45, cobValue = 12.0))
     }
 }

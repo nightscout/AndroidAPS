@@ -39,7 +39,6 @@ class BucketedPointProvider(
 
     override fun getPoint(
         entry: LineCartesianLayerModel.Entry,
-        seriesIndex: Int,
         extraStore: ExtraStore
     ): LineCartesianLayer.Point? {
         val dataPoint = dataLookup[entry.x] ?: return inRangePoint // fallback

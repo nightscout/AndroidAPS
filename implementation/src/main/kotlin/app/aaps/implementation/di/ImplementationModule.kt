@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.LastBgData
@@ -48,6 +49,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
+import app.aaps.implementation.androidNotification.AlarmSoundPlayerImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
 import app.aaps.implementation.aps.DetermineBasalResult
 import app.aaps.implementation.db.ProcessedTbrEbDataImpl
@@ -153,6 +155,7 @@ class ImplementationModule {
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
         @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager
+        @Binds fun bindAlarmSoundPlayer(alarmSoundPlayerImpl: AlarmSoundPlayerImpl): AlarmSoundPlayer
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
         @Binds fun bindsProfileUtil(profileUtilImpl: ProfileUtilImpl): ProfileUtil
         @Binds fun bindsProfileRepository(profileRepositoryImpl: ProfileRepositoryImpl): ProfileRepository

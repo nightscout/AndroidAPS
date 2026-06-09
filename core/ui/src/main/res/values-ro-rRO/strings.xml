@@ -68,6 +68,7 @@
     <string name="configbuilder_insulin">Insulină</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="configbuilder_smoothing">Netezire</string>
+    <string name="configbuilder_calibration">Calibrare</string>
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_sensitivity">Detectare sensibilitate</string>
     <string name="configbuilder_aps">APS</string>
@@ -535,6 +536,7 @@
     <string name="uel_tt_ns_refresh">ACTUALIZARE NS TINTE TEMPORARE</string>
     <string name="uel_automation_removed">AUTOMATIZARE ȘTEARSĂ</string>
     <string name="uel_bg_removed">GLICEMIE ELIMINATĂ</string>
+    <string name="uel_calibration_removed">CALIBRARE ELIMINATĂ</string>
     <string name="uel_careportal_removed">CAREPORTAL ELIMINAT</string>
     <string name="uel_bolus_removed">BOLUS ELIMINAT</string>
     <string name="uel_carbs_removed">CARBOHIDRAȚI ELIMINAȚI</string>

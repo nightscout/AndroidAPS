@@ -58,13 +58,6 @@ interface ProfileRepository {
     suspend fun remove(index: Int): Result<Unit>
 
     /**
-     * Append a new default profile with auto-generated name.
-     *
-     * @return [Result.success] if added, or [Result.failure] propagating any storage exception.
-     */
-    suspend fun addNew(): Result<Unit>
-
-    /**
      * Append an existing [profile] to the store. Used by callers that already have a
      * fully constructed profile (e.g. Autotune, ProfileSwitch import, NS profile clone).
      *
@@ -77,6 +70,27 @@ interface ProfileRepository {
      * Non-suspend so it can be called from synchronous validator lambdas (e.g. setup wizard).
      */
     fun validateStructured(profile: SingleProfile): List<ProfileValidationError>
+
+    /**
+     * Check whether [profile]'s basal schedule is deliverable by the **currently active** pump
+     * (minimum/maximum rate and 30-min vs full-hour granularity) at the given [percentage].
+     *
+     * This is pump-dependent and **non-blocking**: it does not gate editing, storage or Nightscout
+     * sync (those use [validateStructured] / semantic validity). It drives the "won't run on the
+     * current pump" warning shown while editing/viewing, and the pre-emptive block in the activation
+     * dialog. Returns the pump-specific validation errors, or an empty list when compatible.
+     */
+    fun validatePumpCompatibility(profile: SingleProfile, percentage: Int = 100): List<ProfileValidationError>
+
+    /**
+     * Build an empty, **unpersisted** draft profile (one zero block per field, next free name).
+     *
+     * Used by the editor's "new profile" flow: the draft lives only in the editor until the user has
+     * made it valid and saves it via [add]. Because the editor refuses to save a semantically invalid
+     * profile, an incomplete profile never enters the store (so it can't silently block sync). Pure
+     * factory — does not mutate the repository.
+     */
+    fun newDraft(): SingleProfile
 
     /**
      * Build a [SingleProfile] from a [PureProfile] and desired [newName].
