@@ -3,8 +3,8 @@
     <!--    Dialogs-->
     <string name="confirmation">Потвърждение</string>
     <!--    Events-->
-    <string name="bolus_delivering">Пускане %1$.2fЕ</string>
-    <string name="bolus_delivered_so_far">%1$.2fЕ / %2$.2fЕ доставени</string>
+    <string name="bolus_delivering">Пускам %1$.2fЕ</string>
+    <string name="bolus_delivered_so_far">%1$.2fЕ / %2$.2fЕ пуснати</string>
     <string name="bolus_delivered_successfully">Болус от %1$.2fЕд доставен успешно</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Драйверът на помпата е променен.</string>
