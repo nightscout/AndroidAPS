@@ -11,7 +11,6 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
-import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.Scene
@@ -35,8 +34,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.insulin.InsulinManager
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -145,7 +142,6 @@ class DataHandlerMobile @Inject constructor(
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
-    private val insulinManager: InsulinManager,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
     private val uiInteraction: UiInteraction,
@@ -387,30 +383,6 @@ class DataHandlerMobile @Inject constructor(
                 rxCompletable {
                     aapsLogger.debug(LTag.WEAR, "ActionBolusConfirmed received $it from ${it.sourceNodeId}")
                     doBolus(it.insulin, it.carbs, null, 0, null)
-                }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
-        disposable += rxBus
-            .toObservable(EventData.ActionAfrezzaPreCheck::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable {
-                    aapsLogger.debug(LTag.WEAR, "ActionAfrezzaPreCheck received $it from ${it.sourceNodeId}")
-                    handleAfrezzaPreCheck(it)
-                }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
-        disposable += rxBus
-            .toObservable(EventData.ActionAfrezzaConfirmed::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable {
-                    aapsLogger.debug(LTag.WEAR, "ActionAfrezzaConfirmed received $it from ${it.sourceNodeId}")
-                    doAfrezzaBolus(it.units)
                 }
                     .doOnError(fabricPrivacy::logException)
                     .onErrorComplete()
@@ -1170,63 +1142,6 @@ class DataHandlerMobile @Inject constructor(
                 )
             )
         )
-    }
-
-    private suspend fun handleAfrezzaPreCheck(command: EventData.ActionAfrezzaPreCheck) {
-        val units = command.units
-        if (units !in listOf(4, 8, 12)) {
-            sendError("Invalid Afrezza cartridge: ${units}U")
-            return
-        }
-        // Find the Afrezza ICfg from InsulinManager
-        val afrezzaPeak = InsulinType.OREF_INHALED_AFREZZA.insulinPeakTime
-        val afrezzaIcfg = insulinManager.insulins.firstOrNull { it.insulinPeakTime == afrezzaPeak }
-            ?: insulinManager.insulins.firstOrNull { InsulinType.fromPeak(it.insulinPeakTime).isInhaled }
-        if (afrezzaIcfg == null) {
-            sendError(rh.gs(app.aaps.core.ui.R.string.afrezza_not_configured))
-            return
-        }
-        val message = "Afrezza: ${units}U"
-        rxBus.send(
-            EventMobileToWear(
-                EventData.ConfirmAction(
-                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionAfrezzaConfirmed(units),
-                    insulin = units.toDouble(),
-                )
-            )
-        )
-    }
-
-    private suspend fun doAfrezzaBolus(units: Int) {
-        val afrezzaPeak = InsulinType.OREF_INHALED_AFREZZA.insulinPeakTime
-        val afrezzaIcfg = insulinManager.insulins.firstOrNull { it.insulinPeakTime == afrezzaPeak }
-            ?: insulinManager.insulins.firstOrNull { InsulinType.fromPeak(it.insulinPeakTime).isInhaled }
-        if (afrezzaIcfg == null) {
-            sendError(rh.gs(app.aaps.core.ui.R.string.afrezza_not_configured))
-            return
-        }
-        val now = dateUtil.now()
-        val bolus = BS(
-            timestamp = now,
-            amount = units.toDouble(),
-            type = BS.Type.NORMAL,
-            notes = "Afrezza inhaled",
-            iCfg = afrezzaIcfg,
-            ids = IDs(pumpId = now)
-        )
-        persistenceLayer.insertOrUpdateBolus(
-            bolus = bolus,
-            action = Action.BOLUS,
-            source = Sources.Wear,
-            note = "Afrezza inhaled"
-        )
-        uel.log(
-            action = Action.BOLUS, source = Sources.Wear,
-            "Afrezza inhaled",
-            ValueWithUnit.Insulin(units.toDouble())
-        )
-        aapsLogger.info(LTag.WEAR, "Afrezza ${units}U logged via Wear with ICfg: ${afrezzaIcfg.insulinLabel}")
     }
 
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {

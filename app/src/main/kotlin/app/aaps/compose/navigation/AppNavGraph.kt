@@ -313,7 +313,7 @@ fun NavGraphBuilder.appNavGraph(
     composable(route = AppRoute.AfrezzaDialog.route) {
         AfrezzaDialogScreen(
             onNavigateBack = { navController.safePopBackStack() },
-            onShowMessage = { message ->
+            onShowMessage = { _ ->
                 // Toast or Snackbar handled by caller
             }
         )

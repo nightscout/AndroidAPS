@@ -89,11 +89,6 @@
     <string name="scene_stop">STOP</string>
     <string name="action_treatment_confirmation">Treatment Requested</string>
     <string name="action_bolus_confirmation">Bolus Requested</string>
-    <string name="action_afrezza">Afrezza</string>
-    <string name="action_afrezza_short">Afrz</string>
-    <string name="action_afrezza_confirmation">Afrezza Requested</string>
-    <string name="action_afrezza_select_dose">Select Cartridge</string>
-    <string name="action_afrezza_confirm_log">Log %1$dU?</string>
     <string name="action_wizard_confirmation">Calculation Requested</string>
     <string name="action_fill_confirmation">Fill Requested</string>
     <string name="action_ecarb_confirmation">Carbs Requested</string>
