@@ -17,7 +17,7 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    override suspend fun execute(params: JSONObject): NfcExecutionResult {
+    override suspend fun execute(params: JSONObject, tagName: String?): NfcExecutionResult {
         if (plugin.commandQueue.bolusInQueue()) {
             return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_another_bolus_in_queue))
         }
@@ -41,6 +41,16 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             plugin.aapsLogger.error(LTag.NFC, "bolus failed: ${result.comment}")
             return commandNotPossible()
         }
+        
+        uel.log(
+            action = if (isMeal) Action.TREATMENT else Action.BOLUS,
+            source = source,
+            note = tagName,
+            listValues = listOf(
+                ValueWithUnit.Insulin(bolus)
+            )
+        )
+
         plugin.setLastRemoteBolusTime(plugin.dateUtil.now())
         
         if (isMeal) {

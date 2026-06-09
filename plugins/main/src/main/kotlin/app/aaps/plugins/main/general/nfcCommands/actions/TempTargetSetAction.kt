@@ -14,7 +14,7 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 class TempTargetSetAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    override suspend fun execute(params: JSONObject): NfcExecutionResult {
+    override suspend fun execute(params: JSONObject, tagName: String?): NfcExecutionResult {
         val type = params.optString("type")
         val isMeal = type.equals("MEAL", ignoreCase = true)
         val isActivity = type.equals("ACTIVITY", ignoreCase = true)
@@ -52,9 +52,10 @@ class TempTargetSetAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
                 highTarget = plugin.profileUtil.convertToMgdl(tt, plugin.profileUtil.units),
             ),
             action = Action.TT,
-            source = Sources.NfcCommands,
-            note = null,
+            source = source,
+            note = tagName,
             listValues = listOf(
+                ValueWithUnit.TETTReason(reason),
                 ValueWithUnit.fromGlucoseUnit(tt, units),
                 ValueWithUnit.Minute(ttDuration),
             ),

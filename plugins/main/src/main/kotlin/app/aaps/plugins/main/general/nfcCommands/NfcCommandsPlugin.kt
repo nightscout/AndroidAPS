@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -81,6 +82,7 @@ class NfcCommandsPlugin
         val decimalFormatter: DecimalFormatter,
         val configBuilder: ConfigBuilder,
         val rxBus: RxBus,
+        val uel: UserEntryLogger,
     ) : PluginBaseWithPreferences(
             PluginDescription()
                 .mainType(PluginType.GENERAL)
@@ -96,6 +98,18 @@ class NfcCommandsPlugin
         ) {
         var lastRemoteBolusTime: Long = 0
             private set
+
+        private val actionStates = mutableMapOf<String, Any>()
+
+        fun setActionState(key: String, state: Any) {
+            actionStates[key] = state
+        }
+
+        fun getActionState(key: String): Any? = actionStates[key]
+
+        fun clearActionStates() {
+            actionStates.clear()
+        }
 
         fun setLastRemoteBolusTime(time: Long) {
             lastRemoteBolusTime = time
@@ -125,6 +139,7 @@ class NfcCommandsPlugin
         }
 
         fun prepareExecution(tagUid: String): NfcPrepareResult {
+            clearActionStates()
             if (!isEnabled()) {
                 return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
             }
@@ -140,10 +155,10 @@ class NfcCommandsPlugin
             )
         }
 
-        suspend fun executeCascade(commands: List<String>): NfcExecutionResult {
+        suspend fun executeCascade(commands: List<String>, tagName: String? = null): NfcExecutionResult {
             val results = mutableListOf<NfcExecutionResult>()
             for (command in commands) {
-                val result = executeCommand(command)
+                val result = executeCommand(command, tagName)
                 results += result
                 if (!result.success) break
             }
@@ -153,7 +168,8 @@ class NfcCommandsPlugin
         }
 
         suspend fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
-            val result = executeCascade(commands)
+            val result = executeCascade(commands, tagName)
+            clearActionStates()
             nfcTagStore.appendLogEntry(
                 NfcLogEntry(
                     timestamp = System.currentTimeMillis(),
@@ -195,7 +211,7 @@ class NfcCommandsPlugin
                 .tbrSettings()
                 ?.durationStep ?: 60
 
-        suspend fun executeCommand(command: String): NfcExecutionResult {
+        suspend fun executeCommand(command: String, tagName: String? = null): NfcExecutionResult {
             aapsLogger.debug(LTag.NFC, "Executing NFC command: $command")
             
             runCatching { JSONObject(command) }.onSuccess { json ->
@@ -203,37 +219,37 @@ class NfcCommandsPlugin
                 val code = runCatching { NfcCommandCode.valueOf(codeString) }.getOrNull()
                 val params = json.optJSONObject("params") ?: JSONObject()
                 if (code != null) {
-                    return routeAction(code, params)
+                    return routeAction(code, params, tagName)
                 }
             }
 
             return NfcExecutionResult(false, rh.gs(R.string.nfccommands_unknown_command))
         }
 
-        private suspend fun routeAction(code: NfcCommandCode, params: JSONObject): NfcExecutionResult {
+        private suspend fun routeAction(code: NfcCommandCode, params: JSONObject, tagName: String? = null): NfcExecutionResult {
             return requireRemoteCommands {
                 when (code) {
-                    NfcCommandCode.LOOP_STOP -> LoopStopAction(this).execute(params)
-                    NfcCommandCode.LOOP_RESUME -> LoopResumeAction(this).execute(params)
-                    NfcCommandCode.LOOP_SUSPEND -> LoopSuspendAction(this).execute(params)
-                    NfcCommandCode.LOOP_LGS -> LoopLgsAction(this).execute(params)
-                    NfcCommandCode.LOOP_CLOSED -> LoopClosedAction(this).execute(params)
-                    NfcCommandCode.AAPSCLIENT_RESTART -> AapsClientRestartAction(this).execute(params)
-                    NfcCommandCode.PUMP_CONNECT -> PumpConnectAction(this).execute(params)
-                    NfcCommandCode.PUMP_DISCONNECT -> PumpDisconnectAction(this).execute(params)
-                    NfcCommandCode.BASAL_STOP -> BasalCancelAction(this).execute(params)
-                    NfcCommandCode.BASAL_ABS -> TempBasalAbsoluteAction(this).execute(params)
-                    NfcCommandCode.BASAL_PCT -> TempBasalPercentAction(this).execute(params)
-                    NfcCommandCode.BOLUS -> BolusAction(this).execute(params)
-                    NfcCommandCode.EXTENDED_STOP -> ExtendedCancelAction(this).execute(params)
-                    NfcCommandCode.EXTENDED_SET -> ExtendedSetAction(this).execute(params)
-                    NfcCommandCode.PROFILE_SWITCH -> ProfileSwitchAction(this).execute(params)
-                    NfcCommandCode.TARGET_MEAL -> TempTargetSetAction(this).execute(params.put("type", "MEAL"))
-                    NfcCommandCode.TARGET_ACTIVITY -> TempTargetSetAction(this).execute(params.put("type", "ACTIVITY"))
-                    NfcCommandCode.TARGET_HYPO -> TempTargetSetAction(this).execute(params.put("type", "HYPO"))
-                    NfcCommandCode.TARGET_STOP -> TempTargetCancelAction(this).execute(params)
-                    NfcCommandCode.CARBS -> CarbsAction(this).execute(params)
-                    NfcCommandCode.RESTART -> RestartAction(this).execute(params)
+                    NfcCommandCode.LOOP_STOP -> LoopStopAction(this).execute(params, tagName)
+                    NfcCommandCode.LOOP_RESUME -> LoopResumeAction(this).execute(params, tagName)
+                    NfcCommandCode.LOOP_SUSPEND -> LoopSuspendAction(this).execute(params, tagName)
+                    NfcCommandCode.LOOP_LGS -> LoopLgsAction(this).execute(params, tagName)
+                    NfcCommandCode.LOOP_CLOSED -> LoopClosedAction(this).execute(params, tagName)
+                    NfcCommandCode.AAPSCLIENT_RESTART -> AapsClientRestartAction(this).execute(params, tagName)
+                    NfcCommandCode.PUMP_CONNECT -> PumpConnectAction(this).execute(params, tagName)
+                    NfcCommandCode.PUMP_DISCONNECT -> PumpDisconnectAction(this).execute(params, tagName)
+                    NfcCommandCode.BASAL_STOP -> BasalCancelAction(this).execute(params, tagName)
+                    NfcCommandCode.BASAL_ABS -> TempBasalAbsoluteAction(this).execute(params, tagName)
+                    NfcCommandCode.BASAL_PCT -> TempBasalPercentAction(this).execute(params, tagName)
+                    NfcCommandCode.BOLUS -> BolusAction(this).execute(params, tagName)
+                    NfcCommandCode.EXTENDED_STOP -> ExtendedCancelAction(this).execute(params, tagName)
+                    NfcCommandCode.EXTENDED_SET -> ExtendedSetAction(this).execute(params, tagName)
+                    NfcCommandCode.PROFILE_SWITCH -> ProfileSwitchAction(this).execute(params, tagName)
+                    NfcCommandCode.TARGET_MEAL -> TempTargetSetAction(this).execute(params.put("type", "MEAL"), tagName)
+                    NfcCommandCode.TARGET_ACTIVITY -> TempTargetSetAction(this).execute(params.put("type", "ACTIVITY"), tagName)
+                    NfcCommandCode.TARGET_HYPO -> TempTargetSetAction(this).execute(params.put("type", "HYPO"), tagName)
+                    NfcCommandCode.TARGET_STOP -> TempTargetCancelAction(this).execute(params, tagName)
+                    NfcCommandCode.CARBS -> CarbsAction(this).execute(params, tagName)
+                    NfcCommandCode.RESTART -> RestartAction(this).execute(params, tagName)
                 }
             }
         }
