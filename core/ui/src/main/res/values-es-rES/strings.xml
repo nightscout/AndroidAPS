@@ -620,6 +620,9 @@
     <string name="missing_profile_name">Falta el nombre del perfil</string>
     <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
     <string name="profile_activation_failed">Error al activar el perfil</string>
+    <string name="profile_switch_save_failed">No se pudo guardar el cambio de perfil. Por favor, inténtalo de nuevo</string>
+    <string name="profile_basal_not_compatible_with_pump">La tasa basal no es compatible con la bomba actual y no se puede activar. Reduce el porcentaje o ajusta la tasa basal</string>
+    <string name="profile_pump_incompatible_label">Límite de la bomba</string>
     <string name="error_in_ic_values">Error en los valores de Ratio de Hidratos (IC)</string>
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
     <string name="error_in_basal_values">Error en los valores de basal</string>
