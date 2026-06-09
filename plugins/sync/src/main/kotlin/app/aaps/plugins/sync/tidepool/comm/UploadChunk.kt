@@ -22,9 +22,11 @@ import app.aaps.plugins.sync.tidepool.elements.WizardElement
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
+import java.util.Calendar
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -41,6 +43,9 @@ class UploadChunk @Inject constructor(
 ) {
 
     private val maxUploadSize = T.days(7).msecs() // don't change this
+    private val basalSegmentStep = T.mins(1).msecs()
+    private val scheduledBasalGapTolerance = T.mins(2).msecs()
+    private val basalRateTolerance = 0.001
 
     fun getNext(session: Session?): String? {
         session ?: return null
@@ -129,20 +134,110 @@ class UploadChunk @Inject constructor(
 
     private fun fromTemporaryBasals(tbrList: List<TB>, start: Long, end: Long): List<BasalElement> {
         val results = LinkedList<BasalElement>()
+        val calendar = Calendar.getInstance()
         for (tbr in tbrList) {
-            if (tbr.timestamp in start..end)
-                profileFunction.getProfile(tbr.timestamp)?.let {
-                    results.add(BasalElement(tbr, it, dateUtil))
+            var cursor = max(tbr.timestamp, start)
+            val tbrEnd = min(tbr.timestamp + tbr.duration, end)
+            while (cursor < tbrEnd) {
+                val profile = profileFunction.getProfile(cursor)
+                if (profile == null) {
+                    cursor = min(cursor + basalSegmentStep, tbrEnd)
+                    continue
                 }
+
+                val scheduledRate = profile.getBasalTimeFromMidnight(secondsFromMidnight(calendar, cursor))
+                var segmentEnd = min(cursor + basalSegmentStep, tbrEnd)
+
+                while (segmentEnd < tbrEnd) {
+                    val nextProfile = profileFunction.getProfile(segmentEnd) ?: break
+                    val nextScheduledRate = nextProfile.getBasalTimeFromMidnight(secondsFromMidnight(calendar, segmentEnd))
+                    if (abs(nextScheduledRate - scheduledRate) > basalRateTolerance)
+                        break
+                    segmentEnd = min(segmentEnd + basalSegmentStep, tbrEnd)
+                }
+
+                if (segmentEnd > cursor)
+                    results.add(BasalElement(tbr, cursor, segmentEnd - cursor, profile, dateUtil))
+                cursor = segmentEnd
+            }
         }
         return results
     }
 
+    private fun secondsFromMidnight(calendar: Calendar, timestamp: Long): Int {
+        calendar.timeInMillis = timestamp
+        return calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND)
+    }
+
+    private fun activeTemporaryBasalEnd(tbrList: List<TB>, timestamp: Long): Long? {
+        for (tbr in tbrList) {
+            val tbrEnd = tbr.timestamp + tbr.duration
+            if (tbr.timestamp <= timestamp && tbrEnd > timestamp)
+                return tbrEnd
+        }
+        return null
+    }
+
+    private fun nextTemporaryBasalStart(tbrList: List<TB>, timestamp: Long, end: Long): Long {
+        var next = end
+        for (tbr in tbrList) {
+            if (tbr.timestamp > timestamp && tbr.timestamp < next)
+                next = tbr.timestamp
+        }
+        return next
+    }
+
+    private fun fromScheduledBasals(tbrList: List<TB>, start: Long, end: Long): List<BasalElement> {
+        val results = LinkedList<BasalElement>()
+        val sortedTbrs = tbrList.sortedBy { it.timestamp }
+        val calendar = Calendar.getInstance()
+        var cursor = start
+
+        while (cursor < end) {
+            val tbrEnd = activeTemporaryBasalEnd(sortedTbrs, cursor)
+            if (tbrEnd != null) {
+                cursor = min(tbrEnd, end)
+                continue
+            }
+
+            val profile = profileFunction.getProfile(cursor)
+            if (profile == null) {
+                cursor = min(cursor + basalSegmentStep, end)
+                continue
+            }
+
+            val rate = profile.getBasalTimeFromMidnight(secondsFromMidnight(calendar, cursor))
+            val nextTbrStart = nextTemporaryBasalStart(sortedTbrs, cursor, end)
+            if (nextTbrStart < end && nextTbrStart - cursor <= scheduledBasalGapTolerance) {
+                cursor = nextTbrStart
+                continue
+            }
+            var segmentEnd = min(cursor + basalSegmentStep, nextTbrStart)
+
+            while (segmentEnd < nextTbrStart) {
+                val nextProfile = profileFunction.getProfile(segmentEnd) ?: break
+                val nextRate = nextProfile.getBasalTimeFromMidnight(secondsFromMidnight(calendar, segmentEnd))
+                if (abs(nextRate - rate) > basalRateTolerance)
+                    break
+                segmentEnd = min(segmentEnd + basalSegmentStep, nextTbrStart)
+            }
+
+            if (segmentEnd > cursor)
+                results.add(BasalElement(cursor, segmentEnd - cursor, rate, dateUtil))
+            cursor = segmentEnd
+        }
+
+        return results
+    }
+
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val temporaryBasals = persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(start, end, true)
-        val selection = fromTemporaryBasals(temporaryBasals, start, end)
+        // Include TBRs that started before this upload window but are still active at start.
+        val temporaryBasals = persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(max(0L, start - T.days(1).msecs()), end, true)
+        val selection = LinkedList<BasalElement>()
+        selection.addAll(fromScheduledBasals(temporaryBasals, start, end))
+        selection.addAll(fromTemporaryBasals(temporaryBasals, start, end))
         if (selection.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
+            rxBus.send(EventTidepoolStatus("${selection.size} basal records selected for upload"))
         return selection
     }
 
