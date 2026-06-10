@@ -153,9 +153,9 @@ class BolusWizard @Inject constructor(
     private var useAlarm = false
     var notes: String = ""
     private var carbTime: Int = 0
-    private var quickWizard: Boolean = true
     var usePercentage: Boolean = false
     var positiveIOBOnly: Boolean = false
+    private var source: Sources = Sources.WizardDialog
 
     suspend fun doCalc(
         profile: Profile,
@@ -178,8 +178,8 @@ class BolusWizard @Inject constructor(
         carbTime: Int = 0,
         usePercentage: Boolean = false,
         totalPercentage: Double = 100.0,
-        quickWizard: Boolean = false,
-        positiveIOBOnly: Boolean = false
+        positiveIOBOnly: Boolean = false,
+        source: Sources = Sources.WizardDialog
     ): BolusWizard {
 
         this.profile = profile
@@ -200,10 +200,10 @@ class BolusWizard @Inject constructor(
         this.useAlarm = useAlarm
         this.notes = notes
         this.carbTime = carbTime
-        this.quickWizard = quickWizard
         this.usePercentage = usePercentage
         this.totalPercentage = totalPercentage
         this.positiveIOBOnly = positiveIOBOnly
+        this.source = source
 
         // Insulin from BG
         sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdlForCarbs(dateUtil.now(), "BolusWizard", config, processedDeviceStatusData))
@@ -485,7 +485,7 @@ class BolusWizard @Inject constructor(
                 notes = this@BolusWizard.notes
                 uel.log(
                     action = Action.BOLUS_ADVISOR,
-                    source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                    source = source,
                     note = notes,
                     listValues = listOf(
                         ValueWithUnit.TEType(eventType),
@@ -571,7 +571,7 @@ class BolusWizard @Inject constructor(
                         }
                         uel.log(
                             action = action,
-                            source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                            source = source,
                             note = notes,
                             listValues = listOfNotNull(
                                 ValueWithUnit.TEType(eventType),
@@ -784,7 +784,6 @@ class BolusWizard @Inject constructor(
                         carbs == 0.0                   -> Action.BOLUS
                         else                           -> Action.TREATMENT
                     }
-                    val source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog
                     uel.log(
                         action = action,
                         source = source,
@@ -870,7 +869,6 @@ class BolusWizard @Inject constructor(
             carbTime = 0
             bolusCalculatorResult = createBolusCalculatorResult()
             notes = this@BolusWizard.notes
-            val source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog
             uel.log(
                 action = Action.BOLUS_ADVISOR,
                 source = source,

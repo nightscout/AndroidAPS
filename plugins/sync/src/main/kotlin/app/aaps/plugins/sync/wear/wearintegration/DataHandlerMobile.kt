@@ -905,7 +905,8 @@ class DataHandlerMobile @Inject constructor(
             useSuperBolus = false,
             useTT = useTTPref,
             useTrend = useTrendPref,
-            useAlarm = false
+            useAlarm = false,
+            source = Sources.Wear
         )
         val insulinAfterConstraints = bolusWizard.insulinAfterConstraints
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
