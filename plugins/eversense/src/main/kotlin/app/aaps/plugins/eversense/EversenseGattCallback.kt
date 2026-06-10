@@ -64,7 +64,7 @@ class EversenseGattCallback(
     // FIX 1: Dedicated BLE executor for callbacks; separate network executor for HTTP calls
     // so that network operations in authV2flow() cannot block BLE processing.
     private var bleExecutor = Executors.newSingleThreadExecutor()
-    private val networkExecutor = Executors.newSingleThreadExecutor()
+    private var networkExecutor = Executors.newSingleThreadExecutor()
 
     private val handler = Handler(Looper.getMainLooper())
     private var bluetoothGatt: BluetoothGatt? = null
@@ -129,6 +129,7 @@ class EversenseGattCallback(
     // Calling only disconnect() without close() leaks the underlying GATT client resource.
     @SuppressLint("MissingPermission")
     fun disconnect() {
+        handler.removeCallbacksAndMessages(null)
         bluetoothGatt?.disconnect()
         bluetoothGatt?.close()
         bluetoothGatt = null
@@ -137,12 +138,15 @@ class EversenseGattCallback(
     }
     @SuppressLint("MissingPermission")
     fun cleanUp() {
+        handler.removeCallbacksAndMessages(null)
         bluetoothGatt?.disconnect()
         bluetoothGatt?.close()
         bluetoothGatt = null
         connected = false
         bleExecutor.shutdownNow()
         bleExecutor = Executors.newSingleThreadExecutor()
+        networkExecutor.shutdownNow()
+        networkExecutor = Executors.newSingleThreadExecutor()
         EversenseLogger.info(TAG, "GATT cleaned up before reconnect")
     }
     @SuppressLint("MissingPermission")
@@ -508,8 +512,14 @@ class EversenseGattCallback(
         currentPacket.set(packet)
 
         EversenseLogger.debug(TAG, "Writing data: ${requestData.toHexString()}")
-        requestCharacteristic.setValue(requestData)
-        gatt.writeCharacteristic(requestCharacteristic)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            gatt.writeCharacteristic(requestCharacteristic, requestData, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT)
+        } else {
+            @Suppress("DEPRECATION")
+            requestCharacteristic.setValue(requestData)
+            @Suppress("DEPRECATION")
+            gatt.writeCharacteristic(requestCharacteristic)
+        }
 
         synchronized(packet) {
             try {

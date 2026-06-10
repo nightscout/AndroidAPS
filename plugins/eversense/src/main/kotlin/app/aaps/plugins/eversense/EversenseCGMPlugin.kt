@@ -25,6 +25,7 @@ import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.util.EversenseScanner
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
+import java.util.concurrent.CopyOnWriteArrayList
 
 class EversenseCGMPlugin {
 
@@ -39,7 +40,8 @@ class EversenseCGMPlugin {
     private val connectionLock = Any()
 
     private var scanner: EversenseScanner? = null
-    var watchers: List<EversenseWatcher> = listOf()
+    // Thread-safe: watchers are added/removed from main thread but iterated from bleExecutor
+    var watchers: MutableList<EversenseWatcher> = CopyOnWriteArrayList()
     // Credentials set by AAPS layer before any login attempt
     var username: String = ""
     var password: String = ""
@@ -57,11 +59,11 @@ class EversenseCGMPlugin {
 
 
     fun addWatcher(watcher: EversenseWatcher) {
-        this.watchers += watcher
+        if (!this.watchers.contains(watcher)) this.watchers.add(watcher)
     }
 
     fun removeWatcher(watcher: EversenseWatcher) {
-        this.watchers -= watcher
+        this.watchers.remove(watcher)
     }
 
     fun isConnected(): Boolean = gattCallback?.isConnected() ?: false
