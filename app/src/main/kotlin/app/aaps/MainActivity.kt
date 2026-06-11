@@ -463,6 +463,20 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .setTitle("APP动态密码验证")
             .setView(passwordInput)
             .setCancelable(false)
+            // 三个按钮：忘记密码、退出、验证
+            .setNeutralButton("忘记密码") { _, _ ->
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("确认重置密钥")
+                    .setMessage("重置会清空现有绑定，需要重新复制密钥绑定验证器，确定继续？")
+                    .setPositiveButton("确认重置") { _, _ ->
+                        resetTotpSecret()
+                    }
+                    .setNegativeButton("取消", null)
+                    .show()
+            }
+            .setNegativeButton("退出") { _, _ ->
+                finish()
+            }
             .setPositiveButton("验证") { dialog, _ ->
                 val inputPwd = passwordInput.text.toString()
                 val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
@@ -474,25 +488,10 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     dialog.dismiss()
                     ToastUtils.okToast(this, "验证成功")
                 } else {
-                    ToastUtils.errorToast(this, "动态密码错误")
+                    ToastUtils.errorToast(this, "动态密码错误，请核对后重试")
                     dialog.dismiss()
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle("密码错误")
-                        .setMessage("是否忘记了动态密码？可以重置密钥重新设置")
-                        .setPositiveButton("重试") { _, _ ->
-                            showPasswordVerificationDialog()
-                        }
-                        .setNegativeButton("忘记密码，重置密钥") { _, _ ->
-                            resetTotpSecret()
-                        }
-                        .setNeutralButton("退出") { _, _ ->
-                            finish()
-                        }
-                        .show()
+                    showPasswordVerificationDialog()
                 }
-            }
-            .setNegativeButton("退出") { _, _ ->
-                finish()
             }
             .show()
     }
