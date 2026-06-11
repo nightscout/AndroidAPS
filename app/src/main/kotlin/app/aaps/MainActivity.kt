@@ -464,11 +464,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .setView(passwordInput)
             .setCancelable(false)
             // 三个按钮：忘记密码、退出、验证
-            .setNeutralButton("忘记密码") { _, _ ->
+            .setNeutralButton("获取密钥") { _, _ ->
                 MaterialAlertDialogBuilder(this)
-                    .setTitle("确认重置密钥")
-                    .setMessage("重置会清空现有绑定，需要重新复制密钥绑定验证器，确定继续？")
-                    .setPositiveButton("确认重置") { _, _ ->
+                    .setTitle("确认获取密钥")
+                    .setMessage("获取会清空现有绑定，复制密钥绑定验证器，确定继续？")
+                    .setPositiveButton("确认获取") { _, _ ->
                         resetTotpSecret()
                     }
                     .setNegativeButton("取消", null)
