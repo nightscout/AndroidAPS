@@ -3,7 +3,6 @@ package app.aaps
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -114,6 +113,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
+    // 15天过期毫秒常量
+    private val EXPIRE_15DAY_MS = 15L * 24 * 60 * 60 * 1000
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
@@ -128,25 +130,38 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         initAllComponents(savedInstanceState)
 
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        var verified = prefs.getBoolean("password_verified", false)
+        val verified = prefs.getBoolean("password_verified", false)
         val hasTotpSecret = prefs.getString("totp_secret", null) != null
+        val lastVerifyTs = prefs.getLong("last_verify_time", 0L)
+        val nowTs = System.currentTimeMillis()
+        val isExpired = lastVerifyTs > 0 && (nowTs - lastVerifyTs >= EXPIRE_15DAY_MS)
 
+        // 修复脏数据
         if (!hasTotpSecret && verified) {
-            prefs.edit().putBoolean("password_verified", false).apply()
-            verified = false
+            prefs.edit()
+                .putBoolean("password_verified", false)
+                .remove("last_verify_time")
+                .apply()
         }
 
-        if (!verified) {
+        // 未验证 或 15天过期，强制弹窗拦截全部APP流程
+        if (!verified || isExpired) {
             Handler(Looper.getMainLooper()).postDelayed({
                                                             if (initTotpSecretIfNeeded()) {
                                                                 showPasswordVerificationDialog()
                                                             }
                                                         }, 200)
+            return
         }
+
+        // 验证有效，启动APP主页+设置向导
+        Handler(Looper.getMainLooper()).postDelayed({
+                                                        start()
+                                                    }, 200)
     }
 
     /**
-     * 纯Kotlin TOTP工具类，无外部依赖
+     * 原生TOTP工具，无第三方依赖
      */
     private object TotpUtils {
         private const val DEFAULT_SECRET_SIZE = 20
@@ -191,9 +206,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             for (offset in -tolerance..tolerance) {
                 val time = currentTime + offset * DEFAULT_TIME_STEP
                 val expectedCode = generateTotp(secretBase32, time)
-                if (expectedCode == inputCode) {
-                    return true
-                }
+                if (expectedCode == inputCode) return true
             }
             return false
         }
@@ -227,7 +240,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             var n = 0
             var bits = 0
             for (c in cleanEncoded) {
-                val value = BASE32_MAP[c] ?: throw IllegalArgumentException("无效的Base32字符: $c")
+                val value = BASE32_MAP[c] ?: throw IllegalArgumentException("无效Base32字符")
                 n = n shl 5 or value
                 bits += 5
                 if (bits >= 8) {
@@ -241,13 +254,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
-     * 初始化TOTP密钥
+     * 首次生成密钥弹窗
      */
     private fun initTotpSecretIfNeeded(): Boolean {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        if (prefs.getString("totp_secret", null) != null) {
-            return true
-        }
+        if (prefs.getString("totp_secret", null) != null) return true
 
         val secretBase32 = TotpUtils.generateSecret()
         prefs.edit().putString("totp_secret", secretBase32).apply()
@@ -257,63 +268,122 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用请先设置动态密钥：\n1. 截图32位密钥\n2. 添加客服，发送密钥截图\n3. 获取6位动态密码"
+                text = "首次使用设置动态密码：\n1.打开谷歌/微软验证器\n2.手动输入下方密钥添加账户\n3.输入6位验证码完成绑定"
                 textSize = 14f
             })
 
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
                 textSize = 18f
-                setTextColor(Color.RED)
+                setTextColor(Color.BLUE)
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "请输入申请的6位动态密码"
+                hint = "输入验证器6位动态密码"
                 maxLines = 1
             })
         }
-//首次使用：设置动态密码
-//1. 打开谷歌/微软验证器
-//2. 手动添加账户，输入密钥
-//3. 输入当前6位动态密码
+
         MaterialAlertDialogBuilder(this)
-            .setTitle("输入动态密码")
+            .setTitle("设置动态密码")
             .setView(dialogView)
             .setCancelable(false)
             .setPositiveButton("确认") { dialog, _ ->
                 val inputCode = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
-                val secret = getSharedPreferences("AppLock", Context.MODE_PRIVATE).getString("totp_secret", null) ?: return@setPositiveButton
+                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
                 if (TotpUtils.verifyTotp(secret, inputCode)) {
-                    ToastUtils.okToast(this, "动态密码输入成功！")
+                    ToastUtils.okToast(this, "动态密码设置成功！15天后需要重新验证")
+                    // 首次验证写入时间戳
+                    prefs.edit()
+                        .putBoolean("password_verified", true)
+                        .putLong("last_verify_time", System.currentTimeMillis())
+                        .apply()
                     showPasswordVerificationDialog()
                 } else {
-                    ToastUtils.errorToast(this, "密码错误，请重新输入")
-                    getSharedPreferences("AppLock", Context.MODE_PRIVATE).edit().remove("totp_secret").apply()
+                    ToastUtils.errorToast(this, "密码错误，重新生成密钥")
+                    prefs.edit().remove("totp_secret").apply()
                     initTotpSecretIfNeeded()
                 }
             }
-            .setNegativeButton("退出") { _, _ ->
-                finish()
-            }
+            .setNegativeButton("退出") { _, _ -> finish() }
             .show()
 
         return false
     }
 
     /**
-     * 重置TOTP密钥（找回密码用）
+     * 重置密钥，清空验证状态与过期时间
      */
     private fun resetTotpSecret() {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         prefs.edit()
             .remove("totp_secret")
             .remove("password_verified")
+            .remove("last_verify_time")
             .apply()
         initTotpSecretIfNeeded()
+    }
+
+    /**
+     * 全局置顶密码弹窗（带忘记密码重置）
+     */
+    private fun showPasswordVerificationDialog() {
+        val maskView = View(this)
+        maskView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+        maskView.setBackgroundColor(Color.parseColor("#CC000000"))
+        maskView.isClickable = true
+        val rootView = window.decorView.findViewById<FrameLayout>(android.R.id.content)
+        rootView.addView(maskView)
+
+        val passwordInput = EditText(this)
+        passwordInput.inputType = InputType.TYPE_CLASS_NUMBER
+        passwordInput.hint = "请输入验证器生成的6位动态密码"
+        val padding = dp2px(16)
+        passwordInput.setPadding(padding, padding, padding, padding)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("APP动态密码验证")
+            .setView(passwordInput)
+            .setCancelable(false)
+            .setNeutralButton("忘记密码") { _, _ ->
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("确认重置密钥")
+                    .setMessage("重置将清除现有绑定，需重新复制密钥绑定验证器，确定继续？")
+                    .setPositiveButton("确认重置") { _, _ -> resetTotpSecret() }
+                    .setNegativeButton("取消", null)
+                    .show()
+            }
+            .setNegativeButton("退出") { _, _ -> finish() }
+            .setPositiveButton("验证") { dialog, _ ->
+                val inputPwd = passwordInput.text.toString()
+                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
+
+                if (TotpUtils.verifyTotp(secret, inputPwd)) {
+                    // 验证成功刷新过期时间
+                    prefs.edit()
+                        .putBoolean("password_verified", true)
+                        .putLong("last_verify_time", System.currentTimeMillis())
+                        .apply()
+                    rootView.removeView(maskView)
+                    dialog.dismiss()
+                    ToastUtils.okToast(this, "验证成功，15天后再次校验")
+                    Handler(Looper.getMainLooper()).post { start() }
+                } else {
+                    ToastUtils.errorToast(this, "动态密码错误，请重试")
+                    dialog.dismiss()
+                    showPasswordVerificationDialog()
+                }
+            }
+            .show()
+    }
+
+    private fun dp2px(dp: Int): Int {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics).toInt()
     }
 
     private fun initAllComponents(savedInstanceState: Bundle?) {
@@ -341,8 +411,17 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ start() }, fabricPrivacy::logException)
 
+        // 返回键加固：未验证/过期直接退出，无法绕过弹窗
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                val verified = prefs.getBoolean("password_verified", false)
+                val lastTs = prefs.getLong("last_verify_time",0)
+                val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= EXPIRE_15DAY_MS)
+                if (!verified || expired) {
+                    finish()
+                    return
+                }
                 if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
                     binding.mainDrawerLayout.closeDrawers()
                 else if (menuOpen)
@@ -363,27 +442,27 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                 when (menuItem.itemId) {
-                    R.id.nav_preferences        -> {
+                    R.id.nav_preferences -> {
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
                             startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         })
                         true
                     }
-                    R.id.nav_historybrowser     -> {
+                    R.id.nav_historybrowser -> {
                         startActivity(Intent(this@MainActivity, HistoryBrowseActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    R.id.nav_treatments         -> {
+                    R.id.nav_treatments -> {
                         startActivity(Intent(this@MainActivity, TreatmentsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    R.id.nav_setupwizard        -> {
+                    R.id.nav_setupwizard -> {
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
                             startActivity(Intent(this@MainActivity, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         })
                         true
                     }
-                    R.id.nav_about              -> {
+                    R.id.nav_about -> {
                         var message = "Build: ${config.BUILD_VERSION}\n"
                         message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                         message += "${rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(app.aaps.plugins.main.R.string.not_available_full)}"
@@ -404,10 +483,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             .setNegativeButton("重置动态密码") { _, _ ->
                                 MaterialAlertDialogBuilder(this@MainActivity)
                                     .setTitle("确认重置")
-                                    .setMessage("重置后将清除当前动态密码，需要重新设置，是否继续？")
-                                    .setPositiveButton("确认") { _, _ ->
-                                        resetTotpSecret()
-                                    }
+                                    .setMessage("重置后清除当前动态密码，需要重新设置，是否继续？")
+                                    .setPositiveButton("确认") { _, _ -> resetTotpSecret() }
                                     .setNegativeButton("取消", null)
                                     .show()
                             }
@@ -417,7 +494,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             }
                         true
                     }
-                    R.id.nav_exit               -> {
+                    R.id.nav_exit -> {
                         finish()
                         configBuilder.exitApp("Menu", Sources.Aaps, false)
                         true
@@ -429,75 +506,19 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         })
                         true
                     }
-                    R.id.nav_defaultprofile     -> {
+                    R.id.nav_defaultprofile -> {
                         startActivity(Intent(this@MainActivity, ProfileHelperActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    R.id.nav_stats              -> {
+                    R.id.nav_stats -> {
                         startActivity(Intent(this@MainActivity, StatsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    else                        ->
-                        actionBarDrawerToggle?.onOptionsItemSelected(menuItem)!!
+                    else -> actionBarDrawerToggle?.onOptionsItemSelected(menuItem)!!
                 }
         }
         mainMenuProvider?.let { addMenuProvider(it) }
         if (config.appInitialized) setupViews()
-    }
-
-    private fun showPasswordVerificationDialog() {
-        val maskView = View(this)
-        maskView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        maskView.setBackgroundColor(Color.parseColor("#CC000000"))
-        maskView.isClickable = true
-        val rootView = window.decorView.findViewById<FrameLayout>(android.R.id.content)
-        rootView.addView(maskView)
-
-        val passwordInput = EditText(this)
-        passwordInput.inputType = InputType.TYPE_CLASS_NUMBER
-        passwordInput.hint = "请输入验证器生成的6位动态密码"
-        val padding = dp2px(16)
-        passwordInput.setPadding(padding, padding, padding, padding)
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle("APP动态密码验证")
-            .setView(passwordInput)
-            .setCancelable(false)
-            // 三个按钮：忘记密码、退出、验证
-            .setNeutralButton("获取密钥") { _, _ ->
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("确认获取密钥")
-                    .setMessage("获取会清空现有绑定，复制密钥绑定验证器，确定继续？")
-                    .setPositiveButton("确认获取") { _, _ ->
-                        resetTotpSecret()
-                    }
-                    .setNegativeButton("取消", null)
-                    .show()
-            }
-            .setNegativeButton("退出") { _, _ ->
-                finish()
-            }
-            .setPositiveButton("验证") { dialog, _ ->
-                val inputPwd = passwordInput.text.toString()
-                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
-
-                if (TotpUtils.verifyTotp(secret, inputPwd)) {
-                    prefs.edit().putBoolean("password_verified", true).apply()
-                    rootView.removeView(maskView)
-                    dialog.dismiss()
-                    ToastUtils.okToast(this, "验证成功")
-                } else {
-                    ToastUtils.errorToast(this, "动态密码错误，请核对后重试")
-                    dialog.dismiss()
-                    showPasswordVerificationDialog()
-                }
-            }
-            .show()
-    }
-
-    private fun dp2px(dp: Int): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics).toInt()
     }
 
     private fun start() {
@@ -571,8 +592,12 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     override fun onResume() {
         super.onResume()
-        if (config.appInitialized) binding.splash.visibility = View.GONE
-        if (!isProtectionCheckActive) {
+        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        val verified = prefs.getBoolean("password_verified", false)
+        val lastTs = prefs.getLong("last_verify_time",0)
+        val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= EXPIRE_15DAY_MS)
+        if (config.appInitialized && verified && !expired) binding.splash.visibility = View.GONE
+        if (!isProtectionCheckActive && verified && !expired) {
             isProtectionCheckActive = true
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
                                             UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } },
@@ -666,7 +691,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
-        val remote = config.REMOTE.lowercase(Locale.getDefault()).replace("https://","").replace("http://","").replace(".git","").replace(".com/",":").replace(".org/",":").replace(".net/",":")
+        val remote = config.REMOTE.lowercase(Locale.getDefault()).replace("https://", "").replace("http://", "").replace(".git", "").replace(".com/", ":").replace(".org/", ":").replace(".net/", ":")
         fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
         fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
