@@ -75,6 +75,7 @@ enum class ElementType(
     PUMP(category = ElementCategory.SYSTEM, visibility = ElementVisibility { !it.isClient }),
     SETTINGS(category = ElementCategory.SYSTEM, protection = ProtectionCheck.Protection.PREFERENCES),
     QUICK_LAUNCH_CONFIG(category = ElementCategory.SYSTEM, searchable = true),
+    NFC(category = ElementCategory.SYSTEM),
 
     // Navigation screens
     TREATMENTS(category = ElementCategory.NAVIGATION, searchable = true),

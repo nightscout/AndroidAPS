@@ -236,6 +236,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.NSClient            -> ElementType.AAPS.color()
         Sources.NSClientSource      -> ElementType.AAPS.color()
         Sources.NSProfile           -> ElementType.PROFILE_MANAGEMENT.color()
+        Sources.NfcCommands         -> ElementType.NFC.color()
         Sources.Note                -> ElementType.NOTE.color()
         Sources.NotificationReader  -> ElementType.CGM_DEX.color()
         Sources.Objectives          -> ElementType.AAPS.color()

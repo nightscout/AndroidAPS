@@ -81,7 +81,7 @@
              TAG_DISCOVERED is a fallback for blank tags, finished Libre sensors,
              and any other tag whose UID is registered in My Tags. -->
         <activity
-            android:name="app.aaps.plugins.main.general.nfcCommands.NfcControlActivity"
+            android:name="app.aaps.plugins.sync.nfcCommands.NfcControlActivity"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>

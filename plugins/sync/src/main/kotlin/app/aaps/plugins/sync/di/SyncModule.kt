@@ -38,7 +38,8 @@ import dagger.hilt.components.SingletonComponent
     includes = [
         SyncModule.Binding::class,
         SyncModule.Provide::class,
-        SMSCommunicatorModule::class
+        SMSCommunicatorModule::class,
+        NfcCommandsModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)

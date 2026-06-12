@@ -12,7 +12,6 @@ import dagger.hilt.components.SingletonComponent
 @Module(
     includes = [
         PluginsModule.Bindings::class,
-        NFCCommandsModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)

@@ -490,6 +490,8 @@
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
     <string name="automation_management_desc">Create rules that run actions automatically based on triggers</string>
+    <string name="nfccommands">NFC Commands</string>
+    <string name="description_nfc_communicator">Trigger AAPS commands by scanning an NFC tag.</string>
     <string name="settingsexport">Settings Export</string>
     <string name="custom">Custom</string>
     <string name="preset_settings">Preset Settings</string>

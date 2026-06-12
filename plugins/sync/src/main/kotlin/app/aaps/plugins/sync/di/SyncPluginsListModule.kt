@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.di.AllConfigs
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.sync.garmin.GarminPlugin
+import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
@@ -76,4 +77,10 @@ abstract class SyncPluginsListModule {
     @IntoMap
     @IntKey(370)
     abstract fun bindGarminPlugin(plugin: GarminPlugin): PluginBase
+
+    @Binds
+    @NotNSClient
+    @IntoMap
+    @IntKey(380)
+    abstract fun bindNfcCommandsPlugin(plugin: NfcCommandsPlugin): PluginBase
 }

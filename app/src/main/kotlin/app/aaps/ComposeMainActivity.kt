@@ -139,6 +139,7 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.sync.nfcCommands.NfcForegroundDispatch
 import app.aaps.ui.compose.careDialog.CareportalEventType
 import app.aaps.ui.compose.clientcontrol.ClientControlPendingDialog
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
@@ -220,7 +221,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
-    private val nfcForegroundDispatch by lazy { app.aaps.plugins.main.general.nfcCommands.NfcForegroundDispatch(this, preferences) }
+    private val nfcForegroundDispatch by lazy { NfcForegroundDispatch(this, preferences) }
 
     // ViewModels (Hilt-provided via @HiltViewModel)
     private val mainViewModel: MainViewModel by viewModels()
@@ -1173,6 +1174,7 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.QUICK_WIZARD,
             ElementType.SCENE,
             ElementType.AUTOMATION,
+            ElementType.NFC,
             ElementType.COB,
             ElementType.SENSITIVITY,
             ElementType.USER_ENTRY,
