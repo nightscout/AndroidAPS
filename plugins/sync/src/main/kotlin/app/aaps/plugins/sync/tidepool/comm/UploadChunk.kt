@@ -146,15 +146,7 @@ class UploadChunk @Inject constructor(
                 }
 
                 val scheduledRate = profile.getBasalTimeFromMidnight(secondsFromMidnight(calendar, cursor))
-                var segmentEnd = min(cursor + basalSegmentStep, tbrEnd)
-
-                while (segmentEnd < tbrEnd) {
-                    val nextProfile = profileFunction.getProfile(segmentEnd) ?: break
-                    val nextScheduledRate = nextProfile.getBasalTimeFromMidnight(secondsFromMidnight(calendar, segmentEnd))
-                    if (abs(nextScheduledRate - scheduledRate) > basalRateTolerance)
-                        break
-                    segmentEnd = min(segmentEnd + basalSegmentStep, tbrEnd)
-                }
+                val segmentEnd = findTemporaryBasalSegmentEnd(calendar, cursor, tbrEnd, scheduledRate)
 
                 if (segmentEnd > cursor)
                     results.add(BasalElement(tbr, cursor, segmentEnd - cursor, profile, dateUtil))
@@ -162,6 +154,18 @@ class UploadChunk @Inject constructor(
             }
         }
         return results
+    }
+
+    private fun findTemporaryBasalSegmentEnd(calendar: Calendar, cursor: Long, tbrEnd: Long, scheduledRate: Double): Long {
+        var segmentEnd = min(cursor + basalSegmentStep, tbrEnd)
+        while (segmentEnd < tbrEnd) {
+            val nextProfile = profileFunction.getProfile(segmentEnd) ?: break
+            val nextScheduledRate = nextProfile.getBasalTimeFromMidnight(secondsFromMidnight(calendar, segmentEnd))
+            if (abs(nextScheduledRate - scheduledRate) > basalRateTolerance)
+                break
+            segmentEnd = min(segmentEnd + basalSegmentStep, tbrEnd)
+        }
+        return segmentEnd
     }
 
     private fun secondsFromMidnight(calendar: Calendar, timestamp: Long): Int {
