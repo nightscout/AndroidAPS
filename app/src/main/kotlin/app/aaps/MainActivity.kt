@@ -114,7 +114,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private var mainMenuProvider: MenuProvider? = null
 
     // 15天过期毫秒常量
-    private val EXPIRE_15DAY_MS = 15L * 24 * 60 * 60 * 1000
+    private val EXPIRE_15DAY_MS = 10L * 24 * 60 * 60 * 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -268,27 +268,27 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用设置动态密码：\n1.打开谷歌/微软验证器\n2.手动输入下方密钥添加账户\n3.输入6位验证码完成绑定"
+                text = "首次使用请先获取动态密钥：\n1.截图此页面32位密钥\n2.联系管理员，发送密钥截图\n3.获取6位授权码（授权码30秒内有效）"
                 textSize = 14f
             })
 
             addView(TextView(this@MainActivity).apply {
-                text = "密钥：$secretBase32"
+                text = "32位密钥：$secretBase32"
                 textSize = 18f
-                setTextColor(Color.BLUE)
+                setTextColor(Color.RED)
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "输入验证器6位动态密码"
+                hint = "输入动态授权码"
                 maxLines = 1
             })
         }
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("设置动态密码")
+            .setTitle("获取授权码")
             .setView(dialogView)
             .setCancelable(false)
             .setPositiveButton("确认") { dialog, _ ->
@@ -296,7 +296,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
                 if (TotpUtils.verifyTotp(secret, inputCode)) {
-                    ToastUtils.okToast(this, "动态密码设置成功！15天后需要重新验证")
+                    ToastUtils.okToast(this, "授权码输入成功！15天后需要重新验证")
                     // 首次验证写入时间戳
                     prefs.edit()
                         .putBoolean("password_verified", true)
@@ -304,7 +304,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         .apply()
                     showPasswordVerificationDialog()
                 } else {
-                    ToastUtils.errorToast(this, "密码错误，重新生成密钥")
+                    ToastUtils.errorToast(this, "授权码错误，重新生成密钥")
                     prefs.edit().remove("totp_secret").apply()
                     initTotpSecretIfNeeded()
                 }
@@ -341,18 +341,18 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         val passwordInput = EditText(this)
         passwordInput.inputType = InputType.TYPE_CLASS_NUMBER
-        passwordInput.hint = "请输入验证器生成的6位动态密码"
+        passwordInput.hint = "请输入管理员发送的授权码"
         val padding = dp2px(16)
         passwordInput.setPadding(padding, padding, padding, padding)
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("APP动态密码验证")
+            .setTitle("APP授权码验证")
             .setView(passwordInput)
             .setCancelable(false)
-            .setNeutralButton("忘记密码") { _, _ ->
+            .setNeutralButton("获取密钥") { _, _ ->
                 MaterialAlertDialogBuilder(this)
-                    .setTitle("确认重置密钥")
-                    .setMessage("重置将清除现有绑定，需重新复制密钥绑定验证器，确定继续？")
+                    .setTitle("确认获取密钥")
+                    .setMessage("将清除现有绑定，需复制密钥绑定验证器，确定继续？")
                     .setPositiveButton("确认重置") { _, _ -> resetTotpSecret() }
                     .setNegativeButton("取消", null)
                     .show()
@@ -371,10 +371,10 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         .apply()
                     rootView.removeView(maskView)
                     dialog.dismiss()
-                    ToastUtils.okToast(this, "验证成功，15天后再次校验")
+                    ToastUtils.okToast(this, "验证成功，15天后将再次校验")
                     Handler(Looper.getMainLooper()).post { start() }
                 } else {
-                    ToastUtils.errorToast(this, "动态密码错误，请重试")
+                    ToastUtils.errorToast(this, "动态密码错误，请联系管理员")
                     dialog.dismiss()
                     showPasswordVerificationDialog()
                 }
@@ -480,10 +480,10 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
                                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))))
                             }
-                            .setNegativeButton("重置动态密码") { _, _ ->
+                            .setNegativeButton("重置授权码") { _, _ ->
                                 MaterialAlertDialogBuilder(this@MainActivity)
                                     .setTitle("确认重置")
-                                    .setMessage("重置后清除当前动态密码，需要重新设置，是否继续？")
+                                    .setMessage("重置后清除当前授权码，需要重新设置，是否继续？")
                                     .setPositiveButton("确认") { _, _ -> resetTotpSecret() }
                                     .setNegativeButton("取消", null)
                                     .show()
