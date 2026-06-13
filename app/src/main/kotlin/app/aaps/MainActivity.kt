@@ -273,7 +273,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             })
 
             addView(TextView(this@MainActivity).apply {
-                text = "32位密钥：$secretBase32"
+                text = "密钥：$secretBase32"
                 textSize = 18f
                 setTextColor(Color.RED)
                 setPadding(0, dp2px(16), 0, dp2px(16))
@@ -282,7 +282,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "输入动态授权码"
+                hint = "请输入获取的动态授权码"
                 maxLines = 1
             })
         }
