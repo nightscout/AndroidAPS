@@ -50,6 +50,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.VirtualPump
+import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -58,6 +59,7 @@ import app.aaps.core.interfaces.rx.events.EventAcceptOpenLoopChange
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -460,6 +462,14 @@ class LoopPlugin @Inject constructor(
                 aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.no_profile_set))
                 rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.no_profile_set)))
                 return@withContext
+            }
+
+            // An expired timed profile switch is reverted only on EventProfileChangeRequested.
+            // KeepAliveWorker fires it but can be delayed by Doze, so detect the pending
+            // change here as well: the loop runs reliably on every BG
+            if (profileFunction.isProfileChangePending() && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                aapsLogger.debug(LTag.APS, "Profile change pending. Requesting profile update")
+                rxBus.send(EventProfileChangeRequested())
             }
 
             if (!isEmptyQueue()) {

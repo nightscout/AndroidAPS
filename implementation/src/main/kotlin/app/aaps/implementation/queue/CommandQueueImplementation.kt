@@ -12,6 +12,7 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -79,6 +80,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.LinkedList
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -189,7 +191,24 @@ class CommandQueueImplementation @Inject constructor(
                     iCfg = it.iCfg
                 )
                 persistenceLayer.insertOrUpdateEffectiveProfileSwitch(eps)
+                scheduleExpiryCheck(it)
             }
+        }
+    }
+
+    // Expiry of a timed profile switch fires no event on its own and KeepAliveWorker
+    // may be delayed by Doze, so schedule an explicit check at the expiry time
+    private fun scheduleExpiryCheck(ps: PS) {
+        if (ps.duration != 0L && ps.end > dateUtil.now()) {
+            workManager.enqueueUniqueWork(
+                ProfileSwitchExpiryWorker.WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequest.Builder(ProfileSwitchExpiryWorker::class.java)
+                    .setInitialDelay(ps.end - dateUtil.now() + T.secs(10).msecs(), TimeUnit.MILLISECONDS)
+                    .build()
+            )
+        } else {
+            workManager.cancelUniqueWork(ProfileSwitchExpiryWorker.WORK_NAME)
         }
     }
 
