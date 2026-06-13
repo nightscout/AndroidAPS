@@ -22,19 +22,22 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      issues: write
-      id-token: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Check out the base ref (trusted code), NOT the PR head. The action reads
+      # the PR diff via `gh pr diff` (API-based), so it does not need the PR's
+      # files in the workspace. Using head.sha here would let an external PR
+      # inject files (e.g. CLAUDE.md) that the action then reads under
+      # pull_request_target — i.e. with repo secrets in scope.
+      - name: Checkout repository (base ref — trusted)
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         with:
           fetch-depth: 1
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Run Claude Code Review
         id: claude-review
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@24492741e0ccfdef4c1d19da8e11e0f373d07494  # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |

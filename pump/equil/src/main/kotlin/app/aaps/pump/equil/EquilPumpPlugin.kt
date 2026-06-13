@@ -43,6 +43,7 @@ import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.BasalSchedule
+import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
 import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.keys.EquilBooleanKey
@@ -54,6 +55,7 @@ import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdSettingSet
+import app.aaps.pump.equil.manager.command.CmdDevicesGet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
 import app.aaps.pump.equil.manager.command.PumpEvent
 import app.aaps.pump.equil.manager.customCommands.CmdModeAndHistoryGet
@@ -173,8 +175,15 @@ class EquilPumpPlugin @Inject constructor(
     }
 
     override fun isInitialized(): Boolean = true
-    override fun isConnected(): Boolean = true
-    override fun isConnecting(): Boolean = false
+    override fun isConnected(): Boolean {
+        if (!equilManager.isActivationCompleted()) return true
+        if (equilManager.equilState?.address.isNullOrEmpty()) return true
+        return equilManager.equilState?.bluetoothConnectionState == BluetoothConnectionState.CONNECTED
+    }
+    override fun isConnecting(): Boolean {
+        if (!equilManager.isActivationCompleted()) return false
+        return equilManager.equilState?.bluetoothConnectionState == BluetoothConnectionState.CONNECTING
+    }
     override fun isBusy(): Boolean = false
 
     override fun isHandshakeInProgress(): Boolean = false
@@ -190,7 +199,10 @@ class EquilPumpPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
-        if (equilManager.isActivationCompleted()) commandQueue.customCommand(CmdModeAndHistoryGet(), null)
+        if (equilManager.isActivationCompleted()) {
+            commandQueue.customCommand(CmdModeAndHistoryGet(), null)
+            commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager), null)
+        }
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {

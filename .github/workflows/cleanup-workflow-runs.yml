@@ -1,0 +1,100 @@
+name: Cleanup Workflow Runs
+
+on:
+  workflow_call:
+    inputs:
+      workflow_name:
+        required: true
+        type: string
+        description: 'Name of the workflow to cleanup runs for'
+      keep_runs:
+        required: false
+        type: number
+        default: 50
+        description: 'Target number of recent runs to keep after cleanup'
+      keep_threshold:
+        required: false
+        type: number
+        default: 10
+        description: 'Buffer threshold - cleanup only starts when runs exceed keep_runs + keep_threshold'
+
+jobs:
+  cleanup:
+    name: Cleanup Old Workflow Runs
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Cleanup old workflow runs
+        uses: actions/github-script@v7
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Ensure we're using Node 24 for GitHub Script'
+        with:
+          script: |
+            const workflowName = '${{ inputs.workflow_name }}';
+            const keepRuns = ${{ inputs.keep_runs }};
+            const keepThreshold = ${{ inputs.keep_threshold }};
+            const cleanupThreshold = keepRuns + keepThreshold;
+            
+            console.log(`🧹 Starting cleanup check for workflow: "${workflowName}"`);
+            console.log(`📌 Configuration: keep ${keepRuns} runs, threshold ${cleanupThreshold} (keep_runs + keep_threshold)`);
+            
+            // Get the current workflow ID
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            
+            const workflow = workflows.data.workflows.find(w => w.name === workflowName);
+            if (!workflow) {
+              console.log(`❌ Workflow "${workflowName}" not found`);
+              return;
+            }
+            
+            console.log(`✅ Found workflow: ${workflow.name} (ID: ${workflow.id})`);
+            
+            // Get all runs for this workflow
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflow.id,
+              per_page: 100, // Get up to 100 runs
+            });
+            
+            const totalRuns = runs.data.workflow_runs.length;
+            console.log(`📊 Total runs found: ${totalRuns}`);
+            
+            // Check if cleanup is needed
+            if (totalRuns <= cleanupThreshold) {
+              console.log(`✅ No cleanup needed (${totalRuns} runs ≤ ${cleanupThreshold} threshold)`);
+              return;
+            }
+            
+            console.log(`⚠️  Cleanup threshold reached! (${totalRuns} runs > ${cleanupThreshold} threshold)`);
+            console.log(`🧹 Starting cleanup: will keep ${keepRuns} runs, deleting ${totalRuns - keepRuns} runs`);
+            
+            // Sort runs by creation date (newest first)
+            const sortedRuns = runs.data.workflow_runs.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            
+            // Keep only the most recent runs
+            const runsToDelete = sortedRuns.slice(keepRuns);
+            
+            console.log(`📌 Keeping ${keepRuns} most recent runs, deleting ${runsToDelete.length} older runs`);
+            
+            // Delete old runs
+            for (const run of runsToDelete) {
+              try {
+                await github.rest.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id,
+                });
+                console.log(`🗑️  Deleted run: ${run.id} (created: ${run.created_at})`);
+              } catch (error) {
+                console.error(`❌ Failed to delete run ${run.id}: ${error.message}`);
+              }
+            }
+            
+            console.log(`✅ Workflow cleanup completed`);
