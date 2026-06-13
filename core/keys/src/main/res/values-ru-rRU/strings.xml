@@ -1,53 +1,471 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Простой режим</string>
+    <string name="pref_title_insulin_concentration">Поддержка концентрации инсулина</string>
+    <string name="pref_summary_insulin_concentration">Включить поддержку различных концентраций инсулина (U50, U200 и др.)</string>
+
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Не выключать экран</string>
+    <string name="pref_summary_keep_screen_on">Предотвратить выключение экрана Android. Будет потребляться много энергии, пока не подключен к источнику питания.</string>
+    <string name="pref_title_show_treatment_button">Показывать кнопку лечения</string>
+    <string name="pref_title_show_wizard_button">Показывать кнопку мастера</string>
+    <string name="pref_title_show_insulin_button">Показывать кнопку инсулина</string>
+    <string name="pref_title_show_carbs_button">Показывать кнопку углеводов</string>
+    <string name="pref_title_show_cgm_button">Показывать кнопку CGM</string>
+    <string name="pref_summary_show_cgm_button">Открывает xDrip+ или приложение Dexcom (можно использовать кнопку Назад для возврата в AAPS).</string>
+    <string name="pref_title_show_calibration_button">Показывать кнопку калибровки</string>
+    <string name="pref_summary_show_calibration_button">Отправляет калибровку в xDrip+ (убедитесь, что «Принимать калибровки» включено в xDrip+ в настройках межприложений).</string>
+    <string name="pref_title_show_notes_in_dialogs">Показывать примечания в диалогах</string>
+    <string name="pref_title_use_bolus_advisor">Использовать советник болюса</string>
+    <string name="pref_summary_use_bolus_advisor">Включить советника болюса, который помогает рассчитывать дозы инсулина при повышенном уровне глюкозы.</string>
+    <string name="pref_title_use_bolus_reminder">Напоминание о болюсе</string>
+    <string name="pref_summary_use_bolus_reminder">Включить уведомления-напоминания о введении инсулина, чтобы помочь отслеживать его прием.</string>
+    <string name="pref_title_use_super_bolus">Использовать супер болюс</string>
+    <string name="pref_summary_use_super_bolus">Включить функцию супер болюса, которая берет инсулин из базала для немедленной доставки.</string>
+
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Отключает Bluetooth телефона на одну секунду, если нет подключения к помпе. Это может помочь на некоторых телефонах, где зависает стек Bluetooth.</string>
+
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Уведомить о пропущенных показаниях ГК</string>
+    <string name="pref_title_alert_pump_unreachable">Уведомить, если помпа недоступна</string>
+    <string name="pref_title_alert_carbs_required">Уведомить о необходимости углеводов</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Предупреждать как Android-уведомления</string>
+    <string name="pref_title_alert_increase_volume">Постепенно увеличивать громкость</string>
+    <string name="pref_title_alert_override_dnd">Переопределить режим «Не беспокоить»</string>
+    <string name="pref_summary_alert_override_dnd">При включении AAPS-тревоги будут проходить через режимы без голоса и «Не беспокоить» (поток тревог). При отключении тревоги уважают режим без голоса/«Не беспокоить» (поток уведомлений).</string>
+
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Загружать данные ГК в NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Зарегистрировать смену сенсора</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Создать событие терапии при вставке сенсора.</string>
+
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Использовать динамическую чувствительность</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Использовать DynamicISF для коррекции чувствительности вместо Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Использовать Autosens</string>
+    <string name="pref_title_aps_use_smb">Включить SMB</string>
+    <string name="pref_summary_aps_use_smb">Включить сверхмикро-болюс. SMB доставляет инсулин немедленно для реакции на растущий уровень глюкозы.</string>
+    <string name="pref_title_smb_disable_cgm_whitelist">Всегда сообщать о продвинутой фильтрации</string>
+    <string name="pref_summary_smb_disable_cgm_whitelist">[ОПАСНО] Отключить белый список НМГ, позволяет SMB быть включёнными всегда на всех НМГ</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Включить SMB с высокой временной целью</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Разрешить SMB, когда активна высокая временная цель.</string>
+    <string name="pref_title_aps_use_smb_always">Включить SMB всегда</string>
+    <string name="pref_summary_aps_use_smb_always">Включить SMB в любых условиях, независимо от болюса или COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Включить SMB с COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Разрешить SMB, когда есть углеводы в организме.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Включить SMB с низкой временной целью</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Разрешить SMB, когда активна низкая временная цель.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Включить SMB после еды</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Разрешить SMB на период после ввода углеводов.</string>
+    <string name="pref_title_aps_use_uam">Включить UAM</string>
+    <string name="pref_summary_aps_use_uam">Включить обнаружение и лечение необъявленных еды.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Чувствительность повышает цель</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">При обнаружении чувствительности повысьте целевой уровень глюкозы.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Сопротивление снижает цель</string>
+    <string name="pref_summary_aps_resistance_lowers_target">При обнаружении сопротивления снизьте целевой уровень глюкозы.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Всегда использовать короткие дельты</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Всегда использовать короткую среднюю дельту вместо простой дельты для расчета изменения глюкозы.</string>
+    <string name="pref_title_allow_recalculated_bg">Разрешить пересчитанный ГК</string>
+    <string name="pref_summary_allow_recalculated_bg">[ОПАСНО] Разрешить расчёт дельт и ускорения на пересчитанных значениях ГК</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">Коррекция чувствительности DynamicISF</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Корректировать расчеты чувствительности при использовании DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens корректирует цели</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Разрешить Autosens корректировать целевой уровень глюкозы, помимо базала и ISF.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Высокая временная цель повышает чувствительность</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Высокие временные цели будут увеличивать чувствительность к инсулину.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Низкая временная цель снижает чувствительность</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Низкие временные цели будут уменьшать чувствительность к инсулину.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Включить AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Включить весовые корректировки ISF на основе AutoISF.</string>
+    <string name="pref_title_aps_smb_on_even_target">Включить SMB на равной цели</string>
+    <string name="pref_summary_aps_smb_on_even_target">Альтернативная активация SMB всегда на основе целевого уровня глюкозы.</string>
+
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Включить отчетность Fabric о сбоях</string>
+    <string name="pref_title_maintenance_enable_export_automation">Включить автоматический экспорт настроек</string>
+
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Автоматическое переключение профиля</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Автоматически переключаться на профиль, сгенерированный Autotune после расчета.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Классифицировать UAM как базальную потребность</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Воспринимать необъявленные еды как базальные потребности инсулина для расчетов Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Настроить инсулиновую кривую</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Циркадные колебания IC/ISF</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Применять циркадные колебания к IC и ISF в расчетах Autotune.</string>
+    <string name="pref_title_autotune_additional_log">Дополнительная запись в журнал</string>
+
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Разрешить удаленные команды через SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Сообщить, что помпа недоступна, через SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Отправлять уведомление через SMS, когда помпа становится недоступной.</string>
+
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Загрузить статус помпы в NS</string>
+
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Загружать данные в NS</string>
+    <string name="pref_summary_ns_upload_data">Загружать лечения, временные базалы и другие данные в Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Получать данные CGM из NS</string>
+    <string name="pref_summary_ns_receive_cgm">Принимать показания глюкозы от Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Получать profile store из NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Принимать обновления профиля от Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Получать временные цели из NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Принимать изменения временных целей от Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Получать переключения профилей из NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Принимать события переключения профилей от Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Получать инсулин из NS</string>
+    <string name="pref_summary_ns_receive_insulin">Принимать лечения инсулином от Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Получать углеводы из NS</string>
+    <string name="pref_summary_ns_receive_carbs">Принимать записи о углеводах от Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Получать события терапии из NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Принимать события терапии от Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Получать режим работы из NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Принимать изменения режима работы от Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Получать TBR/EB из NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Принимать скорректированные базалы и пролонгированные болюсы от Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">Тревоги NS</string>
+    <string name="pref_title_ns_notifications_from_announcements">Объявления NS</string>
+    <string name="pref_title_ns_use_cellular">Использовать мобильные данные</string>
+    <string name="pref_title_ns_use_roaming">Использовать роуминг</string>
+    <string name="pref_title_ns_use_wifi">Использовать WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Синхронизация на батарее</string>
+    <string name="pref_title_ns_use_on_charging">Синхронизация во время зарядки</string>
+    <string name="pref_title_ns_log_app_start">Записывать событие запуска приложения</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Создавать объявления из ошибок</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Создавать объявления о необходимости углеводов</string>
+    <string name="pref_title_ns_slow_sync">Медленная синхронизация</string>
+    <string name="pref_title_ns_use_ws">Использовать вебсокеты</string>
+    <string name="pref_summary_ns_use_ws">Использовать вебсокеты для реальной передачи данных с Nightscout.</string>
+
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Только WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Только при зарядке</string>
+
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Отправить статус в xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Отправить детальный IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Отправлять детальную информацию об IOB в xDrip+ для отображения на часах.</string>
+    <string name="pref_title_xdrip_send_bgi">Показать BGI</string>
+    <string name="pref_summary_xdrip_send_bgi">Показывать Impact глюкозы в строке статуса xDrip+.</string>
+
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Управление ношением</string>
+    <string name="pref_summary_wear_control">Управлять AAPS из часов Android Wear.</string>
+    <string name="pref_title_wear_wizard_bg">Включить ГК в мастер</string>
+    <string name="pref_title_wear_wizard_tt">Включить временную цель в мастере</string>
+    <string name="pref_title_wear_wizard_trend">Включить тренд в мастере</string>
+    <string name="pref_title_wear_wizard_cob">Включить COB в мастере</string>
+    <string name="pref_title_wear_wizard_iob">Включить IOB в мастере</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Разрешить кастомные часы</string>
+    <string name="pref_title_wear_notify_on_smb">Уведомить о SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Отправлять уведомления на часы при доставке SMB.</string>
+    <string name="pref_title_wear_broadcast_data">Трансляция данных на часы</string>
+    <string name="pref_summary_wear_broadcast_data">Транслировать данные AAPS сторонним приложениям-носочкам через интент.</string>
+
     <!-- Wizard preferences -->
+    <string name="pref_title_wizard_calculation_visible">Показывать расчет мастера</string>
+    <string name="pref_title_wizard_correction_percent">Использовать процент коррекции</string>
+
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Управлять местом установки помпы</string>
+    <string name="pref_title_site_rotation_manage_cgm">Управлять местом установки CGM</string>
+
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Инкремент кнопки углеводов 1</string>
+    <string name="pref_title_carbs_button_increment_2">Инкремент кнопки углеводов 2</string>
+    <string name="pref_title_carbs_button_increment_3">Инкремент кнопки углеводов 3</string>
+    <string name="carb_increment_button_message">Количество углеводов, добавляемых при нажатии кнопки</string>
+    <string name="pref_title_cage_warning">Порог предупреждения по возрасту катетера</string>
+    <string name="pref_title_cage_critical">Порог критического уровня по возрасту катетера</string>
+    <string name="pref_title_iage_warning">Порог предупреждения по возрасту инсулина</string>
+    <string name="pref_title_iage_critical">Порог критического уровня по возрасту инсулина</string>
+    <string name="pref_title_sage_warning">Порог предупреждения по возрасту сенсора</string>
+    <string name="pref_title_sage_critical">Порог критического уровня по возрасту сенсора</string>
+    <string name="pref_title_sbat_warning">Порог предупреждения по уровню батареи сенсора</string>
+    <string name="pref_title_sbat_critical">Порог критического уровня по уровню батареи сенсора</string>
+    <string name="pref_title_bage_warning">Порог предупреждения по возрасту батареи помпы</string>
+    <string name="pref_title_bage_critical">Порог критического уровня по возрасту батареи помпы</string>
+    <string name="pref_title_res_warning">Порог предупреждения по уровню резервуара</string>
+    <string name="pref_title_res_critical">Порог критического уровня по уровню резервуара</string>
+    <string name="pref_title_batt_warning">Порог предупреждения по уровню батареи помпы</string>
+    <string name="pref_title_batt_critical">Порог критического уровня по уровню батареи помпы</string>
+    <string name="pref_title_bolus_percentage">Процент болюса</string>
+    <string name="deliverpartofboluswizard">Применить это значение к коррекции ГК и углеводов в результате мастера болюса\'s</string>
+    <string name="pref_title_reset_bolus_percentage_time">Время сброса процента болюса</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Доставить полный болюс (100%), если глюкоза старше</string>
+
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Таймаут защиты</string>
+    <string name="pref_title_protection_type_application">Уровень 0: Защита приложения</string>
+    <string name="pref_summary_protection_type_application">Запуск приложения. Независимо от других уровней</string>
+    <string name="pref_title_protection_type_bolus">Уровень 1: Защита болюса</string>
+    <string name="pref_summary_protection_type_bolus">Лечения, активация профилей. Требуется Уровень 2</string>
+    <string name="pref_title_protection_type_settings">Уровень 2: Защита настроек</string>
+    <string name="pref_summary_protection_type_settings">Редактирование профилей, настроек</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Без защиты</string>
+    <string name="biometric">Биометрия</string>
+    <string name="master_password">Master-пароль</string>
+    <string name="custom_password">Пароль пользователя</string>
+    <string name="custom_pin">PIN пользователя</string>
+
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Максимальные углеводы</string>
+
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Минимальное изменение режима разомкнутого контура</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop покажет запрос на изменение только если изменение больше этого значения в %. Значение по умолчанию 20%</string>
+
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Интервал SMB</string>
+    <string name="pref_title_smb_max_minutes">Максимальное время базала для ограничения SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM максимальное время базала для ограничения SMB</string>
+    <string name="uam_smb_max_minutes">UAM SMB максимальное время</string>
+    <string name="pref_title_carbs_request_threshold">Порог необходимости углеводов</string>
+    <string name="carbs_req_threshold_summary">Минимальное количество углеводов для отображения уведомления о необходимости углеводов. Углеводы ниже этого числа не будут вызывать уведомление.</string>
+    <string name="pref_title_half_basal_exercise_target">Полубазальная цель для тренировки</string>
+    <string name="half_basal_exercise_target_summary">Задайте число, например 160, что означает, когда временная цель 160 мг/дл и высокая временная цель повышает чувствительность=true, будет работать 50%% базала на этом уровне (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">Порог IOB в процентах</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Процент maxIOB, при котором SMB отключается.\nЗначение по умолчанию: 100%\nПри 100% эта функция эффективно отключена.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Коэффициент коррекции DynamicISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Коэффициент коррекции для DynamicISF. Задайте больше 100%% для более агрессивных коррекций, и меньше 100%% для менее агрессивных.</string>
+    <string name="pref_title_autosens_period">Период Autosens</string>
+    <string name="openapsama_autosens_period_summary">Количество часов назад для обнаружения чувствительности (время усвоения углеводов исключено)</string>
+
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Количество логов для отправки</string>
+
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Порог устаревших данных</string>
+    <string name="pref_title_pump_unreachable_threshold">Порог недоступности помпы</string>
+
     <!-- IntKey: Insulin preferences -->
+
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Дни для настройки</string>
+    <string name="autotune_default_tune_days_summary">Количество дней данных для обработки Autotune (до 30)</string>
+
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Минимальное расстояние для удаленного болюса</string>
+
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Интервал случайной ГК</string>
+    <string name="pref_title_random_bg_randomize">Случайное ГК</string>
+    <string name="pref_summary_random_bg_randomize">Добавить шум, дрожание меток, случайные стрелки тренда и иногда случайные углеводы. Отключить для чистой детерминированной синусоиды без дрожания со склоном.</string>
+
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Порог тревоги за устаревшие данные</string>
+    <string name="pref_title_urgent_alarm_stale_data">Порог срочной тревоги за устаревшие данные</string>
+
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Профиль пользователя для поворота мест</string>
+
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Единицы</string>
+    <string name="units_mgdl">мг/дл</string>
+    <string name="units_mmol">ммоль/л</string>
+    <string name="units_insulin">ЕД</string>
+    <string name="units_insulin_rate">ЕД/ч</string>
+    <string name="units_min">мин</string>
+    <string name="units_sec">сек</string>
+    <string name="units_hours">ч</string>
+    <string name="units_days">дн</string>
+    <string name="units_grams">г</string>
+    <string name="units_kg">кг</string>
+    <string name="units_years">лет</string>
+    <string name="units_percent">%</string>
+
     <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d г</string>
+    <string name="units_format_min">%1$d мин</string>
+    <string name="units_format_sec">%1$d сек</string>
+    <string name="units_format_hours">%1$d ч</string>
+    <string name="units_format_hours_double">%1$.0f ч</string>
+    <string name="units_format_days">%1$d дн</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_insulin">%1$.1f ЕД</string>
+    <string name="units_format_insulin_int">%1$d ЕД</string>
+    <string name="units_format_insulin_rate">%1$.1f ЕД/ч</string>
+    <string name="units_format_mgdl">%1$s мг/дл</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_3">%1$.3f</string>
+
     <!-- Formatted unit strings with value and range -->
+    <string name="units_format_grams_range">%1$d г (%2$d - %3$d)</string>
+    <string name="units_format_min_range">%1$d мин (%2$d - %3$d)</string>
+    <string name="units_format_sec_range">%1$d сек (%2$d - %3$d)</string>
+    <string name="units_format_hours_range">%1$d ч (%2$d - %3$d)</string>
+    <string name="units_format_hours_double_range">%1$.0f ч (%2$.0f - %3$.0f)</string>
+    <string name="units_format_days_range">%1$d дн (%2$d - %3$d)</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_insulin_int_range">%1$d ЕД (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f ЕД (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f ЕД/ч (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl_range">%1$s мг/дл (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="pref_title_language">Язык</string>
+    <string name="lang_default">Система по умолчанию</string>
+    <string name="lang_en">Английский</string>
+    <string name="lang_af">Африканский</string>
+    <string name="lang_bg">Болгарский</string>
+    <string name="lang_cs">Чешский</string>
+    <string name="lang_de">Немецкий</string>
+    <string name="lang_dk">Датский</string>
+    <string name="lang_fr">Французский</string>
+    <string name="lang_nl">Нидерландский</string>
+    <string name="lang_es">Испанский</string>
+    <string name="lang_el">Греческий</string>
+    <string name="lang_ga">Ирландский</string>
+    <string name="lang_it">Итальянский</string>
+    <string name="lang_ko">Корейский</string>
+    <string name="lang_lt">Литовский</string>
+    <string name="lang_nb">Норвежский</string>
+    <string name="lang_pl">Польский</string>
+    <string name="lang_pt">Португальский</string>
+    <string name="lang_pt_br">Португальский, Бразильский</string>
+    <string name="lang_ro">Румынский</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_sk">Словарский</string>
+    <string name="lang_sv">Шведский</string>
+    <string name="lang_tr">Турецкий</string>
+    <string name="lang_zh_tw">Китайский, Традициональный</string>
+    <string name="lang_zh_cn">Китайский, Упрощенный</string>
+    <string name="pref_title_patient_name">Имя</string>
+    <string name="pref_summary_patient_name">Имя для идентификации этого экземпляра AAPS (показывается в отчетах и синхронизации)</string>
+
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">Каталог AAPS</string>
+
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Master-пароль</string>
+    <string name="pref_title_settings_password">Пароль настроек</string>
+    <string name="pref_title_settings_pin">PIN настроек</string>
+    <string name="pref_title_application_password">Пароль приложения</string>
+    <string name="pref_title_application_pin">PIN приложения</string>
+    <string name="pref_title_bolus_password">Пароль болюса</string>
+    <string name="pref_title_bolus_pin">PIN болюса</string>
+
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Выберите темную, светлую или следить за системной темой</string>
+    <string name="pref_title_app_color_scheme">Цветовая схема приложения</string>
+    <string name="pref_dark_theme">Темная тема</string>
+    <string name="pref_light_theme">Светлая тема</string>
+    <string name="pref_follow_system_theme">Следовать за системной темой</string>
+
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Возраст пациента</string>
+
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Получатель письма</string>
+    <string name="pref_title_identification">Идентификация для отчетов о сбоях</string>
+
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Сервис местоположения</string>
+    <string name="automation_location_passive">Использовать пассивное местоположение</string>
+    <string name="automation_location_network">Использовать сетевое местоположение</string>
+    <string name="automation_location_gps">Использовать GPS-местоположение</string>
+
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Разрешенные номера телефонов</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Дополнительный обязательный PIN в конце</string>
+    <string name="smscommunicator_otp_pin_summary">Дополнительные цифры, которые нужно запомнить и добавить в конец каждого сгенерированного One Time Password</string>
+
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Тип помпы</string>
+
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">URL Nightscout</string>
+    <string name="ns_client_url_summary">Введите URL вашего Nightscout (например, https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Секрет API Nightscout</string>
+    <string name="ns_client_secret_summary">Введите секрет API Nightscout (мин. 12 символов)</string>
+    <string name="nsclient_token_title">Токен доступа к Nightscout</string>
+    <string name="nsclient_token_summary">Введите токен доступа к Nightscout (мин. 17 символов)</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">Разрешенные SSID (разделенные точкой с запятой)</string>
+
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Инкремент кнопки инсулина 1</string>
+    <string name="pref_title_insulin_button_increment_2">Инкремент кнопки инсулина 2</string>
+    <string name="pref_title_insulin_button_increment_3">Инкремент кнопки инсулина 3</string>
+    <string name="insulin_increment_button_message">Количество инсулина, добавляемого при нажатии кнопки</string>
+
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Кнопка заполнения 1</string>
+    <string name="pref_title_fill_button_2">Кнопка заполнения 2</string>
+    <string name="pref_title_fill_button_3">Кнопка заполнения 3</string>
+
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Максимальный болюс</string>
+
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Максимальная скорость базала</string>
+    <string name="openapsma_max_basal_summary">Это значение называется max basal в контексте OpenAPS</string>
+    <string name="pref_title_smb_max_iob">Макс. IOB для SMB</string>
+    <string name="openapssmb_max_iob_summary">Это значение называется Max IOB в контексте OpenAPS\nOpenAPS не будет добавлять больше инсулина, если текущий IOB больше этого значения. Значение зависит от типа пациента.</string>
+    <string name="pref_title_ama_max_iob">Макс. IOB для AMA</string>
+    <string name="openapsma_max_iob_summary">Это значение называется Max IOB в контексте OpenAPS\nЭто максимальный инсулин в [ЕД], который APS может доставить за раз. Значение зависит от типа пациента.</string>
+    <string name="pref_title_max_daily_multiplier">Макс. множитель суточной дозы</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Значение по умолчанию: 3. Это ключевой предел безопасности OpenAPS. Что делает это, так это ограничивает ваши базалы 3x (в этом люди) самой большой скоростью базала. Скорее всего, вам не нужно будет менять это, но вы должны быть осведомлены, что обсуждается «3x max daily; 4x current» для пределов безопасности.</string>
+    <string name="pref_title_current_basal_multiplier">Множитель текущей базальной дозы</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Значение по умолчанию: 4. Это вторая половина ключевых пределов безопасности OpenAPS, и вторая половина «3x max daily; 4x current» пределов безопасности. Это означает, что ваш базал, независимо от максимальной скорости базала, установленной на помпе, не может быть выше этого числа умноженного на текущий уровень вашего базала. Это предотвращает попадание людей в опасную зону за счет слишком высоких максимальных базалов до тех пор, пока они не поймут, как работает алгоритм. Снова default 4x; большинство людей никогда не потребуется менять это и вместо этого им будет More, чтобы откорректировать другие настройки, если чувствуют, что они «сталкиваются» об этот предел безопасности.</string>
+    <string name="pref_title_bolus_snooze_divisor">Делитель DIA болюса</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Значение по умолчанию: 2\nBolus snooze вступает в силу после того, как вы сделали прием пищи, так что цикл не будет противопоставлять с низкими temps, когда вы только что поели. Пример здесь и по умолчанию 2; так что 3 часовая DIA означает, что болюс snooze будет постепенно исключен через 1,5 часа (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA мин. воздействие углеводов за 5м</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB мин. воздействие углеводов за 5м</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Значение по умолчанию: 3.0 (AMA) или 8.0 (SMB). Это настройка для стандартного воздействия углеводов за 5 минут. По умолчанию ожидается 3 мг/дл/5мин. Это влияет на то, как быстро уменьшаются COB, и на то, сколько усвоения углеводов предполагается при расчете будущего прогнозируемого ГК, когда ГК падает быстрее ожидаемого, или не растет, как ожидалось.</string>
+    <string name="pref_title_absorption_cutoff">Отсечение усвоения</string>
+    <string name="absorption_cutoff_summary">Время, при котором любая еда считается усвоенной. Оставшиеся углеводы будут отключены.</string>
+    <string name="pref_title_absorption_maxtime">Макс. время усвоения</string>
+    <string name="absorption_max_time_summary">Время в часах, в течение которого ожидается, что все углеводы из еды будут усвоены</string>
+    <string name="pref_title_autosens_min">Autosens мин</string>
+    <string name="openapsama_autosens_min_summary">Значение по умолчанию: 0.7\nВторая сторона пределов безопасности autosens, ограничивающая, насколько низко может уменьшать autosens базалы, и насколько высоко может увеличивать ISF и цели глюкозы.</string>
+    <string name="pref_title_autosens_max">Autosens макс</string>
+    <string name="openapsama_autosens_max_summary">Значение по умолчанию: 1.2\nЭто множитель-ограничитель для autosens (и скоро autotune), который устанавливает максимальный предел 20%%, насколько высоко может быть отношение autosens, что, в свою очередь, определяет, насколько высоко могут быть скорректированы базалы, насколько низко могут быть скорректированы ISF и насколько низко могут быть установлены цели глюкозы.</string>
+    <string name="pref_title_autoisf_min">AutoISF мин</string>
+    <string name="openapsama_autoISF_min_summary">Похоже на autosens_min, это определяет, насколько слабым может стать ISF.\n\nЗначение по умолчанию 1.0 эффективно отключает этот эффект.</string>
+    <string name="pref_title_autoisf_max">AutoISF макс</string>
+    <string name="openapsama_autoISF_max_summary">Похоже на autosens_max, это определяет, насколько сильным может стать ISF.\n\nЗначение по умолчанию 1.0 эффективно отключает этот эффект.\n\nПРЕДУПРЕЖДЕНИЕ: Будьте крайне внимательны при использовании значений выше 2.5</string>
+    <string name="pref_title_bg_accel_weight">Вес ускорения ГК для ISF</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Это вес, применяемый при ускорении глюкозы, который усиливает ISF и, следовательно, потенциально увеличивает доставку инсулина.\n\nЗначение по умолчанию 0.0 эффективно отключает этот эффект.</string>
+    <string name="pref_title_bg_brake_weight">Вес торможения ГК для ISF</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Это вес, применяемый при замедлении глюкозы, который ослабляет ISF и, следовательно, потенциально снижает доставку инсулина.\n\nЗначение по умолчанию 0.0 эффективно отключает этот эффект.</string>
+    <string name="pref_title_low_bg_weight">Вес низкой ГК</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Это вес, применяемый при глюкозе ниже цели, который ослабляет ISF и, следовательно, потенциально снижает доставку инсулина.\n\nЗначение по умолчанию 0.0 эффективно отключает этот эффект.</string>
+    <string name="pref_title_high_bg_weight">Вес высокой ГК</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Это вес, применяемый при глюкозе выше цели, который усиливает ISF и, следовательно, потенциально увеличивает доставку инсулина.\n\nЗначение по умолчанию 0.0 эффективно отключает этот эффект.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">Диапазон ГК для коэффициента доставки SMB</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Значение по умолчанию: 0. Линейно возрастающий коэффициент доставки SMB сопоставляется с диапазоном глюкозы [target_bg, target_bg+bg_range].\nПри target_bg коэффициент SMB равен smb_delivery_ratio_min, при target_bg+bg_range он равен smb_delivery_ratio_max\nПри 0 линейно возрастающий коэффициент SMB отключен и используется исправленный smb_delivery_ratio.</string>
+    <string name="pref_title_pp_weight">Вес постпрандиального ISF</string>
+    <string name="openapsama_pp_ISF_weight_summary">Это вес, применяемый при росте глюкозы, который усиливает ISF и, следовательно, потенциально увеличивает доставку инсулина.\n\nЗначение по умолчанию 0.0 эффективно отключает этот эффект.</string>
+    <string name="pref_title_dura_weight">Вес длительности ISF</string>
+    <string name="openapsama_dura_ISF_weight_summary">Это вес, применяемый при более длительных, повышенных платоах глюкозы, который усиливает ISF и, следовательно, потенциально увеличивает доставку инсулина.\n\nЗначение по умолчанию 0.0 эффективно отключает этот эффект.</string>
+    <string name="pref_title_smb_delivery_ratio">Коэффициент доставки SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Значение по умолчанию: 0.5. Это еще один ключевой предел безопасности OpenAPS, который указывает, какую долю общего инсулина можно доставить как SMB. Это предотвращает попадание людей в опасную зону, устанавливая запросы на SMB одновременно с запросами от опекунов. Увеличивайте этот экспериментальный параметр медленно и с осторожностью.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Мин. коэффициент доставки SMB</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Значение по умолчанию: 0.5. Это нижняя граница линейно возрастающего коэффициента SMB, а не исправленное значение выше.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Макс. коэффициент доставки SMB</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Значение по умолчанию: 0.5. Это верхняя граница линейно возрастающего коэффициента SMB, а не исправленное значение выше.</string>
+    <string name="pref_title_smb_max_range_extension">Расширение диапазона SMB</string>
+    <string name="openapsama_smb_max_range_extension_summary">Значение по умолчанию: 1. Это еще один ключевой предел безопасности OpenAPS, который указывает, в какой фактор вы можете превысить обычные 120 минут maxSMB/maxUAM. Увеличивайте этот экспериментальный параметр медленно и с осторожностью.</string>
+
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Нижняя метка ГК</string>
+    <string name="pref_title_high_mark">Верхняя метка ГК</string>
+
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">Порог LGS</string>
+    <string name="lgs_threshold_summary">Уровень ГК ниже которого инсулин приостанавливается. Значение по умолчанию использует стандартную модель цели. Пользователь может установить значение между 60 мг/дл (3,3 ммоль/л) и 100 мг/дл (5,5 ммоль/л). Значения ниже 65/3,6 приводят к использованию модели по умолчанию.</string>
+
     <!-- IntentKey preferences -->
+
     <!--    Appearance preferences-->
+    <string name="prefs_range_title">Диапазон для визуализации</string>
+
 </resources>

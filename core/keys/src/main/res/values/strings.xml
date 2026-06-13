@@ -48,6 +48,8 @@
     <string name="pref_title_aps_use_autosens">Use Autosens</string>
     <string name="pref_title_aps_use_smb">Enable SMB</string>
     <string name="pref_summary_aps_use_smb">Enable Super Micro Bolus. SMB delivers insulin immediately to respond to rising blood glucose.</string>
+    <string name="pref_title_smb_disable_cgm_whitelist">Always report advanced filtering</string>
+    <string name="pref_summary_smb_disable_cgm_whitelist">[DANGEROUS] Disable CGM whitelist, allows SMB to be always enabled on all CGMs</string>
     <string name="pref_title_aps_use_smb_with_high_tt">Enable SMB with high temp target</string>
     <string name="pref_summary_aps_use_smb_with_high_tt">Allow SMB when high temporary target is active.</string>
     <string name="pref_title_aps_use_smb_always">Enable SMB always</string>
@@ -66,6 +68,8 @@
     <string name="pref_summary_aps_resistance_lowers_target">When resistance is detected, lower the target glucose.</string>
     <string name="pref_title_aps_always_use_short_deltas">Always use short average delta</string>
     <string name="pref_summary_aps_always_use_short_deltas">Always use short average delta instead of simple delta for BG change calculations.</string>
+    <string name="pref_title_allow_recalculated_bg">Allow recalculated BG</string>
+    <string name="pref_summary_allow_recalculated_bg">[DANGEROUS] Allow delta and acceleration calculations on recalculated BG values</string>
     <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF adjust sensitivity</string>
     <string name="pref_summary_aps_dynisf_adjust_sensitivity">Adjust sensitivity calculations when using DynamicISF.</string>
     <string name="pref_title_aps_autosens_adjust_targets">Autosens adjust targets</string>

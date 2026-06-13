@@ -251,4 +251,6 @@
     <string name="loop_status_target_range">Диапазон</string>
     <string name="loop_status_target">Целевое значение ГК:</string>
     <string name="loop_status">Статус цикла</string>
+
+    <string name="key">перевод</string>
 </resources>

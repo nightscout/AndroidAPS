@@ -30,7 +30,7 @@
     <string name="selectedpump">Выбранная помпа</string>
     <string name="bolus_step">Шаг болюса</string>
     <string name="basal_step">Шаг базала</string>
-    <string name="pairfirst">Пожалуйста, выполните сопряжение помпы с телефоном!</string>
+    <string name="pairfirst">выполните сопряжение помпы с телефоном!</string>
     <string name="processinghistory">"Обработка события "</string>
     <string name="diaconn_g8_history_tempbasal">Временный базал</string>
     <string name="diaconng8_pump_settings">Настройки помпы Diaconn</string>
@@ -124,4 +124,7 @@
     <string name="diaconn_g8_errorcode_36">Остановка временного базала отклоняется при неработающем tempbasal</string>
     <string name="diaconn_g8_cloudsend_summary">Отправить лог помпы в Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Синхронизация с Diaconn Cloud</string>
+
+
+    <string name="key">перевод</string>
 </resources>

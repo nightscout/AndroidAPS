@@ -60,10 +60,11 @@ enum class BooleanKey(
     ApsUseDynamicSensitivity("use_dynamic_sensitivity", false, R.string.pref_title_aps_use_dynamic_sensitivity, R.string.pref_summary_aps_use_dynamic_sensitivity),
     ApsUseAutosens("openapsama_useautosens", true, R.string.pref_title_aps_use_autosens, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity),
     ApsUseSmb("use_smb", true, R.string.pref_title_aps_use_smb, R.string.pref_summary_aps_use_smb, defaultedBySM = true),
+    ApsDisableCgmWhitelistForSmb("smb_disable_cgm_whitelist", false, R.string.pref_title_smb_disable_cgm_whitelist, R.string.pref_summary_smb_disable_cgm_whitelist, defaultedBySM = true),
     ApsUseSmbWithHighTt("enableSMB_with_high_temptarget", false, R.string.pref_title_aps_use_smb_with_high_tt, R.string.pref_summary_aps_use_smb_with_high_tt, defaultedBySM = true, dependency = ApsUseSmb),
     ApsUseSmbAlways(
         "enableSMB_always", true, R.string.pref_title_aps_use_smb_always, R.string.pref_summary_aps_use_smb_always, defaultedBySM = true, dependency = ApsUseSmb,
-        visibility = PreferenceVisibility.ADVANCED_FILTERING
+        visibility = PreferenceVisibility { it.preferences.get(ApsDisableCgmWhitelistForSmb) || it.advancedFilteringSupported }
     ),
     ApsUseSmbWithCob(
         "enableSMB_with_COB", true, R.string.pref_title_aps_use_smb_with_cob, R.string.pref_summary_aps_use_smb_with_cob, defaultedBySM = true, dependency = ApsUseSmb,
@@ -104,6 +105,7 @@ enum class BooleanKey(
     ApsAutoIsfHighTtRaisesSens("high_temptarget_raises_sensitivity", false, R.string.pref_title_aps_high_tt_raises_sensitivity, R.string.pref_summary_aps_high_tt_raises_sensitivity, defaultedBySM = true),
     ApsAutoIsfLowTtLowersSens("low_temptarget_lowers_sensitivity", false, R.string.pref_title_aps_low_tt_lowers_sensitivity, R.string.pref_summary_aps_low_tt_lowers_sensitivity, defaultedBySM = true),
     ApsUseAutoIsfWeights("openapsama_enable_autoISF", false, R.string.pref_title_aps_use_autoisf_weights, R.string.pref_summary_aps_use_autoisf_weights, defaultedBySM = true),
+    ApsAllowRecalculatedBg("allow_recalculated_bg", false, R.string.pref_title_allow_recalculated_bg, R.string.pref_summary_allow_recalculated_bg, defaultedBySM = true),
     ApsAutoIsfSmbOnEvenTarget("Enable alternative activation of SMB always", false, R.string.pref_title_aps_smb_on_even_target, R.string.pref_summary_aps_smb_on_even_target, defaultedBySM = true),
 
     MaintenanceEnableFabric("enable_fabric2", true, R.string.pref_title_maintenance_enable_fabric, defaultedBySM = true, hideParentScreenIfHidden = true),

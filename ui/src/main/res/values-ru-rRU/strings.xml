@@ -108,4 +108,7 @@
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
     <!-- Calibration entry rejection reasons -->
     <!-- Calibration preflight messages shown in the dialog before submit -->
+
+    <string name="key">перевод cal_reject_no_session|||Calibration not saved: no sensor session is active. Mark a sensor change first.|</string>
+    <string name="carb_time">Carb Time</string>
 </resources>

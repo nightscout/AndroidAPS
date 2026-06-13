@@ -13,4 +13,35 @@
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
+
+
+
+
+
+    <string name="permission_battery_title">Battery Optimization</string>
+    <string name="permission_battery_description">Application needs to be excluded from battery optimization to run reliably in the background</string>
+    <string name="permission_directory_title">AAPS Directory</string>
+    <string name="permission_directory_description">Select a directory for application settings and log files</string>
+    <string name="permission_notifications_title">Notifications</string>
+    <string name="permission_notifications_description">Required to show alerts, alarms, and pump status updates</string>
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
+    <string name="exported_to_cloud">Settings successfully exported to cloud storage</string>
+    <string name="export_to_cloud_failed">Failed to export to cloud storage</string>
+    <string name="csv_uploaded_to_cloud">User Entries CSV successfully uploaded to cloud storage</string>
+    <string name="exported">Preferences exported</string>
+    <string name="exported_failed">Preferences export failed!</string>
+    <string name="filenotfound">File not found</string>
+    <string name="ue_exported">User Entries exported</string>
+    <string name="exported_ago">exported %1$s ago</string>
+    <string name="exported_at">exported at %1$s</string>
+    <string name="exported_less_than_hour_ago">exported less than hour ago</string>
+    <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
+    <string name="key">перевод</string>
 </resources>

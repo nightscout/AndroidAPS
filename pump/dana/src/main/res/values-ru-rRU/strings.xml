@@ -101,4 +101,7 @@
     <string name="num1pin">1: (12 цифр)</string>
     <string name="num2pin">2: (8 цифр)</string>
     <string name="basal_bolus_step">Шаг Базала/болюса</string>
+
+
+    <string name="key">перевод</string>
 </resources>

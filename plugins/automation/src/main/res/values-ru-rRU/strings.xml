@@ -120,4 +120,32 @@
     <string name="off">ВЫКЛ</string>
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
+
+
+
+    <string name="automation_enabled">Включено</string>
+    <string name="automation_read_only">Только для чтения</string>
+    <string name="automation_new_rule">Новое правило</string>
+    <string name="automation_edit_rule">Редактировать правило</string>
+    <string name="automation_discard_title">Отменить изменения?</string>
+    <string name="automation_discard_message">Правило неполное и не может быть сохранено. Отменить изменения?</string>
+    <string name="automation_discard_confirm">Отменить</string>
+    <string name="automation_category_time">Время и расписание</string>
+    <string name="automation_category_glucose">Глюкоза и лечение</string>
+    <string name="automation_category_device">Состояние устройства</string>
+    <string name="automation_category_sensors">Датчики и подключение</string>
+    <string name="automation_category_other">Другое</string>
+    <string name="automation_choose_trigger">Добавить триггер</string>
+    <string name="automation_add_group">Группа</string>
+    <string name="automation_choose_action">Добавить действие</string>
+    <string name="automation_category_targets">Цели</string>
+    <string name="automation_category_profile">Профиль</string>
+    <string name="automation_category_loop">Контур и инсулин</string>
+    <string name="automation_category_alerts">Оповещения</string>
+    <string name="automation_category_system">Система</string>
+    <string name="automation_category_scenes">Сцены</string>
+    <string name="action_run_scene">Запустить сцену</string>
+    <string name="action_run_scene_short">Запустить сцену: %1$s</string>
+    <string name="action_enable_scene">Включить сцену</string>
+    <string name="action_enable_scene_short">Включить сцену: %1$s</string>
 </resources>

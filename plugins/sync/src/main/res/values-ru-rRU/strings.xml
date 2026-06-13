@@ -67,7 +67,7 @@
     <string name="loop_status">Статус цикла</string>
     <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
-    <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, пожалуйста, обновите плитку</string>
+    <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, обновите плитку</string>
     <string name="wear_action_tempt_cancel_message">Отменить действие ВЦ?</string>
     <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
     <string name="wear_action_tempt_zero_message">Нулевая ВЦ - отменить выполнение Временной Цели?</string>
@@ -127,4 +127,32 @@
     <string name="wear_action_loop_state_now_invalid">Недопустимое состояние</string>
     <string name="garmin_request_key">Ключ запроса</string>
     <!-- SMS Communicator & OTP Authenticator -->
+
+
+    <string name="key">перевод</string>
+    <string name="smscommunicator_carbs_set">Углеводы %1$d г успешно введены</string>
+    <string name="smscommunicator_carbs_failed">Ввод углеводов %1$d г не удался</string>
+    <string name="smscommunicator_tempbasal_set_percent">Временный базал %1$d%% на %2$d мин успешно начат</string>
+    <string name="smscommunicator_tempbasal_failed">Запуск временного базала не удался</string>
+    <string name="smscommunicator_extended_failed">Запуск расширенного болюса не удался</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Чтобы остановить временный базал, ответьте кодом %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Чтобы остановить расширенный болюс, ответьте кодом %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Временный базал отменен</string>
+    <string name="smscommunicator_extended_canceled">Расширенный болюс отменен</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Отмена временного базала не удалась</string>
+    <string name="smscommunicator_extended_cancel_failed">Отмена расширенного болюса не удалась</string>
+    <string name="smscommunicator_unknown_command">Неизвестная команда или неправильный ответ</string>
+    <string name="smscommunicator_another_bolus_in_queue">В очереди уже есть болюс. Попробуйте позже.</string>
+    <string name="smscommunicator_wrong_duration">Неправильная продолжительность</string>
+    <string name="smscommunicator_loop_suspended">Контур приостановлен</string>
+    <string name="smscommunicator_loop_resumed">Контур возобновлен</string>
+    <string name="smscommunicator_invalid_phone_number">Неверный номер телефона для SMS</string>
+    <string name="smscommunicator_calibration_sent">Калибровка отправлена. Прием должен быть включен в xDrip+.</string>
+    <string name="smscommunicator_calibration_failed">xDrip+ не принимает калибровки</string>
+    <string name="smscommunicator_message_body">Неверное тело сообщения</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Чтобы переключить режим контура на LGS (приостановка при низком глюкоозе), ответьте кодом %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Чтобы переключить режим контура на Закрытый цикл, ответьте кодом %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Текущий работающий режим: %1$s</string>
+    <string name="wrong_format">Неверный формат</string>
+    <string name="sms_actual_bg">Глюкоза:</string>
 </resources>

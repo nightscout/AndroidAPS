@@ -97,4 +97,9 @@
     <!--    autoISF -->
     <string name="autoISF_settings_title">Настройки AutoISF</string>
     <string name="smb_delivery_settings_title">Настройки введения микроболюсов SMB</string>
+
+
+
+
+    <string name="description_auto_isf">Экспериментальный алгоритм для продвинутых пользователей с расширениями AutoISF</string>
 </resources>

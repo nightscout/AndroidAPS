@@ -3,6 +3,8 @@ package app.aaps.plugins.aps.openAPS
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.Reusable
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -10,7 +12,8 @@ import kotlin.time.DurationUnit
 
 @Reusable
 class DeltaCalculator @Inject constructor(
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val preferences: Preferences
 ) {
 
     /**
@@ -41,8 +44,9 @@ class DeltaCalculator @Inject constructor(
         val now = data[0]
         val nowDate = now.timestamp
         // start at data[1] as data[0] is the value used in the now calculations
+        val allowRecalculatedBg = preferences.get(BooleanKey.ApsAllowRecalculatedBg)
         for (i in 1 until data.size) {
-            if (data[i].recalculated > minBgValue) {
+            if (allowRecalculatedBg || data[i].recalculated > minBgValue) {
                 val then = data[i]
                 val thenDate = then.timestamp
                 val minutesAgo = (nowDate - thenDate).milliseconds.toDouble(DurationUnit.MINUTES)

@@ -39,4 +39,9 @@
     <!-- Notification Reader -->
     <!-- Permission rationales -->
     <string name="permission_notification_listener_title">Доступ к уведомлениям</string>
+
+
+
+
+    <string name="key">перевод</string>
 </resources>

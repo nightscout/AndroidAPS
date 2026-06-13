@@ -21,7 +21,7 @@
     <string name="omnipod_common_error_failed_to_set_time">Не удалось задать время</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Не удалось возобновить подачу</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Не удалось инициализировать Pod</string>
-    <string name="omnipod_common_error_failed_to_insert_cannula">Не удалось установить канюлю</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Не удалось установить катетер</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Превышено время активации Pod. Этот Pod больше не может быть активирован.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Не удалось проверить ход активации. Повторите попытку.</string>
     <string name="omnipod_common_error_pod_suspended">Omnipod остановлен</string>
@@ -58,7 +58,7 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Заполнить Pod</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Инициализировать Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Подключить Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Подготовьте место инфузии. Удалите колпачок с иглы и защиту липкого слоя, Установите Pod на тело.\n\nесли канюля выступает, нажмите <b>Отмена</b> и утилизируйте Pod.\n\nНажмите <b>Далее</b> чтобы установить катетер и начать подачу базала.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Подготовьте место инфузии. Удалите колпачок с иглы и защиту липкого слоя, Установите Pod на тело.\n\nесли катетер выступает, нажмите <b>Отмена</b> и утилизируйте Pod.\n\nНажмите <b>Далее</b> чтобы установить катетер и начать подачу базала.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">При нажатии <b>OK</b>будет установлен катетер. Убедитесь, что вы подключили Pod к инфузионному отсеку.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Вставить катетер</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Определение графика подачи базала и установка катетера. \n\n После установки катетера нажмите <b>Далее</b>.</string>
@@ -163,4 +163,6 @@
         <item quantity="many">Оповещений Pod: %1$s</item>
         <item quantity="other">Оповещений Pod: %1$s</item>
     </plurals>
+
+    <string name="key">перевод||ом приведилось</string>
 </resources>

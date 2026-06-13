@@ -144,4 +144,6 @@
     <string name="equil_replace_reservoir">Резервуар пуст. Замените резервуар</string>
     <string name="error_mustbe6hexadidits">Должно быть 6 символов: из этих: ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Ошибка при выполнении команды Разъединить. Помпа будет удалена в любом случае. Пароль, установленный при сопряжении, не удаляется из помпы.</string>
+
+    <string name="key">Контейнер Equil</string>
 </resources>

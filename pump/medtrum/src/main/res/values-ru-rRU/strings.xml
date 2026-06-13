@@ -74,7 +74,7 @@
     <string name="press_next">Нажмите <b>Далее</b> для продолжения.</string>
     <string name="press_next_to_start_activation">Нажмите <b>Далее</b> для начала активации.</string>
     <string name="remove_safety_lock">Снимите защиту. Прикрепите помпу к телу. Нажмите на кнопку иглы.</string>
-    <string name="activating_pump">Активация помпы и установка базальной скорости. Пожалуйста, подождите.</string>
+    <string name="activating_pump">Активация помпы и установка базальной скорости. подождите.</string>
     <string name="activating_complete">Новый патч активирован. Заполнение %.2f единиц.</string>
     <string name="can_export_settings">Можно экспортировать настройки, чтобы затем восстановить эту сессию патча.</string>
     <string name="press_OK_to_return">Нажмите <b>OK</b> для возврата к главному экрану.</string>
@@ -82,14 +82,14 @@
     <string name="cancel_sure">Вы уверены, что хотите отменить активацию?</string>
     <string name="medtrum_deactivate_pump_confirm">Вы уверены? Это действие не может быть отменено!!</string>
     <string name="press_next_or_cancel">Нажмите <b>Далее</b> для отключения или <b>Отмена</b> для возврата к основному экрану.</string>
-    <string name="deactivating_pump">Деактивация патча. Пожалуйста, подождите.</string>
+    <string name="deactivating_pump">Деактивация патча. подождите.</string>
     <string name="deactivating_error">Деактивация не удалась, нажмите <b>Сбросить</b>, чтобы забыть патч.</string>
     <string name="retract_needle">Извлеките иглу. Снимите патч с тела.</string>
     <string name="remove_base_discard_patch">Отсоедините основание помпы и утилизируйте отработавший патч надлежащим образом.</string>
     <string name="press_next_or_OK">Нажмите <b>OK</b> для возврата на основной экран. Нажмите <b>Далее</b> для активации нового патча.</string>
     <string name="activation_in_progress">Ой! Что-то пошло не так, вероятно, активация уже запущена.</string>
     <string name="press_retry_or_discard">Нажмите <b>Далее</b>, чтобы возобновить активацию или <b>Discard</b> для сброса статуса активации.</string>
-    <string name="reading_activation_status">Пожалуйста, подождите, получение статуса активации с помпы.</string>
+    <string name="reading_activation_status">подождите, получение статуса активации с помпы.</string>
     <!-- settings-->
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
@@ -126,4 +126,18 @@
     <string name="bolus_error_reason_unable_to_send_command">Невозможно отправить команду на болюс</string>
     <string name="bolus_error_reason_communication_lost">Истекло время ожидания статуса болюса</string>
     <string name="bolus_error_reason_pump_error">Ошибка помпы</string>
+
+    <string name="patch_reset_after_primed_error">Patch reset detected after priming! Remove the patch and start a new patch.</string>
+    <string name="status_idle">Idle</string>
+    <string name="status_filled">Filled</string>
+    <string name="status_priming">Priming</string>
+    <string name="status_primed">Primed</string>
+    <string name="status_ejecting">Ejecting</string>
+    <string name="status_ejected">Ejected</string>
+    <string name="status_active">Active</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="step_select_insulin">Select Insulin</string>
+    <string name="unpair_confirm_message">This will clear the stored pump serial number and disconnect. Activate a new patch to scan for a pump.</string>
+    <string name="ble_scan_connect_pump_base_first">Connect the pump base to a fresh patch to power it on, then select it from the list below.</string>
+    <string name="connect_pump_base">Make sure the pump base is connected to the patch, remove the residual air and fill with insulin, then press</string>
 </resources>

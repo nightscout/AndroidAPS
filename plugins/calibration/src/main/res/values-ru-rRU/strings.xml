@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="calibration_shortname">КАЛ</string>
+    <string name="no_calibration_name">Без калибровки</string>
+    <string name="description_no_calibration">"Калибровка не применяется. Значения сенсора используются как есть. Используйте это, когда сенсор уже заводской калиброван и точен."</string>
+    <string name="linear_calibration_name">Линейная калибровка</string>
+    <string name="description_linear_calibration">"Линейная калибровка с наклона и смещением для каждого сенсора, вычисляемая из ваших показаний на крови. Недавние записи имеют больший вес. Калибровка применяется после начала текущей сессии сенсора; первые 2 часа пропускаются как нагрев."</string>
+    <string name="sensor_change_detected_text">Обнаружена возможная смена сенсора в %1$s. Отметить как новый сенсор?</string>
+    <string name="sensor_change_detected_action">Отметить смену сенсора</string>
+    <string name="cal_status_no_session">Зарегистрируйте смену сенсора, чтобы включить калибровку.</string>
+    <string name="cal_status_warmup">Нагрев сенсора — калибровка будет активна через %1$s.</string>
+    <string name="cal_status_need_more_entries">Нужно как минимум 2 показания на крови (сейчас %1$d).</string>
+    <string name="cal_status_unsafe_fit">Расчет вне безопасного диапазона — калибровка не применена.</string>
+    <string name="cal_status_applied">Калибровка применена.</string>
+    <string name="cal_status_applied_offset_only">Применена только калибровка со смещением — диапазон сенсора слишком узкий для наклона.</string>
+    <string name="cal_status_applied_slope_clamped">Калибровка применена — наклон ограничен безопасным диапазоном. Добавьте больше записей, чтобы расслабить ограничение.</string>
+    <string name="cal_slope_offset">Наклон %1$.2f, коррекция среднего диапазона %2$s</string>
+    <string name="cal_session_started">Сессия начата: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Зарегистрировать смену сенсора</string>
+    <string name="cal_add_calibration">Добавить калибровку</string>
+    <string name="cal_entries_header">Показания на крови (%1$d)</string>
+    <string name="cal_no_entries">Пока нет показаний на крови.</string>
+    <string name="cal_entry_pair">Показание %1$s → сенсор %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Удалить запись?</string>
+    <string name="cal_remove_entry_message">Это сделает запись недействительной. Расчет будет пересчитан.</string>
+    <string name="cal_chart_entry_readout">Запись %1$d/%2$d · %3$s · сенсор %4$s → ГК %5$s</string>
+</resources>

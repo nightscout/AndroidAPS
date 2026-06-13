@@ -82,4 +82,7 @@
     <string name="string_temp_basal_remained_hhmm">оставшееся время: %1$s:%2$s</string>
     <string name="string_resume_failed">Возобновление не состоялось.</string>
     <!-- Permission rationales -->
+
+
+    <string name="key">перевод: Успешно</string>
 </resources>

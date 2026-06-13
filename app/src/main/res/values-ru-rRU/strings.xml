@@ -5,6 +5,7 @@
     <string name="select">Выбрать</string>
     <string name="set">Задать</string>
     <string name="migrating_preferences">Перенос настроек…</string>
+    <string name="optimizing_database">Оптимизация базы данных…</string>
     <string name="initializing_plugins">Инициализация плагинов…</string>
     <string name="initializing">Инициализация…</string>
     <string name="migrating_profile_switches">Перенос переключателей профиля…</string>

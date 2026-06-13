@@ -34,7 +34,7 @@
     <string name="open_objectives">Открыть Цели</string>
     <string name="setupwizard_permissions">Разрешения</string>
     <string name="setupwizard_profile_info">Создайте профиль с указанием БС, УК, ФЧИ и целевой ГК. Вы сможете добавить дополнительные профили позднее.</string>
-    <string name="setupwizard_permissions_info">Для корректной работы AAPS требуется доступ к хранилищу и разрешения. Пожалуйста, предоставьте необходимые разрешения ниже.</string>
+    <string name="setupwizard_permissions_info">Для корректной работы AAPS требуется доступ к хранилищу и разрешения. предоставьте необходимые разрешения ниже.</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
     <string name="readstatus">Статус \'чтение\'</string>
     <!-- Provider-agnostic cloud export/import strings -->
