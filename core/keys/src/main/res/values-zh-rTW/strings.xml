@@ -31,6 +31,9 @@
     <string name="pref_title_alert_carbs_required">需要碳水化合物時發出警示</string>
     <string name="pref_title_alert_urgent_as_android_notification">以 Android 通知顯示緊急警報</string>
     <string name="pref_title_alert_increase_volume">逐步提高通知音量</string>
+    <string name="pref_title_alert_override_dnd">允許覆寫「請勿打擾」模式</string>
+    <string name="pref_summary_alert_override_dnd">啟用後，AAPS 警報會在靜音模式與「請勿打擾」模式下播放（使用鬧鐘音訊串流）。
+停用後，警報會遵循靜音／「請勿打擾」設定（使用通知音訊串流）。</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">將血糖資料上傳至 NS</string>
     <string name="pref_title_bg_source_create_sensor_change">記錄傳感器更換</string>
@@ -221,6 +224,8 @@
     <string name="pref_title_sms_remote_bolus_distance">遠端注射的最小距離</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">隨機血糖間隔</string>
+    <string name="pref_title_random_bg_randomize">隨機化血糖資料</string>
+    <string name="pref_summary_random_bg_randomize">加入雜訊、使時間戳記產生抖動、隨機化趨勢箭頭，並偶爾產生隨機碳水化合物。停用則會提供乾淨且可預測的正弦波，趨勢箭頭源自正弦斜率。</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">資料過期警報門檻</string>
     <string name="pref_title_urgent_alarm_stale_data">緊急資料過期警報門檻</string>

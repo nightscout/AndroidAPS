@@ -68,6 +68,7 @@
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">Nguồn Đường huyết</string>
     <string name="configbuilder_smoothing">Làm mượt</string>
+    <string name="configbuilder_calibration">Hiệu chuẩn</string>
     <string name="configbuilder_pump">Bơm Insulin</string>
     <string name="configbuilder_sensitivity">Phát hiện độ nhạy insulin</string>
     <string name="configbuilder_aps">APS</string>
@@ -328,7 +329,7 @@
     <string name="temporary_targets">Mục tiêu tạm thời</string>
     <string name="running_mode">Chế độ đang chạy</string>
     <string name="scene">Ngữ cảnh</string>
-    <string name="scenes">Các ngữ cảnh</string>
+    <string name="scenes">Ngữ cảnh</string>
     <string name="scene_desc">Thiết lập sẵn theo tình huống — kích hoạt nhiều hành động cùng lúc</string>
     <string name="scene_activate">Kích hoạt</string>
     <string name="scene_deactivate">Kết thúc ngữ cảnh</string>
@@ -346,7 +347,7 @@
     <string name="scene_action_smb_off">Vô hiệu hóa SMBs</string>
     <string name="scene_action_running_mode">Chế độ đang chạy: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
-    <string name="scene_management">Các ngữ cảnh</string>
+    <string name="scene_management">Ngữ cảnh</string>
     <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các ngữ cảnh</string>
     <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
@@ -453,6 +454,8 @@
     <string name="location_front_left_lower_abdomen">Vùng bụng trái phía dưới, mặt trước</string>
     <string name="location_back_right_buttock">Mông phải</string>
     <string name="location_back_left_buttock">Mông trái</string>
+    <string name="location_back_right_lower_back">Vùng lưng dưới bên Phải</string>
+    <string name="location_back_left_lower_back">Vùng lưng dưới bên Trái</string>
     <string name="location_side_right_upper_thigh">Phần ngoài đùi phải phía trên</string>
     <string name="location_side_left_upper_thigh">Phần ngoài đùi trái phía trên</string>
     <string name="location_side_right_lower_thigh">Phần ngoài đùi phải phía dưới</string>
@@ -535,6 +538,7 @@
     <string name="uel_tt_ns_refresh">CẬP NHẬT TEMP TARGET TỪ NS</string>
     <string name="uel_automation_removed">ĐÃ XÓA TỰ ĐỘNG HOÁ</string>
     <string name="uel_bg_removed">BG REMOVED</string>
+    <string name="uel_calibration_removed">ĐÃ XÓA HIỆU CHUẨN</string>
     <string name="uel_careportal_removed">ĐÃ XÓA THÔNG TIN ĐIỀU TRỊ</string>
     <string name="uel_bolus_removed">ĐÃ XÓA BOLUS</string>
     <string name="uel_carbs_removed">ĐÃ XÓA CARBS</string>
@@ -616,6 +620,9 @@
     <string name="missing_profile_name">Thiếu tên cấu hình</string>
     <string name="profile_not_saved_activate">Cấu hình điều trị chưa được lưu. Vui lòng lưu trước khi kích hoạt.</string>
     <string name="profile_activation_failed">Kích hoạt cấu hình thất bại</string>
+    <string name="profile_switch_save_failed">Không thể lưu thay đổi cấu hình. Vui lòng thử lại.</string>
+    <string name="profile_basal_not_compatible_with_pump">Tỷ lệ liều nền không tương thích với máy bơm hiện tại và không thể được kích hoạt. Hãy giảm tỷ lệ phần trăm hoặc điều chỉnh tỷ lệ liều nền.</string>
+    <string name="profile_pump_incompatible_label">Giới hạn Bơm</string>
     <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
     <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
     <string name="error_in_basal_values">Lỗi ở các giá trị liều nền</string>
@@ -761,7 +768,7 @@
     <string name="history" comment="Tab/screen title for viewing past events">Lịch sử</string>
     <string name="overview_reservoir_concentration_value_over">Còn hơn %1$s</string>
     <!--    Constraints-->
-    <string name="limitingbasalratio">Giới hạn tỷ lệ nền tối đa ở %1$.2f U/h do %2$s</string>
+    <string name="limitingbasalratio">Giới hạn tỷ lệ liều nền tối đa ở %1$.2f U/h do %2$s</string>
     <string name="pumplimit">giới hạn Bơm</string>
     <string name="limitingpercentrate">Giới hạn tỷ lệ phần trăm tối đa %1$d%% do %2$s</string>
     <string name="itmustbepositivevalue">phải nhập giá trị dương</string>
@@ -829,6 +836,7 @@
     <string name="clear_cloud_action">Xóa cài đặt</string>
     <string name="clear_cloud_settings">Xóa cài đặt đám mây</string>
     <string name="clear_cloud_settings_message">Hành động này sẽ chuyển sang lưu trữ cục bộ và xóa quyền truy cập. Tiếp tục?</string>
+    <string name="cloud_revoke_incomplete">Cài đặt Cloud đã được xóa trên thiết bị này, nhưng không thể kết nối đến tài khoản để thu hồi hoàn toàn quyền truy cập. Bạn có thể cần xóa thủ công trong phần cài đặt tài khoản của mình.</string>
     <string name="cloud_connection_failed">Kết nối lưu trữ đám mây thất bại</string>
     <string name="cloud_reauthorize_message">Kết nối lưu trữ đám mây thất bại. Bạn có muốn xác thực lại không?</string>
     <string name="reauthorize">Xác thực lại</string>

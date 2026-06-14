@@ -74,15 +74,14 @@ internal fun CobChip(
                         .then(iconAlphaModifier)
                 )
             }
-            val carbsRequired = state.carbsReq > 0
             Text(
                 text = state.text,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = if (carbsRequired) 1 else Int.MAX_VALUE,
+                maxLines = 1,
                 modifier = Modifier
                     .padding(start = if (showIcon) AapsSpacing.medium else 0.dp)
-                    .then(if (carbsRequired) Modifier.basicMarquee() else Modifier)
+                    .basicMarquee()
             )
         }
     }

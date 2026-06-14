@@ -77,6 +77,9 @@ import java.util.Calendar
  * @param dateUtil DateUtil for formatting dates/times
  * @param rh ResourceHelper for string resources
  * @param onNavigateBack Callback to navigate back
+ * @param checkPumpCompatible Returns whether the profile's basal is deliverable by the current pump
+ *        at the given percentage. Re-queried as the percentage changes so the screen can block
+ *        activation before the user confirms.
  * @param onActivate Callback when profile is activated with (duration, percentage, timeshift, withTT, notes, timestamp, timeChanged)
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,6 +93,7 @@ fun ProfileActivationScreen(
     initialTimestamp: Long,
     rh: ResourceHelper,
     onNavigateBack: () -> Unit,
+    checkPumpCompatible: (percentage: Int) -> Boolean = { true },
     onActivate: (durationMinutes: Int, percentage: Int, timeshiftHours: Int, withTT: Boolean, notes: String, timestamp: Long, timeChanged: Boolean) -> Unit
 ) {
     val dateUtil = LocalDateUtil.current
@@ -110,6 +114,11 @@ fun ProfileActivationScreen(
 
     // TT option only visible when duration > 0 and percentage < 100
     val showTTOption = duration > 0 && percentage < 100
+
+    // Pump compatibility is percentage-aware (basal scales with %). Re-query as the user changes
+    // the percentage so the warning + the disabled Activate button track the current selection.
+    val percentageInt = percentage.toInt()
+    val pumpCompatible = remember(percentageInt, checkPumpCompatible) { checkPumpCompatible(percentageInt) }
 
     // Format duration as "Xh Ym" when >= 60 minutes
     val durationMinutes = duration.toInt()
@@ -234,6 +243,7 @@ fun ProfileActivationScreen(
                     focusManager.clearFocus()
                     showConfirmDialog = true
                 },
+                enabled = pumpCompatible,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bottomBarSafeArea()
@@ -264,6 +274,22 @@ fun ProfileActivationScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            // Pre-emptive block: the profile's basal can't be delivered by the current pump at the
+            // selected percentage, so activation is disabled and the reason is shown up front.
+            if (!pumpCompatible) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                ) {
+                    Text(
+                        text = stringResource(app.aaps.core.ui.R.string.profile_basal_not_compatible_with_pump),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+
             // Single card with all inputs
             Card(
                 modifier = Modifier.fillMaxWidth(),

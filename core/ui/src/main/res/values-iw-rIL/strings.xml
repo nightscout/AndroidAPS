@@ -450,6 +450,7 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
+    <string name="cloud_revoke_incomplete">הגדרות הענן נמחקו מהמכשיר הזה, אך לא ניתן היה להגיע לחשבון כדי לבטל את הגישה באופן מלא. מומלץ להסיר אותה ידנית בהגדרות החשבון שלכם.</string>
     <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
     <!-- datetime layout -->
     <string name="event_time_label">שעת אירוע</string>

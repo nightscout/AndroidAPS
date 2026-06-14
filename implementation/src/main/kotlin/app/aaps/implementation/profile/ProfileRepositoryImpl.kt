@@ -26,6 +26,7 @@ import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import dagger.Lazy
@@ -153,16 +154,6 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addNew(): Result<Unit> = mutex.withLock {
-        runCatching {
-            withContext(Dispatchers.IO) {
-                addNewProfileInternal()
-                storeSettingsInternal(timestamp = 0)
-            }
-            snapshot()
-        }
-    }
-
     override suspend fun add(profile: SingleProfile): Result<Unit> = mutex.withLock {
         runCatching {
             withContext(Dispatchers.IO) {
@@ -215,7 +206,6 @@ class ProfileRepositoryImpl @Inject constructor(
         // Pure CPU function of the passed-in profile + DI-injected helpers (HardLimits,
         // pump description, etc.) that are safe to read concurrently.
         val errors = mutableListOf<ProfileValidationError>()
-        val pumpDescription = activePlugin.activePump.pumpDescription
         with(profile) {
             if (name.isEmpty()) {
                 errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.missing_profile_name)))
@@ -229,7 +219,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
                     errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
                 }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) {
+                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < 0.01 || it.amount > hardLimits.maxBasal() } != false) {
                     errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
                 }
                 if (low?.all { hardLimits.isInRange(it.amount, HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
@@ -242,7 +232,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
                     errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
                 }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) {
+                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < 0.01 || it.amount > hardLimits.maxBasal() } != false) {
                     errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
                 }
                 if (low?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
@@ -267,6 +257,33 @@ class ProfileRepositoryImpl @Inject constructor(
             }
         }
         return errors.distinctBy { it.type to it.message }
+    }
+
+    override fun validatePumpCompatibility(profile: SingleProfile, percentage: Int): List<ProfileValidationError> {
+        // Pump-dependent, non-blocking check: is this profile's basal deliverable by the active pump
+        // at [percentage]? Only the basal block is pump-specific (min/max rate, 30-min granularity).
+        val pure = profile.toPureProfile(dateUtil) ?: return emptyList()
+        val sealed = ProfileSealed.Pure(pure, activePlugin)
+        sealed.pct = percentage
+        val check = sealed.validatePump("pumpCompatibility", activePlugin.activePump, config, rh, notificationManager, false)
+        return if (check.isValid) emptyList()
+        else listOf(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.profile_basal_not_compatible_with_pump)))
+    }
+
+    override fun newDraft(): SingleProfile {
+        // Empty (zero) blocks → the profile is semantically invalid, so the editor's Save stays
+        // disabled until the user fills it in. Nothing is persisted here; the editor commits via [add].
+        val existingNames = profiles.value.mapTo(HashSet()) { it.name }
+        val free = (1..10000).firstOrNull { Constants.LOCAL_PROFILE + it !in existingNames } ?: 0
+        return SingleProfile(
+            name = Constants.LOCAL_PROFILE + free,
+            mgdl = profileFunction.get().getUnits() == GlucoseUnit.MGDL,
+            ic = singleBlockProfileArray(0.0),
+            isf = singleBlockProfileArray(0.0),
+            basal = singleBlockProfileArray(0.0),
+            targetLow = singleBlockProfileArray(0.0),
+            targetHigh = singleBlockProfileArray(0.0)
+        )
     }
 
     override fun copyFrom(pureProfile: PureProfile, newName: String): SingleProfile {
@@ -345,7 +362,9 @@ class ProfileRepositoryImpl @Inject constructor(
             for (p in store.getProfileList()) {
                 val pureProfile = store.getSpecificProfile(p.toString())
                 val validityCheck = pureProfile?.let {
-                    ProfileSealed.Pure(it, activePlugin).isValid("NS", activePlugin.activePump, config, rh, notificationManager, hardLimits, false)
+                    // Accept by semantic validity only — a profile that's merely incompatible with the
+                    // current pump is still valid data to store; pump compatibility is enforced at activation.
+                    ProfileSealed.Pure(it, activePlugin).validateSemantic(rh, hardLimits)
                 } ?: Profile.ValidityCheck()
                 if (pureProfile != null && validityCheck.isValid) {
                     // copyFrom would timestamp-suffix the name if it collides with the
@@ -377,18 +396,32 @@ class ProfileRepositoryImpl @Inject constructor(
     private fun addNewProfileInternal() {
         val existingNames = profilesList.mapTo(HashSet()) { it.name }
         val free = (1..10000).firstOrNull { Constants.LOCAL_PROFILE + it !in existingNames } ?: 0
+        val isMgdl = profileFunction.get().getUnits() == GlucoseUnit.MGDL
+        // Seed a new profile with conservative, hard-limit-valid placeholders rather than zeros, so a
+        // freshly added profile is valid out of the box. A zero-seeded profile is semantically invalid
+        // and would silently block the whole profile-store sync until edited (see #4872). ISF and the
+        // targets are stored in the profile's glucose unit, so they branch on [isMgdl].
         profilesList.add(
             SingleProfile(
                 name = Constants.LOCAL_PROFILE + free,
-                mgdl = profileFunction.get().getUnits() == GlucoseUnit.MGDL,
-                ic = JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                isf = JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                basal = JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                targetLow = JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                targetHigh = JSONArray(Constants.DEFAULT_PROFILE_ARRAY)
+                mgdl = isMgdl,
+                ic = singleBlockProfileArray(15.0),
+                isf = singleBlockProfileArray(if (isMgdl) 100.0 else 5.6),
+                basal = singleBlockProfileArray(0.1),
+                targetLow = singleBlockProfileArray(if (isMgdl) 110.0 else 6.1),
+                targetHigh = singleBlockProfileArray(if (isMgdl) 120.0 else 6.7)
             )
         )
     }
+
+    /** A single 00:00 profile block carrying [value], matching the JSON shape AAPS profiles expect. */
+    private fun singleBlockProfileArray(value: Double): JSONArray =
+        JSONArray().put(
+            JSONObject()
+                .put("time", "00:00")
+                .put("timeAsSeconds", 0)
+                .put("value", value)
+        )
 
     private fun createAndStoreConvertedProfile() {
         val json = JSONObject()

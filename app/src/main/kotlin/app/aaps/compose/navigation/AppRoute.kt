@@ -18,6 +18,9 @@ sealed class AppRoute(val route: String) {
         fun createRoute(profileIndex: Int) = "profile_editor/$profileIndex"
     }
 
+    /** Editor opened for a brand-new, unpersisted profile draft (committed only when saved valid). */
+    data object ProfileEditorNew : AppRoute("profile_editor_new")
+
     data object ProfileActivation : AppRoute("profile_activation/{profileIndex}") {
 
         fun createRoute(profileIndex: Int) = "profile_activation/$profileIndex"

@@ -3,9 +3,45 @@
     <string name="automation_short">Автом</string>
     <string name="automation">Автоматизация</string>
     <string name="automation_description">Рецепти за автомация написани от вас</string>
+    <string name="automation_enabled">Включено</string>
+    <string name="automation_read_only">Само за преглед</string>
+    <string name="automation_new_rule">Ново правило</string>
+    <string name="automation_edit_rule">Редактиране</string>
+    <string name="automation_discard_title">Отхвърли промените?</string>
+    <string name="automation_discard_message">Правилото е незавършено и не мога да го запазя. Отказвате ли промените?</string>
+    <string name="automation_discard_confirm">Откажи</string>
+    <string name="automation_category_time">Времеви &amp; график</string>
+    <string name="automation_category_glucose">Глюкозно &amp; третиране</string>
+    <string name="automation_category_device">Статус на устройство</string>
+    <string name="automation_category_sensors">Връзка &amp; със сензор</string>
+    <string name="automation_category_other">Друго</string>
+    <string name="automation_choose_trigger">Добавяне на тригър</string>
+    <string name="automation_add_group">Група</string>
+    <string name="automation_choose_action">Добави действие</string>
+    <string name="automation_category_targets">Цели</string>
+    <string name="automation_category_profile">Профил</string>
+    <string name="automation_category_loop">Кръг &amp; инсулин</string>
+    <string name="automation_category_alerts">Аларми</string>
+    <string name="automation_category_system">Система</string>
+    <string name="automation_category_scenes">Сценарии</string>
+    <string name="action_run_scene">Стартирай сценарий</string>
+    <string name="action_run_scene_short">Стартиране на сценарий: %1$s</string>
+    <string name="action_enable_scene">Разреши сценарий</string>
+    <string name="action_enable_scene_short">Разреши сценарий: %1$s</string>
+    <string name="action_disable_scene">Забрани сценарий</string>
+    <string name="action_disable_scene_short">Забрани сценарий: %1$s</string>
+    <string name="action_scene_label">Сценарий</string>
+    <string name="trigger_scene_active">Сценарий</string>
+    <string name="trigger_scene_active_compared">Сценарий: %1$s</string>
+    <string name="action_scene_not_found">Не намирам сценарий</string>
+    <string name="action_scene_disabled">Сценарият не е открит</string>
+    <string name="automation_unit_meters">м</string>
+    <string name="automation_unit_bpm">уд/м</string>
     <string name="automation_missing_task_name">Въведете име</string>
     <string name="automation_missing_trigger">Въведете поне едно условие.</string>
     <string name="automation_missing_action">Въведете поне едно действие.</string>
+    <string name="exportsettings_message">Експорт настройки: %1$s</string>
+    <string name="export_settings_short">Текст в лечения:</string>
     <string name="alarm_message">Аларма: %1$s</string>
     <string name="alarm_short">Алармa:</string>
     <string name="message_short">Съоб:</string>
@@ -68,6 +104,20 @@
     <string name="cobcompared">Въгл %1$s %2$.0f</string>
     <string name="triggerHeartRate">Сърдечен ритъм</string>
     <string name="triggerHeartRateDesc">СР %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Сензор на</string>
+    <string name="triggerSensorAgeDesc">Сензор на %1$s %2$.1f часа</string>
+    <string name="triggerCannulaAgeLabel">Игла на</string>
+    <string name="triggerCannulaAgeDesc">Иглата е на %1$s %2$.1f часа</string>
+    <string name="triggerPodChangeLabel">Активиране на под</string>
+    <string name="triggerPodChangeDesc">Подът е активиран</string>
+    <string name="triggerInsulinAgeLabel">Инсулин на</string>
+    <string name="triggerInsulinAgeDesc">Инсулин на %1$s %2$.1f часа</string>
+    <string name="triggerPumpBatteryAgeLabel">Батерия на</string>
+    <string name="triggerPumpBatteryAgeDesc">Батерия на %1$s %2$.1f часа</string>
+    <string name="triggerReservoirLevelLabel">В резервоара</string>
+    <string name="triggerReservoirLevelDesc">Инсулин в резервоара %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Батерия на помпата</string>
+    <string name="triggerPumpBatteryLevelDesc">Батерия на помпата %1$s %2$.0f</string>
     <string name="recurringTime">Повтарящо се време</string>
     <string name="every">Всеки</string>
     <string name="never">Никога</string>
@@ -86,13 +136,28 @@
     <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="error_setting_reminder">Грешка при настройка на аларма!</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune профил %1$s</string>
     <string name="autotune_run">Стартирай Autotune</string>
     <string name="autotune_run_without_autoswitch">Стартиране на Autotune без смяна на профила</string>
     <string name="autotune_run_with_autoswitch">Стартиране на Autotune и автоматична смяна на профила</string>
     <string name="autotune_run_with_error">Възникна грешка по време на последното стартиране на Autotune</string>
     <string name="autotune_run_cancelled">Друго стартиране на Autotune е засечено, текущото е отказано</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Стъпки</string>
+    <string name="triggerStepsCountDesc">Стъпки за %1$s мин %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Измерено за</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Пусни/спри SMB</string>
+    <string name="changeSmbTo">Смени SMB на %1$s</string>
+    <string name="newSmbMode">Нов SMB режим:</string>
+    <string name="on">ВКЛ</string>
+    <string name="off">ИЗКЛ</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Избери на карта</string>
+    <string name="tap_to_select_location">Чукни на картата за избор на локация</string>
+    <string name="selected_coords">Избрано: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Локация</string>
+    <string name="permission_location_description">Нужно за автомации с локация и WiFi локализация</string>
+    <string name="permission_background_location_description">Нужно за пускане на автомация когато приложението е във фонов режим (background)</string>
 </resources>

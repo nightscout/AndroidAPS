@@ -45,7 +45,6 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.vicoTheme
 
 @Immutable
 data class TddCyclePatternData(
@@ -233,7 +232,7 @@ private fun TddCycleChart(
         CartesianValueFormatter { _, value, _ -> "${value.toInt() + 1}" }
     }
 
-    val axisLabelComponent = rememberTextComponent(style = TextStyle(color = vicoTheme.textColor))
+    val axisLabelComponent = rememberTextComponent(style = TextStyle(color = MaterialTheme.colorScheme.onSurface))
 
     CartesianChartHost(
         chart = rememberCartesianChart(

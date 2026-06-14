@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmIntent
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -25,14 +26,18 @@ import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.ui.activities.ErrorActivity
 import dagger.Reusable
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Provider
 
 @Reusable
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val alarmNotificationManager: AlarmNotificationManager,
+    // Provider breaks a Dagger cycle: NotificationManagerImpl injects NotificationHolder, which
+    // injects this UiInteraction. notificationManager is only needed lazily in stopAlarm().
+    private val notificationManager: Provider<NotificationManager>,
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
@@ -101,7 +106,10 @@ class UiInteractionImpl @Inject constructor(
 
     override fun stopAlarm(reason: String) {
         aapsLogger.debug(LTag.CORE, "stopAlarm: $reason")
-        alarmNotificationManager.cancelAlarm()
+        // Route through the registry owner so all audible alarms are actually silenced: clears the
+        // internal AlarmSoundPlayer (Wear snooze used to only cancel the system notification, leaving
+        // the ramping audio playing), stops the full-screen audio, and cancels the notifications.
+        notificationManager.get().muteAllAlarms()
     }
 
     /**

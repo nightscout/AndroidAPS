@@ -26,6 +26,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.DatabaseMaintenanceInfo
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -163,6 +164,11 @@ class PersistenceLayerImpl @Inject constructor(
 
     override suspend fun vacuumDatabase() = withContext(Dispatchers.IO) {
         repository.vacuumDatabase()
+    }
+
+    override suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceInfo = withContext(Dispatchers.IO) {
+        val raw = repository.databaseMaintenanceInfo(retentionDays)
+        DatabaseMaintenanceInfo(raw.dbSizeBytes, raw.availableBytes, raw.totalRows, raw.deletableRows, raw.changeRows, raw.report)
     }
 
     // Flow-based change observation

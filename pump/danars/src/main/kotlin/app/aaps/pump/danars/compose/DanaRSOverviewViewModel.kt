@@ -21,8 +21,10 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.compose.DanaOverviewViewModel
@@ -77,6 +79,13 @@ class DanaRSOverviewViewModel @Inject constructor(
         bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
         danaRSPlugin.changePump() // resets mDeviceAddress/mDeviceName — makes isConfigured() return false
         rxTrigger.value = System.currentTimeMillis()
+    }
+
+    override fun errorBanner(isConfigured: Boolean, isInitialized: Boolean): StatusBanner? {
+        if (!isConfigured) return null
+        val address = preferences.get(DanaStringNonKey.MacAddress)
+        if (address.isBlank() || bleTransport.adapter.isDeviceBonded(address)) return null
+        return StatusBanner(rh.gs(app.aaps.core.ui.R.string.ble_not_supported_or_not_paired), StatusLevel.CRITICAL)
     }
 
     override fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<PumpAction> = buildList {

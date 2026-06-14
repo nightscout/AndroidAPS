@@ -78,6 +78,7 @@ fun ProfileEditorScreen(
 
     if (showUnsavedChangesDialog) {
         UnsavedChangesDialog(
+            saveEnabled = state.isValid,
             onSave = {
                 focusManager.clearFocus()
                 viewModel.saveProfile()
@@ -242,6 +243,19 @@ fun ProfileEditorScreen(
                         )
                     }
 
+                    // Non-blocking pump-compatibility warning, shown on the basal tab only (basal is
+                    // the only pump-dependent value). Distinct from the red blocking errors above:
+                    // the profile can still be saved and synced — it just can't be activated on the
+                    // current pump until the basal fits the pump's limits.
+                    if (state.pumpIncompatible && state.selectedTab == 2) {
+                        Text(
+                            text = stringResource(app.aaps.core.ui.R.string.profile_basal_not_compatible_with_pump),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+
                     when (state.selectedTab) {
 
                         0 -> IcContent(
@@ -375,6 +389,7 @@ private fun ProfileNameHeader(
 
 @Composable
 private fun UnsavedChangesDialog(
+    saveEnabled: Boolean,
     onSave: () -> Unit,
     onDiscard: () -> Unit,
     onCancel: () -> Unit
@@ -384,7 +399,9 @@ private fun UnsavedChangesDialog(
         title = { Text(stringResource(R.string.unsaved_changes)) },
         text = { Text(stringResource(R.string.unsaved_changes_message)) },
         confirmButton = {
-            FilledTonalButton(onClick = onSave) {
+            // Disabled when the profile is invalid — an incomplete/invalid profile must not be saved
+            // (e.g. an unfinished new draft); the user can still Discard or Cancel.
+            FilledTonalButton(onClick = onSave, enabled = saveEnabled) {
                 Text(stringResource(R.string.save))
             }
         },

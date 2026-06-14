@@ -62,21 +62,6 @@ private const val SERIES_PRED_ZT = "pred_zt"
 /** All prediction series identifiers */
 private val PREDICTION_SERIES = listOf(SERIES_PRED_IOB, SERIES_PRED_COB, SERIES_PRED_ACOB, SERIES_PRED_UAM, SERIES_PRED_ZT)
 
-private fun interpolateBgAtTimestamp(timestamp: Long, sortedPoints: List<BgDataPoint>): Double {
-    if (sortedPoints.isEmpty()) return 0.0
-    val before = sortedPoints.lastOrNull { it.timestamp <= timestamp }
-    val after = sortedPoints.firstOrNull { it.timestamp > timestamp }
-    return when {
-        before == null -> after!!.value
-        after == null  -> before.value
-
-        else           -> {
-            val t = (timestamp - before.timestamp).toDouble() / (after.timestamp - before.timestamp).toDouble()
-            before.value + t * (after.value - before.value)
-        }
-    }
-}
-
 /**
  * BG Graph using Vico — dual-layer chart.
  *
@@ -249,18 +234,15 @@ fun BgGraphCompose(
                 }
             }
 
-            // Block 4 → EPS layer (layer 3, start axis — Y at interpolated BG value at switch timestamp)
+            // Block 4 → EPS layer (layer 3, start axis — Y based on profile %, scaled into BG coordinate space)
+            // Same principle as legacy (originalPercentage/100 * baseline); baseline = 75% of the BG axis height.
             lineModel {
                 if (currentEpsPoints.isNotEmpty()) {
-                    val allBgPoints = (regularPoints + bucketedPoints).sortedBy { it.timestamp }
+                    val epsBaseline = currentMaxBgY * 0.75
                     val pts = currentEpsPoints
-                        .mapNotNull { eps ->
-                            val bgY = interpolateBgAtTimestamp(eps.timestamp, allBgPoints)
-                            if (bgY > 0.0) timestampToX(eps.timestamp, minTimestamp) to bgY else null
-                        }
+                        .map { eps -> timestampToX(eps.timestamp, minTimestamp) to (eps.originalPercentage / 100.0 * epsBaseline) }
                         .sortedBy { it.first }
-                    if (pts.isNotEmpty()) series(x = pts.map { it.first }, y = pts.map { it.second })
-                    else series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                    series(x = pts.map { it.first }, y = pts.map { it.second })
                 } else {
                     // Dummy series - invisible at y=0
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
@@ -545,7 +527,7 @@ fun BgGraphCompose(
                 rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            // Layer 3: EPS (start axis — Y at interpolated BG value, same range as BG layer)
+            // Layer 3: EPS (start axis — Y based on profile %, same range as BG layer)
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(epsLines),
                 rangeProvider = startAxisRangeProvider,

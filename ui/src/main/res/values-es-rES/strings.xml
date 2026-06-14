@@ -303,4 +303,15 @@
     <string name="widget_rm_disabled">Desactivado</string>
     <string name="widget_rm_suspended">Suspendido</string>
     <string name="widget_rm_resume">Reanudar</string>
+    <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Calibración no guardada: la glucemia está cambiando demasiado rápido (Δ %1$s %3$s por cada 5 min, límite %2$s). Inténtalo de nuevo cuando la glucosa se estabilice</string>
+    <string name="cal_reject_no_pair">Calibración no guardada: no se han encontrado lecturas del MCG en los últimos 10 minutos</string>
+    <string name="cal_reject_warmup">Calibración no guardada: el sensor todavía está en el periodo de calentamiento de 2 horas</string>
+    <string name="cal_reject_no_session">Calibración no guardada: no hay ninguna sesión de sensor activa. Registra primero un cambio de sensor</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">El sensor todavía está en calentamiento. Podrás calibrar a las %1$s</string>
+    <string name="cal_precheck_no_session">No hay ninguna sesión de sensor activa</string>
+    <string name="cal_precheck_no_pair">Sin lecturas del MCG en los últimos 10 minutos. Comprueba la conexión del sensor</string>
+    <string name="cal_precheck_delta_too_high">La glucosa está cambiando demasiado rápido (Δ %1$s %3$s por cada 5 min, límite %2$s). Espera a que se estabilice</string>
+    <string name="cal_precheck_mark_sensor_change">Registrar cambio de sensor</string>
 </resources>

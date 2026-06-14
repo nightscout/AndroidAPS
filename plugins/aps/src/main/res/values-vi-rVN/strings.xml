@@ -25,7 +25,7 @@
     <string name="openapsma_profile_label">Cấu hình</string>
     <string name="openapsma_meal_data_label">Dữ liệu bữa ăn</string>
     <string name="openapsma_request_label">Yêu cầu</string>
-    <string name="constraints">Yếu tố hạn chế</string>
+    <string name="constraints">Điều kiện ràng buộc</string>
     <string name="openapsma_autosensdata_label">Dữ liệu Autosens</string>
     <string name="openapsma_script_debug_data_label">Gỡ lỗi script</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Chú ý!\nThông thường bạn không cần thay đổi các giá trị bên dưới. Vui lòng BẤM VÀO ĐÂY và ĐỌC kỹ nội dung, đảm bảo bạn HIỂU trước khi thay đổi bất kỳ giá trị nào.</string>
@@ -56,7 +56,7 @@
     <string name="last_run_label">Lần chạy gần nhất</string>
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Yêu cầu</string>
-    <string name="loop_constraints_processed_label">Đã áp dụng giới hạn an toàn</string>
+    <string name="loop_constraints_processed_label">ĐSau khi áp dụng giới hạn an toàn</string>
     <string name="loop_tbr_request_time_label">Yêu cầu liều nền tạm thời lúc</string>
     <string name="loop_tbr_execution_time_label">Thực hiện liều nền tạm thời lúc</string>
     <string name="loop_tbr_set_by_pump_label">Liều nền tạm thời bởi bơm</string>

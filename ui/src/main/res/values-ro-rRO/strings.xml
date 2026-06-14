@@ -303,4 +303,15 @@
     <string name="widget_rm_disabled">Dezactivat</string>
     <string name="widget_rm_suspended">Suspendat</string>
     <string name="widget_rm_resume">Reluați</string>
+    <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Calibrarea nu a fost salvată: Glicemia se modifică prea repede (£ %1$s %3$s per 5 min, limita %2$s). Încercați din nou când glicemia este stabilă.</string>
+    <string name="cal_reject_no_pair">Calibrarea nu a fost salvată: Nu a fost găsită nicio citire a senzorului în ultimele 10 minute.</string>
+    <string name="cal_reject_warmup">Calibrarea nu a fost salvată: senzorul se află încă în fereastra de încălzire de 2 ore.</string>
+    <string name="cal_reject_no_session">Calibrarea nu a fost salvată: nicio sesiune de senzor nu este activă. Înregistrați o schimbare de senzor mai întâi.</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Senzorul este încă în perioada de încălzire. Calibrarea va fi disponibilă la %1$s.</string>
+    <string name="cal_precheck_no_session">Nu este activă nicio sesiune de senzor.</string>
+    <string name="cal_precheck_no_pair">Nicio citire a senzorului în ultimele 10 minute. Verificați conexiunea senzorului.</string>
+    <string name="cal_precheck_delta_too_high">Glicemia se modifica prea repede (Δ %1$s %3$s în 5 minute, limita %2$s). Așteptați să se stabilizeze.</string>
+    <string name="cal_precheck_mark_sensor_change">Înregistrați schimbarea senzorului</string>
 </resources>

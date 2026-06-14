@@ -104,9 +104,12 @@ class ProfileStoreObject @Inject constructor(
     }
 
     override val allProfilesValid: Boolean
+        // Sync/storage gate: only semantic (pump-independent) validity. A profile that is merely
+        // incompatible with the *current* pump must still upload to Nightscout, otherwise a single
+        // pump-specific basal value (or a pump switch) silently blocks the whole profile store.
         get() = getProfileList()
             .asSequence()
             .map { profileName -> getSpecificProfile(profileName.toString()) }
-            .map { pureProfile -> pureProfile?.let { ProfileSealed.Pure(pureProfile, activePlugin).isValid("allProfilesValid", activePlugin.activePump, config, rh, notificationManager, hardLimits, false) } }
+            .map { pureProfile -> pureProfile?.let { ProfileSealed.Pure(pureProfile, activePlugin).validateSemantic(rh, hardLimits) } }
             .all { it?.isValid == true }
 }

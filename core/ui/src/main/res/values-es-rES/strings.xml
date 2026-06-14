@@ -68,6 +68,7 @@
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_bgsource">Fuente de glucosa</string>
     <string name="configbuilder_smoothing">Suavizado</string>
+    <string name="configbuilder_calibration">Calibración</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_sensitivity">Detección de sensibilidad</string>
     <string name="configbuilder_aps">APS</string>
@@ -193,8 +194,8 @@
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
     <string name="wear_wizard_settings">Ajustes del asistente en el reloj</string>
-    <string name="bolus_iob_label">IOB de Bolo</string>
-    <string name="treatments_wizard_basaliob_label">IOB de Basal</string>
+    <string name="bolus_iob_label">IOB de bolo</string>
+    <string name="treatments_wizard_basaliob_label">IOB de basal</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Inicio de sesión</string>
     <string name="logout">Cerrar sesión</string>
@@ -295,7 +296,7 @@
     <!--    Translator-->
     <string name="careportal">Portal de cuidados</string>
     <string name="careportal_bgcheck">Medir glucosa</string>
-    <string name="careportal_mbg">Calibración o BG Manual</string>
+    <string name="careportal_mbg">Glucemia manual o calibración</string>
     <string name="careportal_announcement">Aviso</string>
     <string name="careportal_settings_export">Exportación de configuraciones</string>
     <string name="careportal_note">Nota</string>
@@ -453,6 +454,8 @@
     <string name="location_front_left_lower_abdomen">Abdomen izquierdo inferior, frente</string>
     <string name="location_back_right_buttock">Glúteo derecho</string>
     <string name="location_back_left_buttock">Glúteo izquierdo</string>
+    <string name="location_back_right_lower_back">Parte baja derecha de la espalda</string>
+    <string name="location_back_left_lower_back">Parte baja izquierda de la espalda</string>
     <string name="location_side_right_upper_thigh">Muslo superior derecho, exterior</string>
     <string name="location_side_left_upper_thigh">Muslo superior izquierdo, exterior</string>
     <string name="location_side_right_lower_thigh">Muslo inferior derecho, exterior</string>
@@ -535,6 +538,7 @@
     <string name="uel_tt_ns_refresh">ACTUALIZAR OBJETIVO TEMPORAL EN NS</string>
     <string name="uel_automation_removed">AUTOMACIÓN ELIMINADA</string>
     <string name="uel_bg_removed">BG ELIMINADO</string>
+    <string name="uel_calibration_removed">CALIBRACIÓN ELIMINADA</string>
     <string name="uel_careportal_removed">PORTAL DE CUIDADOS ELIMINADO</string>
     <string name="uel_bolus_removed">BOLO ELIMINADO</string>
     <string name="uel_carbs_removed">CARBOHIDRATOS ELIMINADOS</string>
@@ -616,6 +620,9 @@
     <string name="missing_profile_name">Falta el nombre del perfil</string>
     <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
     <string name="profile_activation_failed">Error al activar el perfil</string>
+    <string name="profile_switch_save_failed">No se pudo guardar el cambio de perfil. Por favor, inténtalo de nuevo</string>
+    <string name="profile_basal_not_compatible_with_pump">La tasa basal no es compatible con la bomba actual y no se puede activar. Reduce el porcentaje o ajusta la tasa basal</string>
+    <string name="profile_pump_incompatible_label">Límite de la bomba</string>
     <string name="error_in_ic_values">Error en los valores de Ratio de Hidratos (IC)</string>
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
     <string name="error_in_basal_values">Error en los valores de basal</string>
@@ -653,7 +660,7 @@
     <string name="isf_profile">ISF del perfil: %1$.1f</string>
     <string name="isf_variable">ISF variable: %1$.1f</string>
     <string name="isf_effective">ISF efectivo: %1$.1f</string>
-    <string name="autosens_long">Valor de Autosens: %.0f%%</string>
+    <string name="autosens_long">Valor de autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens en algoritmo: %.0f%%</string>
     <!-- Autotune -->
@@ -829,6 +836,7 @@
     <string name="clear_cloud_action">Restablecer ajustes</string>
     <string name="clear_cloud_settings">Borrar ajustes en la nube</string>
     <string name="clear_cloud_settings_message">Se cambiará al almacenamiento local y se eliminará la autorización. ¿Continuar?</string>
+    <string name="cloud_revoke_incomplete">Configuración de la nube eliminada en este dispositivo, pero no se pudo conectar con la cuenta para revocar el acceso por completo. Es posible que desees eliminarlo manualmente en los ajustes de tu cuenta</string>
     <string name="cloud_connection_failed">Error de conexión con el almacenamiento en la nube</string>
     <string name="cloud_reauthorize_message">Error de conexión con el almacenamiento en la nube. ¿Te gustaría volver a autenticarte?</string>
     <string name="reauthorize">Volver a autenticar</string>

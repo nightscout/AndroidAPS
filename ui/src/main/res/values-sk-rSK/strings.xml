@@ -12,6 +12,7 @@
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">Graf glykémie AAPS</string>
     <string name="widget_compact_bg_description">AAPS GLY + IOB + COB (kompaktné)</string>
+    <string name="widget_small_description">AAPS Malé</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktivity</string>
     <string name="time_range">Časový rozsah</string>
@@ -189,6 +190,7 @@
     <string name="active_profile_indicator">AKTÍVNY</string>
     <string name="confirm_remove_profile">Odstrániť profil %1$s?</string>
     <string name="confirm_clone_profile">Klonovať profil %1$s?</string>
+    <string name="profile_no_longer_exists">Zoznam profilov sa medzičasom zmenil – prosím, vyskúšajte to znova</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>
@@ -301,4 +303,6 @@
     <string name="widget_rm_disabled">Vypnutý</string>
     <string name="widget_rm_suspended">Pozastavený</string>
     <string name="widget_rm_resume">Obnoviť</string>
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
 </resources>

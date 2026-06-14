@@ -303,4 +303,6 @@
     <string name="widget_rm_disabled">Deaktivert</string>
     <string name="widget_rm_suspended">Pauset</string>
     <string name="widget_rm_resume">Gjenoppta</string>
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
 </resources>

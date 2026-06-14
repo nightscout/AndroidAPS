@@ -373,8 +373,15 @@ class NSClientV3Service : DaggerService() {
                 else -> app.aaps.core.ui.R.string.snooze_60m
             }
             NotificationAction(labelRes) {
-                activePlugin.activeNsClient?.handleClearAlarm(nsAlarm, minutes * 60 * 1000L)
-                preferences.put(LongComposedKey.NotificationSnoozedTo, nsAlarm.level.toString(), value = System.currentTimeMillis() + minutes * 60 * 1000L)
+                val snoozeMs = minutes * 60 * 1000L
+                activePlugin.activeNsClient?.handleClearAlarm(nsAlarm, snoozeMs)
+                // Cascade the snooze across all alarm levels. NS itself cascades a level-2 ack down to
+                // level 1, but keeps emitting lower-level forecast alarms (e.g. ar2 WARN) that would
+                // otherwise slip past a single-level local snooze and re-alarm. Snoozing every level
+                // makes the chosen interval authoritative on this device regardless of NS churn.
+                val snoozedUntil = System.currentTimeMillis() + snoozeMs
+                for (level in 0..2)
+                    preferences.put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = snoozedUntil)
             }
         }
 

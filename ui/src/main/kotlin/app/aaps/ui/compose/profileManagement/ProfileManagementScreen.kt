@@ -79,6 +79,7 @@ fun ProfileManagementScreen(
     onRequestEditMode: () -> Unit = {},
     onEditProfile: (Int) -> Unit = {},
     onActivateProfile: (Int) -> Unit = {},
+    onAddProfile: () -> Unit = {},
     onInsulinManager: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -223,12 +224,14 @@ fun ProfileManagementScreen(
                                 val basalSum = uiState.basalSums.getOrNull(page) ?: 0.0
                                 val isActive = name == uiState.activeProfileName
                                 val hasErrors = uiState.profileErrors.getOrNull(page)?.isNotEmpty() == true
+                                val pumpIncompatible = uiState.pumpWarnings.getOrNull(page) == true
 
                                 ProfileCarouselCard(
                                     profileName = name,
                                     basalSum = basalSum,
                                     isActive = isActive,
                                     hasErrors = hasErrors,
+                                    pumpIncompatible = pumpIncompatible,
                                     activeProfileSwitch = if (isActive) uiState.activeProfileSwitch else null,
                                     nextProfileName = if (isActive) uiState.nextProfileName else null,
                                     formatBasalSum = viewModel::formatBasalSum,
@@ -325,7 +328,7 @@ fun ProfileManagementScreen(
                                 modifier = Modifier.padding(horizontal = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                IconButton(onClick = { viewModel.addNewProfile() }) {
+                                IconButton(onClick = onAddProfile) {
                                     Icon(
                                         imageVector = Icons.Filled.Add,
                                         contentDescription = stringResource(R.string.add_new_profile)

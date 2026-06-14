@@ -9,7 +9,7 @@ dagger = "2.59.2"
 mockito = "5.23.0"
 junit = "6.1.0"
 robolectric = "4.16.1"
-okhttp = "5.3.2"
+okhttp = "5.4.0"
 retrofit = "3.0.0"
 kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.11.0"
@@ -49,7 +49,7 @@ com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-co
 com-google-dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.7" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.14.0" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.14.1" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }

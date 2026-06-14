@@ -5,6 +5,7 @@
     <string name="select">Selectați</string>
     <string name="set">Setați</string>
     <string name="migrating_preferences">Se migrează preferințele…</string>
+    <string name="optimizing_database">Optimizare bază de date…</string>
     <string name="initializing_plugins">Se inițializează modulele…</string>
     <string name="initializing">Se inițializează…</string>
     <string name="migrating_profile_switches">Se migrează modificările de profil…</string>

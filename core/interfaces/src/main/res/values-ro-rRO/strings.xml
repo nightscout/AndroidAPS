@@ -10,7 +10,7 @@
     <string name="pump_driver_changed" comment="26 characters max for translation">Driverul pompei a fost schimbat.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d minute în urmă</string>
-    <string name="secago">%1$d zile în urmă</string>
+    <string name="secago">%1$d secunde în urmă</string>
     <string name="min_plus">(+%1$dm)</string>
     <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minute în urmă</string>

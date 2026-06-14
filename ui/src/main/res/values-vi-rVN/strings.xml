@@ -303,4 +303,15 @@
     <string name="widget_rm_disabled">Vô hiệu hoá</string>
     <string name="widget_rm_suspended">Bị tạm dừng</string>
     <string name="widget_rm_resume">Tiếp tục</string>
+    <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Hiệu chuẩn chưa được lưu: BG đang thay đổi quá nhanh (Δ %1$s %3$s trong 5 phút, giới hạn %2$s). Hãy thử lại khi đường huyết ổn định.</string>
+    <string name="cal_reject_no_pair">Hiệu chuẩn chưa được lưu: không tìm thấy giá trị CGM trong 10 phút gần đây.</string>
+    <string name="cal_reject_warmup">Hiệu chuẩn chưa được lưu: cảm biến vẫn đang trong giai đoạn khởi động 2 giờ.</string>
+    <string name="cal_reject_no_session">Hiệu chuẩn chưa được lưu: không có phiên cảm biến nào đang hoạt động. Hãy thay cảm biến trước.</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Cảm biến vẫn đang khởi động. Có thể hiệu chuẩn lúc %1$s.</string>
+    <string name="cal_precheck_no_session">Không có phiên cảm biến nào đang hoạt động.</string>
+    <string name="cal_precheck_no_pair">Không có dữ liệu CGM trong 10 phút gần đây. Hãy kiểm tra kết nối cảm biến.</string>
+    <string name="cal_precheck_delta_too_high">Đường huyết đang thay đổi quá nhanh (Δ %1$s %3$s trong 5 phút, giới hạn %2$s). Hãy chờ đến khi ổn định.</string>
+    <string name="cal_precheck_mark_sensor_change">Ghi nhận thay đổi cảm biến</string>
 </resources>

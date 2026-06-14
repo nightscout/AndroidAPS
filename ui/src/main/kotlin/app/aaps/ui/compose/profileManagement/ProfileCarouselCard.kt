@@ -45,6 +45,7 @@ internal fun ProfileCarouselCard(
     basalSum: Double,
     isActive: Boolean,
     hasErrors: Boolean,
+    pumpIncompatible: Boolean,
     activeProfileSwitch: EPS?,
     nextProfileName: String?,
     formatBasalSum: (Double) -> String,
@@ -78,6 +79,7 @@ internal fun ProfileCarouselCard(
 
     val containerColor = when {
         hasErrors              -> MaterialTheme.colorScheme.errorContainer
+        pumpIncompatible       -> MaterialTheme.colorScheme.tertiaryContainer
         isActive && isModified -> AapsTheme.generalColors.inProgress
         isActive               -> MaterialTheme.colorScheme.primaryContainer
         else                   -> MaterialTheme.colorScheme.surfaceVariant
@@ -85,6 +87,7 @@ internal fun ProfileCarouselCard(
 
     val contentColor = when {
         hasErrors              -> MaterialTheme.colorScheme.onErrorContainer
+        pumpIncompatible       -> MaterialTheme.colorScheme.onTertiaryContainer
         isActive && isModified -> AapsTheme.generalColors.onInProgress
         isActive               -> MaterialTheme.colorScheme.onPrimaryContainer
         else                   -> MaterialTheme.colorScheme.onSurfaceVariant
@@ -134,7 +137,9 @@ internal fun ProfileCarouselCard(
                     color = contentColor
                 )
 
-                // Error indicator
+                // Error indicator (red, blocking) takes priority; otherwise a non-blocking amber
+                // "won't run on this pump" hint — the profile is valid and syncs, but its basal
+                // can't be delivered by the current pump.
                 if (hasErrors) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -143,10 +148,18 @@ internal fun ProfileCarouselCard(
                         color = MaterialTheme.colorScheme.error,
                         fontWeight = FontWeight.Bold
                     )
+                } else if (pumpIncompatible) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(app.aaps.core.ui.R.string.profile_pump_incompatible_label),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
                 // Active indicator and percentage/timeshift
-                if (isActive && !hasErrors) {
+                if (isActive && !hasErrors && !pumpIncompatible) {
                     Spacer(modifier = Modifier.height(4.dp))
 
                     // Show "ACTIVE -> Next: profile" when there's a next profile, otherwise just "ACTIVE"

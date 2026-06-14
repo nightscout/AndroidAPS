@@ -68,6 +68,7 @@
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_bgsource">Sorgente Glicemia</string>
     <string name="configbuilder_smoothing">Smoothing</string>
+    <string name="configbuilder_calibration">Calibrazione</string>
     <string name="configbuilder_pump">Micro</string>
     <string name="configbuilder_sensitivity">Rilevamento sensibilità</string>
     <string name="configbuilder_aps">APS</string>
@@ -453,6 +454,8 @@
     <string name="location_front_left_lower_abdomen">Addome Anteriore Basso Sinistro</string>
     <string name="location_back_right_buttock">Natica Destra</string>
     <string name="location_back_left_buttock">Natica Sinistra</string>
+    <string name="location_back_right_lower_back">Indietro Inferiore Destro</string>
+    <string name="location_back_left_lower_back">Sinistra Inferiore Indietro</string>
     <string name="location_side_right_upper_thigh">Coscia Superiore Destra Esterna</string>
     <string name="location_side_left_upper_thigh">Coscia Superiore Esterna Sinistra</string>
     <string name="location_side_right_lower_thigh">Coscia Inferiore Esterna Destra</string>
@@ -535,6 +538,7 @@
     <string name="uel_tt_ns_refresh">TARGET TEMPORANEO NS: AGGIORNAMENTO</string>
     <string name="uel_automation_removed">AUTOMAZIONE RIMOSSA</string>
     <string name="uel_bg_removed">BG RIMOSSO</string>
+    <string name="uel_calibration_removed">CALIBRAZIONE RIMOSSA</string>
     <string name="uel_careportal_removed">PORTALE RIMOSSO</string>
     <string name="uel_bolus_removed">BOLO RIMOSSO</string>
     <string name="uel_carbs_removed">CHO RIMOSSI</string>
@@ -616,6 +620,9 @@
     <string name="missing_profile_name">Nome profilo mancante</string>
     <string name="profile_not_saved_activate">Profilo non salvato. Si prega di salvare il profilo prima di attivarlo.</string>
     <string name="profile_activation_failed">Attivazione del profilo fallita</string>
+    <string name="profile_switch_save_failed">Il cambio del profilo non può essere salvato. Per favore riprova.</string>
+    <string name="profile_basal_not_compatible_with_pump">La velocità basale non è compatibile col micro corrente e non può essere attivata. Ridurre la percentuale o regolare la velocità basale.</string>
+    <string name="profile_pump_incompatible_label">Limite micro</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
     <string name="error_in_basal_values">Errore nei valori della basale</string>
@@ -829,6 +836,7 @@
     <string name="clear_cloud_action">Cancella impostazioni</string>
     <string name="clear_cloud_settings">Cancella Impostazioni Cloud</string>
     <string name="clear_cloud_settings_message">Questo passerà alla memoria locale e cancellerà l\'autenticazione. Continuare?</string>
+    <string name="cloud_revoke_incomplete">Impostazioni cloud cancellate su questo dispositivo, ma non è stato possibile raggiungere l\'account per revocare completamente l\'accesso. Potresti voler rimuoverlo manualmente nelle impostazioni del tuo account.</string>
     <string name="cloud_connection_failed">Connessione all\'archiviazione cloud fallita</string>
     <string name="cloud_reauthorize_message">Connessione all\'archiviazione cloud non riuscita. Vuoi ri-autenticarti?</string>
     <string name="reauthorize">Ri-autenticazione</string>

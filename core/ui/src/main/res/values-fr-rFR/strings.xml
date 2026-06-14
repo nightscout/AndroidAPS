@@ -68,6 +68,7 @@
     <string name="configbuilder_insulin">Insuline</string>
     <string name="configbuilder_bgsource">Source GLY</string>
     <string name="configbuilder_smoothing">Lissage</string>
+    <string name="configbuilder_calibration">Calibration</string>
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_sensitivity">Calcul de Sensibilité</string>
     <string name="configbuilder_aps">APS</string>
@@ -453,6 +454,8 @@
     <string name="location_front_left_lower_abdomen">Abdomen Gauche Avant Bas</string>
     <string name="location_back_right_buttock">Fesse Droite</string>
     <string name="location_back_left_buttock">Fesse Gauche</string>
+    <string name="location_back_right_lower_back">Bas du Dos Droit</string>
+    <string name="location_back_left_lower_back">Bas du Dos Gauche</string>
     <string name="location_side_right_upper_thigh">Cuisse Droite Extérieur Haut</string>
     <string name="location_side_left_upper_thigh">Cuisse Gauche Extérieur Haut</string>
     <string name="location_side_right_lower_thigh">Cuisse Droite Extérieur Bas</string>
@@ -535,6 +538,7 @@
     <string name="uel_tt_ns_refresh">RÉGÉNÉRATION NS CIBLES TEMP</string>
     <string name="uel_automation_removed">AUTOMATISATION SUPPRIMÉE</string>
     <string name="uel_bg_removed">GLY SUPPRIMÉE</string>
+    <string name="uel_calibration_removed">CALIBRATION SUPPRIMÉE</string>
     <string name="uel_careportal_removed">CAREPORTAL SUPPRIMÉ</string>
     <string name="uel_bolus_removed">BOLUS SUPPRIMÉ</string>
     <string name="uel_carbs_removed">GLUCIDES SUPPRIMÉS</string>
@@ -829,6 +833,7 @@
     <string name="clear_cloud_action">Effacer les paramètres</string>
     <string name="clear_cloud_settings">Effacer les paramètres du Cloud</string>
     <string name="clear_cloud_settings_message">Cela passera au stockage local et effacera les autorisations. Continuer ?</string>
+    <string name="cloud_revoke_incomplete">Les paramètres du cloud ont été effacés sur cet appareil, mais le compte n\'a pas pu être atteint pour révoquer complètement l\'accès. Vous pouvez le supprimer manuellement dans les paramètres de votre compte.</string>
     <string name="cloud_connection_failed">Échec de la connexion au stockage cloud</string>
     <string name="cloud_reauthorize_message">La connexion au stockage cloud a échoué. Voulez-vous vous authentifier à nouveau ?</string>
     <string name="reauthorize">Se réauthentifier</string>
