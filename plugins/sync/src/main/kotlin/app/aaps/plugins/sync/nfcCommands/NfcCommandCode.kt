@@ -1,159 +1,118 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import androidx.annotation.StringRes
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import app.aaps.core.data.pump.defs.PumpDescription
-import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.icons.*
-import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
+import app.aaps.plugins.sync.nfcCommands.actions.*
 import app.aaps.plugins.sync.R
-import org.json.JSONObject
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
-enum class ArgType {
+/**
+ * Defines elementary argument types for NFC Actions.
+ * These types are used by the UI to dynamically build configuration forms.
+ * [jsonKey] indicates which field in the parameters JSON this argument corresponds to.
+ */
+enum class ArgType(val jsonKey: String? = null) {
     NONE,
-    SUSPEND,
-    PUMP_DISCONNECT,
-    BOLUS,
-    BASAL_ABS,
-    BASAL_PCT,
-    EXTENDED,
-    CARBS,
-    PROFILE;
-
-    @Composable
-    fun formatParams(params: JSONObject, plugin: NfcCommandsPlugin): String {
-        return when (this) {
-            BOLUS -> {
-                val amount = params.optDouble("amount", 0.0)
-                val isMeal = params.optBoolean("isMeal", false)
-                val unit = stringResource(CoreUiR.string.insulin_unit_shortname)
-                val mealText = if (isMeal) " (${stringResource(R.string.nfccommands_meal_bolus)})" else ""
-                "${plugin.decimalFormatter.to2Decimal(amount)} $unit$mealText"
-            }
-            CARBS -> {
-                val amount = params.optInt("amount", 0)
-                val unit = stringResource(CoreUiR.string.shortgramm)
-                "$amount $unit"
-            }
-            SUSPEND, PUMP_DISCONNECT -> {
-                val duration = params.optInt("duration", 0)
-                val unit = stringResource(KeysR.string.units_min)
-                "$duration $unit"
-            }
-            BASAL_ABS -> {
-                val rate = params.optDouble("rate", 0.0)
-                val duration = params.optInt("duration", 0)
-                val unitRate = stringResource(CoreUiR.string.profile_ins_units_per_hour)
-                val unitDur = stringResource(KeysR.string.units_min)
-                "${plugin.decimalFormatter.to2Decimal(rate)} $unitRate $duration $unitDur"
-            }
-            BASAL_PCT -> {
-                val percent = params.optInt("percent", 100)
-                val duration = params.optInt("duration", 0)
-                val unitDur = stringResource(KeysR.string.units_min)
-                "$percent% $duration $unitDur"
-            }
-            EXTENDED -> {
-                val amount = params.optDouble("amount", 0.0)
-                val duration = params.optInt("duration", 0)
-                val unitAmt = stringResource(CoreUiR.string.insulin_unit_shortname)
-                val unitDur = stringResource(KeysR.string.units_min)
-                "${plugin.decimalFormatter.to2Decimal(amount)} $unitAmt $duration $unitDur"
-            }
-            PROFILE -> {
-                val name = params.optString("profileName", "")
-                val pct = params.optInt("percentage", 100)
-                if (name.isNotEmpty()) "$name $pct%"
-                else {
-                    val fallback = plugin.profileRepository.profile.value?.getDefaultProfileName() ?: ""
-                    "$fallback $pct%"
-                }
-            }
-            NONE -> ""
-        }
-    }
-
-    suspend fun getDefaultParams(plugin: NfcCommandsPlugin): JSONObject {
-        return when (this) {
-            BOLUS -> JSONObject().put("amount", 0.0).put("isMeal", false)
-            CARBS -> JSONObject().put("amount", 0)
-            SUSPEND -> JSONObject().put("duration", 60)
-            PUMP_DISCONNECT -> JSONObject().put("duration", 30)
-            BASAL_ABS -> JSONObject().put("rate", 0.0).put("duration", plugin.pumpBasalDurationStep())
-            BASAL_PCT -> JSONObject().put("percent", 100).put("duration", plugin.pumpBasalDurationStep())
-            EXTENDED -> JSONObject().put("amount", 0.0).put("duration", 30)
-            PROFILE -> {
-                val profileName = plugin.profileFunction.getOriginalProfileName()
-                JSONObject().put("profileName", profileName).put("percentage", 100)
-            }
-            NONE -> JSONObject()
-        }
-    }
+    DURATION(NfcJsonKeys.DURATION),
+    INSULIN(NfcJsonKeys.AMOUNT),
+    RATE(NfcJsonKeys.RATE),
+    PERCENT(NfcJsonKeys.PERCENT),
+    AMOUNT_GRAMS(NfcJsonKeys.AMOUNT),
+    MEAL_CHECK(NfcJsonKeys.IS_MEAL),
+    PROFILE_NAME(NfcJsonKeys.PROFILE_NAME),
+    SCENE_ID(NfcJsonKeys.SCENE_ID),
+    GLUCOSE_TARGET(NfcJsonKeys.GLUCOSE),
+    BOLUS_WIZARD_OPTIONS // Special composite type for calculator toggles
 }
 
+/**
+ * Categories for grouping NFC commands in the picker UI.
+ */
 enum class NfcCategory(@StringRes val labelResId: Int) {
     LOOP(CoreUiR.string.loop),
     PUMP(CoreUiR.string.pump),
     BASAL(CoreUiR.string.basal),
-    BOLUS(CoreUiR.string.treatments),
+    TREATMENTS(CoreUiR.string.treatments),
     PROFILE(CoreUiR.string.profile),
+    SCENES(CoreUiR.string.scenes),
     TARGETS(R.string.nfccommands_cat_targets),
     SYSTEM(R.string.nfccommands_cat_system)
 }
 
+/**
+ * Data structure representing a group of commands in the NFC action picker.
+ */
+data class NfcUiCategory(
+    val labelResId: Int,
+    val commands: List<NfcCommandCode>,
+)
+
+/**
+ * Registry of all available NFC commands and their factory methods.
+ * Each entry maps a command code to its corresponding [NfcAction] implementation and [NfcCategory].
+ */
 enum class NfcCommandCode(
-    @StringRes val labelResId: Int,
     val category: NfcCategory,
-    val elementType: ElementType,
-    val argType: ArgType,
-    val icon: ImageVector,
-    private val customIconColor: (@Composable () -> Color)? = null,
+    val createAction: (NfcCommandsPlugin) -> NfcAction
 ) {
-    LOOP_STOP(R.string.nfccommands_cmd_loop_stop, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopDisabled, { AapsTheme.elementColors.loopDisabled }),
-    LOOP_RESUME(CoreUiR.string.resumeloop, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopClosed, { AapsTheme.elementColors.loopClosed }),
-    LOOP_SUSPEND(CoreUiR.string.suspendloop, NfcCategory.LOOP, ElementType.LOOP, ArgType.SUSPEND, IcLoopPaused, { AapsTheme.elementColors.loopSuspended }),
-    LOOP_CLOSED(R.string.nfccommands_cmd_loop_close, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopClosed, { AapsTheme.elementColors.loopClosed }),
-    LOOP_LGS(R.string.nfccommands_cmd_loop_lgs, NfcCategory.LOOP, ElementType.LOOP, ArgType.NONE, IcLoopLgs, { AapsTheme.elementColors.loopLgs }),
+    // Loop Management
+    LOOP_STOP(NfcCategory.LOOP, ::LoopStopAction),
+    LOOP_RESUME(NfcCategory.LOOP, ::LoopResumeAction),
+    LOOP_SUSPEND(NfcCategory.LOOP, ::LoopSuspendAction),
+    LOOP_CLOSED(NfcCategory.LOOP, ::LoopClosedAction),
+    LOOP_LGS(NfcCategory.LOOP, ::LoopLgsAction),
     
-    PUMP_CONNECT(R.string.nfccommands_cmd_pump_connect, NfcCategory.PUMP, ElementType.PUMP, ArgType.NONE, IcLoopReconnect),
-    PUMP_DISCONNECT(R.string.nfccommands_cmd_pump_disconnect, NfcCategory.PUMP, ElementType.PUMP, ArgType.PUMP_DISCONNECT, IcLoopDisconnected, { AapsTheme.elementColors.loopDisconnected }),
+    // Pump Control
+    PUMP_CONNECT(NfcCategory.PUMP, ::PumpConnectAction),
+    PUMP_DISCONNECT(NfcCategory.PUMP, ::PumpDisconnectAction),
     
-    BASAL_STOP(CoreUiR.string.cancel_temp, NfcCategory.BASAL, ElementType.TEMP_BASAL, ArgType.NONE, IcTbrCancel),
-    BASAL_ABS(R.string.nfccommands_cmd_basal_absolute, NfcCategory.BASAL, ElementType.TEMP_BASAL, ArgType.BASAL_ABS, IcTbrHigh),
-    BASAL_PCT(R.string.nfccommands_cmd_basal_percent, NfcCategory.BASAL, ElementType.TEMP_BASAL, ArgType.BASAL_PCT, IcTbrLow),
+    // Basal Rate
+    BASAL_STOP(NfcCategory.BASAL, ::BasalCancelAction),
+    BASAL_ABS(NfcCategory.BASAL, ::TempBasalAbsoluteAction),
+    BASAL_PCT(NfcCategory.BASAL, ::TempBasalPercentAction),
     
-    BOLUS(CoreUiR.string.bolus, NfcCategory.BOLUS, ElementType.INSULIN, ArgType.BOLUS, IcBolus),
-    CARBS(CoreUiR.string.carbs, NfcCategory.BOLUS, ElementType.CARBS, ArgType.CARBS, IcCarbs),
-    EXTENDED_STOP(R.string.nfccommands_cmd_extended_stop, NfcCategory.BOLUS, ElementType.EXTENDED_BOLUS, ArgType.NONE, IcCancelExtendedBolus),
-    EXTENDED_SET(CoreUiR.string.extended_bolus, NfcCategory.BOLUS, ElementType.EXTENDED_BOLUS, ArgType.EXTENDED, IcExtendedBolus),
+    // Treatments
+    BOLUS(NfcCategory.TREATMENTS, ::BolusAction),
+    CARBS(NfcCategory.TREATMENTS, ::CarbsAction),
+    BOLUS_WIZARD(NfcCategory.TREATMENTS, ::BolusWizardAction),
+    EXTENDED_STOP(NfcCategory.TREATMENTS, ::ExtendedCancelAction),
+    EXTENDED_SET(NfcCategory.TREATMENTS, ::ExtendedSetAction),
     
-    PROFILE_SWITCH(CoreUiR.string.careportal_profileswitch, NfcCategory.PROFILE, ElementType.PROFILE_MANAGEMENT, ArgType.PROFILE, IcProfile, { if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White }),
+    // Profile
+    PROFILE_SWITCH(NfcCategory.PROFILE, ::ProfileSwitchAction),
     
-    TARGET_MEAL(CoreUiR.string.eatingsoon, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtEatingSoon, { AapsTheme.elementColors.tempTarget }),
-    TARGET_ACTIVITY(CoreUiR.string.activity, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtActivity, { AapsTheme.elementColors.exercise }),
-    TARGET_HYPO(CoreUiR.string.hypo, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtHypo, { AapsTheme.elementColors.loopDisabled }),
-    TARGET_STOP(CoreUiR.string.stoptemptarget, NfcCategory.TARGETS, ElementType.TEMP_TARGET_MANAGEMENT, ArgType.NONE, IcTtCancel, { AapsTheme.elementColors.loopDisabled }),
+    // Scenes
+    RUN_SCENE(NfcCategory.SCENES, ::RunSceneAction),
     
-    AAPSCLIENT_RESTART(R.string.nfccommands_cmd_aapsclient_restart, NfcCategory.SYSTEM, ElementType.SETTINGS, ArgType.NONE, IcPluginNsClient),
-    RESTART(R.string.nfccommands_cmd_restart_aaps, NfcCategory.SYSTEM, ElementType.AAPS, ArgType.NONE, IcAaps);
+    // Temporary Targets
+    TARGET_MEAL(NfcCategory.TARGETS, ::TempTargetMealAction),
+    TARGET_ACTIVITY(NfcCategory.TARGETS, ::TempTargetActivityAction),
+    TARGET_HYPO(NfcCategory.TARGETS, ::TempTargetHypoAction),
+    TARGET_MANUAL(NfcCategory.TARGETS, ::TempTargetManualAction),
+    TARGET_STOP(NfcCategory.TARGETS, ::TempTargetCancelAction),
+    
+    // Maintenance
+    //AAPSCLIENT_RESTART(NfcCategory.SYSTEM, ::AapsClientRestartAction),
+    //RESTART(NfcCategory.SYSTEM, ::RestartAction);
+}
 
-    @Composable
-    fun getIconColor(): Color = customIconColor?.invoke() ?: elementType.color()
-
-    @Composable
-    fun formatParams(params: JSONObject, plugin: NfcCommandsPlugin): String = argType.formatParams(params, plugin)
-
-    fun isSupported(plugin: NfcCommandsPlugin): Boolean = when (this) {
-        BASAL_ABS -> plugin.activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE
-        BASAL_PCT -> plugin.activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT
-        else -> true
+/**
+ * Logic to build the list of available categories and commands based on current system state.
+ */
+object NfcCategories {
+    /**
+     * Scans all [NfcCommandCode]s and returns only those supported by the current hardware/configuration,
+     * grouped by their [NfcCategory].
+     */
+    fun build(plugin: NfcCommandsPlugin): List<NfcUiCategory> {
+        return NfcCommandCode.entries
+            .map { it to it.createAction(plugin) }
+            .filter { it.second.isSupported() }
+            .groupBy { it.first.category }
+            .map { (cat, pairs) ->
+                NfcUiCategory(
+                    labelResId = cat.labelResId,
+                    commands = pairs.map { it.first }
+                )
+            }
     }
 }

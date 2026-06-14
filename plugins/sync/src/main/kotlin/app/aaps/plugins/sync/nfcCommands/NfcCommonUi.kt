@@ -1,9 +1,12 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import android.R
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
@@ -12,6 +15,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +29,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.compose.icons.IcPluginNfc
+import app.aaps.core.ui.compose.navigation.color
 import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
 
@@ -86,35 +92,51 @@ fun NfcCommandDisplay(
         return
     }
 
-    val codeName = json.optString("code")
+    val codeName = json.optString(NfcJsonKeys.CODE)
     val code = remember(codeName) { runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull() }
-    val params = json.optJSONObject("params") ?: JSONObject()
+    val params = json.optJSONObject(NfcJsonKeys.PARAMS) ?: JSONObject()
 
     if (code == null) {
         Text(text = commandJson, style = MaterialTheme.typography.bodySmall)
         return
     }
 
+    val action = remember(code, params) { 
+        plugin.getAction(code).apply { this.params = params }
+    }
+
+    val detail by produceState<String?>(initialValue = null, action) {
+        value = action.formatParams()
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 2.dp)
+        modifier = Modifier.padding(vertical = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Icon(
-            imageVector = code.icon,
+            imageVector = action.icon,
             contentDescription = null,
-            tint = code.getIconColor(),
+            tint = action.customIconColor?.invoke() ?: action.elementType.color(),
             modifier = Modifier.size(16.dp)
         )
+        action.secondaryIcon?.let { secondaryIcon ->
+            Icon(
+                imageVector = secondaryIcon,
+                contentDescription = null,
+                tint = action.secondaryIconColor?.invoke() ?: action.elementType.color(),
+                modifier = Modifier.size(16.dp)
+            )
+        }
         Text(
             text = buildAnnotatedString {
                 withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                     append(" ")
-                    append(stringResource(code.labelResId))
+                    append(stringResource(action.labelResId))
                 }
-                val detail = code.formatParams(params, plugin)
-                if (detail.isNotEmpty()) {
+                if (detail != null) {
                     append(" ")
-                    append(detail)
+                    append(detail!!)
                 }
             },
             style = MaterialTheme.typography.bodySmall

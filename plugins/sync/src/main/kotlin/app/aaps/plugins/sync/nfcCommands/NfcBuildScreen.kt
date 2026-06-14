@@ -34,6 +34,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
@@ -53,8 +54,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -83,6 +87,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -90,7 +95,12 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.icons.IcTtManual
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -117,6 +127,11 @@ fun NfcBuildScreen(
         profileStore?.getProfileList()?.map { it.toString() } ?: emptyList()
     }
 
+    val scenesJson by plugin.sceneAutomationApi.scenesFlow.collectAsStateWithLifecycle()
+    val sceneNames = remember(scenesJson) {
+        plugin.sceneAutomationApi.getScenes().map { it.id to it.name }
+    }
+
     val chain = remember { mutableStateListOf<NfcUiAction>() }
     var tagName by remember { mutableStateOf("") }
     var isWritingMode by remember { mutableStateOf(false) }
@@ -129,7 +144,10 @@ fun NfcBuildScreen(
     var initialTagNameSnap by remember { mutableStateOf("") }
     var isInitialized by remember { mutableStateOf(false) }
 
-    val currentCommands = chain.mapNotNull { it.buildCommand() }
+    val currentCommands = chain.map { 
+        it.meta.params = it.getParams()
+        it.meta.buildCommand(it.command, tagName)
+    }
     val isDirty = isInitialized && (tagName != initialTagNameSnap || currentCommands != initialCommandsSnap)
 
     val isEditMode = initialTag != null
@@ -140,9 +158,9 @@ fun NfcBuildScreen(
             chain.clear()
             initialTag.commands.forEach { cmdJson ->
                 runCatching { JSONObject(cmdJson) }.onSuccess { json ->
-                    val codeName = json.optString("code")
+                    val codeName = json.optString(NfcJsonKeys.CODE)
                     val code = runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull()
-                    val params = json.optJSONObject("params") ?: JSONObject()
+                    val params = json.optJSONObject(NfcJsonKeys.PARAMS) ?: JSONObject()
                     if (code != null) {
                         val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
                         action.applyParams(params)
@@ -151,7 +169,10 @@ fun NfcBuildScreen(
                 }
             }
             initialTagNameSnap = initialTag.name
-            initialCommandsSnap = chain.mapNotNull { it.buildCommand() }
+            initialCommandsSnap = chain.map { 
+                it.meta.params = it.getParams()
+                it.meta.buildCommand(it.command, initialTag.name)
+            }
             isInitialized = true
         } else if (initialTagUid != null) {
             val tag = plugin.nfcTagStore.findTagByUid(initialTagUid)
@@ -175,8 +196,11 @@ fun NfcBuildScreen(
     val onSave: () -> Unit = {
         if (initialTag != null) {
             val uid = initialTag.tagUid
-            val commands = chain.mapNotNull { it.buildCommand() }
-            val name = tagName.ifBlank { chain.firstOrNull()?.shortDescription() ?: "" }
+            val commands = chain.map { 
+                it.meta.params = it.getParams()
+                it.meta.buildCommand(it.command, tagName)
+            }
+            val name = tagName
             plugin.nfcTagStore.saveCreatedTag(
                 NfcCreatedTag(
                     tagUid = uid,
@@ -258,8 +282,11 @@ fun NfcBuildScreen(
         val callback =
             NfcAdapter.ReaderCallback { tag ->
                 val uid = NfcTagStore.tagUidHex(tag.id) ?: return@ReaderCallback
-                val commands = chain.mapNotNull { it.buildCommand() }
-                val name = tagName.ifBlank { chain.firstOrNull()?.shortDescription() ?: "" }
+                val name = tagName
+                val commands = chain.map { 
+                    it.meta.params = it.getParams()
+                    it.meta.buildCommand(it.command, name)
+                }
                 val alreadyAssigned = plugin.nfcTagStore.findTagByUid(uid) != null
                 val ndefWritten = !alreadyAssigned && buildAndWriteNdef(tag, plugin)
                 val outcome = resolveWriteOutcome(alreadyAssigned, ndefWritten)
@@ -332,11 +359,12 @@ fun NfcBuildScreen(
 
     if (showActionPicker) {
         ChooseActionSheet(
+            plugin = plugin,
             categories = categories,
             onPick = { code ->
                 coroutineScope.launch {
                     val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
-                    action.applyParams(code.argType.getDefaultParams(plugin))
+                    action.applyParams(plugin.getAction(code).getDefaultParams())
                     chain.add(action)
                 }
             },
@@ -355,7 +383,9 @@ fun NfcBuildScreen(
         // Section 1: Tag name
         OutlinedTextField(
             value = tagName,
-            onValueChange = { tagName = it },
+            onValueChange = { 
+                tagName = it
+            },
             label = { Text(stringResource(R.string.nfccommands_tag_name_hint)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
@@ -396,8 +426,10 @@ fun NfcBuildScreen(
             ) {
                 chain.forEachIndexed { index, action ->
                     InlineActionCard(
+                        plugin = plugin,
                         action = action,
                         profileNames = profileNames,
+                        sceneNames = sceneNames,
                         onRemove = { chain.removeAt(index) }
                     )
                 }
@@ -452,26 +484,42 @@ private fun SectionDivider(label: String) {
 
 @Composable
 private fun InlineActionCard(
+    plugin: NfcCommandsPlugin,
     action: NfcUiAction,
     profileNames: List<String>,
+    sceneNames: List<Pair<String, String>>,
     onRemove: () -> Unit
 ) {
+    val meta = action.meta
+    meta.params = action.getParams()
+
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = CardDefaults.elevatedShape,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
                 Icon(
-                    imageVector = action.command.icon,
+                    imageVector = meta.icon,
                     contentDescription = null,
-                    tint = action.getIconColor(),
+                    tint = meta.customIconColor?.invoke() ?: meta.elementType.color(),
                     modifier = Modifier.size(20.dp)
                 )
-                Spacer(modifier = Modifier.size(6.dp))
+                meta.secondaryIcon?.let { secondaryIcon ->
+                    Icon(
+                        imageVector = secondaryIcon,
+                        contentDescription = null,
+                        tint = meta.secondaryIconColor?.invoke() ?: meta.elementType.color(),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.size(2.dp))
                 Text(
-                    text = stringResource(action.command.labelResId),
+                    text = stringResource(meta.labelResId),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.weight(1f)
@@ -481,7 +529,9 @@ private fun InlineActionCard(
                 }
             }
             Column(modifier = Modifier.padding(bottom = 8.dp)) {
-                action.EditContent(profileNames) {}
+                action.EditContent(profileNames, sceneNames) {
+                    // Implicitly updates meta.params via getParams() inside EditContent
+                }
             }
         }
     }
@@ -490,6 +540,7 @@ private fun InlineActionCard(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun ChooseActionSheet(
+    plugin: NfcCommandsPlugin,
     categories: List<NfcUiCategory>,
     onPick: (NfcCommandCode) -> Unit,
     onDismiss: () -> Unit
@@ -527,17 +578,18 @@ private fun ChooseActionSheet(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     cat.commands.forEach { code ->
+                        val action = remember(code) { plugin.getAction(code) }
                         AssistChip(
                             onClick = {
                                 onPick(code)
                                 onDismiss()
                             },
-                            label = { Text(stringResource(code.labelResId)) },
+                            label = { Text(stringResource(action.labelResId)) },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = code.icon,
+                                    imageVector = action.icon,
                                     contentDescription = null,
-                                    tint = code.getIconColor(),
+                                    tint = action.customIconColor?.invoke() ?: action.elementType.color(),
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -685,317 +737,205 @@ internal fun resolveWriteOutcome(alreadyAssigned: Boolean, ndefWritten: Boolean)
 
 interface NfcUiAction {
     val command: NfcCommandCode
-    fun buildCommand(): String?
+    val meta: NfcAction
     fun shortDescription(): String
     @Composable
-    fun EditContent(profileNames: List<String>, onChange: () -> Unit)
+    fun EditContent(profileNames: List<String>, sceneNames: List<Pair<String, String>>, onChange: () -> Unit)
 
     fun applyParams(params: JSONObject)
 
-    @Composable
-    fun getIconColor(): Color = command.getIconColor()
+    fun getParams(): JSONObject
 }
 
-private fun createNfcUiAction(plugin: NfcCommandsPlugin, code: NfcCommandCode, durationStep: Int): NfcUiAction = when (code.argType) {
-    ArgType.NONE -> SimpleNfcUiAction(code)
-    ArgType.SUSPEND -> SuspendNfcUiAction(code)
-    ArgType.PUMP_DISCONNECT -> PumpDisconnectNfcUiAction(code)
-    ArgType.BOLUS -> BolusNfcUiAction(plugin, code)
-    ArgType.BASAL_ABS -> BasalAbsNfcUiAction(code, durationStep)
-    ArgType.BASAL_PCT -> BasalPctNfcUiAction(code, durationStep)
-    ArgType.EXTENDED -> ExtendedNfcUiAction(code)
-    ArgType.CARBS -> CarbsNfcUiAction(plugin, code)
-    ArgType.PROFILE -> ProfileNfcUiAction(code)
+private fun createNfcUiAction(plugin: NfcCommandsPlugin, code: NfcCommandCode, durationStep: Int): NfcUiAction {
+    val action = plugin.getAction(code)
+    return GenericNfcUiAction(plugin, code, action.argType, durationStep)
 }
 
-class SimpleNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
-    override fun buildCommand() = NfcTagStore.buildCommand(command)
-    override fun shortDescription() = "" 
+/**
+ * Generic implementation of [NfcUiAction] that dynamically builds the UI based on [argTypes].
+ * It manages state for all possible atomic arguments (Insulin, Carbs, Duration, etc.).
+ */
+class GenericNfcUiAction(
+    val plugin: NfcCommandsPlugin,
+    override val command: NfcCommandCode,
+    val argTypes: List<ArgType>,
+    val durationStep: Int
+) : NfcUiAction {
+    override val meta = plugin.getAction(command)
 
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        Text(
-            text = stringResource(R.string.nfccommands_no_args_needed),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-
-    override fun applyParams(params: JSONObject) {}
-}
-
-class SuspendNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
-    var minutes by mutableIntStateOf(60)
-    override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("duration", minutes))
-    override fun shortDescription() = ""
-
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        NumberInputRow(
-            labelResId = CoreUiR.string.duration_label,
-            value = minutes.toDouble(),
-            onValueChange = { minutes = it.toInt(); onChange() },
-            valueRange = 30.0..480.0,
-            step = 30.0,
-            valueFormat = DecimalFormat("0"),
-            unitLabel = stringResource(KeysR.string.units_min)
-        )
-    }
-
-    override fun applyParams(params: JSONObject) {
-        minutes = params.optInt("duration", 60)
-    }
-}
-
-class PumpDisconnectNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
-    var minutes by mutableIntStateOf(30)
-    override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("duration", minutes))
-    override fun shortDescription() = ""
-
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        NumberInputRow(
-            labelResId = CoreUiR.string.duration_label,
-            value = minutes.toDouble(),
-            onValueChange = { minutes = it.toInt(); onChange() },
-            valueRange = 15.0..180.0,
-            step = 15.0,
-            valueFormat = DecimalFormat("0"),
-            unitLabel = stringResource(KeysR.string.units_min)
-        )
-    }
-
-    override fun applyParams(params: JSONObject) {
-        minutes = params.optInt("duration", 30)
-    }
-}
-
-class BolusNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcCommandCode) : NfcUiAction {
+    // UI State for all possible field types
     var units by mutableDoubleStateOf(1.0)
+    var glucose by mutableDoubleStateOf(100.0)
+    var grams by mutableIntStateOf(20)
+    var duration by mutableIntStateOf(30)
+    var percent by mutableIntStateOf(100)
+    var rate by mutableDoubleStateOf(1.0)
     var meal by mutableStateOf(false)
-    override fun buildCommand(): String {
-        return NfcTagStore.buildCommand(command, JSONObject().put("amount", units).put("isMeal", meal))
-    }
+    var profileName by mutableStateOf("")
+    var sceneId by mutableStateOf("")
+
+    // Bolus Wizard calculation toggles
+    var useBg by mutableStateOf(true)
+    var useTT by mutableStateOf(true)
+    var useTrend by mutableStateOf(true)
+    var useIOB by mutableStateOf(true)
+    var useCOB by mutableStateOf(true)
+
     override fun shortDescription() = ""
+
+    /**
+     * Serializes current UI state into a JSONObject using keys defined in [ArgType].
+     */
+    override fun getParams(): JSONObject {
+        val json = JSONObject()
+        argTypes.forEach { type ->
+            type.jsonKey?.let { key ->
+                when (type) {
+                    ArgType.INSULIN              -> json.put(key, units)
+                    ArgType.AMOUNT_GRAMS         -> json.put(key, grams)
+                    ArgType.RATE                 -> json.put(key, rate)
+                    ArgType.PERCENT              -> json.put(key, percent)
+                    ArgType.DURATION             -> json.put(key, duration)
+                    ArgType.MEAL_CHECK           -> json.put(key, meal)
+                    ArgType.PROFILE_NAME         -> json.put(key, profileName)
+                    ArgType.SCENE_ID             -> json.put(key, sceneId)
+                    ArgType.GLUCOSE_TARGET       -> json.put(key, glucose)
+
+                    ArgType.BOLUS_WIZARD_OPTIONS -> {
+                        json.put(NfcJsonKeys.USE_BG, useBg)
+                        json.put(NfcJsonKeys.USE_TT, useTT)
+                        json.put(NfcJsonKeys.USE_TREND, useTrend)
+                        json.put(NfcJsonKeys.USE_IOB, useIOB)
+                        json.put(NfcJsonKeys.USE_COB, useCOB)
+                    }
+
+                    else                         -> {}
+                }
+            }
+        }
+        meta.params = json
+        return json
+    }
+
+    /**
+     * Restores UI state from a JSONObject.
+     */
+    override fun applyParams(params: JSONObject) {
+        argTypes.forEach { type ->
+            type.jsonKey?.let { key ->
+                when (type) {
+                    ArgType.INSULIN              -> units = params.optDouble(key, 1.0)
+                    ArgType.AMOUNT_GRAMS         -> grams = params.optInt(key, 20)
+                    ArgType.PERCENT              -> percent = params.optInt(key, 100)
+                    ArgType.RATE                 -> rate = params.optDouble(key, 1.0)
+                    ArgType.DURATION             -> duration = params.optInt(key, 30)
+                    ArgType.MEAL_CHECK           -> meal = params.optBoolean(key, false)
+                    ArgType.PROFILE_NAME         -> profileName = params.optString(key, "")
+                    ArgType.SCENE_ID             -> sceneId = params.optString(key, "")
+                    ArgType.GLUCOSE_TARGET       -> glucose = params.optDouble(key, 100.0)
+
+                    ArgType.BOLUS_WIZARD_OPTIONS -> {
+                        useBg = params.optBoolean(NfcJsonKeys.USE_BG, true)
+                        useTT = params.optBoolean(NfcJsonKeys.USE_TT, true)
+                        useTrend = params.optBoolean(NfcJsonKeys.USE_TREND, true)
+                        useIOB = params.optBoolean(NfcJsonKeys.USE_IOB, true)
+                        useCOB = params.optBoolean(NfcJsonKeys.USE_COB, true)
+                    }
+
+                    else                         -> {}
+                }
+            }
+        }
+        meta.params = params
+    }
+
+    /**
+     * Dynamically renders the input fields required for this specific action.
+     */
     @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
+    override fun EditContent(profileNames: List<String>, sceneNames: List<Pair<String, String>>, onChange: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            val bolusStep = plugin.activePlugin.activePump.pumpDescription.bolusStep
-            NumberInputRow(
-                labelResId = CoreUiR.string.overview_insulin_label,
-                value = units,
-                onValueChange = { units = it; onChange() },
-                valueRange = 0.0..30.0,
-                step = bolusStep,
-                decimalPlaces = 2,
-                unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
-            )
-            InsulinQuickAddButtons(
-                increment1 = plugin.preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
-                increment2 = plugin.preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
-                increment3 = plugin.preferences.get(DoubleKey.OverviewInsulinButtonIncrement3),
-                onAddInsulin = { units = (units + it).coerceIn(0.0, 30.0); onChange() }
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = meal, onCheckedChange = { meal = it; onChange() })
-                Text(stringResource(R.string.nfccommands_meal_bolus))
+            if (argTypes.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.nfccommands_no_args_needed),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            
+            argTypes.forEach { type ->
+                when (type) {
+                    ArgType.INSULIN -> InsulinInputRow(plugin, units) { units = it; onChange() }
+                    ArgType.AMOUNT_GRAMS -> AmountGramsInputRow(plugin, grams) { grams = it; onChange() }
+                    ArgType.DURATION -> {
+                        val range = when(command) {
+                            NfcCommandCode.PUMP_DISCONNECT -> 15.0..180.0
+                            NfcCommandCode.LOOP_SUSPEND -> 30.0..480.0
+                            else -> durationStep.toDouble()..480.0
+                        }
+                        val step = when(command) {
+                            NfcCommandCode.PUMP_DISCONNECT -> 15.0
+                            NfcCommandCode.LOOP_SUSPEND -> 30.0
+                            else -> durationStep.toDouble()
+                        }
+                        DurationInputRow(duration.toDouble(), range, step) { duration = it.toInt(); onChange() }
+                    }
+                    ArgType.RATE -> RateInputRow(rate) { rate = it; onChange() }
+                    ArgType.PERCENT -> {
+                        val range = if (command == NfcCommandCode.PROFILE_SWITCH) 10.0..500.0 else 0.0..200.0
+                        val step = if (command == NfcCommandCode.PROFILE_SWITCH) 5.0 else 10.0
+                        PercentInputRow(percent.toDouble(), range, step) { percent = it.toInt(); onChange() }
+                    }
+                    ArgType.MEAL_CHECK -> MealCheckRow(meal) { meal = it; onChange() }
+                    ArgType.PROFILE_NAME -> NfcDropdown(
+                        value = profileName.ifEmpty { profileNames.firstOrNull() ?: "" },
+                        options = profileNames.map { it to it },
+                        onValueChange = { profileName = it; onChange() },
+                        label = stringResource(CoreUiR.string.profile)
+                    )
+                    ArgType.SCENE_ID -> NfcDropdown(
+                        value = sceneId.ifEmpty { sceneNames.firstOrNull()?.first ?: "" },
+                        options = sceneNames,
+                        onValueChange = { sceneId = it; onChange() },
+                        label = stringResource(CoreUiR.string.scenes)
+                    )
+                    ArgType.GLUCOSE_TARGET -> GlucoseInputRow(plugin, glucose) { glucose = it; onChange() }
+                    ArgType.BOLUS_WIZARD_OPTIONS -> CalculatorOptions(useBg, useTT, useTrend, useIOB, useCOB,
+                        onBgChange = { useBg = it; onChange() },
+                        onTTChange = { useTT = it; onChange() },
+                        onTrendChange = { useTrend = it; onChange() },
+                        onIOBChange = { useIOB = it; onChange() },
+                        onCOBChange = { useCOB = it; onChange() }
+                    )
+                    else -> {}
+                }
             }
         }
     }
-
-    override fun applyParams(params: JSONObject) {
-        units = params.optDouble("amount", 1.0)
-        meal = params.optBoolean("isMeal", false)
-    }
 }
 
-class BasalAbsNfcUiAction(override val command: NfcCommandCode, val step: Int) : NfcUiAction {
-    var rate by mutableDoubleStateOf(1.0)
-    var duration by mutableIntStateOf(30)
-    override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("rate", rate).put("duration", duration))
-    override fun shortDescription() = ""
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            NumberInputRow(
-                labelResId = R.string.nfccommands_basal_rate_label,
-                value = rate,
-                onValueChange = { rate = it; onChange() },
-                valueRange = 0.0..10.0,
-                step = 0.05,
-                decimalPlaces = 2,
-                unitLabel = stringResource(CoreUiR.string.profile_ins_units_per_hour)
-            )
-            NumberInputRow(
-                labelResId = CoreUiR.string.duration_label,
-                value = duration.toDouble(),
-                onValueChange = { duration = it.toInt(); onChange() },
-                valueRange = step.toDouble()..480.0,
-                step = step.toDouble(),
-                valueFormat = DecimalFormat("0"),
-                unitLabel = stringResource(KeysR.string.units_min)
-            )
-        }
-    }
-
-    override fun applyParams(params: JSONObject) {
-        rate = params.optDouble("rate", 1.0)
-        duration = params.optInt("duration", 30)
-    }
-}
-
-class BasalPctNfcUiAction(override val command: NfcCommandCode, val step: Int) : NfcUiAction {
-    var percent by mutableIntStateOf(100)
-    var duration by mutableIntStateOf(30)
-    override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("percent", percent).put("duration", duration))
-    override fun shortDescription() = ""
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            NumberInputRow(
-                labelResId = CoreUiR.string.percent,
-                value = percent.toDouble(),
-                onValueChange = { percent = it.toInt(); onChange() },
-                valueRange = 0.0..200.0,
-                step = 10.0,
-                valueFormat = DecimalFormat("0"),
-                unitLabel = "%"
-            )
-            NumberInputRow(
-                labelResId = CoreUiR.string.duration_label,
-                value = duration.toDouble(),
-                onValueChange = { duration = it.toInt(); onChange() },
-                valueRange = step.toDouble()..480.0,
-                step = step.toDouble(),
-                valueFormat = DecimalFormat("0"),
-                unitLabel = stringResource(KeysR.string.units_min)
-            )
-        }
-    }
-
-    override fun applyParams(params: JSONObject) {
-        percent = params.optInt("percent", 100)
-        duration = params.optInt("duration", 30)
-    }
-}
-
-class ExtendedNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
-    var units by mutableDoubleStateOf(1.0)
-    var duration by mutableIntStateOf(30)
-    override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("amount", units).put("duration", duration))
-    override fun shortDescription() = ""
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            NumberInputRow(
-                labelResId = R.string.nfccommands_extended_units,
-                value = units,
-                onValueChange = { units = it; onChange() },
-                valueRange = 0.0..30.0,
-                step = 0.1,
-                decimalPlaces = 2,
-                unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
-            )
-            NumberInputRow(
-                labelResId = CoreUiR.string.duration_label,
-                value = duration.toDouble(),
-                onValueChange = { duration = it.toInt(); onChange() },
-                valueRange = 15.0..480.0,
-                step = 15.0,
-                valueFormat = DecimalFormat("0"),
-                unitLabel = stringResource(KeysR.string.units_min)
-            )
-        }
-    }
-
-    override fun applyParams(params: JSONObject) {
-        units = params.optDouble("amount", 1.0)
-        duration = params.optInt("duration", 30)
-    }
-}
-
-class CarbsNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcCommandCode) : NfcUiAction {
-    var grams by mutableIntStateOf(20)
-    override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("amount", grams))
-    override fun shortDescription() = ""
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        Column(modifier = Modifier.padding(vertical = 4.dp)) {
-            NumberInputRow(
-                labelResId = CoreUiR.string.carbs,
-                value = grams.toDouble(),
-                onValueChange = { grams = it.toInt(); onChange() },
-                valueRange = 0.0..200.0,
-                step = 1.0,
-                valueFormat = DecimalFormat("0"),
-                unitLabel = stringResource(CoreUiR.string.shortgramm)
-            )
-            QuickAddButtons(
-                increment1 = plugin.preferences.get(IntKey.OverviewCarbsButtonIncrement1),
-                increment2 = plugin.preferences.get(IntKey.OverviewCarbsButtonIncrement2),
-                increment3 = plugin.preferences.get(IntKey.OverviewCarbsButtonIncrement3),
-                onAddCarbs = { grams = (grams + it).coerceIn(0, 200); onChange() }
-            )
-        }
-    }
-
-    override fun applyParams(params: JSONObject) {
-        grams = params.optInt("amount", 20)
-    }
-}
-
-class ProfileNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
-    var profileName by mutableStateOf("")
-    var percent by mutableIntStateOf(100)
-    override fun buildCommand(): String? {
-        if (profileName.isBlank()) return null
-        return NfcTagStore.buildCommand(command, JSONObject().put("profileName", profileName).put("percentage", percent))
-    }
-    override fun shortDescription() = ""
-
-    @Composable
-    override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            NfcProfileDropdown(
-                value = profileName.ifEmpty { profileNames.firstOrNull() ?: "" },
-                options = profileNames,
-                onValueChange = { profileName = it; onChange() },
-                label = stringResource(CoreUiR.string.profile)
-            )
-            NumberInputRow(
-                labelResId = CoreUiR.string.percent,
-                value = percent.toDouble(),
-                onValueChange = { percent = it.toInt(); onChange() },
-                valueRange = 10.0..500.0,
-                step = 5.0,
-                unitLabel = "%"
-            )
-        }
-    }
-
-    override fun applyParams(params: JSONObject) {
-        profileName = params.optString("profileName", "")
-        percent = params.optInt("percentage", 100)
-    }
-}
+// ---------- Elementary Input Rows ----------
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NfcProfileDropdown(
+fun NfcDropdown(
     value: String,
-    options: List<String>,
+    options: List<Pair<String, String>>,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: String? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val displayValue = options.find { it.first == value }?.second ?: value
+    
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
         modifier = modifier
     ) {
         OutlinedTextField(
-            value = value,
+            value = displayValue,
             onValueChange = {},
             readOnly = true,
             label = label?.let { { Text(it) } },
@@ -1007,12 +947,189 @@ fun NfcProfileDropdown(
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             options.forEach { opt ->
                 DropdownMenuItem(
-                    text = { Text(opt) },
-                    onClick = { onValueChange(opt); expanded = false }
+                    text = { Text(opt.second) },
+                    onClick = { onValueChange(opt.first); expanded = false }
                 )
             }
         }
     }
+}
+
+@Composable
+private fun InsulinInputRow(plugin: NfcCommandsPlugin, value: Double, onValueChange: (Double) -> Unit) {
+    val bolusStep = plugin.activePlugin.activePump.pumpDescription.bolusStep
+    NumberInputRow(
+        labelResId = CoreUiR.string.overview_insulin_label,
+        value = value,
+        onValueChange = onValueChange,
+        valueRange = 0.0..30.0,
+        step = bolusStep,
+        decimalPlaces = 2,
+        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
+    )
+    InsulinQuickAddButtons(
+        increment1 = plugin.preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
+        increment2 = plugin.preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
+        increment3 = plugin.preferences.get(DoubleKey.OverviewInsulinButtonIncrement3),
+        onAddInsulin = { onValueChange((value + it).coerceIn(0.0, 30.0)) }
+    )
+}
+
+@Composable
+private fun AmountGramsInputRow(plugin: NfcCommandsPlugin, value: Int, onValueChange: (Int) -> Unit) {
+    NumberInputRow(
+        labelResId = CoreUiR.string.carbs,
+        value = value.toDouble(),
+        onValueChange = { onValueChange(it.toInt()) },
+        valueRange = 0.0..200.0,
+        step = 1.0,
+        valueFormat = DecimalFormat("0"),
+        unitLabel = stringResource(CoreUiR.string.shortgramm)
+    )
+    QuickAddButtons(
+        increment1 = plugin.preferences.get(IntKey.OverviewCarbsButtonIncrement1),
+        increment2 = plugin.preferences.get(IntKey.OverviewCarbsButtonIncrement2),
+        increment3 = plugin.preferences.get(IntKey.OverviewCarbsButtonIncrement3),
+        onAddCarbs = { onValueChange((value + it).coerceIn(0, 200)) }
+    )
+}
+
+@Composable
+private fun DurationInputRow(value: Double, range: ClosedFloatingPointRange<Double>, step: Double, onValueChange: (Double) -> Unit) {
+    NumberInputRow(
+        labelResId = CoreUiR.string.duration_label,
+        value = value,
+        onValueChange = onValueChange,
+        valueRange = range,
+        step = step,
+        valueFormat = DecimalFormat("0"),
+        unitLabel = stringResource(KeysR.string.units_min)
+    )
+}
+
+@Composable
+private fun RateInputRow(value: Double, onValueChange: (Double) -> Unit) {
+    NumberInputRow(
+        labelResId = R.string.nfccommands_basal_rate_label,
+        value = value,
+        onValueChange = onValueChange,
+        valueRange = 0.0..10.0,
+        step = 0.05,
+        decimalPlaces = 2,
+        unitLabel = stringResource(CoreUiR.string.profile_ins_units_per_hour)
+    )
+}
+
+@Composable
+private fun PercentInputRow(value: Double, range: ClosedFloatingPointRange<Double> = 0.0..200.0, step: Double = 10.0, onValueChange: (Double) -> Unit) {
+    NumberInputRow(
+        labelResId = CoreUiR.string.percent,
+        value = value,
+        onValueChange = onValueChange,
+        valueRange = range,
+        step = step,
+        valueFormat = DecimalFormat("0"),
+        unitLabel = "%"
+    )
+}
+
+@Composable
+private fun MealCheckRow(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(checked = checked, onCheckedChange = onCheckedChange)
+        Text(stringResource(R.string.nfccommands_meal_bolus))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CalculatorOptions(
+    useBg: Boolean,
+    useTT: Boolean,
+    useTrend: Boolean,
+    useIOB: Boolean,
+    useCOB: Boolean,
+    onBgChange: (Boolean) -> Unit,
+    onTTChange: (Boolean) -> Unit,
+    onTrendChange: (Boolean) -> Unit,
+    onIOBChange: (Boolean) -> Unit,
+    onCOBChange: (Boolean) -> Unit
+) {
+    MultiChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+        SegmentedButton(
+            checked = useBg,
+            onCheckedChange = {
+                onBgChange(it)
+                if (!it) onTTChange(false)
+            },
+            shape = SegmentedButtonDefaults.itemShape(0, 5),
+            icon = {}
+        ) {
+            Icon(imageVector = ElementType.BG_CHECK.icon(), contentDescription = null, modifier = Modifier.size(20.dp))
+        }
+        SegmentedButton(
+            checked = useTT,
+            onCheckedChange = {
+                onTTChange(it)
+                if (it) onBgChange(true)
+            },
+            shape = SegmentedButtonDefaults.itemShape(1, 5),
+            icon = {}
+        ) {
+            Icon(imageVector = IcTtManual, contentDescription = null, modifier = Modifier.size(20.dp))
+        }
+        SegmentedButton(
+            checked = useTrend,
+            onCheckedChange = onTrendChange,
+            shape = SegmentedButtonDefaults.itemShape(2, 5),
+            icon = {}
+        ) {
+            Icon(imageVector = Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null, modifier = Modifier.size(20.dp))
+        }
+        SegmentedButton(
+            checked = useIOB,
+            onCheckedChange = {
+                onIOBChange(it)
+                if (!it) onCOBChange(false)
+            },
+            shape = SegmentedButtonDefaults.itemShape(3, 5),
+            icon = {}
+        ) {
+            Icon(imageVector = ElementType.INSULIN.icon(), contentDescription = null, modifier = Modifier.size(20.dp))
+        }
+        SegmentedButton(
+            checked = useCOB,
+            onCheckedChange = {
+                onCOBChange(it)
+                if (it) onIOBChange(true)
+            },
+            shape = SegmentedButtonDefaults.itemShape(4, 5),
+            icon = {}
+        ) {
+            Icon(imageVector = ElementType.COB.icon(), contentDescription = null, modifier = Modifier.size(20.dp))
+        }
+    }
+}
+
+@Composable
+private fun GlucoseInputRow(plugin: NfcCommandsPlugin, value: Double, onValueChange: (Double) -> Unit) {
+    val units = plugin.profileUtil.units
+    val isMmol = units == GlucoseUnit.MMOL
+    val range = if (isMmol) 3.9..13.9 else 70.0..250.0
+    val step = if (isMmol) 0.1 else 5.0
+    val decimals = if (isMmol) 1 else 0
+    val format = if (isMmol) DecimalFormat("0.0") else DecimalFormat("0")
+    
+    NumberInputRow(
+        labelResId = CoreUiR.string.target_label,
+        value = value,
+        onValueChange = onValueChange,
+        valueRange = range,
+        step = step,
+        decimalPlaces = decimals,
+        valueFormat = format,
+        unitLabel = if (isMmol) "mmol/l" else "mg/dl"
+    )
 }
 
 @Composable

@@ -1,132 +1,92 @@
 # NFC Commands Plugin
 
-Allows AAPS to execute command cascades by scanning a registered NFC tag or by manually
-triggering execution from the My Tags screen.
+Allows AAPS to execute command cascades by scanning a registered NFC tag or by manually triggering execution from the My Tags screen.
 
 ## Screens
 
 ### My Tags tab
-
-Lists all registered NFC tags. Each card shows:
-
-- Tag name
-- Numbered command chain (e.g. `1. LOOP STOP`, `2. BASAL STOP`)
-- Tag UID chip
-
-**Card actions (left to right):**
-
-| Icon | Action |
-|------|--------|
-| ▶ Play | Open the execute confirmation dialog |
-| ✎ Edit | Rename the tag |
-| 🗑 Delete | Remove the tag from My Tags |
-
-#### Manual execution
-
-Tapping the play button shows a confirmation dialog:
-
-```
-Execute <tag name>?
-
-Commands:
-1. LOOP STOP
-2. BASAL STOP
-```
-
-Pressing **Execute** runs the full cascade without requiring a physical NFC scan.
-The result (success/failure + per-command messages) is written to the Log tab with
-`action = "READ"`, identical to a real scan.
-
-**Requirements:** _Allow commands via NFC_ must be enabled in plugin settings; the
-same remote-command permission check applies to manual execution as to physical scans.
+Lists all registered NFC tags. Each card shows the tag name, command icons for quick identification, and the last scanned timestamp.
+- **▶ Play**: Manual execution of the command chain.
+- **🗑 Delete**: Remove the tag from the database.
+- **Tapping the card**: Opens Edit mode in the Build screen.
 
 ### Log tab
+Chronological history of interactions:
+- **Read**: Physical scan results.
+- **Write**: New tag registration.
+- **Manual**: Execution triggered from the UI.
 
-Chronological history of all tag reads (physical scans and manual executions) and
-tag writes. Each entry shows action label (`Read` / `Write`), tag name, timestamp,
-and the execution result message.
+Each entry shows the tag name, timestamp, success status (color-coded), and the execution result message.
 
 ### Build screen
-
-Step-by-step wizard for assembling a command cascade and writing it to a physical
-NFC tag. Navigate there via the **+** FAB on the My Tags tab.
-
----
-
-## Command reference
-
-| Prefix | Examples |
-|--------|---------|
-| `LOOP` | `LOOP STOP`, `LOOP RESUME`, `LOOP SUSPEND 30`, `LOOP CLOSED`, `LOOP LGS` |
-| `PUMP` | `PUMP CONNECT`, `PUMP DISCONNECT 30` |
-| `BASAL` | `BASAL 1.5 30`, `BASAL 75% 30`, `BASAL STOP` |
-| `BOLUS` | `BOLUS 5.0`, `BOLUS 5.0 MEAL` |
-| `EXTENDED` | `EXTENDED 2.0 60`, `EXTENDED STOP` |
-| `CARBS` | `CARBS 30` |
-| `TARGET` | `TARGET MEAL`, `TARGET ACTIVITY`, `TARGET HYPO`, `TARGET STOP` |
-| `PROFILE` | `PROFILE 1`, `PROFILE 1 100` |
-| `AAPSCLIENT` | `AAPSCLIENT RESTART` |
-| `RESTART` | `RESTART` |
-
-Cascades execute sequentially; the first failure stops the chain.
+Wizard for assembling command chains. 
+- **Tag Name**: Optional name, defaults to the first command if left blank.
+- **Command Chain**: Commands can be added, reordered, or removed.
+- **Pump Compatibility**: Basal commands (Absolute vs Percent) are automatically filtered based on the active pump's driver capabilities.
 
 ---
 
-## Write cooldown
+## Available Actions by Category
 
-When a tag is written via the Build screen, Android hardware reads it back immediately
-after the write completes. To prevent that read-back from triggering command execution,
-`NfcTagStore.markJustWritten()` stamps the tag UID with the current timestamp.
-`prepareExecution()` checks `isJustWritten()` first (5-second window) and returns an
-error if the stamp is still fresh. Subsequent scans — after the tag is removed and
-re-presented — execute normally.
+| Category | Command | Description |
+| :--- | :--- | :--- |
+| **LOOP** | `LOOP_STOP` | Stops the loop. |
+| | `LOOP_RESUME` | Resumes the loop. |
+| | `LOOP_SUSPEND` | Suspends the loop for a specified duration. |
+| | `LOOP_CLOSED` | Switches to Closed Loop mode. |
+| | `LOOP_LGS` | Switches to Low Glucose Suspend mode. |
+| **PUMP** | `PUMP_CONNECT` | Connects/Resumes the pump. |
+| | `PUMP_DISCONNECT`| Disconnects/Suspends the pump for a duration. |
+| **BASAL** | `BASAL_STOP` | Cancels any active temporary basal. |
+| | `BASAL_ABS` | Sets an absolute temporary basal rate (if supported). |
+| | `BASAL_PCT` | Sets a percentage temporary basal rate (if supported). |
+| **BOLUS** | `BOLUS` | Delivers a standard bolus (optionally marked as Meal). |
+| | `CARBS` | Records a carb entry. |
+| | `EXTENDED_SET` | Starts an extended bolus. |
+| | `EXTENDED_STOP` | Cancels an active extended bolus. |
+| **PROFILE**| `PROFILE_SWITCH`| Switches the active profile (with percentage). |
+| **TARGETS**| `TARGET_MEAL` | Sets "Eating Soon" temporary target. |
+| | `TARGET_ACTIVITY`| Sets "Activity" temporary target. |
+| | `TARGET_HYPO` | Sets "Hypo" temporary target. |
+| | `TARGET_STOP` | Cancels active temporary target. |
+| **SYSTEM** | `AAPSCLIENT_RESTART`| Triggers an immediate synchronization with Nightscout. |
+| | `RESTART` | Restarts the AAPS application. |
 
 ---
 
-## Registering arbitrary tags (blank tags, finished Libre sensors, …)
+## Technical Details
 
-Any NFC tag can trigger a command chain — it does not need to carry AAPS NDEF data.
-Use the **+** FAB → Build screen to create a command chain, then instead of writing
-to a tag, copy the resulting UID from a physical scan and save the entry with that UID.
-When the phone reads the tag, `ACTION_TAG_DISCOVERED` fires as a fallback and AAPS
-looks up the UID in My Tags.
+### User Entry Logging (UEL)
+Every successful execution is logged in the AAPS Treatments history:
+- **Source**: `Sources.NfcCommands`.
+- **Note**: Contains the **Tag Name** for traceability (allows identifying which physical tag was used).
+- **Color**: Matches the `userEntry` theme color.
 
-**Limitation:** `ACTION_TAG_DISCOVERED` matches every NFC tag the phone reads
-(credit cards, transit cards, etc.). AAPS appears in the Android app-chooser for
-all tags, not just AAPS-written ones. Unknown UIDs are silently ignored (no toast).
+### Intent Handling
+- **NDEF_DISCOVERED**: For tags written by AAPS.
+- **TAG_DISCOVERED**: Fallback for unregistered/blank tags or finished sensors whose UID is manually registered.
 
-Enable **NFC foreground priority** (see Settings) to make AAPS intercept all tags
-ahead of other apps while it is in the foreground.
+### Intent Filter Configuration
+The plugin requires a `nfc_tech_filter.xml` (usually in `app/src/main/res/xml/`) to handle various tag technologies (IsoDep, NfcA, NfcB, etc.).
 
 ---
 
-## Key classes
+## Key Files & Responsibilities
 
-| Class | Responsibility |
-|-------|---------------|
-| `NfcCommandsPlugin` | `executeCascade` / `executeCommand` — all execution logic (suspend); `executeWithFeedback` — unified entry point that runs the cascade, appends the log entry, vibrates, and shows a toast. Pump commands go through the suspend `CommandQueue` API and report the actual `PumpEnactResult` outcome (success/failure) rather than fire-and-forget |
-| `NfcControlActivity` | Handles NFC scan intents (`NDEF_DISCOVERED` and `TAG_DISCOVERED` fallback); calls `prepareExecution` + `executeWithFeedback` from a `CoroutineScope(Dispatchers.IO)` |
-| `NfcForegroundDispatch` | Manages `NfcAdapter.enableForegroundDispatch` lifecycle for `ComposeMainActivity`; forwards intercepted intents to `NfcControlActivity` and shows the warning dialog when the setting is enabled |
-| `NfcCommandsScreen` | My Tags and Log UI; manual execution dialog |
-| `NfcBuildScreen` | Command chain builder UI |
-| `NfcTagStore` | `@Singleton` class injected with `SP`; persistence for tags and log; static companion methods for command templates, `buildCommand`, `buildCascade`, and `tagUidHex`; `logUpdates: Flow<Unit>` for reactive UI refresh |
+| File | Core Responsibility |
+| :--- | :--- |
+| `NfcCommandsPlugin` | Main entry point; handles lifecycle, command routing, and feedback (vibration/toast). |
+| `NfcControlActivity`| Translucent activity that intercepts System Intents and displays the confirmation dialog. |
+| `NfcAction` | Abstract base class for all individual command logic. |
+| `NfcCommandCode` | Central Enum defining available commands, icons, and categories. |
+| `NfcTagStore` | Handles JSON serialization and persistence of tags and logs in SharedPreferences. |
+| `NfcForegroundDispatch`| Manages NFC foreground priority to intercept scans while AAPS is open. |
+| `NfcBuildScreen` | UI for the command chain builder. |
+| `NfcCommandsScreen` | Main UI container for the My Tags and Log tabs. |
 
 ---
 
 ## Settings
-
-| Key | Description |
-|-----|-------------|
-| `BooleanKey.NfcAllowRemoteCommands` | Master switch — must be enabled for any command to execute |
-| `BooleanKey.NfcForegroundPriority` | When enabled, AAPS intercepts all NFC tags via `enableForegroundDispatch` while the app is in the foreground, taking priority over other apps (e.g. LibreLink). A warning dialog is shown when the setting is first enabled. Dispatch is automatically disabled when AAPS moves to the background. |
-
----
-
-## Tests
-
-| Test file | Coverage |
-|-----------|---------|
-| `NfcCommandsPluginTest` | All command processors, `executeCascade` (success, failure, empty list, early stop), write-cooldown rejection in `prepareExecution` |
-| `NfcControlActivityTest` | NDEF and TAG_DISCOVERED intent handling, silent ignore for unknown UIDs, `executeWithFeedback` delegated after successful scan |
-| `NfcForegroundDispatchTest` | `onResume`/`onPause` lifecycle (preference off, no adapter, enable/disable, idempotent disable), `onNewIntent` routing (NDEF, TAG_DISCOVERED, null action, unrelated action), `observeWarning` subscription and dialog send/suppress logic |
-| `NfcTagStoreTest` | Tag persistence, log persistence (success, failure, pruning, ordering), `markJustWritten`/`isJustWritten` (fresh, expired, unknown UID, case-insensitive) |
+- **Allow commands via NFC**: Master switch for execution.
+- **NFC foreground priority**: Prioritizes AAPS for NFC scans over other apps (e.g. LibreLink) when AAPS is in the foreground.
+- **Clear Log**: Wipes the NFC interaction history.

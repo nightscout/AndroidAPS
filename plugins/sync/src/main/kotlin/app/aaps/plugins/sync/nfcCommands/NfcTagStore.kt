@@ -38,8 +38,8 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
             params: JSONObject = JSONObject(),
         ): String {
             return JSONObject()
-                .put("code", code.name)
-                .put("params", params)
+                .put(NfcJsonKeys.CODE, code.name)
+                .put(NfcJsonKeys.PARAMS, params)
                 .toString()
         }
 

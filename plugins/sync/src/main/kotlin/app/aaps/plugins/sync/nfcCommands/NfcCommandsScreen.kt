@@ -6,14 +6,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -22,12 +23,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,14 +55,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.navigation.color
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.text.DateFormat
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.core.ui.R as CoreUiR
 
 private sealed class NfcRoute {
@@ -225,7 +231,11 @@ private fun NfcLogScreen(nfcTagStore: NfcTagStore) {
             }
         }
     } else {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(AapsSpacing.medium),
+            verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+        ) {
             items(entries) { entry ->
                 NfcLogEntryCard(entry)
             }
@@ -244,12 +254,11 @@ private fun NfcLogEntryCard(entry: NfcLogEntry) {
         else -> entry.action
     }
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = AapsSpacing.extraSmall)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(AapsSpacing.large)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -361,7 +370,11 @@ private fun NfcTagsScreen(
                 )
             }
         } else {
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = 72.dp)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(AapsSpacing.medium),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+            ) {
                 items(tags, key = { it.tagUid + it.createdAtMillis }) { tag ->
                     NfcTagCard(
                         plugin = plugin,
@@ -373,11 +386,11 @@ private fun NfcTagsScreen(
                 }
             }
         }
-        FloatingActionButton(
+        AapsFab(
             onClick = onBuild,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp),
+                .padding(AapsSpacing.extraLarge),
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
@@ -387,7 +400,6 @@ private fun NfcTagsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NfcTagCard(
     plugin: NfcCommandsPlugin,
@@ -398,64 +410,82 @@ private fun NfcTagCard(
 ) {
     val dateFormatter = remember { DateFormat.getDateInstance(DateFormat.SHORT) }
 
-    Card(
-        onClick = onEdit,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = AapsSpacing.extraSmall)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = tag.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
-                )
-                if (tag.lastScannedAtMillis != null) {
-                    Text(
-                        text = dateFormatter.format(tag.lastScannedAtMillis),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AapsSpacing.large),
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Row(
-                    modifier = Modifier.weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)
                 ) {
-                    tag.commands.forEach { cmdJson ->
-                        NfcIconOnlyDisplay(commandJson = cmdJson)
+                    Text(
+                        text = tag.name,
+                        style = MaterialTheme.typography.titleSmall,
+                    )
+                    if (tag.lastScannedAtMillis != null) {
+                        Text(
+                            text = dateFormatter.format(tag.lastScannedAtMillis),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
-                IconButton(onClick = onExecute, modifier = Modifier.size(32.dp)) {
-                    Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nfccommands_execute_tag))
+                Row(
+                    modifier = Modifier.padding(top = AapsSpacing.extraSmall),
+                    horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)
+                ) {
+                    tag.commands.forEach { cmdJson ->
+                        NfcIconOnlyDisplay(plugin = plugin, commandJson = cmdJson)
+                    }
                 }
-                IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
-                    Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.nfccommands_disable_tag))
-                }
+            }
+            IconButton(onClick = onExecute) {
+                Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nfccommands_execute_tag))
+            }
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, contentDescription = null)
+            }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.nfccommands_disable_tag))
             }
         }
     }
 }
 
 @Composable
-private fun NfcIconOnlyDisplay(commandJson: String) {
+private fun NfcIconOnlyDisplay(plugin: NfcCommandsPlugin, commandJson: String) {
     val json = remember(commandJson) { runCatching { JSONObject(commandJson) }.getOrNull() }
-    val codeName = json?.optString("code")
+    val codeName = json?.optString(NfcJsonKeys.CODE)
     val code = remember(codeName) { if (codeName != null) runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull() else null }
+    val params = remember(json) { json?.optJSONObject(NfcJsonKeys.PARAMS) ?: JSONObject() }
 
     if (code != null) {
-        Icon(
-            imageVector = code.icon,
-            contentDescription = null,
-            tint = code.getIconColor(),
-            modifier = Modifier.size(20.dp)
-        )
+        val action = remember(code, params) {
+            plugin.getAction(code).apply { this.params = params }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+            Icon(
+                imageVector = action.icon,
+                contentDescription = null,
+                tint = action.customIconColor?.invoke() ?: action.elementType.color(),
+                modifier = Modifier.size(20.dp)
+            )
+            action.secondaryIcon?.let { secondaryIcon ->
+                Icon(
+                    imageVector = secondaryIcon,
+                    contentDescription = null,
+                    tint = action.secondaryIconColor?.invoke() ?: action.elementType.color(),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
     }
 }
