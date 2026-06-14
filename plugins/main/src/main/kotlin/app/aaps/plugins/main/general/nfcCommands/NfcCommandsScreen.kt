@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -133,7 +134,7 @@ fun NfcCommandsScreen(
 ) {
     val tabTitles = listOf(
         stringResource(R.string.nfccommands_tab_log),
-        stringResource(R.string.nfccommands),
+        stringResource(R.string.nfccommands_tab_tags),
     )
 
     val pagerState = rememberPagerState(initialPage = initialTab) { tabTitles.size }
@@ -237,7 +238,12 @@ private fun NfcLogScreen(nfcTagStore: NfcTagStore) {
 @Composable
 private fun NfcLogEntryCard(entry: NfcLogEntry) {
     val dateFormatter = remember { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) }
-    val color = if (entry.success) Color(0xFF4CAF50) else Color(0xFFF44336)
+    val color = when (entry.action) {
+        "READ" -> Color(0xFF4CAF50) // green
+        "WRITE" -> Color(0xFFF44336) // red
+        "MANUAL" -> Color(0xFFFFC107) // amber
+        else -> Color(0xFF4CAF50)
+    }
     val actionLabel = when (entry.action) {
         "READ" -> stringResource(R.string.nfccommands_log_action_read)
         "WRITE" -> stringResource(R.string.nfccommands_log_action_write)
@@ -292,6 +298,7 @@ private fun NfcTagsScreen(
     var tags by remember { mutableStateOf<List<NfcCreatedTag>>(emptyList()) }
     var deleteTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
     var executeTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
+    var renameTarget by remember { mutableStateOf<NfcCreatedTag?>(null) }
 
     LaunchedEffect(refreshKey) {
         tags = nfcTagStore.loadCreatedTags()
@@ -320,6 +327,35 @@ private fun NfcTagsScreen(
             },
             dismissButton = {
                 TextButton(onClick = { deleteTarget = null }) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+            },
+        )
+    }
+
+    renameTarget?.let { tag ->
+        var newName by remember(tag) { mutableStateOf(tag.name) }
+        AlertDialog(
+            onDismissRequest = { renameTarget = null },
+            title = { Text(stringResource(R.string.nfccommands_rename_tag_dialog_title)) },
+            text = {
+                OutlinedTextField(
+                    value = newName,
+                    onValueChange = { newName = it },
+                    label = { Text(stringResource(R.string.nfccommands_tag_name_hint)) },
+                    singleLine = true,
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    val finalName = newName.ifBlank { defaultTagName(tag.commands, plugin) }
+                    nfcTagStore.saveCreatedTag(tag.copy(name = finalName))
+                    refreshKey++
+                    renameTarget = null
+                }) { Text(stringResource(CoreUiR.string.save)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { renameTarget = null }) {
                     Text(stringResource(android.R.string.cancel))
                 }
             },
@@ -369,6 +405,7 @@ private fun NfcTagsScreen(
                         tag = tag,
                         onExecute = { executeTarget = tag },
                         onEdit = { onEdit(tag) },
+                        onRename = { renameTarget = tag },
                         onDelete = { deleteTarget = tag },
                     )
                 }
@@ -395,6 +432,7 @@ private fun NfcTagCard(
     tag: NfcCreatedTag,
     onExecute: () -> Unit,
     onEdit: () -> Unit,
+    onRename: () -> Unit,
     onDelete: () -> Unit,
 ) {
     val dateFormatter = remember { DateFormat.getDateInstance(DateFormat.SHORT) }
@@ -436,6 +474,9 @@ private fun NfcTagCard(
                 }
                 IconButton(onClick = onExecute, modifier = Modifier.size(32.dp)) {
                     Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nfccommands_execute_tag))
+                }
+                IconButton(onClick = onRename, modifier = Modifier.size(32.dp)) {
+                    Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.nfccommands_edit_tag_name))
                 }
                 IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
                     Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.nfccommands_disable_tag))

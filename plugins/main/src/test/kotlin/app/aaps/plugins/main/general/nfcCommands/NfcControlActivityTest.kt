@@ -43,6 +43,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
             decimalFormatter = decimalFormatter,
             configBuilder = mock(),
             rxBus = mock(),
+            uel = mock(),
         )
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.GENERAL, true)
         whenever(rh.gs(any<Int>())).thenReturn("Mock String")

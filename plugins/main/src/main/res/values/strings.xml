@@ -64,6 +64,9 @@
     <string name="nfccommands_log_empty_body">NFC tag reads and writes will appear here</string>
     <string name="nfccommands_add_tag">Add tag</string>
     <string name="nfccommands_tab_log">Log</string>
+    <string name="nfccommands_tab_tags">NFC Tags</string>
+    <string name="nfccommands_edit_tag_name">Rename tag</string>
+    <string name="nfccommands_rename_tag_dialog_title">Rename tag</string>
     <string name="nfccommands_log_action_read">Read</string>
     <string name="nfccommands_log_action_write">Write</string>
     <string name="nfccommands_log_action_manual">Manual</string>

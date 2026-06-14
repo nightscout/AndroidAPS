@@ -175,7 +175,7 @@ fun NfcBuildScreen(
         if (initialTag != null) {
             val uid = initialTag.tagUid
             val commands = chain.mapNotNull { it.buildCommand() }
-            val name = tagName.ifBlank { chain.firstOrNull()?.shortDescription() ?: "" }
+            val name = tagName.ifBlank { defaultTagName(commands, plugin) }
             plugin.nfcTagStore.saveCreatedTag(
                 NfcCreatedTag(
                     tagUid = uid,
@@ -258,7 +258,7 @@ fun NfcBuildScreen(
             NfcAdapter.ReaderCallback { tag ->
                 val uid = NfcTagStore.tagUidHex(tag.id) ?: return@ReaderCallback
                 val commands = chain.mapNotNull { it.buildCommand() }
-                val name = tagName.ifBlank { chain.firstOrNull()?.shortDescription() ?: "" }
+                val name = tagName.ifBlank { defaultTagName(commands, plugin) }
                 val alreadyAssigned = plugin.nfcTagStore.findTagByUid(uid) != null
                 val ndefWritten = !alreadyAssigned && buildAndWriteNdef(tag, plugin)
                 val outcome = resolveWriteOutcome(alreadyAssigned, ndefWritten)
@@ -685,7 +685,6 @@ internal fun resolveWriteOutcome(alreadyAssigned: Boolean, ndefWritten: Boolean)
 interface NfcUiAction {
     val command: NfcCommandCode
     fun buildCommand(): String?
-    fun shortDescription(): String
     @Composable
     fun EditContent(profileNames: List<String>, onChange: () -> Unit)
 
@@ -709,7 +708,6 @@ private fun createNfcUiAction(plugin: NfcCommandsPlugin, code: NfcCommandCode, d
 
 class SimpleNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
     override fun buildCommand() = NfcTagStore.buildCommand(command)
-    override fun shortDescription() = "" 
 
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
@@ -726,7 +724,6 @@ class SimpleNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
 class SuspendNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
     var minutes by mutableIntStateOf(60)
     override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("duration", minutes))
-    override fun shortDescription() = ""
 
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
@@ -749,7 +746,6 @@ class SuspendNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
 class PumpDisconnectNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
     var minutes by mutableIntStateOf(30)
     override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("duration", minutes))
-    override fun shortDescription() = ""
 
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
@@ -775,7 +771,6 @@ class BolusNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcC
     override fun buildCommand(): String {
         return NfcTagStore.buildCommand(command, JSONObject().put("amount", units).put("isMeal", meal))
     }
-    override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -812,7 +807,6 @@ class BasalAbsNfcUiAction(override val command: NfcCommandCode, val step: Int) :
     var rate by mutableDoubleStateOf(1.0)
     var duration by mutableIntStateOf(30)
     override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("rate", rate).put("duration", duration))
-    override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -847,7 +841,6 @@ class BasalPctNfcUiAction(override val command: NfcCommandCode, val step: Int) :
     var percent by mutableIntStateOf(100)
     var duration by mutableIntStateOf(30)
     override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("percent", percent).put("duration", duration))
-    override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -882,7 +875,6 @@ class ExtendedNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
     var units by mutableDoubleStateOf(1.0)
     var duration by mutableIntStateOf(30)
     override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("amount", units).put("duration", duration))
-    override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -916,7 +908,6 @@ class ExtendedNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
 class CarbsNfcUiAction(val plugin: NfcCommandsPlugin, override val command: NfcCommandCode) : NfcUiAction {
     var grams by mutableIntStateOf(20)
     override fun buildCommand() = NfcTagStore.buildCommand(command, JSONObject().put("amount", grams))
-    override fun shortDescription() = ""
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {
         Column(modifier = Modifier.padding(vertical = 4.dp)) {
@@ -950,7 +941,6 @@ class ProfileNfcUiAction(override val command: NfcCommandCode) : NfcUiAction {
         if (profileName.isBlank()) return null
         return NfcTagStore.buildCommand(command, JSONObject().put("profileName", profileName).put("percentage", percent))
     }
-    override fun shortDescription() = ""
 
     @Composable
     override fun EditContent(profileNames: List<String>, onChange: () -> Unit) {

@@ -119,6 +119,7 @@ enum class BooleanKey(
     SmsReportPumpUnreachable("smscommunicator_report_pump_unreachable", true, R.string.pref_title_sms_report_pump_unreachable, R.string.pref_summary_sms_report_pump_unreachable),
     NfcAllowRemoteCommands("nfccommunicator_remotecommandsallowed", false, R.string.pref_title_nfc_allow_remote_commands),
     NfcForegroundPriority("nfccommunicator_foreground_priority", false, R.string.pref_title_nfc_foreground_priority),
+    NfcAutoAcceptTags("nfccommunicator_autoaccept_tags", false, R.string.pref_title_nfc_autoaccept_tags, R.string.pref_summary_nfc_autoaccept_tags),
 
     VirtualPumpStatusUpload("virtualpump_uploadstatus", false, R.string.pref_title_virtual_pump_status_upload, showInNsClientMode = false),
     NsClientUploadData("ns_upload", true, R.string.pref_title_ns_upload_data, R.string.pref_summary_ns_upload_data, showInNsClientMode = false, hideParentScreenIfHidden = true),

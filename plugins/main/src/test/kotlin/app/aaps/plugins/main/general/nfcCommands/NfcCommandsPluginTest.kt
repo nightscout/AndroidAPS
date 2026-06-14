@@ -7,6 +7,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.BooleanKey
@@ -35,6 +36,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var mockProfileStore: ProfileStore
+    @Mock lateinit var uel: UserEntryLogger
 
     private val tagUid = "aabbccdd"
     private lateinit var plugin: NfcCommandsPlugin
@@ -61,6 +63,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 decimalFormatter = decimalFormatter,
                 configBuilder = configBuilder,
                 rxBus = rxBus,
+                uel = uel,
             )
         plugin.setPluginEnabledBlocking(PluginType.GENERAL, true)
 
@@ -115,6 +118,38 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val result = plugin.prepareExecution(tagUid)
 
         assertThat(result).isInstanceOf(NfcPrepareResult.Error::class.java)
+    }
+
+    @Test
+    fun `autoAcceptEnabled is false by default`() {
+        whenever(preferences.get(BooleanKey.NfcAutoAcceptTags)).thenReturn(false)
+
+        assertThat(plugin.autoAcceptEnabled()).isFalse()
+    }
+
+    @Test
+    fun `autoAcceptEnabled reflects preference when enabled`() {
+        whenever(preferences.get(BooleanKey.NfcAutoAcceptTags)).thenReturn(true)
+
+        assertThat(plugin.autoAcceptEnabled()).isTrue()
+    }
+
+    @Test
+    fun `defaultTagName returns label of first command`() {
+        whenever(rh.gs(R.string.nfccommands_cmd_loop_stop)).thenReturn("Stop Loop")
+        val commands = listOf(NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP))
+
+        assertThat(defaultTagName(commands, plugin)).isEqualTo("Stop Loop")
+    }
+
+    @Test
+    fun `defaultTagName returns empty string for empty command list`() {
+        assertThat(defaultTagName(emptyList(), plugin)).isEmpty()
+    }
+
+    @Test
+    fun `defaultTagName returns empty string for unparseable command`() {
+        assertThat(defaultTagName(listOf("not json"), plugin)).isEmpty()
     }
 
     // ── processLoop tests ──────────────────────────────────────────────────────

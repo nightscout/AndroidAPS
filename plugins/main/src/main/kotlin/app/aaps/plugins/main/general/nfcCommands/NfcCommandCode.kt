@@ -157,3 +157,12 @@ enum class NfcCommandCode(
         else -> true
     }
 }
+
+fun defaultTagName(commands: List<String>, plugin: NfcCommandsPlugin): String {
+    val first = commands.firstOrNull() ?: return ""
+    val code = runCatching { JSONObject(first) }.getOrNull()
+        ?.optString("code")
+        ?.let { runCatching { NfcCommandCode.valueOf(it) }.getOrNull() }
+        ?: return ""
+    return plugin.rh.gs(code.labelResId)
+}

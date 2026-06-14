@@ -125,13 +125,21 @@ open class NfcControlActivity : FragmentActivity() {
                     if (pendingTag == null) finish()
                 }
                 is NfcPrepareResult.Ready -> {
-                    withContext(Dispatchers.Main) {
-                        pendingTag = NfcCreatedTag(
-                            tagUid = prep.tagUid,
-                            name = prep.tagName,
-                            commands = prep.commands,
-                            createdAtMillis = 0L
-                        )
+                    if (nfcPlugin.autoAcceptEnabled()) {
+                        nfcPlugin.updateLastScanned(prep.tagUid)
+                        nfcPlugin.executeWithFeedback(prep.commands, prep.tagName)
+                        withContext(Dispatchers.Main) {
+                            finishWithTransition()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            pendingTag = NfcCreatedTag(
+                                tagUid = prep.tagUid,
+                                name = prep.tagName,
+                                commands = prep.commands,
+                                createdAtMillis = 0L
+                            )
+                        }
                     }
                 }
             }

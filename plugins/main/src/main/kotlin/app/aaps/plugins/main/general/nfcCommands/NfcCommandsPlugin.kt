@@ -121,6 +121,7 @@ class NfcCommandsPlugin
             items = listOf(
                 BooleanKey.NfcAllowRemoteCommands,
                 BooleanKey.NfcForegroundPriority,
+                BooleanKey.NfcAutoAcceptTags,
                 PreferenceActionItem(
                     key = "nfccommunicator_clear_log",
                     titleResId = R.string.nfccommands_clear_log,
@@ -137,6 +138,8 @@ class NfcCommandsPlugin
         fun updateLastScanned(tagUid: String) {
             nfcTagStore.updateLastScanned(tagUid)
         }
+
+        fun autoAcceptEnabled(): Boolean = preferences.get(BooleanKey.NfcAutoAcceptTags)
 
         fun prepareExecution(tagUid: String): NfcPrepareResult {
             clearActionStates()
