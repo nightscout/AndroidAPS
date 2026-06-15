@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">DynamicISF коефицент %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Динамично ISF</string>
+    <string name="openaps_auto_isf">Автом ISF</string>
     <string name="openapsma_disabled">Модулът е изключен</string>
     <string name="openapsma_no_glucose_data">Няма данни за КЗ</string>
     <string name="openaps_no_as_data">Няма налични данни за авточувствителност</string>
     <string name="dynisf_shortname">Динамичен ISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Общо %1$d елемента.\nАктуална стойност:</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Алгоритъмът, какъвто е бил през 2017</string>
     <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
     <string name="description_smb_dynamic_isf">Най-новия алгоритъм, за напреднали потребители с динамичен/автоматичен ISF</string>
+    <string name="description_auto_isf">Експериментален алгоритъм за опитни потребители с AutoISF допълнения</string>
     <string name="openapsma_last_run_label">Последно изпълнение</string>
     <string name="openapsma_input_parameters_label">Параметри на входа</string>
     <string name="openapsma_glucose_status_label">КЗ стастус</string>
@@ -59,7 +63,9 @@
     <string name="loop_smb_request_time_label">Време за заявка на SMB</string>
     <string name="loop_smb_execution_time_label">Време за изпълнение на SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB в помпата</string>
+    <string name="fallback_to_isf_no_tdd">Обратно към чувствителността в профила. Няма достатъчно данни. Причина: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Помага с потенциална настройка на профила (ISF, въглехидратно число и базали)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">Брой дни с данни</string>
     <string name="autotune_tunedprofile_name">Настроен</string>
@@ -88,4 +94,6 @@
     <string name="autotune_revert_local_profile_message">Сменете профил %1$s с началния профил?</string>
     <string name="autotune_profile_invalid">Невалиден профил</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">AutoISF настройки</string>
+    <string name="smb_delivery_settings_title">Настройки за SMB</string>
 </resources>

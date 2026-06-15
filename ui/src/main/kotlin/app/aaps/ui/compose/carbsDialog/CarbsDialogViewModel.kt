@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -35,6 +36,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,7 +67,8 @@ class CarbsDialogViewModel @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CarbsDialogUiState())
@@ -385,7 +388,9 @@ class CarbsDialogViewModel @Inject constructor(
         }
 
         if (reason != TT.Reason.CUSTOM) {
-            viewModelScope.launch {
+            // appScope, not viewModelScope: the screen navigates back immediately after confirm,
+            // which cancels viewModelScope and could drop this direct DB write.
+            appScope.launch {
                 try {
                     persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         temporaryTarget = TT(

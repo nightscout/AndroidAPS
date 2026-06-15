@@ -98,6 +98,25 @@ class ProfileManagementViewModel @Inject constructor(
 
     init {
         observeActiveProfileForAutoNavigation()
+        observeNewProfileSelection()
+    }
+
+    /**
+     * When a profile is added (the editor's new-profile draft commits) or cloned, it is appended to
+     * the end of the list — jump the carousel to it so the user lands on what they just created. A
+     * full-list replacement (e.g. an NS push) is ignored here; that's [observeActiveProfileForAutoNavigation]'s job.
+     */
+    private fun observeNewProfileSelection() {
+        var previousNames = profileRepository.profiles.value.map { it.name }
+        profileRepository.profiles
+            .onEach { profiles ->
+                val names = profiles.map { it.name }
+                if (names.size == previousNames.size + 1 && names.dropLast(1) == previousNames) {
+                    _selectedIndex.value = names.size - 1
+                }
+                previousNames = names
+            }
+            .launchIn(viewModelScope)
     }
 
     /**
@@ -185,6 +204,10 @@ class ProfileManagementViewModel @Inject constructor(
 
         val profileErrors = computeProfileErrors(profiles)
 
+        // Per-profile pump compatibility (basal deliverable by the active pump). Non-blocking —
+        // surfaced as an amber "won't run on this pump" hint on the card, distinct from red errors.
+        val pumpWarnings = profiles.map { profileRepository.validatePumpCompatibility(it).isNotEmpty() }
+
         val (selectedProfile, compareData) = computeSelectedProfileAndCompareData(
             profiles, currentIndex, activeEps, activeProfileName
         )
@@ -198,6 +221,7 @@ class ProfileManagementViewModel @Inject constructor(
             remainingTimeMs = remainingTime,
             basalSums = basalSums,
             profileErrors = profileErrors,
+            pumpWarnings = pumpWarnings,
             selectedProfile = selectedProfile,
             compareData = compareData,
             screenMode = screenMode,
@@ -314,14 +338,6 @@ class ProfileManagementViewModel @Inject constructor(
         }
     }
 
-    fun addNewProfile() {
-        viewModelScope.launch {
-            profileRepository.addNew().onSuccess {
-                _selectedIndex.value = (profileRepository.profiles.value.size - 1).coerceAtLeast(0)
-            }
-        }
-    }
-
     fun cloneProfile(index: Int) {
         viewModelScope.launch {
             profileRepository.clone(index)
@@ -386,6 +402,16 @@ class ProfileManagementViewModel @Inject constructor(
      * @param timeChanged Whether the user modified the time from the default
      * @return true if activation was successful
      */
+    /**
+     * Whether the profile at [profileIndex] can be activated on the current pump at [percentage].
+     * Percentage-aware (basal scales with percentage), so the activation dialog can react live as
+     * the user changes the percentage. Returns true when there is no profile at the index.
+     */
+    fun isPumpCompatible(profileIndex: Int, percentage: Int): Boolean {
+        val profile = profileRepository.profiles.value.getOrNull(profileIndex) ?: return true
+        return profileRepository.validatePumpCompatibility(profile, percentage).isEmpty()
+    }
+
     suspend fun activateProfile(
         profileIndex: Int,
         durationMinutes: Int,
@@ -435,8 +461,10 @@ class ProfileManagementViewModel @Inject constructor(
         )
 
         if (success == null) {
-            aapsLogger.error(LTag.UI, "Profile activation failed (validation or DB write): $profileName")
-            _snackbarEvent.tryEmit(rh.gs(R.string.profile_activation_failed))
+            // Pump incompatibility is prevented up front in the activation dialog, and semantic
+            // validity is guaranteed for saved profiles — so a null here means the DB write failed.
+            aapsLogger.error(LTag.UI, "Profile switch could not be persisted: $profileName")
+            _snackbarEvent.tryEmit(rh.gs(R.string.profile_switch_save_failed))
         } else {
             if (percentage == 90 && durationMinutes == 10) {
                 preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
@@ -486,6 +514,8 @@ data class ProfileManagementUiState(
     val remainingTimeMs: Long? = null,
     val basalSums: List<Double> = emptyList(),
     val profileErrors: List<List<ProfileValidationError>> = emptyList(),
+    /** Per-profile flag: basal not deliverable by the current pump (non-blocking warning). */
+    val pumpWarnings: List<Boolean> = emptyList(),
     val selectedProfile: Profile? = null,
     val compareData: ProfileCompareData? = null,
     val screenMode: ScreenMode = ScreenMode.EDIT,

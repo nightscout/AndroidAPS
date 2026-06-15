@@ -303,4 +303,15 @@
     <string name="widget_rm_disabled">Disabilitato</string>
     <string name="widget_rm_suspended">Sospeso</string>
     <string name="widget_rm_resume">Riprendi</string>
+    <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Calibrazione non salvata: la glicemia sta cambiando troppo velocemente (Δ %1$s %3$s per 5 minuti, limite %2$s). Riprova quando il glucosio è stabile.</string>
+    <string name="cal_reject_no_pair">Calibrazione non salvata: nessuna lettura CGM trovata nei 10 minuti precedenti.</string>
+    <string name="cal_reject_warmup">Calibrazione non salvata: il sensore è ancora nella finestra di riscaldamento di 2 ore.</string>
+    <string name="cal_reject_no_session">Calibrazione non salvata: nessuna sessione del sensore è attiva. Segna prima un cambio del sensore.</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Sensore ancora in riscaldamento. Calibrazione disponibile in %1$s.</string>
+    <string name="cal_precheck_no_session">Nessuna sessione del sensore è attiva.</string>
+    <string name="cal_precheck_no_pair">Nessuna lettura CGM negli ultimi 10 minuti. Controllare la connessione del sensore.</string>
+    <string name="cal_precheck_delta_too_high">Il glucosio sta cambiando troppo velocemente (Δ %1$s %3$s per 5 minuti, limite %2$s). Attendi stabilità.</string>
+    <string name="cal_precheck_mark_sensor_change">Registra cambio sensore</string>
 </resources>

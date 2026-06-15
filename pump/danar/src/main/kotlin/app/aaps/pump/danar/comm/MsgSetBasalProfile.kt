@@ -25,7 +25,7 @@ class MsgSetBasalProfile(
         if (result != 1) {
             failed = true
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result ERROR!!!")
-            notificationManager.post(NotificationId.PROFILE_SET_FAILED, app.aaps.pump.dana.R.string.profile_set_failed)
+            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.pump.dana.R.string.profile_set_failed)
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result")

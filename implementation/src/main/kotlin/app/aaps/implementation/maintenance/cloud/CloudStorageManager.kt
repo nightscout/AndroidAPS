@@ -160,6 +160,30 @@ class CloudStorageManager @Inject constructor(
     }
 
     /**
+     * Revoke the OAuth grant for every provider that currently holds credentials (true
+     * deauthorize). Providers without stored credentials are skipped (no network call). This
+     * targets credential-bearing providers rather than only the active one, so a stale grant
+     * left by a previously-used account is revoked even when local storage is now active.
+     * Call before [clearAllCredentials] so the tokens are still available for the revoke request.
+     * @return true if every attempted revoke succeeded (or there was nothing to revoke).
+     */
+    suspend fun revokeAllCredentials(): Boolean {
+        var allSucceeded = true
+        providers.values
+            .filter { it.hasValidCredentials() }
+            .forEach { provider ->
+                try {
+                    if (!provider.revokeAccess()) allSucceeded = false
+                    aapsLogger.info(LTag.CORE, "Revoked access for: ${provider.storageType}")
+                } catch (e: Exception) {
+                    allSucceeded = false
+                    aapsLogger.error(LTag.CORE, "Error revoking access for ${provider.storageType}", e)
+                }
+            }
+        return allSucceeded
+    }
+
+    /**
      * Get the display name for a storage type.
      * @param storageType The storage type
      * @return Human-readable display name

@@ -31,6 +31,8 @@
     <string name="pref_title_alert_carbs_required">Alertă pentru carbohidrații necesari</string>
     <string name="pref_title_alert_urgent_as_android_notification">Ridicați alarmele urgente ca notificări Android</string>
     <string name="pref_title_alert_increase_volume">Creșteți treptat volumul notificărilor</string>
+    <string name="pref_title_alert_override_dnd">Suprascrieți modul Nu Deranjați</string>
+    <string name="pref_summary_alert_override_dnd">Activat, alarmele AAPS sunt redate prin modurile silențios și Nu deranjați (flux de alarmă). Dezactivat, alarmele respectă modul silențios/Nu deranjați (flux de notificări).</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Încărcați datele de glicemie în NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Înregistrați schimbarea senzorului</string>
@@ -221,6 +223,8 @@
     <string name="pref_title_sms_remote_bolus_distance">Interval minim în minute pentru bolusurile de la distanță</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Interval de glicemie aleatoriu</string>
+    <string name="pref_title_random_bg_randomize">Randomizați datele de glicemie</string>
+    <string name="pref_summary_random_bg_randomize">Adăugați zgomot, introduceți variații în marcajele de timp, alegeți aleatoriu direcția săgeților de tendință și emiteți ocazional carbohidrați la întâmplare. Dezactivați funcția pentru a obține o undă sinusoidală curată și deterministă, cu săgeata de tendință calculată pe baza pantei sinusului.</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Prag alarmă date învechite</string>
     <string name="pref_title_urgent_alarm_stale_data">Prag alarmă urgentă date învechite</string>

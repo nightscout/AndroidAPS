@@ -31,6 +31,8 @@
     <string name="pref_title_alert_carbs_required">Varsle ved behov for karbo</string>
     <string name="pref_title_alert_urgent_as_android_notification">Vis akutte alarmer som Android-varsler</string>
     <string name="pref_title_alert_increase_volume">Øk varselvolumet gradvis</string>
+    <string name="pref_title_alert_override_dnd">Overstyr ikke forstyrr-modus</string>
+    <string name="pref_summary_alert_override_dnd">Når aktivert spilles AAPS-alarmer av selv i lydløsmodus og ikke forstyrr (alarmkanal). Når deaktivert følger alarmer lydløsmodus/ikke forstyrr (varslingskanal).</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Last opp BS-data til NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Logg sensorskifte</string>

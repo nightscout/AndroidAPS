@@ -2,6 +2,7 @@ package app.aaps.core.graph
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -23,7 +24,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -35,7 +36,6 @@ import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
-import com.patrykandpatrick.vico.compose.common.vicoTheme
 import kotlin.math.floor
 import app.aaps.core.ui.R as CoreUiR
 
@@ -96,11 +96,11 @@ fun InsulinGraphCompose(
 
         modelProducer.runTransaction {
             // Block 1 → IOB layer (layer 0, primary)
-            lineSeries {
+            lineModel {
                 series(x = xMinutes, y = iobValues)
             }
             // Block 2 → Activity layer (layer 1, normalized)
-            lineSeries {
+            lineModel {
                 series(x = xMinutes, y = normalizedActivity)
             }
             extras { extraStore ->
@@ -109,7 +109,7 @@ fun InsulinGraphCompose(
         }
     }
 
-    val legendItemLabelComponent = rememberTextComponent(style = TextStyle(color = vicoTheme.textColor))
+    val labelComponent = rememberTextComponent(style = TextStyle(color = MaterialTheme.colorScheme.onSurface))
     val activityLegendIcon = rememberShapeComponent(fill = Fill(ActivityColor))
     val iobLegendIcon = rememberShapeComponent(fill = Fill(IobColor))
 
@@ -159,8 +159,9 @@ fun InsulinGraphCompose(
                 rangeProvider = remember { CartesianLayerRangeProvider.fixed(minY = 0.0, maxY = 1.0) },
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            startAxis = VerticalAxis.rememberStart(),
+            startAxis = VerticalAxis.rememberStart(label = labelComponent),
             bottomAxis = HorizontalAxis.rememberBottom(
+                label = labelComponent,
                 valueFormatter = remember {
                     CartesianValueFormatter { _, value, _ -> "${(value / 60).toInt()}h" }
                 },
@@ -172,7 +173,7 @@ fun InsulinGraphCompose(
                         add(
                             LegendItem(
                                 if (index == 0) iobLegendIcon else activityLegendIcon,
-                                legendItemLabelComponent,
+                                labelComponent,
                                 label,
                             )
                         )

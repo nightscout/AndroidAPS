@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="authorizationfailed">Удостоверяването неуспешно</string>
-    <string name="identification_not_set">Идентификацията не е зададена в режим на разработчик</string>
+    <string name="authorizationfailed">Грешка при оторизация</string>
+    <string name="identification_not_set">Идентификацията не е зададена в dev режим</string>
     <string name="select">Избери</string>
     <string name="set">Приложи</string>
+    <string name="migrating_preferences">Мигриране на настройките...</string>
+    <string name="optimizing_database">Оптимизиране на базата данни...</string>
+    <string name="initializing_plugins">Инициализиране на плъгини...</string>
+    <string name="initializing">Инициализация...</string>
+    <string name="migrating_profile_switches">Мигриране на профилите...</string>
+    <string name="migrating_effective_profile_switches">Мигриране на профилните промени...</string>
+    <string name="migrating_boluses">Мигриране на болусите...</string>
 </resources>

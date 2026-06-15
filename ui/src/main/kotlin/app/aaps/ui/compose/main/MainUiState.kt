@@ -41,6 +41,7 @@ data class MainUiState(
     // Running mode state for chip
     val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
     val runningModeText: String = "",
+    val runningModeRemaining: String = "", // short remaining time, e.g. "30'" (temporary modes only)
     val runningModeProgress: Float = 0f, // 0-1 progress for temporary modes
     val runningModeRecordId: Long = 0, // DB record ID (for scene override detection)
     // Running TBR state for chip (HIGH / LOW / NONE)

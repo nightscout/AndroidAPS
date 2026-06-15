@@ -28,7 +28,7 @@ fun IobCobChipsRow(
             IobChip(state = iobUiState, onClick = onIobChipClick, showIcon = true)
             CobChip(state = cobUiState, showIcon = true)
         }
-        val intrinsicsWithIcons = withIcons.map { it.minIntrinsicWidth(constraints.maxHeight) }
+        val intrinsicsWithIcons = withIcons.map { it.maxIntrinsicWidth(constraints.maxHeight) }
         val totalWithIcons = intrinsicsWithIcons.sum()
 
         // If chips with icons don't fit, hide icons to free up space
@@ -43,20 +43,24 @@ fun IobCobChipsRow(
             }
         }
 
-        val intrinsics = measurables.map { it.minIntrinsicWidth(constraints.maxHeight) }
-        val totalIntrinsic = intrinsics.sum()
+        // Max intrinsic width = the width each chip needs to render on a single line.
+        // (min intrinsic only guarantees the longest word fits, which wraps IOB.)
+        val naturalWidths = measurables.map { it.maxIntrinsicWidth(constraints.maxHeight) }
 
-        // Scale each chip proportionally so they fill 100% of available space
-        val placeables = measurables.mapIndexed { i, measurable ->
-            val w = if (isWidthBounded) {
-                if (totalIntrinsic > 0)
-                    (intrinsics[i].toLong() * availableWidth / totalIntrinsic).toInt()
-                else
-                    availableWidth / measurables.size
-            } else {
-                intrinsics[i]
+        val placeables = if (isWidthBounded) {
+            // IOB hugs its content but never grabs more than half the row when space is tight.
+            val iobWidth = naturalWidths[0].coerceAtMost(availableWidth / 2)
+            // COB fills the rest of the row up to the edge so the chips span the full width;
+            // its text marquee-scrolls when it can't fit (see CobChip).
+            val cobWidth = (availableWidth - iobWidth).coerceAtLeast(0)
+            listOf(
+                measurables[0].measure(constraints.copy(minWidth = iobWidth, maxWidth = iobWidth)),
+                measurables[1].measure(constraints.copy(minWidth = cobWidth, maxWidth = cobWidth))
+            )
+        } else {
+            measurables.mapIndexed { i, measurable ->
+                measurable.measure(constraints.copy(minWidth = naturalWidths[i], maxWidth = naturalWidths[i]))
             }
-            measurable.measure(constraints.copy(minWidth = w, maxWidth = w))
         }
 
         val height = if (placeables.isEmpty()) 0 else placeables.maxOf { it.height }

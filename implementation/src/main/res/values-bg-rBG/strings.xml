@@ -5,7 +5,86 @@
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Въглехидрати</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Последно свързване: преди %1$d минути</string>
+    <string name="short_status_last_bolus">ПоследенБолус: %1$sЕ @ %2$s</string>
+    <string name="short_status_temp_basal">Врем базал: %1$s</string>
+    <string name="short_status_battery">Бат: %1$d%%</string>
+    <string name="short_status_not_initialized">Помпата не е инициализирана</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Оптимизиране на батерията</string>
+    <string name="permission_battery_description">Приложението трябва да бъде изключено от оптимизацията на батерия в Андроид за да работи пълноценно.</string>
+    <string name="permission_directory_title">AAPS директория</string>
+    <string name="permission_directory_description">Изберете директория за настройки и логове</string>
+    <string name="permission_notifications_title">Нотификации</string>
+    <string name="permission_notifications_description">Нужно за да показва съобщения, аларми и статуси на помпата</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0Е (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">Е%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">Eд %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CЕд/ч</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Настройките са експортирани в клауда</string>
+    <string name="export_to_cloud_failed">Неуспешно експортиране в клауда</string>
+    <string name="csv_uploaded_to_cloud">CSV с потребителските данни успешно качен в клауда</string>
+    <string name="exported">Настройките са експортирани</string>
+    <string name="exported_failed">Експортът на настройките СЕ ИЗДЪНИ!</string>
+    <string name="filenotfound">Файлът не е намерен</string>
+    <string name="ue_exported">Потребителските данни експортирани</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
+    <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
+    <string name="metadata_warning_different_flavour">Настройките са създадени с различен вариант на AAPS (%1$s) докато Вие сте с: %2$s.\n\nНякои настройки може да липсват или са невалидни!След импортиране, моля, проверете и актуализирайте своите настройки.</string>
+    <string name="metadata_warning_different_device">Настройките са създадени на друго устройство. Това е ОК, ако импортирате от по-стар/различен телефон, но се уверете, че тези настройки са правилни!</string>
+    <string name="metadata_warning_old_export">Импортираните настройки са стари %1$s дни! Може би имате по-актуални настройки или сте избрали грешен файл? Не забравяйте да експортирате настройки редовно!</string>
+    <string name="metadata_warning_date_format">Невалиден формат на датата!</string>
+    <string name="metadata_warning_different_version">Настройки от различна под-версия на приложението. Това е ОК, ако импортирате след надстройка, но проверете след импорта, дали настройките са все още правилни!</string>
+    <string name="metadata_urgent_different_version">Настройки от различна главна версия на приложението. Основните версии се различават значително и могат да имат несъвместими настройки! Уверете се, че след импорт, че настройките са все още правилни!</string>
+    <string name="prefdecrypt_settings_tampered">Файлът с настройки е преправян</string>
+    <string name="prefdecrypt_settings_secure">Файлът с настройки е сигурен</string>
+    <string name="prefdecrypt_settings_unencrypted">Използване на нешифровани настройки е рисково</string>
+    <string name="prefdecrypt_wrong_json">Грешка във формат JSON, липсва поле (формат, съдържание, метаданни или сигурност)</string>
+    <string name="prefdecrypt_wrong_password">Грешка при декриптиране, грешна парола</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Контролна сума (hash) липсва, не може да се провери автентичността на настройките!</string>
+    <string name="prefdecrypt_issue_modified">Файлът е бил модифициран след експорт!</string>
+    <string name="prefdecrypt_issue_parsing">Грешка при декриптиране, възстановяването неуспешно!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Грешка при декриптиране, грешна парола или файлът с настройки е модифициран! Възможно е импортираният файл да е експортиран с различна парола.</string>
+    <string name="prefdecrypt_issue_wrong_format">Липсва конфигурация на шифроване, форматът на настройките е невалиден!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Неподдържан или непотвърден алгоритъм за криптиране!</string>
+    <string name="metadata_label_format">Формат на файла</string>
+    <string name="metadata_label_created_at">Създаден на</string>
+    <string name="metadata_label_aaps_version">Версия на AAPS</string>
+    <string name="metadata_label_aaps_flavour">Вариант</string>
+    <string name="metadata_label_device_name">Експортиране на име на телефона</string>
+    <string name="metadata_label_device_model">Експортиране на модел на телефона</string>
+    <string name="metadata_label_encryption">Криптиране</string>
+    <string name="metadata_format_new">Нов формат на криптиране</string>
+    <string name="metadata_format_other">Непознат формат за експорт</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Грешка при достъп до директория. Изберете правилната AAPS директория.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Архивиране в Google Drive</string>
+    <string name="csv_upload_failed">Неуспешно експортиране в клауда</string>
+    <string name="csv_upload_error">Грешка при експорта на CSV в клауда</string>
+    <string name="uploading_to_cloud">Качване в клауда...</string>
+    <string name="cloud_directory_path">Клауд директория: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Не мога да опресня Google Drive токена</string>
+    <string name="google_drive_token_refresh_error">Не мога да опресня Google Drive токен: %1$s</string>
+    <string name="google_drive_connection_test_failed">Неуспешна връзка с клауда</string>
+    <string name="google_drive_connect_error">Не мога да се вържа с Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Не мога да си листна Google Drive папките</string>
+    <string name="google_drive_list_folders_error">Грешка при листване на папки: %1$s</string>
+    <string name="google_drive_upload_no_id">Успешен ъплойд но не се върна id</string>
+    <string name="google_drive_upload_verify_failed">Грешка при проверка на ъплоуда</string>
+    <string name="google_drive_upload_failed">Ъплоуда се издъни: %1$s</string>
+    <string name="google_drive_upload_error">Грешка при качването на файла: %1$s</string>
+    <string name="google_drive_folder_access_error">Не успях да създам или намеря папка: %1$s</string>
+    <string name="google_drive_list_settings_failed">Не мога да листна файловете с настройки</string>
+    <string name="google_drive_list_settings_error">Грешка при листване на файловете с настройки: %1$s</string>
+    <string name="google_drive_download_failed">Грешка при свалянето на файл</string>
+    <string name="google_drive_download_error">Грешка при свалянето на файл: %1$s</string>
+    <string name="google_drive_authorized">Google Drive оторизиран</string>
+    <string name="google_drive_reauth_required">Изчистете настройките и оторизирайте Google Drive отново</string>
 </resources>

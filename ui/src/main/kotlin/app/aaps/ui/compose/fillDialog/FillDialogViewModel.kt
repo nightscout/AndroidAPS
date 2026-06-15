@@ -14,6 +14,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -35,6 +36,7 @@ import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +69,8 @@ class FillDialogViewModel @Inject constructor(
     private val ch: ConcentrationHelper,
     insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val runningModeGuard: RunningModeGuard
+    private val runningModeGuard: RunningModeGuard,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FillDialogUiState())
@@ -289,10 +292,6 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
-        viewModelScope.launch { confirmAndSaveSuspend() }
-    }
-
-    private suspend fun confirmAndSaveSuspend() {
         val state = confirmedState ?: return
         val eventTime = state.eventTime - (state.eventTime % 1000)
         val notes = state.notes
@@ -305,25 +304,30 @@ class FillDialogViewModel @Inject constructor(
         val doProfileSwitch = state.insulinChanged
         val hasPrimeBolus = state.insulinAfterConstraints > 0
 
-        // Prime bolus
+        // All work runs on appScope, not viewModelScope: the dialog navigates back the moment
+        // confirm is tapped, which cancels viewModelScope. The prime bolus is also launched
+        // independently so the site/insulin change logging below is never gated behind the
+        // (potentially long) prime completing — previously a prime would drop those records.
         if (hasPrimeBolus) {
             uel.log(
                 action = Action.PRIME_BOLUS, source = Sources.FillDialog,
                 note = notes,
                 value = ValueWithUnit.Insulin(state.insulinAfterConstraints)
             )
-            requestPrimeBolus(state.insulinAfterConstraints, notes) {
-                // After successful prime, do profile switch if insulin changed
-                if (doProfileSwitch) {
-                    viewModelScope.launch {
-                        profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+            appScope.launch {
+                requestPrimeBolus(state.insulinAfterConstraints, notes) {
+                    // After successful prime, do profile switch if insulin changed
+                    if (doProfileSwitch) {
+                        appScope.launch {
+                            profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                        }
                     }
                 }
             }
         } else {
             // No prime — do profile switch immediately if insulin changed
             if (doProfileSwitch) {
-                viewModelScope.launch {
+                appScope.launch {
                     profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
                 }
             }
@@ -331,7 +335,7 @@ class FillDialogViewModel @Inject constructor(
 
         // Site change
         if (state.siteChange) {
-            viewModelScope.launch {
+            appScope.launch {
                 try {
                     val location = state.siteLocation.takeIf { it != TE.Location.NONE }
                     val arrow = state.siteArrow.takeIf { it != TE.Arrow.NONE }
@@ -362,7 +366,7 @@ class FillDialogViewModel @Inject constructor(
 
         // Insulin cartridge change (offset by 1 second if site change also recorded)
         if (state.insulinCartridgeChange) {
-            viewModelScope.launch {
+            appScope.launch {
                 try {
                     persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                         therapyEvent = TE(

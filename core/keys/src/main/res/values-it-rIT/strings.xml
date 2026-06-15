@@ -31,6 +31,8 @@
     <string name="pref_title_alert_carbs_required">Avviso se sono richiesti CHO</string>
     <string name="pref_title_alert_urgent_as_android_notification">Alza gli avvisi urgenti come notifiche Android</string>
     <string name="pref_title_alert_increase_volume">Aumenta gradualmente il volume delle notifiche</string>
+    <string name="pref_title_alert_override_dnd">Ignora la modalità Non Disturbare</string>
+    <string name="pref_summary_alert_override_dnd">Se abilitata, gli avvisi AAPS giocano attraverso modalità silenziosa e non disturbare (flusso di avvisi). Quando disabilitato, gli avvisi rispettano silenzioso/DND (flusso di notifica).</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Carica dati BG su NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Registra cambio sensore</string>
@@ -221,6 +223,8 @@
     <string name="pref_title_sms_remote_bolus_distance">Distanza min bolo remoto</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Intervallo glicemia casuale</string>
+    <string name="pref_title_random_bg_randomize">Randomizza i dati glicemia</string>
+    <string name="pref_summary_random_bg_randomize">Aggiungi rumore, timestamp jitter, frecce di tendenza casuali ed emetti carboidrati occasionali. Disabilita per un\'onda sinusoidale deterministica pulita con la freccia di tendenza derivata dal pendio sinusoidale.</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Soglia dati non aggiornati</string>
     <string name="pref_title_urgent_alarm_stale_data">Soglia critica dati non aggiornati</string>

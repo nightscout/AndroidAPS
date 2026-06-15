@@ -26,6 +26,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.DatabaseMaintenanceInfo
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -163,6 +164,11 @@ class PersistenceLayerImpl @Inject constructor(
 
     override suspend fun vacuumDatabase() = withContext(Dispatchers.IO) {
         repository.vacuumDatabase()
+    }
+
+    override suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceInfo = withContext(Dispatchers.IO) {
+        val raw = repository.databaseMaintenanceInfo(retentionDays)
+        DatabaseMaintenanceInfo(raw.dbSizeBytes, raw.availableBytes, raw.totalRows, raw.deletableRows, raw.changeRows, raw.report)
     }
 
     // Flow-based change observation
@@ -2066,13 +2072,12 @@ class PersistenceLayerImpl @Inject constructor(
         try {
             val result = repository.runTransactionForResultSuspend(InvalidateTherapyEventsWithNoteTransaction(note))
             val transactionResult = PersistenceLayer.TransactionResult<TE>()
-            val ueValues = mutableListOf<UE>()
             result.invalidated.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${source.name} $it")
                 transactionResult.invalidated.add(it.fromDb())
-                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note, values = emptyList()))
             }
-            log(ueValues)
+            if (result.invalidated.isNotEmpty())
+                log(listOf(UE(timestamp = dateUtil.now(), action = action, source = source, note = note, values = emptyList())))
             transactionResult
         } catch (e: Exception) {
             aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", e)

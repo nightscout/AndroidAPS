@@ -34,6 +34,8 @@ import java.security.SecureRandom
 import java.util.Base64
 import java.util.Locale
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -53,6 +55,10 @@ class GoogleDriveManager @Inject constructor(
         private const val SCOPE = "https://www.googleapis.com/auth/drive.file"
         private const val AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
         private const val TOKEN_URL = "https://oauth2.googleapis.com/token"
+        private const val REVOKE_URL = "https://oauth2.googleapis.com/revoke"
+
+        // Bound the revoke call so the user-facing "Clear Settings" flow can't hang on a bad network.
+        private const val REVOKE_TIMEOUT_SECONDS = 15L
         private const val DRIVE_API_URL = "https://www.googleapis.com/drive/v3"
         private const val UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3"
         private const val LOG_PREFIX = CloudConstants.LOG_PREFIX
@@ -74,7 +80,10 @@ class GoogleDriveManager @Inject constructor(
     }
 
     private val client = OkHttpClient()
-    private val pathCache = mutableMapOf<String, String>() // cache for resolved folder paths
+
+    // Thread-safe: read/written from concurrent IO coroutines (folder resolution) and cleared
+    // from the deauthorize flow, so a plain HashMap would race.
+    private val pathCache = ConcurrentHashMap<String, String>() // cache for resolved folder paths
 
     // Error state tracking
     private var connectionError = false
@@ -521,6 +530,58 @@ class GoogleDriveManager @Inject constructor(
     }
 
     /**
+     * Revoke the OAuth grant on Google's side (true deauthorize).
+     *
+     * Posts the stored token to Google's revocation endpoint. Revoking the refresh token
+     * invalidates the entire grant (and any access tokens derived from it); the access token
+     * is used only as a fallback. Returns true when the grant is no longer valid afterwards —
+     * including the case where Google reports it as already invalid (HTTP 400).
+     *
+     * Does NOT remove the locally stored settings — call [clearGoogleDriveSettings] afterwards.
+     */
+    suspend fun revokeAccess(): Boolean = withContext(Dispatchers.IO) {
+        val token = sp.getString(PREF_GOOGLE_DRIVE_REFRESH_TOKEN, "")
+            .ifBlank { sp.getString(PREF_GOOGLE_DRIVE_ACCESS_TOKEN, "") }
+        if (token.isBlank()) {
+            aapsLogger.info(LTag.CORE, "$LOG_PREFIX REVOKE skipped, no token stored")
+            return@withContext true
+        }
+        try {
+            val requestBody = FormBody.Builder()
+                .add("token", token)
+                .build()
+            val request = Request.Builder()
+                .url(REVOKE_URL)
+                .post(requestBody)
+                .build()
+            val timedClient = client.newBuilder()
+                .callTimeout(REVOKE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build()
+            val response = timedClient.newCall(request).execute()
+            val responseBody = response.body.string()
+            when {
+                response.isSuccessful -> {
+                    aapsLogger.info(LTag.CORE, "$LOG_PREFIX REVOKE success")
+                    true
+                }
+                // 400 / invalid_token => the grant is already gone, treat as revoked
+                response.code == 400  -> {
+                    aapsLogger.info(LTag.CORE, "$LOG_PREFIX REVOKE token already invalid")
+                    true
+                }
+
+                else                  -> {
+                    aapsLogger.warn(LTag.CORE, "$LOG_PREFIX REVOKE failed: code=${response.code} body=${responseBody.take(200)}")
+                    false
+                }
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.CORE, "$LOG_PREFIX REVOKE error", e)
+            false
+        }
+    }
+
+    /**
      * Clear Google Drive related settings
      */
     fun clearGoogleDriveSettings() {
@@ -529,6 +590,9 @@ class GoogleDriveManager @Inject constructor(
         sp.remove(PREF_GOOGLE_DRIVE_TOKEN_EXPIRY)
         sp.remove(PREF_GOOGLE_DRIVE_FOLDER_ID)
         sp.remove("google_drive_code_verifier")
+        // Drop the in-memory folder-id cache too — otherwise a newly authorized account would
+        // resolve to the previous account's folder ids until the app is restarted.
+        pathCache.clear()
     }
 
     /**

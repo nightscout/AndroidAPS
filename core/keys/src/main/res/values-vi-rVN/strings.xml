@@ -31,6 +31,8 @@
     <string name="pref_title_alert_carbs_required">Cảnh báo khi cần bổ sung carb</string>
     <string name="pref_title_alert_urgent_as_android_notification">Cảnh báo khẩn cấp dưới dạng thông báo Android</string>
     <string name="pref_title_alert_increase_volume">Tăng dần âm lượng thông báo</string>
+    <string name="pref_title_alert_override_dnd">Bỏ qua chế độ Không làm phiền</string>
+    <string name="pref_summary_alert_override_dnd">Khi bật, báo động của AAPS sẽ phát âm thanh ngay cả trong chế độ im lặng và Không làm phiền (luồng báo động). Khi tắt, báo động sẽ tuân theo chế độ im lặng/Không làm phiền (luồng thông báo).</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Tải dữ liệu đường huyết lên NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Ghi lại thay đổi cảm biến</string>
@@ -221,6 +223,8 @@
     <string name="pref_title_sms_remote_bolus_distance">Khoảng tối thiểu bolus từ xa</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Khoảng thời gian BG ngẫu nhiên</string>
+    <string name="pref_title_random_bg_randomize">Dữ liệu BG ngẫu nhiên</string>
+    <string name="pref_summary_random_bg_randomize">Thêm nhiễu, làm lệch nhẹ dấu thời gian, ngẫu nhiên hóa mũi tên xu hướng và thỉnh thoảng tạo carb ngẫu nhiên. Tắt để dùng sóng sin xác định sạch với mũi tên xu hướng được suy ra từ độ dốc của sóng sin.</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Ngưỡng báo động dữ liệu lỗi thời</string>
     <string name="pref_title_urgent_alarm_stale_data">Ngưỡng báo động khẩn cấp cho dữ liệu lỗi thời</string>

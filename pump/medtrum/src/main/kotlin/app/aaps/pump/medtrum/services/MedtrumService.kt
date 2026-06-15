@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -318,7 +317,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             notificationManager.post(
                 NotificationId.PUMP_TIMEZONE_UPDATE_FAILED,
                 R.string.pump_time_update_failed,
-                level = NotificationLevel.URGENT,
+                level = NotificationLevel.IMPORTANT,
             )
         }
     }
@@ -664,7 +663,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                 notificationManager.post(
                     NotificationId.PATCH_NOT_ACTIVE,
                     R.string.patch_not_active,
-                    level = NotificationLevel.URGENT,
+                    level = NotificationLevel.IMPORTANT,
                 )
                 medtrumPump.setFakeTBRIfNotSet()
                 medtrumPump.clearAlarmState()

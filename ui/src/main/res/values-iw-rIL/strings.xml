@@ -84,4 +84,6 @@
     <!--    TDD Cycle Pattern -->
     <!-- Toolbar configuration -->
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
 </resources>

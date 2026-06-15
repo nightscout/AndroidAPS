@@ -48,4 +48,12 @@
     <string name="permission_dexcom_description">Aplikácia potrebuje povolenie, pre príjimanie CGM dát z Dexcom aplikácie</string>
     <string name="permission_notification_listener_title">Prístup k notifikáciam</string>
     <string name="permission_notification_listener_description">Potrebné pre čítanie hodnôt glykémie z notifikácií CGM aplikácie</string>
+    <string name="aidex">MicroTech CGM aplikácia</string>
+    <string name="aidex_short">CGM aplikácia</string>
+    <string name="description_source_aidex">Príjmanie CGM hodnôt z LinX, LinX Vista, Equil G, Smart 2, Diaexpert 2, atď.</string>
+    <string name="aidex_sensor_expired">Senzor expiroval, prosím zaveďte nový senzor</string>
+    <string name="aidex_sensor_error">Chyba senzora, prosím overte stav senzora</string>
+    <string name="aidex_sensor_stabilizing">Senzor sa stabilizuje, prosím čakajte…</string>
+    <string name="aidex_sensor_replace">Potrebná výmena senzora, prosím zaveďte čo najskôr nový senzor</string>
+    <string name="aidex_signal_lost">Signál senzora stratený, prosím preverte pripojenie</string>
 </resources>

@@ -738,8 +738,11 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     /** Compute graph time range from current timeRangeFlow */
     private fun graphTimeRange(): Pair<Long, Long>? {
         val range = timeRangeFlow.value ?: return null
-        val toTime = range.endTime
-        val fromTime = toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
+        val toTime = range.endTime // upper bound may include prediction horizon
+        // History width is always anchored on toTime so secondary graphs (basal, HR, steps)
+        // cover the same 24h of history as the BG graph, not endTime - 24h (which would shift
+        // the start forward by the prediction horizon).
+        val fromTime = range.toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
         return fromTime to toTime
     }
 

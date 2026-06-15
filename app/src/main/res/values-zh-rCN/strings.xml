@@ -5,6 +5,7 @@
     <string name="select">选择</string>
     <string name="set">设置</string>
     <string name="migrating_preferences">正在迁移首选项…</string>
+    <string name="optimizing_database">正在优化数据库…</string>
     <string name="initializing_plugins">初始化插件…</string>
     <string name="initializing">初始化…</string>
     <string name="migrating_profile_switches">迁移配置文件切换…</string>

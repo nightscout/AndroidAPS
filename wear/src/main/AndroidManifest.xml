@@ -43,6 +43,7 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
                 android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -64,6 +65,7 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
                 android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -88,6 +90,7 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
                 android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -644,8 +647,8 @@
         <!-- Transparent activity to handle complication taps reliably on Android 12+ -->
         <activity
             android:name=".complications.ComplicationTapActivity"
-            android:exported="false"
             android:excludeFromRecents="true"
+            android:exported="false"
             android:launchMode="singleTask"
             android:noHistory="true"
             android:taskAffinity=""
@@ -763,6 +766,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -770,10 +774,11 @@
 
         <activity
             android:name=".tile.ActionsTileSettingsActivity"
-            android:theme="@style/WearAppCompatDark"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="tile_settings_actions" />
+
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -781,10 +786,11 @@
 
         <activity
             android:name=".tile.TempTargetTileSettingsActivity"
-            android:theme="@style/WearAppCompatDark"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="tile_settings_tempt" />
+
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -792,10 +798,11 @@
 
         <activity
             android:name=".tile.BgGraphTileSettingsActivity"
-            android:theme="@style/WearAppCompatDark"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="tile_settings_bg_graph" />
+
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -803,10 +810,12 @@
 
         <activity
             android:name=".interaction.actions.QuickSnoozeActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@drawable/ic_icon_snooze"
             android:label="@string/snooze_alert"
-            android:launchMode="singleTask">
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

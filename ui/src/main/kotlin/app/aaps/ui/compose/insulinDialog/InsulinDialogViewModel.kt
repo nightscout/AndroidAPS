@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -40,6 +41,7 @@ import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,7 +77,8 @@ class InsulinDialogViewModel @Inject constructor(
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
     hardLimits: HardLimits,
-    private val runningModeGuard: RunningModeGuard
+    private val runningModeGuard: RunningModeGuard,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinDialogUiState())
@@ -289,7 +292,10 @@ class InsulinDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
-        viewModelScope.launch { confirmAndSaveSuspend() }
+        // appScope, not viewModelScope: the screen navigates back immediately after confirm,
+        // cancelling viewModelScope. Running the whole save on appScope guarantees every write
+        // is reached even when a suspend profile lookup runs before it (e.g. getRunningIcfg()).
+        appScope.launch { confirmAndSaveSuspend() }
     }
 
     private suspend fun confirmAndSaveSuspend() {
@@ -311,7 +317,9 @@ class InsulinDialogViewModel @Inject constructor(
         if (state.eatingSoonTtChecked) {
             val eatingSoonTT = state.eatingSoonTtTarget
             val eatingSoonTTDuration = state.eatingSoonTtDuration
-            viewModelScope.launch {
+            // appScope, not viewModelScope: the screen navigates back immediately after confirm,
+            // which cancels viewModelScope and could drop this direct DB write.
+            appScope.launch {
                 try {
                     persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         temporaryTarget = TT(
@@ -346,7 +354,9 @@ class InsulinDialogViewModel @Inject constructor(
             }
 
             if (recordOnlyChecked) {
-                viewModelScope.launch {
+                // appScope, not viewModelScope: the screen navigates back immediately after
+                // confirm, which cancels viewModelScope and could drop this direct DB write.
+                appScope.launch {
                     persistenceLayer.insertOrUpdateBolus(
                         bolus = detailedBolusInfo.createBolus(iCfg),
                         action = Action.BOLUS,

@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.pump.eopatch.EoPatchRxBus
-import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.alarm.AlarmCode.A005
 import app.aaps.pump.eopatch.alarm.AlarmCode.A016
 import app.aaps.pump.eopatch.alarm.AlarmCode.A020
@@ -28,7 +27,6 @@ import app.aaps.pump.eopatch.ble.PatchManagerExecutor
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.code.AlarmCategory
 import app.aaps.pump.eopatch.event.EventEoPatchAlarm
-import app.aaps.pump.eopatch.extension.takeOne
 import app.aaps.pump.eopatch.vo.Alarms
 import app.aaps.pump.eopatch.vo.PatchConfig
 import io.reactivex.rxjava3.core.Observable
@@ -152,7 +150,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
         notificationManager.post(
             id = NotificationId.EOFLOW_PATCH_ALERT,
             text = alarmMsg,
-            level = if (isCritical) NotificationLevel.URGENT else NotificationLevel.INFO,
+            level = if (isCritical) NotificationLevel.IMPORTANT else NotificationLevel.INFO,
             date = alarms.getOccuredAlarmTimestamp(alarmCode),
             soundRes = if (!isCritical) app.aaps.core.ui.R.raw.error else null,
             actions = listOf(NotificationAction(

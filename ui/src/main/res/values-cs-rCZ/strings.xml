@@ -301,4 +301,6 @@
     <string name="widget_rm_disabled">Zakázáno</string>
     <string name="widget_rm_suspended">Pozastaveno</string>
     <string name="widget_rm_resume">Obnovit</string>
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
 </resources>

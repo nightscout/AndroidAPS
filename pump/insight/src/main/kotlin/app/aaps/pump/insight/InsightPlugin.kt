@@ -479,15 +479,15 @@ class InsightPlugin @Inject constructor(
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
+                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: InsightException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName)
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
+                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: Exception) {
                 aapsLogger.error("Exception while setting profile", e)
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
+                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
                 result.comment(ExceptionTranslator.getString(context, e))
             }
         }
@@ -1595,7 +1595,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun onTimeoutDuringHandshake() {
-        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, R.string.timeout_during_handshake, level = NotificationLevel.URGENT)
+        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, R.string.timeout_during_handshake, level = NotificationLevel.IMPORTANT)
     }
 
     override fun canHandleDST(): Boolean {

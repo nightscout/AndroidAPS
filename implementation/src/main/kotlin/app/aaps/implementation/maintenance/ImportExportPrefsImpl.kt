@@ -847,7 +847,7 @@ class ImportExportPrefsImpl @Inject constructor(
                     if (bytes != null) {
                         val content = String(bytes, Charsets.UTF_8)
                         val metadata = encryptedPrefsFormat.loadMetadata(content)
-                        prefsFiles.add(PrefsFile(file.name, content, metadata))
+                        prefsFiles.add(PrefsFile(file.name, content, metadata, id = file.id))
                     }
                 } catch (e: Exception) {
                     aapsLogger.warn(LTag.CORE, "Failed to load cloud file ${file.name}", e)
@@ -855,7 +855,7 @@ class ImportExportPrefsImpl @Inject constructor(
                         val bytes = provider.downloadFile(file.id)
                         if (bytes != null) {
                             val content = String(bytes, Charsets.UTF_8)
-                            prefsFiles.add(PrefsFile(file.name, content, emptyMap()))
+                            prefsFiles.add(PrefsFile(file.name, content, emptyMap(), id = file.id))
                         }
                     } catch (e2: Exception) {
                         aapsLogger.error(LTag.CORE, "Failed to download ${file.name}", e2)

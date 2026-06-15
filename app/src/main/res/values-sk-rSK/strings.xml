@@ -5,6 +5,7 @@
     <string name="select">Vybrať</string>
     <string name="set">Nastaviť</string>
     <string name="migrating_preferences">Migrujem nastavenia...</string>
+    <string name="optimizing_database">Optimalizácia databázy…</string>
     <string name="initializing_plugins">Inicializujem pluginy...</string>
     <string name="initializing">Inicializujem…</string>
     <string name="migrating_profile_switches">Migrujem prepnutia profilov...</string>

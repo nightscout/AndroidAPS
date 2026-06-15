@@ -68,6 +68,7 @@
     <string name="configbuilder_insulin">胰岛素</string>
     <string name="configbuilder_bgsource">血糖来源</string>
     <string name="configbuilder_smoothing">平滑</string>
+    <string name="configbuilder_calibration">校准</string>
     <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_sensitivity">灵敏度检测</string>
     <string name="configbuilder_aps">APS</string>
@@ -453,6 +454,8 @@
     <string name="location_front_left_lower_abdomen">左下腹部前侧</string>
     <string name="location_back_right_buttock">右臀部</string>
     <string name="location_back_left_buttock">左臀部</string>
+    <string name="location_back_right_lower_back">右下背部</string>
+    <string name="location_back_left_lower_back">左下背部</string>
     <string name="location_side_right_upper_thigh">右大腿外侧上部</string>
     <string name="location_side_left_upper_thigh">左大腿外侧上部</string>
     <string name="location_side_right_lower_thigh">右大腿外侧下部</string>
@@ -535,6 +538,7 @@
     <string name="uel_tt_ns_refresh">从NS刷新临时目标</string>
     <string name="uel_automation_removed">删除自动操作</string>
     <string name="uel_bg_removed">删除血糖数据</string>
+    <string name="uel_calibration_removed">校准已移除</string>
     <string name="uel_careportal_removed">删除护理数据</string>
     <string name="uel_bolus_removed">删除大剂量</string>
     <string name="uel_carbs_removed">删除碳水</string>
@@ -616,6 +620,9 @@
     <string name="missing_profile_name">缺少配置文件名称</string>
     <string name="profile_not_saved_activate">配置文件未保存。请在激活前保存配置文件。</string>
     <string name="profile_activation_failed">配置文件激活失败</string>
+    <string name="profile_switch_save_failed">配置文件切换未能保存，请重试。</string>
+    <string name="profile_basal_not_compatible_with_pump">基础率与当前泵不兼容，无法激活。请降低百分比或调整基础率。</string>
+    <string name="profile_pump_incompatible_label">泵限制</string>
     <string name="error_in_ic_values">IC 数值错误</string>
     <string name="error_in_isf_values">ISF 数值错误</string>
     <string name="error_in_basal_values">基础率数值错误</string>
@@ -829,6 +836,7 @@
     <string name="clear_cloud_action">清除设置</string>
     <string name="clear_cloud_settings">清除云设置</string>
     <string name="clear_cloud_settings_message">这将切换到本地存储并清除授权。是否继续？</string>
+    <string name="cloud_revoke_incomplete">此设备上的云端设置已清除，但无法连接到帐户以完全撤销访问。 建议您在账户设置中手动移除此设备。</string>
     <string name="cloud_connection_failed">云存储连接失败</string>
     <string name="cloud_reauthorize_message">云存储连接失败。您想要重新验证吗？</string>
     <string name="reauthorize">重新验证</string>

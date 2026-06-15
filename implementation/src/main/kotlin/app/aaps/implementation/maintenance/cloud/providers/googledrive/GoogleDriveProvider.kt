@@ -1,5 +1,6 @@
 package app.aaps.implementation.maintenance.cloud.providers.googledrive
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.CloudFile
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.maintenance.CloudFolder
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.icons.IcGoogleDrive
-import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.cloud.StorageTypes
 import javax.inject.Inject
@@ -68,6 +68,11 @@ class GoogleDriveProvider @Inject constructor(
     override fun clearCredentials() {
         gLog("clearCredentials")
         googleDriveManager.clearGoogleDriveSettings()
+    }
+
+    override suspend fun revokeAccess(): Boolean {
+        gLog("revokeAccess")
+        return googleDriveManager.revokeAccess()
     }
 
     override suspend fun getValidAccessToken(): String? {

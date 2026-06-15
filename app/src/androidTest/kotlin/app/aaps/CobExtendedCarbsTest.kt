@@ -24,20 +24,15 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.helpers.IntegrationWaits
 import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withTimeout
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Test
@@ -69,6 +64,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
     @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxHelper: RxHelper
+    @Inject lateinit var waits: IntegrationWaits
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var l: L
     @Inject lateinit var config: Config
@@ -119,36 +115,31 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         nsIncomingDataProcessor.processProfile(JSONObject(profileData), false)
         assertThat(profileRepository.profile.value).isNotNull()
 
-        // Start collecting EPS changes before creating profile switch
-        val epsDeferred = CoroutineScope(Dispatchers.IO).async {
-            withTimeout(40_000) {
-                persistenceLayer.observeChanges(EPS::class.java).first()
-            }
-        }
-
         val store = profileRepository.profile.value ?: error("No profile")
         val profileName = store.getDefaultProfileName() ?: error("No profile")
         val iCfg = store.getSpecificProfile(profileName)?.iCfg ?: ICfg("Insulin", peak = 75, dia = 5.0, concentration = 1.0)
-        val result = profileFunction.createProfileSwitch(
-            profileStore = store,
-            profileName = profileName,
-            durationInMinutes = 0,
-            percentage = 100,
-            timeShiftInHours = 0,
-            timestamp = dateUtil.now(),
-            action = Action.PROFILE_SWITCH,
-            source = Sources.ProfileSwitchDialog,
-            note = "Test",
-            listValues = listOf(
-                ValueWithUnit.SimpleString(profileName),
-                ValueWithUnit.Percent(100)
-            ),
-            iCfg = iCfg
-        )
-        assertThat(result).isNotNull()
 
-        // Wait for EPS flow emission (replaces old EventEffectiveProfileSwitchChanged)
-        val epsList = epsDeferred.await()
+        // Create the profile switch and wait for the resulting EffectiveProfileSwitch (written by the
+        // command queue once the pump push succeeds). Replaces old EventEffectiveProfileSwitchChanged.
+        val epsList = waits.awaitDbChange(EPS::class.java, what = "EffectiveProfileSwitch after createProfileSwitch") {
+            val result = profileFunction.createProfileSwitch(
+                profileStore = store,
+                profileName = profileName,
+                durationInMinutes = 0,
+                percentage = 100,
+                timeShiftInHours = 0,
+                timestamp = dateUtil.now(),
+                action = Action.PROFILE_SWITCH,
+                source = Sources.ProfileSwitchDialog,
+                note = "Test",
+                listValues = listOf(
+                    ValueWithUnit.SimpleString(profileName),
+                    ValueWithUnit.Percent(100)
+                ),
+                iCfg = iCfg
+            )
+            assertThat(result).isNotNull()
+        }
         aapsLogger.info(LTag.CORE, "EPS flow emitted ${epsList.size} entries")
         assertThat(epsList).isNotEmpty()
 
@@ -192,24 +183,18 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
      * 2. Autosens calculation to complete (replaces old EventNewHistoryData + EventAutosensCalculationFinished)
      */
     private suspend fun insertBgAndWait(now: Long) {
-        // Start collecting GV changes before inserting
-        val gvDeferred = CoroutineScope(Dispatchers.IO).async {
-            withTimeout(40_000) {
-                persistenceLayer.observeChanges(GV::class.java).first()
-            }
-        }
-
         rxHelper.resetState(EventAutosensCalculationFinished::class.java)
-        insertFlatBgData(now, 60, 100.0)
 
-        // Wait for GV flow emission (replaces old EventNewBG)
-        val gvList = gvDeferred.await()
+        // Insert BG and wait for the GV flow emission (replaces old EventNewBG)
+        val gvList = waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+            insertFlatBgData(now, 60, 100.0)
+        }
         aapsLogger.info(LTag.CORE, "GV flow emitted ${gvList.size} entries")
         assertThat(gvList).isNotEmpty()
 
-        // Wait for autosens calculation triggered by BG insertion
+        // Wait for autosens calculation triggered by BG insertion, then for the calc to fully settle
         assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "initial calc").first).isTrue()
-        delay(2000)
+        waits.awaitCalculationFinished("initial calc settle")
     }
 
     /**
@@ -230,7 +215,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         )
         persistenceLayer.insertCgmSourceData(Sources.Random, newBg, emptyList(), null)
         assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
-        delay(2000)
+        waits.awaitCalculationFinished("autosens settle")
     }
 
     /** Collect COB values from all autosens data buckets, ordered by time */
@@ -413,18 +398,13 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        // Start collecting GV changes
-        val gvDeferred = CoroutineScope(Dispatchers.IO).async {
-            withTimeout(40_000) {
-                persistenceLayer.observeChanges(GV::class.java).first()
-            }
-        }
         rxHelper.resetState(EventAutosensCalculationFinished::class.java)
-        insertFlatBgData(now, 240, 100.0)
-        gvDeferred.await()
+        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+            insertFlatBgData(now, 240, 100.0)
+        }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 15 * 60_000L)
         assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
-        Thread.sleep(2000)
+        waits.awaitCalculationFinished("absorption settle")
 
         assertCobBounded(10.0)
         assertCobReachedZero()
@@ -435,17 +415,13 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        val gvDeferred = CoroutineScope(Dispatchers.IO).async {
-            withTimeout(40_000) {
-                persistenceLayer.observeChanges(GV::class.java).first()
-            }
-        }
         rxHelper.resetState(EventAutosensCalculationFinished::class.java)
-        insertFlatBgData(now, 240, 100.0)
-        gvDeferred.await()
+        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+            insertFlatBgData(now, 240, 100.0)
+        }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 0)
         assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
-        Thread.sleep(2000)
+        waits.awaitCalculationFinished("absorption settle")
 
         assertCobBounded(10.0)
         assertCobReachedZero()
@@ -458,14 +434,10 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        val gvDeferred = CoroutineScope(Dispatchers.IO).async {
-            withTimeout(40_000) {
-                persistenceLayer.observeChanges(GV::class.java).first()
-            }
-        }
         rxHelper.resetState(EventAutosensCalculationFinished::class.java)
-        insertBgData(now, 60, { minutesAgo -> 200.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
-        gvDeferred.await()
+        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+            insertBgData(now, 60, { minutesAgo -> 200.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
+        }
         insertCarbs(now - 30 * 60_000L, 35.0, 2 * 60 * 60_000L)
         triggerCalculationAndWait(now)
 
@@ -478,14 +450,10 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        val gvDeferred = CoroutineScope(Dispatchers.IO).async {
-            withTimeout(40_000) {
-                persistenceLayer.observeChanges(GV::class.java).first()
-            }
-        }
         rxHelper.resetState(EventAutosensCalculationFinished::class.java)
-        insertBgData(now, 60, { minutesAgo -> 180.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
-        gvDeferred.await()
+        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+            insertBgData(now, 60, { minutesAgo -> 180.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
+        }
         insertCarbs(now - 20 * 60_000L, 20.0, 0)
         triggerCalculationAndWait(now)
 
@@ -498,17 +466,13 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        val gvDeferred = CoroutineScope(Dispatchers.IO).async {
-            withTimeout(40_000) {
-                persistenceLayer.observeChanges(GV::class.java).first()
-            }
-        }
         rxHelper.resetState(EventAutosensCalculationFinished::class.java)
-        insertBgData(now, 240, { minutesAgo -> 250.0 - minutesAgo * (170.0 / 240.0) }, TrendArrow.FORTY_FIVE_UP)
-        gvDeferred.await()
+        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+            insertBgData(now, 240, { minutesAgo -> 250.0 - minutesAgo * (170.0 / 240.0) }, TrendArrow.FORTY_FIVE_UP)
+        }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 15 * 60_000L)
         assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
-        Thread.sleep(2000)
+        waits.awaitCalculationFinished("absorption settle")
 
         assertCobBounded(10.0)
         assertCobReachedZero()

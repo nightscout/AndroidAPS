@@ -72,6 +72,12 @@ data class ProfileUiState(
     val targetMax: Double = 180.0,
     /** Map of error type to error message for tabs with validation errors */
     val tabErrors: Map<ProfileErrorType, String> = emptyMap(),
+    /**
+     * True when the basal schedule isn't deliverable by the currently active pump. Non-blocking:
+     * shown as a warning, does not affect [isValid] / the Save gate. Pump compatibility is enforced
+     * only at activation.
+     */
+    val pumpIncompatible: Boolean = false,
     /** Currently-edited profile as a [PureProfile] for graph rendering; null if not yet computed. */
     val editedProfile: PureProfile? = null,
     /** Sum of basal rates over 24h, derived from [editedProfile]. */
@@ -101,6 +107,11 @@ class ProfileEditorViewModel @Inject constructor(
     private var editingProfile: SingleProfile? = null
     private var locallyEdited: Boolean = false
 
+    // True while editing a not-yet-persisted "new profile" draft. In this mode [editingIndex] is a
+    // sentinel (-1): the profile has no row in the store, so [saveProfile] appends via the repo's
+    // add() and the external-change subscriber must never re-clone from the (nonexistent) index.
+    private var isNewDraft: Boolean = false
+
     // Set while [saveProfile] is in flight so the [profileRepository.profiles] subscriber
     // doesn't drop the user's in-flight edits when the save triggers a StateFlow emit.
     // External changes (NS push, editor reset) still trigger a re-clone. Both writer
@@ -118,6 +129,12 @@ class ProfileEditorViewModel @Inject constructor(
         profileRepository.profiles.drop(1)
             .onEach {
                 aapsLogger.debug(LTag.PROFILE, "profileRepository.profiles changed")
+                if (isNewDraft) {
+                    // Uncommitted draft — its index doesn't exist in the persisted list. Never
+                    // re-clone (that would wipe the draft); just refresh derived UI state.
+                    loadState()
+                    return@onEach
+                }
                 if (savePending) {
                     // Our own save triggered the emit. The repo just persisted the snapshot we
                     // gave it (a deep clone of `editingProfile`); the live `editingProfile`
@@ -151,6 +168,9 @@ class ProfileEditorViewModel @Inject constructor(
             .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(app.aaps.core.ui.R.string.profile_name_contains_dot) }
             .associateBy({ it.type }, { it.message })
 
+        // Pump compatibility is a non-blocking warning (does not feed [isValid]).
+        val pumpIncompatible = profile?.let { profileRepository.validatePumpCompatibility(it).isNotEmpty() } ?: false
+
         // Build the PureProfile from the local clone too, so the graph preview reflects
         // unsaved edits. Shared extension keeps this in sync with ProfileManagementViewModel.
         val editedPureProfile = profile?.toPureProfile(dateUtil)
@@ -176,6 +196,7 @@ class ProfileEditorViewModel @Inject constructor(
                 targetMin = if (isMgdl) HardLimits.LIMIT_MIN_BG[0] else HardLimits.LIMIT_MIN_BG[0] / 18.0,
                 targetMax = if (isMgdl) HardLimits.LIMIT_MAX_BG[1] else HardLimits.LIMIT_MAX_BG[1] / 18.0,
                 tabErrors = tabErrors,
+                pumpIncompatible = pumpIncompatible,
                 editedProfile = editedPureProfile,
                 basalSum = basalSum
             )
@@ -192,8 +213,22 @@ class ProfileEditorViewModel @Inject constructor(
      * subsequent edits mutate the clone, and [saveProfile] commits the clone back via the repo.
      */
     fun selectProfile(index: Int) {
+        isNewDraft = false
         editingIndex = index
         editingProfile = profileRepository.profiles.value.getOrNull(index)?.deepClone()
+        locallyEdited = false
+        viewModelScope.launch { loadState() }
+    }
+
+    /**
+     * Begin editing a brand-new, unpersisted profile. The draft is empty (and therefore invalid, so
+     * Save stays disabled until filled). It is added to the store only when the user saves a valid
+     * profile — see [saveProfile]. Called from the navigation graph when the "new profile" route opens.
+     */
+    fun startNewProfileDraft() {
+        isNewDraft = true
+        editingIndex = -1
+        editingProfile = profileRepository.newDraft()
         locallyEdited = false
         viewModelScope.launch { loadState() }
     }
@@ -356,21 +391,52 @@ class ProfileEditorViewModel @Inject constructor(
     fun saveProfile() {
         viewModelScope.launch {
             val profile = editingProfile ?: return@launch
-            // Flag set BEFORE the replace so the event the replace fires is recognised as ours.
-            savePending = true
-            profileRepository.replace(editingIndex, profile)
-                .onSuccess { locallyEdited = false }
-                .onFailure { error ->
-                    // Clear the flag so the NEXT external event isn't mis-attributed to this
-                    // failed save. Surface the error in the log; the user keeps their unsaved
-                    // edits visible in the editor (locallyEdited stays true).
-                    savePending = false
-                    aapsLogger.error(LTag.PROFILE, "saveProfile failed at index $editingIndex", error)
-                }
+            // Never persist a semantically invalid profile. The top-bar Save button is already
+            // disabled when invalid, but the unsaved-changes dialog's Save is not — guard here so
+            // neither path can write invalid data (and a new draft is only committed once valid).
+            if (!_uiState.value.isValid) {
+                aapsLogger.debug(LTag.PROFILE, "saveProfile ignored: profile is invalid")
+                return@launch
+            }
+            if (isNewDraft) {
+                // Commit the draft as a new profile. deepClone so the stored copy is independent of
+                // the editor's working reference (mirrors replace()'s defensive clone).
+                profileRepository.add(profile.deepClone())
+                    .onSuccess {
+                        // Draft is now persisted: leave draft mode and point at its row so further
+                        // saves go through replace().
+                        isNewDraft = false
+                        editingIndex = profileRepository.profiles.value.indexOfLast { it.name == profile.name }.coerceAtLeast(0)
+                        locallyEdited = false
+                        loadState()
+                    }
+                    .onFailure { error ->
+                        aapsLogger.error(LTag.PROFILE, "saveProfile (new draft) failed", error)
+                    }
+            } else {
+                // Flag set BEFORE the replace so the event the replace fires is recognised as ours.
+                savePending = true
+                profileRepository.replace(editingIndex, profile)
+                    .onSuccess { locallyEdited = false }
+                    .onFailure { error ->
+                        // Clear the flag so the NEXT external event isn't mis-attributed to this
+                        // failed save. Surface the error in the log; the user keeps their unsaved
+                        // edits visible in the editor (locallyEdited stays true).
+                        savePending = false
+                        aapsLogger.error(LTag.PROFILE, "saveProfile failed at index $editingIndex", error)
+                    }
+            }
         }
     }
 
     fun resetProfile() {
+        if (isNewDraft) {
+            // A draft has nothing persisted to reload — reset it back to a fresh empty profile.
+            editingProfile = profileRepository.newDraft()
+            locallyEdited = false
+            viewModelScope.launch { loadState() }
+            return
+        }
         // repo.reset() reloads from preferences and emits a new list on
         // [profileRepository.profiles]; the subscriber re-clones editingProfile from the
         // freshly-loaded list and refreshes the UI. Drops any local edits, matching the

@@ -9,6 +9,7 @@
     <string name="eopatch_ble_status">Състояние на BLE</string>
     <string name="eopatch_serial_number">Сериен номер</string>
     <string name="eopatch_expiration_time">Време на изтичане</string>
+    <string name="eopatch_not_activated">Не е активирана</string>
     <string name="eopatch_base_basal_rate">Базова базална стойност</string>
     <string name="eopatch_temp_basal_rate">Временна базална стойност</string>
     <string name="invalid_basal_rate">Базалната стойност на профила е по-малка от 0,05 Е/час. EOPatch има минимална инжекционна единица от 0,05U. Моля, опитайте отново, след като зададете профила на повече от тази стойност.</string>
@@ -37,11 +38,14 @@
     <string name="patch_wake_up">Пълнене на инсулин</string>
     <string name="patch_wake_up_desc_1">Напълнете нов Patch с инсулин, при стайна температура. Проверете ъгъла на спринцовката.</string>
     <string name="patch_wake_up_desc_2">Следете за 1 звуков сигнал.</string>
+    <string name="patch_wake_up_pairing_info">При свързването 2 Android нотификации ще се покажат. Трябва да ги потвърдите за Bluetooth свързване.</string>
     <string name="patch_start_pairing">Започване на сдвояване</string>
     <string name="patch_connect_new">Сдвояване на Patch</string>
     <string name="patch_connect_new_desc">Новият Patch се сдвоява.\nПоддържайте дистанцията между Patch и смарт устройството възможно най-малка</string>
     <string name="patch_remove_needle_cap">Подгответе се за закрепване на Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Отстранете залепващата лента и след това натиснете „Напред“.</string>
+    <string name="patch_remove_needle_cap_desc_2">Ако иглата стърчи. натиснете \'Откажи\'.</string>
+    <string name="patch_remove_needle_cap_desc_3">Този пач е мокър или мръсен, или с орегъната лепенка. Натиснете \'Откажи\'.</string>
     <string name="patch_remove_protection_tape">Закрепяне на Patch</string>
     <string name="patch_remove_protection_tape_desc_1">Почистете и подсушете мястото на приложение, след което прикрепете Patch към кожата.</string>
     <string name="patch_remove_protection_tape_desc_2">Проверете инфузионния сет и след това натиснете „Стартиране на проверката за безопасност“.</string>

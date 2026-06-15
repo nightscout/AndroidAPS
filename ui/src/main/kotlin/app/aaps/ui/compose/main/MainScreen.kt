@@ -240,6 +240,7 @@ fun MainScreen(
                         tempTargetRecordId = uiState.tempTargetRecordId,
                         runningMode = uiState.runningMode,
                         runningModeText = uiState.runningModeText,
+                        runningModeRemaining = uiState.runningModeRemaining,
                         runningModeProgress = uiState.runningModeProgress,
                         runningModeRecordId = uiState.runningModeRecordId,
                         tbrState = uiState.tbrState,
@@ -335,6 +336,7 @@ fun MainScreen(
                             onSearchQueryChange = onSearchQueryChange,
                             onSearchClear = onSearchClear,
                             onSearchActiveChange = onSearchActiveChange,
+                            isSimpleMode = uiState.isSimpleMode,
                             // Guard against transient 0 heights during AnimatedVisibility exit:
                             // the resulting contentPadding invalidation can schedule a remeasure
                             // on a node that's losing its owner — crashes in dispatchDraw.

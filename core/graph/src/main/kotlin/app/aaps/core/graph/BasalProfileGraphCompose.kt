@@ -2,6 +2,7 @@ package app.aaps.core.graph
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,7 +19,7 @@ import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -30,7 +31,6 @@ import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
-import com.patrykandpatrick.vico.compose.common.vicoTheme
 
 private val LegendLabelKey = ExtraStore.Key<List<String>>()
 
@@ -90,7 +90,7 @@ fun BasalProfileGraphCompose(
                 profile2.getBasalTimeFromMidnight((hour.coerceAtMost(23)) * 60 * 60)
             }
             modelProducer.runTransaction {
-                lineSeries {
+                lineModel {
                     series(y = basalValues2)
                     series(y = basalValues1)
                 }
@@ -98,14 +98,14 @@ fun BasalProfileGraphCompose(
             }
         } else {
             modelProducer.runTransaction {
-                lineSeries {
+                lineModel {
                     series(y = basalValues1)
                 }
             }
         }
     }
 
-    val legendItemLabelComponent = rememberTextComponent(style = TextStyle(color = vicoTheme.textColor))
+    val labelComponent = rememberTextComponent(style = TextStyle(color = MaterialTheme.colorScheme.onSurface))
     val legendIcon1 = rememberShapeComponent(fill = Fill(profile1Color))
     val legendIcon2 = rememberShapeComponent(fill = Fill(profile2Color))
     CartesianChartHost(
@@ -155,8 +155,8 @@ fun BasalProfileGraphCompose(
                     )
                 }
             ),
-            startAxis = VerticalAxis.rememberStart(),
-            bottomAxis = HorizontalAxis.rememberBottom(),
+            startAxis = VerticalAxis.rememberStart(label = labelComponent),
+            bottomAxis = HorizontalAxis.rememberBottom(label = labelComponent),
             legend = if (profile2 != null) {
                 rememberHorizontalLegend(
                     items = { extraStore ->
@@ -164,7 +164,7 @@ fun BasalProfileGraphCompose(
                             add(
                                 LegendItem(
                                     if (index == 0) legendIcon1 else legendIcon2,
-                                    legendItemLabelComponent,
+                                    labelComponent,
                                     label,
                                 )
                             )

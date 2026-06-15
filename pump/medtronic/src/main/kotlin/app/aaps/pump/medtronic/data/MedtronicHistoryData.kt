@@ -781,7 +781,7 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.URGENT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = runBlocking {
@@ -825,7 +825,7 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.URGENT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = runBlocking {
@@ -1097,7 +1097,7 @@ class MedtronicHistoryData @Inject constructor(
             )
 
             if (tempBasalProcess.durationAsSeconds <= 0) {
-                notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.URGENT)
+                notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
                 aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
             } else {
                 val result = runBlocking {

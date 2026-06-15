@@ -392,7 +392,7 @@ class EquilPumpPlugin @Inject constructor(
                     notificationManager.post(
                         NotificationId.FAILED_UPDATE_PROFILE,
                         rh.gs(R.string.equil_low_battery) + battery + "%",
-                        NotificationLevel.URGENT,
+                        NotificationLevel.IMPORTANT,
                         soundRes = app.aaps.core.ui.R.raw.alarm
                     )
                 }

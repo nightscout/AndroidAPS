@@ -67,6 +67,15 @@ interface CloudStorageProvider {
     fun clearCredentials()
 
     /**
+     * Revoke the OAuth grant with the provider (true deauthorize), removing the app's access
+     * server-side. Should be called before [clearCredentials] while the tokens are still present.
+     * Implementations that don't support revocation may treat this as a no-op.
+     * @return true if the grant is no longer valid afterwards (including "nothing to revoke");
+     *         false if the revoke could not be confirmed (e.g. network failure).
+     */
+    suspend fun revokeAccess(): Boolean
+
+    /**
      * Get a valid access token, refreshing if necessary.
      * @return Valid access token or null if unable to obtain one
      */

@@ -31,6 +31,8 @@
     <string name="pref_title_alert_carbs_required">需补充碳水时发出提醒</string>
     <string name="pref_title_alert_urgent_as_android_notification">紧急警报以安卓通知形式提醒</string>
     <string name="pref_title_alert_increase_volume">逐步提高通知音量</string>
+    <string name="pref_title_alert_override_dnd">覆盖勿扰模式</string>
+    <string name="pref_summary_alert_override_dnd">启用后，AAPS 警报会在静音模式和勿扰模式下播放（使用警报流）。禁用后，警报会遵循静音/勿扰模式（使用通知流）。</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">上传血糖数据到 NS</string>
     <string name="pref_title_bg_source_create_sensor_change">记录传感器更换</string>
@@ -221,6 +223,8 @@
     <string name="pref_title_sms_remote_bolus_distance">远程大剂量最小间隔（时间）</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">随机血糖间隔时间</string>
+    <string name="pref_title_random_bg_randomize">随机化血糖数据</string>
+    <string name="pref_summary_random_bg_randomize">添加噪声、抖动时间戳、随机化趋势箭头，并偶尔生成随机碳水化合物。禁用这些功能可获得一个干净确定性的正弦波，其趋势箭头根据正弦波斜率。</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">失效数据报警阈值</string>
     <string name="pref_title_urgent_alarm_stale_data">紧急失效数据报警阈值</string>

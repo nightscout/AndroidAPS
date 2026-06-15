@@ -1,11 +1,20 @@
 package app.aaps.implementation.preference
 
+import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
+import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,8 +30,32 @@ class PreferenceVisibilityContextImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
     private val constraintsChecker: ConstraintsChecker,
+    private val aapsLogger: AAPSLogger,
+    @ApplicationScope private val appScope: CoroutineScope,
     override val preferences: Preferences
 ) : PreferenceVisibilityContext {
+
+    // Cached off-main: advancedFilteringSupported is read from Compose preference-screen visibility
+    // predicates on the main thread, so it must not hit the DB synchronously. Seeded in init and
+    // refreshed whenever glucose values change (the value derives from the latest GV's sensor).
+    // Until the first async load completes it reports false (advanced filtering not supported).
+    @Volatile private var cachedAdvancedFiltering: Boolean = false
+
+    init {
+        appScope.launch { cachedAdvancedFiltering = persistenceLayer.isAdvancedFilteringSupported() }
+        observeAdvancedFiltering()
+    }
+
+    // Debounced so a Nightscout backfill burst (hundreds of GV inserts) collapses into a single
+    // recompute — the value only depends on the latest glucose value's sensor and changes rarely.
+    @OptIn(FlowPreview::class)
+    private fun observeAdvancedFiltering() {
+        persistenceLayer.observeChanges<GV>()
+            .debounce(1000L)
+            .collectResilient(appScope, aapsLogger, LTag.CORE) {
+                cachedAdvancedFiltering = persistenceLayer.isAdvancedFilteringSupported()
+            }
+    }
 
     override val isPatchPump: Boolean
         get() = activePlugin.activePump.pumpDescription.isPatchPump
@@ -34,7 +67,7 @@ class PreferenceVisibilityContextImpl @Inject constructor(
         get() = activePlugin.activePump.isBatteryChangeLoggingEnabled()
 
     override val advancedFilteringSupported: Boolean
-        get() = runBlocking { persistenceLayer.isAdvancedFilteringSupported() }
+        get() = cachedAdvancedFiltering
 
     override val isPumpInitialized: Boolean
         get() = activePlugin.activePump.isInitialized()

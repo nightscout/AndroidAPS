@@ -153,42 +153,30 @@ sealed class ProfileSealed(
     }
 
     override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
-        val validityCheck = Profile.ValidityCheck()
-        val description = pump.pumpDescription
+        // Full validity = semantic (pump-independent) AND pump compatibility. Activating a profile
+        // on the pump requires both; editing, local storage and Nightscout sync only require
+        // [validateSemantic] (a profile that's merely incompatible with the *current* pump is still
+        // valid data worth keeping and uploading).
+        val semantic = validateSemantic(rh, hardLimits)
+        val pumpCheck = validatePump(from, pump, config, rh, notificationManager, sendNotifications)
+        return Profile.ValidityCheck(semantic.isValid && pumpCheck.isValid).also {
+            it.reasons.addAll(semantic.reasons)
+            it.reasons.addAll(pumpCheck.reasons)
+        }
+    }
 
+    /**
+     * Pump-independent ("semantic") validity: every value within the global hard limits. This is
+     * the gate for editing, local storage and Nightscout sync — independent of the active pump, so
+     * switching pumps never silently blocks profile sync.
+     */
+    fun validateSemantic(rh: ResourceHelper, hardLimits: HardLimits): Profile.ValidityCheck {
+        val validityCheck = Profile.ValidityCheck()
         for (basal in basalBlocks) {
             val basalAmount = basal.amount * percentage / 100.0
-            if (!description.is30minBasalRatesCapable) {
-                // Check for hours alignment
-                val duration: Long = basal.duration
-                if (duration % 3600000 != 0L) {
-                    if (sendNotifications && config.APS) {
-                        notificationManager.post(NotificationId.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, R.string.basalprofilenotaligned, from)
-                    }
-                    validityCheck.isValid = false
-                    validityCheck.reasons.add(
-                        rh.gs(R.string.basalprofilenotaligned, from)
-                    )
-                    break
-                }
-            }
             if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.basal_value), basalAmount))
-                break
-            }
-            // Check for minimal basal value
-            if (basalAmount < description.basalMinimumRate) {
-                basal.amount = description.basalMinimumRate
-                if (sendNotifications) sendBelowMinimumNotification(from, notificationManager, rh)
-                validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.minimalbasalvaluereplaced, from))
-                break
-            } else if (basalAmount > description.basalMaximumRate) {
-                basal.amount = description.basalMaximumRate
-                if (sendNotifications) sendAboveMaximumNotification(from, notificationManager, rh)
-                validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))
                 break
             }
         }
@@ -242,6 +230,50 @@ sealed class ProfileSealed(
             ) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_high_target), target.highTarget))
+                break
+            }
+        }
+        return validityCheck
+    }
+
+    /**
+     * Pump-compatibility validity: only the basal block is pump-dependent. Checks that each basal
+     * rate is deliverable by the active pump (minimum/maximum rate) and that the schedule fits the
+     * pump's time granularity (30-min vs full-hour). This gates profile *activation* and drives the
+     * non-blocking "won't run on this pump" warning shown while editing/viewing — it never blocks
+     * editing, storage or sync.
+     */
+    fun validatePump(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, sendNotifications: Boolean): Profile.ValidityCheck {
+        val validityCheck = Profile.ValidityCheck()
+        val description = pump.pumpDescription
+        for (basal in basalBlocks) {
+            val basalAmount = basal.amount * percentage / 100.0
+            if (!description.is30minBasalRatesCapable) {
+                // Check for hours alignment
+                val duration: Long = basal.duration
+                if (duration % 3600000 != 0L) {
+                    if (sendNotifications && config.APS) {
+                        notificationManager.post(NotificationId.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, R.string.basalprofilenotaligned, from)
+                    }
+                    validityCheck.isValid = false
+                    validityCheck.reasons.add(
+                        rh.gs(R.string.basalprofilenotaligned, from)
+                    )
+                    break
+                }
+            }
+            // Check for minimal basal value
+            if (basalAmount < description.basalMinimumRate) {
+                basal.amount = description.basalMinimumRate
+                if (sendNotifications) sendBelowMinimumNotification(from, notificationManager, rh)
+                validityCheck.isValid = false
+                validityCheck.reasons.add(rh.gs(R.string.minimalbasalvaluereplaced, from))
+                break
+            } else if (basalAmount > description.basalMaximumRate) {
+                basal.amount = description.basalMaximumRate
+                if (sendNotifications) sendAboveMaximumNotification(from, notificationManager, rh)
+                validityCheck.isValid = false
+                validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))
                 break
             }
         }

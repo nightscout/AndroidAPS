@@ -8,26 +8,62 @@ import androidx.annotation.RawRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.ComposeMainActivity
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmIntent
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.ui.activities.ErrorActivity
 import dagger.Reusable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Provider
 
 @Reusable
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val alarmNotificationManager: AlarmNotificationManager,
-    private val aapsLogger: AAPSLogger
+    // Provider breaks a Dagger cycle: NotificationManagerImpl injects NotificationHolder, which
+    // injects this UiInteraction. notificationManager is only needed lazily in stopAlarm().
+    private val notificationManager: Provider<NotificationManager>,
+    private val aapsLogger: AAPSLogger,
+    private val persistenceLayer: PersistenceLayer,
+    private val preferences: Preferences,
+    private val config: Config,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : UiInteraction {
 
     override val mainActivity: Class<*> = ComposeMainActivity::class.java
     override val errorHelperActivity: Class<*> = ErrorActivity::class.java
 
     override fun runAlarm(status: String, title: String, @RawRes soundId: Int) {
+        // Persist the error as an announcement at fire time — gated by the NS-announcement
+        // preference + APS build. Done here (not in ErrorActivity) so the record is written for
+        // every alarm with the true trigger time, regardless of whether/how it is later
+        // acknowledged (phone activity, Wear mute, OS-trimmed notification, or never opened).
+        if (config.APS && preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors))
+            appScope.launch {
+                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                    therapyEvent = TE.asAnnouncement(status),
+                    action = Action.CAREPORTAL,
+                    source = Sources.Aaps,
+                    note = status,
+                    listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+                )
+            }
+
         // ProcessLifecycleOwner.currentState requires main-thread access (officially @MainThread).
         // BLE callbacks, RxJava workers, and coroutine non-main dispatchers all call runAlarm
         // from non-main threads. From those contexts we skip the foreground-direct optimization
@@ -70,7 +106,10 @@ class UiInteractionImpl @Inject constructor(
 
     override fun stopAlarm(reason: String) {
         aapsLogger.debug(LTag.CORE, "stopAlarm: $reason")
-        alarmNotificationManager.cancelAlarm()
+        // Route through the registry owner so all audible alarms are actually silenced: clears the
+        // internal AlarmSoundPlayer (Wear snooze used to only cancel the system notification, leaving
+        // the ramping audio playing), stops the full-screen audio, and cancels the notifications.
+        notificationManager.get().muteAllAlarms()
     }
 
     /**

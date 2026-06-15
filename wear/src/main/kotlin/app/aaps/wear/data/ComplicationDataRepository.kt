@@ -10,7 +10,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.impl.weardata.ResFileMap
+import app.aaps.wear.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
@@ -35,8 +37,20 @@ import javax.inject.Singleton
 @Singleton
 class ComplicationDataRepository @Inject constructor(
     private val context: Context,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val sp: SP
 ) {
+
+    /**
+     * Default watchface variant to display, honoring the `key_include_external` preference:
+     * when enabled, the full template (with external/follower views) is used.
+     * Mirrors the legacy Persistence default-watchface selection.
+     */
+    internal fun selectDefaultWatchface(current: ComplicationData): CwfData? =
+        if (sp.getBoolean(R.string.key_include_external, false))
+            current.customWatchfaceDefaultFull ?: current.customWatchfaceDefault
+        else
+            current.customWatchfaceDefault
 
     private val dataStore: DataStore<ComplicationData> = DataStoreFactory.create(
         serializer = ComplicationDataSerializer(aapsLogger),
@@ -188,7 +202,7 @@ class ComplicationDataRepository @Inject constructor(
     suspend fun setDefaultWatchface() {
         try {
             dataStore.updateData { current ->
-                current.customWatchfaceDefault?.let { default ->
+                selectDefaultWatchface(current)?.let { default ->
                     aapsLogger.debug(LTag.WEAR, "Reset to default watchface")
                     current.copy(customWatchface = default)
                 } ?: current
@@ -207,9 +221,9 @@ class ComplicationDataRepository @Inject constructor(
         return try {
             val current = complicationData.first()
             if (isDefault) {
-                current.customWatchfaceDefault
+                selectDefaultWatchface(current)
             } else {
-                current.customWatchface ?: current.customWatchfaceDefault
+                current.customWatchface ?: selectDefaultWatchface(current)
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.WEAR, "Failed to get custom watchface", e)

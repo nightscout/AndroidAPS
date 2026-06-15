@@ -443,14 +443,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     NotificationId.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.failed_to_set_the_new_basal_profile),
                     app.aaps.core.ui.R.raw.boluserror,
-                    level = NotificationLevel.URGENT
+                    level = NotificationLevel.IMPORTANT
                 )
             } else {
                 showNotification(
                     NotificationId.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.setting_basal_profile_might_have_failed),
                     app.aaps.core.ui.R.raw.boluserror,
-                    level = NotificationLevel.URGENT
+                    level = NotificationLevel.IMPORTANT
                 )
             }
             Completable.error(java.lang.IllegalStateException("Command not confirmed"))
@@ -483,7 +483,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     NotificationId.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.suspend_delivery_is_unconfirmed),
                     app.aaps.core.ui.R.raw.boluserror,
-                    level = NotificationLevel.URGENT
+                    level = NotificationLevel.IMPORTANT
                 )
             }
     }
@@ -1015,7 +1015,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }.toPumpEnactResultImpl()
     }
 
-    private fun notifyOnUnconfirmed(notificationId: NotificationId, msg: String, sound: Int?, level: NotificationLevel = NotificationLevel.URGENT) {
+    private fun notifyOnUnconfirmed(notificationId: NotificationId, msg: String, sound: Int?, level: NotificationLevel = NotificationLevel.IMPORTANT) {
         if (podStateManager.activeCommand != null) {
             aapsLogger.debug(LTag.PUMP, "Notification for active command: ${podStateManager.activeCommand}")
             showNotification(notificationId, msg, sound, level = level)
@@ -1132,7 +1132,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     NotificationId.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.unconfirmed_resumedelivery_command_please_refresh_pod_status),
                     app.aaps.core.ui.R.raw.boluserror,
-                    level = NotificationLevel.URGENT
+                    level = NotificationLevel.IMPORTANT
                 )
             }.toPumpEnactResultImpl()
         } ?: pumpEnactResultProvider.get().success(false).enacted(false).comment("No profile active") // TODO i18n

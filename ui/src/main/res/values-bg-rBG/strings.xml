@@ -26,7 +26,57 @@
     <string name="fill_warning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
     <string name="record_pump_site_change">Запис смяна на сет</string>
     <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
+    <string name="fill_prime_amount">Количество за пълнене</string>
+    <string name="fill_pump_units_note">Това е в единиците на помпата</string>
+    <string name="fill_insulin_change">Смени инсулина на:: %1$s (профилът ще бъде сменен)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Чувств</string>
+    <string name="scene_cat_health">Здраве</string>
+    <string name="scene_cat_food">Храна</string>
+    <string name="scene_cat_sleep">Стъпки</string>
+    <string name="scene_cat_dailylife">Ежедневие</string>
+    <string name="scene_cat_wellness">Здраве</string>
+    <string name="scene_cat_general">Основни</string>
+    <string name="aaps_tt_high_icon_label">Временна цел</string>
+    <string name="aaps_tt_activity_icon_label">Вр цел дейност</string>
+    <string name="aaps_tt_eating_icon_label">Временна цел за хранене</string>
+    <string name="aaps_tt_hypo_icon_label">Вр цел за хипо</string>
+    <string name="aaps_tt_manual_icon_label">Друга временна цел</string>
+    <string name="aaps_profile_icon_label">Профил</string>
+    <string name="aaps_loop_icon_label">Кръг</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Болус</string>
+    <string name="aaps_carbs_icon_label">Въглехидрати</string>
+    <string name="aaps_tbr_icon_label">Временен базал</string>
+    <string name="aaps_activity_icon_label">Спорт</string>
+    <string name="aaps_note_icon_label">Бележка</string>
+    <string name="aaps_automation_icon_label">Автомация</string>
+    <string name="aaps_calibration_icon_label">Калибрация</string>
+    <string name="exercise_icon_label">Започване</string>
+    <string name="fitness_icon_label">Фитнес</string>
+    <string name="swim_icon_label">Плуване</string>
+    <string name="hiking_icon_label">Катерене</string>
+    <string name="bike_icon_label">Колело</string>
+    <string name="skateboard_icon_label">Скейтборд</string>
+    <string name="tennis_icon_label">Тенис</string>
+    <string name="soccer_icon_label">Футбол</string>
+    <string name="baseball_icon_label">Ръгби</string>
+    <string name="basketball_icon_label">Хандбал</string>
+    <string name="volleyball_icon_label">Гимнастика</string>
+    <string name="golf_icon_label">Голф</string>
+    <string name="scubadiving_icon_label">Подводно плуване</string>
+    <string name="rowing_icon_label">Гребане</string>
+    <string name="surfing_icon_label">Сърфиране</string>
+    <string name="hospital_icon_label">Болница</string>
+    <string name="medication_icon_label">Медикаменти</string>
+    <string name="monitor_heart_icon_label">Монитор</string>
+    <string name="thermostat_icon_label">Термостат</string>
+    <string name="blood_type_icon_label">Кръв</string>
+    <string name="health_safety_icon_label">Здраве</string>
+    <string name="healing_icon_label">Излекуване</string>
+    <string name="meal_icon_label">Ресторант</string>
+    <string name="cafe_icon_label">Кафе</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
     <string name="timeshift_label">Време на отместване</string>
@@ -61,10 +111,18 @@
     <string name="careportal_remove_started_events">Премахни започнатите от AAPS записи</string>
     <string name="user_entry">Потербителска настройка</string>
     <string name="clone_label">Клонирай</string>
+    <string name="tbr_type_flag_superbolus">СуперБолус</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Профил тип</string>
+    <string name="profile_parameters">Параметри на профила</string>
+    <string name="active_profile">Активен профил</string>
+    <string name="available_profiles">Профили</string>
+    <string name="profile_switches">Смяна на профили</string>
     <string name="basal_pct_from_tdd_label">% от базата</string>
     <string name="selected_profile">Избрано:</string>
+    <string name="comparation">Сравняване</string>
+    <string name="profile_tab_1">Профил 1</string>
+    <string name="profile_tab_2">Профил 2</string>
     <string name="motol_default_profile">Профил по подразбиране</string>
     <string name="current_profile">Текущ профил</string>
     <string name="available_profile">Наличен профил</string>
@@ -75,17 +133,59 @@
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Текст на бутона</string>
+    <string name="quick_wizard_mode_wizard">Съветник</string>
+    <string name="quick_wizard_mode_insulin">Инсулин</string>
+    <string name="quick_wizard_mode_carbs">Въглехидрати</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Само при позитивен инсулин</string>
     <string name="overview_edit_quickwizard_superbolus">Суперболус</string>
     <!--    History browser-->
+    <string name="history_now">Сега</string>
+    <string name="a11y_history_previous_window">Преден прозорец</string>
+    <string name="a11y_history_next_window">Следващ прозорец</string>
     <string name="additional_ecarbs">Добави уд въглехидрати</string>
+    <string name="calculator_options">Опции</string>
+    <string name="use_bg">Включвай КЗ</string>
+    <string name="use_cob">Включвай въглехидрати</string>
+    <string name="use_iob">Включвай IOB</string>
+    <string name="use_trend">Използвай посока</string>
+    <string name="trend_all">Всички</string>
+    <string name="trend_positive_only">Само положителни</string>
+    <string name="trend_negative_only">Само отрицателни</string>
+    <string name="use_temp_target">Включи временната цел</string>
+    <string name="use_alarm">Използвай аларма</string>
+    <string name="device_selection">Избор на устройство</string>
+    <string name="show_on_phone">Покажи на телефона</string>
+    <string name="show_on_watch">Покажи на часовник</string>
+    <string name="ecarbs_additional">Допълнително въглехидрати</string>
+    <string name="valid_from_to">Валиден диапазон</string>
+    <string name="carb_time">Време на въгл</string>
+    <string name="save_changes_question">Запазване на промените тук?</string>
+    <string name="wizard_no_insulin_required">Няма нужда от инсулин</string>
+    <string name="carbs_constraint_violation">Въгл са лимитирани в настройките</string>
+    <string name="insulin_constraint_violation">Инсулина е ограничен в настройките</string>
     <string name="confirm_treatment">Моля потвърдете</string>
     <string name="recalculate">Преизчисляване</string>
     <!--    Widget-->
     <string name="use_black_color">Използвай черен цвят</string>
     <string name="widget_configuration">Конфигурация на уиджет</string>
+    <string name="until_changed">Единиците са променени</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Трябват права за достъп за няколко неща</string>
+    <string name="permission_sheet_subtitle">Някой права са нужни за да работя добре</string>
+    <string name="permission_grant">Позволи</string>
+    <string name="permission_change">Промяна</string>
+    <string name="permission_denied_go_to_settings">Забранено, Опитайте в настройките на Android.</string>
+    <string name="permission_open_settings">Настройки</string>
+    <string name="permission_directory_picker_error">Не мога да търся директории. Обикновено проблем в Android или Family Link.</string>
+    <string name="permission_nav_label">Разрешения</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Отместване на цикъла</string>
+    <string name="raw_tdd">Обща дневна доза</string>
+    <string name="cleaned_tdd">Чиста дневна доза</string>
+    <string name="cleaned_tdd_explanation">Дневна доза без инсулин за въглехидрати.</string>
+    <string name="cycle_lines_legend">Индивидуални цикли</string>
+    <string name="cycles_found">%1$d цикли (%2$d дни)</string>
+    <string name="cycle_day1_date">Ден 1 = %1$s</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>И двете</item>
         <item>Само положителни</item>
@@ -93,4 +193,6 @@
     </string-array>
     <!-- Toolbar configuration -->
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
 </resources>

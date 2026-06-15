@@ -1,5 +1,6 @@
 package app.aaps.database
 
+import android.os.StatFs
 import androidx.room.Transactor.SQLiteTransactionType
 import androidx.room.useWriterConnection
 import app.aaps.database.entities.APSResult
@@ -27,6 +28,7 @@ import app.aaps.database.transactions.Transaction
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -36,11 +38,23 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.Closeable
+import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
+
+/** Module-local carrier for [AppRepository.databaseMaintenanceInfo]; mapped to `DatabaseMaintenanceInfo`. */
+data class DatabaseMaintenanceRaw(
+    val dbSizeBytes: Long,
+    val availableBytes: Long,
+    val totalRows: Long,
+    val deletableRows: Long,
+    val changeRows: Long,
+    val report: String
+)
 
 @Singleton
 class AppRepository @Inject internal constructor(
@@ -95,19 +109,26 @@ class AppRepository @Inject internal constructor(
      * Emits to BOTH RxJava (existing) AND Flow (new)
      */
     suspend fun <T> runTransactionSuspend(transaction: Transaction<T>) {
-        val changes = mutableListOf<DBEntry>()
-        database.useWriterConnection { connection ->
-            connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
-                transaction.database = DelegatedAppDatabase(changes, database)
-                transaction.run()
+        // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
+        // caller (e.g. a WorkManager worker being stopped by Doze/standby/resource pressure) is
+        // cancelled in the window between the SQLite COMMIT and the emit below, the row would be
+        // durably persisted while observers (loop/overview/sync via observeChanges) never fire —
+        // a silently dropped reading with no loop run. NonCancellable closes that window.
+        withContext(NonCancellable) {
+            val changes = mutableListOf<DBEntry>()
+            database.useWriterConnection { connection ->
+                connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
+                    transaction.database = DelegatedAppDatabase(changes, database)
+                    transaction.run()
+                }
             }
-        }
-        // Emit to RxJava (existing) - for backwards compatibility
-        changeSubject.onNext(changes)
+            // Emit to RxJava (existing) - for backwards compatibility
+            changeSubject.onNext(changes)
 
-        // Emit to Flow (new)
-        if (changes.isNotEmpty()) {
-            _changeFlow.emit(changes)
+            // Emit to Flow (new)
+            if (changes.isNotEmpty()) {
+                _changeFlow.emit(changes)
+            }
         }
     }
 
@@ -116,23 +137,29 @@ class AppRepository @Inject internal constructor(
      * Uses Room's suspend withTransaction API for proper coroutine support
      * Emits to BOTH RxJava (existing) AND Flow (new)
      */
-    suspend fun <T : Any> runTransactionForResultSuspend(transaction: Transaction<T>): T {
-        val changes = mutableListOf<DBEntry>()
-        val result = database.useWriterConnection { connection ->
-            connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
-                transaction.database = DelegatedAppDatabase(changes, database)
-                transaction.run()
+    suspend fun <T : Any> runTransactionForResultSuspend(transaction: Transaction<T>): T =
+        // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
+        // caller (e.g. a WorkManager worker being stopped by Doze/standby/resource pressure) is
+        // cancelled in the window between the SQLite COMMIT and the emit below, the row would be
+        // durably persisted while observers (loop/overview/sync via observeChanges) never fire —
+        // a silently dropped reading with no loop run. NonCancellable closes that window.
+        withContext(NonCancellable) {
+            val changes = mutableListOf<DBEntry>()
+            val result = database.useWriterConnection { connection ->
+                connection.withTransaction(SQLiteTransactionType.IMMEDIATE) {
+                    transaction.database = DelegatedAppDatabase(changes, database)
+                    transaction.run()
+                }
             }
-        }
-        // Emit to RxJava (existing) - for backwards compatibility
-        changeSubject.onNext(changes)
+            // Emit to RxJava (existing) - for backwards compatibility
+            changeSubject.onNext(changes)
 
-        // Emit to Flow (new)
-        if (changes.isNotEmpty()) {
-            _changeFlow.emit(changes)
+            // Emit to Flow (new)
+            if (changes.isNotEmpty()) {
+                _changeFlow.emit(changes)
+            }
+            result
         }
-        return result
-    }
 
     fun clearDatabases() {
         database.clearAllTables()
@@ -215,6 +242,56 @@ class AppRepository @Inject internal constructor(
         database.useWriterConnection { connection ->
             connection.usePrepared("PRAGMA wal_checkpoint(TRUNCATE)") { it.step() }
             connection.usePrepared("VACUUM") { it.step() }
+        }
+    }
+
+    /**
+     * Read-only diagnostics gathered before a startup VACUUM (sizes, free space, aggregate row
+     * counts and a human-readable per-table report). Tables are discovered from `sqlite_master`, and
+     * every count is independent and failure-tolerant (missing column → -1), so a schema quirk can
+     * never break logging. Returned as a module-local type because `database:impl` does not depend on
+     * `core:interfaces`; [app.aaps.database.persistence] maps it to `DatabaseMaintenanceInfo`.
+     */
+    suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceRaw {
+        val cutoff = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(retentionDays)
+        return database.useWriterConnection { connection ->
+            suspend fun count(sql: String): Long =
+                try {
+                    connection.usePrepared(sql) { if (it.step()) it.getLong(0) else 0L }
+                } catch (_: Throwable) {
+                    -1L
+                }
+
+            // Driver mode has no openHelper.path, so resolve the file from PRAGMA database_list.
+            var path = ""
+            connection.usePrepared("PRAGMA database_list") { stmt ->
+                while (stmt.step()) if (stmt.getText(1) == "main") path = stmt.getText(2)
+            }
+            val dbFile = File(path)
+            val dbSize = dbFile.length() + File("$path-wal").length() + File("$path-shm").length()
+            val available = dbFile.parent?.let { runCatching { StatFs(it).availableBytes }.getOrDefault(-1L) } ?: -1L
+
+            val tables = mutableListOf<String>()
+            connection.usePrepared(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'room_%' AND name != 'android_metadata' ORDER BY name"
+            ) { stmt -> while (stmt.step()) tables.add(stmt.getText(0)) }
+
+            val sb = StringBuilder()
+            sb.append("file=${dbFile.name} size=${dbSize / 1024}KB free=${if (available < 0) "?" else "${available / 1_048_576}MB"} tables=${tables.size}\n")
+            var totRows = 0L
+            var totOld = 0L
+            var totChanges = 0L
+            for (t in tables) {
+                val all = count("SELECT COUNT(*) FROM `$t`")
+                val old = count("SELECT COUNT(*) FROM `$t` WHERE timestamp < $cutoff")
+                val changes = count("SELECT COUNT(*) FROM `$t` WHERE referenceId IS NOT NULL")
+                if (all > 0) totRows += all
+                if (old > 0) totOld += old
+                if (changes > 0) totChanges += changes
+                sb.append("  $t total=$all old=$old changes=$changes\n")
+            }
+            sb.append("TOTAL rows=$totRows deletable(>${retentionDays}d)=$totOld changes=$totChanges")
+            DatabaseMaintenanceRaw(dbSize, available, totRows, totOld, totChanges, sb.toString())
         }
     }
 
