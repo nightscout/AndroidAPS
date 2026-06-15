@@ -99,23 +99,27 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         } else {
             showWaiting()
         }
+    }
 
-        // Mirrors iOS PlacementGuideViewModel.init: enable diagnostic mode on open
-        // so the transmitter increases its signal-strength broadcast frequency.
+    override fun onResume() {
+        super.onResume()
         ioScope.launch {
             delay(500)
-            eversense.setDiagnosticMode(true)
+            eversense.enterPositioningMode()
             startPolling()
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        stopPolling()
+        CoroutineScope(Dispatchers.IO).launch { eversense.exitPositioningMode() }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        stopPolling()
-        eversense.removeWatcher(this)
-        // Mirrors iOS PlacementGuideViewModel.stop(): disable diagnostic mode on close
-        ioScope.launch { eversense.setDiagnosticMode(false) }
         ioScope.cancel()
+        eversense.removeWatcher(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
