@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
     <!--  start  -->
+    <string name="equil_basal_speed">Базова базална стойност</string>
+    <string name="equil_mode">Текущ режим</string>
+    <string name="equil_title_assemble">Сглоби помпа</string>
+    <string name="equil_title_serial">Сдвояване на устройство</string>
+    <string name="equil_title_fill">Пълнене/Допълване</string>
+    <string name="equil_title_attach">Закачи помпа</string>
+    <string name="equil_title_air">Напълни канула</string>
+    <string name="equil_title_unpair_detach">Разкачи помпа</string>
+    <string name="equil_unbind_content">Това ще спре доставката на инсуин и ше откачи помпата! Също ще нулира статуса на свързване!</string>
+    <string name="equil_record_basal_temp">Временен базал %1$s Е/Ч</string>
+    <string name="equil_pump_not_run">Няма връзка с помпата</string>
+    <string name="equil_fill">Пълнене/Допълване</string>
+    <string name="equil_air">Изкарай въздух</string>
+    <string name="equil_total_delivered">Общо доставени</string>
+    <string name="equil_shutdown_be">Equil ще бъде автоматично изключен</string>
+    <string name="equil_shutdown">Equil автоматично изключване</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Стартирай болус</string>
+    <string name="equil_common_cmd_cancel_bolus">Откажи болус</string>
+    <string name="equil_common_cmd_set_tbr">Приложи временен базал</string>
+    <string name="equil_common_cmd_cancel_tbr">Откажи временен базал</string>
+    <string name="equil_common_cmd_set_basal_schedule">Задаване на график за базал</string>
+    <string name="equil_common_cmd_set_time">Задаване на време</string>
+    <string name="equil_common_cmd_suspend_delivery">Спиране на доставката на инсулин</string>
+    <string name="equil_common_cmd_resume_delivery">Възобновяване доставянето на инсулин</string>
+    <string name="equil_common_cmd_pair">Сдвояване на устройство</string>
+    <string name="equil_common_cmd_insert_cannula">Вмъкване на канюла</string>
+    <string name="equil_common_cmd_unpair">Раздвояване с Equil</string>
     <!--    推杆回退-->
+    <plurals name="equil_common_hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
+    <plurals name="equil_common_days">
+        <item quantity="one">%1$d дeн</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <string name="equil_support_error">Версията на фърмуера е твърде ниска и не се поддържа</string>
+    <string name="equil_password_tips">Парола за връзка с  Equil v5.3 помпа. Tя ще се използва и за разкачане, ЗАПОМНЕТЕ Я. Праволото е: 4 символа, между ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">Парола</string>
+    <string name="equil_hint1">След закачането на помпата към базата, трябва ли да се изкара въздуха от иглата</string>
+    <string name="equil_unbind">Разкачане на устройство</string>
+    <string name="equil_device_unpaired">Устройството е разкачено</string>
+    <string name="equil_assemble">Моля сглобете устройството, пълния резервоар и заредена батерия</string>
+    <string name="equil_devices_number">Ново ID на помпа</string>
+    <string name="equil_pair_password_title">Парола за %1$s</string>
+    <string name="equil_insert">Пуснете прайм на помпата докато малка капка инсулин не се появи на върха на иглата</string>
+    <string name="equil_insert2">The pump must not be on the pump base.</string>
+    <string name="equil_attach">Please attach the pump to the base</string>
+    <string name="equil_hint2">Prime cannula</string>
+    <string name="equil_pump_updated">Pump updated</string>
+    <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
+    <string name="error_mustbe6hexadidits">Паролата трябва да е 6 символа между ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Unpair command failed. Pump will be removed anyway. Password set during pairing is not removed from the pump.</string>
 </resources>
