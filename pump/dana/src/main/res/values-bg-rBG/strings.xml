@@ -106,6 +106,10 @@
     <string name="basal_bolus_step">Базал/Болус стъпка</string>
     <string name="connecting_to_pump">Свързване с помпата…</string>
     <string name="pairing_successful">Успешно свързване!</string>
+    <string name="pairing_successful_message">Помпата е свързана и готова за употреба.</string>
+    <string name="cancel_pairing_title">Спри свързване?</string>
+    <string name="cancel_pairing_message">Процесът ще бъде спрян.</string>
+    <string name="done">Готово</string>
     <string name="open_bluetooth_settings">Отваряне на Bluetooth настройки</string>
     <string name="enter_pump_password">Парола за помпата</string>
     <string name="select_paired_device">Изберете Свързано устройство</string>
