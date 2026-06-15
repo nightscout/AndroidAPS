@@ -83,6 +83,7 @@
     <string name="needle_insertion_error_3">Натиснете „Отхвърляне“, за да деактивирате Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Време за спиране на базала</string>
     <string name="string_resume_insulin_delivery_title">Възобновяване доставянето на инсулин</string>
+    <string name="string_resume_insulin_delivery_message">Край на спирането на инсулин.\nНатиснете \'Потвърди\' за да го продължите.\n\nСпирането няма да прължи докато не натиснете \'Потвърди\'.\nАко не го направите може да изпаднете в хипергликемия.</string>
     <string name="string_suspended_insulin_delivery_message">Доставянето на инсулин е спряно.</string>
     <string name="string_resumed_insulin_delivery_message">Доставянето на инсулин е възобновено.</string>
     <string name="string_temp_basal_remained_hhmm">оставащо време: %1$s:%2$s</string>
