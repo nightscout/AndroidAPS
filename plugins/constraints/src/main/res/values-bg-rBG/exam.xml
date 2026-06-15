@@ -140,34 +140,41 @@
     <string name="breadgrams_exchange">Консумираните въглехидрати могат да бъдат записани с помощта на подходяща система за обмен (напр. DAFNE „CHO“ обмени или европейски „хлебни единици“).</string>
     <string name="breadgrams_decay">AAPS използва динамичен модел за оценка на усвояването на въглехидрати и изчисляване на COB.</string>
     <string name="breadgrams_calc">Ако нивата на кръвната захар са извън допустимите стойности (твърде ниски или твърде високи), болус калкулаторът може да се използва за предоставяне на предложения за корекции с въглехидрати или инсулин.</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint2">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-carbs(бавноусвоими/удължени въглехидрати)</string>
     <string name="extendedcarbs_handling">За какво можете да използвате e-carbs (бавноусвоими/удължени въглехидрати)?</string>
     <string name="extendedcarbs_future">За да планирате въглехидрати в бъдеще, евентуално разпределени в интервал (подобно на удължен болус, разпределящ инсулин в интервал).</string>
     <string name="extendedcarbs_free">За регистриране на „свободни“ въглехидрати от упражнения, които искате да скриете от AAPS.</string>
     <string name="extendedcarbs_fat">(Въвеждането на) Бавноусвоимите въглехидрати (доставени в бъдеще) може да помогнат на APPS при справянето с храни с високо съдържание на мазнини/протеини.</string>
     <string name="extendedcarbs_rescue">За записване на бързи въглехидрати, които използвате за лечение на ниска кръвна захар.</string>
+    <string name="extendedcarbs_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ExtendedCarbs.html</string>
     <string name="nsclient_label">Дистанционно наблюдение</string>
     <string name="nsclient_howcanyou">Как можете да наблюдавате APPS (например за вашето дете) от разстояние?</string>
     <string name="nsclient_nightscout">Приложението AAPSClient, приложението Nightscout и уеб страницата Nightscout ви позволяват да следвате AAPS дистанционно.</string>
     <string name="nsclient_dexcomfollow">Други приложения (напр. Dexcom follow, xDrip, работещ в режим на Follower) ви позволяват да следвате някои параметри (напр. кръвна глюкоза/стойности на сензора) дистанционно, но използват различни алгоритми, така че може да имат неточни IOB или COB стойности.</string>
     <string name="nsclient_data">За да следвате дистанционно AAPS, и двете устройства трябва да имат достъп до интернет (напр. чрез Wi-Fi или мобилна/клетъчна мрежа за данни).</string>
     <string name="nsclient_fullcontrol">AAPSClient, използван като отдалечен последовател, ще наблюдава и осигурява пълен контрол на AAPS.</string>
+    <string name="nsclient_hint1">https://wiki.aaps.app/en/latest/RemoteFeatures/RemoteMonitoring.html</string>
     <string name="isf_label_exam">Фактор на инсулинова чувствителност (ISF)</string>
     <string name="isf_increasingvalue">Повишаването на стойностите на ISF ще доведе до доставяне на повече инсулин, за покриване на определено количество въглехидрати.</string>
     <string name="isf_decreasingvalue">Намаляване стойностите на ISF ще доведе до доставяне на повече инсулин, за да се коригира надцелевата кръвна глюкоза.</string>
     <string name="isf_noeffect">Повишаването или понижаването на ISF не влияе на доставянето на инсулин, когато нивата на кръвната захар са под целта.</string>
     <string name="isf_preferences">ISF трябва да бъде въведен във вашите AAPS настройки.</string>
+    <string name="isf_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="ic_multiple">Можете да използвате повече от една стойност за съотношението I:C във вашия профил.</string>
     <string name="ic_isf">Ако промените своя ISF във вашия профил, винаги трябва да промените и съотношението си I:C.</string>
     <string name="ic_label_exam">Съотношение на инсулин към въглехидрати (I:C)</string>
     <string name="ic_increasingvalue">По-високите стойности на I:C водят до по-малко инсулин доставени за дадено количество въглехидрати.</string>
     <string name="ic_decreasingvalue">По-ниските стойности на I:C водят до по-малко инсулин, доставен за дадено количество въглехидрати.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="profileswitch_label">Смяна на профил</string>
     <string name="profileswitch_pctwillchange">При превключване на 90% профил, кои отговори са верни?</string>
     <string name="profileswitch_basallower">Базалните нива ще бъдат с 10% по-ниски.</string>
     <string name="profileswitch_isfhigher">ISF ще бъде с 10% по-висок.</string>
     <string name="profileswitch_iclower">Стойността на съотношението I:C ще бъде с 10% по-ниска.</string>
     <string name="profileswitch_unchanged">ISF и I:C ще останат непроменени.</string>
+    <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="profileswitch2_label">Смяна на профил</string>
     <string name="profileswitch2_pctwillchange">При превключване на 120% профил, кои отговори са верни?</string>
     <string name="profileswitch2_bghigher">Целевата кръвна захар ще бъде с 20% по-висока.</string>
@@ -180,6 +187,7 @@
     <string name="profileswitchtime__2">Започнете Промяна на профила с отместване във времето -2</string>
     <string name="profileswitchtime_tt">Задайте временна цел за скорошно хранене.</string>
     <string name="profileswitchtime_100">Превключете профила на повече от 100%.</string>
+    <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="profileswitch4_label">Промени на профилите</string>
     <string name="profileswitch4_rates">Базалните нива, ISF, съотношенията I:C и т.н., трябва да бъдат зададени в профилите.</string>
     <string name="profileswitch4_internet">Активирането на промени във вашия Nightscout профил изисква вашият AAPS телефон да има интернет връзка.</string>
@@ -188,4 +196,16 @@
     <string name="other_medication_label">Други лекарства. Моля, прочетете изявлението по-долу и поставете отметка в квадратчето, за да приемете декларацията.</string>
     <string name="other_medication_text">AAPS намалява базалните нива или спира доставянето на инсулин, за да повиши кръвната захар. Лекарствата от класа инхибитори на SGLT2 (глифлозини) могат да предотвратят повишаването на кръвната глюкоза и по този начин да предизвикат опасен инсулинов дефицит, водещ до DKA(Diabetic ketoacidosis).
 \nЧесто срещаните марки са: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nС настоящото обещавам, че няма да приемам такива лекарства, когато използвам AAPS или ще деактивирам цикъла, преди да използвам такива лекарства.</string>
+    <string name="concentration_feature_label">Управление на различни инсулинови концентрации</string>
+    <string name="u200_with_profile">Преди AAPS да поддърца инсулинова концентрация, потребителите пускаха U200 чрез пускане на профила на 50% за да намалят стойностите на две. В този случай кои стойности са правилни?</string>
+    <string name="u200_with_profile_reports">Вътрешната база данни на AAPS и NS статистиките бяха грешни (болуси, базали, ОДД) и трябваше да ги умножавате по 2 за доктрори и медицинския екип.</string>
+    <string name="u200_with_profile_pens">Не трябва да пресмятам конверсията между AAPS и пусалката ако използвам U200 такава за външен болус.</string>
+    <string name="u200_with_profile_pens2">Каквато и писалка да ползвах за външен болус (U100 или U200), Трябваше да пресмятам стойностите между този в AAPS и писалката за всеки болус с писалка</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Ако използвате профил на 50% с U200 инсулин и искате да превключите на новата Функция за инсулинвова концентрация. Кои отговори са правилни?</string>
+    <string name="switch_u200_profile_any_time">Мога да превключа по всяко време, защото вече имам U200 инсулин в помпата.</string>
+    <string name="switch_u200_profile_ps">Трябва да приготвя двойно по агресивен профил (200% спрямо сегашния) и да го синхронизирам него при смяна на резервоара/пача като избера инсулин с концентрация U200.</string>
+    <string name="switch_u200_profile_dynisf">Трябва да изключа DynISF за поне седмица. За да направя статистиките за ОДД правилни за изчисление.</string>
+    <string name="switch_u200_profile_mental">Сляд промяната трябва да съм много внимателен, за да свикне мозъкът ми да мисли в новите единици за болуси. базали и ОДД.</string>
+    <string name="switch_u100_u200">Ако използвате U100 инсулин и превключвате към друга чрез функцията за Инсулинова Концентрация. Какво трябва да направя?</string>
 </resources>
