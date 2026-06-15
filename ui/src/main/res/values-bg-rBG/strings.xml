@@ -110,7 +110,42 @@
     <string name="healing_icon_label">Излекуване</string>
     <string name="meal_icon_label">Ресторант</string>
     <string name="cafe_icon_label">Кафе</string>
+    <string name="lunch_icon_label">Обяд</string>
+    <string name="bakery_icon_label">Печива</string>
+    <string name="sleep_icon_label">Сън</string>
+    <string name="night_icon_label">Вечерна</string>
+    <string name="nights_stay_icon_label">Нощна</string>
+    <string name="hotel_icon_label">Хотел</string>
+    <string name="seat_flat_icon_label">Почивка</string>
+    <string name="work_icon_label">Работа</string>
+    <string name="school_icon_label">Училище</string>
+    <string name="home_icon_label">Вкъщи</string>
+    <string name="car_icon_label">Шофиране</string>
+    <string name="flight_icon_label">Полет</string>
+    <string name="shopping_icon_label">Шопинг</string>
+    <string name="relax_icon_label">Медитация</string>
+    <string name="spa_icon_label">Спа</string>
+    <string name="heart_icon_label">Сърце</string>
+    <string name="psychology_icon_label">Мозък</string>
+    <string name="star_icon_label">Звезда</string>
+    <string name="speed_icon_label">Скорост</string>
+    <string name="alarm_icon_label">Аларма</string>
+    <string name="event_icon_label">Събитие</string>
+    <string name="flag_icon_label">Флаг</string>
+    <string name="bookmark_icon_label">Отметка</string>
+    <string name="label_icon_label">Етикет</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Липсва име на инсулин</string>
+    <string name="insulin_name_exists">Инсулин %1$s вече го има, сложете ново име</string>
+    <string name="a11y_add_new_insulin">Добавяне на нов инсулин</string>
+    <string name="a11y_delete_current_insulin">Изтриване на текущия инсулин</string>
+    <string name="activate_insulin_no_profile">Няма активен профили</string>
+    <string name="activate_insulin_new_insulin">Нов инсулин: %1$s</string>
+    <string name="activate_insulin_remaining">Остават: %1$d мин</string>
+    <string name="activate_insulin_profile_switch">Смяна на профил ще бъде създадена:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Избери пик от</string>
+    <string name="cannot_delete_last_insulin">Не мога да изтрия последния инсулин</string>
+    <string name="cannot_delete_active_insulin">Не мога да изтрия текущия инсулин</string>
     <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
     <string name="timeshift_label">Време на отместване</string>
     <string name="percentage_label">% от профила</string>
@@ -135,6 +170,9 @@
     <string name="duration10h">10 часа</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Нужни %1$d гр</string>
+    <string name="wizard_carbs_type_bread_desc">100% въглехидрати веднага, без удължени въглехидрати</string>
+    <string name="wizard_carbs_type_desc">Въглехидрати намалени с %1$d%%, удължени %2$d%% след %3$dмин с продължителност %4$dч</string>
+    <string name="wizard_include_info">Натиснетете за да включите/изключите от изчисленията:\n• КЗ — кръвна захар (ВКЛ в началото)\n• TT — временна цел (ВКЛ в началото)\n• Посока — промяната в КЗ (запазен последен избор)\n• IOB — действащ инсулии (ВКЛ в началото)\n• COB — въглехидрати (запазане последен избор)</string>
     <!-- Treatments -->
     <string name="no_records_available">Няма налични записи</string>
     <string name="treatments_iob_label_string">IOB:</string>
