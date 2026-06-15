@@ -112,7 +112,6 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
                 .setTitle(getString(R.string.eversense_scan_title))
                 .setMessage("Disconnect from transmitter?")
                 .setPositiveButton("Disconnect") { _, _ ->
-                    eversense.clearStoredDevice()
                     eversense.disconnect()
                     mainHandler.postDelayed({ updateStatus() }, 500)
                 }
