@@ -258,7 +258,14 @@
     <string name="loop_status_superbolus">Суперболус</string>
     <string name="loop_status_unknown">Неизвестно</string>
     <string name="loop_status_result">Резултат</string>
+    <string name="loop_status_last_run_enact">Последно изчислено &amp; стартирано</string>
+    <string name="loop_status_last_run">Последно изпълнение</string>
+    <string name="loop_status_last_enact">Последно зададено</string>
     <string name="loop_status_smb_text">SMB</string>
+    <string name="loop_status_basal_rate">Стойност</string>
+    <string name="loop_status_duration">Продължителност</string>
+    <string name="loop_status_oaps_reason">OpenAPS причина</string>
+    <string name="loop_status_targets">Цели</string>
     <string name="loop_status_temp_target">Временна цел</string>
     <string name="loop_status_target_range">Диапазон</string>
     <string name="loop_status_target">Целeва КЗ</string>
