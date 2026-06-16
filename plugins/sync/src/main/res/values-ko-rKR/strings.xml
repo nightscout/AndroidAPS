@@ -10,13 +10,10 @@
     <string name="unsupported_ns_version">지원하지 않는 Nightscout 버전입니다</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT이 쓰기 권한이 없습니다. 잘못된 API secret인지 확인해보세요</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">즉시전송</string>
     <string name="queue">대기열:</string>
     <string name="status">상태:</string>
@@ -51,8 +48,6 @@
     <string name="no_watch_connected">(열결된 워치가 없습니다)</string>
     <string name="pump_status">펌프 상태</string>
     <string name="loop_status">Loop 상태</string>
-    <string name="quick_wizard_not_available">선택한 빠른 마법사를 더 이상 사용할 수 없습니다, 타일을 새로고침 하십시오</string>
-    <string name="quick_wizard_message">빠른 마법사: %1$s\n인슐린: %2$.2fU\n탄수화물: %3$dg</string>
     <string name="wear_action_tempt_unit_error">워치와 폰과 다른 단위입니다!</string>
     <string name="wear_action_tempt_min_bg_error">최소-BG 범위가 넘었습니다!</string>
     <string name="wear_action_tempt_max_bg_error">최대-BG 범위가 넘었습니다!</string>
