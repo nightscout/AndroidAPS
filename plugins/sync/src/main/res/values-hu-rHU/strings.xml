@@ -5,13 +5,10 @@
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="unsupported_ns_version">Nem támogatott Nightscout verzió</string>
     <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="status">Állapot:</string>
     <string name="clear_log">Napló törlése</string>
     <!-- Tidepool -->
