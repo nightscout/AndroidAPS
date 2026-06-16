@@ -135,6 +135,8 @@
     <string name="pref_title_ns_slow_sync">Use slow sync</string>
     <string name="pref_title_ns_use_ws">Use websockets</string>
     <string name="pref_summary_ns_use_ws">Use websockets for real-time communication with Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">Allow client control</string>
+    <string name="pref_summary_ns_allow_client_control">Let paired client devices send signed commands (e.g. start/stop scenes) over Nightscout.</string>
 
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">WiFi only</string>
@@ -160,10 +162,6 @@
     <string name="pref_summary_wear_notify_on_smb">Send notifications to watch when SMB is delivered.</string>
     <string name="pref_title_wear_broadcast_data">Broadcast data to watch</string>
     <string name="pref_summary_wear_broadcast_data">Broadcast AAPS data to 3rd party watch apps via intent.</string>
-
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Show wizard calculation</string>
-    <string name="pref_title_wizard_correction_percent">Use correction percent</string>
 
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Manage pump site rotation</string>
