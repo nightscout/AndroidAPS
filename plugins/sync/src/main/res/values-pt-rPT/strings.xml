@@ -7,13 +7,10 @@
     <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Administrar agora</string>
     <string name="queue">Fila de espera:</string>
     <string name="status">Estado:</string>
@@ -39,8 +36,6 @@
     <string name="no_watch_connected">(Nenhum relógio Conectado)</string>
     <string name="pump_status">Estado da Bomba</string>
     <string name="loop_status">Estado do loop</string>
-    <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
-    <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulina: %2$.2fU\nHidratos: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
     <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
     <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
