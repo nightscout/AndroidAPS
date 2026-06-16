@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">Tasa basal temporal %1$s U/H</string>
     <string name="equil_record_bolus">Bolo %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">La duración de la TBR debe ser mayor que cero y múltiplo de %1$s minutos.</string>
+    <string name="equil_basal_exceeds_max">La tasa basal del perfil %1s U/h supera el máximo basal de la bomba %2s U/h. Aumenta el ajuste del máximo basal y vuelve a conectar la bomba</string>
     <string name="equil_not_enough_insulin">No queda suficiente insulina en el reservorio</string>
     <string name="equil_low_battery">Batería baja</string>
     <string name="equil_low_insulin">No queda suficiente insulina en el reservorio</string>
