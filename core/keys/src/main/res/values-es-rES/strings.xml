@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Enviar notificaciones al reloj cuando se administra un SMB</string>
     <string name="pref_title_wear_broadcast_data">Transmitir datos al reloj</string>
     <string name="pref_summary_wear_broadcast_data">Transmitir datos de AAPS a aplicaciones de reloj de terceros mediante \"intent\"</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Mostrar cálculo del asistente</string>
-    <string name="pref_title_wizard_correction_percent">Usar porcentaje de corrección</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Gestionar la rotación del lugar de inserción de la bomba</string>
     <string name="pref_title_site_rotation_manage_cgm">Gestionar la rotación del sitio del MCG</string>
