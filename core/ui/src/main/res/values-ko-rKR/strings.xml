@@ -193,6 +193,8 @@
     <string name="careportal_openapsoffline">OpenAPS 오프라인</string>
     <string name="pump_battery_change">펌프 배터리 교체</string>
     <string name="temporary_target">임시 목표</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">임시 목표 수치</string>
     <string name="careportal_temporarytargetcancel">임시 목표 취소</string>
     <string name="boluswizard">Bolus 마법사</string>
@@ -371,17 +373,7 @@
     <string name="wizard_no_active_profile">활성화된 프로파일 설정이 없습니다!</string>
     <string name="wizard_no_cob">알 수 없는 COB입니다! BG 판독이 누락되었거나, 최근 앱을 다시 시작하였습니까?</string>
     <string name="wizard_carbs_constraint">탄수화물 제한 위반!</string>
-    <string name="wizard_explain_calc">계산 (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">탄수화물: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">15\' 트렌드: %1$.2fU</string>
-    <string name="wizard_explain_percent">퍼센트: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">인슐린 제약 위반!\n %1$.2fU을 전달할 수 없습니다</string>
-    <string name="wizard_explain_tt">임시T: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s 에서 %2$s</string>
     <string name="wizard_pump_not_available">이용가능한 펌프가 없습니다!</string>
     <!--    Preferences-->
     <string name="child">어린이</string>
