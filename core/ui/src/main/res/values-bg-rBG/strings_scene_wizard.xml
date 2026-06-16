@@ -67,6 +67,16 @@
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Следващ сценарий</string>
     <string name="scene_wizard_chain_info">Допълнителен сценарий, който да се активира автоматично когато този изтече. Може да го включи автоматично ако прекратите този предсрочно. Следващия ще тръгне само ако целта е валидна и помпата е достъпна. Ако не - ще бъдете уведомени с нотификация.</string>
+    <string name="scene_chain_none">Няма</string>
+    <string name="scene_skip_to_format">Прескочи до %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Последващ сценарий е бил изтрит</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Сценарий \"%1$s\" приключи</string>
+    <string name="scene_chained_format">Следващ сценарий: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s приключи — следващ е прескочен: %2$s</string>
+    <string name="scene_chain_skipped_deleted">посоченият сценарий е изтрит</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" е изключен</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d от %4$d действия са неуспешни</string>
 </resources>
