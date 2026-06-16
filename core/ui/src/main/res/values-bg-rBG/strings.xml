@@ -373,6 +373,8 @@
     <string name="scene_no_profile_store">Няма профили</string>
     <string name="scene_no_actions">Сценарият няма действия</string>
     <string name="scene_profile_not_found">Профил \"%1$s\" не е намерен</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="scene_revert_tt">Изключи временна цел</string>
     <string name="scene_revert_profile">Върни промяната на профил</string>
     <string name="scene_revert_smb_on">Пусни SMB</string>
@@ -707,18 +709,8 @@
     <string name="wizard_no_active_profile">Не е настроен активен профил!</string>
     <string name="wizard_no_cob">Няма информация за активни въглехидрати! Липсваща информация за кръвна захар или рестартиране на приложението?</string>
     <string name="wizard_carbs_constraint">Нарушение на въхлехидратните ограничения!</string>
-    <string name="wizard_explain_calc">Изчисляване (въглехидратно число: %1$.1f, инсулинова чувствителност: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Въглехидрати: %1$.2fЕ</string>
-    <string name="wizard_explain_cob">Активни въглехидрати: %1$.0fгр %2$.2fЕ</string>
-    <string name="wizard_explain_bg">КЗ: %1$.2fЕ</string>
-    <string name="wizard_explain_iob">Остатъчен инсулин: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Суперболус: %1$.2fЕ</string>
-    <string name="wizard_explain_trend">15\' тенденция: %1$.2fЕ</string>
     <string name="wizard_trend_detail">15мин промяна (%1$s %2$s)</string>
-    <string name="wizard_explain_percent">Проценти: %1$.2fЕ x %2$d%% ≈ %3$.2fЕ</string>
     <string name="wizard_constraint_bolus_size">Нарушение в ограничението на инсулин!\nНе може да бъде доставен %1$.2fЕ</string>
-    <string name="wizard_explain_tt">Временна цел: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s към %2$s</string>
     <string name="wizard_pump_not_available">Помпата не е налична!</string>
     <string name="quickwizard_managemnt">Бърз съветник</string>
     <!--    Preferences-->
