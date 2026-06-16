@@ -10,13 +10,10 @@
     <string name="unsupported_ns_version">Nicht unterstützte Nightscout-Version</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">Nightscout-Client hat keine Schreibrechte. Falscher API-Key?</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Jetzt abgeben</string>
     <string name="queue">Warteschlange:</string>
     <string name="status">Status:</string>
@@ -52,8 +49,6 @@
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
     <string name="pump_status">Status der Pumpe</string>
     <string name="loop_status">Loop Status</string>
-    <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
-    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG ist außerhalb des Bereichs!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG ist außerhalb des Bereichs!</string>
