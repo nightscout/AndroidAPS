@@ -63,6 +63,7 @@
     <string name="loop_smb_request_time_label">Време за заявка на SMB</string>
     <string name="loop_smb_execution_time_label">Време за изпълнение на SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB в помпата</string>
+    <string name="fallback_smb_no_tdd">Връщане към SMB. Недостатъчни данни за ОДД.</string>
     <string name="fallback_to_isf_no_tdd">Обратно към чувствителността в профила. Няма достатъчно данни. Причина: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Помага с потенциална настройка на профила (ISF, въглехидратно число и базали)</string>
@@ -93,6 +94,7 @@
     <string name="autotune_update_local_profile_message">Да се обнови ли %1$s профил с Autotune профил?</string>
     <string name="autotune_revert_local_profile_message">Сменете профил %1$s с началния профил?</string>
     <string name="autotune_profile_invalid">Невалиден профил</string>
+    <string name="pump_disconnected">Помпата е разкачена</string>
     <!--    autoISF -->
     <string name="autoISF_settings_title">AutoISF настройки</string>
     <string name="smb_delivery_settings_title">Настройки за SMB</string>
