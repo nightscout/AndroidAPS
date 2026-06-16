@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Gửi thông báo đến đồng hồ khi SMB được thực hiện.</string>
     <string name="pref_title_wear_broadcast_data">Gửi dữ liệu tới đồng hồ</string>
     <string name="pref_summary_wear_broadcast_data">Phát dữ liệu AAPS tới ứng dụng đồng hồ bên thứ ba qua intent.</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Hiển thị trình hướng dẫn tính toán</string>
-    <string name="pref_title_wizard_correction_percent">Sử dụng phần trăm hiệu chỉnh</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Quản lý luân chuyển vị trí bơm</string>
     <string name="pref_title_site_rotation_manage_cgm">Quản lý luân chuyển vị trí CGM</string>
