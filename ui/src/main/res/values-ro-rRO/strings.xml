@@ -137,6 +137,10 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Lipsă nume insulină</string>
     <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
     <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
     <string name="activate_insulin_no_profile">Niciun profil activ găsit</string>
