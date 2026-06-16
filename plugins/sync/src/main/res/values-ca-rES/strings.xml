@@ -7,13 +7,10 @@
     <string name="unsupported_ns_version">Versió no compatible de Nightscout</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">L\'NSCLIENT no te permisos d\'escriptura. Secret d\'API incorrecte?</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Lliurar ara</string>
     <string name="queue">Cua:</string>
     <string name="status">Estat:</string>
