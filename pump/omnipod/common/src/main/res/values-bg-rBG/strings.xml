@@ -132,10 +132,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Прочети Pulse log</string>
     <string name="omnipod_common_cmd_suspend_delivery">Спиране на доставката на инсулин</string>
     <string name="omnipod_common_cmd_resume_delivery">Подновяване на доставката</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Отмяна на временен базал (от потребител)</string>
     <string name="omnipod_common_cmd_get_pod_info">Получи информация за Pod</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Приложи фалпиво спиране на Вече базал</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Изключване на фалпив Временен базал</string>
+    <string name="omnipod_common_cmd_split_tbr">Разделяне на временен базал</string>
     <string name="omnipod_common_cmd_play_test_beep">Възпроизвеждане на тестов звук</string>
     <string name="omnipod_common_cmd_unknown_entry">Непознат запис</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Изключване на аларми за разкачане</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Край на напомняне за сдвояване</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Край на напомнянето за настройка</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Преди малко</string>
