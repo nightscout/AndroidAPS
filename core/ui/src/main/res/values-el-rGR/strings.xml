@@ -190,6 +190,8 @@
     <string name="careportal_openapsoffline">OpenAPS εκτός σύνδεσης</string>
     <string name="pump_battery_change">Αλλαγή Μπαταρίας Αντλίας</string>
     <string name="temporary_target">Προσωρινός στόχος</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Τιμή Προσωρινού στόχου</string>
     <string name="careportal_temporarytargetcancel">Ακύρωση προσωρινού στόχου</string>
     <string name="boluswizard">Οδηγός Bolus</string>
@@ -367,17 +369,7 @@
     <string name="wizard_no_active_profile">Δεν ορίστηκε ενεργό προφίλ!</string>
     <string name="wizard_no_cob">Άγνωστο COB! Λείπει Η ανάγνωση γλυκόζης αίματος ή έγινε πρόσφατα επανεκκίνηση της εφαρμογής;</string>
     <string name="wizard_carbs_constraint">Παραβίαση περιορισμού υδατανθράκων!</string>
-    <string name="wizard_explain_calc">Υπολογισμός (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Υδατάνθρακες: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">Τάση 15\': %1$.2fU</string>
-    <string name="wizard_explain_percent">Ποσοστό: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Παραβίαση περιορισμού ινσουλίνης!\nΔεν μπορούν να χορηγηθούν %1$.2fU</string>
-    <string name="wizard_explain_tt">Προσωρινός Στόχος: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s σε %2$s</string>
     <string name="wizard_pump_not_available">Δεν υπάρχει διαθέσιμη αντλία!</string>
     <!--    Preferences-->
     <string name="child">Παιδί</string>
