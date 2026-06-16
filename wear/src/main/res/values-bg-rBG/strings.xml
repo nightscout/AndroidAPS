@@ -32,6 +32,7 @@
     <string name="pref_show_ago">Преди</string>
     <string name="pref_dark" comment="Enables dark visual theme">Тъмна</string>
     <string name="pref_highlight_basals">Маркирай базали</string>
+    <string name="pref_prediction_lines">Покажи прогнози</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Подходящ разделител</string>
     <string name="pref_chart_timeframe">Часови разделители</string>
     <string name="pref_1_hour">1 час</string>
@@ -163,6 +164,7 @@
     <string name="simple_ui_charging">По време на зареждане</string>
     <string name="simple_ui_always_on">Режим Постоянно включен</string>
     <string name="simple_ui_always_on_charging">Винаги включен по време на зареждане</string>
+    <string name="temp_target_eating_soon">Хранене</string>
     <string name="temp_target_hypo">Хипоглекимия</string>
     <string name="temp_target_activity">Физ.активност</string>
     <string name="temp_target_manual">Друго</string>
@@ -190,9 +192,21 @@
     <string name="pref_heartRateSampling">Сърдечен ритъм</string>
     <string name="pref_heartRateSmoothing">Изглаждане</string>
     <string name="pref_stepsSampling">Показвай стъпки</string>
+    <string name="tile_tempt_1">Временна цел 1</string>
+    <string name="tile_tempt_2">Временна цел 2</string>
+    <string name="tile_tempt_3">Временна цел 3</string>
+    <string name="tile_tempt_4">Временна цел 4</string>
+    <string name="tile_action_1">Действие 1</string>
+    <string name="tile_action_2">Действие 2</string>
+    <string name="tile_action_3">Действие 3</string>
+    <string name="tile_action_4">Действие 4</string>
     <string name="datalayer_notification_title">Data Layer Foreground Service</string>
     <string name="datalayer_notification_text">AAPS работи на преден фон, За да скриете това отидете в Developer options, App notifications, Allowed watch apps, AAPS и изключете Data Layer Foreground Service Channel notification.</string>
+    <string name="on">ВКЛ</string>
+    <string name="off">ИЗКЛ</string>
+    <string name="complication_full_status">Пълен статус</string>
     <string name="complication_full_status_flipped">Пълен статус (обърнат)</string>
+    <string name="complication_blood_glucose">Кръвна захар</string>
     <string name="complication_blood_glucose_large">Голяма КЗ</string>
     <string name="complication_blood_glucose_ext1">КЗ Ext1</string>
     <string name="complication_blood_glucose_ext2">КЗ Ext2</string>
