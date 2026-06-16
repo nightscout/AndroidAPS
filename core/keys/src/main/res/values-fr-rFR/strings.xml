@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Envoyer des notifications à la montre lorsqu\'un SMB est injecté.</string>
     <string name="pref_title_wear_broadcast_data">Diffuser les données à la montre</string>
     <string name="pref_summary_wear_broadcast_data">Diffuser des données AAPS à des applications montre tierces.</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Afficher le calcul de l\'assistant</string>
-    <string name="pref_title_wizard_correction_percent">Utiliser le pourcentage de correction</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Gérer la rotation du site de la pompe</string>
     <string name="pref_title_site_rotation_manage_cgm">Gérer la rotation du site MGC</string>
