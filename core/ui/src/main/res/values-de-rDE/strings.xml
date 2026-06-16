@@ -193,6 +193,8 @@
     <string name="careportal_openapsoffline">OpenAPS offline</string>
     <string name="pump_battery_change">Pumpenbatterie-Wechsel</string>
     <string name="temporary_target">Temporäres Ziel</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
     <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="boluswizard">Bolus-Rechner</string>
@@ -371,17 +373,7 @@
     <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
     <string name="wizard_no_cob">Unbekannter COB! BG-Wert fehlt oder wurde App vor kurzem neu gestartet?</string>
     <string name="wizard_carbs_constraint">Die Kohlenhydrateinschränkung wurde überschritten!</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Kohlenhydrate: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BZ: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">15\' Trend: %1$.2fU</string>
-    <string name="wizard_explain_percent">Prozent: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Verletzung der Bolusbeschränkung!\nKann %1$.2fU nicht abgeben</string>
-    <string name="wizard_explain_tt">TempT: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
     <!--    Preferences-->
     <string name="child">Kind</string>
