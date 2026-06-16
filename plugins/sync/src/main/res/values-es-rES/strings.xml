@@ -4,27 +4,20 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Ajustes de conexión</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client">Sincroniza tus datos con Nightscout usando la API v1</string>
     <string name="description_ns_client_v3">Sincroniza tus datos con Nightscout usando API v3</string>
     <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
     <string name="no_connectivity">Sin conectividad</string>
     <string name="unsupported_ns_version">Versión de Nightscout no soportada</string>
-    <string name="ns_malfunction">NSClient fallando. Considera reiniciar Nightscout y NSClient.</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_title">NSClientV1</string>
     <string name="ns_client_v3_title">NSClientV3</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Lanzar ahora</string>
     <string name="queue">Cola:</string>
     <string name="status">Estado:</string>
@@ -68,20 +61,13 @@
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
     <string name="pump_status">Estado de la bomba</string>
     <string name="loop_status">Estado del lazo</string>
-    <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
-    <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
     <string name="user_action_not_available">La acción del usuario solicitada %1$s ya no está disponible, por favor, actualiza tu tarjeta</string>
     <string name="scene_not_available">La escena %1$s ya no está disponible, por favor actualiza el mosaico</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Los comandos remotos de insulina están desactivados en el modo cliente</string>
-    <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
     <string name="wear_action_tempt_unit_error">¡Diferentes unidades usadas en el reloj y en el teléfono!</string>
-    <string name="wear_action_tempt_zero_message">Objetivo Temporal Zero - ¿Cancelar el Objetivo Temporal en ejecución?</string>
     <string name="wear_action_tempt_min_bg_error">¡Glucosa mínima fuera de rango!</string>
     <string name="wear_action_tempt_max_bg_error">¡Glucosa máxima fuera de rango!</string>
     <string name="wear_action_tempt_range_error">Rango inválido: El objetivo bajo (%1$s) no puede ser mayor que el objetivo alto (%2$s)</string>
-    <string name="wear_action_tempt_manual_range_message">ObjTemporal\n\nMin: %1$s\nMax: %2$s\nDuración: %3$d min</string>
-    <string name="wear_action_tempt_manual_message">ObjTemporal\n\nObjetivo: %1$s\nDuración: %2$d min</string>
-    <string name="wear_action_tempt_preset_message">ObjTemporal\n\nRazón: %1$s\nObjetivo: %2$s\nDuracion: %3$d min</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
     <string name="wear_general_settings">Configuración general</string>
     <string name="wear_custom_watchface_settings">Configuración personalizada de esferas</string>
@@ -105,7 +91,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Sin cambio de perfil activo</string>
-    <string name="profile_message">Perfil: %1$s\nCambio de hora: %2$d h\nPorcentaje: %3$d%%\nDuración: %4$d min</string>
     <string name="target_only_aps_mode">¡Los objetivos sólo se aplican en modo APS!</string>
     <string name="no_history">No hay datos históricos</string>
     <string name="temp_target">Objetivo temporal</string>
