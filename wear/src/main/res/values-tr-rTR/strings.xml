@@ -200,6 +200,4 @@
     <string name="complication_iob_icon">AİNS simgesi</string>
     <string name="complication_iob_detailed">Detaylı AiNS</string>
     <string name="complication_uploader_phone_battery">Yükleyici/Telefon Pili</string>
-    <string name="wizard_result_trend">15 dk eğilim</string>
-    <string name="wizard_result_iob">AİNS</string>
 </resources>
