@@ -204,6 +204,8 @@
     <string name="careportal_openapsoffline">OpenAPS neprisijungus</string>
     <string name="pump_battery_change">Baterijos keitimas</string>
     <string name="temporary_target">Laikinas tikslas</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Laikino tikslo reikšmė</string>
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
     <string name="boluswizard">Boluso patarėjas</string>
@@ -388,17 +390,7 @@
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_no_cob">Nežinomi AAO! Nėra glikemijos duomenų arba programa paleista iš naujo?</string>
     <string name="wizard_carbs_constraint">AV apribojimų pažeidimas!</string>
-    <string name="wizard_explain_calc">Kalk (IA: %1$.1f, JIF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">AV: %1$.2fv</string>
-    <string name="wizard_explain_cob">AAO: %1$.0fg %2$.2fv</string>
-    <string name="wizard_explain_bg">Glikemija: %1$.2fv</string>
-    <string name="wizard_explain_iob">AIO: %1$.2fv</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fv</string>
-    <string name="wizard_explain_trend">15\' tendencija: %1$.2fv</string>
-    <string name="wizard_explain_percent">Procentaliai: %1$.2fv x %2$d%% ≈ %3$.2fv</string>
     <string name="wizard_constraint_bolus_size">Insulino apribojimų pažeidimas!\nNesuleista %1$.2fv</string>
-    <string name="wizard_explain_tt">LT: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s į %2$s</string>
     <string name="wizard_pump_not_available">Pompa nepasiekiama!</string>
     <!--    Preferences-->
     <string name="child">Vaikas</string>
