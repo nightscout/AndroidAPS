@@ -190,6 +190,8 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Skift af pumpebatteri</string>
     <string name="temporary_target">Midlertidigt mål</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Midlertidig mål værdi</string>
     <string name="careportal_temporarytargetcancel">Afslut midlertidigt mål</string>
     <string name="boluswizard">Bolusberegner</string>
@@ -367,17 +369,7 @@
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
     <string name="wizard_no_cob">Ukendt COB! BG læsning mangler eller nylig app genstart?</string>
     <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
-    <string name="wizard_explain_calc">Beregner (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Kulhydrater: %1$.2fE</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
-    <string name="wizard_explain_bg">BS: %1$.2fE</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fE</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
-    <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
-    <string name="wizard_explain_percent">Procent: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
     <string name="wizard_constraint_bolus_size">Overtrædelse af insulinbegrænsning!\nKan ikke levere %1$.2fE</string>
-    <string name="wizard_explain_tt">Midl: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgængelig!</string>
     <!--    Preferences-->
     <string name="child">Barn</string>
