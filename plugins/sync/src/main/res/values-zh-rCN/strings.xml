@@ -4,27 +4,20 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">连接设置</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client">使用 v1 API 与 Nightscout 同步数据</string>
     <string name="description_ns_client_v3">使用 v3 API 与 Nightscout 同步数据</string>
     <string name="blocked_by_charging">被充电选项阻止</string>
     <string name="blocked_by_connectivity">被连接选项阻止</string>
     <string name="no_connectivity">没有连线</string>
     <string name="unsupported_ns_version">不支持的 Nightscout 版本</string>
-    <string name="ns_malfunction">NSClient 故障。请考虑重新启动NS 和 NSClient 。</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT 没有写权限。可能是NS的 API 密钥输错了？</string>
     <string name="ns_client_v3_short_name">NSV3</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL网址：</string>
-    <string name="ns_client_title">NSClientV1</string>
     <string name="ns_client_v3_title">NSClientV3</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">立即输注</string>
     <string name="queue">队列：</string>
     <string name="status">状态:</string>
@@ -68,20 +61,13 @@
     <string name="no_watch_connected">(无手表连接)</string>
     <string name="pump_status">泵状态</string>
     <string name="loop_status">闭环状态</string>
-    <string name="quick_wizard_not_available">选定的快速向导不再可用，请刷新</string>
-    <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
     <string name="user_action_not_available">所选用户动作 %1$s 已不可用，请刷新您的面板</string>
     <string name="scene_not_available">情景 %1$s 已失效，请刷新磁贴</string>
     <string name="wear_remote_insulin_not_allowed_in_client">客户端模式下已禁用远程胰岛素指令</string>
-    <string name="wear_action_tempt_cancel_message">取消运行临时目标？</string>
     <string name="wear_action_tempt_unit_error">手表和手机上使用了不同的单位！</string>
-    <string name="wear_action_tempt_zero_message">零-临时目标-取消运行中的临时目标？</string>
     <string name="wear_action_tempt_min_bg_error">目标血糖最小值超出范围！</string>
     <string name="wear_action_tempt_max_bg_error">目标血糖最大值超出范围！</string>
     <string name="wear_action_tempt_range_error">无效范围：低目标(%1$s) 不能大于高目标(%2$s)</string>
-    <string name="wear_action_tempt_manual_range_message">临时目标\n\n最小: %1$s\n最大: %2$s\n持续时间: %3$d 分钟</string>
-    <string name="wear_action_tempt_manual_message">临时目标\n\n目标：%1$s\n持续时间：%2$d 分钟</string>
-    <string name="wear_action_tempt_preset_message">临时目标\n\n原因：%1$s\n目标%2$s\n持续时间：%3$d 分钟</string>
     <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
     <string name="wear_general_settings">常规设置</string>
     <string name="wear_custom_watchface_settings">自定义表盘设置</string>
@@ -105,7 +91,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">时</string>
     <string name="no_active_profile">没有激活的个人配置切换！</string>
-    <string name="profile_message">配置：%1$s\n时间偏移%2$d 小时\n百分比：%3$d%%\n持续时间：%4$d 分钟</string>
     <string name="target_only_aps_mode">目标仅适用于APS模式！</string>
     <string name="no_history">无历史数据！</string>
     <string name="temp_target">临时目标</string>
