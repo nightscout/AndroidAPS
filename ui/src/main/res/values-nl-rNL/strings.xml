@@ -40,6 +40,10 @@
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
     <!-- Scene -->
     <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="timeshift_label">Tijd verschuiving</string>
     <string name="percentage_label">Percentage</string>
