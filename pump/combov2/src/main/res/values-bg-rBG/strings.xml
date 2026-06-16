@@ -39,6 +39,8 @@
 3. Опитайте да сдвоите отново</string>
     <string name="combov2_enter_pin">Въведи PIN</string>
     <string name="combov2_cancel_pairing">Отмени сдвояване</string>
+    <string name="combov2_confirm_cancel_pairing_message">Сигурни ли сте че искате да прекратите свързването?</string>
+    <string name="combov2_confirm_unpair_message">Сигурни ли сте че искате да раздвоите помпата?</string>
     <string name="combov2_pin_hint">10-цифрен PIN</string>
     <string name="combov2_pairing_finished_successfully">Успешно сдвоен с Combo</string>
     <string name="combov2_pairing_cancelled">Сдвояването с Combo е отменено от потребителя</string>
@@ -87,6 +89,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (остава по-малко от 1 минута)</string>
     <string name="combov2_load_tdds_cancelled">Зареждането на TDD(Обща дневна доза) е отменено</string>
     <string name="combov2_retrieving_tdds_failed">Извличането на TDD(Обща дневна доза) не бе успешно</string>
+    <string name="combov2_battery_empty">Празен</string>
+    <string name="combov2_battery_low">Слаба</string>
+    <string name="combov2_battery_full">Пълна</string>
     <string name="combov2_battery_low_warning">Батерията на помпата е слаба</string>
     <string name="combov2_reservoir_low_warning">Нивото на резервоара на помпата е ниско</string>
     <string name="combov2_setting_tbr_succeeded">Задаването на Временен базал е успешно</string>
