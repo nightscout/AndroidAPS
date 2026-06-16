@@ -19,6 +19,10 @@
     <!-- FillDialog -->
     <!-- Scene -->
     <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
