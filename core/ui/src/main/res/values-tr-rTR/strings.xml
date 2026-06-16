@@ -210,6 +210,8 @@
     <string name="pump_battery_change">Pompa Pil Değişimi</string>
     <string name="temporary_target">Geçici hedef</string>
     <string name="running_mode">Çalışma modu</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Geçici hedef değeri</string>
     <string name="careportal_temporarytargetcancel">Geçici hedef iptali</string>
     <string name="boluswizard">Bolus sihirbazı</string>
@@ -396,17 +398,7 @@
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_no_cob">Aktif karbonhidrat (AKRB) bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
-    <string name="wizard_explain_calc">Hesap (KİO: %1$.1f, İDF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Karb: %1$.2fÜ</string>
-    <string name="wizard_explain_cob">AKRB: %1$.0fg %2$.2fÜ</string>
-    <string name="wizard_explain_bg">KŞ: %1$.2fÜ</string>
-    <string name="wizard_explain_iob">AİNS: %1$.2fÜ</string>
-    <string name="wizard_explain_superbolus">Süperbolus: %1$.2fÜ</string>
-    <string name="wizard_explain_trend">15\' trend: %1$.2fÜ</string>
-    <string name="wizard_explain_percent">Yüzde: %1$.2fÜ x %2$d%% ≈ %3$.2fÜ</string>
     <string name="wizard_constraint_bolus_size">İnsülin kısıtlaması ihlali!\n%1$.2fÜ iletilemez</string>
-    <string name="wizard_explain_tt">GeçiciH: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s - %2$s</string>
     <string name="wizard_pump_not_available">Pompa mevcut değil!</string>
     <!--    Preferences-->
     <string name="child">Çocuk</string>
