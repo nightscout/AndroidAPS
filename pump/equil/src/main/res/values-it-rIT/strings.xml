@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">Tasso basale temporaneo %1$s U/H</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
+    <string name="equil_basal_exceeds_max">La velocità basale del profilo %1$s U/h supera la velocità basale massima del microinfusore %2$s U/h. Aumenta l\'impostazione basale massima e ricollega la pompa.</string>
     <string name="equil_not_enough_insulin">Insulina nel serbatoio insufficiente</string>
     <string name="equil_low_battery">Batteria bassa</string>
     <string name="equil_low_insulin">Insulina nel serbatoio insufficiente</string>
