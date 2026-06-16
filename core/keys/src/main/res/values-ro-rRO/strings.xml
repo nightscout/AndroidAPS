@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Trimiteți notificări către ceas atunci când SMB este administrat.</string>
     <string name="pref_title_wear_broadcast_data">Transmiteți date către ceas</string>
     <string name="pref_summary_wear_broadcast_data">Transmiteți date AAPS către aplicații terțe pentru ceas prin intermediul intențiilor.</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Afișați calculul asistentului</string>
-    <string name="pref_title_wizard_correction_percent">Utilizați procentajul de corecție</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Gestionați rotația locului de infuzare al pompei</string>
     <string name="pref_title_site_rotation_manage_cgm">Gestionați rotația locației senzorului</string>
