@@ -4,12 +4,9 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <!-- AAPSClient -->
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_alarm_options">Параметри сповіщень</string>
     <!-- Tidepool -->
     <!-- Xdrip StatusLine -->
