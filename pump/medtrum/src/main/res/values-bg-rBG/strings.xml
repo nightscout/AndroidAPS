@@ -3,6 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Интеграция за помпи Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки за помпа Medtrum</string>
     <string name="pump_error">Грешка в помпа: %1$s !! </string>
     <string name="pump_warning">Предупреждение от помпата: %1$s </string>
@@ -14,6 +15,7 @@
     <string name="pump_sync_error">Грешка при синхронизацията с историята на помпата. Някой записи са игнорирани. Проверете в Лечения дали болусите са правилни. Отложете и при нова такава грешла сменете базата на пач помпата.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Последно свързване</string>
+    <string name="active_bolus_label">Активен болус</string>
     <string name="pump_state_label">Състояние на помпата</string>
     <string name="active_alarms_label">Активни аларми</string>
     <string name="basal_type_label">Тип базал</string>
@@ -63,6 +65,7 @@
     <string name="unexpected_state">Неочаквано състояние: %1$s</string>
     <string name="patch_begin_activation">Няма активна пач помпа. Натиснете <b>Следващ</b>, за да започнете процеса по активация.</string>
     <string name="note_min_70_units">Забележка: За активация са необходими най-малко 70 единици.</string>
+    <string name="reservoir_text_and_level">Reservoir: %.2f E</string>
     <string name="do_not_attach_to_body">Все още не прикрепяйте пач помпата към тялото.</string>
     <string name="half_press_needle">Натиснете бутона на иглата до средата. След това натиснете <b>Следващ</b>, за да започнете пълнене.</string>
     <string name="wait_for_priming">Моля изчакайте напълването да приключи.</string>
@@ -71,6 +74,7 @@
     <string name="remove_safety_lock">Отстранете предпазителя. Прикрепете помпата към тялото. Натиснете бутона на иглата.</string>
     <string name="activating_pump">Активиране на помпата и настройване на първоначален базал. Моля, изчакайте.</string>
     <string name="activating_complete">Активирана нова пач помпа. Остават %.2f Ед.</string>
+    <string name="can_export_settings">Можете да експортирате настройките, за да можете по-късно да възстановите тази пач сесия.</string>
     <string name="press_OK_to_return">Натиснете <b>OK</b>, за да се върнете на главния екран.</string>
     <string name="deactivate_sure">Сигурни ли сте, че искате да деактивирате текущата пач помпа?</string>
     <string name="cancel_sure">Сигурни ли сте, че искате да прекратите активацията?</string>
@@ -98,6 +102,7 @@
     <string name="patch_expiration_summary">След активация, пач помпата има срок от 3 дни с допълнителен период от 8 часа след това.</string>
     <string name="hourly_max_insulin_title">Макс инсулин за час [Единици]</string>
     <string name="hourly_max_insulin_summary">Посочете максималните единици инсулин за час. Ако бъдат превишени, помпата ще бъде изключена.</string>
+    <string name="daily_max_insulin_title">Максимално количество инсулин за ден [Единици]</string>
     <string name="daily_max_insulin_summary">Посочете максималните единици инсулин за ден. Ако бъдат превишени, помпата ще бъде изключена.</string>
     <string name="scan_on_connection_error_title">Грешка при свързване</string>
     <string name="scan_on_connection_error_summary">ВНИМАНИЕ: Пуснете го само ако имате проблеми с връзката. Ако е пуснато ше се сканира за помпа при всяко свързване с помпата. Проверете дали разрешението за Локация е на \"Винаги позволено\"</string>
