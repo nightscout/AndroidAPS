@@ -195,6 +195,8 @@
     <string name="careportal_openapsoffline">OpenAPS במצב לא מקוון</string>
     <string name="pump_battery_change">החלפת סוללת משאבה</string>
     <string name="temporary_target">ערך מטרה זמני</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">ערך המטרה הזמני</string>
     <string name="careportal_temporarytargetcancel">ביטול ערך מטרה זמני</string>
     <string name="boluswizard">אשף בולוס</string>
@@ -378,17 +380,7 @@
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
     <string name="wizard_no_cob">הפחמימות הפעילות לא ידועות! חסרות קריאות סוכר או שאותחל היישום לאחרונה?</string>
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
-    <string name="wizard_explain_calc">מחשבון (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">פחמ\': %1$.2f יח\'</string>
-    <string name="wizard_explain_cob">פחמ\': %1$.0f גר\' %2$.2f יח\'</string>
-    <string name="wizard_explain_bg">סוכר: %1$.2f יח\'</string>
-    <string name="wizard_explain_iob">אינ\' פעיל: %1$.2f יח\'</string>
-    <string name="wizard_explain_superbolus">סופר בולוס: %1$.2f יח\'</string>
-    <string name="wizard_explain_trend">מגמת 15 דק\': %1$.2f יח\'</string>
-    <string name="wizard_explain_percent">אחוזים: %1$.2f יח\' x %2$d%% ≈ %3$.2f יח\'</string>
     <string name="wizard_constraint_bolus_size">הופעלה מגבלת אינסולין!\nלא ניתן להזריק %1$.2f יח\'</string>
-    <string name="wizard_explain_tt">ע\' מטרה זמני: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s ל-%2$s</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
     <!--    Preferences-->
     <string name="child">ילד\\ה צעיר\\ה</string>
