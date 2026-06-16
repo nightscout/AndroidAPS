@@ -10,13 +10,10 @@
     <string name="unsupported_ns_version">Ikke understøttet version af Nightscout</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT har ingen skrivetilladelse. Forkert API-secret?</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Afgiver nu</string>
     <string name="queue">Kø:</string>
     <string name="status">Status:</string>
@@ -52,8 +49,6 @@
     <string name="no_watch_connected">(Intet ur forbundet)</string>
     <string name="pump_status">Pumpestatus</string>
     <string name="loop_status">Loop status</string>
-    <string name="quick_wizard_not_available">Valgt guide er ikke længere tilgængeligt. Opdater venligst din widget</string>
-    <string name="quick_wizard_message">Hurtigguide: %1$s\nInsulin: %2$.2fE\nKH: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Forskellige enheder brugt på ur og telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS udenfor området!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BS udenfor området!</string>
