@@ -13,6 +13,7 @@
     <string name="patch_not_active">Пач помпата не е активирана</string>
     <string name="pump_setting_failed">Неуспешно зареждане на потребителските настройки в помпата!</string>
     <string name="pump_sync_error">Грешка при синхронизацията с историята на помпата. Някой записи са игнорирани. Проверете в Лечения дали болусите са правилни. Отложете и при нова такава грешла сменете базата на пач помпата.</string>
+    <string name="patch_reset_after_primed_error">Нулиране на пач е открито след пълненето! Махнете пача и стартирайте нов.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Последно свързване</string>
     <string name="active_bolus_label">Активен болус</string>
@@ -23,6 +24,7 @@
     <string name="fw_version_label">Версия на FW</string>
     <string name="patch_no_label">Номер на пач помпа</string>
     <string name="patch_expiry_label">Срок на пач помпа</string>
+    <string name="patch_activation_time_label">Активиране</string>
     <string name="reset_alarms_label">Нулирай аларми</string>
     <string name="change_patch_label">Сменете пач помпата</string>
     <string name="requested_by_user" comment="26 characters max for translation">Заявено от потребителя</string>
@@ -47,11 +49,21 @@
     <string name="alarm_battery_out">Няма батерия</string>
     <string name="alarm_no_calibration">Няма калибрация</string>
     <string name="pump_time_update_failed">Неуспешно актуализиране на часова зона на помпата, отложете съобщението и актуализирайте ръчно.</string>
+    <string name="bolus_error">Грешка при болус</string>
     <!-- Status strings -->
+    <string name="status_idle">Свободен</string>
+    <string name="status_filled">Пълен</string>
+    <string name="status_priming">Пълнене</string>
+    <string name="status_primed">Пълен</string>
+    <string name="status_ejecting">Премахване</string>
+    <string name="status_ejected">Премахнат</string>
+    <string name="status_active">Активен/а</string>
+    <string name="status_stopped">Спрян</string>
     <!-- wizard-->
     <string name="retry">Повтори</string>
     <string name="step_prepare_patch">Активирай пач помпа</string>
     <string name="step_prepare_patch_connect">Свържи и Напълни</string>
+    <string name="step_select_insulin">Изберете инсулин</string>
     <string name="step_prime">Пълнене</string>
     <string name="step_priming">Пълнене</string>
     <string name="step_priming_complete">Напълването завършено</string>
@@ -61,9 +73,12 @@
     <string name="step_deactivate">Деактивирай пач помпа</string>
     <string name="step_deactivating">Деактивиране...</string>
     <string name="step_deactivate_complete">Пач помпата деактивирана</string>
+    <string name="unpair_confirm_message">Това ще изтрие въведения сериен номер на помпа и ще я разкачи. Активирайте нов пач за да сканирате за помпа.</string>
     <string name="step_retry_activation">Активация в ход</string>
     <string name="unexpected_state">Неочаквано състояние: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Закачете нов пач към базата и го изберете от списъка за да го стартирате.</string>
     <string name="patch_begin_activation">Няма активна пач помпа. Натиснете <b>Следващ</b>, за да започнете процеса по активация.</string>
+    <string name="connect_pump_base">Уверете се че базата и пача са свързани. Премахнете въздуха и напълнете с инсулин, тогава натиснете <b>Следващ</b>.</string>
     <string name="note_min_70_units">Забележка: За активация са необходими най-малко 70 единици.</string>
     <string name="reservoir_text_and_level">Reservoir: %.2f E</string>
     <string name="do_not_attach_to_body">Все още не прикрепяйте пач помпата към тялото.</string>
@@ -91,6 +106,11 @@
     <!-- settings-->
     <string name="alarm_setting_title">Настройки на аларма</string>
     <string name="alarm_setting_summary">Изберете предпочитани настройки за аларми на помпата.</string>
+    <string name="alarm_setting_light_vibrate_beep">Светлина, вибрация и звук</string>
+    <string name="alarm_setting_light_vibrate">Светлина и вибрация</string>
+    <string name="alarm_setting_light_beep">Звук и светлина, не онези от Търново</string>
+    <string name="alarm_setting_light">Светлина</string>
+    <string name="alarm_setting_vibrate_beep">Вибрация и звук</string>
     <string name="alarm_setting_vibrate">Вибриране</string>
     <string name="alarm_setting_beep">Звук</string>
     <string name="alarm_setting_silent">Тиха</string>
