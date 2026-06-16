@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.rx.events
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.data.ui.ConfirmationLine
 
 /**
  * Request a modal dialog from anywhere in the app. Consumed by the root
@@ -29,12 +30,16 @@ sealed class EventShowDialog : Event() {
      * (rendered via `AnnotatedString.fromHtml` — legacy HTML in string resources still works)
      * or a pre-built `androidx.compose.ui.text.AnnotatedString` to bypass HTML entirely
      * and style spans directly.
+     *
+     * [confirmationLines], when set, take precedence over [message]: the host tints them with theme
+     * colors at render time (so the producing code stays theme-blind). Pass these for action confirmations.
      */
     data class OkCancel(
         val title: String?,
         val message: CharSequence,
         val secondMessage: String? = null,
         val icon: ImageVector? = null,
+        val confirmationLines: List<ConfirmationLine>? = null,
         val onOk: suspend () -> Unit,
         val onCancel: (suspend () -> Unit)? = null
     ) : EventShowDialog()

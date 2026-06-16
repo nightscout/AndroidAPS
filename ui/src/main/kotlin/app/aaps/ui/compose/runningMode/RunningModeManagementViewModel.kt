@@ -10,21 +10,30 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.db.observeChanges
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.R
+import app.aaps.ui.compose.overview.chips.toIcon
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,15 +53,17 @@ import javax.inject.Inject
 @Stable
 class RunningModeManagementViewModel @Inject constructor(
     private val loop: Loop,
-    private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val translator: Translator,
     private val preferences: Preferences,
     private val persistenceLayer: PersistenceLayer,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
+    private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
-    private val config: Config
+    private val config: Config,
+    private val batchExecutor: BatchExecutor,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RunningModeManagementUiState())
@@ -117,12 +128,15 @@ class RunningModeManagementViewModel @Inject constructor(
     }
 
     /**
-     * Execute a running mode action
+     * Execute a running mode change through the role-transparent [BatchExecutor]: PREPARE (the master caps/validates
+     * the transition and authors the confirmation lines), show those lines as the single confirm dialog, then COMMIT
+     * on OK (the master applies via `Loop.handleRunningModeChange`). A client relays the change to the master; the
+     * master applies locally. [action] is kept only to credit the objectives milestone after a confirmed apply (the
+     * executor re-derives the UEL action from the mode).
      *
      * @param targetMode The target running mode
-     * @param action The action being performed
-     * @param durationMinutes Duration in minutes (for temporary modes)
-     * @return true if action was successful
+     * @param action The action being performed (objectives tracking only)
+     * @param durationMinutes Duration in minutes (for the temporary modes)
      */
     fun executeAction(
         targetMode: RM.Mode,
@@ -130,33 +144,37 @@ class RunningModeManagementViewModel @Inject constructor(
         durationMinutes: Int = 0
     ) {
         viewModelScope.launch {
-            val profile = profileFunction.getProfile() ?: return@launch
-
-            val success = loop.handleRunningModeChange(
-                newRM = targetMode,
-                action = action,
-                source = Sources.LoopDialog,
-                profile = profile,
-                durationInMinutes = durationMinutes
-            )
-
-            // Track objectives usage for specific actions
-            if (success) {
-                when (action) {
-                    Action.RESUME, Action.RECONNECT -> {
-                        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
-                    }
-
-                    Action.DISCONNECT               -> {
-                        if (durationMinutes >= 60) {
-                            preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
+            val label = rh.gs(R.string.running_mode)
+            when (val prepared = batchExecutor.prepare(listOf(BatchAction.RunningMode(targetMode, durationMinutes)), Sources.LoopDialog, label)) {
+                is ActionProgress.Prepared -> rxBus.send(
+                    EventShowDialog.OkCancel(
+                        title = label, message = "", confirmationLines = prepared.lines, icon = targetMode.toIcon(),
+                        onOk = {
+                            appScope.launch {
+                                if (batchExecutor.commit(prepared.id, Sources.LoopDialog, label) is ActionProgress.Applied)
+                                    trackObjectives(action, durationMinutes)
+                            }
                         }
-                    }
+                    )
+                )
 
-                    else                            -> { /* no tracking needed */
-                    }
+                // Master-local validation failure, or a client offline; a client round-trip failure already showed on the app modal.
+                is ActionProgress.Rejected -> {
+                    if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                        rxBus.send(EventShowSnackbar(prepared.detail ?: rh.gs(R.string.running_mode_change_not_allowed), EventShowSnackbar.Type.Error))
                 }
+
+                else                       -> Unit // Unconfirmed → handled by the app-level pending modal
             }
+        }
+    }
+
+    /** Credit the disconnect/reconnect objectives milestones once a running-mode change is confirmed + applied. */
+    private fun trackObjectives(action: Action, durationMinutes: Int) {
+        when (action) {
+            Action.RESUME, Action.RECONNECT -> preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
+            Action.DISCONNECT               -> if (durationMinutes >= 60) preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
+            else                            -> Unit
         }
     }
 

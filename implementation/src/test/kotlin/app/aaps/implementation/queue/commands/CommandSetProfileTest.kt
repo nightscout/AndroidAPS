@@ -1,6 +1,5 @@
 package app.aaps.implementation.queue.commands
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -53,7 +52,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     fun `execute calls pump setNewBasalProfile when profile differs`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
+            on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }
         whenever(commandQueue.isThisProfileSet(effectiveProfile)).thenReturn(false)
         whenever(activePlugin.activePump).thenReturn(pump)
@@ -68,7 +67,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     fun `execute sends SMS notification when enacted and hasNsId and not AAPSCLIENT`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
+            on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }
         whenever(commandQueue.isThisProfileSet(effectiveProfile)).thenReturn(false)
         whenever(activePlugin.activePump).thenReturn(pump)
@@ -87,7 +86,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     fun `execute does not send SMS when hasNsId is false`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
+            on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }
         whenever(commandQueue.isThisProfileSet(effectiveProfile)).thenReturn(false)
         whenever(activePlugin.activePump).thenReturn(pump)
@@ -102,7 +101,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     fun `execute does not send SMS when AAPSCLIENT`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
+            on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }
         whenever(commandQueue.isThisProfileSet(effectiveProfile)).thenReturn(false)
         whenever(activePlugin.activePump).thenReturn(pump)
@@ -121,7 +120,9 @@ class CommandSetProfileTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).executeWithCallback()
@@ -136,7 +137,9 @@ class CommandSetProfileTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced)
@@ -150,7 +153,9 @@ class CommandSetProfileTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)

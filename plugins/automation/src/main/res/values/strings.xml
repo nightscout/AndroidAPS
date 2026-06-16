@@ -6,6 +6,7 @@
     <string name="automation_enabled">Enabled</string>
     <string name="automation_read_only">Read-only</string>
     <string name="automation_new_rule">New rule</string>
+    <string name="automation_empty_desc">Create a rule to automate actions based on triggers.</string>
     <string name="automation_edit_rule">Edit rule</string>
     <string name="automation_discard_title">Discard changes?</string>
     <string name="automation_discard_message">The rule is incomplete and cannot be saved. Discard your changes?</string>

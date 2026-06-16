@@ -11,7 +11,7 @@ import android.os.SystemClock
  */
 fun BluetoothAdapter.safeEnable(waitMilliseconds: Long = 0, after: Runnable? = null): Boolean =
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) false
-    else @Suppress("DEPRECATION") {
+    else {
         if (!isEnabled) {
             val result = enable()
             if (waitMilliseconds != 0L) SystemClock.sleep(waitMilliseconds)
@@ -27,7 +27,7 @@ fun BluetoothAdapter.safeEnable(waitMilliseconds: Long = 0, after: Runnable? = n
  */
 fun BluetoothAdapter.safeDisable(waitMilliseconds: Long = 0): Boolean =
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) false
-    else @Suppress("DEPRECATION") {
+    else {
         if (isEnabled) {
             val result = disable()
             if (waitMilliseconds != 0L) SystemClock.sleep(waitMilliseconds)

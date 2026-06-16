@@ -32,6 +32,7 @@ import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeEnable
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
@@ -54,7 +55,7 @@ class QueueWorker @AssistedInject internal constructor(
 
     override suspend fun doWorkAndLog(): Result {
         queue.waitingForDisconnect = false
-        // Defensive: a previous worker may have been cancelled mid-execute (e.g. blocking sleep
+        // Defensive: a previous worker may have been canceled mid-execute (e.g. blocking sleep
         // not honoring coroutine cancellation), leaving `performing` set. Without this reset the
         // new worker's main loop has no matching branch (performing != null AND queue non-empty)
         // and spins.
@@ -85,7 +86,7 @@ class QueueWorker @AssistedInject internal constructor(
                         rxBus.send(EventShowSnackbar(rh.gs(R.string.need_connect_permission), EventShowSnackbar.Type.Error))
                         aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
-                        delay(5000)
+                        delay(timeMillis = 5000)
                         continue
                     }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
@@ -104,12 +105,12 @@ class QueueWorker @AssistedInject internal constructor(
                         preferences.put(LongNonKey.BtWatchdogLastBark, System.currentTimeMillis())
                         //toggle BT
                         pump.disconnect("watchdog")
-                        delay(1000)
+                        delay(timeMillis = 1000)
                         (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bluetoothAdapter ->
                             bluetoothAdapter.safeDisable(0)
-                            delay(1000)
+                            delay(timeMillis = 1000)
                             bluetoothAdapter.safeEnable(0)
-                            delay(1000)
+                            delay(timeMillis = 1000)
                         }
                         //start over again once after watchdog barked
                         lastCommandTime = System.currentTimeMillis()
@@ -127,26 +128,26 @@ class QueueWorker @AssistedInject internal constructor(
                 if (pump.isHandshakeInProgress()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "handshaking $secondsElapsed")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.HANDSHAKING, secondsElapsed.toInt()))
-                    delay(100)
+                    delay(timeMillis = 100)
                     continue
                 }
                 if (pump.isConnecting()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "connecting $secondsElapsed")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
-                    delay(1000)
+                    delay(timeMillis = 1000)
                     continue
                 }
                 if (!pump.isConnected()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "connect")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
                     pump.connect("Connection needed")
-                    delay(1000)
+                    delay(timeMillis = 1000)
                     continue
                 }
                 if (pump.isBusy()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "busy")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
-                    delay(1000)
+                    delay(timeMillis = 1000)
                     continue
                 }
                 if (queue.performing() == null) {
@@ -161,11 +162,24 @@ class QueueWorker @AssistedInject internal constructor(
                             aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.log())
                             rxBus.send(EventQueueChanged())
                             rxBus.send(EventPumpStatusChanged(it.status()))
-                            it.executeWithCallback()
+                            try {
+                                it.executeWithCallback()
+                            } catch (e: CancellationException) {
+                                throw e // honor coroutine cancellation (worker stopped)
+                            } catch (e: Exception) {
+                                // A pump-driver throw must not kill the worker. Without this catch the
+                                // exception unwinds out of doWorkAndLog(): the command's callback never
+                                // runs (the caller's deferred await() hangs forever) and `performing`
+                                // stays set. Complete the caller with a failure result and carry on so
+                                // the remaining queue and the disconnect logic still run.
+                                aapsLogger.error(LTag.PUMPQUEUE, "Command threw during execution: " + it.log(), e)
+                                fabricPrivacy.logException(e)
+                                it.cancel(R.string.error, success = false)
+                            }
                             queue.resetPerforming()
                             rxBus.send(EventQueueChanged())
                             lastCommandTime = System.currentTimeMillis()
-                            delay(100)
+                            delay(timeMillis = 100)
                             true
                         } == true
                         if (cont) {
@@ -186,13 +200,13 @@ class QueueWorker @AssistedInject internal constructor(
                     } else {
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.WAITING_FOR_DISCONNECTION))
                         aapsLogger.debug(LTag.PUMPQUEUE, "waiting for disconnect")
-                        delay(1000)
+                        delay(timeMillis = 1000)
                     }
                 } else {
                     // Catch-all: no branch above matched (e.g. performing != null and queue non-empty,
-                    // which can happen if a previous worker was cancelled mid-execute). Without a yield
+                    // which can happen if a previous worker was canceled mid-execute). Without a yield
                     // here the loop spins CPU and the isStopped check never gets to fire.
-                    delay(100)
+                    delay(timeMillis = 100)
                 }
             }
         } finally {

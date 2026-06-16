@@ -18,20 +18,25 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.mapper.toCalibrationMbg
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
 import app.aaps.core.nssdk.mapper.toNSTreatment
-import app.aaps.plugins.sync.nsShared.NSAlarmObject
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
+import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
+import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
+import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.android.DaggerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -57,10 +62,11 @@ class NSClientV3Service : DaggerService() {
     @Inject lateinit var config: Config
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Inject lateinit var storeDataForDb: StoreDataForDb
-    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Inject lateinit var nsClientRepository: NSClientRepository
+    @Inject lateinit var runningConfiguration: RunningConfiguration
+    @Inject lateinit var orphanDetector: OrphanDetector
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     private val disposable = CompositeDisposable()
@@ -96,7 +102,15 @@ class NSClientV3Service : DaggerService() {
 
     var storageSocket: Socket? = null
     var alarmSocket: Socket? = null
-    internal var wsConnected = false
+
+    /**
+     * WS connection state. Pass-through to [NSClientV3Plugin.wsConnectedFlow] — the plugin is
+     * the singleton that survives service rebinds, so the canonical StateFlow lives there and
+     * UI subscribers don't get torn down across service lifecycles.
+     */
+    internal var wsConnected: Boolean
+        get() = nsClientV3Plugin.wsConnectedFlow.value
+        set(value) = nsClientV3Plugin.setWsConnected(value)
 
     @OpenForTesting
     fun shutdownWebsockets() {
@@ -190,7 +204,7 @@ class NSClientV3Service : DaggerService() {
                     nsClientRepository.addLog("◄ WS", "Subscribed for: ${response.optString("collections")}")                    // during disconnection updated data is not received
                     // thus run non WS load to get missing data
                     nsClientV3Plugin.initialLoadFinished = false
-                    nsClientV3Plugin.executeLoop("WS_CONNECT", forceNew = true)
+                    nsClientV3Plugin.executeLoop("WS_CONNECT")
                     true
                 } else {
                     nsClientRepository.addLog("◄ WS", "Auth failed")
@@ -248,10 +262,18 @@ class NSClientV3Service : DaggerService() {
             nsClientV3Plugin.storeLastLoadedSrvModified()
         }
         when (collection) {
-            "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it)) }
-            "entries"      -> docString.toNSSgvV3()?.let {
-                nsIncomingDataProcessor.processSgvs(listOf(it), doFullSync = false)
-                storeDataForDb.requestStoreGlucoseValues()
+            "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it), live = true) }
+
+            "entries"      -> {
+                docString.toNSSgvV3()?.let {
+                    nsIncomingDataProcessor.processSgvs(listOf(it), doFullSync = false)
+                    storeDataForDb.requestStoreGlucoseValues()
+                }
+                // Same entries collection also carries AAPS calibration mbg entries (marked).
+                docString.toCalibrationMbg()?.let {
+                    nsIncomingDataProcessor.processCalibrations(listOf(it), doFullSync = false)
+                    storeDataForDb.requestStoreCalibrationEntries()
+                }
             }
 
             "profile"      ->
@@ -267,7 +289,38 @@ class NSClientV3Service : DaggerService() {
                 storeDataForDb.requestStoreFoods()
             }
 
-            "settings"     -> { /* nothing to do for now */
+            "settings"     -> {
+                val identifier = docJson.optString("identifier")
+                when {
+                    // Client-side: cold config doc — apply everything except the active scene.
+                    config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
+                        docString.toRunningConfiguration()?.let {
+                            runningConfiguration.applyCold(it)
+                            orphanDetector.onSettingsDoc(it, docJson.optLong("srvModified", 0L))
+                            // A live config push proves the master is alive now → feed the liveness clock.
+                            nsClientV3Plugin.bumpMasterSignal(srvModified)
+                        }
+                    // Client-side: hot state doc — apply only the active scene + runtime flags.
+                    // Kept distinct from the cold branch so this never clears a running scene.
+                    config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
+                        docString.toRunningConfiguration()?.let {
+                            runningConfiguration.applyHot(it)
+                            nsClientV3Plugin.bumpMasterSignal(srvModified)
+                        }
+                    // Client-side: master→client command ACK. Must be checked BEFORE the generic
+                    // IDENTIFIER_PREFIX branch (ack identifiers share that prefix) so the master
+                    // receiver never tries to verify an ack as an inbound command envelope.
+                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)      ->
+                        nsClientV3Plugin.handleClientControlAckEvent(docJson)
+                    // Client-side: master→client live bolus-progress mirror. Same ordering rule as ACK (shares
+                    // IDENTIFIER_PREFIX) so the master never treats its own progress doc as an inbound command.
+                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
+                        nsClientV3Plugin.handleClientControlProgressEvent(docJson)
+                    // Master-side: route client-control envelopes (paired-client → master commands)
+                    // to the receiver. The plugin gates on the master toggle internally.
+                    identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)                               ->
+                        nsClientV3Plugin.handleClientControlSettingsEvent(identifier, docJson)
+                }
             }
         }
     }
@@ -374,7 +427,7 @@ class NSClientV3Service : DaggerService() {
             }
             NotificationAction(labelRes) {
                 val snoozeMs = minutes * 60 * 1000L
-                activePlugin.activeNsClient?.handleClearAlarm(nsAlarm, snoozeMs)
+                nsClientV3Plugin.handleClearAlarm(nsAlarm, snoozeMs)
                 // Cascade the snooze across all alarm levels. NS itself cascades a level-2 ack down to
                 // level 1, but keeps emitting lower-level forecast alarms (e.g. ar2 WARN) that would
                 // otherwise slip past a single-level local snooze and re-alarm. Snoozing every level

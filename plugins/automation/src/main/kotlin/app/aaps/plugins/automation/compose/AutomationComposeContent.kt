@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
@@ -42,7 +39,8 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.plugins.automation.AutomationPlugin
+import app.aaps.core.ui.compose.masterEditingEnabled
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.compose.actions.ActionOption
 import app.aaps.plugins.automation.compose.actions.ChooseActionSheet
@@ -54,7 +52,7 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.full.primaryConstructor
 
 class AutomationComposeContent(
-    private val plugin: AutomationPlugin,
+    private val plugin: AutomationRuntime,
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
@@ -84,7 +82,7 @@ class AutomationComposeContent(
         val ioScope = rememberCoroutineScope()
 
         when (route) {
-            is AutomationRoute.List        -> ListRoute(
+            is AutomationRoute.List -> ListRoute(
                 holder = holder,
                 setToolbarConfig = setToolbarConfig,
                 onNavigateBack = onNavigateBack,
@@ -93,7 +91,7 @@ class AutomationComposeContent(
                 activity = activity
             )
 
-            is AutomationRoute.Edit        -> EditRoute(
+            is AutomationRoute.Edit -> EditRoute(
                 holder = holder,
                 setToolbarConfig = setToolbarConfig,
                 activity = activity
@@ -104,7 +102,7 @@ class AutomationComposeContent(
                 setToolbarConfig = setToolbarConfig
             )
 
-            is AutomationRoute.MapPicker   -> MapPickerRoute(
+            is AutomationRoute.MapPicker -> MapPickerRoute(
                 holder = holder,
                 setToolbarConfig = setToolbarConfig,
                 route = route as AutomationRoute.MapPicker
@@ -122,76 +120,62 @@ class AutomationComposeContent(
         activity: FragmentActivity?
     ) {
         val state by holder.state.collectAsStateWithLifecycle()
-        var showRemoveConfirm by remember { mutableStateOf(false) }
+        var deleteTarget by remember { mutableStateOf<Int?>(null) }
 
         val title = stringResource(R.string.automation)
         val backDesc = stringResource(app.aaps.core.ui.R.string.back)
         val settingsDesc = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
-        val selectionMode = state.selectionMode
-        val selectedCount = state.events.count { it.isSelected }
 
-        LaunchedEffect(selectionMode, selectedCount) {
+        LaunchedEffect(Unit) {
             setToolbarConfig(
                 buildListToolbar(
                     title = title,
                     backDesc = backDesc,
                     settingsDesc = settingsDesc,
-                    selectionMode = selectionMode,
-                    selectedCount = selectedCount,
                     onBack = onNavigateBack,
-                    onExitSelection = { holder.exitSelection() },
                     onRun = onRun,
-                    onStartRemove = { holder.enterRemoveMode() },
-                    onStartSort = { holder.enterSortMode() },
-                    onConfirmRemove = { if (selectedCount > 0) showRemoveConfirm = true else holder.exitSelection() },
-                    onSettings = onSettings
+                    // Run stays master-only (automation executes only on the master). Settings is shown on
+                    // the client too: its sole pref (location-provider mode) is now a Bidirectional synced
+                    // setting the client can change, and the screen resolves on a client (see BuiltInSearchables).
+                    onSettings = onSettings,
+                    showRun = plugin.executionEnabled
                 )
             )
         }
 
+        // On a client whose master is unreachable, edits can't sync right now — grey out the
+        // whole list and hide the add FAB (mirrors the offline-gating of synced preference rows).
+        // Master short-circuits to true, so it is never gated.
+        val editingEnabled = masterEditingEnabled()
+
         AutomationScreen(
             state = state,
             onToggleEnabled = holder::toggleEnabled,
-            onClickEvent = { pos ->
-                when (selectionMode) {
-                    AutomationSelectionMode.None   -> holder.openEdit(pos)
-
-                    AutomationSelectionMode.Remove -> {
-                        val current = state.events.firstOrNull { it.position == pos }?.isSelected == true
-                        holder.toggleSelection(pos, !current)
-                    }
-
-                    AutomationSelectionMode.Sort   -> Unit
-                }
-            },
-            onLongClickEvent = {
-                if (selectionMode == AutomationSelectionMode.None) holder.enterRemoveMode()
-            },
-            onToggleSelect = holder::toggleSelection,
+            onEditEvent = { pos -> holder.openEdit(pos) },
+            onDeleteEvent = { pos -> deleteTarget = pos },
             onMove = holder::move,
             onMoveFinished = holder::commitMove,
-            onAddClick = { holder.openNew() }
+            onAddClick = { holder.openNew() },
+            editingEnabled = editingEnabled
         )
 
-        if (showRemoveConfirm) {
-            val targets = holder.selectedEvents()
-            val message = if (targets.size == 1)
-                stringResource(app.aaps.core.ui.R.string.removerecord) + " " + targets.first().title
-            else
-                stringResource(app.aaps.core.ui.R.string.confirm_remove_multiple_items, targets.size)
+        deleteTarget?.let { pos ->
+            val target = holder.eventAt(pos)
+            val message = stringResource(app.aaps.core.ui.R.string.removerecord) +
+                (target?.let { " " + it.title } ?: "")
             AlertDialog(
-                onDismissRequest = { showRemoveConfirm = false },
+                onDismissRequest = { deleteTarget = null },
                 title = { Text(stringResource(app.aaps.core.ui.R.string.removerecord)) },
                 text = { Text(message) },
                 confirmButton = {
                     TextButton(onClick = {
-                        targets.forEach { uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, it.title) }
-                        holder.removeSelected()
-                        showRemoveConfirm = false
+                        target?.let { uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, it.title) }
+                        holder.remove(pos)
+                        deleteTarget = null
                     }) { Text(stringResource(android.R.string.ok)) }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showRemoveConfirm = false }) {
+                    TextButton(onClick = { deleteTarget = null }) {
                         Text(stringResource(android.R.string.cancel))
                     }
                 }
@@ -467,66 +451,30 @@ private fun buildListToolbar(
     title: String,
     backDesc: String,
     settingsDesc: String,
-    selectionMode: AutomationSelectionMode,
-    selectedCount: Int,
     onBack: () -> Unit,
-    onExitSelection: () -> Unit,
     onRun: () -> Unit,
-    onStartRemove: () -> Unit,
-    onStartSort: () -> Unit,
-    onConfirmRemove: () -> Unit,
-    onSettings: (() -> Unit)?
-): ToolbarConfig = when (selectionMode) {
-    AutomationSelectionMode.Remove -> ToolbarConfig(
-        title = "$selectedCount",
-        navigationIcon = {
-            IconButton(onClick = onExitSelection) {
-                Icon(Icons.Default.Close, contentDescription = backDesc)
-            }
-        },
-        actions = {
-            IconButton(onClick = onConfirmRemove) {
-                Icon(Icons.Default.Delete, contentDescription = null)
+    onSettings: (() -> Unit)?,
+    showRun: Boolean
+): ToolbarConfig = ToolbarConfig(
+    title = title,
+    navigationIcon = {
+        IconButton(onClick = onBack) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDesc)
+        }
+    },
+    actions = {
+        if (onSettings != null) {
+            IconButton(onClick = onSettings) {
+                Icon(Icons.Default.Settings, contentDescription = settingsDesc)
             }
         }
-    )
-
-    AutomationSelectionMode.Sort   -> ToolbarConfig(
-        title = title,
-        navigationIcon = {
-            IconButton(onClick = onExitSelection) {
-                Icon(Icons.Default.Close, contentDescription = backDesc)
-            }
-        },
-        actions = {
-            Icon(Icons.Default.DragHandle, contentDescription = null)
-        }
-    )
-
-    AutomationSelectionMode.None   -> ToolbarConfig(
-        title = title,
-        navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDesc)
-            }
-        },
-        actions = {
-            if (onSettings != null) {
-                IconButton(onClick = onSettings) {
-                    Icon(Icons.Default.Settings, contentDescription = settingsDesc)
-                }
-            }
-            AutomationOverflow(onRun, onStartRemove, onStartSort)
-        }
-    )
-}
+        // "Run now" is master-only — automation does not execute on a client.
+        if (showRun) AutomationOverflow(onRun)
+    }
+)
 
 @Composable
-private fun AutomationOverflow(
-    onRun: () -> Unit,
-    onStartRemove: () -> Unit,
-    onStartSort: () -> Unit
-) {
+private fun AutomationOverflow(onRun: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     IconButton(onClick = { expanded = true }) {
         Icon(Icons.Default.MoreVert, contentDescription = null)
@@ -535,14 +483,6 @@ private fun AutomationOverflow(
         DropdownMenuItem(
             text = { Text(stringResource(R.string.run_automations)) },
             onClick = { expanded = false; onRun() }
-        )
-        DropdownMenuItem(
-            text = { Text(stringResource(app.aaps.core.ui.R.string.remove_items)) },
-            onClick = { expanded = false; onStartRemove() }
-        )
-        DropdownMenuItem(
-            text = { Text(stringResource(app.aaps.core.ui.R.string.sort_items)) },
-            onClick = { expanded = false; onStartSort() }
         )
     }
 }

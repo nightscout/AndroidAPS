@@ -97,6 +97,8 @@ class EmulatorBleTransport(
         val threads = synchronized(pendingThreads) { pendingThreads.toList() }
         for (t in threads) t.join(timeoutMs)
         synchronized(pendingThreads) { pendingThreads.removeAll { !it.isAlive } }
+        // Also drain the emulator's own notification threads (bolus delivery, history events).
+        emulator.awaitPendingCallbacks(timeoutMs)
     }
 
     private fun launchAsync(block: () -> Unit) {

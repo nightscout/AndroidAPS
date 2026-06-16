@@ -76,6 +76,7 @@ fun OverviewScreen(
     sceneExpired: Boolean = false,
     onEndScene: () -> Unit = {},
     onDismissScene: () -> Unit = {},
+    endSceneEnabled: Boolean = true,
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
     paddingValues: PaddingValues,
     fabBottomOffset: Dp = 0.dp,
@@ -104,11 +105,11 @@ fun OverviewScreen(
         }
     }
 
-    val runningModeSceneManaged = activeSceneState?.priorState?.sceneRunningModeId
+    val runningModeSceneManaged = activeSceneState?.scopedRecords?.rmId
         ?.let { it == runningModeRecordId && it > 0 } == true
-    val tempTargetSceneManaged = activeSceneState?.priorState?.sceneTtId
+    val tempTargetSceneManaged = activeSceneState?.scopedRecords?.ttId
         ?.let { it == tempTargetRecordId && it > 0 } == true
-    val profileSceneManaged = activeSceneState?.priorState?.scenePsId
+    val profileSceneManaged = activeSceneState?.scopedRecords?.psId
         ?.let { it == profilePsId && it > 0 } == true
 
     val configuration = LocalConfiguration.current
@@ -149,6 +150,7 @@ fun OverviewScreen(
                 sceneExpired = sceneExpired,
                 onEndScene = onEndScene,
                 onDismissScene = onDismissScene,
+                endSceneEnabled = endSceneEnabled,
                 formatDuration = formatDuration
             )
         } else BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -185,6 +187,7 @@ fun OverviewScreen(
                     sceneExpired = sceneExpired,
                     onEndScene = onEndScene,
                     onDismissScene = onDismissScene,
+                    endSceneEnabled = endSceneEnabled,
                     formatDuration = formatDuration
                 )
             } else {
@@ -220,6 +223,7 @@ fun OverviewScreen(
                     sceneExpired = sceneExpired,
                     onEndScene = onEndScene,
                     onDismissScene = onDismissScene,
+                    endSceneEnabled = endSceneEnabled,
                     formatDuration = formatDuration
                 )
             }

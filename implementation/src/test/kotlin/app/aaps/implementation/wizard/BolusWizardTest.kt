@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -13,7 +14,6 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -39,7 +39,6 @@ class BolusWizardTest : TestBaseWithProfile() {
     private val pumpBolusStep = 0.1
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
-    @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: Loop
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
@@ -51,6 +50,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var runningModeGuard: RunningModeGuard
     @Mock lateinit var activeInsulin: Insulin
+    @Mock lateinit var wizardBolusExecutor: WizardBolusExecutor
 
     @BeforeEach
     fun prepare() {
@@ -95,9 +95,9 @@ class BolusWizardTest : TestBaseWithProfile() {
 
     private fun createWizard() = BolusWizard(
         aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, activePlugin,
-        commandQueue, loop, iobCobCalculator, dateUtil, config, uel, automation, glucoseStatusProvider, uiInteraction,
+        loop, iobCobCalculator, dateUtil, config, uel, automation, glucoseStatusProvider, uiInteraction,
         persistenceLayer, decimalFormatter, processedDeviceStatusData, runningModeGuard, activeInsulin,
-        CoroutineScope(Dispatchers.Unconfined)
+        wizardBolusExecutor, CoroutineScope(Dispatchers.Unconfined)
     )
 
     // ==========================================

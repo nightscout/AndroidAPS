@@ -24,7 +24,7 @@ import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.launch

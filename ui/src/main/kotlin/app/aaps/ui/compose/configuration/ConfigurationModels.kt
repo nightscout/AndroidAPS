@@ -16,5 +16,7 @@ data class ConfigCategoryUiModel(
     val plugins: List<ConfigPluginUiModel>,
     val isMultiSelect: Boolean,
     val subtitle: String,
-    val categoryIcon: ImageVector?
+    val categoryIcon: ImageVector?,
+    /** True only on a client for a category whose selection syncs to the master — drives the sync badge. */
+    val synced: Boolean = false
 )

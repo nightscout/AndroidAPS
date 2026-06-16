@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
@@ -50,7 +51,6 @@ import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.plugins.calibration.CalibrationFit
 import app.aaps.plugins.calibration.FitMode
 import app.aaps.plugins.calibration.R
-import app.aaps.plugins.calibration.db.CalibrationEntry
 import kotlin.math.roundToInt
 
 @Composable
@@ -188,9 +188,9 @@ private fun CalibrationScreenContentPreview() {
     val now = 1_700_000_000_000L
     val hour = 3_600_000L
     val entries = listOf(
-        CalibrationEntry(id = 1, timestamp = now - 5 * hour, fingerstickMgdl = 120.0, sensorMgdlAtPairing = 110.0),
-        CalibrationEntry(id = 2, timestamp = now - 3 * hour, fingerstickMgdl = 150.0, sensorMgdlAtPairing = 145.0),
-        CalibrationEntry(id = 3, timestamp = now - 1 * hour, fingerstickMgdl = 95.0, sensorMgdlAtPairing = 90.0)
+        CAL(id = 1, timestamp = now - 5 * hour, fingerstickMgdl = 120.0, sensorMgdlAtPairing = 110.0),
+        CAL(id = 2, timestamp = now - 3 * hour, fingerstickMgdl = 150.0, sensorMgdlAtPairing = 145.0),
+        CAL(id = 3, timestamp = now - 1 * hour, fingerstickMgdl = 95.0, sensorMgdlAtPairing = 90.0)
     )
     MaterialTheme {
         CalibrationScreenContent(
@@ -388,7 +388,7 @@ private fun EmptyEntries() {
 
 @Composable
 private fun EntriesList(
-    entries: List<CalibrationEntry>,
+    entries: List<CAL>,
     selectedEntryId: Long?,
     glucoseUnit: GlucoseUnit,
     listState: LazyListState,
@@ -418,7 +418,7 @@ private fun EntriesList(
 
 @Composable
 private fun EntryRow(
-    entry: CalibrationEntry,
+    entry: CAL,
     selected: Boolean,
     glucoseUnit: GlucoseUnit,
     formatTime: (Long) -> String,

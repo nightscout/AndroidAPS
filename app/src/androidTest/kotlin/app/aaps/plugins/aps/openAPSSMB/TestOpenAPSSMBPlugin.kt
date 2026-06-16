@@ -43,7 +43,6 @@ import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
-import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -92,9 +91,6 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
     // last values
     override var lastAPSRun: Long = 0
     override val algorithm = APSResult.Algorithm.SMB
-    override fun configuration(): JsonObject = JsonObject(emptyMap())
-    override fun applyConfiguration(configuration: JsonObject) {
-    }
 
     override var lastAPSResult: DetermineBasalResultSMBFromJS? = null
 

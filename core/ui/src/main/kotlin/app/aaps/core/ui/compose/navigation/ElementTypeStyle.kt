@@ -3,6 +3,7 @@ package app.aaps.core.ui.compose.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -29,13 +30,13 @@ import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
+import app.aaps.core.ui.compose.icons.IcPluginFood
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.icons.IcQuestion
-import app.aaps.core.ui.compose.icons.IcPluginFood
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.core.ui.compose.icons.IcSetupWizard
 import app.aaps.core.ui.compose.icons.IcSiteRotation
@@ -62,6 +63,7 @@ fun ElementType.color(): Color = when (this) {
     ElementType.BOLUS_WIZARD            -> AapsTheme.elementColors.bolusWizard
     ElementType.QUICK_WIZARD,
     ElementType.QUICK_WIZARD_MANAGEMENT -> AapsTheme.elementColors.quickWizard
+
     ElementType.FOOD_MANAGEMENT         -> AapsTheme.elementColors.carbs
 
     ElementType.CGM_XDRIP               -> AapsTheme.elementColors.cgmXdrip
@@ -86,7 +88,9 @@ fun ElementType.color(): Color = when (this) {
     ElementType.SITE_ROTATION           -> AapsTheme.elementColors.siteRotation
     ElementType.TEMP_BASAL              -> AapsTheme.elementColors.tempBasal
     ElementType.EXTENDED_BOLUS          -> AapsTheme.elementColors.extendedBolus
-    ElementType.AUTOMATION              -> AapsTheme.elementColors.automation
+    ElementType.AUTOMATION,
+    ElementType.AUTOMATION_MANAGEMENT   -> AapsTheme.elementColors.automation
+
     ElementType.PUMP                    -> AapsTheme.elementColors.pump
     ElementType.SETTINGS,
     ElementType.QUICK_LAUNCH_CONFIG     -> AapsTheme.elementColors.settings
@@ -107,6 +111,10 @@ fun ElementType.color(): Color = when (this) {
     ElementType.SENSITIVITY             -> AapsTheme.elementColors.sensitivity
     ElementType.SCENE,
     ElementType.SCENE_MANAGEMENT        -> AapsTheme.elementColors.scene
+
+    ElementType.AUTHORIZED_CLIENTS,
+    ElementType.PAIR_WITH_MASTER        -> AapsTheme.elementColors.navigation
+
     ElementType.RUNNING_MODE            -> AapsTheme.elementColors.runningMode
     ElementType.USER_ENTRY              -> AapsTheme.elementColors.userEntry
     ElementType.LOOP                    -> AapsTheme.elementColors.loop
@@ -120,6 +128,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.BOLUS_WIZARD            -> IcCalculator
     ElementType.QUICK_WIZARD,
     ElementType.QUICK_WIZARD_MANAGEMENT -> IcQuickwizard
+
     ElementType.FOOD_MANAGEMENT         -> IcPluginFood
 
     ElementType.TREATMENT               -> Icons.Default.Add
@@ -144,7 +153,9 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.SITE_ROTATION           -> IcSiteRotation
     ElementType.TEMP_BASAL              -> IcTbrHigh
     ElementType.EXTENDED_BOLUS          -> IcExtendedBolus
-    ElementType.AUTOMATION              -> IcPluginAutomation
+    ElementType.AUTOMATION,
+    ElementType.AUTOMATION_MANAGEMENT   -> IcPluginAutomation
+
     ElementType.PUMP                    -> Pump
     ElementType.SETTINGS                -> Icons.Default.Settings
     ElementType.QUICK_LAUNCH_CONFIG     -> Icons.Default.Settings
@@ -161,7 +172,10 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.COB                     -> IcCarbs
     ElementType.SENSITIVITY             -> IcAs
     ElementType.SCENE,
-    ElementType.SCENE_MANAGEMENT        -> IcAutomation  // TODO: rename IcScene ?
+    ElementType.SCENE_MANAGEMENT        -> IcAutomation  // TODO: create dedicated scene icon
+    ElementType.AUTHORIZED_CLIENTS,
+    ElementType.PAIR_WITH_MASTER        -> Icons.Default.Devices
+
     ElementType.RUNNING_MODE            -> IcLoopClosed
     ElementType.USER_ENTRY              -> IcUserOptions
     ElementType.LOOP                    -> IcLoopClosed
@@ -196,6 +210,7 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.TEMP_BASAL              -> R.string.temp_basal
     ElementType.EXTENDED_BOLUS          -> R.string.extended_bolus
     ElementType.AUTOMATION              -> 0 // dynamic label
+    ElementType.AUTOMATION_MANAGEMENT   -> R.string.automation
     ElementType.PUMP                    -> R.string.pump
     ElementType.SETTINGS                -> R.string.settings
     ElementType.QUICK_LAUNCH_CONFIG     -> R.string.quick_launch_configure
@@ -212,6 +227,8 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.SENSITIVITY             -> R.string.sensitivity
     ElementType.SCENE                   -> 0 // dynamic label
     ElementType.SCENE_MANAGEMENT        -> R.string.scene_management
+    ElementType.AUTHORIZED_CLIENTS      -> R.string.authorized_clients_manage_label
+    ElementType.PAIR_WITH_MASTER        -> R.string.pair_with_master_manage_label
     ElementType.RUNNING_MODE            -> R.string.running_mode
     ElementType.USER_ENTRY              -> R.string.user_entry
     ElementType.LOOP                    -> R.string.loop
@@ -258,6 +275,9 @@ fun ElementType.descriptionResId(): Int = when (this) {
     ElementType.QUICK_LAUNCH_CONFIG     -> R.string.quick_launch_configure_desc
     ElementType.SCENE                   -> R.string.scene_desc
     ElementType.SCENE_MANAGEMENT        -> R.string.scene_management_desc
+    ElementType.AUTOMATION_MANAGEMENT   -> R.string.automation_management_desc
+    ElementType.AUTHORIZED_CLIENTS      -> R.string.authorized_clients_manage_desc
+    ElementType.PAIR_WITH_MASTER        -> R.string.pair_with_master_manage_desc
     ElementType.QUICK_WIZARD,
     ElementType.RUNNING_MODE,
     ElementType.AUTOMATION,

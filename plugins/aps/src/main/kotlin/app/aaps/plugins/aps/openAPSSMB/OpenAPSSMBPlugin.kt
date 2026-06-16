@@ -52,8 +52,6 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
-import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcPluginOpenAPS
@@ -67,7 +65,6 @@ import app.aaps.plugins.aps.openAPS.TddStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -116,7 +113,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .pluginName(R.string.openapssmb)
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesVisibleInSimpleMode(false)
-        .showInList(showInList = { config.APS })
+        .showInList { config.APS || config.AAPSCLIENT }   // AAPSCLIENT: visible so a client can select the master's APS
         .description(R.string.description_smb)
         .setDefault(),
     ownPreferences = listOf(ApsIntentKey::class.java),
@@ -573,19 +570,6 @@ open class OpenAPSSMBPlugin @Inject constructor(
             if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         }
         return value
-    }
-
-    override fun configuration(): JsonObject =
-        JsonObject(emptyMap())
-            .put(BooleanKey.ApsUseDynamicSensitivity, preferences)
-            .put(IntKey.ApsDynIsfAdjustmentFactor, preferences)
-            .put(BooleanKey.ApsUseSmb, preferences)
-
-    override fun applyConfiguration(configuration: JsonObject) {
-        configuration
-            .store(BooleanKey.ApsUseDynamicSensitivity, preferences)
-            .store(IntKey.ApsDynIsfAdjustmentFactor, preferences)
-            .store(BooleanKey.ApsUseSmb, preferences)
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

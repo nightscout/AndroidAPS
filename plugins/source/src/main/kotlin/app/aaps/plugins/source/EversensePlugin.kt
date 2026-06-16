@@ -1,4 +1,4 @@
-﻿package app.aaps.plugins.source
+package app.aaps.plugins.source
 
 import android.Manifest
 import android.content.Intent
@@ -272,8 +272,8 @@ class EversensePlugin @Inject constructor(
             val lifetimeDays = if (eversense.is365()) 365 else 180
             val warnHours  = (lifetimeDays - 30) * 24   // orange when 30 days remaining
             val urgentHours = (lifetimeDays - 10) * 24  // red when 10 days remaining
-            preferences.put(IntKey.OverviewSageWarning, warnHours)
-            preferences.put(IntKey.OverviewSageCritical, urgentHours)
+
+
         }
 
         // Check for persistent no-signal — indicates transmitter not placed over sensor

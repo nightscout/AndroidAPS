@@ -35,6 +35,13 @@ abstract class PluginBase(
     open val name: String
         get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else rh.gs(pluginDescription.pluginName)
 
+    /**
+     * Stable identity for syncing the active-plugin selection (see the `ActivePlugin*` keys). Defaults to
+     * the class simple name — matching the legacy `RunningConfiguration` encoding, so dual-write stays
+     * consistent. Override to decouple from the class name (survive rename / R8) when a durable id is needed.
+     */
+    open val pluginId: String get() = javaClass.simpleName
+
     //only if translation exists
     // use long name as fallback
     val nameShort: String

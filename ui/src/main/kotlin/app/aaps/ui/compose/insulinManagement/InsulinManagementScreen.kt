@@ -60,17 +60,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.graph.InsulinGraphCompose
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
+import app.aaps.core.ui.compose.masterEditingEnabled
+import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.ui.R
 import kotlin.math.absoluteValue
 import app.aaps.core.keys.R as KeysR
@@ -95,7 +100,12 @@ fun InsulinManagementScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
-    val isPlayMode = uiState.screenMode == ScreenMode.PLAY
+    // On a client whose master is unreachable, force VIEW-ONLY so insulin (synced config) edits can't be made
+    // while they couldn't sync. DERIVED from current state (no setScreenMode side-effect) → deterministic at
+    // startup and flips the instant reachability changes. Master is never gated. Both edits AND the
+    // master-bound Activate FAB (a client→master command) are gated by this on a client.
+    val editingEnabled = masterEditingEnabled()
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled
 
     // Set initial mode
     LaunchedEffect(initialMode) {
@@ -118,6 +128,9 @@ fun InsulinManagementScreen(
 
     // Dialog states
     var showDeleteDialog by remember { mutableStateOf(false) }
+
+    // The MASTER's prepared activation confirmation (bolusId + its lines), set via the ShowConfirmation side effect.
+    var activationConfirmation by remember { mutableStateOf<Pair<Long, List<ConfirmationLine>>?>(null) }
 
     // Scroll-to-page state for programmatic scrolling
     var scrollToPage by remember { mutableStateOf<Int?>(null) }
@@ -142,8 +155,12 @@ fun InsulinManagementScreen(
                     scrollToPage = effect.index
                 }
 
-                is InsulinManagementViewModel.SideEffect.NavigateBack    -> {
+                is InsulinManagementViewModel.SideEffect.NavigateBack -> {
                     onNavigateBack()
+                }
+
+                is InsulinManagementViewModel.SideEffect.ShowConfirmation -> {
+                    activationConfirmation = effect.bolusId to effect.lines
                 }
             }
         }
@@ -163,14 +180,27 @@ fun InsulinManagementScreen(
         )
     }
 
-    // Activate confirmation dialog
-    uiState.activationMessage?.let { message ->
+    // Activate confirmation dialog — renders the MASTER's prepared lines (set via ShowConfirmation after prepare()).
+    activationConfirmation?.let { (bolusId, lines) ->
+        ElementConfirmationDialog(
+            elementType = ElementType.INSULIN_MANAGEMENT,
+            lines = lines,
+            onConfirm = {
+                viewModel.commit(bolusId)
+                activationConfirmation = null
+            },
+            onDismiss = { activationConfirmation = null }
+        )
+    }
+
+    // External (client→master sync) update arrived while the user has unsaved edits
+    if (uiState.externalUpdatePending) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.activate_insulin),
-            message = message,
+            title = stringResource(R.string.insulin_external_update_title),
+            message = stringResource(R.string.insulin_external_update_message),
             icon = IcPluginInsulin,
-            onConfirm = { viewModel.executeActivation() },
-            onDismiss = { viewModel.dismissActivation() }
+            onConfirm = { viewModel.acceptExternalUpdate() },
+            onDismiss = { viewModel.dismissExternalUpdate() }
         )
     }
 
@@ -235,6 +265,7 @@ fun InsulinManagementScreen(
                 .clearFocusOnTap(focusManager)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
+                MasterOfflineBanner(editingEnabled = editingEnabled)
                 if (cardCount > 0) {
                     // Carousel
                     val pagerState = rememberPagerState(
@@ -445,7 +476,10 @@ fun InsulinManagementScreen(
                         }
                     }
                     val currentIcfgConcentration = uiState.insulins.getOrNull(uiState.currentCardIndex)?.concentration ?: 0.0
-                    if (currentIcfgConcentration == uiState.activeConcentration)
+                    // Activate is a client→master command (prepareActivation relays via BatchExecutor) — hide it
+                    // when the master is unreachable, since it couldn't be delivered (editingEnabled == "can
+                    // reach the master"). On a master, editingEnabled is always true.
+                    if (editingEnabled && currentIcfgConcentration == uiState.activeConcentration)
                     // Activate FAB
                         AapsFab(
                             onClick = {

@@ -4,13 +4,19 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.data.ui.confirmationLines
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -19,11 +25,8 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -32,8 +35,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.extensions.observeChange
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -44,20 +46,21 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.abs
+import app.aaps.core.ui.R as CoreUiR
 
 @HiltViewModel
 @Stable
 class FillDialogViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val constraintChecker: ConstraintsChecker,
-    private val commandQueue: CommandQueue,
     activePlugin: ActivePlugin,
-    private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     val preferences: Preferences,
     val config: Config,
@@ -69,7 +72,8 @@ class FillDialogViewModel @Inject constructor(
     private val ch: ConcentrationHelper,
     insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val runningModeGuard: RunningModeGuard,
+    private val wizardBolusExecutor: WizardBolusExecutor,
+    private val batchExecutor: BatchExecutor,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -133,6 +137,17 @@ class FillDialogViewModel @Inject constructor(
             }
         }
         loadLastSiteLocation()
+        observeConcentrationEnabled()
+    }
+
+    // The concentration-support flag is a synced preference (it can change from another device while
+    // this dialog is open). This dialog is not a preference screen, so it isn't covered by the
+    // shared-state observer in ProvidePreferenceTheme — observe the key here instead of only
+    // snapshotting it at construction.
+    private fun observeConcentrationEnabled() {
+        preferences.observeChange(BooleanKey.GeneralInsulinConcentration)
+            .onEach { _uiState.update { it.copy(concentrationEnabled = preferences.get(BooleanKey.GeneralInsulinConcentration)) } }
+            .launchIn(viewModelScope)
     }
 
     private fun loadLastSiteLocation() {
@@ -217,78 +232,65 @@ class FillDialogViewModel @Inject constructor(
         _uiState.update { it.copy(siteArrow = arrow) }
     }
 
-    /**
-     * A line in the confirmation summary.
-     * @param text The text to display
-     * @param color Semantic color role: NORMAL (default), INSULIN (accent), WARNING (error/red)
-     */
-    data class SummaryLine(val text: String, val color: SummaryColor = SummaryColor.NORMAL)
-
-    enum class SummaryColor { NORMAL, INSULIN, WARNING }
-
     private var confirmedState: FillDialogUiState? = null
 
-    fun buildConfirmationSummary(): List<SummaryLine> {
+    fun buildConfirmationSummary(): List<ConfirmationLine> {
         val state = uiState.value
         confirmedState = state
-        val lines = mutableListOf<SummaryLine>()
         val bolusStep = state.bolusStep
 
-        if (state.insulinAfterConstraints > 0) {
-            lines.add(SummaryLine(rh.gs(R.string.fill_warning)))
-            lines.add(SummaryLine(""))
-            val bolusText = rh.gs(R.string.fill_prime_amount) + ": " +
-                if (state.siteChange || state.insulinCartridgeChange)
-                    ch.bolusWithVolume(state.insulinAfterConstraints)
-                else
-                    decimalFormatter.toPumpSupportedBolus(state.insulinAfterConstraints, bolusStep)
-            lines.add(SummaryLine(bolusText, SummaryColor.INSULIN))
-            if (state.constraintApplied) {
-                lines.add(
-                    SummaryLine(
+        return confirmationLines {
+            if (state.insulinAfterConstraints > 0) {
+                line(ConfirmationRole.WARNING, rh.gs(R.string.fill_warning))
+                line(ConfirmationRole.NORMAL, "")
+                val bolusValue =
+                    if (state.siteChange || state.insulinCartridgeChange)
+                        ch.bolusWithVolume(state.insulinAfterConstraints)
+                    else
+                        decimalFormatter.toPumpSupportedBolusWithUnits(state.insulinAfterConstraints, bolusStep)
+                line(ConfirmationRole.BOLUS, rh.gs(CoreUiR.string.confirmation_line, rh.gs(R.string.fill_prime_amount), bolusValue))
+                if (state.constraintApplied) {
+                    line(
+                        ConfirmationRole.WARNING,
                         rh.gs(
-                            app.aaps.core.ui.R.string.bolus_constraint_applied_warn,
+                            CoreUiR.string.bolus_constraint_applied_warn,
                             state.insulin,
                             state.insulinAfterConstraints
                         )
                     )
+                }
+                pumpUnitsWarningFor(state.selectedInsulin)?.let { warning ->
+                    line(ConfirmationRole.WARNING, warning)
+                }
+            }
+
+            if (state.siteChange) {
+                line(ConfirmationRole.NORMAL, rh.gs(R.string.record_pump_site_change))
+            }
+
+            if (state.insulinCartridgeChange) {
+                line(ConfirmationRole.NORMAL, rh.gs(R.string.record_insulin_cartridge_change))
+            }
+
+            if (state.insulinChanged) {
+                line(
+                    ConfirmationRole.WARNING,
+                    rh.gs(R.string.fill_insulin_change, state.selectedInsulin?.insulinLabel ?: "")
                 )
             }
-            pumpUnitsWarningFor(state.selectedInsulin)?.let { warning ->
-                lines.add(SummaryLine(warning, SummaryColor.WARNING))
+
+            if (state.notes.isNotEmpty()) {
+                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.notes_label), state.notes))
+            }
+
+            if (state.eventTimeChanged) {
+                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.time), dateUtil.dateAndTimeString(state.eventTime)))
+            }
+
+            if (state.siteRotationEnabled && state.siteLocation != TE.Location.NONE) {
+                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.site_location), translator.translate(state.siteLocation)))
             }
         }
-
-        if (state.siteChange) {
-            lines.add(SummaryLine(rh.gs(R.string.record_pump_site_change)))
-        }
-
-        if (state.insulinCartridgeChange) {
-            lines.add(SummaryLine(rh.gs(R.string.record_insulin_cartridge_change)))
-        }
-
-        if (state.insulinChanged) {
-            lines.add(
-                SummaryLine(
-                    rh.gs(R.string.fill_insulin_change, state.selectedInsulin?.insulinLabel ?: ""),
-                    SummaryColor.WARNING
-                )
-            )
-        }
-
-        if (state.notes.isNotEmpty()) {
-            lines.add(SummaryLine(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + state.notes))
-        }
-
-        if (state.eventTimeChanged) {
-            lines.add(SummaryLine(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime)))
-        }
-
-        if (state.siteRotationEnabled && state.siteLocation != TE.Location.NONE) {
-            lines.add(SummaryLine(rh.gs(app.aaps.core.ui.R.string.site_location) + ": " + translator.translate(state.siteLocation)))
-        }
-
-        return lines
     }
 
     fun confirmAndSave() {
@@ -309,26 +311,29 @@ class FillDialogViewModel @Inject constructor(
         // independently so the site/insulin change logging below is never gated behind the
         // (potentially long) prime completing — previously a prime would drop those records.
         if (hasPrimeBolus) {
-            uel.log(
-                action = Action.PRIME_BOLUS, source = Sources.FillDialog,
-                note = notes,
-                value = ValueWithUnit.Insulin(state.insulinAfterConstraints)
-            )
+            // Prime now rides the shared executor (one audited path): it logs the user entry, sets the
+            // PRIMING treatment + notes, and the profile switch is sequenced on prime success.
             appScope.launch {
-                requestPrimeBolus(state.insulinAfterConstraints, notes) {
-                    // After successful prime, do profile switch if insulin changed
-                    if (doProfileSwitch) {
-                        appScope.launch {
-                            profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                wizardBolusExecutor.deliverFillBolus(
+                    amount = state.insulinAfterConstraints,
+                    notes = notes,
+                    source = Sources.FillDialog,
+                    onError = { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) },
+                    onSuccess = {
+                        // After successful prime, do profile switch if insulin changed
+                        if (doProfileSwitch) {
+                            appScope.launch {
+                                activateInsulin(state.selectedInsulin!!)
+                            }
                         }
                     }
-                }
+                )
             }
         } else {
             // No prime — do profile switch immediately if insulin changed
             if (doProfileSwitch) {
                 appScope.launch {
-                    profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                    activateInsulin(state.selectedInsulin!!)
                 }
             }
         }
@@ -389,21 +394,28 @@ class FillDialogViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Non-interactive insulin activation for the fill flow (a chained profile switch after a prime) — relays through
+     * the master-controlled [BatchExecutor] like everything else, but with NO confirmation UI: prepare then commit
+     * back-to-back. Master → local; client → signed round-trip. Failures are surfaced by the round-trip's app-level
+     * modal (client); on the master-local path they have no UI here, so a [ActionProgress.Rejected] prepare/commit is
+     * logged (no longer silently swallowed), matching the prior fire-and-forget semantics otherwise.
+     */
+    private suspend fun activateInsulin(iCfg: ICfg) {
+        val label = rh.gs(CoreUiR.string.activate_insulin)
+        when (val prepared = batchExecutor.prepare(listOf(BatchAction.InsulinActivate(iCfg)), Sources.FillDialog, label)) {
+            is ActionProgress.Prepared -> {
+                val committed = batchExecutor.commit(prepared.id, Sources.FillDialog, label)
+                if (committed is ActionProgress.Rejected)
+                    aapsLogger.warn(LTag.UI, "Fill insulin activation commit rejected: ${committed.reason} ${committed.detail}")
+            }
+
+            is ActionProgress.Rejected -> aapsLogger.warn(LTag.UI, "Fill insulin activation prepare rejected: ${prepared.reason} ${prepared.detail}")
+            else                       -> Unit
+        }
+    }
+
     fun decimalFormat(): DecimalFormat =
         decimalFormatter.pumpSupportedBolusFormat(uiState.value.bolusStep)
 
-    private suspend fun requestPrimeBolus(insulin: Double, notes: String, onSuccess: (() -> Unit)? = null) {
-        if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
-        val detailedBolusInfo = DetailedBolusInfo().also {
-            it.insulin = insulin
-            it.bolusType = BS.Type.PRIMING
-            it.notes = notes
-        }
-        val result = commandQueue.bolus(detailedBolusInfo)
-        if (!result.success) {
-            _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-        } else {
-            onSuccess?.invoke()
-        }
-    }
 }

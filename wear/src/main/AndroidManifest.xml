@@ -674,7 +674,7 @@
             android:label="@string/menu_wizard"
             android:theme="@style/WearAppCompatDark" />
         <activity
-            android:name=".interaction.actions.WizardResultActivity"
+            android:name=".interaction.actions.ContactingMasterActivity"
             android:exported="false"
             android:theme="@style/WearAppCompatDark" />
         <activity

@@ -9,6 +9,9 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.data.ui.confirmationLines
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -195,23 +198,23 @@ class SiteRotationManagementViewModel @Inject constructor(
 
     private var confirmedTe: TE? = null
 
-    fun buildConfirmationSummary(): List<String> {
-        val lines = mutableListOf<String>()
+    fun buildConfirmationSummary(): List<ConfirmationLine> {
         val te = uiState.value.editedTe
         confirmedTe = te
-        te?.let {
-            if (it.location != loadedLocation)
-                lines.add(rh.gs(R.string.record_site_location, translator.translate(it.location)))
-            if (it.arrow != loadedArrow)
-                lines.add(rh.gs(R.string.record_site_arrow, translator.translate(it.arrow)))
-            if (it.note != loadedNote) {
-                if (!it.note.isNullOrEmpty())
-                    lines.add(rh.gs(R.string.record_site_note, it.note))
-                else
-                    lines.add(rh.gs(R.string.delete_site_note))
+        return confirmationLines {
+            te?.let {
+                if (it.location != loadedLocation)
+                    line(ConfirmationRole.NORMAL, rh.gs(R.string.record_site_location, translator.translate(it.location)))
+                if (it.arrow != loadedArrow)
+                    line(ConfirmationRole.NORMAL, rh.gs(R.string.record_site_arrow, translator.translate(it.arrow)))
+                if (it.note != loadedNote) {
+                    if (!it.note.isNullOrEmpty())
+                        line(ConfirmationRole.NORMAL, rh.gs(R.string.record_site_note, it.note))
+                    else
+                        line(ConfirmationRole.NORMAL, rh.gs(R.string.delete_site_note))
+                }
             }
         }
-        return lines
     }
 
     fun confirmAndSave() {

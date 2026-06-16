@@ -153,6 +153,7 @@ org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", v
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
 com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta09" } # do not update to 4.xx
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
+com-google-zxing-core = { group = "com.google.zxing", name = "core", version = "3.5.3" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.2" }
 org-osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version = "6.1.20" }
 io-kotlintest-runner-junit5 = { group = "io.kotlintest", name = "kotlintest-runner-junit5", version = "3.4.2" }

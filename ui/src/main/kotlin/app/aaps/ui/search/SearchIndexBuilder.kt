@@ -213,6 +213,11 @@ class SearchIndexBuilder @Inject constructor(
             // Skip keys with invalid title resource
             if (prefKey.titleResId == 0) return@forEach
 
+            // Skip keys not visible in the current build mode (mirror calculatePreferenceVisibility)
+            if (preferences.apsMode && !prefKey.showInApsMode) return@forEach
+            if (preferences.nsclientMode && !prefKey.showInNsClientMode) return@forEach
+            if (preferences.pumpControlMode && !prefKey.showInPumpControlMode) return@forEach
+
             val parentInfo = parentScreenMap[prefKey.key]
             val item = SearchableItem.Preference(prefKey, parentInfo?.key, parentInfo?.plugin)
             val entry = createIndexEntry(item)

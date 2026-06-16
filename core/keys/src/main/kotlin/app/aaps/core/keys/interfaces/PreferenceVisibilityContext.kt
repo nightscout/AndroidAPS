@@ -37,6 +37,13 @@ interface PreferenceVisibilityContext {
     val preferences: Preferences
 
     /**
+     * Whether this build runs in client (AAPSCLIENT) mode.
+     * Used to gate mode-exclusive elements (e.g. master-only vs client-only screens).
+     */
+    val isClient: Boolean
+        get() = false
+
+    /**
      * Whether the pump is currently paired/connected.
      * Used by pump plugins like ComboV2 to enable/disable pairing preferences.
      */

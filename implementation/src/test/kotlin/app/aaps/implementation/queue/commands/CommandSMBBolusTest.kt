@@ -59,7 +59,7 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         val info = smbInfo()
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
 
@@ -101,12 +101,14 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         val info = smbInfo()
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(info, callback).executeWithCallback()
@@ -119,7 +121,9 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(smbInfo(), callback).cancel(app.aaps.core.ui.R.string.command_replaced)
@@ -134,7 +138,9 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(smbInfo(), callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)

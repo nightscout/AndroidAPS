@@ -27,6 +27,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,6 +79,7 @@ class QuickWizardManagementViewModel @Inject constructor(
     init {
         loadData()
         observeQuickWizardChanges()
+        observeQuickWizardPrefChanges()
     }
 
     override fun onCleared() {
@@ -134,6 +138,19 @@ class QuickWizardManagementViewModel @Inject constructor(
                        }, { throwable ->
                            aapsLogger.error(LTag.UI, "Error observing QuickWizard changes", throwable)
                        })
+    }
+
+    /**
+     * Observe QuickWizard changes that don't originate from this screen — edits on another screen or
+     * a value synced from the main phone. [QuickWizard.changes] bumps after the domain cache reloads,
+     * so [loadData] reads fresh entries (no race with the cache update). The local-edit path is still
+     * covered by [EventQuickWizardChange] above.
+     */
+    private fun observeQuickWizardPrefChanges() {
+        quickWizard.changes
+            .drop(1) // skip initial value; loadData() in init already read the current entries
+            .onEach { loadData() }
+            .launchIn(viewModelScope)
     }
 
     /**

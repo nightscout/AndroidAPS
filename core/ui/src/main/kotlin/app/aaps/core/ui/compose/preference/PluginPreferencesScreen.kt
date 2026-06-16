@@ -25,11 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MasterOfflineBanner
+import app.aaps.core.ui.compose.masterEditingEnabled
 import kotlinx.coroutines.launch
 
 /**
@@ -72,7 +73,6 @@ fun PluginPreferencesScreen(
                     SinglePluginPreferencesRenderer(
                         screen = preferenceScreenContent,
                         title = title,
-                        plugin = plugin,
                         visibilityContext = visibilityContext,
                         onBackClick = onBackClick
                     )
@@ -122,41 +122,9 @@ fun PluginPreferencesScreen(
 private fun SinglePluginPreferencesRenderer(
     screen: PreferenceSubScreenDef,
     title: String,
-    plugin: PluginBase,
     visibilityContext: PreferenceVisibilityContext?,
     onBackClick: () -> Unit
 ) {
-    val pluginWithPrefs = plugin as? PluginBaseWithPreferences
-    if (pluginWithPrefs == null) {
-        // Plugin doesn't support preferences - show message in proper container
-        Scaffold(
-            topBar = {
-                AapsTopAppBar(
-                    title = { Text(title) },
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
-                        }
-                    }
-                )
-            },
-            containerColor = MaterialTheme.colorScheme.background
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(app.aaps.core.ui.R.string.plugin_no_preferences),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        }
-        return
-    }
-
     val sectionState = rememberPreferenceSectionState()
     val snackbarHostState = LocalSnackbarHostState.current
     val snackbarScope = rememberCoroutineScope()
@@ -198,6 +166,7 @@ private fun SinglePluginPreferencesRenderer(
                     .verticalScrollIndicators(listState),
                 state = listState
             ) {
+                item { MasterOfflineBanner(editingEnabled = masterEditingEnabled()) }
                 // Use the same addPreferenceContent() as AllPreferencesScreen
                 // This renders as collapsible sections, not navigation
                 addPreferenceContent(

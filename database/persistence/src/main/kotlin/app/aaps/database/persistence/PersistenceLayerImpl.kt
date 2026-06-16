@@ -3,6 +3,7 @@ package app.aaps.database.persistence
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
@@ -35,6 +36,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.CalibrationEntry
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
@@ -66,6 +68,7 @@ import app.aaps.database.transactions.InsertOrUpdateApsResultTransaction
 import app.aaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import app.aaps.database.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransaction
+import app.aaps.database.transactions.InsertOrUpdateCalibrationEntryTransaction
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.transactions.InsertOrUpdateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
@@ -77,6 +80,7 @@ import app.aaps.database.transactions.InsertOrUpdateTherapyEventTransaction
 import app.aaps.database.transactions.InsertTemporaryBasalWithTempIdTransaction
 import app.aaps.database.transactions.InvalidateBolusCalculatorResultTransaction
 import app.aaps.database.transactions.InvalidateBolusTransaction
+import app.aaps.database.transactions.InvalidateCalibrationEntryTransaction
 import app.aaps.database.transactions.InvalidateCarbsTransaction
 import app.aaps.database.transactions.InvalidateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InvalidateExtendedBolusTransaction
@@ -93,6 +97,7 @@ import app.aaps.database.transactions.InvalidateTherapyEventsWithNoteTransaction
 import app.aaps.database.transactions.SyncBolusWithTempIdTransaction
 import app.aaps.database.transactions.SyncNsBolusCalculatorResultTransaction
 import app.aaps.database.transactions.SyncNsBolusTransaction
+import app.aaps.database.transactions.SyncNsCalibrationEntryTransaction
 import app.aaps.database.transactions.SyncNsCarbsTransaction
 import app.aaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.SyncNsExtendedBolusTransaction
@@ -111,6 +116,7 @@ import app.aaps.database.transactions.SyncPumpTotalDailyDoseTransaction
 import app.aaps.database.transactions.SyncTemporaryBasalWithTempIdTransaction
 import app.aaps.database.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.transactions.UpdateNsIdBolusTransaction
+import app.aaps.database.transactions.UpdateNsIdCalibrationEntryTransaction
 import app.aaps.database.transactions.UpdateNsIdCarbsTransaction
 import app.aaps.database.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
@@ -204,6 +210,9 @@ class PersistenceLayerImpl @Inject constructor(
                 .map { list -> list.map { it.fromDb() } }
 
             GV::class.java  -> repository.changesOfType<GlucoseValue>()
+                .map { list -> list.map { it.fromDb() } }
+
+            CAL::class.java -> repository.changesOfType<CalibrationEntry>()
                 .map { list -> list.map { it.fromDb() } }
 
             UE::class.java  -> repository.changesOfType<UserEntry>()
@@ -543,7 +552,10 @@ class PersistenceLayerImpl @Inject constructor(
                 aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
                 transactionResult.updated.add(it.fromDb())
             }
-            log(ueValues)
+            // Skip the user-entry for an internal (command-queue) carbs persist: the queue uses
+            // Sources.Database and the originating caller (executor / SMS / wizard) already logged the
+            // real-source user entry — a second Database-sourced row would just duplicate it in the log.
+            if (source != Sources.Database) log(ueValues)
             transactionResult
         } catch (e: Exception) {
             aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", e)
@@ -882,6 +894,102 @@ class PersistenceLayerImpl @Inject constructor(
             transactionResult
         } catch (e: Exception) {
             aapsLogger.error(LTag.DATABASE, "Updated nsId of GlucoseValue failed", e)
+            throw e
+        }
+    }
+
+    // CALIBRATION ENTRIES
+    override suspend fun getLastCalibrationEntryId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastCalibrationEntryId()
+    }
+
+    override suspend fun getNextSyncElementCalibrationEntry(id: Long): Pair<CAL, CAL>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementCalibrationEntry(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
+
+    override suspend fun getValidCalibrationEntriesSince(from: Long): List<CAL> = withContext(Dispatchers.IO) {
+        repository.getValidCalibrationEntriesSince(from).map { it.fromDb() }
+    }
+
+    override suspend fun getAllValidCalibrationEntries(): List<CAL> = withContext(Dispatchers.IO) {
+        repository.getAllValidCalibrationEntries().map { it.fromDb() }
+    }
+
+    override suspend fun insertOrUpdateCalibrationEntry(calibrationEntry: CAL): PersistenceLayer.TransactionResult<CAL> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateCalibrationEntryTransaction(calibrationEntry.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<CAL>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted CalibrationEntry $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated CalibrationEntry $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving CalibrationEntry", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsCalibrationEntries(calibrationEntries: List<CAL>): PersistenceLayer.TransactionResult<CAL> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsCalibrationEntryTransaction(calibrationEntries.map { it.toDb() }))
+            val transactionResult = PersistenceLayer.TransactionResult<CAL>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted CalibrationEntry from NS $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated CalibrationEntry from NS $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated CalibrationEntry from NS $it")
+                transactionResult.invalidated.add(it.fromDb())
+            }
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of CalibrationEntry from NS $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while syncing CalibrationEntry from NS", e)
+            throw e
+        }
+    }
+
+    override suspend fun invalidateCalibrationEntry(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<CAL> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateCalibrationEntryTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<CAL>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated CalibrationEntry from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating CalibrationEntry", e)
+            throw e
+        }
+    }
+
+    override suspend fun updateCalibrationEntriesNsIds(calibrationEntries: List<CAL>): PersistenceLayer.TransactionResult<CAL> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdCalibrationEntryTransaction(calibrationEntries.map { it.toDb() }))
+            val transactionResult = PersistenceLayer.TransactionResult<CAL>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of CalibrationEntry $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of CalibrationEntry failed", e)
             throw e
         }
     }

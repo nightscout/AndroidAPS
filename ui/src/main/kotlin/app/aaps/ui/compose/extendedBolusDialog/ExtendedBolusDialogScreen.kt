@@ -3,7 +3,6 @@ package app.aaps.ui.compose.extendedBolusDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,9 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
@@ -40,12 +39,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
@@ -59,20 +59,20 @@ fun ExtendedBolusDialogScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    // The master's prepared confirmation (bolusId + its lines), set via the ShowConfirmation side effect.
+    var confirmation by remember { mutableStateOf<Pair<Long, List<ConfirmationLine>>?>(null) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+
     // Observe side effects
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
             when (effect) {
-                is ExtendedBolusDialogViewModel.SideEffect.ShowDeliveryError -> {
-                    onShowDeliveryError(effect.comment)
-                }
+                is ExtendedBolusDialogViewModel.SideEffect.ShowDeliveryError -> onShowDeliveryError(effect.comment)
+                is ExtendedBolusDialogViewModel.SideEffect.ShowNoActionDialog -> showNoAction = true
+                is ExtendedBolusDialogViewModel.SideEffect.ShowConfirmation -> confirmation = effect.bolusId to effect.lines
             }
         }
     }
-
-    // Dialog states
-    var showConfirmation by rememberSaveable { mutableStateOf(false) }
-    var showNoAction by rememberSaveable { mutableStateOf(false) }
 
     // Loop-stop warning dialog (shown before the main form)
     if (uiState.showLoopStopWarning && !uiState.loopStopWarningAccepted) {
@@ -84,32 +84,25 @@ fun ExtendedBolusDialogScreen(
         )
     }
 
-    // Confirmation dialog
-    if (showConfirmation) {
-        if (!viewModel.hasAction()) {
-            showConfirmation = false
-            showNoAction = true
-        } else {
-            val summaryLines = viewModel.buildConfirmationSummary()
-            OkCancelDialog(
-                title = stringResource(ElementType.EXTENDED_BOLUS.labelResId()),
-                message = summaryLines.joinToString("<br/>"),
-                icon = ElementType.EXTENDED_BOLUS.icon(),
-                onConfirm = {
-                    viewModel.confirmAndSave()
-                    onNavigateBack()
-                },
-                onDismiss = { showConfirmation = false }
-            )
-        }
+    // Confirmation dialog — renders the MASTER's prepared lines (set via ShowConfirmation after prepare()).
+    confirmation?.let { (bolusId, lines) ->
+        ElementConfirmationDialog(
+            elementType = ElementType.EXTENDED_BOLUS,
+            lines = lines,
+            onConfirm = {
+                viewModel.commit(bolusId)
+                confirmation = null
+                onNavigateBack()
+            },
+            onDismiss = { confirmation = null }
+        )
     }
 
     // No action dialog
     if (showNoAction) {
-        OkCancelDialog(
-            title = stringResource(ElementType.EXTENDED_BOLUS.labelResId()),
+        ElementConfirmationDialog(
+            elementType = ElementType.EXTENDED_BOLUS,
             message = stringResource(CoreUiR.string.no_action_selected),
-            icon = ElementType.EXTENDED_BOLUS.icon(),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -120,7 +113,7 @@ fun ExtendedBolusDialogScreen(
         onInsulinChange = viewModel::updateInsulin,
         onDurationChange = viewModel::updateDuration,
         onNavigateBack = onNavigateBack,
-        onConfirmClick = { showConfirmation = true }
+        onConfirmClick = { viewModel.prepareAndConfirm() }
     )
 }
 
@@ -154,7 +147,7 @@ private fun ExtendedBolusDialogContent(
                     focusManager.clearFocus()
                     onConfirmClick()
                 },
-                enabled = uiState.insulin > 0.0,
+                enabled = uiState.insulin > 0.0 && !uiState.isPreparing,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bottomBarSafeArea()
@@ -198,7 +191,7 @@ private fun ExtendedBolusDialogContent(
                         labelResId = CoreUiR.string.overview_insulin_label,
                         value = uiState.insulin,
                         onValueChange = onInsulinChange,
-                        valueRange = uiState.extendedStep..uiState.maxInsulin,
+                        valueRange = uiState.minInsulin..uiState.maxInsulin,
                         step = uiState.extendedStep,
                         valueFormat = DecimalFormat("0.00"),
                         unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
@@ -232,6 +225,7 @@ private fun ExtendedBolusDialogPreview() {
                 insulin = 1.0,
                 durationMinutes = 30.0,
                 maxInsulin = 10.0,
+                minInsulin = 0.1,
                 extendedStep = 0.1,
                 extendedDurationStep = 30.0,
                 extendedMaxDuration = 720.0,

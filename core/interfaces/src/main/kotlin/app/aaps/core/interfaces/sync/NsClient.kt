@@ -1,12 +1,69 @@
 package app.aaps.core.interfaces.sync
 
 import app.aaps.core.interfaces.nsclient.NSAlarm
-import app.aaps.core.interfaces.profile.Profile
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * Plugin providing communication with Nightscout server
  */
 interface NsClient : Sync {
+
+    /**
+     * Live WebSocket connection state. Distinct from [Sync.connected] (which reports HTTP API
+     * reachability): this flips false the instant a WS disconnect event lands so consumers
+     * (e.g. AAPSCLIENT scene gating) can react before the next HTTP cycle would notice.
+     *
+     * Default exposes a static always-false flow for impls that don't carry a real WS layer.
+     */
+    val wsConnectedFlow: StateFlow<Boolean>
+        get() = MutableStateFlow(false).asStateFlow()
+
+    /**
+     * Wall-clock (ms epoch) when the local client last received a devicestatus batch from the
+     * master, or `0L` if none has been seen yet. Pure WS-state can't detect "master itself is
+     * offline" — the client may be cheerfully connected to NS while master's phone is dead;
+     * absence of a recent devicestatus is the most reliable indicator that the loop publisher
+     * has gone silent. AAPSCLIENT scene gating combines this with [wsConnectedFlow] to lock
+     * controls when no heartbeat has arrived within the staleness window.
+     *
+     * Default exposes a static `0L` flow — impls without a WS / NS receive pipeline don't
+     * carry this signal and shouldn't appear reachable on its strength.
+     */
+    val lastDevicestatusReceivedAt: StateFlow<Long>
+        get() = MutableStateFlow(0L).asStateFlow()
+
+    /**
+     * Derived "master is reachable for remote control / config edits" signal. On a client it requires
+     * ALL of: [wsConnectedFlow] (with a short falling-edge grace so brief WS flaps don't lock the UI),
+     * a fresh UNIFIED liveness signal, a current Client-Control pairing, and not being orphaned (master
+     * still authorizes this device). The freshness term is the LATEST of any master-alive evidence —
+     * the [lastDevicestatusReceivedAt] devicestatus heartbeat, an authenticated Client-Control pong, or
+     * a live running-config republish — so an active channel keeps the UI unlocked even when one source
+     * (e.g. devicestatus) momentarily goes quiet. It is short-circuited to always-`true`
+     * on a master device. The pairing + authorization terms matter because client→master edits/commands
+     * ride the signed Client-Control channel: an unpaired client's writes are silently dropped and a
+     * revoked client's are rejected, so neither must look reachable. Consumers — scene gating and
+     * client→master config edits — read this instead of reassembling the raw signals, and share one
+     * computed flow.
+     *
+     * Default exposes a static always-`true` flow: impls without a WS/heartbeat pipeline must never
+     * lock controls on its strength.
+     */
+    val masterReachable: StateFlow<Boolean>
+        get() = MutableStateFlow(true).asStateFlow()
+
+    /**
+     * Actively probe master liveness (and pull any config missed while out of contact). On a client
+     * this fires a signed Client-Control ping — whose authenticated ACK ("pong") refreshes
+     * [masterReachable] far faster than waiting for the next devicestatus heartbeat — and re-fetches
+     * the running-config docs. Rate-limited and a no-op when WS is down / on a master. Call it when an
+     * offline-gated screen appears so the banner clears promptly if the master is in fact online.
+     *
+     * Default no-op: impls without a Client-Control channel have nothing to probe.
+     */
+    fun requestMasterProbe() {}
 
     /**
      * NS URL
@@ -36,19 +93,17 @@ interface NsClient : Sync {
      */
     fun detectedNsVersion(): String?
 
-    enum class Collection { ENTRIES, TREATMENTS, FOODS, PROFILE }
+    enum class Collection { ENTRIES, TREATMENTS, FOODS, PROFILE, SETTINGS }
 
     /**
-     * NSC v3 does first load of all data
-     * next loads are using srvModified property for sync
-     * not used for NSCv1
+     * First load downloads all data; next loads use srvModified for sync.
      *
-     * @return true if inside first load of NSCv3, true for NSCv1
+     * @return true while inside the first load
      */
     fun isFirstLoad(collection: Collection): Boolean = true
 
     /**
-     * Update newest loaded timestamp for entries collection (first load or NSCv1)
+     * Update newest loaded timestamp for entries collection (first load)
      * Update newest srvModified (sync loads)
      *
      * @param latestReceived timestamp
@@ -57,7 +112,7 @@ interface NsClient : Sync {
     fun updateLatestBgReceivedIfNewer(latestReceived: Long)
 
     /**
-     * Update newest loaded timestamp for treatments collection (first load or NSCv1)
+     * Update newest loaded timestamp for treatments collection (first load)
      * Update newest srvModified (sync loads)
      *
      * @param latestReceived timestamp
@@ -79,24 +134,4 @@ interface NsClient : Sync {
      * Next synchronization will start from scratch
      */
     suspend fun resetToFullSync()
-
-    /**
-     * Upload new record to NS
-     *
-     * @param collection target ns collection
-     * @param dataPair data to upload (data.first) and id of changed record (data.second)
-     * @param progress progress of sync in format "number/number". Only for display in fragment
-     * @return true for successful upload
-     */
-    suspend fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, profile: Profile? = null): Boolean
-
-    /**
-     * Upload updated record to NS
-     *
-     * @param collection target ns collection
-     * @param dataPair data to upload (data.first) and id of changed record (data.second)
-     * @param progress progress of sync in format "number/number". Only for display in fragment
-     * @return true for successful upload
-     */
-    suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, profile: Profile? = null): Boolean
 }

@@ -33,7 +33,7 @@ class CommandBolusTest : TestBaseWithProfile() {
     fun `execute returns pump result and marks complete on success`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
 
@@ -47,7 +47,7 @@ class CommandBolusTest : TestBaseWithProfile() {
     fun `execute clears progress data on failure`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(false).enacted(false)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
 
@@ -61,12 +61,14 @@ class CommandBolusTest : TestBaseWithProfile() {
     fun `executeWithCallback forwards execute result to callback`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).executeWithCallback()
@@ -79,7 +81,9 @@ class CommandBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced)
@@ -94,7 +98,9 @@ class CommandBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)

@@ -9,6 +9,7 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Emulates Dana RS pump command processing.
@@ -31,6 +32,41 @@ class PumpEmulator(val state: PumpState = PumpState()) {
 
     /** Delay between history events in [processApsHistoryEvents]. Tests can set to 0. */
     var historyEventDelayMs: Long = 10L
+
+    // Track background notification threads (bolus delivery, history events) so tests can
+    // await/cancel them and avoid touching Mockito mocks after inline mocks are cleared.
+    private val pendingThreads = CopyOnWriteArrayList<Thread>()
+
+    /**
+     * Wait for all pending async notification threads to finish.
+     * Call this in tests before teardown to avoid Mockito mock-cleared races.
+     */
+    fun awaitPendingCallbacks(timeoutMs: Long = 2000) {
+        pendingThreads.toList().forEach { it.join(timeoutMs) }
+        pendingThreads.removeAll { !it.isAlive }
+    }
+
+    /** Interrupt and join all pending notification threads (used on disconnect/teardown). */
+    fun cancelPendingWork(timeoutMs: Long = 500) {
+        val threads = pendingThreads.toList()
+        pendingThreads.clear()
+        threads.forEach { it.interrupt() }
+        threads.forEach { runCatching { it.join(timeoutMs) } }
+    }
+
+    private fun launchTracked(block: () -> Unit) {
+        val thread = Thread {
+            try {
+                block()
+            } catch (_: InterruptedException) {
+                // cancelled during teardown - exit quietly
+            } finally {
+                pendingThreads.remove(Thread.currentThread())
+            }
+        }
+        pendingThreads.add(thread)
+        thread.start()
+    }
 
     /**
      * Process a command and return the response data bytes.
@@ -290,7 +326,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             // Schedule bolus delivery notifications on a separate thread.
             // Delivery takes amount * speed seconds (e.g., 1U at speed 12 = 12 seconds).
             // Send progress every second to match the app's expected delivery timing.
-            Thread {
+            launchTracked {
                 @Suppress("SleepInsteadOfDelay")
                 val intervalMs = state.bolusDeliveryIntervalMs
                 val deliveryTimeMs = if (intervalMs > 0) (amount * speed * 1000).toLong() else 0L
@@ -298,6 +334,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
                 val stepAmount = amountHundredths / steps
                 for (i in 1..steps) {
                     if (intervalMs > 0) Thread.sleep(intervalMs)
+                    if (Thread.currentThread().isInterrupted) return@launchTracked
                     val delivered = minOf(stepAmount * i, amountHundredths)
                     val rateData = byteArrayOf(
                         (delivered and 0xFF).toByte(),
@@ -305,13 +342,14 @@ class PumpEmulator(val state: PumpState = PumpState()) {
                     )
                     onSpontaneousMessage?.invoke(BleEncryption.DANAR_PACKET__TYPE_NOTIFY, BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY, rateData)
                 }
+                if (Thread.currentThread().isInterrupted) return@launchTracked
                 // NOTIFY__DELIVERY_COMPLETE
                 val completeData = byteArrayOf(
                     (amountHundredths and 0xFF).toByte(),
                     ((amountHundredths shr 8) and 0xFF).toByte()
                 )
                 onSpontaneousMessage?.invoke(BleEncryption.DANAR_PACKET__TYPE_NOTIFY, BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE, completeData)
-            }.start()
+            }
         }
         return byteArrayOf(0x00) // OK (error code 0 = no error)
     }
@@ -460,10 +498,11 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         if (events.isEmpty()) return store.doneMarker
 
         // Return first event directly; send remaining + done via spontaneous messages
-        Thread {
+        launchTracked {
             @Suppress("SleepInsteadOfDelay")
             for (i in 1 until events.size) {
                 if (historyEventDelayMs > 0) Thread.sleep(historyEventDelayMs)
+                if (Thread.currentThread().isInterrupted) return@launchTracked
                 val data = buildHistoryEventData(events[i], (i + 1).toShort())
                 onSpontaneousMessage?.invoke(
                     BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
@@ -472,12 +511,13 @@ class PumpEmulator(val state: PumpState = PumpState()) {
                 )
             }
             Thread.sleep(10)
+            if (Thread.currentThread().isInterrupted) return@launchTracked
             onSpontaneousMessage?.invoke(
                 BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
                 BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS,
                 store.doneMarker
             )
-        }.start()
+        }
 
         return buildHistoryEventData(events[0], 1)
     }

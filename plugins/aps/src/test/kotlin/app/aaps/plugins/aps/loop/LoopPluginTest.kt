@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -47,7 +46,6 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var androidNotificationManager: NotificationManager
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
@@ -60,7 +58,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         loopPlugin = LoopPlugin(
             aapsLogger, rxBus, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-            persistenceLayer, runningConfiguration, uiInteraction, notificationManager, pumpEnactResultProvider, processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, testScope
+            persistenceLayer, uiInteraction, notificationManager, pumpEnactResultProvider, processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         whenever(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(androidNotificationManager)

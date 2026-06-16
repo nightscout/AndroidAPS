@@ -46,6 +46,7 @@ fun CollapsibleCardSectionContent(
     expanded: Boolean,
     onToggle: () -> Unit,
     icon: ImageVector? = null,
+    collapsible: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val theme = LocalPreferenceTheme.current
@@ -65,11 +66,12 @@ fun CollapsibleCardSectionContent(
                 expanded = expanded,
                 onToggle = onToggle,
                 insideCard = true,
-                icon = icon
+                icon = icon,
+                collapsible = collapsible
             )
 
             AnimatedVisibility(
-                visible = expanded,
+                visible = expanded || !collapsible,
                 enter = expandVertically(),
                 exit = shrinkVertically()
             ) {

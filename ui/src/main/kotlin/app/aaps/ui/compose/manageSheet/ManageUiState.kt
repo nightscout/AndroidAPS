@@ -18,6 +18,8 @@ data class ManageUiState(
     val showHistoryBrowser: Boolean = false,
     val showBatteryChange: Boolean = false,
     val showFill: Boolean = false,
+    val showAuthorizedClients: Boolean = false,
+    val showPairWithMaster: Boolean = false,
     val isPatchPump: Boolean = false,
 
     // Cancel button labels (with active values)

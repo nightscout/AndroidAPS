@@ -127,6 +127,7 @@ data class UserEntry(
         RUNNING_MODE_UPDATED,
         SCENE_ACTIVATED,
         SCENE_DEACTIVATED,
+        REMOTE_CONFIG_CHANGED,
         UNKNOWN
         ;
     }

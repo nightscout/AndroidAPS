@@ -3,6 +3,7 @@ package app.aaps.implementation.di
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.Insulin
@@ -17,6 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -52,6 +54,7 @@ import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.AlarmSoundPlayerImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
 import app.aaps.implementation.aps.DetermineBasalResult
+import app.aaps.implementation.bolus.BatchExecutorImpl
 import app.aaps.implementation.db.ProcessedTbrEbDataImpl
 import app.aaps.implementation.insulin.ConcentrationHelperImpl
 import app.aaps.implementation.insulin.InsulinImpl
@@ -101,6 +104,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.Multibinds
 
 @Module(
     includes = [
@@ -123,12 +127,18 @@ class ImplementationModule {
         @Binds fun bindPreferenceVisibilityContext(impl: PreferenceVisibilityContextImpl): PreferenceVisibilityContext
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
+
+        // Runtime-permission sources for non-plugin features (e.g. standalone Automation).
+        // May be empty; contributors bind via @IntoSet PermissionProvider.
+        @Multibinds fun permissionProviders(): Set<PermissionProvider>
+
         @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
         @Binds fun bindInsulin(insulinImpl: InsulinImpl): Insulin
         @Binds fun bindInsulinManager(insulinImpl: InsulinImpl): InsulinManager
+        @Binds fun bindBatchExecutor(impl: BatchExecutorImpl): BatchExecutor
         @Binds fun bindConcentrationHelper(concentrationHelperImpl: ConcentrationHelperImpl): ConcentrationHelper
         @Binds fun bindDetailedBolusInfoStorage(detailedBolusInfoStorageImpl: DetailedBolusInfoStorageImpl): DetailedBolusInfoStorage
         @Binds fun bindTemporaryBasalStorage(temporaryBasalStorageImpl: TemporaryBasalStorageImpl): TemporaryBasalStorage

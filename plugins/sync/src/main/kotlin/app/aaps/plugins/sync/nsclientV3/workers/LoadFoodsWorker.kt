@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers

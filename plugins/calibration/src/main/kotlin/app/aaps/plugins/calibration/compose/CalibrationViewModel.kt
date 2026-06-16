@@ -3,6 +3,7 @@ package app.aaps.plugins.calibration.compose
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -12,10 +13,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.calibration.db.CalibrationRepository
 import app.aaps.plugins.calibration.fitLinearCalibration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,10 +37,8 @@ private val WARM_UP_DURATION_MS = T.hours(2).msecs()
 @HiltViewModel
 @Stable
 class CalibrationViewModel @Inject constructor(
-    private val repository: CalibrationRepository,
     private val persistenceLayer: PersistenceLayer,
     private val profileUtil: ProfileUtil,
-    private val uel: UserEntryLogger,
     private val aapsLogger: AAPSLogger,
     val dateUtil: DateUtil
 ) : ViewModel() {
@@ -59,7 +56,7 @@ class CalibrationViewModel @Inject constructor(
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private fun observeChanges() {
         merge(
-            repository.observeAll().map { },
+            persistenceLayer.observeChanges<CAL>().map { },
             persistenceLayer.observeChanges<TE>().map { }
         )
             .onStart { emit(Unit) }
@@ -71,7 +68,7 @@ class CalibrationViewModel @Inject constructor(
     private suspend fun recomputeSuspend() {
         val now = dateUtil.now()
         val sessionStart = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)?.timestamp
-        val entries = if (sessionStart != null) repository.getSince(sessionStart) else emptyList()
+        val entries = if (sessionStart != null) persistenceLayer.getValidCalibrationEntriesSince(sessionStart) else emptyList()
         val warmUpEndsAt = sessionStart?.plus(WARM_UP_DURATION_MS)
         val isInWarmUp = warmUpEndsAt != null && now < warmUpEndsAt
         _uiState.update { previous ->
@@ -98,21 +95,23 @@ class CalibrationViewModel @Inject constructor(
         viewModelScope.launch {
             val entry = _uiState.value.entries.firstOrNull { it.id == id }
             try {
-                repository.invalidate(id)
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.DATABASE, "Failed to invalidate calibration entry id=$id", e)
-                return@launch
-            }
-            if (entry != null) {
-                uel.log(
+                // UserEntry logging is performed inside PersistenceLayer.invalidateCalibrationEntry
+                persistenceLayer.invalidateCalibrationEntry(
+                    id = id,
                     action = Action.CALIBRATION_REMOVED,
                     source = Sources.CalibrationDialog,
                     note = "id=$id",
-                    value = ValueWithUnit.fromGlucoseUnit(
-                        profileUtil.fromMgdlToUnits(entry.fingerstickMgdl),
-                        profileUtil.units
-                    )
+                    listValues = entry?.let {
+                        listOf(
+                            ValueWithUnit.fromGlucoseUnit(
+                                profileUtil.fromMgdlToUnits(it.fingerstickMgdl),
+                                profileUtil.units
+                            )
+                        )
+                    } ?: emptyList()
                 )
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.DATABASE, "Failed to invalidate calibration entry id=$id", e)
             }
         }
     }

@@ -22,13 +22,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -41,7 +41,10 @@ import javax.inject.Singleton
 class PluginStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    private val pumpWithConcentration: Lazy<PumpWithConcentration>
+    private val pumpWithConcentration: Lazy<PumpWithConcentration>,
+    // Lazy: a PermissionProvider (e.g. AutomationRuntime) transitively depends on ActivePlugin
+    // (= this PluginStore), so eager injection would form a Dagger dependency cycle.
+    private val permissionProviders: Lazy<Set<@JvmSuppressWildcards PermissionProvider>>
 ) : ActivePlugin {
 
     companion object {
@@ -276,8 +279,6 @@ class PluginStore @Inject constructor(
         get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
     override val activeObjectives: Objectives?
         get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives?
-    override val activeNsClient: NsClient?
-        get() = getTheOneEnabledInArray(getSpecificPluginsListByInterface(NsClient::class.java), PluginType.SYNC) as NsClient?
 
     @Suppress("UNCHECKED_CAST")
     override val firstActiveSync: Sync?
@@ -325,11 +326,20 @@ class PluginStore @Inject constructor(
         val globalMissing = globalPermissions(context).filter { group ->
             group.permissions.any { perm -> isPermissionMissing(context, perm) }
         }
-        return (globalMissing + pluginPerms + specialPluginPerms).distinctBy { it.permissions.toSet() }
+        // Non-plugin feature permissions (e.g. standalone Automation). Queried dynamically, so a
+        // feature only contributes its permission while it actually needs it. isPermissionMissing
+        // handles both standard and special permission identifiers.
+        val providerMissing = permissionProviders.get()
+            .flatMap { it.requiredPermissions() }
+            .filter { group -> group.permissions.any { perm -> isPermissionMissing(context, perm) } }
+            .distinctBy { it.permissions.toSet() }
+        return (globalMissing + pluginPerms + specialPluginPerms + providerMissing).distinctBy { it.permissions.toSet() }
     }
 
     override fun collectAllPermissions(context: Context): List<PermissionGroup> =
-        (globalPermissions(context) + plugins.filter { it.isEnabled() }.flatMap { it.requiredPermissions() })
+        (globalPermissions(context) +
+            plugins.filter { it.isEnabled() }.flatMap { it.requiredPermissions() } +
+            permissionProviders.get().flatMap { it.requiredPermissions() })
             .distinctBy { it.permissions.toSet() }
 
 }

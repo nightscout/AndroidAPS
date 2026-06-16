@@ -2,6 +2,9 @@ package app.aaps.core.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.SyncChannel
+import app.aaps.core.keys.interfaces.SyncDirection
+import app.aaps.core.keys.interfaces.SyncSpec
 
 enum class DoubleKey(
     override val key: String,
@@ -20,7 +23,8 @@ enum class DoubleKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val exportable: Boolean = true,
-    override val unitType: UnitType = UnitType.NONE
+    override val unitType: UnitType = UnitType.NONE,
+    override val sync: SyncSpec? = null
 ) : DoublePreferenceKey {
 
     OverviewInsulinButtonIncrement1(
@@ -59,7 +63,7 @@ enum class DoubleKey(
     ActionsFillButton1(key = "fill_button1", defaultValue = 0.3, min = 0.05, max = 20.0, titleResId = R.string.pref_title_fill_button_1, defaultedBySM = true, hideParentScreenIfHidden = true, unitType = UnitType.INSULIN),
     ActionsFillButton2(key = "fill_button2", defaultValue = 0.0, min = 0.0, max = 20.0, titleResId = R.string.pref_title_fill_button_2, defaultedBySM = true, unitType = UnitType.INSULIN),
     ActionsFillButton3(key = "fill_button3", defaultValue = 0.0, min = 0.0, max = 20.0, titleResId = R.string.pref_title_fill_button_3, defaultedBySM = true, unitType = UnitType.INSULIN),
-    SafetyMaxBolus(key = "treatmentssafety_maxbolus", defaultValue = 3.0, min = 0.1, max = 60.0, titleResId = R.string.pref_title_max_bolus, unitType = UnitType.INSULIN),
+    SafetyMaxBolus(key = "treatmentssafety_maxbolus", defaultValue = 3.0, min = 0.1, max = 60.0, titleResId = R.string.pref_title_max_bolus, unitType = UnitType.INSULIN, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsMaxBasal(
         key = "openapsma_max_basal",
         defaultValue = 1.0,
@@ -131,7 +135,8 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_ama_min_5m_carbs_impact,
         summaryResId = R.string.openapsama_min_5m_carb_impact_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsSmbMin5MinCarbsImpact(
         key = "openaps_smb_min_5m_carbimpact",
@@ -141,10 +146,29 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_smb_min_5m_carbs_impact,
         summaryResId = R.string.openapsama_min_5m_carb_impact_summary,
         defaultedBySM = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    AbsorptionCutOff(key = "absorption_cutoff", defaultValue = 6.0, min = 4.0, max = 10.0, titleResId = R.string.pref_title_absorption_cutoff, summaryResId = R.string.absorption_cutoff_summary, unitType = UnitType.HOURS_DOUBLE),
-    AbsorptionMaxTime(key = "absorption_maxtime", defaultValue = 6.0, min = 4.0, max = 10.0, titleResId = R.string.pref_title_absorption_maxtime, summaryResId = R.string.absorption_max_time_summary, unitType = UnitType.HOURS_DOUBLE),
+    AbsorptionCutOff(
+        key = "absorption_cutoff",
+        defaultValue = 6.0,
+        min = 4.0,
+        max = 10.0,
+        titleResId = R.string.pref_title_absorption_cutoff,
+        summaryResId = R.string.absorption_cutoff_summary,
+        unitType = UnitType.HOURS_DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    AbsorptionMaxTime(
+        key = "absorption_maxtime",
+        defaultValue = 6.0,
+        min = 4.0,
+        max = 10.0,
+        titleResId = R.string.pref_title_absorption_maxtime,
+        summaryResId = R.string.absorption_max_time_summary,
+        unitType = UnitType.HOURS_DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     AutosensMin(
         key = "autosens_min",
         defaultValue = 0.7,
@@ -153,10 +177,20 @@ enum class DoubleKey(
         titleResId = R.string.pref_title_autosens_min,
         summaryResId = R.string.openapsama_autosens_min_summary,
         defaultedBySM = true,
-        hideParentScreenIfHidden = true,
-        unitType = UnitType.DOUBLE
+        unitType = UnitType.DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    AutosensMax(key = "autosens_max", defaultValue = 1.2, min = 0.5, max = 3.0, titleResId = R.string.pref_title_autosens_max, summaryResId = R.string.openapsama_autosens_max_summary, defaultedBySM = true, unitType = UnitType.DOUBLE),
+    AutosensMax(
+        key = "autosens_max",
+        defaultValue = 1.2,
+        min = 0.5,
+        max = 3.0,
+        titleResId = R.string.pref_title_autosens_max,
+        summaryResId = R.string.openapsama_autosens_max_summary,
+        defaultedBySM = true,
+        unitType = UnitType.DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     ApsAutoIsfMin(key = "autoISF_min", defaultValue = 1.0, min = 0.3, max = 1.0, titleResId = R.string.pref_title_autoisf_min, summaryResId = R.string.openapsama_autoISF_min_summary, defaultedBySM = true, unitType = UnitType.DOUBLE),
     ApsAutoIsfMax(key = "autoISF_max", defaultValue = 1.0, min = 1.0, max = 3.0, titleResId = R.string.pref_title_autoisf_max, summaryResId = R.string.openapsama_autoISF_max_summary, defaultedBySM = true, unitType = UnitType.DOUBLE),
     ApsAutoIsfBgAccelWeight(

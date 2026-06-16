@@ -5,16 +5,18 @@ import android.os.IBinder
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsShared.compose.NSClientRepositoryImpl
-import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
+import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
 class NSClientV3ServiceTest : TestBaseWithProfile() {
@@ -29,9 +31,18 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     private lateinit var nsClientMvvmRepository: NSClientRepositoryImpl
     private lateinit var sut: NSClientV3Service
 
+    // Service's `wsConnected` property is a pass-through to the plugin's StateFlow — back it
+    // with a real one so getter reads and setter writes flow through the mock.
+    private val wsConnectedState = MutableStateFlow(false)
+
     @BeforeEach
     fun init() {
         nsClientMvvmRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
+        wsConnectedState.value = false
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(wsConnectedState)
+        whenever(nsClientV3Plugin.setWsConnected(any())).thenAnswer { invocation ->
+            wsConnectedState.value = invocation.arguments[0] as Boolean
+        }
         sut = NSClientV3Service().also {
             it.aapsLogger = aapsLogger
             it.preferences = preferences

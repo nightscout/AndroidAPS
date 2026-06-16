@@ -19,9 +19,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.plugins.calibration.CalibrationFit
-import app.aaps.plugins.calibration.db.CalibrationEntry
 import app.aaps.plugins.calibration.weightFor
 import kotlin.math.max
 import kotlin.math.min
@@ -37,7 +37,7 @@ private const val LONGEST_AXIS_LABEL_SAMPLE = "22.2"
 
 @Composable
 internal fun CalibrationScatterChart(
-    entries: List<CalibrationEntry>,
+    entries: List<CAL>,
     fit: CalibrationFit?,
     selectedEntryId: Long?,
     now: Long,
@@ -105,7 +105,7 @@ internal fun CalibrationScatterChart(
     }
 }
 
-private fun computeAxisRange(entries: List<CalibrationEntry>): Pair<Float, Float> {
+private fun computeAxisRange(entries: List<CAL>): Pair<Float, Float> {
     if (entries.isEmpty()) return 40f to 200f
     var lo = Float.POSITIVE_INFINITY
     var hi = Float.NEGATIVE_INFINITY
@@ -235,7 +235,7 @@ private fun DrawScope.drawRegressionLine(
 }
 
 private fun DrawScope.drawEntries(
-    entries: List<CalibrationEntry>,
+    entries: List<CAL>,
     selectedEntryId: Long?,
     now: Long,
     xToPx: (Float) -> Float,

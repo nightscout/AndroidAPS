@@ -115,30 +115,10 @@ sealed class EventData : Event() {
     data class ActionQuickWizardPreCheck(val guid: String) : EventData()
 
     @Serializable
-    data class ActionWizardResult(
-        val timestamp: Long,
-        val totalInsulin: Double,
-        val carbs: Int,
-        val ic: Double,
-        val sens: Double,
-        val insulinFromCarbs: Double,
-        val insulinFromBG: Double?,
-        val insulinFromCOB: Double?,
-        val insulinFromBolusIOB: Double?,
-        val insulinFromBasalIOB: Double?,
-        val insulinFromTrend: Double?,
-        val insulinFromSuperBolus: Double?,
-        val tempTarget: String?,
-        val percentageCorrection: Int?,
-        val totalBeforePercentage: Double?,
-        val cob: Double
-    ) : EventData()
+    data class ActionUserActionPreCheck(val id: String, val title: String) : EventData()
 
     @Serializable
-    data class ActionUserActionPreCheck(val id: Int, val title: String) : EventData()
-
-    @Serializable
-    data class ActionUserActionConfirmed(val id: Int, val title: String) : EventData()
+    data class ActionUserActionConfirmed(val id: String, val title: String) : EventData()
 
     @Serializable
     data class ActionScenePreCheck(val id: String, val title: String) : EventData()
@@ -158,8 +138,9 @@ sealed class EventData : Event() {
     @Serializable
     data class RunningModeSelected(val timeStamp: Long, val index: Int, val duration: Int? = null) : EventData()
 
+    /** Wear ✓ on a running-mode change → the master's parked, consume-once [bolusId] (the shared batch confirm path). */
     @Serializable
-    data class RunningModeConfirmed(val timeStamp: Long, val index: Int, val duration: Int? = null) : EventData()
+    data class RunningModeConfirmed(val bolusId: Long) : EventData()
 
     @Serializable
     data class ActionHeartRate(
@@ -206,23 +187,25 @@ sealed class EventData : Event() {
 
     // Mobile <- Wear return
 
+    /** Wear ✓ on a wizard / quick-wizard bolus → the master's parked, consume-once bolusId ([timeStamp] is the
+     *  opaque id field, == the master `wizard.timeStamp`; the wear caller echoes the id `prepareWizard`/`prepareQuickWizard` returned). */
     @Serializable
     data class ActionWizardConfirmed(val timeStamp: Long) : EventData()
 
     @Serializable
-    data class ActionTempTargetConfirmed(val isMgdl: Boolean = true, val duration: Int = 0, val low: Double = 0.0, val high: Double = 0.0) : EventData()
+    data class ActionTempTargetConfirmed(val bolusId: Long) : EventData()
 
     @Serializable
-    data class ActionBolusConfirmed(val insulin: Double, val carbs: Int) : EventData()
+    data class ActionBolusConfirmed(val bolusId: Long) : EventData()
 
     @Serializable
-    data class ActionECarbsConfirmed(val carbs: Int, val carbsTime: Long, val duration: Int) : EventData()
+    data class ActionECarbsConfirmed(val bolusId: Long) : EventData()
 
     @Serializable
     data class ActionFillConfirmed(val insulin: Double) : EventData()
 
     @Serializable
-    data class ActionProfileSwitchConfirmed(val timeShift: Int, val percentage: Int, val duration: Int) : EventData()
+    data class ActionProfileSwitchConfirmed(val bolusId: Long) : EventData()
 
     @Serializable
     data class OpenLoopRequestConfirmed(val timeStamp: Long) : EventData()
@@ -426,7 +409,10 @@ sealed class EventData : Event() {
         @Serializable
         data class UserActionEntry(
             val timeStamp: Long,
-            val id: Int,
+            // Stable UUID of the AutomationEvent — survives reload / NS sync, unlike the prior
+            // identity-hashCode-as-Int which lost the binding whenever the master reconstructed
+            // its event list and silently broke wear taps.
+            val id: String,
             val title: String
         ) : EventData()
     }
@@ -462,33 +448,41 @@ sealed class EventData : Event() {
     @Serializable
     data class OpenLoopRequest(val title: String, val message: String, val returnCommand: EventData?) : EventData()
 
+    /** One master-authored confirmation row the watch renders verbatim. [role] is a [ConfirmationRole] name (color hint). */
+    @Serializable
+    data class ConfirmActionLine(val role: String, val text: String)
+
     @Serializable // returnCommand is sent back to Mobile after confirmation
     data class ConfirmAction(
         val title: String,
         val message: String,
         val returnCommand: EventData?,
-        val insulin: Double? = null,
-        val carbs: Int? = null,
-        val carbsTimeShift: Int? = null,
-        val duration: Int? = null,
-        val constraintApplied: Boolean = false,
-        // TempTarget fields
-        val tempTargetLow: Double? = null,
-        val tempTargetHigh: Double? = null,
-        val tempTargetDurationMinutes: Int? = null,
-        val tempTargetIsMGDL: Boolean = true,
-        val isCancelTempTarget: Boolean = false,
-        val tempTargetReason: String? = null,
-        // ProfileSwitch fields
-        val profileName: String? = null,
-        val profilePercentage: Int? = null,
-        val profileTimeshift: Int? = null,
-        val profileDurationMinutes: Int? = null,
-        // RunningMode fields
-        val runningModeTitle: String? = null,
-        val runningModeDurationMinutes: Int? = null,
-        val runningModeType: String? = null,
+        // Master-authored, color-coded confirmation rows (bolus / carbs / eCarbs / temp target / profile switch /
+        // running mode): the watch renders these verbatim, the same lines the phone dialog + every client show.
+        val lines: List<ConfirmActionLine> = emptyList(),
+        // [deferConfirm] = the commit is a CLIENT→master round-trip (the watch is paired to an AAPSCLIENT, so every
+        // action — bolus/wizard/TT/PS/RM/eCarbs — is relayed and executed on the master): the watch must NOT flash the
+        // local success animation on ✓, but instead show the "contacting master" spinner and wait for the master's real
+        // terminal ([RemoteDelivered] = success, or an error [ConfirmAction]). False = a master-paired watch (executes
+        // locally, no relay) → the watch shows success immediately as before. Set from config.AAPSCLIENT, so it is
+        // role-based, not per-action.
+        val deferConfirm: Boolean = false,
     ) : EventData()
+
+    /**
+     * Mobile→Wear: show a transient "Contacting master…" spinner while a CLIENT→master round-trip is in flight (the
+     * watch-on-client insulin relay). Dismissed when the resolving [ConfirmAction] (prepare lines / error) or
+     * [RemoteDelivered] (commit success) arrives, or by the spinner's own timeout. Emitted only on an AAPSCLIENT.
+     */
+    @Serializable
+    data object ContactingMaster : EventData()
+
+    /**
+     * Mobile→Wear: terminal for a deferred (relayed) commit that the master APPLIED — the watch shows its success
+     * animation now (it deferred it on ✓). Only sent on an AAPSCLIENT; a master-paired watch shows success locally.
+     */
+    @Serializable
+    data object RemoteDelivered : EventData()
 
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()

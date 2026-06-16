@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -51,18 +50,12 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
-import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.EventTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.icons.IcActivity
-import app.aaps.core.ui.compose.icons.IcAnnouncement
-import app.aaps.core.ui.compose.icons.IcBgCheck
-import app.aaps.core.ui.compose.icons.IcCgmInsert
-import app.aaps.core.ui.compose.icons.IcNote
-import app.aaps.core.ui.compose.icons.IcPumpBattery
-import app.aaps.core.ui.compose.icons.IcQuestion
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
+import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
@@ -109,11 +102,9 @@ fun CareDialogScreen(
 
     // Confirmation dialog
     if (showConfirmation) {
-        val summaryLines = viewModel.buildConfirmationSummary()
-        OkCancelDialog(
-            title = stringResource(uiState.eventType.titleResId()),
-            message = summaryLines.joinToString("<br/>"),
-            icon = uiState.eventType.icon(),
+        ElementConfirmationDialog(
+            elementType = uiState.eventType.toElementType(),
+            lines = viewModel.buildConfirmationSummary(),
             onConfirm = {
                 viewModel.confirmAndSave()
                 onNavigateBack()
@@ -398,14 +389,14 @@ fun CareportalEventType.titleResId(): Int = when (this) {
     CareportalEventType.ANNOUNCEMENT   -> CoreUiR.string.careportal_announcement
 }
 
-fun CareportalEventType.icon(): ImageVector = when (this) {
-    CareportalEventType.BGCHECK        -> IcBgCheck
-    CareportalEventType.SENSOR_INSERT  -> IcCgmInsert
-    CareportalEventType.BATTERY_CHANGE -> IcPumpBattery
-    CareportalEventType.NOTE           -> IcNote
-    CareportalEventType.EXERCISE       -> IcActivity
-    CareportalEventType.QUESTION       -> IcQuestion
-    CareportalEventType.ANNOUNCEMENT   -> IcAnnouncement
+fun CareportalEventType.toElementType(): ElementType = when (this) {
+    CareportalEventType.BGCHECK        -> ElementType.BG_CHECK
+    CareportalEventType.SENSOR_INSERT  -> ElementType.SENSOR_INSERT
+    CareportalEventType.BATTERY_CHANGE -> ElementType.BATTERY_CHANGE
+    CareportalEventType.NOTE           -> ElementType.NOTE
+    CareportalEventType.EXERCISE       -> ElementType.EXERCISE
+    CareportalEventType.QUESTION       -> ElementType.QUESTION
+    CareportalEventType.ANNOUNCEMENT   -> ElementType.ANNOUNCEMENT
 }
 
 @Preview(showBackground = true)

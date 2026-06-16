@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">Carbs constraint applied</string>
     <string name="no_temp_basal_running">No temp basal running</string>
     <string name="temp_target_short">TT</string>
@@ -148,6 +149,25 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Missing Insulin Name</string>
     <string name="insulin_name_exists">Insulin Name %1$s already exists, select a new name</string>
+    <string name="insulin_external_update_title">Insulin configuration changed</string>
+    <string name="insulin_external_update_message">A paired client changed the insulin configuration. Tap OK to load their changes and discard your unsaved edits, or Cancel to keep editing (your next save will overwrite theirs).</string>
+    <string name="insulin_edit_target_gone">This insulin was removed elsewhere, so your edit could not be saved. The list has been reloaded.</string>
+    <string name="insulin_activation_applied">Insulin activation applied</string>
+    <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Applying…</string>
+    <string name="clientcontrol_pending_working_text">Waiting for the master to confirm…</string>
+    <string name="clientcontrol_pending_rejected_title">Not applied</string>
+    <string name="clientcontrol_pending_rejected_text">The master could not apply this request.</string>
+    <string name="clientcontrol_pending_failed_format">%1$s couldn\'t be done.\n%2$s</string>
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Partly applied</string>
+    <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s was applied, but some actions couldn\'t be.\nCheck the active state.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Couldn\'t confirm</string>
+    <string name="clientcontrol_pending_unconfirmed_text">The request was sent but the master didn\'t confirm in time. It may or may not have been applied — this screen will update if it syncs back.</string>
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s was sent, but no confirmation came back.\n%2$s\nIt will appear here if/when the master applies it.</string>
+    <string name="clientcontrol_pending_stop_waiting">Stop waiting</string>
     <string name="a11y_add_new_insulin">Add new insulin</string>
     <string name="a11y_delete_current_insulin">Delete current insulin</string>
     <string name="activate_insulin_no_profile">No active profile found</string>

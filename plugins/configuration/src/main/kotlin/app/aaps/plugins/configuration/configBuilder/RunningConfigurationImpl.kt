@@ -1,14 +1,10 @@
 package app.aaps.plugins.configuration.configBuilder
 
-import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.aps.APS
-import app.aaps.core.interfaces.aps.APSResult
-import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -16,21 +12,27 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.defs.fillFor
-import app.aaps.core.interfaces.smoothing.Smoothing
+import app.aaps.core.interfaces.scenes.ActiveSceneSnapshot
+import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.SyncChannel
+import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
-import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.store
+import app.aaps.core.nssdk.localmodel.configuration.NSActiveScene
+import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.configuration.R
 import dagger.Reusable
-import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.Json
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -38,8 +40,7 @@ import javax.inject.Inject
 @Reusable
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
-    private val configBuilder: ConfigBuilder,
+    private val activeSceneSync: ActiveSceneSync,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val config: Config,
@@ -47,10 +48,10 @@ class RunningConfigurationImpl @Inject constructor(
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,
     private val constraintsChecker: ConstraintsChecker
-) : RunningConfiguration {
+) : RunningConfiguration, RunningConfigurationKeys {
 
-    private var counter = 0
-    private val every = 12 // Send only every 12 device status to save traffic
+    // Omit null fields so the frequently-published hot doc stays small.
+    private val wireJson = Json { explicitNulls = false }
 
     // called in AAPS mode only
     override fun configuration(): JSONObject {
@@ -58,86 +59,121 @@ class RunningConfigurationImpl @Inject constructor(
         val pumpInterface = activePlugin.activePump
 
         if (!pumpInterface.isInitialized()) return json
-        if (counter++ % every == 0)
-            try {
-                val insulinInterface = insulin
-                val sensitivityInterface = activePlugin.activeSensitivity
-                val safetyInterface = activePlugin.activeSafety
-                val smoothingInterface = activePlugin.activeSmoothing
-                // APS interface is needed for dynamic sensitivity calculation
-                val apsInterface = activePlugin.activeAPS
-
-                json.put("insulin", insulinInterface.id.value)
-                json.put("insulinConfiguration", JSONObject(insulinInterface.configuration().toString()))
-                apsInterface?.let {
-                    json.put("aps", it.algorithm.name)
-                    json.put("apsConfiguration", JSONObject(it.configuration().toString()))
-                }
-                json.put("sensitivity", sensitivityInterface.id.value)
-                json.put("sensitivityConfiguration", JSONObject(sensitivityInterface.configuration().toString()))
-                json.put("smoothing", smoothingInterface.javaClass.simpleName)
-                json.put("overviewConfiguration", JSONObject(buildOverviewConfiguration().toString()))
-                json.put("safetyConfiguration", JSONObject(safetyInterface.configuration().toString()))
-                json.put("pump", pumpInterface.model().description)
-                json.put("version", config.VERSION_NAME)
-            } catch (e: JSONException) {
-                aapsLogger.error("Unhandled exception", e)
-            }
+        try {
+            // Plugin selection + settings + scene definitions all ride the generic key-sync path now
+            // (ActivePlugin* keys + the flat syncedPrefs cold block).
+            json.put("syncedPrefs", buildSyncedPrefs())
+            json.put("pump", pumpInterface.model().description)
+            // Mirror the master's active-pump faking flag READ-ONLY to clients (so a follower's VirtualPump shows the
+            // right EB capability + interprets emulated-temp EBs correctly) — computed here on the master, never on the client.
+            // Reads activePump (the wrapper, which delegates to the real pump on the master); applyCold instead casts
+            // activePumpInternal because a client only has VirtualPump (not the PumpWithConcentration wrapper).
+            json.put("isFakingTempsByExtendedBoluses", pumpInterface.isFakingTempsByExtendedBoluses)
+            json.put("version", config.VERSION_NAME)
+        } catch (e: JSONException) {
+            aapsLogger.error("Unhandled exception", e)
+        }
         return json
     }
 
-    // called in NSClient mode only
-    override fun apply(configuration: NSDeviceStatus.Configuration) {
-        assert(config.AAPSCLIENT)
+    // called in AAPS mode only — the small "hot" doc: active scene (if any) + computed runtime flags.
+    override fun activeSceneConfiguration(): JSONObject {
+        val json = JSONObject()
+        try {
+            activeSceneSync.activeSceneSnapshot()?.let { snapshot ->
+                // Serialize from the wire DTO so the field set stays in lockstep with
+                // [NSActiveScene] (no hand-maintained put() list to drift). explicitNulls=false
+                // keeps the doc small by omitting not-yet-resolved NS ids.
+                val wire = NSActiveScene(
+                    sceneId = snapshot.sceneId,
+                    activatedAt = snapshot.activatedAt,
+                    durationMs = snapshot.durationMs,
+                    lifecycle = snapshot.lifecycle.name,
+                    ttNsId = snapshot.ttNsId,
+                    psNsId = snapshot.psNsId,
+                    rmNsId = snapshot.rmNsId,
+                    teNsId = snapshot.teNsId
+                )
+                json.put("activeScene", JSONObject(wireJson.encodeToString(NSActiveScene.serializer(), wire)))
+            }
+            json.put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())
+        } catch (e: JSONException) {
+            aapsLogger.error("Unhandled exception", e)
+        }
+        return json
+    }
+
+    // All cold-synced values (plugin selection, plugin settings, scene/quick-wizard/automation/insulin
+    // definitions) are declared via SyncSpec — a change to any republishes the cold doc. Their domain
+    // objects self-reload from the key, so there's no reloadInternalState hook.
+    override fun observableKeys(): List<NonPreferenceKey> = coldSyncKeys()
+
+    /** Plain preference keys declared to ride the cold running-config doc via [SyncChannel.Cold]. */
+    private fun coldSyncKeys(): List<NonPreferenceKey> =
+        preferences.getSyncKeys().filter { it.sync?.channel == SyncChannel.Cold }
+
+    // Flat {keyString: valueAsString} block of cold synced prefs. Values serialized as strings so the
+    // wire stays a Map<String, String> regardless of the key's underlying type. Boolean/String/Int/
+    // UnitDouble are supported (see the `when` below); other types are skipped with a warning.
+    //
+    // We sync the RAW persisted value (via the BooleanNonPreferenceKey getter), NOT the mode-adjusted
+    // effective value the BooleanPreferenceKey getter returns. Simple mode / defaultedBySM is a
+    // per-device presentation choice; the persisted user setting is what should travel, and each
+    // device re-applies its own mode logic on read. Do not "fix" this to preferences.get(asPreferenceKey).
+    private fun buildSyncedPrefs(): JSONObject {
+        val out = JSONObject()
+        coldSyncKeys().forEach { key ->
+            when (key) {
+                is BooleanNonPreferenceKey -> out.put(key.key, preferences.get(key).toString())
+                is StringNonPreferenceKey  -> out.put(key.key, preferences.get(key))
+                is IntNonPreferenceKey     -> out.put(key.key, preferences.get(key).toString())
+                is DoubleNonPreferenceKey  -> out.put(key.key, preferences.get(key).toString())   // raw (DoubleNonPreferenceKey getter, no SM adjust)
+                is UnitDoublePreferenceKey -> out.put(key.key, preferences.getRaw(key).toString())   // raw mg/dl, 1:1
+                else                       -> aapsLogger.warn(LTag.CORE, "syncedPrefs: unsupported key type for ${key.key}")
+            }
+        }
+        return out
+    }
+
+    // Apply master-published synced prefs on the client. "Master wins": adopt verbatim via putRemote
+    // (which suppresses the client→master echo and floors the modified stamp; the wire carries no
+    // per-key lastModified yet). A later client edit out-stamps it via max(stored+1, now()).
+    /**
+     * `putRemote(key, value, 0L)`: the trailing `0L` is the lastModified stamp. Passing `0L` floors
+     * the stamp to the minimum so any later user edit (stamped with `max(stored+1, now())`) always
+     * out-wins this remotely-adopted value under last-write-wins.
+     */
+    private fun applySyncedPrefs(prefs: Map<String, String>) {
+        prefs.forEach { (keyString, valueString) ->
+            val key = preferences.get(keyString) ?: return@forEach
+            when (key) {
+                is BooleanNonPreferenceKey -> valueString.toBooleanStrictOrNull()?.let { preferences.putRemote(key, it, 0L) }
+                is StringNonPreferenceKey  -> preferences.putRemote(key, valueString, 0L)
+                is IntNonPreferenceKey     -> valueString.toIntOrNull()?.let { preferences.putRemote(key, it, 0L) }
+                is DoubleNonPreferenceKey  -> valueString.toDoubleOrNull()?.let { preferences.putRemote(key, it, 0L) }
+                is UnitDoublePreferenceKey -> valueString.toDoubleOrNull()?.let { preferences.putRemote(key, it, 0L) }   // raw mg/dl
+                else                       -> aapsLogger.warn(LTag.CORE, "syncedPrefs: unsupported key type for $keyString")
+            }
+        }
+    }
+
+    // Runtime state — published to the separate "hot" doc, not the cold config doc.
+    override fun hotKeys(): List<NonPreferenceKey> = listOf(StringNonKey.ActiveScene)
+
+    // called in NSClient mode only — apply the cold config doc (everything except the active scene).
+    override fun applyCold(configuration: NSRunningConfiguration) {
+        if (!config.AAPSCLIENT) {
+            aapsLogger.error(LTag.CORE, "applyCold called on non-client build — ignored")
+            return
+        }
 
         configuration.version?.let {
-            nsClientRepository.addLog("◄ VERSION", "Received AAPS version  $it")
+            nsClientRepository.addLog("◄ VERSION", "Received AAPS version $it")
             if (config.VERSION_NAME.startsWith(it).not())
                 notificationManager.post(NotificationId.NSCLIENT_VERSION_DOES_NOT_MATCH, R.string.nsclient_version_does_not_match)
         }
-        configuration.insulinConfiguration?.let { ic ->
-            insulin.applyConfiguration(ic)
-        }
-
-        configuration.aps?.let {
-            val algorithm = APSResult.Algorithm.valueOf(it)
-            for (p in activePlugin.getSpecificPluginsListByInterface(APS::class.java)) {
-                val apsPlugin = p as APS
-                if (apsPlugin.algorithm == algorithm) {
-                    if (!p.isEnabled()) {
-                        aapsLogger.debug(LTag.CORE, "Changing aps plugin to ${apsPlugin.algorithm}")
-                        configBuilder.performPluginSwitch(p, true, PluginType.APS)
-                    }
-                    configuration.apsConfiguration?.let { ac -> apsPlugin.applyConfiguration(ac) }
-                }
-            }
-        }
-
-        configuration.sensitivity?.let {
-            val sensitivity = Sensitivity.SensitivityType.fromInt(it)
-            for (p in activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)) {
-                val sensitivityPlugin = p as Sensitivity
-                if (sensitivityPlugin.id == sensitivity) {
-                    if (!p.isEnabled()) {
-                        aapsLogger.debug(LTag.CORE, "Changing sensitivity plugin to ${sensitivity.name}")
-                        configBuilder.performPluginSwitch(p, true, PluginType.SENSITIVITY)
-                    }
-                    configuration.sensitivityConfiguration?.let { sc -> sensitivityPlugin.applyConfiguration(sc) }
-                }
-            }
-        }
-
-        configuration.smoothing?.let {
-            for (p in activePlugin.getSpecificPluginsListByInterface(Smoothing::class.java)) {
-                val smoothingPlugin = p as Smoothing
-                if (smoothingPlugin.javaClass.simpleName == it) {
-                    if (!p.isEnabled()) {
-                        aapsLogger.debug(LTag.CORE, "Changing smoothing plugin to ${smoothingPlugin.javaClass.simpleName}")
-                        configBuilder.performPluginSwitch(p, true, PluginType.SMOOTHING)
-                    }
-                }
-            }
-        }
+        // APS/Sensitivity/Smoothing/Calibration selection is adopted via the synced ActivePlugin* keys
+        // (applied below in syncedPrefs → ConfigBuilder's key observer performs the switch).
 
         configuration.pump?.let {
             if (preferences.get(StringKey.VirtualPumpType) != it) {
@@ -148,59 +184,41 @@ class RunningConfigurationImpl @Inject constructor(
             }
         }
 
-        configuration.overviewConfiguration?.let { applyOverviewConfiguration(it) }
+        configuration.syncedPrefs?.let { applySyncedPrefs(it) }
+        // Read-only mirror of the master's active-pump faking flag onto this client's VirtualPump. Applied verbatim
+        // (incl. false, so turning it off on the master propagates); null = older master → leave the client flag as-is.
+        // activePumpInternal (the real plugin) — NOT activePump, which is a PumpWithConcentration wrapper that isn't a VirtualPump.
+        configuration.isFakingTempsByExtendedBoluses?.let { (activePlugin.activePumpInternal as? VirtualPump)?.fakeDataDetected = it }
+    }
 
-        configuration.safetyConfiguration?.let {
-            activePlugin.activeSafety.applyConfiguration(it)
+    // called in NSClient mode only — apply the hot doc (active scene + computed runtime flags).
+    // Kept separate from [applyCold] so a cold-doc apply (which carries no activeScene) never
+    // clears a running scene.
+    override fun applyHot(configuration: NSRunningConfiguration) {
+        if (!config.AAPSCLIENT) {
+            aapsLogger.error(LTag.CORE, "applyHot called on non-client build — ignored")
+            return
         }
+        // activeScene: null on the wire means "no scene active" — clear locally.
+        // Always pass through (even null) so master-side dismissal propagates.
+        activeSceneSync.applyActiveScene(configuration.activeScene?.toSnapshot())
+        configuration.usedAutosensOnMainPhone?.let { preferences.put(BooleanNonKey.AutosensUsedOnMainPhone, it) }
     }
 
-    private fun buildOverviewConfiguration(): JsonObject =
-        JsonObject(emptyMap())
-            .put(StringKey.GeneralUnits, preferences)
-            .put(StringNonKey.QuickWizard, preferences)
-            .put(StringNonKey.TempTargetPresets, preferences)
-            .put(UnitDoubleKey.OverviewLowMark, preferences)
-            .put(UnitDoubleKey.OverviewHighMark, preferences)
-            .put(IntKey.OverviewCageWarning, preferences)
-            .put(IntKey.OverviewCageCritical, preferences)
-            .put(IntKey.OverviewIageWarning, preferences)
-            .put(IntKey.OverviewIageCritical, preferences)
-            .put(IntKey.OverviewSageWarning, preferences)
-            .put(IntKey.OverviewSageCritical, preferences)
-            .put(IntKey.OverviewSbatWarning, preferences)
-            .put(IntKey.OverviewSbatCritical, preferences)
-            .put(IntKey.OverviewBageWarning, preferences)
-            .put(IntKey.OverviewBageCritical, preferences)
-            .put(IntKey.OverviewResWarning, preferences)
-            .put(IntKey.OverviewResCritical, preferences)
-            .put(IntKey.OverviewBattWarning, preferences)
-            .put(IntKey.OverviewBattCritical, preferences)
-            .put(IntKey.OverviewBolusPercentage, preferences)
-            .put(BooleanNonKey.AutosensUsedOnMainPhone, constraintsChecker.isAutosensModeEnabled().value())
+    private fun NSActiveScene.toSnapshot() =
+        ActiveSceneSnapshot(
+            sceneId = sceneId,
+            activatedAt = activatedAt,
+            durationMs = durationMs,
+            // null on the wire = pre-lifecycle master, treat as ACTIVE.
+            // Forward-compat: an unknown lifecycle string (newer master adds a value this build doesn't
+            // know) → valueOf returns null via runCatching → falls through to ACTIVE as well.
+            lifecycle = lifecycle?.let { runCatching { SceneLifecycle.valueOf(it) }.getOrNull() }
+                ?: SceneLifecycle.ACTIVE,
+            ttNsId = ttNsId,
+            psNsId = psNsId,
+            rmNsId = rmNsId,
+            teNsId = teNsId
+        )
 
-    private fun applyOverviewConfiguration(configuration: JsonObject) {
-        configuration
-            .store(StringKey.GeneralUnits, preferences)
-            .store(StringNonKey.QuickWizard, preferences)
-            .store(StringNonKey.TempTargetPresets, preferences)
-            .store(UnitDoubleKey.OverviewLowMark, preferences)
-            .store(UnitDoubleKey.OverviewHighMark, preferences)
-            .store(IntKey.OverviewCageWarning, preferences)
-            .store(IntKey.OverviewCageCritical, preferences)
-            .store(IntKey.OverviewIageWarning, preferences)
-            .store(IntKey.OverviewIageCritical, preferences)
-            .store(IntKey.OverviewSageWarning, preferences)
-            .store(IntKey.OverviewSageCritical, preferences)
-            .store(IntKey.OverviewSbatWarning, preferences)
-            .store(IntKey.OverviewSbatCritical, preferences)
-            .store(IntKey.OverviewBageWarning, preferences)
-            .store(IntKey.OverviewBageCritical, preferences)
-            .store(IntKey.OverviewResWarning, preferences)
-            .store(IntKey.OverviewResCritical, preferences)
-            .store(IntKey.OverviewBattWarning, preferences)
-            .store(IntKey.OverviewBattCritical, preferences)
-            .store(IntKey.OverviewBolusPercentage, preferences)
-            .store(BooleanNonKey.AutosensUsedOnMainPhone, preferences)
-    }
 }

@@ -19,10 +19,10 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +36,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -80,7 +81,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, profileRepository
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), profileRepository
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

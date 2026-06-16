@@ -70,6 +70,8 @@ import app.aaps.compose.navigation.AppRoute
 import app.aaps.compose.navigation.appNavGraph
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.InitProgress
@@ -95,6 +97,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -107,6 +110,7 @@ import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -128,10 +132,12 @@ import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.ui.compose.careDialog.CareportalEventType
+import app.aaps.ui.compose.clientcontrol.ClientControlPendingDialog
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -183,6 +189,9 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var nsClient: NsClient
+    @Inject lateinit var clientControlActionDispatcher: ClientControlActionDispatcher
+    @Inject lateinit var automationRuntime: AutomationRuntime
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var swDefinition: SWDefinition
     @Inject lateinit var config: Config
@@ -297,11 +306,27 @@ class ComposeMainActivity : AppCompatActivity() {
     @Composable
     private fun MainContent() {
         val navController = rememberNavController().also { this.navController = it }
+        val masterReachable by nsClient.masterReachable.collectAsStateWithLifecycle()
+
+        // Global self-heal — event-driven, NOT a poll (a timer would keep the CPU awake). Probe once when
+        // we go offline, and again on each navigation while offline, so any screen/dialog the user opens
+        // re-checks. (The WS reconnect and a failed action also probe; all internally rate-limited.)
+        // `masterReachable` is lifecycle-collected and navigation only happens in the foreground, so this
+        // never runs in the background.
+        LaunchedEffect(masterReachable) {
+            if (!masterReachable) nsClient.requestMasterProbe()
+        }
+        LaunchedEffect(navController) {
+            navController.currentBackStackEntryFlow.collect {
+                if (!nsClient.masterReachable.value) nsClient.requestMasterProbe()
+            }
+        }
 
         CompositionLocalProvider(
             LocalPreferences provides preferences,
             LocalDateUtil provides dateUtil,
             LocalConfig provides config,
+            LocalMasterReachable provides masterReachable,
             LocalProfileUtil provides profileUtil,
             LocalCheckPassword provides cryptoUtil::checkPassword,
             LocalHashPassword provides cryptoUtil::hashPassword,
@@ -343,6 +368,19 @@ class ComposeMainActivity : AppCompatActivity() {
                         // Root-level dialog host — subscribes to EventShowDialog and
                         // renders one modal dialog at a time.
                         GlobalDialogHost(rxBus = rxBus)
+
+                        // The single app-level pending modal for ANY client-control round-trip
+                        // (insulin / scenes / synced-preference edits). Hosted once here, feature-
+                        // independent; round-trips are single-in-flight so at most one shows. Applied is
+                        // cleared by the dispatcher (silent); Rejected/Unconfirmed stay until dismissed.
+                        val pendingAction by clientControlActionDispatcher.pendingAction.collectAsStateWithLifecycle()
+                        pendingAction?.let { pending ->
+                            if (pending.progress !is ActionProgress.Applied)
+                                ClientControlPendingDialog(
+                                    pending = pending,
+                                    onDismiss = { clientControlActionDispatcher.dismissActionProgress() }
+                                )
+                        }
                     }
                 }
             }
@@ -712,7 +750,12 @@ class ComposeMainActivity : AppCompatActivity() {
                     queueStatusText = pumpQueueStatus,
                     isPumpCommunicating = pumpStatusBanner != null,
                     onStopBolus = {
-                        commandQueue.cancelAllBoluses(null)
+                        if (config.AAPSCLIENT) {
+                            clientControlActionDispatcher.stopBolus()
+                            bolusProgressData.stopPressed()
+                        } else {
+                            commandQueue.cancelAllBoluses(null)
+                        }
                     }
                 )
             }
@@ -736,6 +779,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 swDefinition = swDefinition,
                 rxBus = rxBus,
                 activePlugin = activePlugin,
+                automationRuntime = automationRuntime,
                 preferences = preferences,
                 rh = rh,
                 builtInSearchables = builtInSearchables,
@@ -776,7 +820,12 @@ class ComposeMainActivity : AppCompatActivity() {
                     queueStatus = queueStatus,
                     isModal = true,
                     onStop = {
-                        commandQueue.cancelAllBoluses(null)
+                        if (config.AAPSCLIENT) {
+                            clientControlActionDispatcher.stopBolus()
+                            bolusProgressData.stopPressed()
+                        } else {
+                            commandQueue.cancelAllBoluses(null)
+                        }
                     },
                     onDismiss = { }
                 )
@@ -1050,6 +1099,9 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.FOOD_MANAGEMENT         -> navController.navigate(AppRoute.FoodManagement.route)
             ElementType.RUNNING_MODE            -> navController.navigate(AppRoute.RunningMode.route)
             ElementType.SCENE_MANAGEMENT        -> navController.navigate(AppRoute.SceneList.route)
+            ElementType.AUTOMATION_MANAGEMENT   -> navController.navigate(AppRoute.AutomationList.route)
+            ElementType.AUTHORIZED_CLIENTS      -> navController.navigate(AppRoute.AuthorizedClients.route)
+            ElementType.PAIR_WITH_MASTER        -> navController.navigate(AppRoute.PairWithMaster.route)
             ElementType.QUICK_LAUNCH_CONFIG     -> navController.navigate(AppRoute.QuickLaunchConfig.route)
 
             // Treatment dialogs

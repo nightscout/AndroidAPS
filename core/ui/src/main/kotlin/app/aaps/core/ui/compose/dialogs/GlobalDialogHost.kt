@@ -1,11 +1,13 @@
 package app.aaps.core.ui.compose.dialogs
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
@@ -77,9 +79,26 @@ fun GlobalDialogHost(rxBus: RxBus) {
                 onDismiss = { choice.complete(true) }
             )
 
-        is EventShowDialog.OkCancel    ->
-            when (val msg = event.message) {
-                is androidx.compose.ui.text.AnnotatedString ->
+        is EventShowDialog.OkCancel    -> {
+            // Structured confirmation lines win and are themed here (render time); otherwise fall back to
+            // a pre-built AnnotatedString, else a plain/HTML String. Local vals so the cross-module
+            // properties can smart-cast.
+            val lines = event.confirmationLines
+            val msg = event.message
+            // No element on a bare EventShowDialog — wizard lines don't use PRIMARY, so the default is unused.
+            val themed = if (lines != null) lines.toAnnotatedString(primaryColor = MaterialTheme.colorScheme.primary) else null
+            when {
+                themed != null         ->
+                    OkCancelDialog(
+                        title = event.title,
+                        message = themed,
+                        secondMessage = event.secondMessage,
+                        icon = event.icon,
+                        onConfirm = { choice.complete(true) },
+                        onDismiss = { choice.complete(false) }
+                    )
+
+                msg is AnnotatedString ->
                     OkCancelDialog(
                         title = event.title,
                         message = msg,
@@ -89,7 +108,7 @@ fun GlobalDialogHost(rxBus: RxBus) {
                         onDismiss = { choice.complete(false) }
                     )
 
-                else                                        ->
+                else                   ->
                     OkCancelDialog(
                         title = event.title,
                         message = msg.toString(),
@@ -99,6 +118,7 @@ fun GlobalDialogHost(rxBus: RxBus) {
                         onDismiss = { choice.complete(false) }
                     )
             }
+        }
 
         is EventShowDialog.YesNoCancel ->
             YesNoCancelDialog(

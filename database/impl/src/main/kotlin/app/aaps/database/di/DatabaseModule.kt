@@ -11,6 +11,7 @@ import androidx.sqlite.execSQL
 import app.aaps.database.AppDatabase
 import app.aaps.database.entities.TABLE_APS_RESULTS
 import app.aaps.database.entities.TABLE_BOLUSES
+import app.aaps.database.entities.TABLE_CALIBRATION_ENTRIES
 import app.aaps.database.entities.TABLE_EFFECTIVE_PROFILE_SWITCHES
 import app.aaps.database.entities.TABLE_HEART_RATE
 import app.aaps.database.entities.TABLE_PREFERENCE_CHANGES
@@ -44,7 +45,7 @@ open class DatabaseModule {
             // Bundled SQLite driver: ships its own SQLite compiled from source instead of the
             // device's framework SQLite. This is Google's recommended driver (consistent engine
             // across all devices) and, crucially, it does not allocate the framework CursorWindow
-            // ashmem buffer, eliminating CursorWindowAllocationException on memory-constrained devices.
+            // mem buffer, eliminating CursorWindowAllocationException on memory-constrained devices.
             .setDriver(BundledSQLiteDriver())
             .addMigrations(*migrations)
             .addCallback(object : Callback() {
@@ -305,7 +306,19 @@ open class DatabaseModule {
         }
     }
 
+    internal val migration34to35 = object : Migration(34, 35) {
+        override fun migrate(connection: SQLiteConnection) {
+            connection.execSQL("DROP TABLE IF EXISTS `$TABLE_CALIBRATION_ENTRIES`")
+            connection.execSQL("CREATE TABLE IF NOT EXISTS `$TABLE_CALIBRATION_ENTRIES` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `fingerstickMgdl` REAL NOT NULL, `sensorMgdlAtPairing` REAL NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `$TABLE_CALIBRATION_ENTRIES`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
+            connection.execSQL("CREATE INDEX IF NOT EXISTS `index_calibrationEntries_nightscoutId` ON `$TABLE_CALIBRATION_ENTRIES` (`nightscoutId`)")
+            connection.execSQL("CREATE INDEX IF NOT EXISTS `index_calibrationEntries_referenceId` ON `$TABLE_CALIBRATION_ENTRIES` (`referenceId`)")
+            connection.execSQL("CREATE INDEX IF NOT EXISTS `index_calibrationEntries_timestamp` ON `$TABLE_CALIBRATION_ENTRIES` (`timestamp`)")
+            // Custom indexes must be dropped on migration to pass room schema checking after upgrade
+            dropCustomIndexes(connection)
+        }
+    }
+
     /** List of all migrations for easy reply in tests. */
     @VisibleForTesting
-    internal val migrations = arrayOf(migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28, migration28to29, migration29to30, migration30to31, migration31to32, migration32to33, migration33to34)
+    internal val migrations = arrayOf(migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28, migration28to29, migration29to30, migration30to31, migration31to32, migration32to33, migration33to34, migration34to35)
 }

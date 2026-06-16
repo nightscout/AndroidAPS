@@ -13,6 +13,9 @@ interface AutomationEvent {
     val id: String
     var isEnabled: Boolean
     var title: String
+
+    /** True when this event is exposed as a user-tappable action (Overview button / wear tile / quick-launch). */
+    var userAction: Boolean
     suspend fun canRun(): Boolean
     suspend fun preconditionCanRun(): Boolean
     fun firstActionIcon(): AutomationIconData?

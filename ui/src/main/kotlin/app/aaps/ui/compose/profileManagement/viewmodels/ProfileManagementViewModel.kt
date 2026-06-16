@@ -7,13 +7,17 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.graph.profile.ProfileCompareData
 import app.aaps.core.graph.profile.buildProfileCompareData
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.db.compensateForClockSkew
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -25,6 +29,8 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.ProfileValidationError
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -34,7 +40,9 @@ import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.ScreenMode
+import app.aaps.core.ui.compose.icons.IcProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +58,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -73,11 +80,14 @@ class ProfileManagementViewModel @Inject constructor(
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     val profileUtil: ProfileUtil,
     val decimalFormatter: DecimalFormatter,
     private val persistenceLayer: PersistenceLayer,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val config: Config,
+    private val batchExecutor: BatchExecutor,
+    private val rxBus: RxBus,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     // VM-owned selection state. The source of truth for "which profile is currently shown
@@ -127,6 +137,7 @@ class ProfileManagementViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeActiveProfileForAutoNavigation() {
         persistenceLayer.observeChanges(EPS::class.java)
+            .compensateForClockSkew(config, dateUtil)
             .onStart { emit(emptyList()) }
             .mapLatest {
                 persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.originalProfileName
@@ -147,7 +158,7 @@ class ProfileManagementViewModel @Inject constructor(
     val uiState: StateFlow<ProfileManagementUiState> = combine(
         profileRepository.profiles,
         _selectedIndex,
-        persistenceLayer.observeChanges(EPS::class.java).onStart { emit(emptyList()) },
+        persistenceLayer.observeChanges(EPS::class.java).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
         _screenMode
     ) { profiles, requestedIdx, _, screenMode ->
         UiInputs(profiles, requestedIdx, screenMode)
@@ -412,6 +423,15 @@ class ProfileManagementViewModel @Inject constructor(
         return profileRepository.validatePumpCompatibility(profile, percentage).isEmpty()
     }
 
+    /**
+     * Activate a named profile. Routes through the role-transparent [BatchExecutor] so a client relays the switch
+     * to the master (which resolves the name in its own store); on the master it applies locally. The master-authored
+     * confirmation lines are shown as the single confirm dialog, and an optional activity temp-target rides the same
+     * atomic batch. Returns true when the switch was prepared (the confirm dialog is shown), false on a pre-check reject.
+     *
+     * Note: back-dating ([timestamp]/[timeChanged]) isn't carried through the batch path — the master stamps now().
+     */
+    @Suppress("UNUSED_PARAMETER")
     suspend fun activateProfile(
         profileIndex: Int,
         durationMinutes: Int,
@@ -440,64 +460,40 @@ class ProfileManagementViewModel @Inject constructor(
             return false
         }
 
-        val success = profileFunction.createProfileSwitch(
-            profileStore = profileStore,
-            profileName = profileName,
-            durationInMinutes = durationMinutes,
-            percentage = percentage,
-            timeShiftInHours = timeshiftHours,
-            timestamp = timestamp,
-            action = Action.PROFILE_SWITCH,
-            source = Sources.ProfileSwitchDialog,
-            note = notes.ifBlank { null },
-            listValues = listOfNotNull(
-                ValueWithUnit.Timestamp(timestamp).takeIf { timeChanged },
-                ValueWithUnit.SimpleString(profileName),
-                ValueWithUnit.Percent(percentage),
-                ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
-                ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
-            ),
-            iCfg = profileFunction.getProfile()?.iCfg ?: insulin.iCfg
-        )
-
-        if (success == null) {
-            // Pump incompatibility is prevented up front in the activation dialog, and semantic
-            // validity is guaranteed for saved profiles — so a null here means the DB write failed.
-            aapsLogger.error(LTag.UI, "Profile switch could not be persisted: $profileName")
-            _snackbarEvent.tryEmit(rh.gs(R.string.profile_switch_save_failed))
-        } else {
-            if (percentage == 90 && durationMinutes == 10) {
-                preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
-            }
-
+        val actions = buildList {
+            add(BatchAction.ProfileSwitch(percentage, timeshiftHours, durationMinutes, profileName = profileName, notes = notes.ifBlank { null }))
+            // An activity temp-target rides the same batch (raising → applied first, atomically with the switch).
             if (withTT && durationMinutes > 0 && percentage < 100) {
                 val targetMgdl = preferences.ttTargetMgdl(TT.Reason.ACTIVITY)
-                viewModelScope.launch {
-                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                        TT(
-                            timestamp = timestamp + 10000, // Add ten secs for proper NSCv1 sync
-                            duration = TimeUnit.MINUTES.toMillis(durationMinutes.toLong()),
-                            reason = TT.Reason.ACTIVITY,
-                            lowTarget = targetMgdl,
-                            highTarget = targetMgdl
-                        ),
-                        action = Action.TT,
-                        source = Sources.TTDialog,
-                        note = null,
-                        listValues = listOfNotNull(
-                            ValueWithUnit.Timestamp(timestamp).takeIf { timeChanged },
-                            ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
-                            ValueWithUnit.Mgdl(targetMgdl),
-                            ValueWithUnit.Minute(durationMinutes)
-                        )
+                add(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, targetMgdl, targetMgdl, durationMinutes, 0))
+            }
+        }
+        val label = rh.gs(R.string.careportal_profileswitch)
+        return when (val prepared = batchExecutor.prepare(actions, Sources.ProfileSwitchDialog, label)) {
+            is ActionProgress.Prepared -> {
+                rxBus.send(
+                    EventShowDialog.OkCancel(
+                        title = label, message = "", confirmationLines = prepared.lines, icon = IcProfile,
+                        onOk = {
+                            appScope.launch {
+                                batchExecutor.commit(prepared.id, Sources.ProfileSwitchDialog, label)
+                                if (percentage == 90 && durationMinutes == 10) preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
+                            }
+                        }
                     )
-                }
+                )
+                true
             }
 
-            // EPS change triggers uiState refresh automatically via persistenceLayer.observeChanges
-        }
+            // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal.
+            is ActionProgress.Rejected -> {
+                if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                    _snackbarEvent.tryEmit(prepared.detail ?: rh.gs(R.string.clientcontrol_fail_not_reachable))
+                false
+            }
 
-        return success != null
+            else                       -> false // Unconfirmed → handled by the app-level pending modal
+        }
     }
 }
 

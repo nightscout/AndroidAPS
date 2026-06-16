@@ -49,10 +49,8 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import java.text.DecimalFormat
@@ -83,12 +81,9 @@ fun CalibrationDialogScreen(
             showConfirmation = false
             showNoAction = true
         } else {
-            val summaryLines = viewModel.buildConfirmationSummary()
-            OkCancelDialog(
-                title = stringResource(CoreUiR.string.calibration),
-                message = summaryLines.joinToString("<br/>"),
-                icon = ElementType.CALIBRATION.icon(),
-                iconTint = ElementType.CALIBRATION.color(),
+            ElementConfirmationDialog(
+                elementType = ElementType.CALIBRATION,
+                lines = viewModel.buildConfirmationSummary(),
                 onConfirm = {
                     viewModel.confirmAndSave()
                     showConfirmation = false
@@ -99,11 +94,9 @@ fun CalibrationDialogScreen(
     }
 
     if (showNoAction) {
-        OkCancelDialog(
-            title = stringResource(CoreUiR.string.calibration),
+        ElementConfirmationDialog(
+            elementType = ElementType.CALIBRATION,
             message = stringResource(CoreUiR.string.no_action_selected),
-            icon = ElementType.CALIBRATION.icon(),
-            iconTint = ElementType.CALIBRATION.color(),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )

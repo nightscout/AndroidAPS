@@ -10,8 +10,8 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -55,4 +55,4 @@ class LoadDeviceStatusWorker @AssistedInject constructor(
         nsClientV3Plugin.lastOperationError = null
         return Result.success()
     }
-}
+}

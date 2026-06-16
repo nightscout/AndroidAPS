@@ -3,30 +3,24 @@ package app.aaps.ui.compose.insulinDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
@@ -36,10 +30,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
@@ -51,33 +42,27 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.math.abs
 import kotlin.math.max
 
 @HiltViewModel
 @Stable
 class InsulinDialogViewModel @Inject constructor(
-    private val constraintChecker: ConstraintsChecker,
+    constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    private val commandQueue: CommandQueue,
-    private val activePlugin: ActivePlugin,
+    activePlugin: ActivePlugin,
     val activeInsulin: Insulin,
     val insulinManager: InsulinManager,
     val config: Config,
     private val automation: Automation,
-    private val uel: UserEntryLogger,
-    private val persistenceLayer: PersistenceLayer,
     val decimalFormatter: DecimalFormatter,
     private val loop: Loop,
     val preferences: Preferences,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger,
     hardLimits: HardLimits,
-    private val runningModeGuard: RunningModeGuard,
+    private val batchExecutor: BatchExecutor,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -87,6 +72,9 @@ class InsulinDialogViewModel @Inject constructor(
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
+
+        /** The MASTER prepared the batch and returned its merged confirmation [lines]; show them, then [commit] [bolusId]. */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -119,7 +107,7 @@ class InsulinDialogViewModel @Inject constructor(
                 insulin = 0.0,
                 timeOffsetMinutes = 0,
                 eatingSoonTtChecked = false,
-                recordOnlyChecked = initialForcedRecordOnly || isAapsClient,
+                recordOnlyChecked = initialForcedRecordOnly,
                 notes = "",
                 eventTime = now,
                 eventTimeOriginal = now,
@@ -142,12 +130,14 @@ class InsulinDialogViewModel @Inject constructor(
             val runningIcfg = getRunningIcfg()
             val mode = loop.runningMode()
             val cantDeliverBolus = PumpCommandGate.check(mode, PumpCommandGate.CommandKind.BOLUS) is PumpCommandGate.Decision.Reject
-            val forcedRecordOnly = cantDeliverBolus || !pumpInitialized
+            // A client delivers via the master (the batch round-trip), so its local pump state must NOT force
+            // record-only; only a master's own can't-deliver conditions do. The record-only toggle still works.
+            val forcedRecordOnly = if (isAapsClient) false else (cantDeliverBolus || !pumpInitialized)
             _uiState.update {
                 it.copy(
                     selectedIcfg = runningIcfg,
                     forcedRecordOnly = forcedRecordOnly,
-                    recordOnlyChecked = forcedRecordOnly || isAapsClient
+                    recordOnlyChecked = forcedRecordOnly
                 )
             }
         }
@@ -220,167 +210,74 @@ class InsulinDialogViewModel @Inject constructor(
         }
     }
 
-    private var confirmedState: InsulinDialogUiState? = null
+    @Volatile private var confirmedState: InsulinDialogUiState? = null
 
-    fun buildConfirmationSummary(): List<String> {
-        val state = uiState.value
-        confirmedState = state
-        val lines = mutableListOf<String>()
-        val unitLabel = if (state.units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
-        val pump = activePlugin.activePump
-        val pumpDescription = pump.pumpDescription
-
-        val insulin = state.insulin
-        val insulinAfterConstraints = if (state.recordOnlyChecked) {
-            insulin
-        } else {
-            constraintChecker.applyBolusConstraints(
-                ConstraintObject(insulin, aapsLogger)
-            ).value()
-        }
-
-        // Bolus line
-        if (insulinAfterConstraints > 0) {
-            lines.add(
-                rh.gs(app.aaps.core.ui.R.string.bolus) + ": " +
-                    decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, pumpDescription.bolusStep)
-            )
-            if (state.recordOnlyChecked) {
-                lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
-                state.selectedIcfg?.let {
-                    lines.add(rh.gs(app.aaps.core.ui.R.string.selected_insulin, it.insulinLabel))
-                }
+    /**
+     * Tap-confirm → ask the MASTER to PREPARE the batch (cap + build the merged confirmation). Client = signed
+     * round-trip; master = local. The user then confirms the MASTER's exact lines (the contract — the client never
+     * builds or caps its own numbers) and [commit] delivers. appScope: the screen may navigate away (cancelling
+     * viewModelScope) while the round-trip is in flight.
+     */
+    fun prepareAndConfirm() {
+        appScope.launch {
+            val state = uiState.value
+            confirmedState = state
+            val actions = buildActions(state)
+            if (actions.isEmpty()) {
+                _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+                return@launch
             }
-            if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
-                lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints))
+            when (val prepared = batchExecutor.prepare(actions, Sources.InsulinDialog, rh.gs(app.aaps.core.ui.R.string.bolus))) {
+                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
+                // Offline block (and a master-local failure) surface here; a client round-trip failure already showed
+                // on the app-level modal, so only re-surface NotReachable or a master-side detail message.
+                is ActionProgress.Rejected ->
+                    if (prepared.reason == FailureReason.NotReachable) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                    else prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
+
+                else                       -> Unit // Unconfirmed → app-level modal
             }
         }
-
-        // Eating soon TT
-        if (state.eatingSoonTtChecked) {
-            lines.add(
-                rh.gs(R.string.temp_target_short) + ": " +
-                    decimalFormatter.to1Decimal(state.eatingSoonTtTarget) + " " + unitLabel +
-                    " (" + rh.gs(app.aaps.core.ui.R.string.format_mins, state.eatingSoonTtDuration) + ")"
-            )
-        }
-
-        // Time offset
-        val timeOffset = state.timeOffsetMinutes
-        if (timeOffset != 0) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime))
-        }
-
-        // Notes
-        if (state.notes.isNotEmpty()) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + state.notes)
-        }
-
-        return lines
     }
 
-    fun hasAction(): Boolean {
-        val state = uiState.value
-        val insulin = if (state.recordOnlyChecked) {
-            state.insulin
-        } else {
-            constraintChecker.applyBolusConstraints(
-                ConstraintObject(state.insulin, aapsLogger)
-            ).value()
+    /** Confirm the master's prepared batch: deliver the parked bundle exactly once. */
+    fun commit(bolusId: Long) {
+        appScope.launch {
+            val state = confirmedState
+            val result = batchExecutor.commit(bolusId, Sources.InsulinDialog, rh.gs(app.aaps.core.ui.R.string.bolus))
+            // Non-record: remove the bolus reminder on success. Record-only: only when not back/forward-dated.
+            if (result is ActionProgress.Applied && (state == null || !state.recordOnlyChecked || state.timeOffsetMinutes == 0))
+                automation.removeAutomationEventBolusReminder()
+            // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
+            // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
+            if (result is ActionProgress.Rejected) {
+                if (result.reason == FailureReason.NotReachable)
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                else result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
+            }
         }
-        return insulin > 0 || state.eatingSoonTtChecked
     }
 
-    fun confirmAndSave() {
-        // appScope, not viewModelScope: the screen navigates back immediately after confirm,
-        // cancelling viewModelScope. Running the whole save on appScope guarantees every write
-        // is reached even when a suspend profile lookup runs before it (e.g. getRunningIcfg()).
-        appScope.launch { confirmAndSaveSuspend() }
-    }
-
-    private suspend fun confirmAndSaveSuspend() {
-        val state = confirmedState ?: return
-        val insulin = state.insulin
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
-            ConstraintObject(insulin, aapsLogger)
-        ).value()
-        val timeOffset = state.timeOffsetMinutes
-        val time = state.eventTime
-        val notes = state.notes
-        val recordOnlyChecked = state.recordOnlyChecked
+    /**
+     * Build the batch from the dialog state. The bolus carries the user's RAW amount — the MASTER caps it (a client
+     * never caps its own numbers); a record-only is kept as given. The eating-soon TT (target-LOWERING) travels with
+     * the bolus so the master applies it only if the bolus is accepted (decision B). iCfg matters only for record-only.
+     */
+    private fun buildActions(state: InsulinDialogUiState): List<BatchAction> {
         val units = profileFunction.getUnits()
-        val iCfg = if (state.recordOnlyChecked)
-            state.selectedIcfg ?: activeInsulin.iCfg
-        else
-            getRunningIcfg()
-        // Insert temp target if eating soon checked
-        if (state.eatingSoonTtChecked) {
-            val eatingSoonTT = state.eatingSoonTtTarget
-            val eatingSoonTTDuration = state.eatingSoonTtDuration
-            // appScope, not viewModelScope: the screen navigates back immediately after confirm,
-            // which cancels viewModelScope and could drop this direct DB write.
-            appScope.launch {
-                try {
-                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                        temporaryTarget = TT(
-                            timestamp = System.currentTimeMillis(),
-                            duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                            reason = TT.Reason.EATING_SOON,
-                            lowTarget = profileUtil.convertToMgdl(eatingSoonTT, units),
-                            highTarget = profileUtil.convertToMgdl(eatingSoonTT, units)
-                        ),
-                        action = Action.TT,
-                        source = Sources.InsulinDialog,
-                        note = notes,
-                        listValues = listOf(
-                            ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
-                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
-                            ValueWithUnit.Minute(eatingSoonTTDuration)
-                        )
-                    )
-                } catch (e: Exception) {
-                    aapsLogger.error(LTag.UI, "Failed to save temp target", e)
-                }
+        val iCfg = if (state.recordOnlyChecked) state.selectedIcfg ?: activeInsulin.iCfg else null
+        return buildList {
+            if (state.eatingSoonTtChecked) {
+                val mgdl = profileUtil.convertToMgdl(state.eatingSoonTtTarget, units)
+                add(BatchAction.TempTarget(reason = TT.Reason.EATING_SOON.text, lowMgdl = mgdl, highMgdl = mgdl, durationMinutes = state.eatingSoonTtDuration, startOffsetMinutes = 0))
             }
-        }
-
-        // Send bolus
-        if (insulinAfterConstraints > 0) {
-            val detailedBolusInfo = DetailedBolusInfo().also {
-                it.eventType = TE.Type.CORRECTION_BOLUS
-                it.insulin = insulinAfterConstraints
-                it.notes = notes
-                it.timestamp = time
-            }
-
-            if (recordOnlyChecked) {
-                // appScope, not viewModelScope: the screen navigates back immediately after
-                // confirm, which cancels viewModelScope and could drop this direct DB write.
-                appScope.launch {
-                    persistenceLayer.insertOrUpdateBolus(
-                        bolus = detailedBolusInfo.createBolus(iCfg),
-                        action = Action.BOLUS,
-                        source = Sources.InsulinDialog,
-                        note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
+            if (state.insulin > 0)
+                add(
+                    BatchAction.Bolus(
+                        insulin = state.insulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
+                        recordOnly = state.recordOnlyChecked, notes = state.notes, timestamp = state.eventTime, iCfg = iCfg
                     )
-                }
-                if (timeOffset == 0) {
-                    automation.removeAutomationEventBolusReminder()
-                }
-            } else {
-                if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
-                uel.log(
-                    Action.BOLUS, Sources.InsulinDialog,
-                    notes,
-                    ValueWithUnit.Insulin(insulinAfterConstraints)
                 )
-                val result = commandQueue.bolus(detailedBolusInfo)
-                if (!result.success) {
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                } else {
-                    automation.removeAutomationEventBolusReminder()
-                }
-            }
         }
     }
 }

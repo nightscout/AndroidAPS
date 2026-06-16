@@ -22,7 +22,7 @@ internal data class RemoteEntry(
     @SerializedName("srvModified") val srvModified: Long?,
     @SerializedName("srvCreated") val srvCreated: Long?,
     // Philoul Others fields below found in API v3 doc
-    @SerializedName("app") var app : String? = null,
+    @SerializedName("app") var app: String? = null,
     @SerializedName("utcOffset") var utcOffset: Long?, // Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is
     // automatically parsed from the date field.
     @SerializedName("subject") val subject: String?, // Name of the security subject (within Nightscout scope) which has created the document. This field is automatically set by the server from the passed token or JWT.
@@ -32,5 +32,9 @@ internal data class RemoteEntry(
     @SerializedName("noise") val noise: Double?, // 0 or 1 found in the export, I don't know if other values possible ?
     @SerializedName("filtered") val filtered: Double?, // The raw filtered value directly from CGM transmitter. (only available for sgv types)
     @SerializedName("unfiltered") val unfiltered: Double?, // The raw unfiltered value directly from CGM transmitter. (only available for sgv types)
-    @SerializedName("units") val units: String? // The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
+    @SerializedName("units") val units: String?, // The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
+    @SerializedName("mbg") val mbg: Double? = null, // Manual blood glucose reading (only available for mbg types). AAPS uses a marked mbg to carry a calibration fingerstick.
+    // AAPS-specific calibration fields, carried on a marked `mbg` entry so a follower can re-fit the calibration curve.
+    @SerializedName("sensorMgdlAtPairing") val sensorMgdlAtPairing: Double? = null, // sensor value at the moment the fingerstick was entered
+    @SerializedName("isCalibration") val isCalibration: Boolean? = null // marker: true when this mbg is an AAPS calibration pair (vs a foreign manual BG)
 )

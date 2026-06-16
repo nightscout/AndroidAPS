@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -360,23 +359,14 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal))
             jsonSettings.put("tune_insulin_curve", false)
 
+            // The oref0 insulin model is exponential and fully parameterized by peak time; the discrete
+            // InsulinType "curve" was only a preset peak (rapid-acting=75 / ultra-rapid=55). Pick the curve
+            // whose valid peak range contains iCfg.peak and always pass the peak explicitly — this reproduces
+            // every former InsulinType branch exactly (75→rapid, 55/45→ultra) and works for any custom peak.
             val peakTime: Int = insulinInterface.iCfg.peak
-            when {
-                insulinInterface.id === InsulinType.OREF_ULTRA_RAPID_ACTING -> jsonSettings.put("curve", "ultra-rapid")
-                insulinInterface.id === InsulinType.OREF_RAPID_ACTING       -> jsonSettings.put("curve", "rapid-acting")
-
-                insulinInterface.id === InsulinType.OREF_LYUMJEV            -> {
-                    jsonSettings.put("curve", "ultra-rapid")
-                    jsonSettings.put("useCustomPeakTime", true)
-                    jsonSettings.put("insulinPeakTime", peakTime)
-                }
-
-                insulinInterface.id === InsulinType.OREF_FREE_PEAK          -> {
-                    jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
-                    jsonSettings.put("useCustomPeakTime", true)
-                    jsonSettings.put("insulinPeakTime", peakTime)
-                }
-            }
+            jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
+            jsonSettings.put("useCustomPeakTime", true)
+            jsonSettings.put("insulinPeakTime", peakTime)
             jsonString = jsonSettings.toString(4).replace("\\/", "/")
         } catch (e: JSONException) {
             aapsLogger.error(LTag.AUTOTUNE, e.localizedMessage ?: e.toString())

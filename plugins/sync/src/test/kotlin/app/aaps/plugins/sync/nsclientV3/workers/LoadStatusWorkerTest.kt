@@ -21,10 +21,10 @@ import app.aaps.core.nssdk.localmodel.ApiPermissions
 import app.aaps.core.nssdk.localmodel.Status
 import app.aaps.core.nssdk.localmodel.Storage
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.plugins.sync.nsShared.compose.NSClientRepositoryImpl
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.seconds
@@ -77,7 +78,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientMvvmRepository, uel, profileRepository
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientMvvmRepository, uel, mock(), mock(), mock(), mock(), mock(), profileRepository
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

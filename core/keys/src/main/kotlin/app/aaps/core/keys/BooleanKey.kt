@@ -3,6 +3,9 @@ package app.aaps.core.keys
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.PreferenceVisibility
+import app.aaps.core.keys.interfaces.SyncChannel
+import app.aaps.core.keys.interfaces.SyncDirection
+import app.aaps.core.keys.interfaces.SyncSpec
 
 enum class BooleanKey(
     override val key: String,
@@ -21,30 +24,42 @@ enum class BooleanKey(
     override val engineeringModeOnly: Boolean = false,
     override val exportable: Boolean = true,
     override val visibility: PreferenceVisibility = PreferenceVisibility.ALWAYS,
-    override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS
+    override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS,
+    override val sync: SyncSpec? = null
 ) : BooleanPreferenceKey {
 
-    GeneralSimpleMode("simple_mode", true, R.string.pref_title_simple_mode),
+    GeneralSimpleMode(key = "simple_mode", defaultValue = true, titleResId = R.string.pref_title_simple_mode, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     GeneralInsulinConcentration(
-        "insulin_concentration_enabled", false, R.string.pref_title_insulin_concentration, R.string.pref_summary_insulin_concentration,
+        key = "insulin_concentration_enabled", defaultValue = false, titleResId = R.string.pref_title_insulin_concentration, summaryResId = R.string.pref_summary_insulin_concentration,
         defaultedBySM = true,
-        enabledCondition = PreferenceEnabledCondition { it.isConcentrationEnabled }
+        enabledCondition = PreferenceEnabledCondition { it.isConcentrationEnabled },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    OverviewKeepScreenOn("keep_screen_on", false, R.string.pref_title_keep_screen_on, R.string.pref_summary_keep_screen_on, calculatedDefaultValue = true),
-    OverviewShowTreatmentButton("show_treatment_button", false, R.string.pref_title_show_treatment_button, defaultedBySM = true, hideParentScreenIfHidden = true),
-    OverviewShowWizardButton("show_wizard_button", true, R.string.pref_title_show_wizard_button, defaultedBySM = true),
-    OverviewShowInsulinButton("show_insulin_button", true, R.string.pref_title_show_insulin_button, defaultedBySM = true),
-    OverviewShowCarbsButton("show_carbs_button", true, R.string.pref_title_show_carbs_button, defaultedBySM = true),
-    OverviewShowCgmButton("show_cgm_button", false, R.string.pref_title_show_cgm_button, R.string.pref_summary_show_cgm_button, defaultedBySM = true, showInNsClientMode = false),
-    OverviewShowCalibrationButton("show_calibration_button", false, R.string.pref_title_show_calibration_button, R.string.pref_summary_show_calibration_button, defaultedBySM = true, showInNsClientMode = false),
-    OverviewShowNotesInDialogs("show_notes_entry_dialogs", false, R.string.pref_title_show_notes_in_dialogs, defaultedBySM = true),
-    OverviewUseBolusAdvisor("use_bolus_advisor", true, R.string.pref_title_use_bolus_advisor, R.string.pref_summary_use_bolus_advisor, defaultedBySM = true),
+    OverviewKeepScreenOn(key = "keep_screen_on", defaultValue = false, titleResId = R.string.pref_title_keep_screen_on, summaryResId = R.string.pref_summary_keep_screen_on, calculatedDefaultValue = true),
+    OverviewShowTreatmentButton(key = "show_treatment_button", defaultValue = false, titleResId = R.string.pref_title_show_treatment_button, defaultedBySM = true),
+    OverviewShowWizardButton(key = "show_wizard_button", defaultValue = true, titleResId = R.string.pref_title_show_wizard_button, defaultedBySM = true),
+    OverviewShowInsulinButton(key = "show_insulin_button", defaultValue = true, titleResId = R.string.pref_title_show_insulin_button, defaultedBySM = true),
+    OverviewShowCarbsButton(key = "show_carbs_button", defaultValue = true, titleResId = R.string.pref_title_show_carbs_button, defaultedBySM = true),
+    OverviewShowCgmButton(key = "show_cgm_button", defaultValue = false, titleResId = R.string.pref_title_show_cgm_button, summaryResId = R.string.pref_summary_show_cgm_button, defaultedBySM = true, showInNsClientMode = false),
+    OverviewShowCalibrationButton(
+        key = "show_calibration_button",
+        defaultValue = false,
+        titleResId = R.string.pref_title_show_calibration_button,
+        summaryResId = R.string.pref_summary_show_calibration_button,
+        defaultedBySM = true,
+        showInNsClientMode = false
+    ),
+    OverviewShowNotesInDialogs(key = "show_notes_entry_dialogs", defaultValue = false, titleResId = R.string.pref_title_show_notes_in_dialogs, defaultedBySM = true),
+    OverviewUseBolusAdvisor("use_bolus_advisor", true, R.string.pref_title_use_bolus_advisor, R.string.pref_summary_use_bolus_advisor, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     OverviewUseBolusReminder("use_bolus_reminder", true, R.string.pref_title_use_bolus_reminder, R.string.pref_summary_use_bolus_reminder, defaultedBySM = true),
 
     @Deprecated("Remove support")
     OverviewUseSuperBolus("key_usersuperbolus", false, R.string.pref_title_use_super_bolus, R.string.pref_summary_use_super_bolus, defaultedBySM = true, hideParentScreenIfHidden = true),
 
-    PumpBtWatchdog("bt_watchdog", false, R.string.pref_title_bt_watchdog, R.string.pref_summary_bt_watchdog, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    PumpBtWatchdog(
+        "bt_watchdog", false, R.string.pref_title_bt_watchdog, R.string.pref_summary_bt_watchdog,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
 
     AlertMissedBgReading("enable_missed_bg_readings", false, R.string.pref_title_alert_missed_bg_reading),
     AlertPumpUnreachable("enable_pump_unreachable_alert", true, R.string.pref_title_alert_pump_unreachable),
@@ -57,8 +72,8 @@ enum class BooleanKey(
     BgSourceCreateSensorChange("dexcom_lognssensorchange", true, R.string.pref_title_bg_source_create_sensor_change, R.string.pref_summary_bg_source_create_sensor_change, defaultedBySM = true),
     BgSourceRandomBgRandomize("randombg_randomize", true, R.string.pref_title_random_bg_randomize, R.string.pref_summary_random_bg_randomize, defaultedBySM = true),
 
-    ApsUseDynamicSensitivity("use_dynamic_sensitivity", false, R.string.pref_title_aps_use_dynamic_sensitivity, R.string.pref_summary_aps_use_dynamic_sensitivity),
-    ApsUseAutosens("openapsama_useautosens", true, R.string.pref_title_aps_use_autosens, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity),
+    ApsUseDynamicSensitivity("use_dynamic_sensitivity", false, R.string.pref_title_aps_use_dynamic_sensitivity, R.string.pref_summary_aps_use_dynamic_sensitivity, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsUseAutosens("openapsama_useautosens", true, R.string.pref_title_aps_use_autosens, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsUseSmb("use_smb", true, R.string.pref_title_aps_use_smb, R.string.pref_summary_aps_use_smb, defaultedBySM = true),
     ApsUseSmbWithHighTt("enableSMB_with_high_temptarget", false, R.string.pref_title_aps_use_smb_with_high_tt, R.string.pref_summary_aps_use_smb_with_high_tt, defaultedBySM = true, dependency = ApsUseSmb),
     ApsUseSmbAlways(
@@ -141,6 +156,13 @@ enum class BooleanKey(
     NsClientCreateAnnouncementsFromCarbsReq("ns_create_announcements_from_carbs_req", false, R.string.pref_title_ns_create_announcements_from_carbs_req, calculatedDefaultValue = true, showInNsClientMode = false),
     NsClientSlowSync("ns_sync_slow", false, R.string.pref_title_ns_slow_sync),
     NsClient3UseWs("ns_use_ws", true, R.string.pref_title_ns_use_ws, R.string.pref_summary_ns_use_ws),
+    NsClientAllowClientControl(
+        "ns_allow_client_control", false,
+        R.string.pref_title_ns_allow_client_control, R.string.pref_summary_ns_allow_client_control,
+        // No longer on the prefs screen — it's the stop/allow-communication switch on the Authorized clients screen.
+        // Default OFF, but ON in simple mode (resolved in PreferencesImpl.calculatedDefaultValue). Hidden on a client.
+        calculatedDefaultValue = true, showInNsClientMode = false
+    ),
     OpenHumansWifiOnly("oh_wifi_only", true, R.string.pref_title_openhumans_wifi_only),
     OpenHumansChargingOnly("oh_charging_only", false, R.string.pref_title_openhumans_charging_only),
     XdripSendStatus("xdrip_send_status", false, R.string.pref_title_xdrip_send_status),

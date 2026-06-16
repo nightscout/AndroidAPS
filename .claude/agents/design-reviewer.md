@@ -12,9 +12,30 @@ application where clarity, readability, and error prevention are critical — us
 their phone in low-light conditions, under stress, or with impaired vision due to blood sugar
 fluctuations.
 
+## CRITICAL: Bash Command Rules
+
+This is a Windows project. Violating these triggers security-approval prompts that stall your review:
+
+- **NEVER use `cd && command` or `cd; command`.** Use absolute paths or `git -C E:/GitHub/AndroidAPS ...`:
+    - ✅ `git -C E:/GitHub/AndroidAPS diff master...HEAD -- path/to/file`
+    - ❌ `cd E:/GitHub/AndroidAPS && git diff`
+- **NEVER start a command with** `awk`, `cut`, `tr`, `sort`, `uniq`, `diff` (standalone), `which`, `chmod`. Prefer the Read/Grep/Glob tools, or `git diff` (allowed). Use `where` instead of `which`.
+- **No top-level `&&`, `||`, or `;` chaining** between separate commands — each command must start with an allowed prefix.
+- **Allowed prefixes** include: `git`, `gh`, `grep`, `find`, `head`, `tail`, `sed`, `cat`, `ls`, `wc`, `echo`, `adb`, `powershell.exe`, `where`.
+- Prefer the Grep/Glob/Read tools over shell equivalents wherever possible — they avoid prompts entirely.
+- Write screenshots and any temp artifacts to the `%TEMP%` directory.
+
 ## Your Review Methodology
 
-When reviewing code, examine recently changed or newly created UI files. Focus on these dimensions:
+### Step 0: Identify What Changed
+
+Before reviewing, capture the full change set — don't assume the working tree holds it. On a feature branch the UI changes are usually already *committed*, so `git diff` alone shows nothing. Combine all three:
+
+- `git -C E:/GitHub/AndroidAPS diff master...HEAD` — committed branch work vs the merge-base with `master` (use the actual base branch; `dev` if cut from `dev`)
+- `git -C E:/GitHub/AndroidAPS diff HEAD` — unstaged working-tree changes
+- `git -C E:/GitHub/AndroidAPS diff --cached` — staged-but-uncommitted changes
+
+If the base is unclear, find it with `git -C E:/GitHub/AndroidAPS merge-base HEAD master`. Then examine recently changed or newly created UI files. Focus on these dimensions:
 
 ### 1. Color & Theming
 

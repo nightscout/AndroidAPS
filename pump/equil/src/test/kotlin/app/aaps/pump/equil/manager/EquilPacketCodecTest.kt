@@ -146,7 +146,7 @@ class EquilPacketCodecTest {
         val response = EquilPacketCodec.buildPackets(model, port, 0, System.currentTimeMillis())
 
         assertNotNull(response)
-        assertTrue(response.send.size > 0)
+        assertTrue(response.send.isNotEmpty())
 
         // Verify CRC8 on every packet
         for (buf in response.send) {
@@ -156,12 +156,12 @@ class EquilPacketCodecTest {
         }
 
         // Last packet should have end bit set
-        val lastPacket = response.send.last.array()
+        val lastPacket = response.send.last().array()
         assertTrue(EquilPacketCodec.isEnd(lastPacket[4]))
 
         // Non-last packets should not have end bit
         if (response.send.size > 1) {
-            val firstPacket = response.send.first.array()
+            val firstPacket = response.send.first().array()
             assertFalse(EquilPacketCodec.isEnd(firstPacket[4]))
         }
     }
@@ -219,6 +219,6 @@ class EquilPacketCodecTest {
 
         val response = EquilPacketCodec.buildPackets(model, port, 0, System.currentTimeMillis())
         assertNotNull(response)
-        assertTrue(response.send.size > 0)
+        assertTrue(response.send.isNotEmpty())
     }
 }

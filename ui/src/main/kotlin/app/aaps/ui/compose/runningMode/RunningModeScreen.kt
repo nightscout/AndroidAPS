@@ -25,9 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.R
 import app.aaps.ui.compose.overview.chips.toColor
 import app.aaps.ui.compose.overview.chips.toIcon
@@ -54,12 +50,9 @@ import kotlinx.coroutines.delay
 @Composable
 fun RunningModeScreen(
     viewModel: RunningModeManagementViewModel,
-    showOkCancel: Boolean,
     onNavigateBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-
-    var pendingAction by remember { mutableStateOf<PendingRunningModeAction?>(null) }
 
     LaunchedEffect(Unit) {
         // Reload immediately on open: the ViewModel is Activity-scoped, so its cached state may be
@@ -127,10 +120,9 @@ fun RunningModeScreen(
                 LoopControlSection(
                     allowedModes = state.allowedNextModes,
                     onAction = { action ->
-                        if (showOkCancel) pendingAction = action
-                        else {
-                            executeAction(viewModel, action); onNavigateBack()
-                        }
+                        // The master-authored confirmation lines are shown as the single confirm dialog (emitted by
+                        // the ViewModel via EventShowDialog); navigate back immediately — the modal is app-level.
+                        executeAction(viewModel, action); onNavigateBack()
                     }
                 )
             }
@@ -143,10 +135,9 @@ fun RunningModeScreen(
                     currentMode = state.currentMode,
                     allowedModes = state.allowedNextModes,
                     onAction = { action ->
-                        if (showOkCancel) pendingAction = action
-                        else {
-                            executeAction(viewModel, action); onNavigateBack()
-                        }
+                        // The master-authored confirmation lines are shown as the single confirm dialog (emitted by
+                        // the ViewModel via EventShowDialog); navigate back immediately — the modal is app-level.
+                        executeAction(viewModel, action); onNavigateBack()
                     }
                 )
             }
@@ -163,27 +154,13 @@ fun RunningModeScreen(
                     tempDurationStep15mAllowed = state.tempDurationStep15mAllowed,
                     tempDurationStep30mAllowed = state.tempDurationStep30mAllowed,
                     onAction = { action ->
-                        if (showOkCancel) pendingAction = action
-                        else {
-                            executeAction(viewModel, action); onNavigateBack()
-                        }
+                        // The master-authored confirmation lines are shown as the single confirm dialog (emitted by
+                        // the ViewModel via EventShowDialog); navigate back immediately — the modal is app-level.
+                        executeAction(viewModel, action); onNavigateBack()
                     }
                 )
             }
         }
-    }
-
-    pendingAction?.let { action ->
-        OkCancelDialog(
-            title = stringResource(app.aaps.core.ui.R.string.confirmation),
-            message = action.confirmationMessage,
-            onConfirm = {
-                executeAction(viewModel, action)
-                pendingAction = null
-                onNavigateBack()
-            },
-            onDismiss = { pendingAction = null }
-        )
     }
 }
 
@@ -232,28 +209,28 @@ private fun LoopControlSection(
             if (allowedModes.contains(RM.Mode.CLOSED_LOOP)) {
                 CompactButton(
                     closedLoopText, RM.Mode.CLOSED_LOOP,
-                    { onAction(PendingRunningModeAction(RM.Mode.CLOSED_LOOP, Action.CLOSED_LOOP_MODE, 0, closedLoopText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.CLOSED_LOOP, Action.CLOSED_LOOP_MODE, 0)) },
                     Modifier.weight(1f)
                 )
             }
             if (allowedModes.contains(RM.Mode.CLOSED_LOOP_LGS)) {
                 CompactButton(
                     lgsText, RM.Mode.CLOSED_LOOP_LGS,
-                    { onAction(PendingRunningModeAction(RM.Mode.CLOSED_LOOP_LGS, Action.LGS_LOOP_MODE, 0, lgsText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.CLOSED_LOOP_LGS, Action.LGS_LOOP_MODE, 0)) },
                     Modifier.weight(1f)
                 )
             }
             if (allowedModes.contains(RM.Mode.OPEN_LOOP)) {
                 CompactButton(
                     openLoopText, RM.Mode.OPEN_LOOP,
-                    { onAction(PendingRunningModeAction(RM.Mode.OPEN_LOOP, Action.OPEN_LOOP_MODE, 0, openLoopText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.OPEN_LOOP, Action.OPEN_LOOP_MODE, 0)) },
                     Modifier.weight(1f)
                 )
             }
             if (allowedModes.contains(RM.Mode.DISABLED_LOOP)) {
                 CompactButton(
                     disableLoopText, RM.Mode.DISABLED_LOOP,
-                    { onAction(PendingRunningModeAction(RM.Mode.DISABLED_LOOP, Action.LOOP_DISABLED, 0, disableLoopText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.DISABLED_LOOP, Action.LOOP_DISABLED, 0)) },
                     Modifier.weight(1f)
                 )
             }
@@ -275,38 +252,34 @@ private fun SuspendSection(
     val duration2hText = stringResource(R.string.duration2h)
     val duration3hText = stringResource(R.string.duration3h)
     val duration10hText = stringResource(R.string.duration10h)
-    val suspend1hText = stringResource(R.string.suspendloopfor1h)
-    val suspend2hText = stringResource(R.string.suspendloopfor2h)
-    val suspend3hText = stringResource(R.string.suspendloopfor3h)
-    val suspend10hText = stringResource(R.string.suspendloopfor10h)
 
     SectionCard(title = title) {
         if (isSuspended && allowedModes.contains(RM.Mode.RESUME)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 CompactButton(
                     resumeText, RM.Mode.RESUME,
-                    { onAction(PendingRunningModeAction(RM.Mode.RESUME, Action.RESUME, 0, resumeText)) })
+                    { onAction(PendingRunningModeAction(RM.Mode.RESUME, Action.RESUME, 0)) })
             }
         } else if (allowedModes.contains(RM.Mode.SUSPENDED_BY_USER)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 CompactButton(
                     duration1hText, RM.Mode.SUSPENDED_BY_USER,
-                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 60, suspend1hText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 60)) },
                     Modifier.weight(1f)
                 )
                 CompactButton(
                     duration2hText, RM.Mode.SUSPENDED_BY_USER,
-                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 120, suspend2hText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 120)) },
                     Modifier.weight(1f)
                 )
                 CompactButton(
                     duration3hText, RM.Mode.SUSPENDED_BY_USER,
-                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 180, suspend3hText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 180)) },
                     Modifier.weight(1f)
                 )
                 CompactButton(
                     duration10hText, RM.Mode.SUSPENDED_BY_USER,
-                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 600, suspend10hText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.SUSPENDED_BY_USER, Action.SUSPEND, 600)) },
                     Modifier.weight(1f)
                 )
             }
@@ -331,48 +304,43 @@ private fun PumpDisconnectSection(
     val duration1hText = stringResource(R.string.duration1h)
     val duration2hText = stringResource(R.string.duration2h)
     val duration3hText = stringResource(R.string.duration3h)
-    val disconnect15mText = stringResource(R.string.disconnectpumpfor15m)
-    val disconnect30mText = stringResource(R.string.disconnectpumpfor30m)
-    val disconnect1hText = stringResource(R.string.disconnectpumpfor1h)
-    val disconnect2hText = stringResource(R.string.disconnectpumpfor2h)
-    val disconnect3hText = stringResource(R.string.disconnectpumpfor3h)
 
     SectionCard(title = title) {
         if (isDisconnected && allowedModes.contains(RM.Mode.RESUME)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 CompactButton(
                     reconnectText, RM.Mode.RESUME,
-                    { onAction(PendingRunningModeAction(RM.Mode.RESUME, Action.RECONNECT, 0, reconnectText)) })
+                    { onAction(PendingRunningModeAction(RM.Mode.RESUME, Action.RECONNECT, 0)) })
             }
         } else if (allowedModes.contains(RM.Mode.DISCONNECTED_PUMP)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 if (tempDurationStep15mAllowed) {
                     CompactButton(
                         duration15mText, RM.Mode.DISCONNECTED_PUMP,
-                        { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 15, disconnect15mText)) },
+                        { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 15)) },
                         Modifier.weight(1f)
                     )
                 }
                 if (tempDurationStep30mAllowed) {
                     CompactButton(
                         duration30mText, RM.Mode.DISCONNECTED_PUMP,
-                        { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 30, disconnect30mText)) },
+                        { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 30)) },
                         Modifier.weight(1f)
                     )
                 }
                 CompactButton(
                     duration1hText, RM.Mode.DISCONNECTED_PUMP,
-                    { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 60, disconnect1hText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 60)) },
                     Modifier.weight(1f)
                 )
                 CompactButton(
                     duration2hText, RM.Mode.DISCONNECTED_PUMP,
-                    { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 120, disconnect2hText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 120)) },
                     Modifier.weight(1f)
                 )
                 CompactButton(
                     duration3hText, RM.Mode.DISCONNECTED_PUMP,
-                    { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 180, disconnect3hText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.DISCONNECTED_PUMP, Action.DISCONNECT, 180)) },
                     Modifier.weight(1f)
                 )
             }
@@ -421,6 +389,5 @@ private fun CompactButton(
 private data class PendingRunningModeAction(
     val targetMode: RM.Mode,
     val action: Action,
-    val durationMinutes: Int = 0,
-    val confirmationMessage: String
+    val durationMinutes: Int = 0
 )

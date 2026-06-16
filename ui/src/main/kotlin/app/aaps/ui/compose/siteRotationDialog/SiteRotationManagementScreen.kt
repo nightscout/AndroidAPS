@@ -31,7 +31,6 @@ import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TooltipState
-import app.aaps.core.ui.compose.AapsTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -50,12 +49,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
-import app.aaps.core.ui.compose.icons.IcSiteRotation
+import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.siteRotation.ArrowSelectionDialog
 import app.aaps.core.ui.compose.siteRotation.SiteEntryDisplayData
 import app.aaps.core.ui.compose.siteRotation.SiteEntryList
@@ -109,16 +108,13 @@ fun SiteRotationManagementScreen(
         if (!uiState.isEdited || uiState.editedTe == null) {
             showConfirmation = false
         } else {
-            val summaryLines = viewModel.buildConfirmationSummary()
-            OkCancelDialog(
-                title = stringResource(R.string.update_site_change),
-                message = summaryLines.joinToString("<br/>"),
-                icon = when (uiState.editedTe?.type) {
-                    TE.Type.CANNULA_CHANGE -> IcCannulaChange
-                    TE.Type.SENSOR_CHANGE  -> IcCgmInsert
-                    else                   -> IcSiteRotation
+            ElementConfirmationDialog(
+                elementType = when (uiState.editedTe?.type) {
+                    TE.Type.CANNULA_CHANGE -> ElementType.CANNULA_CHANGE
+                    TE.Type.SENSOR_CHANGE  -> ElementType.SENSOR_INSERT
+                    else                   -> ElementType.SITE_ROTATION
                 },
-                iconTint = AapsTheme.elementColors.tempBasal,
+                lines = viewModel.buildConfirmationSummary(),
                 onConfirm = {
                     viewModel.confirmAndSave()
                     showConfirmation = false

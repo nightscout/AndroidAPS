@@ -18,4 +18,6 @@ data class TempBasalDialogUiState(
     val tempDurationStep: Double = 60.0,
     val tempMaxDuration: Double = 720.0,
     val profile: Profile? = null,
+    // True while a prepare round-trip is in flight; disables the Confirm button to prevent a double prepare.
+    val isPreparing: Boolean = false,
 )

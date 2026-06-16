@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -50,7 +49,6 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
@@ -72,7 +70,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -85,8 +82,7 @@ import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.icons.IcBread
 import app.aaps.core.ui.compose.icons.IcCake
 import app.aaps.core.ui.compose.icons.IcPizza
@@ -95,9 +91,9 @@ import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
-import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
+import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
@@ -116,7 +112,7 @@ fun WizardDialogScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
             when (effect) {
-                is WizardDialogViewModel.SideEffect.ShowDeliveryError -> {
+                is WizardDialogViewModel.SideEffect.ShowDeliveryError  -> {
                     onShowDeliveryError(effect.comment)
                 }
 
@@ -130,9 +126,7 @@ fun WizardDialogScreen(
     // Dialog states (rememberSaveable to survive rotation)
     var showConfirmation by rememberSaveable { mutableStateOf(false) }
     var showNoAction by rememberSaveable { mutableStateOf(false) }
-    var showBolusAdvisorPrompt by rememberSaveable { mutableStateOf(false) }
-    var showAdvisorConfirmation by rememberSaveable { mutableStateOf(false) }
-    var showNormalConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showRecordOnly by rememberSaveable { mutableStateOf(false) }
     var showSettings by rememberSaveable { mutableStateOf(false) }
 
     // Settings bottom sheet
@@ -149,97 +143,41 @@ fun WizardDialogScreen(
 
     // --- Confirmation flow ---
     if (showConfirmation) {
-        if (!viewModel.hasAction()) {
-            showConfirmation = false
-            showNoAction = true
-        } else if (viewModel.needsBolusAdvisor()) {
-            showConfirmation = false
-            showBolusAdvisorPrompt = true
-        } else {
-            showConfirmation = false
-            showNormalConfirmation = true
+        showConfirmation = false
+        when {
+            !viewModel.hasAction()   -> showNoAction = true
+            // Master can't deliver → log the wizard calc locally (record-only). Master-only; a client always delivers.
+            uiState.forcedRecordOnly -> showRecordOnly = true
+            // Deliver role-transparently: the master recomputes, caps + authors the confirmation and shows it on the
+            // single app-level dialog (both roles); the advisor fork is decided from the master's prepared result.
+            else                     -> {
+                viewModel.deliverManualWizard()
+                onNavigateBack()
+            }
         }
     }
 
     // No action dialog
     if (showNoAction) {
-        OkCancelDialog(
-            title = stringResource(ElementType.BOLUS_WIZARD.labelResId()),
+        ElementConfirmationDialog(
+            elementType = ElementType.BOLUS_WIZARD,
             message = stringResource(CoreUiR.string.no_action_selected),
-            icon = ElementType.BOLUS_WIZARD.icon(),
-            iconTint = ElementType.BOLUS_WIZARD.color(),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
     }
 
-    // Bolus advisor prompt: Yes / No / Cancel (3-button dialog)
-    if (showBolusAdvisorPrompt) {
-        AlertDialog(
-            onDismissRequest = { showBolusAdvisorPrompt = false },
-            icon = {
-                Icon(
-                    imageVector = ElementType.BOLUS_WIZARD.icon(),
-                    contentDescription = null,
-                    tint = ElementType.BOLUS_WIZARD.color()
-                )
-            },
-            title = { Text(stringResource(CoreUiR.string.bolus_advisor)) },
-            text = { Text(stringResource(CoreUiR.string.bolus_advisor_message)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    showBolusAdvisorPrompt = false
-                    showAdvisorConfirmation = true
-                }) {
-                    Text(stringResource(CoreUiR.string.yes))
-                }
-            },
-            dismissButton = {
-                Row {
-                    TextButton(onClick = {
-                        showBolusAdvisorPrompt = false
-                        showNormalConfirmation = true
-                    }) {
-                        Text(stringResource(CoreUiR.string.no))
-                    }
-                    TextButton(onClick = { showBolusAdvisorPrompt = false }) {
-                        Text(stringResource(CoreUiR.string.cancel))
-                    }
-                }
-            },
-            properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
-        )
-    }
-
-    // Advisor confirmation: show summary with advisor=true
-    if (showAdvisorConfirmation) {
-        val summaryLines = viewModel.getAdvisorSummary()
-        OkCancelDialog(
-            title = stringResource(ElementType.BOLUS_WIZARD.labelResId()),
-            message = summaryLines.joinToString("<br/>"),
-            icon = ElementType.BOLUS_WIZARD.icon(),
-            iconTint = ElementType.BOLUS_WIZARD.color(),
+    // Record-only confirmation (master can't deliver): locally-built lines, persisted on confirm. The delivery path
+    // shows the master-authored confirmation on the single app-level dialog instead (see deliverManualWizard).
+    if (showRecordOnly) {
+        ElementConfirmationDialog(
+            elementType = ElementType.BOLUS_WIZARD,
+            lines = viewModel.getConfirmationSummary(),
             onConfirm = {
-                viewModel.executeBolusAdvisor()
+                viewModel.recordOnly()
                 onNavigateBack()
             },
-            onDismiss = { showAdvisorConfirmation = false }
-        )
-    }
-
-    // Normal confirmation: show summary with advisor=false
-    if (showNormalConfirmation) {
-        val summaryLines = viewModel.getConfirmationSummary()
-        OkCancelDialog(
-            title = stringResource(ElementType.BOLUS_WIZARD.labelResId()),
-            message = summaryLines.joinToString("<br/>"),
-            icon = ElementType.BOLUS_WIZARD.icon(),
-            iconTint = ElementType.BOLUS_WIZARD.color(),
-            onConfirm = {
-                viewModel.executeNormal()
-                onNavigateBack()
-            },
-            onDismiss = { showNormalConfirmation = false }
+            onDismiss = { showRecordOnly = false }
         )
     }
 
@@ -991,19 +929,10 @@ private fun WizardSettingsSheet(
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surface
     ) {
-        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 24.dp)) {
-            Text(
-                text = stringResource(settingsDef.titleResId),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp)
-            )
-            ProvidePreferenceTheme {
-                AdaptivePreferenceList(
-                    items = settingsDef.items
-                )
-            }
-        }
+        PreferenceSheetContent(
+            settingsDef = settingsDef,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
     }
 }
 

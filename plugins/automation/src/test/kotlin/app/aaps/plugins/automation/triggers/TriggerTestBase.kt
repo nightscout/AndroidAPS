@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.plugins.automation.AutomationPlugin
+import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
     @Mock lateinit var autosensDataStore: AutosensDataStore
-    @Mock lateinit var automationPlugin: AutomationPlugin
+    @Mock lateinit var btConnectionSource: BtConnectionSource
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpPluginWithConcentration: PumpWithConcentration
@@ -69,7 +69,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
             }
             if (it is TriggerBTDevice) {
                 it.context = context
-                it.automationPlugin = automationPlugin
+                it.btConnectionSource = btConnectionSource
             }
             if (it is TriggerWifiSsid) {
                 it.receiverStatusStore = receiverStatusStore

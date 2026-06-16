@@ -20,7 +20,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
-import app.aaps.ui.compose.scenes.SceneRepository
+import app.aaps.core.interfaces.scenes.SceneStore
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,7 +36,7 @@ class QuickLaunchResolver @Inject constructor(
     private val automation: Automation,
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
-    private val sceneRepository: SceneRepository,
+    private val sceneRepository: SceneStore,
     private val rh: ResourceHelper,
     private val elementAvailability: ElementAvailability
 ) {
@@ -76,8 +76,9 @@ class QuickLaunchResolver @Inject constructor(
         is QuickLaunchAction.QuickWizardAction -> quickWizard.get(action.guid) != null
 
         is QuickLaunchAction.AutomationAction  -> {
+            // Automation executes on master only — invalid (hidden) on a client.
             val event = automation.findEventById(action.automationId)
-            event != null && event.isEnabled
+            automation.executionEnabled && event != null && event.isEnabled
         }
 
         is QuickLaunchAction.TempTargetPreset  -> {

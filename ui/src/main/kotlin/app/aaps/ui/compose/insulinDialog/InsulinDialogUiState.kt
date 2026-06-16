@@ -39,7 +39,9 @@ val InsulinDialogUiState.timeLayoutVisible: Boolean
     get() = recordOnlyChecked
 
 val InsulinDialogUiState.recordOnlyEnabled: Boolean
-    get() = !forcedRecordOnly && !isAapsClient
+    // A client CAN record-only: the entry goes through the batch → master (SSOT), so the toggle is enabled
+    // there too. Only a forced record-only (master can't deliver) locks it (checked + non-editable).
+    get() = !forcedRecordOnly
 
 val InsulinDialogUiState.confirmEnabled: Boolean
     get() = insulin > 0.0 || eatingSoonTtChecked

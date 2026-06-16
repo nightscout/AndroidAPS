@@ -6,6 +6,7 @@ import androidx.room.useWriterConnection
 import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.CalibrationEntry
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
@@ -328,6 +329,30 @@ class AppRepository @Inject internal constructor(
             nextIdElement to nextIdElement
         } else {
             val historic = database.glucoseValueDao.getCurrentFromHistoric(nextIdElemReferenceId) ?: return null
+            historic to nextIdElement
+        }
+    }
+
+    // CALIBRATION ENTRIES
+    suspend fun getLastCalibrationEntryId(): Long? =
+        database.calibrationEntryDao.getLastId()
+
+    suspend fun getValidCalibrationEntriesSince(from: Long): List<CalibrationEntry> =
+        database.calibrationEntryDao.getValidSince(from)
+
+    suspend fun getAllValidCalibrationEntries(): List<CalibrationEntry> =
+        database.calibrationEntryDao.getAllValid()
+
+    suspend fun findCalibrationEntryByNSId(nsId: String): CalibrationEntry? =
+        database.calibrationEntryDao.findByNSId(nsId)
+
+    suspend fun getNextSyncElementCalibrationEntry(id: Long): Pair<CalibrationEntry, CalibrationEntry>? {
+        val nextIdElement = database.calibrationEntryDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.calibrationEntryDao.getCurrentFromHistoric(nextIdElemReferenceId) ?: return null
             historic to nextIdElement
         }
     }

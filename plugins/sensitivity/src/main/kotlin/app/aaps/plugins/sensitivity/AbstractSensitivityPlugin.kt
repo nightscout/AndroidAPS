@@ -18,7 +18,7 @@ abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    val preferences: Preferences
+    protected val preferences: Preferences
 ) : PluginBase(pluginDescription, aapsLogger, rh), Sensitivity {
 
     abstract override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult

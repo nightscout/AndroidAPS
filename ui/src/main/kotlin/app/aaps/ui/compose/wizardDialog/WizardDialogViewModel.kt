@@ -5,9 +5,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -16,6 +23,8 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
@@ -29,7 +38,9 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
+import app.aaps.core.ui.compose.icons.IcCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +72,10 @@ class WizardDialogViewModel @Inject constructor(
     private val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,
-    private val runningModeGuard: RunningModeGuard
+    private val runningModeGuard: RunningModeGuard,
+    private val wizardExecutor: WizardExecutor,
+    private val rxBus: RxBus,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WizardDialogUiState())
@@ -130,7 +144,9 @@ class WizardDialogViewModel @Inject constructor(
         val totalIOB = bolusIob.iob + basalIob.basaliob
 
         val cantDeliverBolus = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS) != null
-        val forcedRecordOnly = cantDeliverBolus || !activePlugin.activePump.isInitialized() || config.AAPSCLIENT
+        // An AAPSCLIENT always delivers via the master (deliverManualWizard), so it is NEVER forced record-only;
+        // only a master's own can't-deliver conditions force the local record-only log (matches Insulin/Treatment dialog).
+        val forcedRecordOnly = if (config.AAPSCLIENT) false else (cantDeliverBolus || !activePlugin.activePump.isInitialized())
 
         _uiState.update {
             WizardDialogUiState(
@@ -388,38 +404,38 @@ class WizardDialogViewModel @Inject constructor(
 
         // Format trend detail: signed 45-min BG projection
         val trendDetail = if (state.useTrend) {
-            val signedTrendValue = (if (w.trend > 0) "+" else "") +
-                profileUtil.fromMgdlToStringInUnits(w.trend * 3, state.units)
+            val signedTrendValue = (if (w.data.trend > 0) "+" else "") +
+                profileUtil.fromMgdlToStringInUnits(w.data.trend * 3, state.units)
             rh.gs(app.aaps.core.ui.R.string.wizard_trend_detail, signedTrendValue, profileUtil.unitLabel)
         } else ""
 
         _uiState.update {
             it.copy(
                 // Calculation results
-                insulinFromBG = w.insulinFromBG,
-                insulinFromTrend = w.insulinFromTrend,
-                insulinFromCarbs = w.insulinFromCarbs,
-                insulinFromCOB = w.insulinFromCOB,
-                insulinFromBolusIOB = w.insulinFromBolusIOB,
-                insulinFromBasalIOB = w.insulinFromBasalIOB,
-                insulinFromCorrection = w.insulinFromCorrection,
+                insulinFromBG = w.data.insulinFromBG,
+                insulinFromTrend = w.data.insulinFromTrend,
+                insulinFromCarbs = w.data.insulinFromCarbs,
+                insulinFromCOB = w.data.insulinFromCOB,
+                insulinFromBolusIOB = w.data.insulinFromBolusIOB,
+                insulinFromBasalIOB = w.data.insulinFromBasalIOB,
+                insulinFromCorrection = w.data.insulinFromCorrection,
                 trendDetail = trendDetail,
-                totalInsulin = w.calculatedTotalInsulin,
-                totalBeforePercentage = w.totalBeforePercentageAdjustment,
-                insulinAfterConstraints = w.insulinAfterConstraints,
-                carbsEquivalent = w.carbsEquivalent,
-                calculatedPercentage = w.calculatedPercentage,
-                constraintApplied = abs(w.insulinAfterConstraints - w.calculatedTotalInsulin) >
-                    activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(w.insulinAfterConstraints),
-                isf = w.sens,
-                ic = w.ic,
+                totalInsulin = w.data.calculatedTotalInsulin,
+                totalBeforePercentage = w.data.totalBeforePercentageAdjustment,
+                insulinAfterConstraints = w.data.insulinAfterConstraints,
+                carbsEquivalent = w.data.carbsEquivalent,
+                calculatedPercentage = w.data.calculatedPercentage,
+                constraintApplied = abs(w.data.insulinAfterConstraints - w.data.calculatedTotalInsulin) >
+                    activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(w.data.insulinAfterConstraints),
+                isf = w.data.sens,
+                ic = w.data.ic,
                 currentCOB = cob,
-                totalIOB = -(w.insulinFromBolusIOB + w.insulinFromBasalIOB),
-                trend = w.trend,
+                totalIOB = -(w.data.insulinFromBolusIOB + w.data.insulinFromBasalIOB),
+                trend = w.data.trend,
                 targetBGLow = 0.0, // not exposed directly
                 targetBGHigh = 0.0,
                 hasResult = true,
-                okVisible = w.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0,
+                okVisible = w.data.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0,
                 hasTempTarget = hasTT,
                 effectiveCarbs = effectiveCarbs,
                 eCarbs = eCarbs,
@@ -434,10 +450,7 @@ class WizardDialogViewModel @Inject constructor(
     fun hasAction(): Boolean =
         wizard?.let { it.insulinAfterConstraints > 0 || it.carbs > 0 || uiState.value.eCarbs > 0 } ?: false
 
-    fun needsBolusAdvisor(): Boolean =
-        wizard?.needsBolusAdvisor() ?: false
-
-    fun getConfirmationSummary(): List<String> {
+    fun getConfirmationSummary(): List<ConfirmationLine> {
         val state = uiState.value
         return wizard?.buildConfirmationLines(
             advisor = false,
@@ -448,43 +461,21 @@ class WizardDialogViewModel @Inject constructor(
         ) ?: emptyList()
     }
 
-    fun getAdvisorSummary(): List<String> {
+    /**
+     * Record-only path (MASTER only — a client always delivers via the master). Used when the master can't deliver
+     * (pump not initialized / mode forbids a bolus): log the wizard-calculated treatment + its BolusCalculatorResult
+     * locally via [BolusWizard.executeNormal] with forcedRecordOnly. The DELIVERY path is [deliverManualWizard].
+     * appScope: the screen pops on confirm, which would cancel viewModelScope before the write runs.
+     */
+    fun recordOnly() {
         val state = uiState.value
-        return wizard?.buildConfirmationLines(
-            advisor = true,
-            eCarbsGrams = state.eCarbs,
-            eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-            eCarbsDurationHours = state.eCarbsDurationHours,
-            forcedRecordOnly = state.forcedRecordOnly
-        ) ?: emptyList()
-    }
-
-    fun executeNormal() {
-        val state = uiState.value
-        viewModelScope.launch {
+        appScope.launch {
             wizard?.executeNormal(
-                onError = { comment ->
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
-                },
+                onError = { comment -> _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment)) },
                 eCarbsGrams = state.eCarbs,
                 eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
                 eCarbsDurationHours = state.eCarbsDurationHours,
-                forcedRecordOnly = state.forcedRecordOnly
-            )
-        }
-    }
-
-    fun executeBolusAdvisor() {
-        val state = uiState.value
-        viewModelScope.launch {
-            wizard?.executeBolusAdvisor(
-                onError = { comment ->
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
-                },
-                eCarbsGrams = state.eCarbs,
-                eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-                eCarbsDurationHours = state.eCarbsDurationHours,
-                forcedRecordOnly = state.forcedRecordOnly
+                forcedRecordOnly = true
             )
         }
     }
@@ -493,5 +484,42 @@ class WizardDialogViewModel @Inject constructor(
         val state = uiState.value
         preferences.put(BooleanNonKey.WizardIncludeCob, state.useCOB)
         preferences.put(BooleanNonKey.WizardIncludeTrend, state.useTrend)
+    }
+
+    /**
+     * Deliver the manual wizard bolus role-transparently via [WizardExecutor]: the master recomputes the dose on its
+     * OWN profile (the dialog's profile selection travels), temp target, COB and IOB, caps it, and authors the
+     * confirmation. Both roles render the master's EXACT lines via the shared [showWizardBolusConfirmation]; the user's
+     * OK commits (the advisor fork chooses correction-only). No dose is ever computed on a client. This is the DELIVERY
+     * path; a master that can't deliver records locally via [recordOnly] (master-only — a client always delivers).
+     * appScope, not viewModelScope: the screen pops right after this call.
+     */
+    fun deliverManualWizard() {
+        val state = uiState.value
+        val effectiveCarbs = state.carbs * state.carbsType.carbsPercent / 100
+        // null → recompute on the master's active profile (index 0 = "Active"); else the selected stored profile by name.
+        val profileName = if (state.selectedProfileIndex == 0) null else state.profileNames.getOrNull(state.selectedProfileIndex)
+        val inputs = WizardBolusExecutor.WizardInputs(
+            bg = state.bg, carbs = effectiveCarbs, percentage = state.percentage, directCorrection = state.directCorrection,
+            carbTime = state.carbTime, useBg = state.useBg, useCob = state.useCOB, useIob = state.useIOB,
+            useTt = state.useTT, useTrend = state.useTrend, alarm = state.alarmChecked, notes = state.notes,
+            eCarbsGrams = state.eCarbs, eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime, eCarbsDurationHours = state.eCarbsDurationHours,
+            profileName = profileName
+        )
+        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_deliver_bolus)
+        appScope.launch {
+            when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.Manual(inputs), label)) {
+                is ActionProgress.Prepared ->
+                    showWizardBolusConfirmation(rxBus, rh, rh.gs(app.aaps.core.ui.R.string.boluswizard), IcCalculator, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
+                        appScope.launch { wizardExecutor.commit(prepared.id, asAdvisor, Sources.WizardDialog, label) }
+                    }
+                // Master-local compute failure (no modal) or client offline; a client round-trip failure already showed on the app modal.
+                is ActionProgress.Rejected ->
+                    if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = prepared.detail ?: rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+
+                else                       -> Unit // Unconfirmed → app modal
+            }
+        }
     }
 }

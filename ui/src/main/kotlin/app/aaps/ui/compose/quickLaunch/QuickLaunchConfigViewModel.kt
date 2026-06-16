@@ -12,7 +12,8 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.wizard.QuickWizard
-import app.aaps.ui.compose.scenes.SceneRepository
+import app.aaps.core.ui.compose.pluginCategoryTitleRes
+import app.aaps.core.interfaces.scenes.SceneStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,7 +48,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
     private val automation: Automation,
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
-    private val sceneRepository: SceneRepository,
+    private val sceneRepository: SceneStore,
     private val resolver: QuickLaunchResolver
 ) : ViewModel() {
 
@@ -75,8 +76,12 @@ class QuickLaunchConfigViewModel @Inject constructor(
             .filter { actionKey(it) !in selectedSet }
             .map { resolver.resolveItem(it) }
 
-        // Available Automation items (user actions only)
-        val availableAuto = automation.userEvents()
+        // Available Automation items (user actions only). Reads the flow snapshot directly so the
+        // filter set is explicit at the call site instead of hidden behind userEvents().
+        // Master-only: automation executes on master, so a client cannot add automation quick launches.
+        val availableAuto = if (!automation.executionEnabled) emptyList()
+        else automation.events.value
+            .filter { it.userAction && it.isEnabled }
             .map { QuickLaunchAction.AutomationAction(it.id) }
             .filter { actionKey(it) !in selectedSet }
             .map { resolver.resolveItem(it) }
@@ -169,18 +174,6 @@ class QuickLaunchConfigViewModel @Inject constructor(
             PluginType.CONSTRAINTS,
             PluginType.SYNC, PluginType.GENERAL
         )
-        val typeLabelMap = mapOf(
-            PluginType.PUMP to app.aaps.core.ui.R.string.configbuilder_pump,
-            PluginType.BGSOURCE to app.aaps.core.ui.R.string.configbuilder_bgsource,
-            PluginType.APS to app.aaps.core.ui.R.string.configbuilder_aps,
-            PluginType.LOOP to app.aaps.core.ui.R.string.configbuilder_loop,
-            PluginType.SENSITIVITY to app.aaps.core.ui.R.string.configbuilder_sensitivity,
-            PluginType.SMOOTHING to app.aaps.core.ui.R.string.configbuilder_smoothing,
-            PluginType.CALIBRATION to app.aaps.core.ui.R.string.configbuilder_calibration,
-            PluginType.CONSTRAINTS to app.aaps.core.ui.R.string.constraints,
-            PluginType.SYNC to app.aaps.core.ui.R.string.configbuilder_sync,
-            PluginType.GENERAL to app.aaps.core.ui.R.string.configbuilder_general
-        )
 
         val plugins = activePlugin.getPluginsList()
             .filter { it.isEnabled(it.pluginDescription.mainType) && it.hasComposeContent() }
@@ -190,7 +183,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
                 .filter { it.pluginDescription.mainType == type }
                 .map { plugin -> resolver.resolvePluginItem(plugin) }
                 .filter { actionKey(it.action) !in selectedSet }
-            if (items.isNotEmpty()) PluginGroup(type, typeLabelMap[type] ?: 0, items) else null
+            if (items.isNotEmpty()) PluginGroup(type, pluginCategoryTitleRes(type), items) else null
         }
     }
 

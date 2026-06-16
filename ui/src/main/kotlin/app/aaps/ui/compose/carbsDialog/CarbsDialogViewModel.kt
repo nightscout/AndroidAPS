@@ -4,37 +4,30 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
@@ -46,9 +39,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.math.ceil
 import kotlin.math.max
 
 @HiltViewModel
@@ -58,16 +49,13 @@ class CarbsDialogViewModel @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val iobCobCalculator: IobCobCalculator,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val uel: UserEntryLogger,
     private val automation: Automation,
-    private val commandQueue: CommandQueue,
+    private val batchExecutor: BatchExecutor,
     private val persistenceLayer: PersistenceLayer,
     val preferences: Preferences,
     val config: Config,
-    private val decimalFormatter: DecimalFormatter,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -77,6 +65,9 @@ class CarbsDialogViewModel @Inject constructor(
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
+
+        /** The MASTER prepared the batch and returned its merged confirmation [lines]; show them, then [commit] [bolusId]. */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -251,204 +242,91 @@ class CarbsDialogViewModel @Inject constructor(
         }
     }
 
-    private var confirmedState: CarbsDialogUiState? = null
+    @Volatile private var confirmedState: CarbsDialogUiState? = null
 
-    fun buildConfirmationSummary(): List<String> {
-        val state = uiState.value
-        confirmedState = state
-        val lines = mutableListOf<String>()
-        val unitLabel = if (state.units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
+    /**
+     * Tap-confirm → ask the MASTER to PREPARE the batch (cap + COB-clamp + build the merged confirmation). Client =
+     * signed round-trip; master = local. The user confirms the MASTER's exact lines (the contract — the client never
+     * caps its own carbs) and [commit] records them.
+     */
+    fun prepareAndConfirm() {
+        appScope.launch {
+            val state = uiState.value
+            confirmedState = state
+            val actions = buildActions(state)
+            if (actions.isEmpty()) {
+                _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+                return@launch
+            }
+            when (val prepared = batchExecutor.prepare(actions, Sources.CarbDialog, rh.gs(app.aaps.core.ui.R.string.carbs))) {
+                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
+                is ActionProgress.Rejected ->
+                    if (prepared.reason == FailureReason.NotReachable) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                    else prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
 
-        // Temp target info
-        if (state.activityTtChecked) {
-            lines.add(
-                rh.gs(R.string.temp_target_short) + ": " +
-                    decimalFormatter.to1Decimal(state.activityTtTarget) + " " + unitLabel +
-                    " (" + rh.gs(app.aaps.core.ui.R.string.format_mins, state.activityTtDuration) + ")"
-            )
-        }
-        if (state.eatingSoonTtChecked) {
-            lines.add(
-                rh.gs(R.string.temp_target_short) + ": " +
-                    decimalFormatter.to1Decimal(state.eatingSoonTtTarget) + " " + unitLabel +
-                    " (" + rh.gs(app.aaps.core.ui.R.string.format_mins, state.eatingSoonTtDuration) + ")"
-            )
-        }
-        if (state.hypoTtChecked) {
-            lines.add(
-                rh.gs(R.string.temp_target_short) + ": " +
-                    decimalFormatter.to1Decimal(state.hypoTtTarget) + " " + unitLabel +
-                    " (" + rh.gs(app.aaps.core.ui.R.string.format_mins, state.hypoTtDuration) + ")"
-            )
-        }
-
-        // Alarm
-        val timeOffset = state.timeOffsetMinutes
-        if (state.alarmChecked && state.carbs > 0 && timeOffset > 0) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, timeOffset))
-        }
-
-        // Duration
-        val duration = state.durationHours
-        if (duration > 0) {
-            lines.add(
-                rh.gs(app.aaps.core.ui.R.string.duration) + ": " + duration +
-                    rh.gs(app.aaps.core.interfaces.R.string.shorthour)
-            )
-        }
-
-        // Carbs (with constraint check)
-        val carbs = state.carbs
-        var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(
-            ConstraintObject(carbs, aapsLogger)
-        ).value()
-
-        if (carbsAfterConstraints > 0) {
-            lines.add(
-                rh.gs(app.aaps.core.ui.R.string.carbs) + ": " +
-                    rh.gs(app.aaps.core.ui.R.string.format_carbs, carbsAfterConstraints)
-            )
-            if (carbsAfterConstraints != carbs) {
-                lines.add(rh.gs(R.string.carbs_constraint_applied))
+                else                       -> Unit // Unconfirmed → app-level modal
             }
         }
-        if (carbsAfterConstraints < 0) {
-            val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
-            if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
-            if (timeOffset != 0) carbsAfterConstraints = 0
-            lines.add(
-                rh.gs(app.aaps.core.ui.R.string.carbs) + ": " +
-                    rh.gs(app.aaps.core.ui.R.string.format_carbs, carbsAfterConstraints)
-            )
-            if (carbsAfterConstraints != carbs) {
-                lines.add(rh.gs(R.string.carbs_constraint_applied))
+    }
+
+    /** Confirm the master's prepared batch: record the carbs (+ TT) once, then the device-local reminders. */
+    fun commit(bolusId: Long) {
+        appScope.launch {
+            val state = confirmedState
+            val result = batchExecutor.commit(bolusId, Sources.CarbDialog, rh.gs(app.aaps.core.ui.R.string.carbs))
+            // Opt-in post-carbs bolus reminder (device-local) on success.
+            if (result is ActionProgress.Applied && preferences.get(BooleanKey.OverviewUseBolusReminder) && state?.bolusReminderChecked == true)
+                automation.scheduleAutomationEventBolusReminder()
+            // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
+            // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
+            if (result is ActionProgress.Rejected) {
+                if (result.reason == FailureReason.NotReachable)
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                else result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
             }
+            automation.removeAutomationEventEatReminder()
+            // Device-local "time to eat" alarm — on confirm, when configured.
+            if (state != null && state.alarmChecked && state.carbs > 0 && state.timeOffsetMinutes > 0)
+                automation.scheduleTimeToEatReminder(T.mins(state.timeOffsetMinutes.toLong()).secs().toInt())
         }
-
-        // Notes
-        if (state.notes.isNotEmpty()) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + state.notes)
-        }
-
-        // Time
-        if (state.eventTimeChanged) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime))
-        }
-
-        return lines
     }
 
-    fun hasAction(): Boolean {
-        val state = uiState.value
-        val carbs = state.carbs
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(
-            ConstraintObject(carbs, aapsLogger)
-        ).value()
-        return carbsAfterConstraints != 0 || state.activityTtChecked || state.eatingSoonTtChecked || state.hypoTtChecked
-    }
-
-    fun confirmAndSave() {
-        val state = confirmedState ?: return
-        val carbs = state.carbs
-        val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
-        var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(
-            ConstraintObject(carbs, aapsLogger)
-        ).value()
-        val timeOffset = state.timeOffsetMinutes
-        val duration = state.durationHours
-        val notes = state.notes
-        val useAlarm = state.alarmChecked
-        val remindBolus = state.bolusReminderChecked
-        val eventTime = state.eventTime
-
-        // Negative carbs constraint
-        if (carbsAfterConstraints < 0) {
-            if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
-            if (timeOffset != 0) carbsAfterConstraints = 0
-        }
-
-        // Insert temp target if selected
-        val selectedTTDuration = when {
-            state.activityTtChecked   -> state.activityTtDuration
-            state.eatingSoonTtChecked -> state.eatingSoonTtDuration
-            state.hypoTtChecked       -> state.hypoTtDuration
-            else                      -> 0
-        }
-        val selectedTT = when {
-            state.activityTtChecked   -> state.activityTtTarget
-            state.eatingSoonTtChecked -> state.eatingSoonTtTarget
-            state.hypoTtChecked       -> state.hypoTtTarget
-            else                      -> 0.0
-        }
+    /**
+     * Build the batch from the dialog state. Carbs travel RAW — the MASTER caps + COB-clamps (so the client never
+     * decides its own number). The TT (target-raising for hypo/activity, lowering for eating-soon) travels WITH the
+     * carbs so the master applies it in one transaction; it starts now even when the carbs are back-dated.
+     */
+    private fun buildActions(state: CarbsDialogUiState): List<BatchAction> {
         val reason = when {
             state.activityTtChecked   -> TT.Reason.ACTIVITY
             state.eatingSoonTtChecked -> TT.Reason.EATING_SOON
             state.hypoTtChecked       -> TT.Reason.HYPOGLYCEMIA
             else                      -> TT.Reason.CUSTOM
         }
-
-        if (reason != TT.Reason.CUSTOM) {
-            // appScope, not viewModelScope: the screen navigates back immediately after confirm,
-            // which cancels viewModelScope and could drop this direct DB write.
-            appScope.launch {
-                try {
-                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                        temporaryTarget = TT(
-                            timestamp = System.currentTimeMillis(),
-                            duration = TimeUnit.MINUTES.toMillis(selectedTTDuration.toLong()),
-                            reason = reason,
-                            lowTarget = profileUtil.convertToMgdl(selectedTT, state.units),
-                            highTarget = profileUtil.convertToMgdl(selectedTT, state.units)
-                        ),
-                        action = Action.TT,
-                        source = Sources.CarbDialog,
-                        note = null,
-                        listValues = listOf(
-                            ValueWithUnit.TETTReason(reason),
-                            ValueWithUnit.fromGlucoseUnit(selectedTT, state.units),
-                            ValueWithUnit.Minute(selectedTTDuration)
-                        )
+        val ttDuration = when {
+            state.activityTtChecked   -> state.activityTtDuration
+            state.eatingSoonTtChecked -> state.eatingSoonTtDuration
+            state.hypoTtChecked       -> state.hypoTtDuration
+            else                      -> 0
+        }
+        val ttTarget = when {
+            state.activityTtChecked   -> state.activityTtTarget
+            state.eatingSoonTtChecked -> state.eatingSoonTtTarget
+            state.hypoTtChecked       -> state.hypoTtTarget
+            else                      -> 0.0
+        }
+        return buildList {
+            if (reason != TT.Reason.CUSTOM) {
+                val mgdl = profileUtil.convertToMgdl(ttTarget, state.units)
+                add(BatchAction.TempTarget(reason = reason.text, lowMgdl = mgdl, highMgdl = mgdl, durationMinutes = ttDuration, startOffsetMinutes = 0))
+            }
+            if (state.carbs != 0)
+                add(
+                    BatchAction.Bolus(
+                        insulin = 0.0, carbs = state.carbs, carbsTimeOffsetMinutes = state.timeOffsetMinutes,
+                        carbsDurationHours = state.durationHours, recordOnly = false, notes = state.notes, timestamp = state.eventTime, iCfg = null
                     )
-                } catch (e: Exception) {
-                    aapsLogger.error(LTag.UI, "Failed to save temp target", e)
-                }
-            }
-        }
-
-        // Send carbs via command queue
-        if (carbsAfterConstraints != 0) {
-            val detailedBolusInfo = DetailedBolusInfo().also {
-                it.eventType = TE.Type.CORRECTION_BOLUS
-                it.carbs = carbsAfterConstraints.toDouble()
-                it.notes = notes
-                it.carbsDuration = T.hours(duration.toLong()).msecs()
-                it.carbsTimestamp = eventTime
-            }
-            uel.log(
-                action = if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS,
-                source = Sources.CarbDialog,
-                note = notes,
-                listValues = listOfNotNull(
-                    ValueWithUnit.Timestamp(eventTime).takeIf { state.eventTimeChanged },
-                    ValueWithUnit.Gram(carbsAfterConstraints),
-                    ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
-                    ValueWithUnit.Hour(duration).takeIf { duration != 0 }
                 )
-            )
-            viewModelScope.launch {
-                val result = commandQueue.bolus(detailedBolusInfo)
-                automation.removeAutomationEventEatReminder()
-                if (!result.success) {
-                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-                } else if (preferences.get(BooleanKey.OverviewUseBolusReminder) && remindBolus) {
-                    automation.scheduleAutomationEventBolusReminder()
-                }
-            }
-        }
-
-        // Schedule eat reminder alarm
-        if (useAlarm && carbs > 0 && timeOffset > 0) {
-            automation.scheduleTimeToEatReminder(T.mins(timeOffset.toLong()).secs().toInt())
         }
     }
 }

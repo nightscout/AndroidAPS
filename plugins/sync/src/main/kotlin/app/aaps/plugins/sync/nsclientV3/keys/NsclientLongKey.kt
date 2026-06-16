@@ -14,6 +14,7 @@ enum class NsclientLongKey(
     TemporaryTargetLastSyncedId("ns_temporary_target_last_sync", 0L),
     FoodLastSyncedId("ns_food_last_sync", 0L),
     GlucoseValueLastSyncedId("ns_glucose_value_last_sync", 0L),
+    CalibrationEntryLastSyncedId("ns_calibration_entry_last_sync", 0L),
     TherapyEventLastSyncedId("ns_therapy_event_last_sync", 0L),
     DeviceStatusLastSyncedId("ns_device_status_last_synced_id", 0L),
     TemporaryBasalLastSyncedId("ns_temporary_basal_last_synced_id", 0L),

@@ -3,29 +3,23 @@ package app.aaps.ui.compose.treatmentDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.model.TE
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.objects.runningMode.RunningModeGuard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
@@ -38,25 +32,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 @Stable
 class TreatmentDialogViewModel @Inject constructor(
-    private val constraintChecker: ConstraintsChecker,
-    private val activePlugin: ActivePlugin,
+    constraintChecker: ConstraintsChecker,
+    activePlugin: ActivePlugin,
     private val activeInsulin: Insulin,
-    private val commandQueue: CommandQueue,
     config: Config,
-    private val uel: UserEntryLogger,
-    private val persistenceLayer: PersistenceLayer,
     val decimalFormatter: DecimalFormatter,
     private val rh: ResourceHelper,
-    private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
     hardLimits: HardLimits,
-    private val runningModeGuard: RunningModeGuard,
     private val loop: Loop,
+    private val batchExecutor: BatchExecutor,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -66,6 +55,9 @@ class TreatmentDialogViewModel @Inject constructor(
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
+
+        /** The MASTER prepared the treatment and returned its merged confirmation [lines]; show them, then [commit] [bolusId]. */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -102,7 +94,9 @@ class TreatmentDialogViewModel @Inject constructor(
         viewModelScope.launch {
             val mode = loop.runningMode()
             val cantDeliverBolus = PumpCommandGate.check(mode, PumpCommandGate.CommandKind.BOLUS) is PumpCommandGate.Decision.Reject
-            val forcedRecordOnly = cantDeliverBolus || !pumpInitialized || isAapsClient
+            // A client delivers via the master (see confirmRemoteBolus), so its local pump state must NOT force
+            // record-only; only a master's own can't-deliver conditions do.
+            val forcedRecordOnly = if (isAapsClient) false else (cantDeliverBolus || !pumpInitialized)
             _uiState.update { it.copy(forcedRecordOnly = forcedRecordOnly) }
         }
     }
@@ -115,145 +109,63 @@ class TreatmentDialogViewModel @Inject constructor(
         _uiState.update { it.copy(carbs = value) }
     }
 
-    fun hasAction(): Boolean {
-        val state = uiState.value
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
-            ConstraintObject(state.insulin, aapsLogger)
-        ).value()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(
-            ConstraintObject(state.carbs, aapsLogger)
-        ).value()
-        return insulinAfterConstraints > 0 || carbsAfterConstraints > 0
+    @Volatile private var confirmedState: TreatmentDialogUiState? = null
+
+    /**
+     * Tap-confirm → ask the MASTER to PREPARE the treatment (cap + build the merged confirmation). Client = signed
+     * round-trip; master = local. The user confirms the MASTER's exact lines (the contract — the client never caps its
+     * own numbers) and [commit] delivers. A forced record-only (master can't deliver) records insulin + carbs as given.
+     */
+    fun prepareAndConfirm() {
+        appScope.launch {
+            val state = uiState.value
+            confirmedState = state
+            val actions = buildActions(state)
+            if (actions.isEmpty()) {
+                _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+                return@launch
+            }
+            when (val prepared = batchExecutor.prepare(actions, Sources.TreatmentDialog, rh.gs(app.aaps.core.ui.R.string.bolus))) {
+                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
+                is ActionProgress.Rejected ->
+                    if (prepared.reason == FailureReason.NotReachable) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                    else prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
+
+                else                       -> Unit // Unconfirmed → app-level modal
+            }
+        }
     }
 
-    private var confirmedState: TreatmentDialogUiState? = null
-
-    fun buildConfirmationSummary(): List<String> {
-        val state = uiState.value
-        confirmedState = state
-        val lines = mutableListOf<String>()
-        val pumpDescription = activePlugin.activePump.pumpDescription
-
-        val insulin = state.insulin
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
-            ConstraintObject(insulin, aapsLogger)
-        ).value()
-        val carbs = state.carbs
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(
-            ConstraintObject(carbs, aapsLogger)
-        ).value()
-
-        if (insulinAfterConstraints > 0) {
-            lines.add(
-                rh.gs(app.aaps.core.ui.R.string.bolus) + ": " +
-                    decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, pumpDescription.bolusStep)
-            )
-            if (state.forcedRecordOnly) {
-                lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
-            }
-            if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
-                lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints))
+    /** Confirm the master's prepared treatment: deliver/record the parked bundle exactly once. */
+    fun commit(bolusId: Long) {
+        appScope.launch {
+            val result = batchExecutor.commit(bolusId, Sources.TreatmentDialog, rh.gs(app.aaps.core.ui.R.string.bolus))
+            // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
+            // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
+            if (result is ActionProgress.Rejected) {
+                if (result.reason == FailureReason.NotReachable)
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                else result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
             }
         }
-
-        if (carbsAfterConstraints > 0) {
-            lines.add(
-                rh.gs(app.aaps.core.ui.R.string.carbs) + ": " +
-                    rh.gs(app.aaps.core.ui.R.string.format_carbs, carbsAfterConstraints)
-            )
-            if (carbsAfterConstraints != carbs) {
-                lines.add(rh.gs(app.aaps.ui.R.string.carbs_constraint_applied))
-            }
-        }
-
-        return lines
     }
 
-    fun confirmAndSave() {
-        // appScope, not viewModelScope: the screen navigates back immediately after confirm,
-        // cancelling viewModelScope. Running the whole save on appScope guarantees every write
-        // is reached even when a suspend profile lookup runs before it (e.g. getProfile()).
-        appScope.launch { confirmAndSaveSuspend() }
-    }
-
-    private suspend fun confirmAndSaveSuspend() {
-        val state = confirmedState ?: return
-        val insulin = state.insulin
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
-            ConstraintObject(insulin, aapsLogger)
-        ).value()
-        val carbs = state.carbs
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(
-            ConstraintObject(carbs, aapsLogger)
-        ).value()
-        val recordOnlyChecked = state.forcedRecordOnly
-        val iCfg = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg
-
-        val action = when {
-            insulinAfterConstraints == 0.0 -> Action.CARBS
-            carbsAfterConstraints == 0     -> Action.BOLUS
-            else                           -> Action.TREATMENT
-        }
-
-        val detailedBolusInfo = DetailedBolusInfo().also {
-            it.eventType = when {
-                insulinAfterConstraints == 0.0 -> TE.Type.CARBS_CORRECTION
-                carbsAfterConstraints == 0     -> TE.Type.CORRECTION_BOLUS
-                else                           -> TE.Type.MEAL_BOLUS
-            }
-            it.insulin = insulinAfterConstraints
-            it.carbs = carbsAfterConstraints.toDouble()
-        }
-
-        if (recordOnlyChecked) {
-            if (detailedBolusInfo.insulin > 0) {
-                // appScope, not viewModelScope: the screen navigates back immediately after
-                // confirm, which cancels viewModelScope and could drop this direct DB write.
-                appScope.launch {
-                    persistenceLayer.insertOrUpdateBolus(
-                        bolus = detailedBolusInfo.createBolus(iCfg),
-                        action = action,
-                        source = Sources.TreatmentDialog,
-                        note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""
-                    )
-                }
-            }
-            if (detailedBolusInfo.carbs > 0) {
-                appScope.launch {
-                    persistenceLayer.insertOrUpdateCarbs(
-                        carbs = detailedBolusInfo.createCarbs(),
-                        action = action,
-                        source = Sources.TreatmentDialog,
-                        note = if (carbsAfterConstraints != 0) rh.gs(app.aaps.core.ui.R.string.record) else ""
-                    )
-                }
-            }
-        } else {
-            if (detailedBolusInfo.insulin > 0) {
-                if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
-                uel.log(
-                    action = action,
-                    source = Sources.TreatmentDialog,
-                    listValues = listOfNotNull(
-                        ValueWithUnit.Insulin(insulinAfterConstraints),
-                        ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 }
+    /**
+     * Build the batch — one fixed Bolus carrying the user's RAW insulin + carbs (the MASTER caps both, classifies the
+     * event type, and either delivers or records). A forced record-only (the master can't deliver) is persisted as
+     * given with the resolved insulin config. No TT, no offset/duration; the dialog has no event-time picker, so the
+     * record is stamped "now" (timestamp 0 = now in the executor).
+     */
+    private suspend fun buildActions(state: TreatmentDialogUiState): List<BatchAction> {
+        val iCfg = if (state.forcedRecordOnly) profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg else null
+        return buildList {
+            if (state.insulin > 0.0 || state.carbs > 0)
+                add(
+                    BatchAction.Bolus(
+                        insulin = state.insulin, carbs = state.carbs, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
+                        recordOnly = state.forcedRecordOnly, notes = "", timestamp = 0L, iCfg = iCfg
                     )
                 )
-                val result = commandQueue.bolus(detailedBolusInfo)
-                if (!result.success) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-            } else {
-                if (detailedBolusInfo.carbs > 0) {
-                    // appScope, not viewModelScope: the screen navigates back immediately after
-                    // confirm, which cancels viewModelScope and could drop this direct DB write.
-                    appScope.launch {
-                        persistenceLayer.insertOrUpdateCarbs(
-                            carbs = detailedBolusInfo.createCarbs(),
-                            action = action,
-                            source = Sources.TreatmentDialog
-                        )
-                    }
-                }
-            }
         }
     }
 }

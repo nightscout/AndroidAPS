@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.ui.R
 import app.aaps.ui.compose.profileHelper.ProfileType
 import app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfile
@@ -221,6 +222,7 @@ class ProfileHelperViewModel @Inject constructor(
                 EventShowDialog.OkCancel(
                     title = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
                     message = rh.gs(app.aaps.core.ui.R.string.copytolocalprofile),
+                    icon = IcProfile,
                     onOk = {
                         viewModelScope.launch {
                             profileRepository.add(

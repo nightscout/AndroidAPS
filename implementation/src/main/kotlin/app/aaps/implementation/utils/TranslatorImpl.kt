@@ -119,6 +119,7 @@ class TranslatorImpl @Inject internal constructor(
         Action.CHANGE_INSULIN_CONCENTRATION    -> rh.gs(R.string.uel_change_insulin_concentration)
         Action.SCENE_ACTIVATED                 -> rh.gs(R.string.uel_scene_activated)
         Action.SCENE_DEACTIVATED               -> rh.gs(R.string.uel_scene_deactivated)
+        Action.REMOTE_CONFIG_CHANGED           -> rh.gs(R.string.uel_remote_config_changed)
         Action.UNKNOWN                         -> rh.gs(R.string.unknown)
     }
 

@@ -50,8 +50,6 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
-import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcPluginOpenAPS
@@ -64,7 +62,6 @@ import app.aaps.plugins.aps.keys.ApsIntentKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonObject
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
@@ -113,7 +110,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         .pluginName(R.string.openaps_auto_isf)
         .shortName(R.string.autoisf_shortname)
         .preferencesVisibleInSimpleMode(false)
-        .showInList { config.APS && config.isEngineeringMode() && config.isDev() }
+        .showInList { (config.APS || config.AAPSCLIENT) && config.isEngineeringMode() && config.isDev() }   // AAPSCLIENT: visible so a client can select the master's APS (still eng+dev only)
         .description(R.string.description_auto_isf),
     ownPreferences = listOf(ApsIntentKey::class.java),
     aapsLogger, rh, preferences
@@ -151,7 +148,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     override suspend fun onStart() {
         super.onStart()
         var count = 0
-        val apsResults = runBlocking { persistenceLayer.getApsResults(dateUtil.now() - T.days(1).msecs(), dateUtil.now()) }
+        val apsResults = persistenceLayer.getApsResults(dateUtil.now() - T.days(1).msecs(), dateUtil.now())
         apsResults.forEach {
             val glucose = it.glucoseStatus?.glucose ?: return@forEach
             val variableSens = it.variableSens ?: return@forEach
@@ -221,8 +218,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val autoIsfCache = LongSparseArray<Double>()
 
     private suspend fun calculateVariableIsf(timestamp: Long): Pair<String, Double?> {
-        val profile = profileFunction.getProfile(timestamp)
-        if (profile == null) return Pair("OFF", null)
+        val profile = profileFunction.getProfile(timestamp) ?: return Pair("OFF", null)
         val glucose = glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
         // Round down to minutesClass min and use it as a key for caching
         // Add BG to key as it affects calculation
@@ -520,19 +516,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         val enabled = preferences.get(BooleanKey.ApsUseAutosens)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
-    }
-
-    override fun configuration(): JsonObject =
-        JsonObject(emptyMap())
-            .put(BooleanKey.ApsUseDynamicSensitivity, preferences)
-            .put(IntKey.ApsDynIsfAdjustmentFactor, preferences)
-            .put(BooleanKey.ApsUseSmb, preferences)
-
-    override fun applyConfiguration(configuration: JsonObject) {
-        configuration
-            .store(BooleanKey.ApsUseDynamicSensitivity, preferences)
-            .store(IntKey.ApsDynIsfAdjustmentFactor, preferences)
-            .store(BooleanKey.ApsUseSmb, preferences)
     }
 
     // Rounds value to 'digits' decimal places

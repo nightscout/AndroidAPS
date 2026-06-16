@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolBooleanKey
@@ -131,7 +131,8 @@ class TidepoolUploader @Inject constructor(
 
         // Check if already in a connected or connecting state
         if (authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED ||
-            authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.FETCHING_TOKEN) {
+            authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.FETCHING_TOKEN
+        ) {
             aapsLogger.debug(LTag.TIDEPOOL, "Already connected or connecting")
             return
         }

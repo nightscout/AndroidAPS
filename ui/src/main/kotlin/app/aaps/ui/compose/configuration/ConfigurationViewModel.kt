@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ConfigPluginUiModel
+import app.aaps.core.ui.compose.pluginCategoryTitleRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,6 +64,11 @@ class ConfigurationViewModel @Inject constructor(
 
     init {
         loadCategories()
+        // Refresh live when a synced selection changes — including a master→client push adopted while the
+        // screen is open (fires on putRemote too), not just the user's own toggles.
+        viewModelScope.launch {
+            configBuilder.activeSelectionChanges.collect { refreshCategories() }
+        }
     }
 
     private fun loadCategories() {
@@ -129,13 +135,18 @@ class ConfigurationViewModel @Inject constructor(
         }
     }
 
+    /** A single-select category whose selection syncs, viewed on a client — drives both client visibility and
+     *  the sync badge. SSOT-derived (configBuilder.syncedSelectionTypes); always false on a master. */
+    private fun clientSynced(type: PluginType) = config.AAPSCLIENT && type in configBuilder.syncedSelectionTypes
+
     private fun buildCategories(isSimpleMode: Boolean): List<ConfigCategoryUiModel> {
         val lookup = mutableMapOf<String, PluginBase>()
         val categories = mutableListOf<ConfigCategoryUiModel>()
 
-        fun addCategory(type: PluginType, titleRes: Int) {
+        fun addCategory(type: PluginType) {
             val plugins = activePlugin.getSpecificPluginsVisibleInList(type)
             if (plugins.isEmpty()) return
+            val titleRes = pluginCategoryTitleRes(type)
             val isMultiSelect = isMultiSelect(type)
 
             val pluginModels = plugins.map { plugin ->
@@ -176,27 +187,30 @@ class ConfigurationViewModel @Inject constructor(
                     plugins = pluginModels,
                     isMultiSelect = isMultiSelect,
                     subtitle = subtitle,
-                    categoryIcon = singleEnabled?.composeIcon ?: defaultIcon
+                    categoryIcon = singleEnabled?.composeIcon ?: defaultIcon,
+                    synced = clientSynced(type)
                 )
             )
         }
 
-        if (!config.AAPSCLIENT) {
-            addCategory(PluginType.BGSOURCE, app.aaps.core.ui.R.string.configbuilder_bgsource)
-            addCategory(PluginType.SMOOTHING, app.aaps.core.ui.R.string.configbuilder_smoothing)
-            addCategory(PluginType.CALIBRATION, app.aaps.core.ui.R.string.configbuilder_calibration)
-            addCategory(PluginType.PUMP, app.aaps.core.ui.R.string.configbuilder_pump)
+        // A category is also shown on a client when its selection syncs (clientSynced, SSOT-derived) — folded
+        // into each existing gate (rather than appended) so client and master keep the same category order.
+        if (!config.AAPSCLIENT) addCategory(PluginType.BGSOURCE)
+        if (!config.AAPSCLIENT || clientSynced(PluginType.SMOOTHING)) addCategory(PluginType.SMOOTHING)
+        if (!config.AAPSCLIENT || clientSynced(PluginType.CALIBRATION)) addCategory(PluginType.CALIBRATION)
+        if (!config.AAPSCLIENT) addCategory(PluginType.PUMP)
+        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode() || clientSynced(PluginType.SENSITIVITY)) {
+            addCategory(PluginType.SENSITIVITY)
         }
-        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode()) {
-            addCategory(PluginType.SENSITIVITY, app.aaps.core.ui.R.string.configbuilder_sensitivity)
+        if (config.APS || clientSynced(PluginType.APS)) {
+            addCategory(PluginType.APS)
         }
         if (config.APS) {
-            addCategory(PluginType.APS, app.aaps.core.ui.R.string.configbuilder_aps)
-            addCategory(PluginType.LOOP, app.aaps.core.ui.R.string.configbuilder_loop)
-            addCategory(PluginType.CONSTRAINTS, app.aaps.core.ui.R.string.constraints)
+            addCategory(PluginType.LOOP)
+            addCategory(PluginType.CONSTRAINTS)
         }
-        addCategory(PluginType.SYNC, app.aaps.core.ui.R.string.configbuilder_sync)
-        addCategory(PluginType.GENERAL, app.aaps.core.ui.R.string.configbuilder_general)
+        addCategory(PluginType.SYNC)
+        addCategory(PluginType.GENERAL)
 
         pluginLookup = lookup
         return categories
@@ -204,10 +218,6 @@ class ConfigurationViewModel @Inject constructor(
 
     companion object {
 
-        private fun isMultiSelect(type: PluginType): Boolean =
-            type == PluginType.GENERAL ||
-                type == PluginType.CONSTRAINTS ||
-                type == PluginType.LOOP ||
-                type == PluginType.SYNC
+        private fun isMultiSelect(type: PluginType): Boolean = !type.singleSelect
     }
 }

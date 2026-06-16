@@ -26,8 +26,10 @@ class LocationServiceHelper @Inject constructor(
     private val notificationHolder: NotificationHolder
 ) {
 
-    fun startService(context: Context) {
-        if (!hasLocationPermission(context)) return
+    /** @return true if the service start was issued; false if it was skipped because the location
+     *  permission isn't granted yet (so the caller can retry once it is). */
+    fun startService(context: Context): Boolean {
+        if (!hasLocationPermission(context)) return false
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 // The binder of the service that returns the instance that is created.
@@ -58,6 +60,7 @@ class LocationServiceHelper @Inject constructor(
             // this case.
             context.startForegroundService(Intent(context, LocationService::class.java))
         }
+        return true
     }
 
     fun stopService(context: Context) =

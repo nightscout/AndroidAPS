@@ -5,13 +5,16 @@
 package app.aaps.core.ui.compose.preference
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.decimalPlaces
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
@@ -78,13 +81,16 @@ fun AdaptiveDoublePreferenceItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(theme.listItemPadding)
+                .padding(theme.padding)
         ) {
-            Text(
-                text = stringResource(effectiveTitleResId),
-                style = theme.titleTextStyle,
-                color = theme.titleColor
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(effectiveTitleResId),
+                    style = theme.titleTextStyle,
+                    color = theme.titleColor
+                )
+                SyncBadge(doubleKey, Modifier.padding(start = 6.dp))
+            }
             if (summary != null) {
                 Text(
                     text = summary,
@@ -119,7 +125,7 @@ fun AdaptiveDoublePreferenceItem(
         }
         TextFieldPreference(
             state = state,
-            title = { Text(stringResource(effectiveTitleResId)) },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, doubleKey) },
             textToValue = { text ->
                 text.toDoubleOrNull()?.coerceIn(doubleKey.min, doubleKey.max)
             },

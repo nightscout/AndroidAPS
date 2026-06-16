@@ -23,7 +23,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginTidepool
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk

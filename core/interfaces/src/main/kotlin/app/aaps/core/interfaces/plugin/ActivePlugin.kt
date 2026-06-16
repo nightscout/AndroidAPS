@@ -8,12 +8,10 @@ import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.iob.IobCobCalculator
-
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 
 interface ActivePlugin {
@@ -75,11 +73,6 @@ interface ActivePlugin {
      *  Defaults to no-op when no override plugin is enabled.
      */
     val activeCalibration: Calibration
-
-    /**
-     *  Currently selected NsClient plugin
-     */
-    val activeNsClient: NsClient?
 
     /**
      *  Currently selected Sync plugin
