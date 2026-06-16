@@ -27,9 +27,14 @@
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Изберете един от възможните алгоритми. Те са сортирани от стар към най-нов. Новите са обикновено по-добри. Не забравяйте да прочетете документацията и да конфигурирате преди да го използвате.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
     <string name="startobjective">Започнете първа цел</string>
+    <string name="open_objectives">Отворени цели</string>
+    <string name="setupwizard_permissions">Разрешения</string>
+    <string name="setupwizard_profile_info">Създайте профил с вашите базали, въгл. число, инсулинова чувствителност и цели. Можете да добавите други профили по-късно.</string>
+    <string name="setupwizard_permissions_info">На AAPS му трябва разрешение да ползва паметта. Моля разрешете му всичко от изброените.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
     <!-- Provider-agnostic cloud export/import strings -->
@@ -37,6 +42,7 @@
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Коя помпа бихте искали да използвате с AAPS?</string>
     <string name="configbuilder_aps_description">Кои APS алгоритъм да се използва за корекции в лечението?</string>
+    <string name="configbuilder_sync_description">Плъгини за качване на данни, синхронизация и комуникация.</string>
     <string name="configbuilder_bgsource_description">От къде трябва AAPS да взима данни?</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише базали, съхранявани в помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
@@ -51,6 +57,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Зареждане…</string>
+    <string name="warning_wrong_directory_selected">Избрана е грешна директория</string>
+    <string name="warning_wrong_directory_message">Избрали сте \"%1$s\" поддиректория вместо главната AAPS такава. Изберете главната AAPS директория. Апа ще създаде поддиректориите автоматично.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
