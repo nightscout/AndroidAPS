@@ -9,6 +9,7 @@
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Показване на PULSE LOG в менюто на Pod Management</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Показване на RileyLink Stats бутон в меню Управление на Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Позволи на записване на смяна на батерията в Действия</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f Е, Вх=%2$.1f гр</string>
     <string name="omnipod_eros_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
@@ -43,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">В Pod има пуснат временен базал но AAPS не знае за него. Моля, отменете временния си базал ръчно.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink статистика</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Ресет на RileyLink</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse лог</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse log(копиран в клипборда)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
