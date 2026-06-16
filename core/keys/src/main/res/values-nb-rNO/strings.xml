@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Send varsler til klokken når SMB leveres.</string>
     <string name="pref_title_wear_broadcast_data">Send data til klokken</string>
     <string name="pref_summary_wear_broadcast_data">Send AAPS-data til tredjeparts klokkeapper via intent.</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Vis kalkulatorberegning</string>
-    <string name="pref_title_wizard_correction_percent">Bruk korreksjonsprosent</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Administrer pumpe-stedsrotasjon</string>
     <string name="pref_title_site_rotation_manage_cgm">Administrer sensor-stedsrotasjon</string>
