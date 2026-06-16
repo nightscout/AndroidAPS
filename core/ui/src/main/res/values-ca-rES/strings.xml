@@ -160,6 +160,8 @@
     <string name="careportal_tempbasalend">Fi basal temporal</string>
     <string name="careportal_carbscorrection">Correcció carbohidrats</string>
     <string name="careportal_openapsoffline">OpenAPS fora de línia</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Valor objectiu temporal</string>
     <string name="careportal_temporarytargetcancel">Cancel·lar objectiu temporal</string>
     <string name="boluswizard">Calculadora de bolus</string>
