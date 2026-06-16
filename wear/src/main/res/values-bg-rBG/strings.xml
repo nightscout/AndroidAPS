@@ -12,7 +12,12 @@
     <string name="msg_warning_old">Данните са %1$s стари! Проверете сензора, xDrip+, NS, AAPS конфигурацията и други!</string>
     <string name="pref_vibrate_on_bolus">Вибрация при болус</string>
     <string name="units_short">Ед.</string>
+    <string name="pref_display_settings">Изглед</string>
+    <string name="pref_graph_settings">Графика</string>
+    <string name="pref_interface_settings">Интерфейс</string>
     <string name="pref_tile_settings">Tiles</string>
+    <string name="pref_others_settings">Други</string>
+    <string name="pref_complication_settings">Допълнение</string>
     <string name="pref_show_date">Покажи дата</string>
     <string name="pref_show_iob">Покажи IOB</string>
     <string name="pref_show_detailed_iob">Покажи подробен IOB</string>
@@ -30,6 +35,9 @@
     <string name="pref_show_bgi">Показвай BGI</string>
     <string name="pref_show_direction_arrow">Делта стрелка</string>
     <string name="pref_show_ago">Преди</string>
+    <string name="pref_show_temp_basal">Покажи временен базал</string>
+    <string name="pref_show_bolus">Покажи болус &amp; SMB</string>
+    <string name="pref_show_grid">Покажи решетка</string>
     <string name="pref_dark" comment="Enables dark visual theme">Тъмна</string>
     <string name="pref_highlight_basals">Маркирай базали</string>
     <string name="pref_prediction_lines">Покажи прогнози</string>
