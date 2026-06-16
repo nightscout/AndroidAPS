@@ -10,13 +10,10 @@
     <string name="unsupported_ns_version">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">Ο NSCLIENT δεν έχει άδεια εγγραφής. Λάθος κωδικός API;</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <!-- ns_client_url_title moved to core:keys module -->
-    <!-- ns_client_url_summary moved to core:keys module -->
-    <!-- ns_client_secret_title moved to core:keys module -->
-    <!-- ns_client_secret_summary moved to core:keys module -->
-    <!-- nsclient_token_title moved to core:keys module -->
-    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Έγχυση τώρα</string>
     <string name="queue">Σειρά:</string>
     <string name="status">Κατάσταση:</string>
@@ -51,8 +48,6 @@
     <string name="no_watch_connected">(Χωρίς Σύνδεση Ρολογιού)</string>
     <string name="pump_status">Κατάσταση Αντλίας</string>
     <string name="loop_status">Κατάσταση κυκλώματος</string>
-    <string name="quick_wizard_not_available">Ο επιλεγμένος οδηγός δεν είναι πλέον διαθέσιμος, παρακαλώ ανανεώστε το πλακίδιο σας</string>
-    <string name="quick_wizard_message">Γρήγορος οδηγός: %1$s\nΙνσουλίνη: %2$.2fU\nΥδατάνθρακες: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Χρησιμοποιούνται διαφορετικές μονάδες στο ρολόι και το τηλέφωνο!</string>
     <string name="wear_action_tempt_min_bg_error">Ελάσιχτο-BG εκτός εύρους!</string>
     <string name="wear_action_tempt_max_bg_error">Μέγιστο-BG εκτός εύρους!</string>
