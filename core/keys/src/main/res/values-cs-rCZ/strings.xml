@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Odesílat oznámení na hodinky, když je podán SMB.</string>
     <string name="pref_title_wear_broadcast_data">Odesílat data na hodinky</string>
     <string name="pref_summary_wear_broadcast_data">Vysílat data AAPS do aplikací hodinek třetích stran přes intent.</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Zobrazit výpočet kalkulátoru</string>
-    <string name="pref_title_wizard_correction_percent">Použít korekční procento</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Spravovat rotaci míst pumpy</string>
     <string name="pref_title_site_rotation_manage_cgm">Spravovat rotaci míst CGM</string>
