@@ -35,6 +35,10 @@
     <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
     <!-- Scene -->
     <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
     <string name="timeshift_label">Zaman kaydırma</string>
     <string name="percentage_label">Yüzde</string>
