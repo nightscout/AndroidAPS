@@ -40,6 +40,8 @@ class EversenseCGMPlugin(context: Context) {
 
     private var scanner: EversenseScanner? = null
     var watchers: MutableList<EversenseWatcher> = java.util.concurrent.CopyOnWriteArrayList()
+    // Flag to track positioning mode state for safe diagnostic mode toggling
+    var isPositioningMode: Boolean = false
     // Credentials set by AAPS layer before any login attempt
     var username: String = ""
     var password: String = ""
@@ -136,6 +138,18 @@ class EversenseCGMPlugin(context: Context) {
         }
         gattCallback.disconnect()
         EversenseLogger.info(TAG, "Disconnected from transmitter")
+    }
+
+    fun enterPositioningMode() {
+        isPositioningMode = true
+        setDiagnosticMode(true)
+        EversenseLogger.info(TAG, "Diagnostic Mode ENABLED: Positioning active")
+    }
+
+    fun exitPositioningMode() {
+        isPositioningMode = false
+        setDiagnosticMode(false)
+        EversenseLogger.info(TAG, "Diagnostic Mode DISABLED: Power saving active")
     }
 
     fun setDiagnosticMode(isEnabled: Boolean) {
@@ -343,3 +357,4 @@ class EversenseCGMPlugin(context: Context) {
         private val JSON = Json { ignoreUnknownKeys = true }
     }
 }
+
