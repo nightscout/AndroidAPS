@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Показвай нотификация при пускане на SMB.</string>
     <string name="pref_title_wear_broadcast_data">Изпращай данни към часовник</string>
     <string name="pref_summary_wear_broadcast_data">Изпращане на данни от системата към трети приложения.</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Покажи изчисленията на съветника.</string>
-    <string name="pref_title_wizard_correction_percent">Използвай корекция в проценти</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Позволи следене на мястото на помпата</string>
     <string name="pref_title_site_rotation_manage_cgm">Позволи следене на CGM локацията</string>
