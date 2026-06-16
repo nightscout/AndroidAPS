@@ -373,6 +373,8 @@
     <string name="scene_no_profile_store">Niciun spațiu de stocare pentru profiluri disponibil</string>
     <string name="scene_no_actions">Scenariul nu are acțiuni</string>
     <string name="scene_profile_not_found">Profilul \"%1$s\" nu a fost găsit</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="scene_revert_tt">Anulați ținta temporară</string>
     <string name="scene_revert_profile">Reveniți la profilul de dinainte de schimbare</string>
     <string name="scene_revert_smb_on">Reactivați SMB</string>
@@ -702,18 +704,8 @@
     <string name="wizard_no_active_profile">Niciun profil activ stabilit!</string>
     <string name="wizard_no_cob">COB necunoscut! Lipsesc datele de glicemie sau aplicația a fost repornită de curând?</string>
     <string name="wizard_carbs_constraint">Limite carbohidrați încălcate!</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Carbohidrați: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">Glicemie: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">Tendința la 15\': %1$.2fU</string>
     <string name="wizard_trend_detail">Tendință 15 minute (%1$s %2$s)</string>
-    <string name="wizard_explain_percent">Procentaj: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Încălcare constrângere insulină!\nNu se pot administra %1$.2fU</string>
-    <string name="wizard_explain_tt">BazalaT.: %1$s</string>
-    <string name="wizard_explain_tt_to">Între %1$s și %2$s</string>
     <string name="wizard_pump_not_available">Nicio pompă disponibilă!</string>
     <string name="quickwizard_managemnt">Asistent Rapid</string>
     <!--    Preferences-->
