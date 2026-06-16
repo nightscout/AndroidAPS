@@ -137,6 +137,10 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">缺少胰岛素名称</string>
     <string name="insulin_name_exists">胰岛素名称 %1$s 已存在，请选择新的名称</string>
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="a11y_add_new_insulin">新增胰岛素</string>
     <string name="a11y_delete_current_insulin">删除当前的胰岛素</string>
     <string name="activate_insulin_no_profile">未找到生效的配置文件</string>
