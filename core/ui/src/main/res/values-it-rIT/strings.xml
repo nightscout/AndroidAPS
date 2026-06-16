@@ -373,6 +373,8 @@
     <string name="scene_no_profile_store">Nessun archivio profilo disponibile</string>
     <string name="scene_no_actions">La scena non ha azioni</string>
     <string name="scene_profile_not_found">Profilo \"%1$s\" non trovato</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="scene_revert_tt">Cancella basali temporanee</string>
     <string name="scene_revert_profile">Ripristina la modifica del profilo</string>
     <string name="scene_revert_smb_on">Riattiva SMB</string>
@@ -707,18 +709,8 @@
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
     <string name="wizard_carbs_constraint">Violazione vincolo CHO!</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">CHO: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
-    <string name="wizard_explain_trend">Trend di 15\': %1$.2fU</string>
     <string name="wizard_trend_detail">Tendenza 15min (%1$s %2$s)</string>
-    <string name="wizard_explain_percent">Percentuale: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Violazione vincolo insulina!\nImpossibile erogare %1$.2fU</string>
-    <string name="wizard_explain_tt">TempT: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
     <string name="quickwizard_managemnt">Assistente Rapido</string>
     <!--    Preferences-->
