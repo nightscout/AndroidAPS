@@ -29,13 +29,31 @@
     <string name="equil_tone_mode_tone">Само звук</string>
     <string name="equil_tone_mode_tone_and_shake">Вибрация и звук</string>
     <string name="equil_unbind_content">Това ще спре доставката на инсуин и ше откачи помпата! Също ще нулира статуса на свързване!</string>
+    <string name="equil_ble_config_confirmation_title">Сдвоете помпа Equil patch</string>
+    <string name="equil_error">Грешка при свързване</string>
+    <string name="equil_change">Сменете помпата</string>
+    <string name="equil_change_content">Моля, отделете помпата от основата.</string>
+    <string name="equil_unpair_alert">Сигурни ли сте, че искате да се откажете от контрола над %1$s?</string>
+    <string name="equil_devices_number_hint">Номер на устройство</string>
+    <string name="equil_record_basal">Базал %1$s Е/Ч</string>
     <string name="equil_record_basal_temp">Временен базал %1$s Е/Ч</string>
+    <string name="equil_record_bolus">Болус %1$s Е</string>
+    <string name="equil_error_set_temp_basal_failed_validation">Продължителността трябва да бъде по-голяма от нула и кратна на %1$s минути.</string>
+    <string name="equil_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
+    <string name="equil_low_battery">Изтощена батерия</string>
+    <string name="equil_low_insulin">Недостатъчно инсулин в резервоара</string>
     <string name="equil_pump_not_run">Няма връзка с помпата</string>
+    <string name="equil_pair">Свързване</string>
+    <string name="equil_pair_error">Грешка при свързване</string>
     <string name="equil_fill">Пълнене/Допълване</string>
     <string name="equil_air">Изкарай въздух</string>
+    <string name="equil_temp_basal_rate">Временен базал</string>
     <string name="equil_total_delivered">Общо доставени</string>
+    <string name="equil_firmware_version">Версия на фърмуера</string>
     <string name="equil_shutdown_be">Equil ще бъде автоматично изключен</string>
     <string name="equil_shutdown">Equil автоматично изключване</string>
+    <string name="equil_common_history_tbr_value">Количество: %1$.2f Е/Ч, Продължителност: %2$d мин</string>
+    <string name="equil_common_history_bolus_value">%1$.2f Е</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Стартирай болус</string>
     <string name="equil_common_cmd_cancel_bolus">Откажи болус</string>
@@ -52,6 +70,10 @@
     <string name="equil_common_cmd_cancel_extended_bolus">Спри удължен болус</string>
     <!--    推杆回退-->
     <string name="equil_common_change_insulin">Изтегляне на буталото</string>
+    <string name="equil_common_set_alarm_tone">Конфигурирайте само за звук за известяване</string>
+    <string name="equil_common_set_alarm_shake">Конфигурирайте само за вибрация</string>
+    <string name="equil_common_set_alarm_mute">Конфигурирайте за режим без звук</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Конфигурирайте за известяване за звук и вибрация</string>
     <string name="equil_common_read_devices">Прочита информация за помпата</string>
     <string name="equil_common_cmd_fill">Пълнене</string>
     <string name="history_manual_confirm">Ръчно потвърждение</string>
@@ -93,6 +115,15 @@
     <string name="equil_common_overview_button_suspend_delivery">Спиране</string>
     <string name="equil_common_overview_button_resume_delivery">Възобновяване доставянето на инсулин</string>
     <string name="equil_common_moments_ago">Преди малко</string>
+    <string name="equil_common_less_than_a_minute_ago">Преди по-малко от минута</string>
+    <string name="equil_common_time_ago">преди %1$sсек</string>
+    <string name="equil_common_composite_time">%1$s и %2$s</string>
+    <string name="equil_common_wizard_exit_confirmation_text">Не сте завършили стъпките. Сигурни ли сте?</string>
+    <string name="equil_common_wizard_exit_confirmation_title">Изход</string>
+    <plurals name="equil_common_minutes">
+        <item quantity="one">%1$d минутa</item>
+        <item quantity="other">%1$d минутa</item>
+    </plurals>
     <plurals name="equil_common_hours">
         <item quantity="one">%1$d час</item>
         <item quantity="other">%1$d часа</item>
