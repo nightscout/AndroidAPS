@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">当执行微型大剂量（SMB）时，向手表发送通知。</string>
     <string name="pref_title_wear_broadcast_data">向手表广播数据</string>
     <string name="pref_summary_wear_broadcast_data">通过Intent将 AAPS 数据广播给第三方手表应用。</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">显示向导计算</string>
-    <string name="pref_title_wizard_correction_percent">使用校正百分比</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">管理泵部位轮换</string>
     <string name="pref_title_site_rotation_manage_cgm">管理 CGM 部位轮换</string>
