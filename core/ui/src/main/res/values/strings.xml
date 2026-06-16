@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">The field must not be empty</string>
     <string name="error_mustbe4hexadidits">Must be 4 characters of ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Authorized clients</string>
+    <string name="authorized_clients_manage_desc">Manage paired client devices controlling this master.</string>
+    <string name="pair_with_master_manage_label">Pair with master</string>
+    <string name="pair_with_master_manage_desc">Enter a master\'s pairing PIN to let this client send signed commands.</string>
     <!--    General-->
     <string name="treatments">Treatments</string>
     <string name="treatments_history">Treatments history</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Refresh</string>
     <string name="no_history_records">No records found</string>
     <string name="error">Error</string>
+    <string name="navigation_error_screen_not_found">Screen could not be opened (not available in this configuration)</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalid_input">Invalid input data</string>
     <string name="invalid_number">Invalid number</string>
@@ -104,6 +109,8 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Objectives</string>
     <string name="please_wait">Please wait…</string>
     <string name="stop">Stop</string>
@@ -190,6 +197,8 @@
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
+    <string name="percentage_label">Percentage</string>
+    <string name="timeshift_label">Timeshift</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="copytolocalprofile">Create new profile from this profile?</string>
@@ -243,6 +252,7 @@
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
+    <string name="pref_syncs_with_main_phone">Syncs with the main phone</string>
     <string name="show_hide_records">Hide loop records</string>
 
     <!--    Protection-->
@@ -338,6 +348,8 @@
     <string name="temporary_target">Temporary target</string>
     <string name="temporary_targets">Temporary targets</string>
     <string name="running_mode">Running mode</string>
+    <string name="running_mode_change_not_allowed">Running mode change not available</string>
+    <string name="pump_reconnect">Reconnect pump</string>
     <string name="scene">Scene</string>
     <string name="scenes">Scenes</string>
     <string name="scene_desc">Situation presets — activate multiple actions at once</string>
@@ -383,6 +395,39 @@
     <string name="scene_no_profile_store">No profile store available</string>
     <string name="scene_no_actions">Scene has no actions</string>
     <string name="scene_profile_not_found">Profile \"%1$s\" not found</string>
+    <string name="scene_lock_banner_master_offline">Master device unreachable. Scene controls will resume when connection is restored.</string>
+    <string name="master_offline_banner">Master device unreachable. Editing is disabled until the connection is restored.</string>
+    <string name="scene_lock_reason_master_offline">Master disconnected</string>
+    <string name="scene_lock_reason_scene_active">Stop the running scene first</string>
+
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Set temp target</string>
+    <string name="clientcontrol_action_cancel_temp_target">Cancel temp target</string>
+    <string name="clientcontrol_action_activate_scene">Activate scene %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">End scene</string>
+    <string name="clientcontrol_action_activate_insulin">Activate insulin %1$s</string>
+    <string name="clientcontrol_action_update_settings">Update settings</string>
+    <string name="clientcontrol_action_deliver_bolus">Deliver bolus</string>
+    <string name="clientcontrol_action_record_bolus">Record bolus</string>
+
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">This device isn\'t paired with a master.</string>
+    <string name="clientcontrol_fail_not_reachable">The master is offline.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Pump configuration out of sync with the master. Please try again.</string>
+    <string name="clientcontrol_fail_no_reply">No reply from the master in time.</string>
+    <string name="clientcontrol_fail_expired">The command expired before the master applied it.</string>
+    <string name="clientcontrol_fail_busy">Another action is already in progress.</string>
+    <string name="clientcontrol_fail_send_failed">Couldn\'t reach Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">The master has no active profile to apply it onto.</string>
+    <string name="clientcontrol_fail_scene_not_found">The scene no longer exists.</string>
+    <string name="clientcontrol_fail_scene_disabled">The scene is disabled.</string>
+    <string name="clientcontrol_fail_partial">Some actions couldn\'t be applied.</string>
+    <string name="clientcontrol_fail_execution">The master couldn\'t apply it.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">The prepared bolus expired or was superseded. Tap the button again.</string>
+    <string name="clientcontrol_fail_bolus_compute">The master couldn\'t calculate the bolus (missing glucose / profile, or pump not ready).</string>
+    <string name="clientcontrol_fail_internal">Something went wrong.</string>
+    <string name="clientcontrol_fail_unknown">The command failed.</string>
+    <string name="clientcontrol_unconfirmed_wear">State unknown — check phone/Nightscout before re-bolusing.</string>
     <string name="scene_revert_tt">Cancel temporary target</string>
     <string name="scene_revert_profile">Revert profile change</string>
     <string name="scene_revert_smb_on">Re-enable SMB</string>
@@ -438,6 +483,7 @@
     <string name="activity">Activity</string>
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
+    <string name="automation_management_desc">Create rules that run actions automatically based on triggers</string>
     <string name="settingsexport">Settings Export</string>
     <string name="custom">Custom</string>
     <string name="preset_settings">Preset Settings</string>
@@ -616,6 +662,7 @@
     <string name="uel_running_mode_updarted">RUNNING MODE UPDATED</string>
     <string name="uel_scene_activated">SCENE ACTIVATED</string>
     <string name="uel_scene_deactivated">SCENE DEACTIVATED</string>
+    <string name="uel_remote_config_changed">REMOTE CONFIG CHANGED</string>
 
     <!-- HardLimits -->
     <string name="profile_low_target">Profile low target</string>
@@ -733,19 +780,10 @@
     <string name="wizard_no_active_profile">No active profile set!</string>
     <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
     <string name="wizard_carbs_constraint">Carb constraint violation!</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
-    <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
-    <string name="wizard_explain_tt">TempT: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">No pump available!</string>
+    <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
     <string name="quickwizard_managemnt">QuickWizard</string>
 
 
