@@ -216,6 +216,8 @@
     <string name="pump_battery_change">Zmiana baterii pompy</string>
     <string name="temporary_target">Cel tymczasowy (TT)</string>
     <string name="running_mode">Tryb pracy</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Wartość celu tymczasowego</string>
     <string name="careportal_temporarytargetcancel">Odrzuć Cel tymczasowy</string>
     <string name="boluswizard">Kalkulator bolusa</string>
@@ -440,17 +442,7 @@
     <string name="wizard_no_active_profile">Nie ustawiono aktywnego profilu!</string>
     <string name="wizard_no_cob">Nieznane COB! Może brakuje odczytu glikemii lub niedawno zrestartowano aplikację?</string>
     <string name="wizard_carbs_constraint">Naruszenie ograniczeń węglowodanów!</string>
-    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Węgle: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">Glikemia: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">Trend 15min.: %1$.2fU</string>
-    <string name="wizard_explain_percent">Procentowo: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Naruszenie ograniczeń insuliny!\nNie można podać %1$.2fU</string>
-    <string name="wizard_explain_tt">CelTymcz.: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pompa niedostępna!</string>
     <!--    Preferences-->
     <string name="child">Dziecko</string>
