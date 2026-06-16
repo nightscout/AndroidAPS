@@ -147,9 +147,6 @@
     <string name="pref_summary_wear_notify_on_smb">Invia notifiche per quando SMB viene erogato.</string>
     <string name="pref_title_wear_broadcast_data">Trasmetti i dati all\'orologio</string>
     <string name="pref_summary_wear_broadcast_data">Trasmetti i dati AAPS alle applicazioni di terze parti.</string>
-    <!-- Wizard preferences -->
-    <string name="pref_title_wizard_calculation_visible">Mostra calcolo guidato</string>
-    <string name="pref_title_wizard_correction_percent">Usare percentuale correzione</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Gestisci la rotazione del sito del micro</string>
     <string name="pref_title_site_rotation_manage_cgm">Gestisci la rotazione del sito del CGM</string>
