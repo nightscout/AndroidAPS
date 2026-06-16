@@ -373,6 +373,8 @@
     <string name="scene_no_profile_store">无可用配置档案库</string>
     <string name="scene_no_actions">该情景未配置任何操作</string>
     <string name="scene_profile_not_found">未找到配置文件 \"%1$s\"</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="scene_revert_tt">取消临时目标</string>
     <string name="scene_revert_profile">撤销配置更改</string>
     <string name="scene_revert_smb_on">重新启用微型大剂量</string>
@@ -707,18 +709,8 @@
     <string name="wizard_no_active_profile">没有激活的个人配置文件！</string>
     <string name="wizard_no_cob">未知的活性碳水！血糖读取缺失或最近重新启动了应用程序？</string>
     <string name="wizard_carbs_constraint">碳水违反约束条件!</string>
-    <string name="wizard_explain_calc">计算 (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">碳水: %1$.2fU</string>
-    <string name="wizard_explain_cob">活性碳水: %1$.0f克 %2$.2fU</string>
-    <string name="wizard_explain_bg">血糖: %1$.2fU</string>
-    <string name="wizard_explain_iob">活性胰岛素: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">超级大剂量：%1$.2fU</string>
-    <string name="wizard_explain_trend">15分钟趋势：%1$.2fU</string>
     <string name="wizard_trend_detail">15分钟趋势(%1$s %2$s)</string>
-    <string name="wizard_explain_percent">百分比：%1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">胰岛素剂量违法约束！\n无法输注 %1$.2fU</string>
-    <string name="wizard_explain_tt">临时目标：%1$s</string>
-    <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">没有可用的泵！</string>
     <string name="quickwizard_managemnt">快速向导</string>
     <!--    Preferences-->
