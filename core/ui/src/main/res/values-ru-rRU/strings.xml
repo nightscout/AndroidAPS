@@ -216,6 +216,8 @@
     <string name="pump_battery_change">Замена батареи помпы</string>
     <string name="temporary_target">Временная цель</string>
     <string name="running_mode">Текущий режим</string>
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Временное целевое значение</string>
     <string name="careportal_temporarytargetcancel">Отмена временной цели</string>
     <string name="boluswizard">Мастер Болюса</string>
@@ -440,17 +442,7 @@
     <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
     <string name="wizard_no_cob">Неизвестный COB! Отсутствуют данные ГК или приложения недавно перезапущено?</string>
     <string name="wizard_carbs_constraint">Нарушено ограничение по углеводам!</string>
-    <string name="wizard_explain_calc">Кальк (IC:%1$.1f ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Углеводов: %1$.2fгУ</string>
-    <string name="wizard_explain_cob">Акт Инс COB: %1$.0fг %2$.2fед</string>
-    <string name="wizard_explain_bg">ГК: %1$.2f</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fед</string>
-    <string name="wizard_explain_superbolus">Суперболюс:%1$.2fед</string>
-    <string name="wizard_explain_trend">тренд 15\': %1$.2f</string>
-    <string name="wizard_explain_percent">В процентах: %1$.2fед x %2$d%% = %3$.2f</string>
     <string name="wizard_constraint_bolus_size">Нарушено ограничение по инсулину!\nНевозможно подать %1$.2fед</string>
-    <string name="wizard_explain_tt">ВремЦ: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s до %2$s</string>
     <string name="wizard_pump_not_available">Нет помпы!</string>
     <!--    Preferences-->
     <string name="child">Ребенок</string>
