@@ -17,6 +17,10 @@
     <string name="hoursago">преди %1$.1fч</string>
     <string name="days_ago">преди %1$.1f дни</string>
     <string name="days_ago_round">преди %1$.0f дни</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">преди %1$s дни и %2$s часа</item>
+        <item quantity="other">преди %1$s дни и %2$s часа</item>
+    </plurals>
     <plurals name="plurals_hour_ago">
         <item quantity="one">преди %1$s часа</item>
         <item quantity="other">преди %1$s часа</item>
