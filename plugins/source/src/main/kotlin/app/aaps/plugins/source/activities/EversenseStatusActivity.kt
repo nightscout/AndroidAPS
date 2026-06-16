@@ -134,11 +134,9 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
         var isCancelled = false
         var dialog: AlertDialog? = null
 
-        val scanCallback = object : EversenseScanCallback {
-            override fun onResult(item: EversenseScanResult) {
-                if (!isCancelled && item.name.matches(Regex("T\\d+.*")) && foundDevices.none { it.name == item.name })
-                    foundDevices.add(item)
-            }
+        val scanCallback = EversenseScanCallback { item ->
+            if (!isCancelled && item.name.matches(Regex("T\\d+.*")) && foundDevices.none { it.name == item.name })
+                foundDevices.add(item)
         }
 
         eversense.startScan(scanCallback)

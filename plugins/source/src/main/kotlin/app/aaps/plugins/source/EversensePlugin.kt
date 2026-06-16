@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import app.aaps.core.interfaces.configuration.Config
@@ -29,13 +28,11 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.util.EversenseLogger
-import app.aaps.plugins.eversense.callbacks.EversenseScanCallback
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
-import app.aaps.plugins.eversense.models.EversenseScanResult
 import app.aaps.plugins.eversense.models.EversenseSecureState
 import app.aaps.plugins.eversense.models.EversenseState
 import app.aaps.plugins.eversense.util.StorageKeys
@@ -255,15 +252,6 @@ class EversensePlugin @Inject constructor(
         }
     }
 
-    private fun signalToLabel(strength: Int): String = when {
-        strength >= 75 -> "Excellent"
-        strength >= 48 -> "Good"
-        strength >= 30 -> "Low"
-        strength >= 25 -> "Poor"
-        strength > 0   -> "Very Poor"
-        else           -> rh.gs(R.string.eversense_not_connected)
-    }
-
     override fun onStateChanged(state: EversenseState) {
         aapsLogger.info(LTag.BGSOURCE, "New state received: ${Json.encodeToString(state)}")
 
@@ -311,27 +299,31 @@ class EversensePlugin @Inject constructor(
             val daysRemaining = ((expiryMs - System.currentTimeMillis()) / (24 * 60 * 60 * 1000)).toInt()
             val isAfterNoon = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
 
-            if (isAfterNoon && daysRemaining in 31..60 && !isSensorExpiryDismissed(state.insertionDate, 60)) {
-                setSensorExpiryDismissed(state.insertionDate, 60)
-                notificationManager.post(
-                    NotificationId.EVERSENSE_ALARM,
-                    rh.gs(R.string.eversense_sensor_expiry_plan, daysRemaining),
-                    level = NotificationLevel.INFO
-                )
-            } else if (isAfterNoon && daysRemaining in 11..30 && !isSensorExpiryDismissed(state.insertionDate, 30)) {
-                setSensorExpiryDismissed(state.insertionDate, 30)
-                notificationManager.post(
-                    NotificationId.EVERSENSE_ALARM,
-                    rh.gs(R.string.eversense_sensor_expiry_soon, daysRemaining),
-                    level = NotificationLevel.NORMAL
-                )
-            } else if (isAfterNoon && daysRemaining in 1..10 && !isSensorExpiryDismissed(state.insertionDate, daysRemaining)) {
-                setSensorExpiryDismissed(state.insertionDate, daysRemaining)
-                notificationManager.post(
-                    NotificationId.EVERSENSE_ALARM,
-                    rh.gs(R.string.eversense_sensor_expiry_urgent, daysRemaining),
-                    level = NotificationLevel.URGENT
-                )
+            when {
+                isAfterNoon && daysRemaining in 31..60 && !isSensorExpiryDismissed(state.insertionDate, 60) -> {
+                    setSensorExpiryDismissed(state.insertionDate, 60)
+                    notificationManager.post(
+                        NotificationId.EVERSENSE_ALARM,
+                        rh.gs(R.string.eversense_sensor_expiry_plan, daysRemaining),
+                        level = NotificationLevel.INFO
+                    )
+                }
+                isAfterNoon && daysRemaining in 11..30 && !isSensorExpiryDismissed(state.insertionDate, 30) -> {
+                    setSensorExpiryDismissed(state.insertionDate, 30)
+                    notificationManager.post(
+                        NotificationId.EVERSENSE_ALARM,
+                        rh.gs(R.string.eversense_sensor_expiry_soon, daysRemaining),
+                        level = NotificationLevel.NORMAL
+                    )
+                }
+                isAfterNoon && daysRemaining in 1..10 && !isSensorExpiryDismissed(state.insertionDate, daysRemaining) -> {
+                    setSensorExpiryDismissed(state.insertionDate, daysRemaining)
+                    notificationManager.post(
+                        NotificationId.EVERSENSE_ALARM,
+                        rh.gs(R.string.eversense_sensor_expiry_urgent, daysRemaining),
+                        level = NotificationLevel.URGENT
+                    )
+                }
             }
         }
 
@@ -558,58 +550,5 @@ class EversensePlugin @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun showDeviceSelectionDialog(context: Context) {
-        val foundDevices = mutableListOf<EversenseScanResult>()
-        var isCancelled = false
-        var dialog: AlertDialog? = null
-
-        val scanCallback = object : EversenseScanCallback {
-            override fun onResult(item: EversenseScanResult) {
-                val isEversenseTransmitter = item.name.matches(Regex("T\\d+.*"))
-                if (!isCancelled && isEversenseTransmitter && foundDevices.none { it.name == item.name }) {
-                    foundDevices.add(item)
-                    aapsLogger.info(LTag.BGSOURCE, "Scan found device: ${item.name}")
-                }
-            }
-        }
-
-        eversense.startScan(scanCallback)
-
-        mainHandler.postDelayed({
-            if (isCancelled) return@postDelayed
-            eversense.stopScan()
-            dialog?.dismiss()
-
-            if (foundDevices.isEmpty()) {
-                AlertDialog.Builder(context)
-                    .setTitle(rh.gs(R.string.eversense_scan_title))
-                    .setMessage(rh.gs(R.string.eversense_no_transmitters_found))
-                    .setPositiveButton("OK", null)
-                    .show()
-            } else {
-                val items = foundDevices.map { it.name }.toTypedArray()
-                AlertDialog.Builder(context)
-                    .setTitle(rh.gs(R.string.eversense_scan_title))
-                    .setItems(items) { _, position ->
-                        val selected = foundDevices[position]
-                        aapsLogger.info(LTag.BGSOURCE, "User selected device: ${selected.name}")
-                        eversense.connect(selected.device)
-                    }
-                    .setNegativeButton(rh.gs(R.string.eversense_scan_cancel), null)
-                    .show()
-            }
-        }, 10000)
-
-        dialog = AlertDialog.Builder(context)
-            .setTitle(rh.gs(R.string.eversense_scan_title))
-            .setMessage("Scanning for Eversense devices (10 seconds)...")
-            .setNegativeButton(rh.gs(R.string.eversense_scan_cancel)) { _, _ ->
-                isCancelled = true
-                eversense.stopScan()
-            }
-            .setCancelable(false)
-            .show()
     }
 }
