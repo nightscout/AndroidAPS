@@ -11,6 +11,24 @@
     <string name="pump_status_suspended">Прекратено</string>
     <string name="pump_status_executing_command">Изпълнение на команда</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Получи настройки</string>
+    <string name="pump_cmd_desc_get_firmware">Получаване на фърмуер на помпата</string>
+    <string name="pump_cmd_desc_get_basal_profile">Получаване на базален профил</string>
+    <string name="pump_cmd_desc_set_basal_profile">Прилагане на профил</string>
+    <string name="pump_cmd_desc_get_tbr">Получаване на временни базали</string>
+    <string name="pump_cmd_desc_cancel_tbr">Изключване на временен базали</string>
+    <string name="pump_cmd_desc_set_tbr">Пускане на временен базали</string>
+    <string name="pump_cmd_desc_set_bolus">Пускане на болус</string>
+    <string name="pump_cmd_desc_get_bolus">Получаване на болус</string>
+    <string name="pump_cmd_desc_cancel_bolus">Спиране на болус</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Получаване на ниво на инсулин</string>
+    <string name="pump_cmd_desc_get_battery_status">Получаване на статус на батерия</string>
+    <string name="pump_cmd_desc_get_time">Получаване на времето</string>
+    <string name="pump_cmd_desc_set_time">Задаване на време</string>
+    <string name="pump_cmd_desc_get_pump_status">Получаване на статус помпата</string>
+    <string name="pump_cmd_desc_get_history">Получаване на История</string>
+    <string name="pump_cmd_desc_get_history_params">Получаване на история %s</string>
+    <string name="pump_cmd_desc_custom">Потребителска команда</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Базали</string>
     <string name="history_group_configuration">Конфигурации</string>
@@ -32,6 +50,7 @@
     <string name="time_last_3_hours">Последните 3 часа</string>
     <string name="time_last_6_hours">Последните 6 часа</string>
     <string name="time_last_12_hours">Последните 12 часа</string>
+    <string name="time_last_24_hours">Последните 24 часа</string>
     <string name="time_last_2_days">Последните 2 дни</string>
     <string name="time_last_4_days">Последните 4 дни</string>
     <string name="time_last_week">Последната седмица</string>
