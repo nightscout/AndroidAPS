@@ -27,6 +27,10 @@
     <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
     <!-- Scene -->
     <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
     <string name="timeshift_label">시간 이동</string>
     <string name="percentage_label">퍼센트</string>
