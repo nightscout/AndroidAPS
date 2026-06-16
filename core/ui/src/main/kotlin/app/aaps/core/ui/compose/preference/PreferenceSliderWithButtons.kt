@@ -22,7 +22,7 @@ import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import app.aaps.core.ui.compose.formatSliderDisplayValue
 import java.text.DecimalFormat
 
-private const val MAX_SLIDER_STEPS = 200.0
+private const val MAX_SLIDER_STEPS = 260.0
 
 /**
  * Preference-row variant of [SliderWithButtons]. Forwards to [SliderWithButtons] when the

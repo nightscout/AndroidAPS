@@ -31,8 +31,10 @@
     <color name="dark_warning">#ffff00</color>
     <color name="dark_alarm">#ff4444</color>
 
+    <color name="dark_veryHighColor">@color/RED</color>
     <color name="dark_highColor">@color/yellow_A200</color>
-    <color name="dark_lowColor">@color/RED</color>
+    <color name="dark_lowColor">@color/yellow_A200</color>
+    <color name="dark_veryLowColor">@color/RED</color>
     <color name="dark_midColor">@color/grey_50</color>
     <color name="dark_gridColor">@color/grey_50</color>
 
@@ -52,7 +54,8 @@
     <color name="inrange">#00FF00</color>
     <color name="exercise">#67DFE8</color>
     <color name="carbs">#FFFB8C00</color>
-    <color name="low">#FF0000</color>
+    <color name="low">#FFFF00</color>
+    <color name="veryLow">#FF0000</color>
     <color name="tempTargetConfirmation">#77dd77</color>
 
     <!-- Material Design - Color Palette -->

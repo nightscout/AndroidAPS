@@ -82,8 +82,10 @@ class BuiltInSearchables @Inject constructor(
                 key = "range_settings",
                 titleResId = app.aaps.core.keys.R.string.prefs_range_title,
                 items = listOf(
+                    UnitDoubleKey.OverviewVeryLowMark,
                     UnitDoubleKey.OverviewLowMark,
-                    UnitDoubleKey.OverviewHighMark
+                    UnitDoubleKey.OverviewHighMark,
+                    UnitDoubleKey.OverviewVeryHighMark
                 )
             ),
 
