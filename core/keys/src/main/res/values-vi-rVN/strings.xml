@@ -125,6 +125,8 @@
     <string name="pref_title_ns_slow_sync">Sử dụng đồng bộ chậm</string>
     <string name="pref_title_ns_use_ws">Sử dụng websockets</string>
     <string name="pref_summary_ns_use_ws">Sử dụng WebSocket để giao tiếp thời gian thực với Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">Cho phép thiết bị phụ điều khiển</string>
+    <string name="pref_summary_ns_allow_client_control">Cho phép các thiết bị phụ đã ghép đôi gửi các lệnh đã ký xác thực (ví dụ: bắt đầu/dừng ngữ cảnh) qua Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Chỉ dùng WiFi</string>
     <string name="pref_title_openhumans_charging_only">Chỉ sạc</string>
