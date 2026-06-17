@@ -238,6 +238,8 @@
     <string name="wizard_carbs_format">%1$d g carboidrati</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_confirmation_sent">Inviato</string>
+    <string name="contacting_master">Contatto master…</string>
+    <string name="contacting_master_unknown">Stato sconosciuto — controlla il telefono</string>
     <string name="tile_settings">Impostazioni delle caselle</string>
     <string name="loop_status_error">Impossibile aggiornare lo stato</string>
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
