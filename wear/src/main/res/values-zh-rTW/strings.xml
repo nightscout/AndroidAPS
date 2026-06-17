@@ -240,6 +240,8 @@
     <string name="wizard_carbs_format">%1$d 克碳水化合物</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_confirmation_sent">已送出</string>
+    <string name="contacting_master">正在聯絡主控端…</string>
+    <string name="contacting_master_unknown">狀態未知 — 請檢查智慧型手機</string>
     <string name="tile_settings">資訊方塊設定</string>
     <string name="loop_status_error">狀態載入失敗</string>
     <string name="loop_status_tempt_duration">%1$d 分鐘（%2$s）</string>
