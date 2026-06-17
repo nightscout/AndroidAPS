@@ -6,6 +6,7 @@
     <string name="automation_enabled">啟用</string>
     <string name="automation_read_only">唯讀</string>
     <string name="automation_new_rule">新規則</string>
+    <string name="automation_empty_desc">建立規則，根據觸發條件自動執行動作。</string>
     <string name="automation_edit_rule">編輯規則</string>
     <string name="automation_discard_title">放棄變更？</string>
     <string name="automation_discard_message">此規則不完整，無法儲存。要放棄變更嗎？</string>
