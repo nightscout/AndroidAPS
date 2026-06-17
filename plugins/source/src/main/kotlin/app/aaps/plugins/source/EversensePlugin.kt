@@ -524,7 +524,8 @@ class EversensePlugin @Inject constructor(
                         val eventsOk = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
                             preferences = prefs,
                             readings = uploadableReadings,
-                            transmitterSerialNumber = state.transmitterSerialNumber
+                            transmitterSerialNumber = state.transmitterSerialNumber,
+                            calibrations = state.calibrationHistory
                         )
                         aapsLogger.info(LTag.BGSOURCE, "Eversense device events: ${if (eventsOk) "✅ ok" else "❌ failed"}")
                     }
@@ -545,7 +546,8 @@ class EversensePlugin @Inject constructor(
                     val eventsOk = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
                         preferences = prefs,
                         readings = readings,
-                        transmitterSerialNumber = state.transmitterSerialNumber
+                        transmitterSerialNumber = state.transmitterSerialNumber,
+                        calibrations = state.calibrationHistory
                     )
                     val msgE3 = if (eventsOk)
                         "E3 cloud upload: ✅ ${readings.size} reading(s) sent"

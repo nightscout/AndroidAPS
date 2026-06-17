@@ -3,10 +3,12 @@ package app.aaps.plugins.eversense.packets.e365
 import app.aaps.plugins.eversense.enums.CalibrationFlag
 import app.aaps.plugins.eversense.enums.EversenseSecurityType
 import app.aaps.plugins.eversense.packets.EversenseBasePacket
+import kotlinx.serialization.Serializable
 import app.aaps.plugins.eversense.packets.EversensePacket
 import app.aaps.plugins.eversense.packets.e365.utils.toUnix
 import app.aaps.plugins.eversense.util.EversenseLogger
 
+@Serializable
 data class CalibrationHistoryItem(
     val datetime: Long,
     val glucoseInMgDl: Int,

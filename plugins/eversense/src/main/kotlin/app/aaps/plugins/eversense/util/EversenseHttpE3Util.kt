@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
+import app.aaps.plugins.eversense.packets.e365.CalibrationHistoryItem
 import app.aaps.plugins.eversense.models.EversenseSecureState
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -148,7 +149,8 @@ class EversenseHttpE3Util {
         fun putDeviceEvents(
             preferences: SharedPreferences,
             readings: List<EversenseCGMResult>,
-            transmitterSerialNumber: String
+            transmitterSerialNumber: String,
+            calibrations: List<CalibrationHistoryItem> = emptyList()
         ): Boolean {
             if (readings.isEmpty()) return true
             val token = getOrRefreshToken(preferences) ?: run {
@@ -160,7 +162,7 @@ class EversenseHttpE3Util {
                 val tzOffsetSec = TimeZone.getDefault().getOffset(Date().time) / 1000
                 val offsetBytes = Base64.getEncoder().encodeToString(int32LE(tzOffsetSec))
                 val sgBytes     = buildSgBytes(readings)
-                val mgBytes     = buildEmptyMgBytes()
+                val mgBytes     = if (calibrations.isNotEmpty()) buildMgBytes(calibrations) else buildEmptyMgBytes()
                 val patientBytes = buildEmptyPatientBytes()
                 val alertBytes  = buildAlertBytes(sensorId)
 
@@ -232,6 +234,21 @@ class EversenseHttpE3Util {
                 baos.write(int16LE(0))
                 baos.write(0x00)
                 repeat(3) { baos.write(int16LE(0)) }
+            }
+            return Base64.getEncoder().encodeToString(baos.toByteArray())
+        }
+
+        private fun buildMgBytes(calibrations: List<CalibrationHistoryItem>): String {
+            val baos = ByteArrayOutputStream()
+            baos.write(byteArrayOf(0x98.toByte(), 0x01, 0x00))
+            baos.write(int16LE(calibrations.size))
+            baos.write(0x00)
+            calibrations.forEachIndexed { idx, c ->
+                baos.write(int24LE(idx + 1))
+                baos.write(calcDateBytes(c.datetime))
+                baos.write(calcTimeBytes(c.datetime))
+                baos.write(int16LE(c.glucoseInMgDl))
+                baos.write(1) // ACTUALLY_USED_FOR_CALIBRATION
             }
             return Base64.getEncoder().encodeToString(baos.toByteArray())
         }

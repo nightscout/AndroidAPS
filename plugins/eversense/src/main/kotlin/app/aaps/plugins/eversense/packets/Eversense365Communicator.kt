@@ -14,6 +14,7 @@ import app.aaps.plugins.eversense.packets.e365.GetActiveAlarmsPacket
 import app.aaps.plugins.eversense.packets.e365.Ping365Packet
 import app.aaps.plugins.eversense.packets.e365.SetAppVersion365Packet
 import app.aaps.plugins.eversense.packets.e365.SetBleDisconnect365Packet
+import app.aaps.plugins.eversense.packets.e365.GetCalibrationLogValuesPacket
 import app.aaps.plugins.eversense.packets.e365.GetGlucoseLogValuesPacket
 import app.aaps.plugins.eversense.packets.e365.GetLogRangePacket365
 import app.aaps.plugins.eversense.packets.e365.SetHighGlucoseAlarm365Packet
@@ -86,6 +87,23 @@ class Eversense365Communicator {
                 sensorId = glucoseData.sensorId,
                 rawResponseHex = glucoseData.rawResponseHex
             )
+
+            // Read last calibration entry for DMS upload (must run while GATT is connected)
+            try {
+                val calibLogRange = gatt.writePacket<GetLogRangePacket365.Response>(
+                    GetLogRangePacket365(LogType.CALIBRATIONS)
+                )
+                if (calibLogRange.rangeTo > calibLogRange.rangeFrom) {
+                    val calibFrom = maxOf(calibLogRange.rangeTo - 1, calibLogRange.rangeFrom)
+                    val calibHistory = gatt.writePacket<GetCalibrationLogValuesPacket.Response>(
+                        GetCalibrationLogValuesPacket(from = calibFrom, to = calibLogRange.rangeTo)
+                    )
+                    state.calibrationHistory = calibHistory.calibrationHistory
+                    EversenseLogger.info(TAG, "Calibration: ${calibHistory.count} entries read (range $calibFrom..${calibLogRange.rangeTo})")
+                }
+            } catch (e: Exception) {
+                EversenseLogger.warning(TAG, "Could not read calibration history: $e")
+            }
 
             // Read glucose history for backfill — use previousGlucoseDatetime so gap readings are included
             try {

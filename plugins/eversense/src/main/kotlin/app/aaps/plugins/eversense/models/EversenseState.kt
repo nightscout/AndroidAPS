@@ -1,6 +1,7 @@
 package app.aaps.plugins.eversense.models
 
 import app.aaps.plugins.eversense.enums.CalibrationMode
+import app.aaps.plugins.eversense.packets.e365.CalibrationHistoryItem
 import app.aaps.plugins.eversense.enums.CalibrationPhase
 import app.aaps.plugins.eversense.enums.CalibrationReadiness
 import kotlinx.serialization.Serializable
@@ -28,6 +29,7 @@ class EversenseState {
     var transmitterName: String = ""
     var sensorId: String = ""
     var settings = EversenseTransmitterSettings()
+    var calibrationHistory: List<CalibrationHistoryItem> = emptyList()
 }
 
 @Serializable
