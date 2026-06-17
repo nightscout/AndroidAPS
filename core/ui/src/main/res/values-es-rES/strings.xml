@@ -375,6 +375,8 @@
     <string name="scene_profile_not_found">No se encontró el perfil \"%1$s\"</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_bolus_progress_stalled_title">Conexión perdida — estado de entrega desconocido</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Este teléfono ha dejado de recibir actualizaciones del maestro. Es posible que el bolo se siga administrando o que ya haya terminado. Cerrar este aviso solo lo oculta aquí, no detiene la bomba. Comprueba en el teléfono maestro la cantidad que realmente se ha administrado</string>
     <string name="scene_revert_tt">Cancelar objetivo temporal</string>
     <string name="scene_revert_profile">Revertir cambio de perfil</string>
     <string name="scene_revert_smb_on">Volver a habilitar SMB</string>
