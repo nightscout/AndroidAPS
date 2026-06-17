@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">Trường này không được để trống</string>
     <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Thiết bị được ủy quyền</string>
+    <string name="authorized_clients_manage_desc">Quản lý các thiết bị khách đã ghép đôi được phép điều khiển thiết bị chính này.</string>
+    <string name="pair_with_master_manage_label">Ghép đôi với thiết bị chính</string>
+    <string name="pair_with_master_manage_desc">Nhập mã PIN ghép đôi của thiết bị chính để cho phép thiết bị khách này gửi các lệnh đã ký xác thực.</string>
     <!--    General-->
     <string name="treatments">Điều trị</string>
     <string name="treatments_history">Lịch sử điều trị</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Làm mới</string>
     <string name="no_history_records">Không tìm thấy bản ghi nào</string>
     <string name="error">Lỗi</string>
+    <string name="navigation_error_screen_not_found">Không thể mở màn hình này (không khả dụng trong cấu hình cài đặt hiện tại)</string>
     <string name="profile_set_ok">Đã cập nhật cấu hình liều nền trong bơm</string>
     <string name="invalid_input">Dữ liệu đầu vào không hợp lệ</string>
     <string name="invalid_number">Số không hợp lệ</string>
@@ -104,6 +109,8 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Mục tiêu học tập</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
@@ -190,6 +197,8 @@
     <string name="reset">Đặt lại</string>
     <string name="profileswitch_ismissing">Thiếu Chuyển đổi Cấu hình. Vui lòng thực hiện chuyển đổi cấu hình hoặc nhấn “Kích hoạt cấu hình” trong cấu hình cục bộ.</string>
     <string name="profile">Cấu hình</string>
+    <string name="percentage_label">Phần trăm</string>
+    <string name="timeshift_label">Điều chỉnh thời gian</string>
     <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không</string>
     <string name="overview_treatment_label">Điều trị</string>
     <string name="copytolocalprofile">Tạo cấu hình mới từ cấu hình này không?</string>
@@ -242,6 +251,7 @@
     <string name="engineering_mode_enabled">Chế độ bảo trì đã được bật</string>
     <string name="back">Quay lại</string>
     <string name="next">Tiếp theo</string>
+    <string name="pref_syncs_with_main_phone">Đồng bộ với điện thoại chính</string>
     <string name="show_hide_records">Ẩn các bản ghi vòng lặp</string>
     <!--    Protection-->
     <string name="wrongpassword">Sai mật khẩu</string>
@@ -328,6 +338,8 @@
     <string name="temporary_target">Mục tiêu Tạm thời</string>
     <string name="temporary_targets">Mục tiêu tạm thời</string>
     <string name="running_mode">Chế độ đang chạy</string>
+    <string name="running_mode_change_not_allowed">Không thể thay đổi chế độ hoạt động</string>
+    <string name="pump_reconnect">Kết nối lại bơm</string>
     <string name="scene">Ngữ cảnh</string>
     <string name="scenes">Ngữ cảnh</string>
     <string name="scene_desc">Thiết lập sẵn theo tình huống — kích hoạt nhiều hành động cùng lúc</string>
@@ -373,8 +385,39 @@
     <string name="scene_no_profile_store">Không có kho cấu hình khả dụng</string>
     <string name="scene_no_actions">Ngữ cảnh không có hành động nào</string>
     <string name="scene_profile_not_found">Không tìm thấy cấu hình “%1$s”</string>
+    <string name="scene_lock_banner_master_offline">Không thể kết nối với thiết bị chính. Các điều khiển kịch bản sẽ hoạt động trở lại khi kết nối được khôi phục.</string>
+    <string name="master_offline_banner">Không thể kết nối với thiết bị chính. Không thể chỉnh sửa cho đến khi kết nối được khôi phục.</string>
+    <string name="scene_lock_reason_master_offline">Thiết bị chính đã ngắt kết nối</string>
+    <string name="scene_lock_reason_scene_active">Hãy dừng ngữ cảnh đang chạy trước</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Thiết lập mục tiêu tạm thời</string>
+    <string name="clientcontrol_action_cancel_temp_target">Hủy mục tiêu tạm thời</string>
+    <string name="clientcontrol_action_activate_scene">Kích hoạt ngữ cảnh “%1$s”</string>
+    <string name="clientcontrol_action_deactivate_scene">Kết thúc ngữ cảnh</string>
+    <string name="clientcontrol_action_activate_insulin">Kích hoạt insulin %1$s</string>
+    <string name="clientcontrol_action_update_settings">Cập nhật cài đặt</string>
+    <string name="clientcontrol_action_deliver_bolus">Tiêm liều bolus</string>
+    <string name="clientcontrol_action_record_bolus">Ghi lại liều bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Thiết bị này chưa được ghép đôi với thiết bị chính.</string>
+    <string name="clientcontrol_fail_not_reachable">Thiết bị chính đang ngoại tuyến.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Cấu hình bơm không đồng bộ với thiết bị chính. Vui lòng thử lại.</string>
+    <string name="clientcontrol_fail_no_reply">Không có phản hồi từ thiết bị chính trong thời gian quy định.</string>
+    <string name="clientcontrol_fail_expired">Lệnh đã hết hiệu lực trước khi được thiết bị chính áp dụng.</string>
+    <string name="clientcontrol_fail_busy">Một thao tác khác đang được thực hiện.</string>
+    <string name="clientcontrol_fail_send_failed">Không thể truy cập Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Thiết bị chính không có cấu hình đang hoạt động để áp dụng thay đổi này.</string>
+    <string name="clientcontrol_fail_scene_not_found">Ngữ cảnh này không còn tồn tại.</string>
+    <string name="clientcontrol_fail_scene_disabled">Ngữ cảnh đã bị vô hiệu hóa.</string>
+    <string name="clientcontrol_fail_partial">Không thể áp dụng một số thao tác.</string>
+    <string name="clientcontrol_fail_execution">Thiết bị chính không thể áp dụng thay đổi này.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Liều Bolus đã chuẩn bị đã hết hiệu lực hoặc bị thay thế. Hãy nhấn nút lại.</string>
+    <string name="clientcontrol_fail_bolus_compute">Thiết bị chính không thể tính toán bolus (thiếu dữ liệu đường huyết, cấu hình hoặc bơm chưa sẵn sàng).</string>
+    <string name="clientcontrol_fail_internal">Đã xảy ra lỗi.</string>
+    <string name="clientcontrol_fail_unknown">Không thể thực hiện lệnh.</string>
+    <string name="clientcontrol_unconfirmed_wear">Không xác định được trạng thái — hãy kiểm tra điện thoại/Nightscout trước khi bolus lại.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Mất kết nối — không xác định được trạng thái phân phối insulin</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Điện thoại này đã ngừng nhận cập nhật từ thiết bị chính. Bolus có thể vẫn đang được phân phối hoặc đã hoàn tất. Đóng thông báo này chỉ ẩn nó trên thiết bị này — không dừng bơm. Hãy kiểm tra điện thoại chính để xem lượng insulin thực tế đã được phân phối.</string>
     <string name="scene_revert_tt">Hủy mục tiêu tạm thời</string>
     <string name="scene_revert_profile">Hoàn tác thay đổi cấu hình</string>
     <string name="scene_revert_smb_on">Bật lại SMB</string>
@@ -430,6 +473,7 @@
     <string name="activity">Hoạt động</string>
     <string name="wear">Wear</string>
     <string name="automation">Tự động hóa</string>
+    <string name="automation_management_desc">Create rules that run actions automatically based on triggers</string>
     <string name="settingsexport">Xuất cài đặt</string>
     <string name="custom">Tuỳ chỉnh</string>
     <string name="preset_settings">Thiết lập cài đặt sẵn</string>
@@ -600,6 +644,7 @@
     <string name="uel_running_mode_updarted">ĐÃ CẬP NHẬT CHẾ ĐỘ THỂ DỤC</string>
     <string name="uel_scene_activated">ĐÃ KÍCH HOẠT NGỮ CẢNH</string>
     <string name="uel_scene_deactivated">ĐÃ TẮT NGỮ CẢNH</string>
+    <string name="uel_remote_config_changed">CẤU HÌNH TỪ XA ĐÃ THAY ĐỔI</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Cấu hình mục tiêu thấp</string>
     <string name="profile_high_target">Cấu hình mục tiêu cao</string>
@@ -712,6 +757,7 @@
     <string name="wizard_trend_detail">Xu hướng 15 phút (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Vượt giới hạn insulin!\nKhông thể tiêm %1$.2fU</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
+    <string name="quick_wizard_not_available">Quick Wizard đã chọn không còn khả dụng, vui lòng làm mới ô tiện ích</string>
     <string name="quickwizard_managemnt">Hướng dẫn nhanh</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
