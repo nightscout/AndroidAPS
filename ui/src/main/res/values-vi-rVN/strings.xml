@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">Giới hạn Carbs đã bật</string>
     <string name="no_temp_basal_running">Không có liều nền tạm thời nào đang chạy</string>
     <string name="temp_target_short">TT</string>
@@ -137,10 +138,25 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Thiếu tên insulin</string>
     <string name="insulin_name_exists">Tên insulin %1$s đã tồn tại, vui lòng chọn tên khác</string>
+    <string name="insulin_external_update_title">Cấu hình insulin đã thay đổi</string>
+    <string name="insulin_external_update_message">Một thiết bị phụ đã thay đổi cấu hình insulin. Nhấn OK để tải các thay đổi của họ và bỏ các chỉnh sửa chưa lưu của bạn, hoặc Cancel để tiếp tục chỉnh sửa (lần lưu tiếp theo của bạn sẽ ghi đè lên thay đổi của họ).</string>
+    <string name="insulin_edit_target_gone">Loại insulin này đã bị xóa ở nơi khác, nên thay đổi của bạn không thể được lưu. Danh sách đã được tải lại.</string>
+    <string name="insulin_activation_applied">Đã áp dụng kích hoạt insulin</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Đang áp dụng…</string>
+    <string name="clientcontrol_pending_working_text">Đang chờ thiết bị chính xác nhận…</string>
+    <string name="clientcontrol_pending_rejected_title">Không áp dụng</string>
+    <string name="clientcontrol_pending_rejected_text">Thiết bị chính không thể áp dụng yêu cầu này.</string>
+    <string name="clientcontrol_pending_failed_format">Không thể thực hiện %1$s.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Đã áp dụng một phần</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s đã được áp dụng, nhưng một số thao tác không thể thực hiện được.\nHãy kiểm tra trạng thái hiện tại.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Không thể xác nhận</string>
+    <string name="clientcontrol_pending_unconfirmed_text">Yêu cầu đã được gửi nhưng thiết bị chính không xác nhận kịp thời. Có thể đã được áp dụng hoặc chưa — màn hình này sẽ tự cập nhật nếu đồng bộ lại.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s đã được gửi, nhưng không nhận được xác nhận.\n%2$s\nNó sẽ xuất hiện ở đây nếu/khi thiết bị chính áp dụng.</string>
+    <string name="clientcontrol_pending_stop_waiting">Dừng chờ</string>
     <string name="a11y_add_new_insulin">Thêm insulin mới</string>
     <string name="a11y_delete_current_insulin">Xoa insulin hiện tại</string>
     <string name="activate_insulin_no_profile">Không tìm thấy cấu hình hoạt động</string>
