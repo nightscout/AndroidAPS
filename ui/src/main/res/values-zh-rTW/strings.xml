@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">已套用碳水化合物限制</string>
     <string name="no_temp_basal_running">沒有正在執行的臨時基礎率</string>
     <string name="temp_target_short">臨時目標</string>
@@ -137,10 +138,29 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">缺少胰島素名稱</string>
     <string name="insulin_name_exists">胰島素名稱 %1$s 已存在，請選擇新的名稱</string>
+    <string name="insulin_external_update_title">胰島素組態已變更</string>
+    <string name="insulin_external_update_message">已配對的用戶端已變更胰島素組態。點選 OK 以載入他們的變更並捨棄你未儲存的編輯，或點選 Cancel 以繼續編輯（你下一次的儲存將會覆寫他們的變更）。</string>
+    <string name="insulin_edit_target_gone">此胰島素已在其他位置被移除，因此你的編輯無法儲存。清單已重新載入。</string>
+    <string name="insulin_activation_applied">胰島素啟用已生效</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">正在套用…</string>
+    <string name="clientcontrol_pending_working_text">正在等候主控端確認…</string>
+    <string name="clientcontrol_pending_rejected_title">未套用</string>
+    <string name="clientcontrol_pending_rejected_text">主控端無法套用此請求。</string>
+    <string name="clientcontrol_pending_failed_format">%1$s 無法完成。
+%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">部分套用</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s was applied, but some actions couldn\'t be.
+Check the active state.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">無法確認</string>
+    <string name="clientcontrol_pending_unconfirmed_text">請求已送出，但主裝置未及時確認。可能已套用，也可能未套用 — 若同步回來，此畫面會更新。</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">已送出 %1$s，但未收到確認。
+%2$s
+當主裝置套用後，會在此顯示。</string>
+    <string name="clientcontrol_pending_stop_waiting">停止等待</string>
     <string name="a11y_add_new_insulin">新增胰島素</string>
     <string name="a11y_delete_current_insulin">刪除目前的胰島素</string>
     <string name="activate_insulin_no_profile">未找到啟用中的設定檔</string>
