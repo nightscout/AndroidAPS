@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">Il campo non deve essere vuoto</string>
     <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Client autorizzati</string>
+    <string name="authorized_clients_manage_desc">Gestisci i dispositivi client accoppiati che controllano questo master.</string>
+    <string name="pair_with_master_manage_label">Accoppia con master</string>
+    <string name="pair_with_master_manage_desc">Inserisci il PIN di accoppiamento di un master per consentire a questo client di inviare comandi firmati.</string>
     <!--    General-->
     <string name="treatments">Trattamenti</string>
     <string name="treatments_history">Cronologia trattamenti</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Aggiorna</string>
     <string name="no_history_records">Non è stato trovato alcun dato</string>
     <string name="error">Errore</string>
+    <string name="navigation_error_screen_not_found">Impossibile aprire lo schermo (non disponibile in questa configurazione)</string>
     <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
     <string name="invalid_input">Dati di input non validi</string>
     <string name="invalid_number">Numero non valido</string>
@@ -104,6 +109,8 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Obiettivi</string>
     <string name="please_wait">Attendi…</string>
     <string name="stop">Stop</string>
@@ -190,6 +197,8 @@
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
+    <string name="percentage_label">Percentuale</string>
+    <string name="timeshift_label">Timeshift</string>
     <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
@@ -242,6 +251,7 @@
     <string name="engineering_mode_enabled">Engineering mode abilitata</string>
     <string name="back">Indietro</string>
     <string name="next">Prossimo</string>
+    <string name="pref_syncs_with_main_phone">Sincronizza con il telefono principale</string>
     <string name="show_hide_records">Nascondi record di loop</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
@@ -328,6 +338,8 @@
     <string name="temporary_target">Target temporaneo</string>
     <string name="temporary_targets">Target temporanei</string>
     <string name="running_mode">Modalità esecuzione</string>
+    <string name="running_mode_change_not_allowed">Cambio modalità di esecuzione non disponibile</string>
+    <string name="pump_reconnect">Riconnetti micro</string>
     <string name="scene">Scena</string>
     <string name="scenes">Scene</string>
     <string name="scene_desc">Situazione preset — attivare azioni multiple contemporaneamente</string>
@@ -373,8 +385,37 @@
     <string name="scene_no_profile_store">Nessun archivio profilo disponibile</string>
     <string name="scene_no_actions">La scena non ha azioni</string>
     <string name="scene_profile_not_found">Profilo \"%1$s\" non trovato</string>
+    <string name="scene_lock_banner_master_offline">Dispositivo master irraggiungibile. I controlli della scena riprenderanno quando la connessione viene ripristinata.</string>
+    <string name="master_offline_banner">Dispositivo master irraggiungibile. La modifica è disabilitata fino al ripristino della connessione.</string>
+    <string name="scene_lock_reason_master_offline">Master disconnesso</string>
+    <string name="scene_lock_reason_scene_active">Ferma prima la scena in esecuzione</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Avvia temp-target</string>
+    <string name="clientcontrol_action_cancel_temp_target">Cancella temp target</string>
+    <string name="clientcontrol_action_activate_scene">Attivare la scena %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Fine Scena</string>
+    <string name="clientcontrol_action_activate_insulin">Attiva insulina %1$s</string>
+    <string name="clientcontrol_action_update_settings">Aggiorna le impostazioni</string>
+    <string name="clientcontrol_action_deliver_bolus">Eroga bolo</string>
+    <string name="clientcontrol_action_record_bolus">Registra bolo</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Questo dispositivo non è abbinato a un master.</string>
+    <string name="clientcontrol_fail_not_reachable">Il master è offline.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Configurazione del micro non sincronizzata con il master. Riprova.</string>
+    <string name="clientcontrol_fail_no_reply">Nessuna risposta dal master in tempo.</string>
+    <string name="clientcontrol_fail_expired">Il comando è scaduto prima che il master lo abbia applicato.</string>
+    <string name="clientcontrol_fail_busy">Un\'altra azione è già in corso.</string>
+    <string name="clientcontrol_fail_send_failed">Impossibile raggiungere Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Il master non ha un profilo attivo per applicarlo.</string>
+    <string name="clientcontrol_fail_scene_not_found">La scena non esiste più.</string>
+    <string name="clientcontrol_fail_scene_disabled">La scena è disabilitata.</string>
+    <string name="clientcontrol_fail_partial">Alcune azioni non possono essere applicate.</string>
+    <string name="clientcontrol_fail_execution">Il master non può applicare questa richiesta.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Il bolo preparato è scaduto o è stato sostituito. Tocca nuovamente il pulsante.</string>
+    <string name="clientcontrol_fail_bolus_compute">Il master non è riuscito a calcolare il bolo (mancanza di glucosio / profilo, o pompa non pronta).</string>
+    <string name="clientcontrol_fail_internal">Qualcosa è andato storto.</string>
+    <string name="clientcontrol_fail_unknown">Comando fallito.</string>
+    <string name="clientcontrol_unconfirmed_wear">Stato sconosciuto — controllare il telefono/Nightscout prima di rifare il bolo.</string>
     <string name="scene_revert_tt">Cancella basali temporanee</string>
     <string name="scene_revert_profile">Ripristina la modifica del profilo</string>
     <string name="scene_revert_smb_on">Riattiva SMB</string>
@@ -430,6 +471,7 @@
     <string name="activity">Attività</string>
     <string name="wear">Smartwatch</string>
     <string name="automation">Automazione</string>
+    <string name="automation_management_desc">Crea regole che eseguono le azioni automaticamente in base ai trigger</string>
     <string name="settingsexport">Esportazione Impostazioni</string>
     <string name="custom">Personalizzato</string>
     <string name="preset_settings">Impostazioni Preset</string>
@@ -600,6 +642,7 @@
     <string name="uel_running_mode_updarted">MODALITÀ RUNNING AGGIORNATA</string>
     <string name="uel_scene_activated">SCENA ATTIVATA</string>
     <string name="uel_scene_deactivated">SCENA DISATTIVATA</string>
+    <string name="uel_remote_config_changed">CONFIG REMOTA MODIFICATA</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Target basso (profilo)</string>
     <string name="profile_high_target">Target alto (profilo)</string>
@@ -712,6 +755,7 @@
     <string name="wizard_trend_detail">Tendenza 15min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Violazione vincolo insulina!\nImpossibile erogare %1$.2fU</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
+    <string name="quick_wizard_not_available">Il calcolo rapido selezionato non è più disponibile, aggiorna il riquadro</string>
     <string name="quickwizard_managemnt">Assistente Rapido</string>
     <!--    Preferences-->
     <string name="child">Bambino</string>
