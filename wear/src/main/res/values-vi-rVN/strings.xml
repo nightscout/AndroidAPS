@@ -240,6 +240,8 @@
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_confirmation_sent">Gửi</string>
+    <string name="contacting_master">Đang liên hệ với thiết bị chính…</string>
+    <string name="contacting_master_unknown">Trạng thái không xác định — hãy kiểm tra điện thoại</string>
     <string name="tile_settings">Cài đặt Tile</string>
     <string name="loop_status_error">Không tải được trạng thái</string>
     <string name="loop_status_tempt_duration">%1$d phút (%2$s)</string>
