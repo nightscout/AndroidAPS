@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">Tỷ lệ liều nền tạm thời %1$s U/giờ</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Thời lượng TBR phải lớn hơn 0 và là bội số của %1$s phút.</string>
+    <string name="equil_basal_exceeds_max">Tỷ lệ liều nền của Cấu hình %1$s U/h vượt quá giới hạn liều nền tối đa của bơm %2$s U/h. Hãy tăng cài đặt liều nền tối đa và kết nối lại bơm.</string>
     <string name="equil_not_enough_insulin">Insulin trong bình chứa không đủ</string>
     <string name="equil_low_battery">Pin yếu</string>
     <string name="equil_low_insulin">Insulin trong bình chứa không đủ</string>
