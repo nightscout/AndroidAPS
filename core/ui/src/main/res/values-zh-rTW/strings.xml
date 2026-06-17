@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">此欄位不可留空</string>
     <string name="error_mustbe4hexadidits">必須為 4 個由 ABCDEF0123456789 組成的字元</string>
+    <string name="authorized_clients_manage_label">授權的用戶端</string>
+    <string name="authorized_clients_manage_desc">管理控制此主裝置的已配對用戶端裝置。</string>
+    <string name="pair_with_master_manage_label">與主裝置配對</string>
+    <string name="pair_with_master_manage_desc">輸入主裝置的配對 PIN 碼，讓此用戶端可傳送簽章的指令。</string>
     <!--    General-->
     <string name="treatments">治療</string>
     <string name="treatments_history">治療紀錄</string>
@@ -16,6 +20,7 @@
     <string name="refresh">重新整理</string>
     <string name="no_history_records">找不到任何紀錄</string>
     <string name="error">錯誤</string>
+    <string name="navigation_error_screen_not_found">無法開啟畫面（此組態不支援）</string>
     <string name="profile_set_ok">幫浦中的基礎率設定已更新</string>
     <string name="invalid_input">輸入資料無效</string>
     <string name="invalid_number">無效的數字</string>
@@ -104,6 +109,8 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f 小時</string>
     <string name="format_mins">%1$d 分鐘</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">目標</string>
     <string name="please_wait">請稍候…</string>
     <string name="stop">停止</string>
@@ -190,6 +197,8 @@
     <string name="reset">重設</string>
     <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
     <string name="profile">設定檔</string>
+    <string name="percentage_label">百分比</string>
+    <string name="timeshift_label">時間偏移</string>
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
@@ -242,6 +251,7 @@
     <string name="engineering_mode_enabled">工程模式已啟用</string>
     <string name="back">返回</string>
     <string name="next">下一步</string>
+    <string name="pref_syncs_with_main_phone">與主手機同步</string>
     <string name="show_hide_records">隱藏循環紀錄</string>
     <!--    Protection-->
     <string name="wrongpassword">密碼錯誤</string>
@@ -328,6 +338,8 @@
     <string name="temporary_target">臨時目標</string>
     <string name="temporary_targets">臨時目標</string>
     <string name="running_mode">運行模式</string>
+    <string name="running_mode_change_not_allowed">執行模式變更不可用</string>
+    <string name="pump_reconnect">重新連線至幫浦</string>
     <string name="scene">情境</string>
     <string name="scenes">情境</string>
     <string name="scene_desc">情境預設—一次啟用多個動作</string>
@@ -373,8 +385,41 @@
     <string name="scene_no_profile_store">沒有可用的設定檔儲存區</string>
     <string name="scene_no_actions">此場景沒有動作</string>
     <string name="scene_profile_not_found">找不到設定檔 \"%1$s\"</string>
+    <string name="scene_lock_banner_master_offline">無法連線到主裝置。恢復連線後將繼續提供情境控制。</string>
+    <string name="master_offline_banner">無法連線到主裝置。連線恢復前，編輯功能已停用。</string>
+    <string name="scene_lock_reason_master_offline">主裝置已中斷連線</string>
+    <string name="scene_lock_reason_scene_active">請先停止正在執行的情境</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">設定臨時目標</string>
+    <string name="clientcontrol_action_cancel_temp_target">取消臨時目標</string>
+    <string name="clientcontrol_action_activate_scene">啟動情境 %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">結束情境</string>
+    <string name="clientcontrol_action_activate_insulin">啟用胰島素 %1$s</string>
+    <string name="clientcontrol_action_update_settings">更新設定</string>
+    <string name="clientcontrol_action_deliver_bolus">施打注射</string>
+    <string name="clientcontrol_action_record_bolus">紀錄注射</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">此裝置未與主裝置配對。</string>
+    <string name="clientcontrol_fail_not_reachable">主裝置已離線。</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">幫浦設定與主裝置不同步。請再試一次。</string>
+    <string name="clientcontrol_fail_no_reply">未及時收到主裝置回應。</string>
+    <string name="clientcontrol_fail_expired">指令在主裝置套用前已失效。</string>
+    <string name="clientcontrol_fail_busy">已有其他動作正在進行中。</string>
+    <string name="clientcontrol_fail_send_failed">無法連線到 Nightscout。</string>
+    <string name="clientcontrol_fail_no_active_profile">主裝置沒有啟用中的設定檔可供套用。</string>
+    <string name="clientcontrol_fail_scene_not_found">該情境已不存在。</string>
+    <string name="clientcontrol_fail_scene_disabled">該情境已停用。</string>
+    <string name="clientcontrol_fail_partial">部分動作無法套用。</string>
+    <string name="clientcontrol_fail_execution">主裝置無法套用。</string>
+    <string name="clientcontrol_fail_no_pending_bolus">已準備的注射已失效或被取代。請再輕觸按鈕一次。</string>
+    <string name="clientcontrol_fail_bolus_compute">主裝置無法計算注射（缺少血糖／設定檔，或幫浦尚未就緒）。</string>
+    <string name="clientcontrol_fail_internal">發生錯誤。</string>
+    <string name="clientcontrol_fail_unknown">指令失敗。</string>
+    <string name="clientcontrol_unconfirmed_wear">狀態未知 — 在再次注射前，請先檢查手機／Nightscout。</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">連線中斷 — 傳送狀態未知</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">這支手機已停止接收來自主手機的更新。胰島素注射可能仍在進行中，也可能已經完成。
+關閉此提示只會在這支手機上隱藏它，不會停止幫浦。
+請檢查主手機，以確認實際已輸注的胰島素劑量。</string>
     <string name="scene_revert_tt">取消臨時目標</string>
     <string name="scene_revert_profile">還原設定檔變更</string>
     <string name="scene_revert_smb_on">重新啟用微量注射</string>
@@ -430,6 +475,7 @@
     <string name="activity">活動</string>
     <string name="wear">WearOS手錶</string>
     <string name="automation">自動化</string>
+    <string name="automation_management_desc">建立規則，根據觸發條件自動執行動作</string>
     <string name="settingsexport">設定匯出</string>
     <string name="custom">自訂</string>
     <string name="preset_settings">預設設定</string>
@@ -600,6 +646,7 @@
     <string name="uel_running_mode_updarted">已更新運模式</string>
     <string name="uel_scene_activated">場景已啟動</string>
     <string name="uel_scene_deactivated">場景已停用</string>
+    <string name="uel_remote_config_changed">遠端設定已變更</string>
     <!-- HardLimits -->
     <string name="profile_low_target">設定檔低目標</string>
     <string name="profile_high_target">設定檔高目標</string>
@@ -712,6 +759,7 @@
     <string name="wizard_trend_detail">15 分鐘趨勢 (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">胰島素限制違規！\n無法傳送 %1$.2fU</string>
     <string name="wizard_pump_not_available">無可用幫浦！</string>
+    <string name="quick_wizard_not_available">所選的快速嚮導已不可用，請重新整理你的圖磚</string>
     <string name="quickwizard_managemnt">快速嚮導</string>
     <!--    Preferences-->
     <string name="child">兒童</string>
