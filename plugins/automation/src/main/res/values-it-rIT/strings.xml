@@ -6,6 +6,7 @@
     <string name="automation_enabled">Abilitato</string>
     <string name="automation_read_only">Sola lettura</string>
     <string name="automation_new_rule">Nuova regola</string>
+    <string name="automation_empty_desc">Creare una regola per automatizzare le azioni in base ai trigger.</string>
     <string name="automation_edit_rule">Modifica regola</string>
     <string name="automation_discard_title">Annullare modifiche?</string>
     <string name="automation_discard_message">La regola è incompleta e non può essere salvata. Scartare le modifiche?</string>
