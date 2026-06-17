@@ -3,9 +3,9 @@
     <string name="error_field_must_not_be_empty">Trường này không được để trống</string>
     <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Thiết bị được ủy quyền</string>
-    <string name="authorized_clients_manage_desc">Quản lý các thiết bị khách đã ghép đôi được phép điều khiển thiết bị chính này.</string>
+    <string name="authorized_clients_manage_desc">Quản lý các thiết bị phụ đã ghép đôi được phép điều khiển thiết bị chính này.</string>
     <string name="pair_with_master_manage_label">Ghép đôi với thiết bị chính</string>
-    <string name="pair_with_master_manage_desc">Nhập mã PIN ghép đôi của thiết bị chính để cho phép thiết bị khách này gửi các lệnh đã ký xác thực.</string>
+    <string name="pair_with_master_manage_desc">Nhập mã PIN ghép đôi của thiết bị chính để cho phép thiết bị phụ này gửi các lệnh đã ký xác thực.</string>
     <!--    General-->
     <string name="treatments">Điều trị</string>
     <string name="treatments_history">Lịch sử điều trị</string>
