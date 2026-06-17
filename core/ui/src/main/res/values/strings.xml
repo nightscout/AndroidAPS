@@ -428,6 +428,8 @@
     <string name="clientcontrol_fail_internal">Something went wrong.</string>
     <string name="clientcontrol_fail_unknown">The command failed.</string>
     <string name="clientcontrol_unconfirmed_wear">State unknown — check phone/Nightscout before re-bolusing.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Connection lost — delivery status unknown</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">This phone stopped receiving updates from the master. The bolus may still be delivering or may have finished. Closing this only hides it here — it does not stop the pump. Check the master phone for the amount actually delivered.</string>
     <string name="scene_revert_tt">Cancel temporary target</string>
     <string name="scene_revert_profile">Revert profile change</string>
     <string name="scene_revert_smb_on">Re-enable SMB</string>
