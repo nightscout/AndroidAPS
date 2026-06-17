@@ -416,6 +416,8 @@
     <string name="clientcontrol_fail_internal">Qualcosa è andato storto.</string>
     <string name="clientcontrol_fail_unknown">Comando fallito.</string>
     <string name="clientcontrol_unconfirmed_wear">Stato sconosciuto — controllare il telefono/Nightscout prima di rifare il bolo.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Connessione persa — stato di consegna sconosciuto</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Questo telefono ha smesso di ricevere aggiornamenti dal master. Il bolo potrebbe essere ancora in consegna o potrebbe essere finito. Chiudere questo lo nasconde solo qui — non ferma la pompa. Controlla il telefono principale per l\'importo effettivamente consegnato.</string>
     <string name="scene_revert_tt">Cancella basali temporanee</string>
     <string name="scene_revert_profile">Ripristina la modifica del profilo</string>
     <string name="scene_revert_smb_on">Riattiva SMB</string>
