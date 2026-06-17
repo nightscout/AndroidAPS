@@ -6,6 +6,7 @@
     <string name="automation_enabled">Đã bật</string>
     <string name="automation_read_only">Chỉ đọc</string>
     <string name="automation_new_rule">Quy tắc mới</string>
+    <string name="automation_empty_desc">Tạo quy tắc để tự động thực hiện các hành động dựa trên điều kiện kích hoạt.</string>
     <string name="automation_edit_rule">Sửa quy tắc</string>
     <string name="automation_discard_title">Huỷ bỏ thay đổi?</string>
     <string name="automation_discard_message">Quy tắc chưa hoàn chỉnh và không thể lưu. Bạn có muốn hủy các thay đổi không?</string>
