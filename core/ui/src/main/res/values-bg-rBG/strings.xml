@@ -473,6 +473,7 @@
     <string name="activity">Физ.активност</string>
     <string name="wear">Часовник</string>
     <string name="automation">Автоматизация</string>
+    <string name="automation_management_desc">Създаване на правила за автоматични действия при определени условия</string>
     <string name="settingsexport">Експорт на настройки</string>
     <string name="custom">По избор</string>
     <string name="preset_settings">Предварителни настройки</string>
@@ -640,9 +641,10 @@
     <string name="uel_insulin_removed">ИНСУЛИН ИЗКАРАН</string>
     <string name="uel_running_mode">ТЕКУЩ РЕЖИМ</string>
     <string name="uel_running_mode_removed">ПРЕМАХНАТ ТЕКУЩ РЕЖИМ</string>
-    <string name="uel_running_mode_updarted">ТЕКУЩ РЕЖИМ ОБНОВЕН</string>
+    <string name="uel_running_mode_updarted">ТЕКУЩ РЕЖИМ ОБНОВЕН АКТИВИРАН</string>
     <string name="uel_scene_activated">СЦЕНАРИЙ АКТИВИРАН</string>
     <string name="uel_scene_deactivated">СЦЕНАРИЙ ДЕАКТИВИРАН</string>
+    <string name="uel_remote_config_changed">ОТДАЛЕЧЕНАТА КОНФИГУРАЦИЯ Е СМЕНЕНА</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Профил ниска цел</string>
     <string name="profile_high_target">Профил висока цел</string>
@@ -755,6 +757,7 @@
     <string name="wizard_trend_detail">15мин промяна (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Нарушение в ограничението на инсулин!\nНе може да бъде доставен %1$.2fЕ</string>
     <string name="wizard_pump_not_available">Помпата не е налична!</string>
+    <string name="quick_wizard_not_available">Избраният съветник е недостъпе, моля опреснете</string>
     <string name="quickwizard_managemnt">Бърз съветник</string>
     <!--    Preferences-->
     <string name="child">Дете</string>
