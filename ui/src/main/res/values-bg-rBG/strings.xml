@@ -138,10 +138,25 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Липсва име на инсулин</string>
     <string name="insulin_name_exists">Инсулин %1$s вече го има, сложете ново име</string>
+    <string name="insulin_external_update_title">Конфигурацията на инсулин е сменена</string>
+    <string name="insulin_external_update_message">Друг клиент е сменил инсулиновата конфигурация. Натиснете OK за зареждане на неговите промени или Откажи за да продължите редакцията (следващата смяна ще презапише неговите).</string>
+    <string name="insulin_edit_target_gone">Този инсулин е изтрит от друго място. Вашите промени не могат да бъдат запазени. Списъка е презареден.</string>
+    <string name="insulin_activation_applied">Инсулинът е активиран</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Прилагане…</string>
+    <string name="clientcontrol_pending_working_text">Чакам потвърждение от главния…</string>
+    <string name="clientcontrol_pending_rejected_title">НЕ е приложено. Отказан</string>
+    <string name="clientcontrol_pending_rejected_text">Главният телефон не иска да приложи тази промяна.</string>
+    <string name="clientcontrol_pending_failed_format">%1$s не може да приложи.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Приложено частично</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s е приложен, но не с всички промени.\nПроверете активните промени.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Не може да бъде потвърдено вече</string>
+    <string name="clientcontrol_pending_unconfirmed_text">Искането е изпратено но главният не е потвърдил навреме. Може да не е било приложено. Този екран ще се обнови при следваща синхронизация.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s е изпратено но не се върна потвърждение.\n%2$s\nЩе се появи тук при потвърждение от главния телефон.</string>
+    <string name="clientcontrol_pending_stop_waiting">Спри да чакаш</string>
     <string name="a11y_add_new_insulin">Добавяне на нов инсулин</string>
     <string name="a11y_delete_current_insulin">Изтриване на текущия инсулин</string>
     <string name="activate_insulin_no_profile">Няма активен профили</string>
