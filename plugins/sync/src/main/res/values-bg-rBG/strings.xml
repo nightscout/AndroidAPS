@@ -14,7 +14,16 @@
     <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_error_ambiguous_pin">Засечени са много свързвания с този ПИН. Генерирайте нов и опитайте отново.</string>
+    <string name="pair_with_master_error_expired">Този ПИН е изтекъл. Генерирайте нов на главния телефон.</string>
+    <string name="pair_with_master_error_network">Не мога да се свържа с Nightscout. Проверете връзката и опитайте отново.</string>
+    <string name="pair_with_master_retry">Опитайте отново</string>
+    <string name="pair_with_master_already_paired_title">Вече е свързан</string>
+    <string name="pair_with_master_already_paired_master">Вече сте свързани с %1$s. Първо се разкачете и въведете новия PIN.</string>
+    <string name="pair_with_master_unpair">Разкачи</string>
+    <string name="pair_with_master_sending">Изпращане на съобщение за свързване…</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="clientcontrol_orphan_notification">Главният телефон вече не разпознава това устройство. Отоврете Управление → Свързване за да се закачите отново.</string>
     <string name="ns_client">От Nightscout</string>
     <string name="ns_client_url">Nightscout aдрес:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
