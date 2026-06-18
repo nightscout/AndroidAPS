@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">此字段不能为空</string>
     <string name="error_mustbe4hexadidits">必须是4位字符，在ABCDEF0123456789中选用</string>
+    <string name="authorized_clients_manage_label">已授权的客户端</string>
+    <string name="authorized_clients_manage_desc">管理控制此主机的已配对客户端设备。</string>
+    <string name="pair_with_master_manage_label">与主机配对</string>
+    <string name="pair_with_master_manage_desc">输入主机的配对PIN码，以允许此客户端发送已签名的命令。</string>
     <!--    General-->
     <string name="treatments">治疗</string>
     <string name="treatments_history">治疗历史</string>
@@ -16,6 +20,7 @@
     <string name="refresh">刷新</string>
     <string name="no_history_records">找不到记录</string>
     <string name="error">错误</string>
+    <string name="navigation_error_screen_not_found">屏幕无法打开（当前配置下不可用）</string>
     <string name="profile_set_ok">泵基础率配置文件更新了</string>
     <string name="invalid_input">无效的输入数据</string>
     <string name="invalid_number">无效数字</string>
@@ -104,6 +109,8 @@
     <string name="format_carbs">%1$d 克</string>
     <string name="format_hours">%1$.2f 小时</string>
     <string name="format_mins">%1$d 分钟</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">目标</string>
     <string name="please_wait">请稍等...</string>
     <string name="stop">停止</string>
@@ -190,6 +197,8 @@
     <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
+    <string name="percentage_label">百分比</string>
+    <string name="timeshift_label">时间偏移</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
@@ -242,6 +251,7 @@
     <string name="engineering_mode_enabled">已启用工程模式</string>
     <string name="back">返回</string>
     <string name="next">下一步</string>
+    <string name="pref_syncs_with_main_phone">与主手机同步</string>
     <string name="show_hide_records">隐藏闭环记录</string>
     <!--    Protection-->
     <string name="wrongpassword">密码错误</string>
@@ -328,6 +338,8 @@
     <string name="temporary_target">临时目标</string>
     <string name="temporary_targets">临时目标</string>
     <string name="running_mode">运行模式</string>
+    <string name="running_mode_change_not_allowed">运行模式更改不可用</string>
+    <string name="pump_reconnect">重新连接泵</string>
     <string name="scene">情景</string>
     <string name="scenes">情景</string>
     <string name="scene_desc">情景预设 — 一次性激活多项操作</string>
@@ -373,8 +385,39 @@
     <string name="scene_no_profile_store">无可用配置档案库</string>
     <string name="scene_no_actions">该情景未配置任何操作</string>
     <string name="scene_profile_not_found">未找到配置文件 \"%1$s\"</string>
+    <string name="scene_lock_banner_master_offline">主机设备无法访问。连接恢复后，场景控制将恢复。</string>
+    <string name="master_offline_banner">主机设备无法访问。连接恢复前编辑功能已禁用。</string>
+    <string name="scene_lock_reason_master_offline">主机已断开连接</string>
+    <string name="scene_lock_reason_scene_active">请先停止正在运行的情景</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">设定临时目标</string>
+    <string name="clientcontrol_action_cancel_temp_target">取消临时目标</string>
+    <string name="clientcontrol_action_activate_scene">激活情景 %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">结束情景</string>
+    <string name="clientcontrol_action_activate_insulin">激活胰岛素 %1$s</string>
+    <string name="clientcontrol_action_update_settings">更新设置</string>
+    <string name="clientcontrol_action_deliver_bolus">输注大剂量</string>
+    <string name="clientcontrol_action_record_bolus">记录大剂量</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">此设备未与主机配对。</string>
+    <string name="clientcontrol_fail_not_reachable">主机已离线。</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">泵配置与主机不同步。请重试。</string>
+    <string name="clientcontrol_fail_no_reply">主机未及时回复。</string>
+    <string name="clientcontrol_fail_expired">命令在主机应用之前已过期。</string>
+    <string name="clientcontrol_fail_busy">另一操作正在进行中。</string>
+    <string name="clientcontrol_fail_send_failed">无法访问 Nightscout。</string>
+    <string name="clientcontrol_fail_no_active_profile">主机没有可应用该操作的活跃配置文件。</string>
+    <string name="clientcontrol_fail_scene_not_found">该情景模式已不存在。</string>
+    <string name="clientcontrol_fail_scene_disabled">该情景模式已禁用。</string>
+    <string name="clientcontrol_fail_partial">部分操作无法应用。</string>
+    <string name="clientcontrol_fail_execution">主机无法应用该操作。</string>
+    <string name="clientcontrol_fail_no_pending_bolus">准备的大剂量已过期或已被取代。请再次点击按钮。</string>
+    <string name="clientcontrol_fail_bolus_compute">主机无法计算大剂量（缺少血糖值/配置文件，或泵未就绪）。</string>
+    <string name="clientcontrol_fail_internal">发生错误。</string>
+    <string name="clientcontrol_fail_unknown">命令执行失败。</string>
+    <string name="clientcontrol_unconfirmed_wear">状态未知——请在再次输注大剂量前检查手机/Nightscout。</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">连接已断开——输注状态未知</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">此手机已停止接收来自主机的更新。大剂量可能仍在输注中，也可能已经完成。关闭此提示仅在此处隐藏该信息——不会停止泵。请查看主机手机了解实际已输注的剂量。</string>
     <string name="scene_revert_tt">取消临时目标</string>
     <string name="scene_revert_profile">撤销配置更改</string>
     <string name="scene_revert_smb_on">重新启用微型大剂量</string>
@@ -430,6 +473,7 @@
     <string name="activity">活动</string>
     <string name="wear">手表</string>
     <string name="automation">自动操作</string>
+    <string name="automation_management_desc">创建基于触发器自动执行操作的规则</string>
     <string name="settingsexport">设置导出</string>
     <string name="custom">自定义</string>
     <string name="preset_settings">预设设置</string>
@@ -600,6 +644,7 @@
     <string name="uel_running_mode_updarted">运行模式已更新</string>
     <string name="uel_scene_activated">情景已激活</string>
     <string name="uel_scene_deactivated">情景已停用</string>
+    <string name="uel_remote_config_changed">远程配置已更改</string>
     <!-- HardLimits -->
     <string name="profile_low_target">个人配置低目标</string>
     <string name="profile_high_target">个人配置高目标</string>
@@ -712,6 +757,7 @@
     <string name="wizard_trend_detail">15分钟趋势(%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">胰岛素剂量违法约束！\n无法输注 %1$.2fU</string>
     <string name="wizard_pump_not_available">没有可用的泵！</string>
+    <string name="quick_wizard_not_available">所选快速向导已不可用，请刷新您的磁贴</string>
     <string name="quickwizard_managemnt">快速向导</string>
     <!--    Preferences-->
     <string name="child">儿童</string>
