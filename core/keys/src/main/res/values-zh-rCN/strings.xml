@@ -125,6 +125,8 @@
     <string name="pref_title_ns_slow_sync">使用缓慢同步</string>
     <string name="pref_title_ns_use_ws">使用 websockets</string>
     <string name="pref_summary_ns_use_ws">使用 websockets 与 Nightscout 进行实时通信。</string>
+    <string name="pref_title_ns_allow_client_control">允许客户端控制</string>
+    <string name="pref_summary_ns_allow_client_control">允许已配对的客户端设备通过 Nightscout 发送已签名的命令（例如启动/停止情景模式）。</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">仅使用 WiFi</string>
     <string name="pref_title_openhumans_charging_only">仅充电</string>
