@@ -139,8 +139,13 @@ class EversenseHttp365Util {
             }
         }
 
-        private val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
-            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        // SimpleDateFormat is not thread-safe. A ThreadLocal gives each thread its own
+        // instance, so a scheduled sync and a manual sync running at the same time cannot
+        // corrupt the formatted timestamp. Output is byte-for-byte identical to before.
+        private val dateFormatter: ThreadLocal<SimpleDateFormat> = ThreadLocal.withInitial {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
+                timeZone = java.util.TimeZone.getTimeZone("UTC")
+            }
         }
 
         fun getOrRefreshToken(preferences: SharedPreferences): String? {
@@ -196,7 +201,7 @@ class EversenseHttp365Util {
                     val essentialLog = Base64.getEncoder().encodeToString(
                         r.rawResponseHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
                     )
-                    val ts = dateFormatter.format(Date(r.datetime))
+                    val ts = dateFormatter.get().format(Date(r.datetime))
                     EversenseLogger.info(TAG, "  Reading: glucose=${r.glucoseInMgDl} ts=$ts rawHex=${r.rawResponseHex.length / 2}B")
                     """{"SensorId":"$portalSensorId","TransmitterId":"$transmitterSerialNumber","Timestamp":"$ts","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"$ts","FWVersion":"$firmwareVersion","EssentialLog":"$essentialLog"}"""
                 }
@@ -272,7 +277,7 @@ class EversenseHttp365Util {
                 return false
             }
             return try {
-                val ts = dateFormatter.format(Date(timestamp))
+                val ts = dateFormatter.get().format(Date(timestamp))
                 val jsonBody = """{"CurrentGlucose":$glucose,"CGTime":"$ts","GlucoseTrend":${trendOrdinal(trend)},"SignalStrength":${signalStrengthOrdinal(signalStrength)},"BatteryStrength":${batteryPercentage.coerceAtLeast(0)},"IsTransmitterConnected":1}"""
 
                 val url = URL("${careBaseUrl}api/care/PutCurrentValues")

@@ -45,8 +45,13 @@ class EversenseHttpE3Util {
         internal var tokenBaseUrl = "https://ousiamapialpha.eversensedms.com/"
         internal var careBaseUrl  = "https://ousalphaapiservices.eversensedms.com/"
 
-        private val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
+        // SimpleDateFormat is not thread-safe. A ThreadLocal gives each thread its own
+        // instance, so a scheduled sync and a manual sync running at the same time cannot
+        // corrupt the formatted timestamp. Output is byte-for-byte identical to before.
+        private val dateFormatter: ThreadLocal<SimpleDateFormat> = ThreadLocal.withInitial {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
         }
 
         // -- Auth --------------------------------------------------------------
@@ -116,7 +121,7 @@ class EversenseHttpE3Util {
                 return false
             }
             return try {
-                val ts = dateFormatter.format(Date(timestamp))
+                val ts = dateFormatter.get().format(Date(timestamp))
                 val body = """{"CurrentGlucose":$glucose,"CGTime":"$ts","GlucoseTrend":${trendOrdinal(trend)},"SignalStrength":${signalStrengthOrdinal(signalStrength)},"BatteryStrength":${batteryPercentage.coerceAtLeast(0)},"IsTransmitterConnected":1}"""
 
                 val conn = URL("${careBaseUrl}api/care/PutCurrentValues").openConnection() as HttpURLConnection

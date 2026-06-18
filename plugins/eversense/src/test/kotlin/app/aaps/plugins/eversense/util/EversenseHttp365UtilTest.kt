@@ -312,5 +312,30 @@ class EversenseHttp365UtilTest {
 
         assertNull(result)
     }
+
+    // ─── timestamp formatting (guards the thread-safe ThreadLocal change) ──────
+
+    @Test
+    fun `uploadGlucoseReadings formats timestamp as UTC in the expected pattern`() {
+        val futureExpiry = System.currentTimeMillis() + 600_000L
+        whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
+        whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
+
+        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
+
+        // 1700000000000 ms == 2023-11-14T22:13:20 UTC. The formatter must emit UTC with
+        // no offset, regardless of the machine's default time zone.
+        val readings = listOf(
+            EversenseCGMResult(120, 1700000000000L, EversenseTrendArrow.FLAT, "s1", "ab")
+        )
+
+        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+
+        val body = mockWebServer.takeRequest().body.readUtf8()
+        assertTrue(
+            body.contains("\"Timestamp\":\"2023-11-14T22:13:20\""),
+            "Timestamp must be UTC in yyyy-MM-dd'T'HH:mm:ss; got: $body"
+        )
+    }
 }
 
