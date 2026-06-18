@@ -240,6 +240,8 @@
     <string name="wizard_carbs_format">%1$d гр въгл</string>
     <string name="insulin_unit_short">Е</string>
     <string name="wizard_confirmation_sent">Изпратено</string>
+    <string name="contacting_master">Свързване с главния</string>
+    <string name="contacting_master_unknown">Непознат статус - вижте телефона</string>
     <string name="tile_settings">Настройки на тайлове</string>
     <string name="loop_status_error">Невъзможно зареждане на състояние</string>
     <string name="loop_status_tempt_duration">%1$d мин (%2$s)</string>
