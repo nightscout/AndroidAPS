@@ -6,6 +6,7 @@
     <string name="automation_enabled">Включено</string>
     <string name="automation_read_only">Само за преглед</string>
     <string name="automation_new_rule">Ново правило</string>
+    <string name="automation_empty_desc">Създайте правило за автомация на база тези действия.</string>
     <string name="automation_edit_rule">Редактиране</string>
     <string name="automation_discard_title">Отхвърли промените?</string>
     <string name="automation_discard_message">Правилото е незавършено и не мога да го запазя. Отказвате ли промените?</string>
