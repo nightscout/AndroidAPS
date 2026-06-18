@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">临时基础率 %1$s U/H</string>
     <string name="equil_record_bolus">大剂量 %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">临时基础率TBR 持续时间必须大于零，且是 %1$s 分钟的倍数。</string>
+    <string name="equil_basal_exceeds_max">配置文件基础率 %1$s U/h 超出泵最大基础率 %2$s U/h。请提高最大基础率设置并重新连接泵。</string>
     <string name="equil_not_enough_insulin">储药器中的胰岛素不足</string>
     <string name="equil_low_battery">电量不足</string>
     <string name="equil_low_insulin">储药器中的胰岛素不足</string>
