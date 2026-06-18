@@ -10,14 +10,12 @@ import app.aaps.plugins.eversense.models.EversenseSecureState
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.BufferedInputStream
-import java.io.ByteArrayOutputStream
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.Base64
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -122,7 +120,7 @@ class EversenseHttpE3Util {
             }
             return try {
                 val ts = dateFormatter.get().format(Date(timestamp))
-                val body = """{"CurrentGlucose":$glucose,"CGTime":"$ts","GlucoseTrend":${trendOrdinal(trend)},"SignalStrength":${signalStrengthOrdinal(signalStrength)},"BatteryStrength":${batteryPercentage.coerceAtLeast(0)},"IsTransmitterConnected":1}"""
+                val body = """{"CurrentGlucose":$glucose,"CGTime":"$ts","GlucoseTrend":${EversenseDmsBinaryCodec.trendOrdinal(trend)},"SignalStrength":${EversenseDmsBinaryCodec.signalStrengthOrdinal(signalStrength)},"BatteryStrength":${batteryPercentage.coerceAtLeast(0)},"IsTransmitterConnected":1}"""
 
                 val conn = URL("${careBaseUrl}api/care/PutCurrentValues").openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
@@ -165,11 +163,11 @@ class EversenseHttpE3Util {
             return try {
                 val sensorId    = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: ""
                 val tzOffsetSec = TimeZone.getDefault().getOffset(Date().time) / 1000
-                val offsetBytes = Base64.getEncoder().encodeToString(int32LE(tzOffsetSec))
-                val sgBytes     = buildSgBytes(readings)
-                val mgBytes     = if (calibrations.isNotEmpty()) buildMgBytes(calibrations) else buildEmptyMgBytes()
-                val patientBytes = buildEmptyPatientBytes()
-                val alertBytes  = buildAlertBytes(sensorId)
+                val offsetBytes = Base64.getEncoder().encodeToString(EversenseDmsBinaryCodec.int32LE(tzOffsetSec))
+                val sgBytes     = EversenseDmsBinaryCodec.buildSgBytes(readings)
+                val mgBytes     = if (calibrations.isNotEmpty()) EversenseDmsBinaryCodec.buildMgBytes(calibrations) else EversenseDmsBinaryCodec.buildEmptyMgBytes()
+                val patientBytes = EversenseDmsBinaryCodec.buildEmptyPatientBytes()
+                val alertBytes  = EversenseDmsBinaryCodec.buildAlertBytes(sensorId)
 
                 EversenseLogger.info(TAG, "E3 PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber'")
 
@@ -197,91 +195,6 @@ class EversenseHttpE3Util {
                 EversenseLogger.error(TAG, "E3 PutDeviceEvents exception: $e")
                 false
             }
-        }
-
-        // -- Binary helpers (shared with E365 format) --------------------------
-
-        private fun int16LE(v: Int) = byteArrayOf((v and 0xFF).toByte(), ((v shr 8) and 0xFF).toByte())
-        private fun int24LE(v: Int) = byteArrayOf((v and 0xFF).toByte(), ((v shr 8) and 0xFF).toByte(), ((v shr 16) and 0xFF).toByte())
-        private fun int32LE(v: Int) = byteArrayOf((v and 0xFF).toByte(), ((v shr 8) and 0xFF).toByte(), ((v shr 16) and 0xFF).toByte(), ((v shr 24) and 0xFF).toByte())
-
-        private fun calcDateBytes(tsMs: Long): ByteArray {
-            val cal = Calendar.getInstance(TimeZone.getTimeZone("GMT")).also { it.timeInMillis = tsMs }
-            val year = cal.get(Calendar.YEAR); val month = cal.get(Calendar.MONTH) + 1; val day = cal.get(Calendar.DAY_OF_MONTH)
-            var b1 = (year - 2000) shl 1; if (month > 7) b1 += 1
-            val b0 = ((month and 7) shl 5) or day
-            return byteArrayOf(b0.toByte(), b1.toByte())
-        }
-
-        private fun calcTimeBytes(tsMs: Long): ByteArray {
-            val cal = Calendar.getInstance(TimeZone.getTimeZone("GMT")).also { it.timeInMillis = tsMs }
-            val hour = cal.get(Calendar.HOUR_OF_DAY); val minute = cal.get(Calendar.MINUTE); val second = cal.get(Calendar.SECOND)
-            val b0 = ((minute and 7) shl 5) or (second / 2)
-            val b1 = (hour shl 3) or ((minute and 56) shr 3)
-            return byteArrayOf(b0.toByte(), b1.toByte())
-        }
-
-        private fun buildSgBytes(readings: List<EversenseCGMResult>): String {
-            val baos = ByteArrayOutputStream()
-            baos.write(byteArrayOf(0x8C.toByte(), 0x00, 0x01, 0x00, 0x00))
-            baos.write(int24LE(readings.size))
-            readings.forEachIndexed { idx, r ->
-                val sensorIdBytes = if (r.sensorId.isNotEmpty())
-                    r.sensorId.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
-                else ByteArray(10)
-                baos.write(int24LE(idx + 1))
-                baos.write(calcDateBytes(r.datetime))
-                baos.write(calcTimeBytes(r.datetime))
-                baos.write(int16LE(r.glucoseInMgDl))
-                baos.write(0x00)
-                baos.write(sensorIdBytes)
-                repeat(5) { baos.write(int16LE(0)) }
-                baos.write(int16LE(0))
-                baos.write(0x00)
-                repeat(3) { baos.write(int16LE(0)) }
-            }
-            return Base64.getEncoder().encodeToString(baos.toByteArray())
-        }
-
-        private fun buildMgBytes(calibrations: List<CalibrationHistoryItem>): String {
-            val baos = ByteArrayOutputStream()
-            baos.write(byteArrayOf(0x98.toByte(), 0x01, 0x00))
-            baos.write(int16LE(calibrations.size))
-            baos.write(0x00)
-            calibrations.forEachIndexed { idx, c ->
-                baos.write(int24LE(idx + 1))
-                baos.write(calcDateBytes(c.datetime))
-                baos.write(calcTimeBytes(c.datetime))
-                baos.write(int16LE(c.glucoseInMgDl))
-                baos.write(1) // ACTUALLY_USED_FOR_CALIBRATION
-            }
-            return Base64.getEncoder().encodeToString(baos.toByteArray())
-        }
-
-        private fun buildEmptyMgBytes()      = Base64.getEncoder().encodeToString(byteArrayOf(0x98.toByte(), 0x01, 0x00, 0x00, 0x00, 0x00))
-        private fun buildEmptyPatientBytes() = Base64.getEncoder().encodeToString(byteArrayOf(0x9E.toByte(), 0x01, 0x00, 0x00, 0x00))
-
-        private fun buildAlertBytes(sensorId: String): String {
-            val baos = ByteArrayOutputStream()
-            baos.write(byteArrayOf(0x93.toByte(), 0x01, 0x00, 0x00, 0x00))
-            if (sensorId.isNotEmpty())
-                baos.write(sensorId.chunked(2).map { it.toInt(16).toByte() }.toByteArray())
-            baos.write(0x00)
-            return Base64.getEncoder().encodeToString(baos.toByteArray())
-        }
-
-        private fun signalStrengthOrdinal(percent: Int) = when {
-            percent >= 75 -> 5; percent >= 48 -> 4; percent >= 30 -> 3
-            percent >= 28 -> 2; percent >= 25 -> 1; else -> 0
-        }
-
-        private fun trendOrdinal(trend: EversenseTrendArrow) = when (trend) {
-            EversenseTrendArrow.NONE            -> 0
-            EversenseTrendArrow.SINGLE_DOWN     -> 1
-            EversenseTrendArrow.FORTY_FIVE_DOWN -> 2
-            EversenseTrendArrow.FLAT            -> 3
-            EversenseTrendArrow.FORTY_FIVE_UP   -> 4
-            EversenseTrendArrow.SINGLE_UP       -> 5
         }
 
         private fun getState(preferences: SharedPreferences): EversenseSecureState {
