@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">Приложено ограничение на въглехидрати</string>
     <string name="no_temp_basal_running">Няма временен базал</string>
     <string name="temp_target_short">Вр.цел</string>
