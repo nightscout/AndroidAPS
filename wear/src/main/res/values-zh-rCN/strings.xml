@@ -240,6 +240,8 @@
     <string name="wizard_carbs_format">%1$d 克碳水化合物</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_confirmation_sent">已发送</string>
+    <string name="contacting_master">正在联系主机…</string>
+    <string name="contacting_master_unknown">状态未知 - 请检查手机</string>
     <string name="tile_settings">卡片设定</string>
     <string name="loop_status_error">加载状态失败</string>
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
