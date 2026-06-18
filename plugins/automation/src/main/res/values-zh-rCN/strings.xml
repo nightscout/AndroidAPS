@@ -6,6 +6,7 @@
     <string name="automation_enabled">已启用</string>
     <string name="automation_read_only">只读</string>
     <string name="automation_new_rule">新规则</string>
+    <string name="automation_empty_desc">创建一条基于触发器自动执行操作的规则。</string>
     <string name="automation_edit_rule">编辑规则</string>
     <string name="automation_discard_title">放弃更改？</string>
     <string name="automation_discard_message">规则不完整，无法保存。是否放弃更改？</string>
