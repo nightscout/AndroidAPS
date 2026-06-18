@@ -97,7 +97,7 @@
     <string name="bolus_speed_60">60 сек/Е</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="rs_loginsulinchange_title">Записвай смените на резервоар</string>
-    <string name="rs_loginsulinchange_summary">Добави \"Смяна на резервоар\" в НС, когато е открит в историята</string>
+    <string name="rs_loginsulinchange_summary">Добави \"Смяна на резервоар\" в NS, когато е открит в историята</string>
     <string name="rs_logcanulachange_title">Записвай смяна на канюла</string>
     <string name="rs_logcanulachange_summary">Добави \"смяна на канюла\" в НС, когато е открит в историята</string>
     <string name="press_ok_on_the_pump">Натиснете OK на помпата\nи въведете двата номера\nДръжте дисплея на помпата включен чрез натискане минус бутон, докато завършите въвеждане на код.</string>
