@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">Временен базал %1$s Е/Ч</string>
     <string name="equil_record_bolus">Болус %1$s Е</string>
     <string name="equil_error_set_temp_basal_failed_validation">Продължителността трябва да бъде по-голяма от нула и кратна на %1$s минути.</string>
+    <string name="equil_basal_exceeds_max">Профилният базал %1$s Е/ч надвишава разрешения в помпата от %2$s Е/ч. Разрешете по-голям базал в помпата.</string>
     <string name="equil_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
     <string name="equil_low_battery">Изтощена батерия</string>
     <string name="equil_low_insulin">Недостатъчно инсулин в резервоара</string>
