@@ -125,6 +125,8 @@
     <string name="pref_title_ns_slow_sync">Използвай бавна синхронизация</string>
     <string name="pref_title_ns_use_ws">Използвай websockets</string>
     <string name="pref_summary_ns_use_ws">Използвай websockets за комуникация с NS в реално време.</string>
+    <string name="pref_title_ns_allow_client_control">Позволете контол от друг телефон</string>
+    <string name="pref_summary_ns_allow_client_control">Позволете изпращането на подписани команди (пр. старт/стоп сценарий) чрез Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Само с WiFi</string>
     <string name="pref_title_openhumans_charging_only">Само когато телефона се зарежда</string>
