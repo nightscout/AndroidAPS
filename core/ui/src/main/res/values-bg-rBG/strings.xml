@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">Полето не може да е празно</string>
     <string name="error_mustbe4hexadidits">Може да бъде само 4 символа между ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Оторизирани клиенти</string>
+    <string name="authorized_clients_manage_desc">Редактиране на позволените клиенти, на които е разрешено да контролират главния телефон.</string>
+    <string name="pair_with_master_manage_label">Свържи се с главния телефон</string>
+    <string name="pair_with_master_manage_desc">Въведете PINът от главният телефон за да позволите на този да изпраща подписани команди.</string>
     <!--    General-->
     <string name="treatments">Лечения</string>
     <string name="treatments_history">История на леченията</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Обнови</string>
     <string name="no_history_records">Няма записи</string>
     <string name="error">Грешка</string>
+    <string name="navigation_error_screen_not_found">Екранът не е наличен в конфигурация.</string>
     <string name="profile_set_ok">Профила на помпата е обновен</string>
     <string name="invalid_input">Грешни входящи данни</string>
     <string name="invalid_number">Грешен брой</string>
@@ -192,6 +197,8 @@
     <string name="reset">Нулирай</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
+    <string name="percentage_label">Процент</string>
+    <string name="timeshift_label">Отместване</string>
     <string name="confirm_remove_multiple_items">Сигурен ли сте, че искате да премахнете %1$d елементи?</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
@@ -244,6 +251,7 @@
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
     <string name="back">Назад</string>
     <string name="next">Напред</string>
+    <string name="pref_syncs_with_main_phone">Симхронизации с главния телефон</string>
     <string name="show_hide_records">Скрий записите от кръга</string>
     <!--    Protection-->
     <string name="wrongpassword">Грешна парола</string>
@@ -330,6 +338,8 @@
     <string name="temporary_target">Временна цел</string>
     <string name="temporary_targets">Временни цели</string>
     <string name="running_mode">Текущ режим</string>
+    <string name="running_mode_change_not_allowed">Смяна на режим не е позволена</string>
+    <string name="pump_reconnect">Свържи отново помпата</string>
     <string name="scene">Сценарий</string>
     <string name="scenes">Сценарии</string>
     <string name="scene_desc">Ситуационни предпоставки - активиране на много действия едновременно</string>
@@ -375,8 +385,39 @@
     <string name="scene_no_profile_store">Няма профили</string>
     <string name="scene_no_actions">Сценарият няма действия</string>
     <string name="scene_profile_not_found">Профил \"%1$s\" не е намерен</string>
+    <string name="scene_lock_banner_master_offline">Главния телефон е недостъпен. Контолът на сценарии ще се поднови при възстановяване на връзката.</string>
+    <string name="master_offline_banner">Главният телефон недостъпен. Редакцията е изключена до възстановяване на връзката.</string>
+    <string name="scene_lock_reason_master_offline">Главният телефон е разкачен</string>
+    <string name="scene_lock_reason_scene_active">Първо спри вървящия сценарий</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Приложи временна цел</string>
+    <string name="clientcontrol_action_cancel_temp_target">Спри временна цел</string>
+    <string name="clientcontrol_action_activate_scene">Стартирай сценарий %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Приключи сценария</string>
+    <string name="clientcontrol_action_activate_insulin">Активирай инсулин %1$s</string>
+    <string name="clientcontrol_action_update_settings">Обнови настройките</string>
+    <string name="clientcontrol_action_deliver_bolus">Стартирай болус</string>
+    <string name="clientcontrol_action_record_bolus">Запиши болус</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Телефонът не е свързан с главния.</string>
+    <string name="clientcontrol_fail_not_reachable">Главният телефон няма интернет връзка.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Конфигурацията на помпа не е синхронизирана с главния телефон. Опитайте отново.</string>
+    <string name="clientcontrol_fail_no_reply">Няма навременен отговор от главния телефон.</string>
+    <string name="clientcontrol_fail_expired">Времето за отговор изтече преди главният да потвърди.</string>
+    <string name="clientcontrol_fail_busy">Друго действие е в прогрес.</string>
+    <string name="clientcontrol_fail_send_failed">Не мога да се свържа с Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Главният телефон няма активен профил.</string>
+    <string name="clientcontrol_fail_scene_not_found">Сценярият вече не съшествува.</string>
+    <string name="clientcontrol_fail_scene_disabled">Сценарият е изключен.</string>
+    <string name="clientcontrol_fail_partial">Някой действия не може да бъдат приложени.</string>
+    <string name="clientcontrol_fail_execution">Главният телефон не може да го приложи.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Болусът изтече или е бил отказан. Натиснете бутона да опитате отново.</string>
+    <string name="clientcontrol_fail_bolus_compute">Главният телефон не можа да изчисли болуса (липсват КЗ / профил или помпата не е готова).</string>
+    <string name="clientcontrol_fail_internal">Нещо се обърка.</string>
+    <string name="clientcontrol_fail_unknown">Тази команда се провали.</string>
+    <string name="clientcontrol_unconfirmed_wear">Неразпознат статус - проверете телефона/Nightscout преди да опитате отново.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Няма връзка - не мога да потвърдя какъв болус е пуснат</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Този телефон не получава обновявания от главния. Болусът може да е пуснат или свършил. Затварянето ще го затвори тук, но няма да го спре в помпата. Проверете главния телефон за реално пуснатият болус.</string>
     <string name="scene_revert_tt">Изключи временна цел</string>
     <string name="scene_revert_profile">Върни промяната на профил</string>
     <string name="scene_revert_smb_on">Пусни SMB</string>
@@ -878,7 +919,7 @@
     <!-- Alerts -->
     <string name="localalertsettings_title">Локални аларми</string>
     <!-- Actions Screen -->
-    <string name="add">Добави</string>
+    <string name="add">Смени</string>
     <string name="remove">Изтрий</string>
     <string name="reorder">Подреди</string>
     <string name="status">Статус</string>
