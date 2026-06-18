@@ -66,7 +66,7 @@ class EversenseHttp365Util {
                     val errorBody = try {
                         conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: ""
                     } catch (e: Exception) { "" }
-                    EversenseLogger.error(TAG, "Login failed — status: $responseCode, body: $errorBody")
+                    EversenseLogger.error(TAG, "Login failed — status: $responseCode")
                     return null
                 }
 
@@ -122,13 +122,13 @@ class EversenseHttp365Util {
                 val dataJson = buffer.toString()
 
                 if (conn.responseCode >= 400) {
-                    EversenseLogger.error(TAG, "Failed to do login - status: ${conn.responseCode}, data: $dataJson")
+                    EversenseLogger.error(TAG, "Failed to fetch tx certificate - status: ${conn.responseCode}")
                     return null
                 }
 
                 val response = Json.decodeFromString(FleetSecretV2ResponseModel.serializer(), dataJson)
                 if (response.Status != "Success" || response.Result.Certificate == null) {
-                    EversenseLogger.error(TAG, "Received invalid response - message: $dataJson")
+                    EversenseLogger.error(TAG, "Received invalid tx certificate response - status=${response.Status}")
                     return null
                 }
 
@@ -197,7 +197,7 @@ class EversenseHttp365Util {
                         r.rawResponseHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
                     )
                     val ts = dateFormatter.format(Date(r.datetime))
-                    EversenseLogger.info(TAG, "  Reading: sensorId='$portalSensorId' glucose=${r.glucoseInMgDl} ts=$ts rawHex=${r.rawResponseHex.length / 2}B")
+                    EversenseLogger.info(TAG, "  Reading: glucose=${r.glucoseInMgDl} ts=$ts rawHex=${r.rawResponseHex.length / 2}B")
                     """{"SensorId":"$portalSensorId","TransmitterId":"$transmitterSerialNumber","Timestamp":"$ts","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"$ts","FWVersion":"$firmwareVersion","EssentialLog":"$essentialLog"}"""
                 }
 
@@ -219,11 +219,11 @@ class EversenseHttp365Util {
                 val responseCode = conn.responseCode
                 if (responseCode >= 400) {
                     val error = try { conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: "" } catch (e: Exception) { "" }
-                    EversenseLogger.error(TAG, "Glucose upload failed — status: $responseCode, body: $error")
+                    EversenseLogger.error(TAG, "Glucose upload failed — status: $responseCode")
                     false
                 } else {
                     val responseBody = try { conn.inputStream.readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
-                    EversenseLogger.info(TAG, "Glucose upload success — status: $responseCode, readings: ${uploadable.size}, response: $responseBody")
+                    EversenseLogger.info(TAG, "Glucose upload success — status: $responseCode, readings: ${uploadable.size}")
                     true
                 }
             } catch (e: Exception) {
@@ -289,11 +289,11 @@ class EversenseHttp365Util {
                 val responseCode = conn.responseCode
                 if (responseCode >= 400) {
                     val error = try { conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: "" } catch (e: Exception) { "" }
-                    EversenseLogger.error(TAG, "PutCurrentValues failed — status: $responseCode, body: $error")
+                    EversenseLogger.error(TAG, "PutCurrentValues failed — status: $responseCode")
                     false
                 } else {
                     val responseBody = try { conn.inputStream.readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
-                    EversenseLogger.info(TAG, "PutCurrentValues success — status: $responseCode, glucose=$glucose, response: $responseBody")
+                    EversenseLogger.info(TAG, "PutCurrentValues success — status: $responseCode, glucose=$glucose")
                     true
                 }
             } catch (e: Exception) {
@@ -348,11 +348,11 @@ class EversenseHttp365Util {
                 val responseCode = conn.responseCode
                 if (responseCode >= 400) {
                     val error = try { conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: "" } catch (e: Exception) { "" }
-                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode, body: $error")
+                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode")
                     false
                 } else {
                     val responseBody = try { conn.inputStream.readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
-                    EversenseLogger.info(TAG, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}, response: $responseBody")
+                    EversenseLogger.info(TAG, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}")
                     true
                 }
             } catch (e: Exception) {

@@ -73,7 +73,7 @@ class EversenseHttpE3Util {
                 val code = conn.responseCode
                 if (code >= 400) {
                     val err = conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: ""
-                    EversenseLogger.error(TAG, "E3 login failed � status: $code, body: $err")
+                    EversenseLogger.error(TAG, "E3 login failed � status: $code")
                     return null
                 }
                 val body = conn.inputStream.readBytes().toString(Charsets.UTF_8)
@@ -131,7 +131,7 @@ class EversenseHttpE3Util {
                 val code = conn.responseCode
                 if (code >= 400) {
                     val err = conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: ""
-                    EversenseLogger.error(TAG, "E3 PutCurrentValues failed � status: $code, body: $err")
+                    EversenseLogger.error(TAG, "E3 PutCurrentValues failed � status: $code")
                     false
                 } else {
                     EversenseLogger.info(TAG, "E3 PutCurrentValues ok � status: $code, glucose=$glucose")
@@ -182,7 +182,7 @@ class EversenseHttpE3Util {
                 val code = conn.responseCode
                 if (code >= 400) {
                     val err = conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: ""
-                    EversenseLogger.error(TAG, "E3 PutDeviceEvents failed � status: $code, body: $err")
+                    EversenseLogger.error(TAG, "E3 PutDeviceEvents failed � status: $code")
                     false
                 } else {
                     EversenseLogger.info(TAG, "E3 PutDeviceEvents ok � status: $code, readings: ${readings.size}")
