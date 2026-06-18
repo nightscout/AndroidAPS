@@ -201,7 +201,7 @@
     <string name="invalid">НЕВАЛИДНО</string>
     <string name="login">Вход</string>
     <string name="logout">Изход</string>
-    <string name="prime_fill">Пълнене/Допълване</string>
+    <string name="prime_fill">Смяна/Пълнене</string>
     <string name="site_rotation">Смяна на мястото</string>
     <string name="edit_site">Редактиране</string>
     <string name="select_arrow">Изберете стрелка</string>
