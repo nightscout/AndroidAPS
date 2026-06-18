@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">碳水化合物约束条件应用了</string>
     <string name="no_temp_basal_running">无临时基础率运行中</string>
     <string name="temp_target_short">临时目标</string>
@@ -137,10 +138,25 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">缺少胰岛素名称</string>
     <string name="insulin_name_exists">胰岛素名称 %1$s 已存在，请选择新的名称</string>
+    <string name="insulin_external_update_title">胰岛素配置已更改</string>
+    <string name="insulin_external_update_message">已配对的客户端更改了胰岛素配置。点按“确定”可加载其更改并丢弃您未保存的编辑内容，或点按“取消”继续编辑（您下次保存时将覆盖其更改）。</string>
+    <string name="insulin_edit_target_gone">此胰岛素已在别处被移除，因此您的编辑无法保存。列表已重新加载。</string>
+    <string name="insulin_activation_applied">胰岛素激活已应用</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">正在应用…</string>
+    <string name="clientcontrol_pending_working_text">正在等待主机确认…</string>
+    <string name="clientcontrol_pending_rejected_title">未应用</string>
+    <string name="clientcontrol_pending_rejected_text">主机无法应用此请求。</string>
+    <string name="clientcontrol_pending_failed_format">%1$s 无法完成。\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">部分应用</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s 已应用，但某些操作无法执行。\n请检查当前状态。</string>
+    <string name="clientcontrol_pending_unconfirmed_title">无法确认</string>
+    <string name="clientcontrol_pending_unconfirmed_text">请求已发送，但主机未及时确认。操作可能已应用也可能未应用——如果同步回来，此界面将进行更新。</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s 已发送，但未收到确认。\n%2$s\n 如果主机应用了该操作，它将在此处显示。</string>
+    <string name="clientcontrol_pending_stop_waiting">停止等待</string>
     <string name="a11y_add_new_insulin">新增胰岛素</string>
     <string name="a11y_delete_current_insulin">删除当前的胰岛素</string>
     <string name="activate_insulin_no_profile">未找到生效的配置文件</string>
