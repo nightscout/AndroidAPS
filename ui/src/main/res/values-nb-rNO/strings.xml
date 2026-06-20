@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
     <string name="no_temp_basal_running">Ingen midlertidig basal kjører</string>
     <string name="temp_target_short">Midlertidig mål</string>
@@ -137,10 +138,25 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Mangler insulinnavn</string>
     <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
+    <string name="insulin_external_update_title">Insulinkonfigurasjonen er endret</string>
+    <string name="insulin_external_update_message">En paret klient har endret insulinkonfigurasjonen. Trykk OK for å laste inn endringene og forkaste ulagrede endringer, eller Avbryt for å fortsette redigeringen (neste lagring vil overskrive deres endringer).</string>
+    <string name="insulin_edit_target_gone">Denne insulinen ble fjernet et annet sted, så endringen kunne ikke lagres. Listen er lastet inn på nytt.</string>
+    <string name="insulin_activation_applied">Insulinaktivering utført</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Utfører…</string>
+    <string name="clientcontrol_pending_working_text">Venter på bekreftelse fra hovedenhet…</string>
+    <string name="clientcontrol_pending_rejected_title">Ikke utført</string>
+    <string name="clientcontrol_pending_rejected_text">Hovedenheten kunne ikke utføre denne forespørselen.</string>
+    <string name="clientcontrol_pending_failed_format">%1$s kunne ikke utføres.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Delvis utført</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s ble utført, men enkelte handlinger kunne ikke utføres.\nKontroller gjeldende status.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Kunne ikke bekrefte</string>
+    <string name="clientcontrol_pending_unconfirmed_text">Forespørselen ble sendt, men hovedenheten bekreftet ikke i tide. Den kan ha blitt utført eller ikke — dette skjermbildet oppdateres dersom status synkroniseres tilbake.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s ble sendt, men ingen bekreftelse ble mottatt.\n%2$s\nDet vil vises her dersom/når hovedenheten utfører handlingen.</string>
+    <string name="clientcontrol_pending_stop_waiting">Slutt å vente</string>
     <string name="a11y_add_new_insulin">Legg til nytt insulin</string>
     <string name="a11y_delete_current_insulin">Slett nåværende insulin</string>
     <string name="activate_insulin_no_profile">Ingen aktiv profil funnet</string>
@@ -308,5 +324,14 @@
     <string name="widget_rm_suspended">Pauset</string>
     <string name="widget_rm_resume">Gjenoppta</string>
     <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Kalibrering ble ikke lagret: Glukosen endrer seg for raskt (Δ %1$s %3$s per 5 min, grense %2$s). Prøv igjen når glukosen er stabil.</string>
+    <string name="cal_reject_no_pair">Kalibrering ble ikke lagret: Ingen CGM-måling funnet de siste 10 minuttene.</string>
+    <string name="cal_reject_warmup">Kalibrering ble ikke lagret: Sensoren er fortsatt i den 2 timer lange oppvarmingsperioden.</string>
+    <string name="cal_reject_no_session">Kalibrering ble ikke lagret: Ingen aktiv sensorsesjon. Registrer et sensorbytte først.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Sensoren er fortsatt i oppvarmingsperioden. Kalibrering blir tilgjengelig kl. %1$s.</string>
+    <string name="cal_precheck_no_session">Ingen aktiv sensorsesjon.</string>
+    <string name="cal_precheck_no_pair">Ingen CGM-måling de siste 10 minuttene. Kontroller sensorforbindelsen.</string>
+    <string name="cal_precheck_delta_too_high">Glukosen endrer seg for raskt (Δ %1$s %3$s per 5 min, grense %2$s). Vent til den er stabil.</string>
+    <string name="cal_precheck_mark_sensor_change">Registrer sensorbytte</string>
 </resources>
