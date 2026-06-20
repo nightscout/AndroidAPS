@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">Restricción aplicada en carbohidratos</string>
     <string name="no_temp_basal_running">No hay basal temporal activa</string>
     <string name="temp_target_short">OT</string>
@@ -137,10 +138,25 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Nombre de insulina no especificado</string>
     <string name="insulin_name_exists">El nombre de insulina %1$s ya existe, seleccione un nombre nuevo</string>
+    <string name="insulin_external_update_title">Configuración de insulina cambiada</string>
+    <string name="insulin_external_update_message">Un cliente emparejado ha cambiado la configuración de insulina. Pulsa OK para cargar sus cambios y descartar tus ediciones no guardadas, o Cancelar para seguir editando (tu próxima acción de guardar sobrescribirá la suya)</string>
+    <string name="insulin_edit_target_gone">Esta insulina se eliminó en otro lugar, por lo que tu edición no se pudo guardar. La lista se ha vuelto a cargar</string>
+    <string name="insulin_activation_applied">Activación de insulina aplicada</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Aplicando…</string>
+    <string name="clientcontrol_pending_working_text">Esperando que el maestro confirme…</string>
+    <string name="clientcontrol_pending_rejected_title">No aplicado</string>
+    <string name="clientcontrol_pending_rejected_text">El maestro no ha podido aplicar esta solicitud</string>
+    <string name="clientcontrol_pending_failed_format">%1$s no se pudo realizar\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Aplicado parcialmente</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">Se aplicó %1$s, pero algunas acciones no se pudieron realizar.\nComprueba el estado activo</string>
+    <string name="clientcontrol_pending_unconfirmed_title">No se pudo confirmar</string>
+    <string name="clientcontrol_pending_unconfirmed_text">La solicitud se envió, pero el maestro no confirmó a tiempo. Puede que se haya aplicado o no; esta pantalla se actualizará si se vuelve a sincronizar</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">Se envió %1$s, pero no se recibió ninguna confirmación.\n%2$s\nAparecerá aquí si el maestro lo aplica o cuando lo haga</string>
+    <string name="clientcontrol_pending_stop_waiting">Detener espera</string>
     <string name="a11y_add_new_insulin">Añadir nueva insulina</string>
     <string name="a11y_delete_current_insulin">Eliminar insulina actual</string>
     <string name="activate_insulin_no_profile">No se ha encontrado ningún perfil activo</string>
