@@ -747,6 +747,7 @@
     <string name="wizard_include_cob">Includi IOB</string>
     <string name="wizard_calculation">Calcolo</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Rimozione massima: %1$d g (carboidrati a bordo)</string>
     <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
     <string name="bolus_equal_zero_no_action">Bolo = 0. Nessuna azione intrapresa!</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
