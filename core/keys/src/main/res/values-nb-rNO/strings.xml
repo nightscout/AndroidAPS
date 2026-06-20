@@ -125,6 +125,8 @@
     <string name="pref_title_ns_slow_sync">Bruk langsom synkronisering</string>
     <string name="pref_title_ns_use_ws">Bruk websockets</string>
     <string name="pref_summary_ns_use_ws">Bruk websockets for sanntidskommunikasjon med Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">Tillat klientstyring</string>
+    <string name="pref_summary_ns_allow_client_control">La tilkoblede klientenheter sende signerte kommandoer (f.eks. starte/stoppe scener) via Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Kun WiFi</string>
     <string name="pref_title_openhumans_charging_only">Kun under lading</string>
@@ -220,6 +222,8 @@
     <string name="pref_title_sms_remote_bolus_distance">Minimum avstand mellom fjernboluser</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Tilfeldig BS-intervall</string>
+    <string name="pref_title_random_bg_randomize">Tilfeldiggjør glukosedata</string>
+    <string name="pref_summary_random_bg_randomize">Legg til støy, varier tidsstempler, tilfeldiggjør trendpiler og generer sporadiske tilfeldige karboregistreringer. Deaktiver for en ren, deterministisk sinuskurve der trendpilen beregnes ut fra sinuskurvens helning.</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Terskel for alarm om utdaterte data</string>
     <string name="pref_title_urgent_alarm_stale_data">Terskel for akutt alarm om utdaterte data</string>
