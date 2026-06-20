@@ -394,7 +394,13 @@
     <string name="clientcontrol_action_cancel_temp_target">Avbryt midlertidig mål</string>
     <string name="clientcontrol_action_activate_scene">Aktiver scene %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Avslutt scene</string>
+    <string name="clientcontrol_action_activate_insulin">Aktiver insulin %1$s</string>
+    <string name="clientcontrol_action_update_settings">Oppdater innstillinger</string>
+    <string name="clientcontrol_action_deliver_bolus">Lever bolus</string>
+    <string name="clientcontrol_action_record_bolus">Registrer bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Denne enheten er ikke koblet til en hovedenhet.</string>
+    <string name="clientcontrol_fail_not_reachable">Hovedenheten er frakoblet.</string>
     <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Pumpekonfigurasjonen er ikke synkronisert med hovedenheten. Prøv igjen.</string>
     <string name="clientcontrol_fail_no_reply">Ingen svar fra hovedenheten innen tidsfristen.</string>
     <string name="clientcontrol_fail_expired">Kommandoen utløp før hovedenheten utførte den.</string>
@@ -410,6 +416,8 @@
     <string name="clientcontrol_fail_internal">Noe gikk galt.</string>
     <string name="clientcontrol_fail_unknown">Kommandoen mislyktes.</string>
     <string name="clientcontrol_unconfirmed_wear">Status ukjent — kontroller telefonen/Nightscout før du gir ny bolus.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Forbindelsen brutt — leveringsstatus ukjent</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Denne telefonen mottar ikke lenger oppdateringer fra hovedenheten. Bolusen kan fortsatt være under levering eller være ferdig levert. Hvis du lukker dette vinduet, skjules det bare her — det stopper ikke pumpen. Kontroller hovedtelefonen for faktisk levert mengde.</string>
     <string name="scene_revert_tt">Avbryt midlertidig mål</string>
     <string name="scene_revert_profile">Omgjør profilbytte</string>
     <string name="scene_revert_smb_on">Reaktiver SMB</string>
@@ -465,6 +473,7 @@
     <string name="activity">Aktivitet</string>
     <string name="wear">Klokke</string>
     <string name="automation">Automasjon</string>
+    <string name="automation_management_desc">Opprett regler som automatisk utfører handlinger basert på utløsere</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
     <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
@@ -491,6 +500,8 @@
     <string name="location_front_left_lower_abdomen">Nedre venstre framside av magen</string>
     <string name="location_back_right_buttock">Høyre rumpe</string>
     <string name="location_back_left_buttock">Venstre rumpe</string>
+    <string name="location_back_right_lower_back">Nedre høyre rygg</string>
+    <string name="location_back_left_lower_back">Nedre venstre rygg</string>
     <string name="location_side_right_upper_thigh">Øvre høyre ytterside av låret</string>
     <string name="location_side_left_upper_thigh">Øvre venstre ytterside av låret</string>
     <string name="location_side_right_lower_thigh">Nedre høyre ytterside av låret</string>
@@ -573,6 +584,7 @@
     <string name="uel_tt_ns_refresh">OPPDATER MIDLERTIDIG MÅL NS</string>
     <string name="uel_automation_removed">AUTOMASJON FJERNET</string>
     <string name="uel_bg_removed">BS FJERNET</string>
+    <string name="uel_calibration_removed">KALIBRERING FJERNET</string>
     <string name="uel_careportal_removed">HELSEPORTAL FJERNET</string>
     <string name="uel_bolus_removed">BOLUS FJERNET</string>
     <string name="uel_carbs_removed">KARBO FJERNET</string>
@@ -632,6 +644,7 @@
     <string name="uel_running_mode_updarted">KJØREMODUS OPPDATERT</string>
     <string name="uel_scene_activated">SCENE AKTIVERT</string>
     <string name="uel_scene_deactivated">SCENE DEAKTIVERT</string>
+    <string name="uel_remote_config_changed">FJERNKONFIGURASJON ENDRET</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil lavt mål</string>
     <string name="profile_high_target">Profil høyt mål</string>
@@ -654,6 +667,9 @@
     <string name="missing_profile_name">Mangler profilnavn</string>
     <string name="profile_not_saved_activate">Profilen er ikke lagret. Vennligst lagre profilen før aktivering.</string>
     <string name="profile_activation_failed">Profilaktivering mislyktes</string>
+    <string name="profile_switch_save_failed">Profilbytte kunne ikke lagres. Prøv igjen.</string>
+    <string name="profile_basal_not_compatible_with_pump">Basaldosen er ikke kompatibel med den aktuelle pumpen og kan ikke aktiveres. Reduser prosenten eller juster basaldosen.</string>
+    <string name="profile_pump_incompatible_label">Pumpegrense</string>
     <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
     <string name="error_in_isf_values">Feil i ISF-verdien</string>
     <string name="error_in_basal_values">Feil i basalverdiene</string>
@@ -741,6 +757,7 @@
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insulinbegrensning nådd!\nKan ikke levere %1$.2fE</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
+    <string name="quick_wizard_not_available">Valgt Hurtigknapp er ikke lenger tilgjengelig. Oppdater flisen</string>
     <string name="quickwizard_managemnt">Hurtigknapp</string>
     <!--    Preferences-->
     <string name="child">Barn</string>
@@ -857,6 +874,7 @@
     <string name="clear_cloud_action">Tøm innstillinger</string>
     <string name="clear_cloud_settings">Tøm skyinnstillinger</string>
     <string name="clear_cloud_settings_message">Dette vil bytte til lokal lagring og fjerne autorisasjon. Fortsette?</string>
+    <string name="cloud_revoke_incomplete">Skyinnstillingene er slettet på denne enheten, men kontoen kunne ikke nås for å tilbakekalle tilgangen fullstendig. Du bør vurdere å fjerne den manuelt i kontoinnstillingene.</string>
     <string name="cloud_connection_failed">Tilkobling til skylagring mislyktes</string>
     <string name="cloud_reauthorize_message">Tilkobling til skylagring mislyktes. Vil du autentisere på nytt?</string>
     <string name="reauthorize">Autentiser på nytt</string>
