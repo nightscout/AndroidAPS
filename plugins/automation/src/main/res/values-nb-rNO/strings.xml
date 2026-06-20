@@ -6,6 +6,7 @@
     <string name="automation_enabled">Aktivert</string>
     <string name="automation_read_only">Skrivebeskyttet</string>
     <string name="automation_new_rule">Ny regel</string>
+    <string name="automation_empty_desc">Opprett en regel som automatiserer handlinger basert på utløsere.</string>
     <string name="automation_edit_rule">Rediger regel</string>
     <string name="automation_discard_title">Forkaste endringer?</string>
     <string name="automation_discard_message">Regelen er ufullstendig og kan ikke lagres. Vil du forkaste endringene dine?</string>
