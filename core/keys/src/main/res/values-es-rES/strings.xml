@@ -125,6 +125,8 @@
     <string name="pref_title_ns_slow_sync">Usar sincronización lenta (Slow Sync)</string>
     <string name="pref_title_ns_use_ws">Usar WebSockets</string>
     <string name="pref_summary_ns_use_ws">Usar WebSockets para comunicación en tiempo real con Nightscout</string>
+    <string name="pref_title_ns_allow_client_control">Permitir control del cliente</string>
+    <string name="pref_summary_ns_allow_client_control">Permitir que los dispositivos cliente emparejados envíen comandos firmados (por ejemplo, iniciar/detener escenas) a través de Nightscout</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Sólo WiFi</string>
     <string name="pref_title_openhumans_charging_only">Sólo durante la carga</string>
