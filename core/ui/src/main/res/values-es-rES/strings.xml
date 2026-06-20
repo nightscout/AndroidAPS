@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">El campo no debe estar vacío</string>
     <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Clientes autorizados</string>
+    <string name="authorized_clients_manage_desc">Gestiona los dispositivos clientes emparejados que controlan este maestro</string>
+    <string name="pair_with_master_manage_label">Emparejar con el maestro</string>
+    <string name="pair_with_master_manage_desc">Introduce el PIN de emparejamiento del maestro para permitir que este cliente envíe comandos firmados</string>
     <!--    General-->
     <string name="treatments">Tratamientos</string>
     <string name="treatments_history">Historial de tratamientos</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Actualizar</string>
     <string name="no_history_records">No se encontraron registros</string>
     <string name="error">Error</string>
+    <string name="navigation_error_screen_not_found">No se pudo abrir la pantalla (no está disponible en esta configuración)</string>
     <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
     <string name="invalid_input">Datos inválidos</string>
     <string name="invalid_number">Número no válido</string>
@@ -104,6 +109,8 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Objetivos</string>
     <string name="please_wait">Por favor, espere…</string>
     <string name="stop">Detener</string>
@@ -190,6 +197,8 @@
     <string name="reset">Restablecer</string>
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
+    <string name="percentage_label">Porcentaje</string>
+    <string name="timeshift_label">Desplazamiento temporal</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
@@ -242,6 +251,7 @@
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
     <string name="back">Atrás</string>
     <string name="next">Siguiente</string>
+    <string name="pref_syncs_with_main_phone">Se sincroniza con el teléfono principal</string>
     <string name="show_hide_records">Ocultar registros del Lazo</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
@@ -328,6 +338,8 @@
     <string name="temporary_target">Objetivo temporal</string>
     <string name="temporary_targets">Objetivos temporales</string>
     <string name="running_mode">Modo de funcionamiento</string>
+    <string name="running_mode_change_not_allowed">El cambio de modo de funcionamiento no está disponible</string>
+    <string name="pump_reconnect">Reconectar bomba</string>
     <string name="scene">Escena</string>
     <string name="scenes">Escenas</string>
     <string name="scene_desc">Ajustes de situación — activar múltiples acciones a la vez</string>
@@ -373,8 +385,37 @@
     <string name="scene_no_profile_store">No hay un almacén de perfiles disponible</string>
     <string name="scene_no_actions">La escena no tiene acciones</string>
     <string name="scene_profile_not_found">No se encontró el perfil \"%1$s\"</string>
+    <string name="scene_lock_banner_master_offline">Dispositivo maestro inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
+    <string name="master_offline_banner">Dispositivo maestro inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
+    <string name="scene_lock_reason_master_offline">Maestro desconectado</string>
+    <string name="scene_lock_reason_scene_active">Detén primero la escena en ejecución</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Establecer objetivo temporal</string>
+    <string name="clientcontrol_action_cancel_temp_target">Cancelar objetivo temporal</string>
+    <string name="clientcontrol_action_activate_scene">Activar escena %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Finalizar escena</string>
+    <string name="clientcontrol_action_activate_insulin">Activar insulina %1$s</string>
+    <string name="clientcontrol_action_update_settings">Actualizar ajustes</string>
+    <string name="clientcontrol_action_deliver_bolus">Administrar bolo</string>
+    <string name="clientcontrol_action_record_bolus">Registrar bolo</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un maestro</string>
+    <string name="clientcontrol_fail_not_reachable">El maestro está fuera de línea</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">La configuración de la bomba no está sincronizada con el maestro. Por favor, inténtalo de nuevo</string>
+    <string name="clientcontrol_fail_no_reply">No hay respuesta del maestro a tiempo</string>
+    <string name="clientcontrol_fail_expired">El comando caducó antes de que el maestro lo aplicara</string>
+    <string name="clientcontrol_fail_busy">Ya hay otra acción en progreso</string>
+    <string name="clientcontrol_fail_send_failed">No se pudo conectar con Nightscout</string>
+    <string name="clientcontrol_fail_no_active_profile">El maestro no tiene ningún perfil activo sobre el que aplicarlo</string>
+    <string name="clientcontrol_fail_scene_not_found">La escena ya no existe</string>
+    <string name="clientcontrol_fail_scene_disabled">La escena está desactivada</string>
+    <string name="clientcontrol_fail_partial">No se han podido aplicar algunas acciones</string>
+    <string name="clientcontrol_fail_execution">El maestro no ha podido aplicarlo</string>
+    <string name="clientcontrol_fail_no_pending_bolus">El bolo preparado ha caducado o ha sido reemplazado. Toca el botón de nuevo</string>
+    <string name="clientcontrol_fail_bolus_compute">El maestro no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
+    <string name="clientcontrol_fail_internal">Algo ha salido mal</string>
+    <string name="clientcontrol_fail_unknown">El comando ha fallado</string>
+    <string name="clientcontrol_unconfirmed_wear">Estado desconocido — comprueba el teléfono/Nightscout antes de volver a administrar un bolo</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Conexión perdida — estado de entrega desconocido</string>
     <string name="clientcontrol_bolus_progress_stalled_body">Este teléfono ha dejado de recibir actualizaciones del maestro. Es posible que el bolo se siga administrando o que ya haya terminado. Cerrar este aviso solo lo oculta aquí, no detiene la bomba. Comprueba en el teléfono maestro la cantidad que realmente se ha administrado</string>
     <string name="scene_revert_tt">Cancelar objetivo temporal</string>
@@ -432,6 +473,7 @@
     <string name="activity">Actividad</string>
     <string name="wear">Reloj</string>
     <string name="automation">Automatización</string>
+    <string name="automation_management_desc">Crea reglas que ejecuten acciones automáticamente según los disparadores</string>
     <string name="settingsexport">Exportación de configuraciones</string>
     <string name="custom">Personalizado</string>
     <string name="preset_settings">Ajustes preestablecidos</string>
@@ -602,6 +644,7 @@
     <string name="uel_running_mode_updarted">MODO DE FUNCIONAMIENTO ACTUALIZADO</string>
     <string name="uel_scene_activated">ESCENA ACTIVADA</string>
     <string name="uel_scene_deactivated">ESCENA DESACTIVADA</string>
+    <string name="uel_remote_config_changed">CAMBIO EN CONFIGURACIÓN REMOTA</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Perfil de objetivo bajo</string>
     <string name="profile_high_target">Perfil de objetivo alto</string>
@@ -704,6 +747,7 @@
     <string name="wizard_include_cob">Incluir COB</string>
     <string name="wizard_calculation">Cálculos</string>
     <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Eliminación máxima: %1$d g (carbohidratos activos)</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. ¡No se toma ningua acción!</string>
     <string name="bolus_equal_zero_no_action">Bolo = 0. ¡No se ha realizado ninguna acción!</string>
     <string name="wizard_no_insulin_required">No se requiere insulina</string>
@@ -714,6 +758,7 @@
     <string name="wizard_trend_detail">Tendencia 15 min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">¡Violación de restricciones de insulina!\nNo se puede entregar %1$.2fU</string>
     <string name="wizard_pump_not_available">¡No hay bomba disponible!</string>
+    <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualiza el panel</string>
     <string name="quickwizard_managemnt">Asistente rápido</string>
     <!--    Preferences-->
     <string name="child">Menor de edad</string>
