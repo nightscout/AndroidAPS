@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">Feltet må ikke være tomt</string>
     <string name="error_mustbe4hexadidits">Må være 4 tegn fra ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Autoriserte klienter</string>
+    <string name="authorized_clients_manage_desc">Administrer tilkoblede klientenheter som styrer denne hovedenheten.</string>
+    <string name="pair_with_master_manage_label">Koble til hovedenhet</string>
+    <string name="pair_with_master_manage_desc">Skriv inn hovedenhetens sammenkoblings-PIN for å la denne klienten sende signerte kommandoer.</string>
     <!--    General-->
     <string name="treatments">Behandlinger</string>
     <string name="treatments_history">Behandlingshistorikk</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Oppdater</string>
     <string name="no_history_records">Ingen poster funnet</string>
     <string name="error">Feil</string>
+    <string name="navigation_error_screen_not_found">Skjermbildet kunne ikke åpnes (ikke tilgjengelig i denne konfigurasjonen)</string>
     <string name="profile_set_ok">Basalprofil i pumpen er oppdatert</string>
     <string name="invalid_input">Ugyldige verdier</string>
     <string name="invalid_number">Ugyldig nummer</string>
@@ -68,6 +73,7 @@
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
     <string name="configbuilder_smoothing">Utjevning</string>
+    <string name="configbuilder_calibration">Kalibrering</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_sensitivity">Sensitivitetsdeteksjon</string>
     <string name="configbuilder_aps">APS</string>
@@ -103,6 +109,8 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f t</string>
     <string name="format_mins">%1$d min</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
@@ -189,6 +197,8 @@
     <string name="reset">Tilbakestill</string>
     <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="profile">Profil</string>
+    <string name="percentage_label">Percentage</string>
+    <string name="timeshift_label">Tidsforskyving</string>
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
@@ -241,6 +251,7 @@
     <string name="engineering_mode_enabled">Engineering mode aktivert</string>
     <string name="back">Bakside</string>
     <string name="next">Neste</string>
+    <string name="pref_syncs_with_main_phone">Synkroniseres med hovedtelefonen</string>
     <string name="show_hide_records">Skjul loop-poster</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
@@ -327,6 +338,8 @@
     <string name="temporary_target">Midlertidig mål</string>
     <string name="temporary_targets">Midlertidige mål</string>
     <string name="running_mode">Kjøremodus</string>
+    <string name="running_mode_change_not_allowed">Endring av kjøremodus er ikke tilgjengelig</string>
+    <string name="pump_reconnect">Koble til pumpen på nytt</string>
     <string name="scene">Scene</string>
     <string name="scenes">Scener</string>
     <string name="scene_desc">Forhåndsinnstillinger for situasjoner - aktivere flere hendelser på en gang</string>
@@ -372,8 +385,31 @@
     <string name="scene_no_profile_store">Finner ingen profiler</string>
     <string name="scene_no_actions">Scenen har ingen handlinger</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" finnes ikke</string>
+    <string name="scene_lock_banner_master_offline">Hovedenheten kan ikke nås. Scenekontroller blir tilgjengelige igjen når forbindelsen er gjenopprettet.</string>
+    <string name="master_offline_banner">Hovedenheten kan ikke nås. Redigering er deaktivert til forbindelsen er gjenopprettet.</string>
+    <string name="scene_lock_reason_master_offline">Hovedenheten er frakoblet</string>
+    <string name="scene_lock_reason_scene_active">Avslutt den aktive scenen først</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Sett midlertidig mål</string>
+    <string name="clientcontrol_action_cancel_temp_target">Avbryt midlertidig mål</string>
+    <string name="clientcontrol_action_activate_scene">Aktiver scene %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Avslutt scene</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Pumpekonfigurasjonen er ikke synkronisert med hovedenheten. Prøv igjen.</string>
+    <string name="clientcontrol_fail_no_reply">Ingen svar fra hovedenheten innen tidsfristen.</string>
+    <string name="clientcontrol_fail_expired">Kommandoen utløp før hovedenheten utførte den.</string>
+    <string name="clientcontrol_fail_busy">En annen handling pågår allerede.</string>
+    <string name="clientcontrol_fail_send_failed">Kunne ikke koble til Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Hovedenheten har ingen aktiv profil å bruke dette på.</string>
+    <string name="clientcontrol_fail_scene_not_found">Scenen finnes ikke lenger.</string>
+    <string name="clientcontrol_fail_scene_disabled">Scenen er deaktivert.</string>
+    <string name="clientcontrol_fail_partial">Noen handlinger kunne ikke utføres.</string>
+    <string name="clientcontrol_fail_execution">Hovedenheten kunne ikke utføre handlingen.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Den forberedte bolusen utløp eller ble erstattet. Trykk på knappen igjen.</string>
+    <string name="clientcontrol_fail_bolus_compute">Hovedenheten kunne ikke beregne bolusen (mangler glukoseverdi/profil, eller pumpen er ikke klar).</string>
+    <string name="clientcontrol_fail_internal">Noe gikk galt.</string>
+    <string name="clientcontrol_fail_unknown">Kommandoen mislyktes.</string>
+    <string name="clientcontrol_unconfirmed_wear">Status ukjent — kontroller telefonen/Nightscout før du gir ny bolus.</string>
     <string name="scene_revert_tt">Avbryt midlertidig mål</string>
     <string name="scene_revert_profile">Omgjør profilbytte</string>
     <string name="scene_revert_smb_on">Reaktiver SMB</string>
