@@ -5,6 +5,7 @@
     <string name="select">Velg</string>
     <string name="set">Angi</string>
     <string name="migrating_preferences">Migrerer innstillinger…</string>
+    <string name="optimizing_database">Optimaliserer databasen…</string>
     <string name="initializing_plugins">Initialiserer plugins…</string>
     <string name="initializing">Initialiserer…</string>
     <string name="migrating_profile_switches">Migrerer profilbytter…</string>
