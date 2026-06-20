@@ -240,6 +240,8 @@
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_confirmation_sent">Enviado</string>
+    <string name="contacting_master">Contactando con el maestro…</string>
+    <string name="contacting_master_unknown">Estado desconocido — comprueba el teléfono</string>
     <string name="tile_settings">Ajustes de tarjetas</string>
     <string name="loop_status_error">Error al cargar el estado del lazo</string>
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
