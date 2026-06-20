@@ -37,8 +37,8 @@
     <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
     <string name="loop_disabled_by_user">Loop deaktivert av bruker</string>
     <string name="event_type">Hendelsestype</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Lagre</string>
