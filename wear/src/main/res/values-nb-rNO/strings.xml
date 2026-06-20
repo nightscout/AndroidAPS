@@ -240,6 +240,8 @@
     <string name="wizard_carbs_format">%1$d g karbo</string>
     <string name="insulin_unit_short">E</string>
     <string name="wizard_confirmation_sent">Sendt</string>
+    <string name="contacting_master">Kontakter hovedenhet…</string>
+    <string name="contacting_master_unknown">Status ukjent — sjekk telefonen</string>
     <string name="tile_settings">Flisinnstillinger</string>
     <string name="loop_status_error">Kunne ikke laste inn loopstatus</string>
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
