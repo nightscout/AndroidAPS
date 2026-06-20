@@ -775,6 +775,7 @@
     <string name="wizard_include_cob">Include COB</string>
     <string name="wizard_calculation">Calculation</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max removal: %1$d g (carbs on board)</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>
     <string name="bolus_equal_zero_no_action">Bolus = 0. No action taken!</string>
     <string name="wizard_no_insulin_required">No insulin required</string>
