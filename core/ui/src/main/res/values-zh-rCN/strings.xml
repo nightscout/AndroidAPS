@@ -747,6 +747,7 @@
     <string name="wizard_include_cob">包含 COB</string>
     <string name="wizard_calculation">计算</string>
     <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">最大移除：%1$d g（COB）</string>
     <string name="carb_equal_zero_no_action">碳水化合物 = 0。未采取任何措施！</string>
     <string name="bolus_equal_zero_no_action">大剂量 = 0。未采取任何措施！</string>
     <string name="wizard_no_insulin_required">不需要胰岛素</string>
