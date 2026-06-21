@@ -16,8 +16,6 @@
     <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
     <string name="loop_disabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
     <string name="event_type">Tipus d\'esdeveniment</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="save">Desar</string>
     <string name="snooze">Postposar</string>
     <string name="virtual_pump">Bomba virtual</string>
@@ -48,7 +46,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="format_mins">%1$d min</string>
     <string name="objectives">Objectius</string>
     <string name="please_wait">Espereu si us plau…</string>
     <string name="stop">Stop</string>
@@ -361,7 +358,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Hora de l\'esdeveniment</string>
     <!-- BluetoothDevicePreference -->
