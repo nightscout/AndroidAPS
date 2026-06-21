@@ -37,10 +37,6 @@
     <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
     <string name="loop_disabled_by_user">Loop disabilitato dall\'utente</string>
     <string name="event_type">Tipo evento</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
-    <string name="bg_mgdl">%1$d mg/dl</string>
-    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Salva</string>
     <string name="skip">Salta</string>
     <string name="switch_to_edit">Modifica</string>
@@ -109,7 +105,6 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="format_mins">%1$d min</string>
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Obiettivi</string>
@@ -882,7 +877,6 @@
     <string name="reauthorize">Ri-autenticazione</string>
     <string name="cloud_auth_success">Autenticazione archiviazione cloud riuscita</string>
     <string name="authorization_status">Stato Autorizzazione</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ora evento</string>
     <!-- BluetoothDevicePreference -->
