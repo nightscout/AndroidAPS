@@ -16,8 +16,6 @@
     <string name="limiting_iob">Ribojamas AIO iki %1$.1f v dėl %2$s</string>
     <string name="loop_disabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
     <string name="event_type">Įvykio tipas</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="save">Išsaugoti</string>
     <string name="snooze">Nutildyti</string>
     <string name="virtual_pump">Virtuali pompa</string>
@@ -51,7 +49,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
     <string name="format_carbs">%1$dg</string>
     <string name="format_hours">%1$.2f val.</string>
-    <string name="format_mins">%1$d min.</string>
     <string name="objectives">Tikslai</string>
     <string name="please_wait">Palaukite…</string>
     <string name="stop">Stop</string>
@@ -461,7 +458,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Įvykio laikas</string>
     <!-- BluetoothDevicePreference -->
