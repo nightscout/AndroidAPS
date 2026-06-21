@@ -16,8 +16,6 @@
     <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="event_type">Ereignistyp</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="save">Speichern</string>
     <string name="snooze">Schlummern</string>
     <string name="virtual_pump">Virtuelle Pumpe</string>
@@ -51,7 +49,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="format_mins">%1$d min.</string>
     <string name="objectives">Objectives (Ziele)</string>
     <string name="please_wait">Bitte warten…</string>
     <string name="stop">Stopp</string>
@@ -433,7 +430,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ereignis-Zeit</string>
     <!-- BluetoothDevicePreference -->
