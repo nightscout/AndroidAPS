@@ -16,8 +16,6 @@
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="loop_disabled">הלולאה הופסקה עקב המגבלות שבתוקף</string>
     <string name="event_type">סוג האירוע</string>
-    <string name="mgdl">mg/dL</string>
-    <string name="mmol">mmol/L</string>
     <string name="save">שמירה</string>
     <string name="snooze">נודניק</string>
     <string name="virtual_pump">משאבה וירטואלית</string>
@@ -51,7 +49,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f יח\'</string>
     <string name="format_carbs">%1$d גר\'</string>
     <string name="format_hours">%1$.2f ש\'</string>
-    <string name="format_mins">%1$d דק\'</string>
     <string name="objectives">משימות</string>
     <string name="please_wait">נא להמתין…</string>
     <string name="stop">עצור</string>
@@ -443,7 +440,6 @@
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
     <string name="cloud_revoke_incomplete">הגדרות הענן נמחקו מהמכשיר הזה, אך לא ניתן היה להגיע לחשבון כדי לבטל את הגישה באופן מלא. מומלץ להסיר אותה ידנית בהגדרות החשבון שלכם.</string>
-    <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
     <!-- datetime layout -->
     <string name="event_time_label">שעת אירוע</string>
     <!-- BluetoothDevicePreference -->
