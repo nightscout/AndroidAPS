@@ -16,8 +16,6 @@
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="loop_disabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
     <string name="event_type">тип события</string>
-    <string name="mgdl">мг/дл</string>
-    <string name="mmol">ммоль/л</string>
     <string name="save">Сохранить</string>
     <string name="snooze">Убрать оповещение</string>
     <string name="virtual_pump">Виртуальная помпа</string>
@@ -51,7 +49,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f ед</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="format_hours">%1$.2f ч</string>
-    <string name="format_mins">%1$d мин</string>
     <string name="objectives">Цели</string>
     <string name="please_wait">Подождите…</string>
     <string name="stop">Стоп</string>
@@ -513,7 +510,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <string name="format_hour_minute">%1$dч %2$dмин</string>
     <!-- datetime layout -->
     <string name="event_time_label">время события</string>
     <!-- BluetoothDevicePreference -->
