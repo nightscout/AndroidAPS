@@ -36,7 +36,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="format_mins">%1$d mins</string>
     <string name="objectives">Ciljevi</string>
     <string name="please_wait">Molimo pričekajte…</string>
     <string name="stop">Zaustavi</string>
@@ -230,7 +229,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">Aplikacija treba bluetooth dozvolu</string>
