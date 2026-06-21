@@ -32,10 +32,6 @@
     <string name="loop_disabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="loop_disabled_by_user">Smyčka zakázána uživatelem</string>
     <string name="event_type">Typ události</string>
-    <string name="mgdl">mg/dL</string>
-    <string name="mmol">mmol/L</string>
-    <string name="bg_mgdl">%1$d mg/dL</string>
-    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Uložit</string>
     <string name="skip">Přeskočit</string>
     <string name="switch_to_edit">Upravit</string>
@@ -103,7 +99,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="format_mins">%1$d min</string>
     <string name="objectives">Cíle</string>
     <string name="please_wait">Počkejte prosím…</string>
     <string name="stop">Stop</string>
@@ -834,7 +829,6 @@
     <string name="reauthorize">Znovu autentizovat</string>
     <string name="cloud_auth_success">Autentizace cloudového úložiště úspěšná</string>
     <string name="authorization_status">Stav autorizace</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Čas</string>
     <!-- BluetoothDevicePreference -->
