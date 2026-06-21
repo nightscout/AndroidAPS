@@ -32,10 +32,6 @@
     <string name="loop_disabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
     <string name="loop_disabled_by_user">Boucle désactivée par l\'utilisateur</string>
     <string name="event_type">Type d\'évènement</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
-    <string name="bg_mgdl">%1$d mg/dl</string>
-    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Enregistrer</string>
     <string name="skip">Ignorer</string>
     <string name="switch_to_edit">Éditer</string>
@@ -103,7 +99,6 @@
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="format_mins">%1$d min</string>
     <string name="objectives">Objectifs</string>
     <string name="please_wait">Merci de patienter...</string>
     <string name="stop">Arrêt</string>
@@ -834,7 +829,6 @@
     <string name="reauthorize">Se réauthentifier</string>
     <string name="cloud_auth_success">Authentification du stockage cloud réussie</string>
     <string name="authorization_status">Statut d\'autorisation</string>
-    <string name="format_hour_minute">%1$dh%2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Heure de l\'événement</string>
     <!-- BluetoothDevicePreference -->
