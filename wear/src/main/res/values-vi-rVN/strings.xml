@@ -85,8 +85,6 @@
     <string name="action_tempt_confirmation">Mục tiêu tạm thời được yêu cầu</string>
     <string name="action_quick_wizard_confirmation">Yêu cầu hướng dẫn nhanh</string>
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
-    <string name="action_scene_confirmation">Kích hoạt ngữ cảnh</string>
-    <string name="scene_stop">DỪNG</string>
     <string name="action_treatment_confirmation">Yêu cầu xử lý</string>
     <string name="action_bolus_confirmation">Bolus được yêu cầu</string>
     <string name="action_wizard_confirmation">Yêu cầu tính toán</string>
