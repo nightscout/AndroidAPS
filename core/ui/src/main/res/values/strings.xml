@@ -39,6 +39,8 @@
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Save</string>
