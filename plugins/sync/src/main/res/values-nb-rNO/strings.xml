@@ -25,6 +25,7 @@
     <string name="authorized_clients_empty_title">Ingen autoriserte klienter</string>
     <string name="authorized_clients_empty_subtitle">Koble til en klientenhet for å la den sende signerte kommandoer til denne hovedenheten.</string>
     <string name="authorized_clients_disabled_title">Klientstyring er deaktivert</string>
+    <string name="authorized_clients_disabled_subtitle">Aktiver klientstyring i innstillingene for å autorisere klientenheter til å sende signerte kommandoer til denne hovedenheten.</string>
     <string name="authorized_clients_open_settings">Åpne innstillinger</string>
     <string name="authorized_clients_name_dialog_title">Ny klient</string>
     <string name="authorized_clients_name_placeholder">Enhetsnavn</string>
