@@ -85,6 +85,8 @@
     <string name="action_tempt_confirmation">Midlertidig mål forespurt</string>
     <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
     <string name="action_user_action_confirmation">Brukerhandling forespurt</string>
+    <string name="action_scene_confirmation">Scene forespurt</string>
+    <string name="scene_end">Avslutt</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
     <string name="action_wizard_confirmation">Beregning forespurt</string>
@@ -237,6 +239,8 @@
     <string name="title_activity_suspend_loop">Pause loop</string>
     <string name="wizard_carbs_format">%1$d g karbo</string>
     <string name="insulin_unit_short">E</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f E</string>
     <string name="wizard_confirmation_sent">Sendt</string>
     <string name="contacting_master">Kontakter hovedenhet…</string>
     <string name="contacting_master_unknown">Status ukjent — sjekk telefonen</string>
