@@ -125,6 +125,8 @@
     <string name="pref_title_ns_slow_sync">Použít pomalou synchronizaci</string>
     <string name="pref_title_ns_use_ws">Použít websockety</string>
     <string name="pref_summary_ns_use_ws">Použít websockety pro komunikaci v reálném čase s Nightscoutem.</string>
+    <string name="pref_title_ns_allow_client_control">Povolit ovládání z klienta</string>
+    <string name="pref_summary_ns_allow_client_control">Nechat spárované klientské zařízení odesílat podepsané příkazy (např. scény start/stop) přes Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Pouze WiFi</string>
     <string name="pref_title_openhumans_charging_only">Pouze při nabíjení</string>
