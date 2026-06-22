@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
     <string name="no_temp_basal_running">Žádný dočasný bazál není spuštěn</string>
     <string name="temp_target_short">DC</string>
@@ -137,10 +138,25 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Chybí název inzulínu</string>
     <string name="insulin_name_exists">Název inzulínu %1$s již existuje, vyberte nový název</string>
+    <string name="insulin_external_update_title">Konfigurace inzulínu změněna</string>
+    <string name="insulin_external_update_message">Spárovaný klient změnil konfiguraci inzulinu. Klepnutím na tlačítko OK načtěte své změny a zahodíte své neuložené úpravy, nebo zrušte jejich ponechání (vaše další uložení bude přepsat).</string>
+    <string name="insulin_edit_target_gone">Tento inzulin byl odstraněn jinde, takže vaše úpravy nemohly být uloženy. Seznam byl obnoven.</string>
+    <string name="insulin_activation_applied">Aktivace inzulínu byla použita</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Aplikuji…</string>
+    <string name="clientcontrol_pending_working_text">Čekání na potvrzení od hlavního zařízení…</string>
+    <string name="clientcontrol_pending_rejected_title">Neaplikováno</string>
+    <string name="clientcontrol_pending_rejected_text">Hlavní zařízení nemohlo použít tento požadavek.</string>
+    <string name="clientcontrol_pending_failed_format">%1$s nelze provést.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Částečně aplikováno</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s byl použitý, ale některé akce nemohly být.\nZkontrolujte aktivní stav.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Nelze potvrdit</string>
+    <string name="clientcontrol_pending_unconfirmed_text">Žádost byla odeslána, ale hlavní zařízení ji nepotvrdilo včas. Může nebo nemusí být aplikována - tato obrazovka se aktualizuje po synchronizaci.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s bylo odesláno, ale žádné potvrzení se nevrátilo.\n%2$s\n se zde zobrazí, pokud/když jej hlavní zařízení použije.</string>
+    <string name="clientcontrol_pending_stop_waiting">Zastavit čekání</string>
     <string name="a11y_add_new_insulin">Přidat nový inzulín</string>
     <string name="a11y_delete_current_insulin">Odstranit aktuální inzulín</string>
     <string name="activate_insulin_no_profile">Nebyl nalezen žádný aktivní profil</string>
