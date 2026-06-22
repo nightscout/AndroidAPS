@@ -85,8 +85,8 @@
     <string name="action_tempt_confirmation">Temp Target Requested</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard Requested</string>
     <string name="action_user_action_confirmation">User Action Requested</string>
-    <string name="action_scene_confirmation">Activate Scene</string>
-    <string name="scene_stop">STOP</string>
+    <string name="action_scene_confirmation">Scene Requested</string>
+    <string name="scene_end">End</string>
     <string name="action_treatment_confirmation">Treatment Requested</string>
     <string name="action_bolus_confirmation">Bolus Requested</string>
     <string name="action_wizard_confirmation">Calculation Requested</string>
@@ -297,6 +297,8 @@
     <string name="title_activity_suspend_loop">Suspend Loop</string>
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Sent</string>
     <string name="contacting_master">Contacting master…</string>
     <string name="contacting_master_unknown">State unknown — check phone</string>
