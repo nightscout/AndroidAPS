@@ -94,11 +94,12 @@ internal object EversenseDmsBinaryCodec {
         baos.write(int16LE(calibrations.size))
         baos.write(0x00)
         calibrations.forEachIndexed { idx, c ->
-            baos.write(int24LE(idx + 1))
-            baos.write(calcDateBytes(c.datetime))
-            baos.write(calcTimeBytes(c.datetime))
-            baos.write(int16LE(c.glucoseInMgDl))
-            baos.write(1) // ACTUALLY_USED_FOR_CALIBRATION
+            baos.write(int16LE(idx + 1))            // record number (2 bytes)
+            baos.write(calcDateBytes(c.datetime))   // date (2)
+            baos.write(calcTimeBytes(c.datetime))   // time (2)
+            baos.write(int16LE(c.glucoseInMgDl))    // glucose (2)
+            baos.write(int16LE(0))                  // padding (2)
+            baos.write(byteArrayOf(1, 0, 0, 0))     // custom field (4)
         }
         return Base64.getEncoder().encodeToString(baos.toByteArray())
     }

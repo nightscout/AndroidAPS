@@ -98,7 +98,7 @@ class EversenseDmsBinaryCodecTest {
     @Test
     fun `buildMgBytes encodes a calibration record exactly`() {
         val cals = listOf(CalibrationHistoryItem(ts, 100, CalibrationFlag.ACTUALLY_USED_FOR_CALIBRATION))
-        assertEquals("mAEAAQAAAQAAbi+qsWQAAQ==", EversenseDmsBinaryCodec.buildMgBytes(cals))
+        assertEquals("mAEAAQAAAQBuL6qxZAAAAAEAAAA=", EversenseDmsBinaryCodec.buildMgBytes(cals))
     }
 
     // ─── ordinal mappings ───────────────────────────────────────────────────────
