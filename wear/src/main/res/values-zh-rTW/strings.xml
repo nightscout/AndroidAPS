@@ -85,8 +85,6 @@
     <string name="action_tempt_confirmation">已請求臨時目標</string>
     <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
     <string name="action_user_action_confirmation">用戶操作請求</string>
-    <string name="action_scene_confirmation">啟動情境</string>
-    <string name="scene_stop">停止</string>
     <string name="action_treatment_confirmation">已請求治療</string>
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
