@@ -96,6 +96,7 @@ sealed class AppRoute(val route: String) {
         fun createRoute(pluginIndex: Int) = "plugin_content/$pluginIndex"
     }
 
+    data object AutomationList : AppRoute("automation_list")
     data object SceneList : AppRoute("scene_list")
     data object SceneWizard : AppRoute("scene_wizard?sceneId={sceneId}") {
 
@@ -124,4 +125,6 @@ sealed class AppRoute(val route: String) {
     data object SiteRotationManagement : AppRoute("siteRotationManagement")
     data object SiteRotationSettings : AppRoute("siteRotationSettings")
     data object SetupWizard : AppRoute("setup_wizard")
+    data object AuthorizedClients : AppRoute("authorized_clients")
+    data object PairWithMaster : AppRoute("pair_with_master")
 }

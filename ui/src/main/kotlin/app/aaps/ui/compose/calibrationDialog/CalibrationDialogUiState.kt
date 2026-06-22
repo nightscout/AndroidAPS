@@ -16,7 +16,7 @@ data class CalibrationDialogUiState(
 ) {
 
     val isMgdl: Boolean get() = units == GlucoseUnit.MGDL
-    val unitLabel: String get() = units.asText
+    val unitLabel: String get() = units.displayLabel
     val hasValidBg: Boolean get() = bg > 0.0
     val canSubmit: Boolean get() = hasValidBg && preconditions is AddEntryResult.Accepted && !submitting
     val blockingPreconditions: AddEntryResult.Rejected? get() = preconditions as? AddEntryResult.Rejected

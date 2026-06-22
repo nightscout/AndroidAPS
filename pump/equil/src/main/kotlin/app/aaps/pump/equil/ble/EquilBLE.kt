@@ -41,6 +41,8 @@ class EquilBLE @Inject constructor(
     private var equilManager: EquilManager? = null
     var isConnected = false
     var connecting = false
+    private var connectInitiated = false
+    private var connectRunnable: Runnable? = null
     var macAddress: String? = null
     private var bleHandler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -142,6 +144,10 @@ class EquilBLE @Inject constructor(
     fun disconnect() {
         isConnected = false
         connecting = false
+        connectInitiated = false
+        // Cancel any pending delayed connect so a stale runnable can't re-open a GATT after teardown.
+        connectRunnable?.let { handler.removeCallbacks(it) }
+        connectRunnable = null
         startTrue = false
         autoScan = false
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
@@ -168,10 +174,17 @@ class EquilBLE @Inject constructor(
     }
 
     private fun connectEquil(address: String) {
-        handler.postDelayed({
+        // Guard against the scan emitting the same device multiple times (and other re-entrant
+        // calls): only one connect attempt per session, reset on disconnect(). Prevents stacking
+        // overlapping GATT clients. See also the close-before-connect guard in EquilBleTransportImpl.
+        if (connectInitiated) return
+        connectInitiated = true
+        val runnable = Runnable {
             aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
             bleTransport.gatt.connect(address)
-        }, 500)
+        }
+        connectRunnable = runnable
+        handler.postDelayed(runnable, 500)
     }
 
     private var baseCmd: BaseCmd? = null

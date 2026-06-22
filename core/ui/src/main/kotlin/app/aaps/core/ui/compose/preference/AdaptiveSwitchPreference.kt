@@ -77,14 +77,14 @@ fun AdaptiveSwitchPreferenceItem(
                     guardMessage = message
                 }
             },
-            title = { Text(stringResource(effectiveTitleResId)) },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, booleanKey) },
             summary = summary,
             enabled = visibility.enabled
         )
     } else {
         SwitchPreference(
             state = state,
-            title = { Text(stringResource(effectiveTitleResId)) },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, booleanKey) },
             summary = summary,
             enabled = visibility.enabled
         )

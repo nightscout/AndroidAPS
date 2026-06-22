@@ -354,3 +354,15 @@ jobs:
           upload_to_gdrive "aaps-wear-${VERSION}${VERSION_SUFFIX}.apk" "aaps-wear-${VERSION}${VERSION_SUFFIX}.apk"
 
           echo "🎉 APKs successfully uploaded to Google Drive!"
+
+  # Configuration: Threshold-based cleanup
+  # Clean up only occurs when total runs exceed: keep_runs + keep_threshold (e.g., 20 + 5 = 25)
+  cleanup:
+    name: Cleanup Old Workflow Runs
+    needs: build
+    if: always()
+    uses: ./.github/workflows/cleanup-workflow-runs.yml
+    with:
+      workflow_name: 'AAPS CI'
+      keep_runs: 20
+      keep_threshold: 5

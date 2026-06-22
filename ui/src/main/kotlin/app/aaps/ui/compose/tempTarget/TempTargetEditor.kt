@@ -123,7 +123,7 @@ fun TempTargetEditor(
             valueRange = minTarget..maxTarget,
             step = targetStep,
             valueFormat = if (units == GlucoseUnit.MGDL) DecimalFormat("0") else DecimalFormat("0.0"),
-            unitLabel = units.asText,
+            unitLabel = units.displayLabel,
             modifier = Modifier.fillMaxWidth()
         )
 

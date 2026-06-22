@@ -48,15 +48,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
-import app.aaps.core.ui.compose.preference.PreferenceCategory
+import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.ui.compose.overview.statusLights.StatusItem
 import app.aaps.ui.compose.overview.statusLights.StatusSectionContent
@@ -213,13 +210,6 @@ private fun StatusLightsSettingsContent(
 ) {
     var showCopyDialog by remember { mutableStateOf(false) }
 
-    val groups = listOf(
-        stringResource(app.aaps.core.ui.R.string.cannula) to listOf(IntKey.OverviewCageWarning, IntKey.OverviewCageCritical),
-        stringResource(app.aaps.core.ui.R.string.insulin_label) to listOf(IntKey.OverviewIageWarning, IntKey.OverviewIageCritical, IntKey.OverviewResWarning, IntKey.OverviewResCritical),
-        stringResource(app.aaps.core.ui.R.string.sensor_label) to listOf(IntKey.OverviewSageWarning, IntKey.OverviewSageCritical, IntKey.OverviewSbatWarning, IntKey.OverviewSbatCritical),
-        stringResource(app.aaps.core.ui.R.string.pb_label) to listOf(IntKey.OverviewBageWarning, IntKey.OverviewBageCritical, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical)
-    )
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -232,12 +222,9 @@ private fun StatusLightsSettingsContent(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
         )
 
-        ProvidePreferenceTheme {
-            groups.forEach { (categoryTitle, keys) ->
-                PreferenceCategory(title = { Text(categoryTitle) })
-                AdaptivePreferenceList(items = keys)
-            }
-        }
+        // Multiple group subscreens → one expandable card each (collapsed by default), matching the
+        // main Settings screen's look. Shared renderer; groups are the SSOT in BuiltInSearchables.
+        PreferenceSheetContent(settingsDef = settingsDef)
 
         FilledTonalButton(
             onClick = { showCopyDialog = true },

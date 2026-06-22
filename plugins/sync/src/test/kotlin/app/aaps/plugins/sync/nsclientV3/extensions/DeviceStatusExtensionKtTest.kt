@@ -10,10 +10,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
-import app.aaps.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
+import app.aaps.plugins.sync.nsclientV3.data.ProcessedDeviceStatusDataImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -31,11 +31,11 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
-    @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var apsResultProvider: Provider<APSResult>
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var overviewData: OverviewData
     @Mock lateinit var calculationWorkflow: CalculationWorkflow
+    @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     private lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -43,7 +43,11 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     @BeforeEach
     fun setup() {
         processedDeviceStatusData = ProcessedDeviceStatusDataImpl(apsResultProvider)
-        nsDeviceStatusHandler = NSDeviceStatusHandler(preferences, config, dateUtil, runningConfiguration, processedDeviceStatusData, aapsLogger, persistenceLayer, overviewData, calculationWorkflow, rxBus, testScope)
+        nsDeviceStatusHandler = NSDeviceStatusHandler(
+            preferences, config, dateUtil, processedDeviceStatusData, aapsLogger,
+            persistenceLayer, overviewData, calculationWorkflow, rxBus, testScope,
+            Provider { nsClientV3Plugin }
+        )
         whenever(config.AAPSCLIENT).thenReturn(true)
     }
 
@@ -82,6 +86,5 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
         assertThat(nsDeviceStatus2.uploader?.battery).isEqualTo(nsDeviceStatus.uploader?.battery)
         assertThat(nsDeviceStatus2.pump?.battery).isEqualTo(nsDeviceStatus.pump?.battery)
         assertThat(nsDeviceStatus2.openaps?.enacted?.toString()).isEqualTo(nsDeviceStatus.openaps?.enacted?.toString())
-        assertThat(nsDeviceStatus2.configuration?.toString()).isEqualTo(nsDeviceStatus.configuration?.toString())
     }
 }

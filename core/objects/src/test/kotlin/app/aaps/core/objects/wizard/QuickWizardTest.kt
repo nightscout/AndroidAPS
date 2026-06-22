@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.keys.StringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONArray
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,6 +39,7 @@ class QuickWizardTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         whenever(preferences.get(StringNonKey.QuickWizard)).thenReturn("[]")
+        whenever(preferences.observe(StringNonKey.QuickWizard)).thenReturn(MutableStateFlow("[]"))
         val quickWizardEntry = QuickWizardEntry(aapsLogger, preferences, profileFunction, loop, iobCobCalculator, persistenceLayer, dateUtil, glucoseStatusProvider, bolusWizardProvider, quickWizardProvider)
         quickWizardEntry.time = mockedTime
         val quickWizardEntryProvider = Provider { quickWizardEntry }

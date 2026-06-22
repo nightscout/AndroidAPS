@@ -139,6 +139,7 @@ class PumpWithConcentrationImpl @Inject constructor(
                 activePumpInternal.pumpDescription.clone().also {
                     it.bolusStep *= conc
                     it.extendedBolusStep *= conc
+                    it.extendedBolusMinAmount *= conc
                     it.maxTempAbsolute *= conc
                     it.tempAbsoluteStep *= conc
                     it.basalStep *= conc

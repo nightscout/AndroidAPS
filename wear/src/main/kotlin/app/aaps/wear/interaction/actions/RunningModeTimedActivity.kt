@@ -39,6 +39,7 @@ import androidx.wear.compose.material3.Text
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import dagger.android.support.DaggerAppCompatActivity
@@ -48,21 +49,25 @@ import javax.inject.Inject
 class RunningModeTimedActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var sp: SP
+
+    private var eventData: EventData.RunningModePreSelect? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val eventData = intent.extras?.getString(DataLayerListenerServiceWear.KEY_ACTION)
+        val data = intent.extras?.getString(DataLayerListenerServiceWear.KEY_ACTION)
             ?.let { EventData.deserialize(it) as? EventData.RunningModePreSelect }
             ?: run { finish(); return }
+        eventData = data
 
-        val fineStep = (eventData.durations.firstOrNull() ?: 60).toDouble()
+        val fineStep = (data.durations.firstOrNull() ?: 60).toDouble()
         val min = fineStep
-        val max = (eventData.durations.lastOrNull() ?: 240).toDouble()
+        val max = (data.durations.lastOrNull() ?: 240).toDouble()
         val stepValues = listOf(fineStep, fineStep * 2, fineStep * 3)
         val defaultDuration = if (fineStep < 60.0) fineStep * 2 else fineStep
         val stepLabels = if (fineStep >= 60.0) listOf("+${(fineStep * 2 / 60).toInt()}", "+${(fineStep * 3 / 60).toInt()}") else null
-        val activityTitle = eventData.title.ifEmpty { null }
+        val activityTitle = data.title.ifEmpty { null }
 
         setContent {
             MaterialTheme {
@@ -90,7 +95,7 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
                             else -> RunningModeConfirmScreen(
                                 duration = duration.toInt(),
                                 onConfirm = {
-                                    confirmRunningMode(eventData.timeStamp, eventData.stateIndex, duration.toInt())
+                                    confirmRunningMode(data.stateIndex, duration.toInt())
                                 },
                             )
                         }
@@ -104,8 +109,13 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun confirmRunningMode(timeStamp: Long, stateIndex: Int, duration: Int) {
-        rxBus.send(EventWearToMobile(EventData.RunningModeSelected(timeStamp, stateIndex, duration)))
+    // Always use the latest timeStamp from SP so a stale tile-cached intent does not get rejected
+    // by the phone when a new RunningModeList has been issued since the tile was last rendered.
+    private fun confirmRunningMode(stateIndex: Int, duration: Int) {
+        val latestTS = runCatching {
+            (EventData.deserialize(sp.getString(R.string.key_running_mode_data, "")) as? EventData.RunningModeList)?.timeStamp
+        }.getOrNull() ?: eventData?.timeStamp ?: return
+        rxBus.send(EventWearToMobile(EventData.RunningModeSelected(latestTS, stateIndex, duration)))
         startActivity(
             Intent(this, ConfirmationActivity::class.java).apply {
                 putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)

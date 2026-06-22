@@ -72,7 +72,7 @@ fun ProfileSingleContent(
                 Column(modifier = Modifier.padding(16.dp)) {
                     ProfileRow(
                         label = stringResource(R.string.units_label),
-                        value = profile.units.asText
+                        value = profile.units.displayLabel
                     )
                 }
             }

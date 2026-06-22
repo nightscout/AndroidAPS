@@ -64,7 +64,8 @@ class ProfileSealedTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         hardLimits = HardLimitsMock(preferences, rh)
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_per_unit)).thenReturn("/U")
+        whenever(rh.gs(app.aaps.core.ui.R.string.profile_isf_units_mgdl)).thenReturn("mg/dL/U")
+        whenever(rh.gs(app.aaps.core.ui.R.string.profile_isf_units_mmol)).thenReturn("mmol/L/U")
         whenever(rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit)).thenReturn("g/U")
         whenever(rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour)).thenReturn("U/h")
         whenever(rh.gs(anyInt(), anyString())).thenReturn("")
@@ -93,8 +94,8 @@ class ProfileSealedTest : TestBase() {
 //        assertThat(p.getIsfTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(110.0)
         assertThat(p.getIsfList(rh, dateUtil).replace(".", ",")).isEqualTo(
             """
-    00:00    6,0 mmol/U
-    02:00    6,2 mmol/U
+    00:00    6,0 mmol/L/U
+    02:00    6,2 mmol/L/U
     """.trimIndent()
         )
         assertThat(p.getIc(c.timeInMillis)).isWithin(0.01).of(30.0)
@@ -143,9 +144,9 @@ class ProfileSealedTest : TestBase() {
         p.ts = 1
         assertThat(p.getIsfList(rh, dateUtil).replace(',', '.')).isEqualTo(
             """
-                00:00    6.2 mmol/U
-                01:00    6.0 mmol/U
-                03:00    6.2 mmol/U
+                00:00    6.2 mmol/L/U
+                01:00    6.0 mmol/L/U
+                03:00    6.2 mmol/L/U
                 """.trimIndent()
         )
 

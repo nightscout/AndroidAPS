@@ -55,14 +55,14 @@ class BolusTimerImplTest : TestBase() {
         }
     }
     private lateinit var dateUtil: DateUtil
-    private lateinit var automationPlugin: AutomationPlugin
+    private lateinit var automationRuntime: AutomationRuntime
 
     @BeforeEach
     fun init() {
         whenever(rh.gs(anyInt())).thenReturn("")
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
-        automationPlugin = AutomationPlugin(
+        automationRuntime = AutomationRuntime(
             injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil,
             activePlugin, timerUtil, receiverStatusStore, uel, profileRepository, sceneApi
         )
@@ -70,10 +70,10 @@ class BolusTimerImplTest : TestBase() {
 
     @Test
     fun doTest() {
-        assertThat(automationPlugin.size()).isEqualTo(0)
-        automationPlugin.scheduleAutomationEventBolusReminder()
-        assertThat(automationPlugin.size()).isEqualTo(1)
-        automationPlugin.removeAutomationEventBolusReminder()
-        assertThat(automationPlugin.size()).isEqualTo(0)
+        assertThat(automationRuntime.size()).isEqualTo(0)
+        automationRuntime.scheduleAutomationEventBolusReminder()
+        assertThat(automationRuntime.size()).isEqualTo(1)
+        automationRuntime.removeAutomationEventBolusReminder()
+        assertThat(automationRuntime.size()).isEqualTo(0)
     }
 }

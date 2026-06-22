@@ -2,6 +2,7 @@ package app.aaps.core.graph
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -35,7 +36,6 @@ import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
-import com.patrykandpatrick.vico.compose.common.vicoTheme
 import kotlin.math.floor
 import app.aaps.core.ui.R as CoreUiR
 
@@ -109,7 +109,7 @@ fun InsulinGraphCompose(
         }
     }
 
-    val legendItemLabelComponent = rememberTextComponent(style = TextStyle(color = vicoTheme.textColor))
+    val labelComponent = rememberTextComponent(style = TextStyle(color = MaterialTheme.colorScheme.onSurface))
     val activityLegendIcon = rememberShapeComponent(fill = Fill(ActivityColor))
     val iobLegendIcon = rememberShapeComponent(fill = Fill(IobColor))
 
@@ -159,8 +159,9 @@ fun InsulinGraphCompose(
                 rangeProvider = remember { CartesianLayerRangeProvider.fixed(minY = 0.0, maxY = 1.0) },
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            startAxis = VerticalAxis.rememberStart(),
+            startAxis = VerticalAxis.rememberStart(label = labelComponent),
             bottomAxis = HorizontalAxis.rememberBottom(
+                label = labelComponent,
                 valueFormatter = remember {
                     CartesianValueFormatter { _, value, _ -> "${(value / 60).toInt()}h" }
                 },
@@ -172,7 +173,7 @@ fun InsulinGraphCompose(
                         add(
                             LegendItem(
                                 if (index == 0) iobLegendIcon else activityLegendIcon,
-                                legendItemLabelComponent,
+                                labelComponent,
                                 label,
                             )
                         )

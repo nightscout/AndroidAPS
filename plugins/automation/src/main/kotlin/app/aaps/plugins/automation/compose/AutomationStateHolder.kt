@@ -2,12 +2,10 @@ package app.aaps.plugins.automation.compose
 
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
-import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.compose.icons.IcUserOptions
 import app.aaps.plugins.automation.AutomationEventObject
-import app.aaps.plugins.automation.AutomationPlugin
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.triggers.TriggerConnector
@@ -15,12 +13,19 @@ import app.aaps.plugins.automation.triggers.TriggerLocation
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class AutomationStateHolder(
-    private val plugin: AutomationPlugin,
+    private val plugin: AutomationRuntime,
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
@@ -36,8 +41,8 @@ class AutomationStateHolder(
     private val _editState = MutableStateFlow(AutomationEditUiState())
     val editState: StateFlow<AutomationEditUiState> = _editState.asStateFlow()
 
-    private val selectedPositions = mutableSetOf<Int>()
     private var disposable: CompositeDisposable? = null
+    private var scope: CoroutineScope? = null
 
     // Working copy for edit
     private var workingEvent: AutomationEventObject = AutomationEventObject(injector)
@@ -52,66 +57,50 @@ class AutomationStateHolder(
                            refresh()
                            refreshEditState()
                        }, fabricPrivacy::logException)
-        d += rxBus.toObservable(EventAutomationDataChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           refresh()
-                           rxBus.send(EventWearUpdateTiles())
-                       }, fabricPrivacy::logException)
         disposable = d
+        // drop(1) skips the seed empty snapshot the plugin emits before loadFromSP runs — the
+        // refresh() below covers the cold start, and the plugin's first real emission after load
+        // re-triggers it. EventWearUpdateTiles is now broadcast from the plugin's own scope so it
+        // also fires for NS-synced edits while the user is on a different screen — no longer
+        // gated on this holder being alive.
+        val newScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        scope = newScope
+        plugin.events.drop(1).onEach { refresh() }.launchIn(newScope)
         refresh()
     }
 
     fun stop() {
         disposable?.clear()
         disposable = null
+        scope?.cancel()
+        scope = null
     }
 
     // ---- List ----
     fun toggleEnabled(position: Int, checked: Boolean) {
         plugin.at(position).isEnabled = checked
-        rxBus.send(EventAutomationDataChanged())
+        // In-place mutation — list reference unchanged, so we have to kick the flow manually.
+        // markEdited bumps the sync version so the toggle propagates client→master.
+        plugin.markEdited()
     }
 
     fun move(from: Int, to: Int) {
         plugin.swap(from, to)
-        refresh()
+        // swap() emits, refresh() runs from the flow collector. Local refresh() removed to avoid
+        // a redundant rebuild on every drag tick — the collector already fires on the same thread.
     }
 
     fun commitMove() {
-        rxBus.send(EventAutomationDataChanged())
+        // swap() already emitted on every drag step, so this is a no-op in the new model.
+        // Kept as a no-op so the existing caller in the drag handler doesn't break.
     }
 
-    fun enterRemoveMode() {
-        selectedPositions.clear()
-        _state.value = _state.value.copy(selectionMode = AutomationSelectionMode.Remove)
-        refresh()
-    }
+    fun eventAt(position: Int): AutomationEventObject? =
+        runCatching { plugin.at(position) }.getOrNull()
 
-    fun enterSortMode() {
-        _state.value = _state.value.copy(selectionMode = AutomationSelectionMode.Sort)
-        refresh()
-    }
-
-    fun exitSelection() {
-        selectedPositions.clear()
-        _state.value = _state.value.copy(selectionMode = AutomationSelectionMode.None)
-        refresh()
-    }
-
-    fun toggleSelection(position: Int, checked: Boolean) {
-        if (checked) selectedPositions.add(position) else selectedPositions.remove(position)
-        refresh()
-    }
-
-    fun selectedEvents(): List<AutomationEventObject> =
-        selectedPositions.sorted().mapNotNull { runCatching { plugin.at(it) }.getOrNull() }
-
-    fun removeSelected() {
-        selectedEvents().forEach { plugin.remove(it) }
-        selectedPositions.clear()
-        _state.value = _state.value.copy(selectionMode = AutomationSelectionMode.None)
-        rxBus.send(EventAutomationDataChanged())
+    fun remove(position: Int) {
+        eventAt(position)?.let { plugin.remove(it) }
+        // plugin.remove() emits; the collector picks it up and rebuilds the list.
     }
 
     private var eventSnapshotJson: String? = null
@@ -250,8 +239,7 @@ class AutomationStateHolder(
         if (e.trigger.size() == 0 && !e.userAction) return false
         if (e.actions.isEmpty()) return false
         if (workingPosition == -1) plugin.add(e) else plugin.set(e, workingPosition)
-        rxBus.send(EventAutomationDataChanged())
-        rxBus.send(EventWearUpdateTiles())
+        // add/set both emit via notifyChanged() — collector triggers refresh + EventWearUpdateTiles.
         _route.value = AutomationRoute.List
         return true
     }
@@ -288,6 +276,9 @@ class AutomationStateHolder(
             val actionIcons = mutableListOf<AutomationIcon>()
             for (act in a.actions) act.composeIcon()?.let { actionIcons.add(AutomationIcon(it, act.composeIconTint())) }
             AutomationEventUi(
+                // Identity of the persistent event object — stable across in-place swaps so the
+                // reorder key doesn't change mid-drag (position does).
+                key = System.identityHashCode(a).toLong(),
                 position = i,
                 title = a.title,
                 isEnabled = a.isEnabled,
@@ -296,8 +287,7 @@ class AutomationStateHolder(
                 systemAction = a.systemAction,
                 actionsValid = a.areActionsValid(),
                 triggerIcons = triggerIcons.distinct(),
-                actionIcons = actionIcons.distinct(),
-                isSelected = i in selectedPositions
+                actionIcons = actionIcons.distinct()
             )
         }
         val sb = StringBuilder()

@@ -365,12 +365,12 @@ sealed class ProfileSealed(
         getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(R.string.profile_carbs_per_unit), dateUtil)
 
     override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(R.string.profile_per_unit), dateUtil)
+        getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(if (units == GlucoseUnit.MGDL) R.string.profile_isf_units_mgdl else R.string.profile_isf_units_mmol), dateUtil)
 
     override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String =
         getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
 
-    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.asText, dateUtil)
+    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.displayLabel, dateUtil)
 
     override fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile =
         PureProfile(

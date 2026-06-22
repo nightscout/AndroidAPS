@@ -1,7 +1,7 @@
 package app.aaps.plugins.calibration
 
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.time.T
-import app.aaps.plugins.calibration.db.CalibrationEntry
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -60,7 +60,7 @@ class CalibrationMathTest {
         val fit = fitLinearCalibration(
             listOf(
                 entry(100.0, 110.0, ageDays = 0L),
-                CalibrationEntry(
+                CAL(
                     id = 0L,
                     timestamp = now + T.mins(5).msecs(),
                     fingerstickMgdl = 220.0,
@@ -162,8 +162,8 @@ class CalibrationMathTest {
         assertThat(fit.offset).isWithin(0.01).of(4.0)
     }
 
-    private fun entry(sensor: Double, fs: Double, ageDays: Long = 0L): CalibrationEntry =
-        CalibrationEntry(
+    private fun entry(sensor: Double, fs: Double, ageDays: Long = 0L): CAL =
+        CAL(
             id = 0L,
             timestamp = now - T.days(ageDays).msecs(),
             fingerstickMgdl = fs,

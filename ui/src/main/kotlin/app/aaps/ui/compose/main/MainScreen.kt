@@ -226,6 +226,9 @@ fun MainScreen(
 
                 val activeSceneState by mainViewModel.activeSceneState.collectAsStateWithLifecycle()
                 val sceneExpired by mainViewModel.sceneExpired.collectAsStateWithLifecycle()
+                val masterReachable by mainViewModel.masterReachable.collectAsStateWithLifecycle()
+                // (Probe-while-offline is now global — see ComposeMainActivity. This screen still reads
+                // masterReachable for its own gating.)
                 Box(modifier = Modifier.fillMaxSize()) {
                     // Main content
                     OverviewScreen(
@@ -264,6 +267,7 @@ fun MainScreen(
                         sceneExpired = sceneExpired,
                         onEndScene = { mainViewModel.requestSceneDeactivation() },
                         onDismissScene = { mainViewModel.dismissExpiredScene() },
+                        endSceneEnabled = masterReachable,
                         formatDuration = mainViewModel::formatDuration,
                         paddingValues = contentPadding,
                         fabBottomOffset = if (hasToolbar && showChrome) 56.dp else 0.dp,
@@ -476,6 +480,7 @@ fun MainScreen(
             ThreeButtonDialog(
                 title = confirmation.title,
                 message = confirmation.message,
+                icon = confirmation.icon,
                 primaryLabel = confirmation.confirmLabel ?: stringResource(R.string.ok),
                 onPrimary = { mainViewModel.executeConfirmableAction(confirmation.onConfirmAction) },
                 secondaryLabel = secondaryLabel,
@@ -486,6 +491,7 @@ fun MainScreen(
             OkCancelDialog(
                 title = confirmation.title,
                 message = confirmation.message,
+                icon = confirmation.icon,
                 onConfirm = { mainViewModel.executeConfirmableAction(confirmation.onConfirmAction) },
                 onDismiss = { mainViewModel.dismissActionConfirmation() }
             )

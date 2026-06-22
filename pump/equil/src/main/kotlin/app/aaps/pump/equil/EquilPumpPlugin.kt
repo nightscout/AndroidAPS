@@ -140,14 +140,21 @@ class EquilPumpPlugin @Inject constructor(
             if (r.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
             else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
         }
-        preferences.observe(DoubleKey.SafetyMaxBolus).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) {
-            val profile = pumpSync.expectedPumpState().profile ?: return@collectResilient
-            val r = commandQueue.customCommand(
-                CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager)
-            )
-            if (r.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
-            else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
-        }
+        // Re-program the pod thresholds whenever either the max bolus or the max basal changes.
+        // The pod enforces the basal threshold (see CmdSettingSet) as a hard limit, so it must stay
+        // in sync with getMaxBasalAllowed — otherwise a raised max basal won't take effect until the
+        // next pod activation.
+        preferences.observe(DoubleKey.SafetyMaxBolus).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) { resendPumpSettings() }
+        preferences.observe(DoubleKey.ApsMaxBasal).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) { resendPumpSettings() }
+    }
+
+    private suspend fun resendPumpSettings() {
+        val profile = pumpSync.expectedPumpState().profile ?: return
+        val r = commandQueue.customCommand(
+            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager)
+        )
+        if (r.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
+        else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
     }
 
     var tempActivationProgress = ActivationProgress.NONE
@@ -204,6 +211,15 @@ class EquilPumpPlugin @Inject constructor(
         val mode = equilManager.equilState?.runMode
         if (mode === RunMode.RUN || mode === RunMode.SUSPEND) {
             val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
+            // The pod silently rejects a schedule whose rate exceeds the max basal threshold
+            // programmed via CmdSettingSet (getMaxBasalAllowed), surfacing only as a connection
+            // timeout. Reject it up front with a clear message instead of letting it hang.
+            val maxBasalAllowed = constraintsChecker.getMaxBasalAllowed(profile).value()
+            val peakRate = basalSchedule.getEntries().maxOf { it.rate }
+            if (peakRate > maxBasalAllowed + 0.001) {
+                return pumpEnactResultProvider.get().enacted(false).success(false)
+                    .comment(rh.gs(R.string.equil_basal_exceeds_max, peakRate, maxBasalAllowed))
+            }
             val pumpEnactResult = equilManager.executeCmd(CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager))
             if (pumpEnactResult.success) equilManager.equilState?.basalSchedule = basalSchedule
             return pumpEnactResult

@@ -43,7 +43,6 @@ import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
-import kotlinx.serialization.json.JsonObject
 import org.json.JSONException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -289,9 +288,5 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         val enabled = preferences.get(BooleanKey.ApsUseAutosens)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
-    }
-
-    override fun configuration(): JsonObject = JsonObject(emptyMap())
-    override fun applyConfiguration(configuration: JsonObject) {
     }
 }

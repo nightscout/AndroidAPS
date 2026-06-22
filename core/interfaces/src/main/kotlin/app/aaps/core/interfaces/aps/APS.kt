@@ -1,9 +1,8 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.interfaces.configuration.ConfigExportImport
 import app.aaps.core.interfaces.profile.Profile
 
-interface APS : ConfigExportImport {
+interface APS {
 
     /**
      * Algorithm used

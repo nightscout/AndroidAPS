@@ -5,10 +5,10 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.plugins.calibration.CalibrationFit
 import app.aaps.plugins.calibration.FitMode
-import app.aaps.plugins.calibration.db.CalibrationEntry
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -36,8 +36,8 @@ class CalibrationScreenComposeTest {
     private val hour = 3_600_000L
 
     private val sampleEntries = listOf(
-        CalibrationEntry(id = 1, timestamp = now - 5 * hour, fingerstickMgdl = 120.0, sensorMgdlAtPairing = 110.0),
-        CalibrationEntry(id = 2, timestamp = now - 1 * hour, fingerstickMgdl = 150.0, sensorMgdlAtPairing = 145.0)
+        CAL(id = 1, timestamp = now - 5 * hour, fingerstickMgdl = 120.0, sensorMgdlAtPairing = 110.0),
+        CAL(id = 2, timestamp = now - 1 * hour, fingerstickMgdl = 150.0, sensorMgdlAtPairing = 145.0)
     )
 
     private fun appliedState() = CalibrationUiState(

@@ -7,6 +7,11 @@ enum class GlucoseUnit(val asText: String) {
     MGDL("mg/dl"),
     MMOL("mmol");
 
+    val displayLabel: String get() = when (this) {
+        MGDL -> "mg/dL"
+        MMOL -> "mmol/L"
+    }
+
     companion object {
 
         const val MMOLL_TO_MGDL = 18.0 // 18.0182;

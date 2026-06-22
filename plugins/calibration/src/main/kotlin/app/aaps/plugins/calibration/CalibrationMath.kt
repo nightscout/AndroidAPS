@@ -1,7 +1,7 @@
 package app.aaps.plugins.calibration
 
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.time.T
-import app.aaps.plugins.calibration.db.CalibrationEntry
 import kotlin.math.exp
 
 const val TIME_DECAY_TAU_DAYS = 2L
@@ -82,7 +82,7 @@ internal fun weightFor(timestamp: Long, now: Long): Double {
  * Returns null when fewer than [MIN_ENTRIES_FOR_FIT] entries are provided
  * or when all sensor values collapse to a single point (degenerate denominator).
  */
-fun fitLinearCalibration(entries: List<CalibrationEntry>, now: Long): CalibrationFit? {
+fun fitLinearCalibration(entries: List<CAL>, now: Long): CalibrationFit? {
     if (entries.size < MIN_ENTRIES_FOR_FIT) return null
 
     val sensorRange = entries.maxOf { it.sensorMgdlAtPairing } - entries.minOf { it.sensorMgdlAtPairing }

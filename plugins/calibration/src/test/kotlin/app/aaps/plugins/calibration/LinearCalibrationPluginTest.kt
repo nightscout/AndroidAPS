@@ -1,6 +1,7 @@
 package app.aaps.plugins.calibration
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
@@ -18,9 +19,6 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.calibration.db.CalibrationDatabase
-import app.aaps.plugins.calibration.db.CalibrationEntry
-import app.aaps.plugins.calibration.db.CalibrationRepository
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -41,9 +39,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var notificationManager: NotificationManager
-    @Mock lateinit var repository: CalibrationRepository
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Mock lateinit var database: CalibrationDatabase
 
     private lateinit var plugin: LinearCalibrationPlugin
 
@@ -58,10 +54,9 @@ class LinearCalibrationPluginTest : TestBase() {
         whenever(dateUtil.timeString(any())).thenReturn("12:00")
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(defaultSessionStart))
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(emptyList())
-        whenever(repository.getSince(any())).thenReturn(emptyList())
-        whenever(repository.getAll()).thenReturn(emptyList())
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(emptyList())
         plugin = LinearCalibrationPlugin(
-            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, repository, glucoseStatusProvider, database, rxBus
+            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus
         )
     }
 
@@ -78,7 +73,7 @@ class LinearCalibrationPluginTest : TestBase() {
     fun calibrate_inWarmUp_returnsIdentity() = runTest {
         // Session started 1h ago — within 2h warm-up
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(now - T.hours(1).msecs()))
-        whenever(repository.getSince(any())).thenReturn(twoGoodEntries())
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(twoGoodEntries())
         val data = bucketed(timestamps(now, every = 5))
         plugin.calibrate(data, CalibrationContext.NONE)
         assertThat(data.all { it.calibrated == null }).isTrue()
@@ -88,8 +83,7 @@ class LinearCalibrationPluginTest : TestBase() {
     fun calibrate_noSessionStart_returnsIdentity() = runTest {
         // No SENSOR_CHANGE recorded — calibration must NOT blend across sensor sessions
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(null)
-        whenever(repository.getAll()).thenReturn(twoGoodEntries())
-        whenever(repository.getSince(any())).thenReturn(twoGoodEntries())
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(twoGoodEntries())
         val data = bucketed(listOf(now to 150.0))
         plugin.calibrate(data, CalibrationContext.NONE)
         assertThat(data[0].calibrated).isNull()
@@ -97,7 +91,7 @@ class LinearCalibrationPluginTest : TestBase() {
 
     @Test
     fun calibrate_fewerThanTwoEntries_returnsIdentity() = runTest {
-        whenever(repository.getSince(any())).thenReturn(listOf(entry(sensor = 100.0, fs = 110.0, ageDays = 1L)))
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(listOf(entry(sensor = 100.0, fs = 110.0, ageDays = 1L)))
         val data = bucketed(timestamps(now, every = 5))
         plugin.calibrate(data, CalibrationContext.NONE)
         assertThat(data.all { it.calibrated == null }).isTrue()
@@ -106,7 +100,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Test
     fun calibrate_validFit_appliesSlopeAndOffset() = runTest {
         // Two entries on the line y = 1.1 * x + 0
-        whenever(repository.getSince(any())).thenReturn(
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(
             listOf(
                 entry(sensor = 100.0, fs = 110.0, ageDays = 1L),
                 entry(sensor = 200.0, fs = 220.0, ageDays = 1L)
@@ -120,7 +114,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Test
     fun calibrate_pureOffset_appliesCorrectly() = runTest {
         // Sensor reads 10 mg/dL too low across the range -> slope=1, offset=10
-        whenever(repository.getSince(any())).thenReturn(
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(
             listOf(
                 entry(sensor = 100.0, fs = 110.0, ageDays = 1L),
                 entry(sensor = 200.0, fs = 210.0, ageDays = 1L)
@@ -134,7 +128,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Test
     fun calibrate_slopeOutOfRange_returnsIdentity() = runTest {
         // y = 2x — slope 2.0 is way outside [0.6, 1.4]
-        whenever(repository.getSince(any())).thenReturn(
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(
             listOf(
                 entry(sensor = 100.0, fs = 200.0, ageDays = 1L),
                 entry(sensor = 200.0, fs = 400.0, ageDays = 1L)
@@ -149,7 +143,7 @@ class LinearCalibrationPluginTest : TestBase() {
     fun calibrate_clusteredEntries_appliesOffsetOnly() = runTest {
         // Five entries all within ~6 mg/dL of each other — slope estimate would be noise.
         // Mean delta (FS - sensor) = (3 + 5 + 4 + 6 + 2) / 5 = 4 mg/dL → expected correction.
-        whenever(repository.getSince(any())).thenReturn(
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(
             listOf(
                 entry(sensor = 140.0, fs = 143.0, ageDays = 0L),
                 entry(sensor = 141.0, fs = 146.0, ageDays = 0L),
@@ -168,7 +162,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Test
     fun calibrate_offsetOutOfRange_returnsIdentity() = runTest {
         // y = x + 50 — offset 50 is outside [-30, +30]
-        whenever(repository.getSince(any())).thenReturn(
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(
             listOf(
                 entry(sensor = 100.0, fs = 150.0, ageDays = 1L),
                 entry(sensor = 200.0, fs = 250.0, ageDays = 1L)
@@ -184,7 +178,7 @@ class LinearCalibrationPluginTest : TestBase() {
         // Session start 6h ago. Old (8h ago) point should NOT be calibrated.
         val sessionStart = now - T.hours(6).msecs()
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(sessionStart))
-        whenever(repository.getSince(eq(sessionStart))).thenReturn(twoGoodEntries())
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(eq(sessionStart))).thenReturn(twoGoodEntries())
         val data = bucketed(
             listOf(
                 now to 150.0,
@@ -279,7 +273,7 @@ class LinearCalibrationPluginTest : TestBase() {
             .thenReturn(listOf(bgReading(now, 145.0)))
         val result = plugin.addEntry(bgMgdl = 150.0, timestamp = now)
         assertThat(result).isEqualTo(AddEntryResult.Accepted)
-        verify(repository).insert(timestamp = eq(now), fingerstickMgdl = eq(150.0), sensorMgdlAtPairing = eq(145.0))
+        verify(persistenceLayer).insertOrUpdateCalibrationEntry(eq(CAL(timestamp = now, fingerstickMgdl = 150.0, sensorMgdlAtPairing = 145.0)))
     }
 
     @Test
@@ -290,7 +284,7 @@ class LinearCalibrationPluginTest : TestBase() {
             .thenReturn(listOf(bgReading(now, 145.0)))
         val result = plugin.addEntry(bgMgdl = 150.0, timestamp = now)
         assertThat(result).isEqualTo(AddEntryResult.Accepted)
-        verify(repository).insert(timestamp = eq(now), fingerstickMgdl = eq(150.0), sensorMgdlAtPairing = eq(145.0))
+        verify(persistenceLayer).insertOrUpdateCalibrationEntry(eq(CAL(timestamp = now, fingerstickMgdl = 150.0, sensorMgdlAtPairing = 145.0)))
     }
 
     @Test
@@ -301,14 +295,14 @@ class LinearCalibrationPluginTest : TestBase() {
         assertThat(result).isInstanceOf(AddEntryResult.Rejected.DeltaTooHigh::class.java)
         assertThat((result as AddEntryResult.Rejected.DeltaTooHigh).deltaMgdlPer5Min).isWithin(0.01).of(6.0)
         assertThat(result.thresholdMgdlPer5Min).isWithin(0.01).of(5.0)
-        verify(repository, never()).insert(any(), any(), any())
+        verify(persistenceLayer, never()).insertOrUpdateCalibrationEntry(any())
     }
 
     @Test
     fun addEntry_deltaThresholdScaledBySlopeWhenFitApplicable() = runTest {
         // Two entries imply slope = 1.05, well inside clamps → fit is applicable.
         // Effective threshold becomes 5.0 * 1.05 = 5.25 mg/dL/5min.
-        whenever(repository.getSince(any())).thenReturn(twoGoodEntries())
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(twoGoodEntries())
         // Delta 5.2: would be rejected without scaling, accepted with slope-scaled threshold.
         whenever(glucoseStatusProvider.glucoseStatusData).thenReturn(glucoseStatus(shortAvgDelta = 5.2))
         whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), eq(false)))
@@ -320,7 +314,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Test
     fun addEntry_deltaExceedsScaledThreshold_rejectsWithScaledThreshold() = runTest {
         // Same fit (slope=1.05), but delta 6.0 still exceeds the scaled threshold 5.25.
-        whenever(repository.getSince(any())).thenReturn(twoGoodEntries())
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(twoGoodEntries())
         whenever(glucoseStatusProvider.glucoseStatusData).thenReturn(glucoseStatus(shortAvgDelta = 6.0))
         val result = plugin.addEntry(bgMgdl = 150.0, timestamp = now)
         assertThat(result).isInstanceOf(AddEntryResult.Rejected.DeltaTooHigh::class.java)
@@ -335,7 +329,7 @@ class LinearCalibrationPluginTest : TestBase() {
             .thenReturn(emptyList())
         val result = plugin.addEntry(bgMgdl = 150.0, timestamp = now)
         assertThat(result).isEqualTo(AddEntryResult.Rejected.NoSensorPair)
-        verify(repository, never()).insert(any(), any(), any())
+        verify(persistenceLayer, never()).insertOrUpdateCalibrationEntry(any())
     }
 
     @Test
@@ -347,7 +341,7 @@ class LinearCalibrationPluginTest : TestBase() {
         val result = plugin.addEntry(bgMgdl = 150.0, timestamp = now)
         assertThat(result).isInstanceOf(AddEntryResult.Rejected.InWarmUp::class.java)
         assertThat((result as AddEntryResult.Rejected.InWarmUp).warmUpEndsAt).isEqualTo(sessionStart + T.hours(2).msecs())
-        verify(repository, never()).insert(any(), any(), any())
+        verify(persistenceLayer, never()).insertOrUpdateCalibrationEntry(any())
     }
 
     @Test
@@ -355,7 +349,7 @@ class LinearCalibrationPluginTest : TestBase() {
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(null)
         val result = plugin.addEntry(bgMgdl = 150.0, timestamp = now)
         assertThat(result).isEqualTo(AddEntryResult.Rejected.NoSession)
-        verify(repository, never()).insert(any(), any(), any())
+        verify(persistenceLayer, never()).insertOrUpdateCalibrationEntry(any())
     }
 
     // ------------ checkPreconditions() ------------
@@ -416,8 +410,8 @@ class LinearCalibrationPluginTest : TestBase() {
     private fun timestamps(start: Long, every: Long, count: Int = 6): List<Pair<Long, Double>> =
         (0 until count).map { i -> (start - T.mins(every * i).msecs()) to 150.0 }
 
-    private fun entry(sensor: Double, fs: Double, ageDays: Long): CalibrationEntry =
-        CalibrationEntry(
+    private fun entry(sensor: Double, fs: Double, ageDays: Long): CAL =
+        CAL(
             id = 0L,
             timestamp = now - T.days(ageDays).msecs(),
             fingerstickMgdl = fs,

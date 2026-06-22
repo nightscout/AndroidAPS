@@ -51,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.graph.profile.ProfileCompareContent
 import app.aaps.core.graph.profile.buildBasalRows
 import app.aaps.core.graph.profile.buildIcRows
@@ -170,11 +171,11 @@ fun ProfileHelperScreen(
                     icsRows = buildIcRows(sealed1, sealed2, viewModel.dateUtil),
                     icUnits = viewModel.rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit),
                     isfsRows = buildIsfRows(sealed1, sealed2, viewModel.profileUtil, viewModel.dateUtil),
-                    isfUnits = "${viewModel.getUnits().asText} ${viewModel.rh.gs(app.aaps.core.ui.R.string.profile_per_unit)}",
+                    isfUnits = viewModel.rh.gs(if (viewModel.getUnits() == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.profile_isf_units_mgdl else app.aaps.core.ui.R.string.profile_isf_units_mmol),
                     basalsRows = buildBasalRows(sealed1, sealed2, viewModel.dateUtil),
                     basalUnits = viewModel.rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour),
                     targetsRows = buildTargetRows(sealed1, sealed2, viewModel.dateUtil, viewModel.profileUtil),
-                    targetUnits = viewModel.getUnits().asText,
+                    targetUnits = viewModel.getUnits().displayLabel,
                     profileName1 = name0,
                     profileName2 = name1
                 )

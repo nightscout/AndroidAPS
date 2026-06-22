@@ -3,8 +3,6 @@ package app.aaps.plugins.automation.compose
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
-enum class AutomationSelectionMode { None, Remove, Sort }
-
 sealed interface AutomationRoute {
     data object List : AutomationRoute
     data class Edit(val position: Int) : AutomationRoute
@@ -41,6 +39,9 @@ data class AutomationEditUiState(
 }
 
 data class AutomationEventUi(
+    // Stable identity of the underlying event object, used as the LazyColumn/reorder key. Unlike
+    // [position] it does not change when rows are swapped, so dragging no longer flickers.
+    val key: Long,
     val position: Int,
     val title: String,
     val isEnabled: Boolean,
@@ -49,12 +50,10 @@ data class AutomationEventUi(
     val systemAction: Boolean,
     val actionsValid: Boolean,
     val triggerIcons: List<AutomationIcon>,
-    val actionIcons: List<AutomationIcon>,
-    val isSelected: Boolean
+    val actionIcons: List<AutomationIcon>
 )
 
 data class AutomationUiState(
     val events: List<AutomationEventUi> = emptyList(),
-    val logHtml: String = "",
-    val selectionMode: AutomationSelectionMode = AutomationSelectionMode.None
+    val logHtml: String = ""
 )

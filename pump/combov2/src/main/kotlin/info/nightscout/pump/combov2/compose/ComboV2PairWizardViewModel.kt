@@ -71,13 +71,13 @@ class ComboV2PairWizardViewModel @Inject constructor(
     /**
      * Combined UI state derived from:
      * - driverStateUIFlow (for NotInitialized check)
-     * - getPairingProgressFlow() (for stage + progress)
+     * - pairingProgressUiFlow (for stage + progress)
      * - previousPairingAttemptFailedFlow (for PIN failure indicator)
      * - local PIN text + cancel confirmation
      */
     val uiState: StateFlow<ComboV2PairWizardUiState> = combine(
         combov2Plugin.driverStateUIFlow,
-        combov2Plugin.getPairingProgressFlow(),
+        combov2Plugin.pairingProgressUiFlow,
         combov2Plugin.previousPairingAttemptFailedFlow,
         _pinText,
         _confirmCancel

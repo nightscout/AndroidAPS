@@ -1,29 +1,32 @@
 package app.aaps.ui.compose.main
 
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
-import app.aaps.core.data.model.SceneEndAction
+import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.overview.graph.ProfileDisplayData
 import app.aaps.core.interfaces.overview.graph.RunningModeDisplayData
@@ -34,19 +37,18 @@ import app.aaps.core.interfaces.overview.graph.TempTargetState
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.interfaces.scenes.SceneActions
+import app.aaps.core.interfaces.scenes.SceneChainResolver
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
@@ -54,20 +56,28 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.toStringFull
-import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
+import app.aaps.core.ui.compose.icons.IcAction
+import app.aaps.core.ui.compose.icons.IcAutomation
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.ui.compose.icons.IcQuickwizard
+import app.aaps.core.ui.compose.icons.IcTtActivity
+import app.aaps.core.ui.compose.icons.IcTtEatingSoon
+import app.aaps.core.ui.compose.icons.IcTtHypo
+import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.ui.compose.aboutDialog.AboutDialogData
+import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
-import app.aaps.ui.compose.scenes.ActiveSceneManager
-import app.aaps.ui.compose.scenes.SceneExecutor
-import app.aaps.ui.compose.scenes.SceneRepository
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
+import app.aaps.ui.compose.wizardDialog.showWizardBolusConfirmation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,6 +87,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -88,7 +99,6 @@ import kotlin.math.abs
 @Stable
 class MainViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     val config: Config,
     val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
@@ -98,34 +108,52 @@ class MainViewModel @Inject constructor(
     private val overviewDataCache: OverviewDataCache,
     private val iobCobCalculator: IobCobCalculator,
     private val profileFunction: ProfileFunction,
-    private val profileUtil: ProfileUtil,
     private val constraintChecker: ConstraintsChecker,
     private val quickWizard: QuickWizard,
     private val automation: Automation,
     private val persistenceLayer: PersistenceLayer,
-    private val profileRepository: ProfileRepository,
     private val aapsLogger: AAPSLogger,
     private val quickLaunchResolver: QuickLaunchResolver,
-    private val commandQueue: CommandQueue,
-    private val uiInteraction: UiInteraction,
+    private val wizardExecutor: WizardExecutor,
+    private val batchExecutor: BatchExecutor,
     private val uel: UserEntryLogger,
     private val loop: Loop,
     private val protectionCheck: ProtectionCheck,
-    private val sceneRepository: SceneRepository,
-    private val sceneExecutor: SceneExecutor,
-    private val activeSceneManager: ActiveSceneManager,
+    private val sceneActions: SceneActions,
+    private val sceneChainTargetResolver: SceneChainResolver,
+    private val activeSceneManager: ActiveSceneSync,
     private val rxBus: RxBus,
-    private val runningModeGuard: RunningModeGuard,
-    private val notificationManager: NotificationManager
+    private val nsClient: NsClient,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     // Event-driven state (drawer, dialogs, simple-mode preference). Imperative .update{} calls
     // from user actions and preference observers land here.
     private val _eventState = MutableStateFlow(EventState())
 
+    /**
+     * AAPSCLIENT-only WS-reachability signal. Constantly true on master. Exposed so the screen
+     * can mirror the gating used in [app.aaps.ui.compose.scenes.SceneListViewModel] for any
+     * affordance (e.g. the active-scene chip's End button) that would hit the master via the
+     * client-control round-trip under the hood.
+     */
+    val masterReachable: StateFlow<Boolean> = nsClient.masterReachable
+
     /** Toolbar items as a separate StateFlow to avoid unnecessary recompositions of the main UI */
     private val _quickLaunchItems = MutableStateFlow<List<ResolvedQuickLaunchItem>>(emptyList())
-    val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> = _quickLaunchItems.asStateFlow()
+
+    /**
+     * Public toolbar items, gated by [masterReachable]: scene-action items disable when WS is
+     * down on AAPSCLIENT. The resolver only sees local catalog state, so the dynamic
+     * reachability check has to layer on here. Non-scene items pass through unchanged.
+     */
+    val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> =
+        combine(_quickLaunchItems, masterReachable) { items, reachable ->
+            if (reachable) items
+            else items.map { item ->
+                if (item.action is QuickLaunchAction.SceneAction) item.copy(enabled = false) else item
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     /** Pending confirmation dialog (automation/TT preset actions) */
     private val _actionConfirmation = MutableStateFlow<ActionConfirmation?>(null)
@@ -150,7 +178,9 @@ class MainViewModel @Inject constructor(
         overviewDataCache.profileFlow,
         overviewDataCache.runningModeFlow,
         overviewDataCache.tbrFlow,
-        progressTicker
+        // Re-emit the latest tick whenever QuickWizard entries change (local edit or synced from the
+        // main phone) so the carousel rebuilds. changes is a StateFlow (initial 0) → never blocks.
+        combine(progressTicker, quickWizard.changes) { now, _ -> now }
     ) { ttData, profileData, rmData, tbrData, now ->
         buildChipState(ttData, profileData, rmData, tbrData, now)
     }
@@ -395,105 +425,90 @@ class MainViewModel @Inject constructor(
     }
 
     /**
-     * Execute QuickWizard by GUID: re-validates at execution time and calls confirmAndExecute.
-     * Needs Activity context for the confirmation dialog.
+     * Execute QuickWizard by GUID. WIZARD mode runs the shared prepare→confirm spine (master delivers
+     * locally; an AAPSCLIENT routes prepare/commit to its master over the signed round-trip).
      */
     fun executeQuickWizard(guid: String) {
         viewModelScope.launch {
             val entry = quickWizard.get(guid) ?: return@launch
             if (!entry.isActive()) return@launch
             when (entry.mode()) {
-                QuickWizardMode.WIZARD  -> executeQuickWizardMode(entry)
+                QuickWizardMode.WIZARD  -> executeWizardQuickWizard(entry, guid)
                 QuickWizardMode.INSULIN -> executeInsulinMode(entry)
                 QuickWizardMode.CARBS   -> executeCarbsMode(entry)
             }
         }
     }
 
-    private suspend fun executeQuickWizardMode(entry: QuickWizardEntry) {
-        val bg = iobCobCalculator.ads.actualBg() ?: return
-        val profile = profileFunction.getProfile() ?: return
-        val profileName = profileFunction.getProfileName()
-        val wizard = entry.doCalc(profile, profileName, bg)
-        if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
-            wizard.confirmAndExecute(entry)
+    /**
+     * QuickWizard WIZARD mode, role-transparent via [WizardExecutor]: the master computes + caps the dose and authors
+     * the confirmation (locally on a master, returned in the signed ack to a client). Both roles render the master's
+     * EXACT lines via the shared [showWizardBolusConfirmation]; the user's OK rides back as a commit the master delivers
+     * once (the advisor fork chooses correction-only). No dose is ever computed on a client.
+     */
+    private suspend fun executeWizardQuickWizard(entry: QuickWizardEntry, guid: String) {
+        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_deliver_bolus)
+        when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.QuickWizard(guid), label)) {
+            is ActionProgress.Prepared ->
+                showWizardBolusConfirmation(rxBus, rh, entry.buttonText(), IcQuickwizard, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
+                    // The async delivery failure is alarmed once, centrally, from the executor — no local alarm here (it would double).
+                    appScope.launch { wizardExecutor.commit(prepared.id, asAdvisor, Sources.QuickWizard, label) }
+                }
+            // A master-local compute failure (no modal) or a client offline pre-check surfaces here; a client round-trip failure already showed on the app modal.
+            is ActionProgress.Rejected ->
+                if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                    rxBus.send(EventShowDialog.Ok(title = entry.buttonText(), message = prepared.detail ?: rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+
+            else                       -> Unit // Unconfirmed → app modal
+        }
+    }
+
+    /**
+     * Prepare→confirm→commit for a FIXED QuickWizard batch (INSULIN or CARBS). Role-transparent via [BatchExecutor]:
+     * client → signed round-trip, master → local. The MASTER caps + builds the confirmation; the user confirms the
+     * master's exact lines (the contract), then commits. INSULIN now has the client route it previously lacked.
+     */
+    private suspend fun executeFixedBatch(entry: QuickWizardEntry, actions: List<BatchAction>, label: String, icon: ImageVector) {
+        when (val prepared = batchExecutor.prepare(actions, Sources.QuickWizard, label)) {
+            is ActionProgress.Prepared ->
+                rxBus.send(
+                    EventShowDialog.OkCancel(
+                        title = entry.buttonText(), message = "", confirmationLines = prepared.lines, icon = icon,
+                        onOk = {
+                            appScope.launch { batchExecutor.commit(prepared.id, Sources.QuickWizard, label) }
+                            entry.markAsUsed()
+                        }
+                    )
+                )
+            // A master-local failure (no modal) or a client offline pre-check surfaces here; a client round-trip failure already showed on the app modal.
+            is ActionProgress.Rejected ->
+                if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                    rxBus.send(EventShowDialog.Ok(title = entry.buttonText(), message = prepared.detail ?: rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+
+            else                       -> Unit // Unconfirmed → app modal
         }
     }
 
     private suspend fun executeInsulinMode(entry: QuickWizardEntry) {
-        val pump = activePlugin.activePump
-        if (!pump.isInitialized() || pump.isSuspended()) return
-
         val insulin = entry.insulin()
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
-            ConstraintObject(insulin, aapsLogger)
-        ).value()
-        if (insulinAfterConstraints <= 0.0) return
-        if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
-
-        val message = buildString {
-            append(rh.gs(app.aaps.core.ui.R.string.bolus) + ": ")
-            append(rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints))
-            if (abs(insulinAfterConstraints - insulin) > pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
-                append("<br/>")
-                append(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints))
-            }
-        }
-
-        rxBus.send(
-            EventShowDialog.OkCancel(
-                title = entry.buttonText(),
-                message = message,
-                onOk = {
-                    uel.log(
-                        Action.BOLUS, Sources.QuickWizard,
-                        entry.buttonText(),
-                        ValueWithUnit.Insulin(insulinAfterConstraints)
-                    )
-                    val detailedBolusInfo = DetailedBolusInfo().apply {
-                        eventType = app.aaps.core.data.model.TE.Type.CORRECTION_BOLUS
-                        this.insulin = insulinAfterConstraints
-                    }
-                    val result = commandQueue.bolus(detailedBolusInfo)
-                    if (!result.success) {
-                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                    }
-                    entry.markAsUsed()
-                }
-            )
+        if (insulin <= 0.0) return
+        // Raw amount → the master caps + gates; no dose leaves a client.
+        executeFixedBatch(
+            entry,
+            listOf(BatchAction.Bolus(insulin = insulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = entry.buttonText(), timestamp = 0L, iCfg = null)),
+            rh.gs(app.aaps.core.ui.R.string.bolus),
+            IcBolus
         )
     }
 
-    private fun executeCarbsMode(entry: QuickWizardEntry) {
+    private suspend fun executeCarbsMode(entry: QuickWizardEntry) {
         val carbs = entry.carbs()
         if (carbs <= 0) return
-
-        val message = buildString {
-            append(rh.gs(app.aaps.core.ui.R.string.carbs) + ": ${carbs}g")
-        }
-
-        rxBus.send(
-            EventShowDialog.OkCancel(
-                title = entry.buttonText(),
-                message = message,
-                onOk = {
-                    uel.log(
-                        Action.CARBS, Sources.QuickWizard,
-                        entry.buttonText(),
-                        ValueWithUnit.Gram(carbs)
-                    )
-                    val detailedBolusInfo = DetailedBolusInfo().apply {
-                        eventType = app.aaps.core.data.model.TE.Type.CARBS_CORRECTION
-                        this.carbs = carbs.toDouble()
-                        carbsTimestamp = dateUtil.now()
-                    }
-                    val result = commandQueue.bolus(detailedBolusInfo)
-                    if (!result.success) {
-                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                    }
-                    entry.markAsUsed()
-                }
-            )
+        executeFixedBatch(
+            entry,
+            listOf(BatchAction.Bolus(insulin = 0.0, carbs = carbs, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = entry.buttonText(), timestamp = 0L, iCfg = null)),
+            rh.gs(app.aaps.core.ui.R.string.carbs),
+            IcCarbs
         )
     }
 
@@ -546,7 +561,7 @@ class MainViewModel @Inject constructor(
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"
         message += "Flavor: ${config.FLAVOR}${config.BUILD_TYPE}\n"
-        message += "${rh.gs(app.aaps.core.ui.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(app.aaps.core.ui.R.string.not_available_full)}"
+        message += "${rh.gs(app.aaps.core.ui.R.string.configbuilder_nightscoutversion_label)} ${nsClient.detectedNsVersion() ?: rh.gs(app.aaps.core.ui.R.string.not_available_full)}"
         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
         val enabledOptions = ExternalOptions.entries.filter { config.isEnabled(it) }
         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
@@ -593,39 +608,60 @@ class MainViewModel @Inject constructor(
             ActionConfirmation(
                 title = event.title,
                 message = message,
+                icon = IcAutomation,
                 onConfirmAction = ConfirmableAction.ExecuteAutomation(automationId)
             )
         }
     }
 
+    /** QuickLaunch TT preset → contact the master, render the master's confirmation, commit on OK (role-transparent). */
     fun requestTempTargetPresetConfirmation(presetId: String) {
         val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
         val preset = presets.find { it.id == presetId } ?: return
-        val name = preset.name ?: preset.nameRes?.let { rh.gs(it) } ?: "?"
-        val durationMin = (preset.duration / 60000L).toInt()
-        val message = "$name\n${rh.gs(app.aaps.core.ui.R.string.format_mins, durationMin)}"
-        _actionConfirmation.update {
-            ActionConfirmation(
-                title = rh.gs(app.aaps.core.ui.R.string.temp_target_management),
-                message = message,
-                onConfirmAction = ConfirmableAction.ActivateTempTargetPreset(presetId)
-            )
+        val icon = when (preset.reason) {
+            TT.Reason.ACTIVITY     -> IcTtActivity
+            TT.Reason.EATING_SOON  -> IcTtEatingSoon
+            TT.Reason.HYPOGLYCEMIA -> IcTtHypo
+            else                   -> IcTtManual
+        }
+        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_set_temp_target)
+        val actions = listOf(BatchAction.TempTarget(preset.reason.text, preset.targetValue, preset.targetValue, (preset.duration / 60000L).toInt(), 0))
+        viewModelScope.launch {
+            when (val prepared = batchExecutor.prepare(actions, Sources.TTDialog, label)) {
+                is ActionProgress.Prepared ->
+                    rxBus.send(
+                        EventShowDialog.OkCancel(
+                            title = rh.gs(app.aaps.core.ui.R.string.temporary_target),
+                            message = "",
+                            confirmationLines = prepared.lines,
+                            icon = icon,
+                            onOk = { appScope.launch { batchExecutor.commit(prepared.id, Sources.TTDialog, label) } })
+                    )
+
+                is ActionProgress.Rejected ->
+                    if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = prepared.detail ?: rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+
+                else                       -> Unit
+            }
         }
     }
 
+    /** QuickLaunch profile switch → contact the master, render the master's confirmation, commit on OK (role-transparent). */
     fun requestProfileConfirmation(profileName: String, percentage: Int, durationMinutes: Int) {
-        val details = buildString {
-            append(profileName)
-            if (percentage != 100) append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_confirm_pct, percentage)}")
-            if (durationMinutes > 0) append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_confirm_dur, durationMinutes)}")
-            else append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_permanent)}")
-        }
-        _actionConfirmation.update {
-            ActionConfirmation(
-                title = rh.gs(app.aaps.ui.R.string.activate_profile),
-                message = details,
-                onConfirmAction = ConfirmableAction.ActivateProfile(profileName, percentage, durationMinutes)
-            )
+        val label = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch)
+        val actions = listOf(BatchAction.ProfileSwitch(percentage, 0, durationMinutes, profileName = profileName))
+        viewModelScope.launch {
+            when (val prepared = batchExecutor.prepare(actions, Sources.ProfileSwitchDialog, label)) {
+                is ActionProgress.Prepared ->
+                    rxBus.send(EventShowDialog.OkCancel(title = label, message = "", confirmationLines = prepared.lines, icon = IcProfile, onOk = { appScope.launch { batchExecutor.commit(prepared.id, Sources.ProfileSwitchDialog, label) } }))
+
+                is ActionProgress.Rejected ->
+                    if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                        rxBus.send(EventShowDialog.Ok(title = label, message = prepared.detail ?: rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+
+                else                       -> Unit
+            }
         }
     }
 
@@ -664,45 +700,50 @@ class MainViewModel @Inject constructor(
     /** Expose active scene state for UI (banner, etc.) */
     val activeSceneState: StateFlow<ActiveSceneState?> = activeSceneManager.activeSceneState
 
-    /** Whether the active scene has expired (duration ran out, non-duration actions reverted) */
-    val sceneExpired: StateFlow<Boolean> = activeSceneManager.expired
+    /** Whether the active scene has expired (duration ran out, non-duration actions reverted).
+     *  Derived from the lifecycle field that lives inside [ActiveSceneState] and rides NS sync. */
+    val sceneExpired: StateFlow<Boolean> = activeSceneManager.activeSceneState
+        .map { it?.lifecycle == SceneLifecycle.EXPIRED }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-    /** Dismiss the expired scene banner */
+    /** Dismiss the expired scene banner.
+     *
+     *  On AAPSCLIENT: send scene_stop to master. Master's [SceneAutomationApiImpl.stopActiveScene]
+     *  routes expired scenes to [SceneExecutor.dismiss], then republishes empty `activeScene` via
+     *  NS — clients see banner gone. Local dismissal alone would be undone on the next
+     *  RunningConfiguration apply (master still has lifecycle=EXPIRED).
+     *
+     *  On master: dismiss locally as before. */
     fun dismissExpiredScene() {
-        sceneExecutor.dismiss()
+        // stop(false) maps to "dismiss expired banner" on the master (stopActiveScene dismisses when
+        // the scene is expired) and to scene.stop on a client — one path for both.
+        viewModelScope.launch { sceneActions.stop(triggerChain = false) }
     }
 
     /** Format milliseconds to a localized "time remaining" string (e.g., "1h 30m remaining"). */
     fun formatDuration(ms: Long): String = dateUtil.timeRemainingString(ms, rh)
 
+    /** QuickLaunch scene → ask the MASTER to PREPARE it, render the master's authored confirmation lines, commit on OK (role-transparent). */
     fun requestSceneConfirmation(sceneId: String) {
-        val scene = sceneRepository.getScene(sceneId) ?: return
-        val actionSummary = scene.actions.joinToString("\n") { action ->
-            when (action) {
-                is app.aaps.core.data.model.SceneAction.TempTarget      ->
-                    rh.gs(app.aaps.core.ui.R.string.scene_action_tt, profileUtil.fromMgdlToStringWithUnits(action.targetMgdl))
+        val title = rh.gs(app.aaps.core.ui.R.string.scene)
+        viewModelScope.launch {
+            when (val prepared = sceneActions.prepareStart(sceneId)) {
+                is ActionProgress.Prepared ->
+                    rxBus.send(
+                        EventShowDialog.OkCancel(
+                            // commitStart uses the executor's consume-once prepared.id token, so a double
+                            // onOk (fast double-tap) is idempotent — the second commit hits an already-
+                            // consumed id and is discarded.
+                            title = title, message = "", confirmationLines = prepared.lines, icon = IcAction,
+                            onOk = { appScope.launch { sceneActions.commitStart(prepared.id) } })
+                    )
 
-                is app.aaps.core.data.model.SceneAction.ProfileSwitch   ->
-                    rh.gs(app.aaps.core.ui.R.string.scene_action_profile, action.profileName, action.percentage)
+                is ActionProgress.Rejected ->
+                    if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable)
+                        rxBus.send(EventShowDialog.Ok(title = title, message = prepared.detail ?: rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
 
-                is app.aaps.core.data.model.SceneAction.SmbToggle       ->
-                    if (action.enabled) rh.gs(app.aaps.core.ui.R.string.scene_action_smb_on)
-                    else rh.gs(app.aaps.core.ui.R.string.scene_action_smb_off)
-
-                is app.aaps.core.data.model.SceneAction.LoopModeChange  ->
-                    rh.gs(app.aaps.core.ui.R.string.scene_action_running_mode, action.mode.name)
-
-                is app.aaps.core.data.model.SceneAction.CarePortalEvent ->
-                    rh.gs(app.aaps.core.ui.R.string.scene_action_careportal, action.type.text)
+                else                       -> Unit
             }
-        }
-        val message = "${scene.name}\n${scene.defaultDurationMinutes} min\n\n$actionSummary"
-        _actionConfirmation.update {
-            ActionConfirmation(
-                title = rh.gs(app.aaps.core.ui.R.string.scene),
-                message = message,
-                onConfirmAction = ConfirmableAction.ActivateScene(sceneId, scene.defaultDurationMinutes)
-            )
         }
     }
 
@@ -711,20 +752,17 @@ class MainViewModel @Inject constructor(
         val message = rh.gs(app.aaps.core.ui.R.string.scene_confirm_deactivate, activeState.scene.name)
         // When the scene chains to a runnable follow-up, "Skip to <Next>" becomes the primary
         // action and "End Scene" the alternative — the chain represents the user's pre-declared
-        // intent for what happens next, so it's the recommended path on early end. Preconditions
-        // mirror SceneExpiryWorker.runChain (target enabled, loop running, pump initialized,
-        // profile set); they are re-checked at execute time as a TOCTOU guard.
-        val chain = activeState.scene.endAction as? SceneEndAction.ChainScene
-        val target = chain?.let { sceneRepository.getScene(it.sceneId) }
-        val ready = target != null &&
-            target.isEnabled &&
-            !loop.runningMode().pausesLoopExecution() &&
-            activePlugin.activePump.isInitialized() &&
-            profileFunction.getProfile() != null
+        // intent for what happens next, so it's the recommended path on early end. On master,
+        // preconditions are re-checked at execute time as a TOCTOU guard inside the resolver;
+        // on AAPSClient we use the catalog-only check (the local pump/loop/profile don't
+        // reflect master state — see SceneChainTargetResolver KDoc).
+        val target = if (config.AAPSCLIENT) sceneChainTargetResolver.resolveCatalogChainTarget(activeState.scene)
+        else sceneChainTargetResolver.resolveRunnableChainTarget(activeState.scene)
         _actionConfirmation.update {
-            if (ready) ActionConfirmation(
+            if (target != null) ActionConfirmation(
                 title = rh.gs(app.aaps.core.ui.R.string.scene_deactivate),
                 message = message,
+                icon = IcAction,
                 onConfirmAction = ConfirmableAction.DeactivateAndChainScene(target.id),
                 confirmLabel = rh.gs(app.aaps.core.ui.R.string.scene_skip_to_format, target.name),
                 secondaryAction = ConfirmableAction.DeactivateScene,
@@ -733,6 +771,7 @@ class MainViewModel @Inject constructor(
             else ActionConfirmation(
                 title = rh.gs(app.aaps.core.ui.R.string.scene_deactivate),
                 message = message,
+                icon = IcAction,
                 onConfirmAction = ConfirmableAction.DeactivateScene
             )
         }
@@ -745,103 +784,19 @@ class MainViewModel @Inject constructor(
     fun executeConfirmableAction(action: ConfirmableAction) = viewModelScope.launch {
         _actionConfirmation.update { null }
         when (action) {
-            is ConfirmableAction.ExecuteAutomation        -> {
+            is ConfirmableAction.ExecuteAutomation       -> {
                 val event = automation.findEventById(action.automationId) ?: return@launch
                 viewModelScope.launch { automation.processEvent(event) }
             }
 
-            is ConfirmableAction.ActivateTempTargetPreset -> {
-                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
-                val preset = presets.find { it.id == action.presetId } ?: return@launch
-                viewModelScope.launch {
-                    val tempTarget = TT(
-                        timestamp = dateUtil.now(),
-                        duration = preset.duration,
-                        reason = preset.reason,
-                        lowTarget = preset.targetValue,
-                        highTarget = preset.targetValue
-                    )
-                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                        temporaryTarget = tempTarget,
-                        action = Action.TT,
-                        source = Sources.TTDialog,
-                        note = null,
-                        listValues = listOf(
-                            ValueWithUnit.Mgdl(preset.targetValue),
-                            ValueWithUnit.Minute((preset.duration / 60000L).toInt())
-                        )
-                    )
-                }
-            }
+            is ConfirmableAction.DeactivateScene         ->
+                sceneActions.stop(triggerChain = false)
 
-            is ConfirmableAction.ActivateProfile          -> {
-                val store = profileRepository.profile.value ?: return@launch
-                profileFunction.createProfileSwitch(
-                    profileStore = store,
-                    profileName = action.profileName,
-                    durationInMinutes = action.durationMinutes,
-                    percentage = action.percentage,
-                    timeShiftInHours = 0,
-                    timestamp = dateUtil.now(),
-                    action = Action.PROFILE_SWITCH,
-                    source = Sources.ProfileSwitchDialog,
-                    note = null,
-                    listValues = listOf(
-                        ValueWithUnit.SimpleString(action.profileName),
-                        ValueWithUnit.Percent(action.percentage),
-                        ValueWithUnit.Minute(action.durationMinutes)
-                    ),
-                    iCfg = insulin.iCfg
-                )
-            }
-
-            is ConfirmableAction.ActivateScene            -> {
-                val scene = sceneRepository.getScene(action.sceneId) ?: return@launch
-                sceneExecutor.activate(scene, action.durationMinutes)
-            }
-
-            is ConfirmableAction.DeactivateScene          -> {
-                sceneExecutor.deactivate()
-            }
-
-            is ConfirmableAction.DeactivateAndChainScene  -> {
-                // User chose "Skip to <Next>": end current scene early, then activate the chain
-                // target. Always deactivates (user committed to ending the current scene); the
-                // chain is best-effort. Re-checks preconditions at execute time as a TOCTOU
-                // guard — the dialog may have been open for arbitrary time, during which the
-                // target could be disabled/deleted, the pump dropped, the loop suspended, or the
-                // profile cleared. If anything changed, we end the current scene cleanly and
-                // skip the chain rather than partially activating onto an unhealthy state.
-                val endedName = activeSceneManager.getActiveState()?.scene?.name
-                val target = sceneRepository.getScene(action.targetSceneId)
-                val canChain = target != null &&
-                    target.isEnabled &&
-                    !loop.runningMode().pausesLoopExecution() &&
-                    activePlugin.activePump.isInitialized() &&
-                    profileFunction.getProfile() != null
-                sceneExecutor.deactivate()
-                if (!canChain) return@launch
-                // Smart-cast: canChain==true implies target!=null (canChain itself includes target!=null).
-                val result = sceneExecutor.activate(target)
-                if (result.success && endedName != null) {
-                    notificationManager.post(
-                        id = NotificationId.SCENE_CHAINED,
-                        text = rh.gs(app.aaps.core.ui.R.string.scene_chained_format, endedName, target.name)
-                    )
-                } else if (!result.success) {
-                    val failed = result.actionResults.count { !it.success }
-                    notificationManager.post(
-                        id = NotificationId.SCENE_CHAIN_ERROR,
-                        text = rh.gs(
-                            app.aaps.core.ui.R.string.scene_chain_error_summary,
-                            endedName ?: "",
-                            target.name,
-                            failed,
-                            result.actionResults.size
-                        )
-                    )
-                }
-            }
+            is ConfirmableAction.DeactivateAndChainScene ->
+                // The master derives the chain target from its active scene's endAction and posts the
+                // SCENE_CHAINED / SCENE_CHAIN_ERROR notification itself (in SceneAutomationApiImpl.
+                // stopActiveSceneAndChain), so this is identical for UI- and client-triggered chains.
+                sceneActions.stop(triggerChain = true)
         }
     }
 

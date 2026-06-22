@@ -152,6 +152,19 @@ private fun InfoSection(rows: List<PumpInfoInterface>) {
                             color = MaterialTheme.colorScheme.outlineVariant
                         )
                     }
+                } else if (row is PumpInfoComposable) {
+                    val content = row.composableContent()
+
+                    Column {
+                        content()
+
+                        if (row.hasDividerOnEnd()) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = MaterialTheme.colorScheme.outlineVariant
+                            )
+                        }
+                    }
                 }
             }
         }

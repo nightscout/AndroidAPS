@@ -3,8 +3,8 @@ package app.aaps.plugins.sync.tidepool
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate.ConnectivityStatus
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate.ConnectivityStatus
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk

@@ -25,8 +25,7 @@ internal fun RemoteDeviceStatus.toNSDeviceStatus(): NSDeviceStatus =
         device = device,
         uploader = NSDeviceStatus.Uploader(uploader?.battery),
         pump = pump?.toNSDeviceStatusPump(),
-        openaps = openaps?.toNSDeviceStatusOpenAps(),
-        configuration = configuration?.toNSDeviceStatusConfiguration()
+        openaps = openaps?.toNSDeviceStatusOpenAps()
     )
 
 internal fun NSDeviceStatus.toRemoteDeviceStatus(): RemoteDeviceStatus =
@@ -42,8 +41,7 @@ internal fun NSDeviceStatus.toRemoteDeviceStatus(): RemoteDeviceStatus =
         device = device,
         uploader = RemoteDeviceStatus.Uploader(uploader?.battery),
         pump = pump?.toRemoteDeviceStatusPump(),
-        openaps = openaps?.toRemoteDeviceStatusOpenAps(),
-        configuration = configuration?.toRemoteDeviceStatusConfiguration()
+        openaps = openaps?.toRemoteDeviceStatusOpenAps()
     )
 
 internal fun RemoteDeviceStatus.Pump.toNSDeviceStatusPump(): NSDeviceStatus.Pump =
@@ -79,34 +77,3 @@ internal fun NSDeviceStatus.OpenAps.toRemoteDeviceStatusOpenAps(): RemoteDeviceS
         enacted = enacted?.let { JsonParser.parseString(it.toString()).asJsonObject },
         iob = iob?.let { JsonParser.parseString(it.toString()).asJsonObject }
     )
-
-internal fun RemoteDeviceStatus.Configuration.toNSDeviceStatusConfiguration(): NSDeviceStatus.Configuration =
-    NSDeviceStatus.Configuration(
-        pump = pump,
-        version = version,
-        insulin = insulin,
-        aps = aps,
-        sensitivity = sensitivity,
-        smoothing = smoothing,
-        insulinConfiguration = insulinConfiguration?.let { Json.decodeFromString(it.toString()) },
-        apsConfiguration = apsConfiguration?.let { Json.decodeFromString(it.toString()) },
-        sensitivityConfiguration = sensitivityConfiguration?.let { Json.decodeFromString(it.toString()) },
-        overviewConfiguration = overviewConfiguration?.let { Json.decodeFromString(it.toString()) },
-        safetyConfiguration = safetyConfiguration?.let { Json.decodeFromString(it.toString()) }
-    )
-
-internal fun NSDeviceStatus.Configuration.toRemoteDeviceStatusConfiguration(): RemoteDeviceStatus.Configuration =
-    RemoteDeviceStatus.Configuration(
-        pump = pump,
-        version = version,
-        insulin = insulin,
-        aps = aps,
-        sensitivity = sensitivity,
-        smoothing = smoothing,
-        insulinConfiguration = insulinConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
-        apsConfiguration = apsConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
-        sensitivityConfiguration = sensitivityConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
-        overviewConfiguration = overviewConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
-        safetyConfiguration = safetyConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject }
-    )
-

@@ -13,18 +13,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -53,6 +61,7 @@ private class ReactiveVisibilityContext(
     override val isPumpPaired: Boolean get() = delegate.isPumpPaired
     override val isPumpInitialized: Boolean get() = delegate.isPumpInitialized
     override val isConcentrationEnabled: Boolean get() = delegate.isConcentrationEnabled
+    override val isClient: Boolean get() = delegate.isClient
 
     // Return a reactive preferences wrapper
     override val preferences: Preferences get() = ReactivePreferencesWrapper(delegatePreferences, sharedStates)
@@ -167,6 +176,12 @@ fun calculatePreferenceVisibility(
             enabled = false
         }
     }
+
+    // On a client, a Bidirectional synced key is master-arbitrated — lock the whole row while the
+    // master is unreachable, so the user can't make an edit that won't sync now (it would queue
+    // silently and could expire past the replay window). Master/previews never gated (default true).
+    if (config.AAPSCLIENT && preferenceKey.sync?.direction == SyncDirection.Bidirectional && !LocalMasterReachable.current)
+        enabled = false
 
     return PreferenceVisibilityState(visible, enabled)
 }
@@ -296,6 +311,51 @@ private fun getSharedDoubleState(map: SnapshotStateMap<String, Any?>, key: Strin
 
 private fun setSharedDoubleState(map: SnapshotStateMap<String, Any?>, key: String, value: Double) {
     map["double:$key"] = value
+}
+
+/**
+ * Feed external preference writes into the shared-state map so open preference screens live-update,
+ * not just on edits made on-screen. Without this the map is seeded once via `getOrPut` and never
+ * re-reads, so a value changed behind the screen's back (notably device-to-device sync) stays stale
+ * until the user navigates away and back.
+ *
+ * Scoped to the keys declared synced ([Preferences.getSyncKeys]) — the only realistic source of
+ * external writes — so it's a bounded, known-up-front set rather than reacting to lazy map growth.
+ * Launched once from [ProvidePreferenceTheme]. Currently handles Boolean keys (the only synced type
+ * so far); extend the `when` per type as new synced types appear.
+ */
+internal suspend fun observeSyncedKeysIntoState(
+    preferences: Preferences,
+    sharedStates: SnapshotStateMap<String, Any?>
+): Unit = coroutineScope {
+    preferences.getSyncKeys().forEach { key ->
+        when (key) {
+            // PreferenceKey getter applies mode logic (simpleMode/engineering); write the EFFECTIVE value.
+            is BooleanPreferenceKey    -> launch {
+                preferences.observe(key).drop(1).collect { setSharedBooleanState(sharedStates, key.key, preferences.get(key)) }
+            }
+
+            is BooleanNonPreferenceKey -> launch {
+                preferences.observe(key).drop(1).collect { setSharedBooleanState(sharedStates, key.key, it) }
+            }
+            // PreferenceKey getter applies mode logic; write the EFFECTIVE value for it.
+            is StringPreferenceKey     -> launch {
+                preferences.observe(key).drop(1).collect { setSharedStringState(sharedStates, key.key, preferences.get(key)) }
+            }
+
+            is StringNonPreferenceKey  -> launch {
+                preferences.observe(key).drop(1).collect { setSharedStringState(sharedStates, key.key, it) }
+            }
+
+            is IntPreferenceKey        -> launch {
+                preferences.observe(key).drop(1).collect { setSharedIntState(sharedStates, key.key, preferences.get(key)) }
+            }
+
+            is IntNonPreferenceKey     -> launch {
+                preferences.observe(key).drop(1).collect { setSharedIntState(sharedStates, key.key, it) }
+            }
+        }
+    }
 }
 
 // =================================

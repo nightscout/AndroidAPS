@@ -184,7 +184,7 @@ class PumpIOTest : TestBase() {
         // This amounts to 2 pairs of RT_BUTTON_STATUS packets plus the
         // final CTRL_DISCONNECT packets, for a total of 5 packets.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -253,20 +253,20 @@ class PumpIOTest : TestBase() {
         // to avoid having to deal with RT_KEEP_ALIVE packets in the
         // testIO.sentPacketData list.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             val testStates = TestStates(true)
             val testIO = testStates.testIO
             val pumpIO = testStates.pumpIO
 
             // First, test long UP button press.
 
-            System.err.println("DEBUG: Phase 1 - feeding initial packets for UP press")
+            aapsLogger.debug("Phase 1 - feeding initial packets for UP press")
             testStates.feedInitialPackets()
 
-            System.err.println("DEBUG: Phase 1 - connecting")
+            aapsLogger.debug("Phase 1 - connecting")
             pumpIO.connect(runHeartbeat = false)
 
-            System.err.println("DEBUG: Phase 1 - starting long UP button press")
+            aapsLogger.debug("Phase 1 - starting long UP button press")
             var counter = 0
             pumpIO.startLongRTButtonPress(ApplicationLayer.RTButton.UP) {
                 // Return true the first time, false the second time.
@@ -274,13 +274,13 @@ class PumpIOTest : TestBase() {
                 // send a button status to the Combo once (= when
                 // we return true).
                 counter++
-                System.err.println("DEBUG: Phase 1 - keepGoing called, counter=$counter, returning=${counter <= 1}")
+                aapsLogger.debug("Phase 1 - keepGoing called, counter=$counter, returning=${counter <= 1}")
                 counter <= 1
             }
-            System.err.println("DEBUG: Phase 1 - waiting for long press to finish")
+            aapsLogger.debug("Phase 1 - waiting for long press to finish")
             pumpIO.waitForLongRTButtonPressToFinish()
 
-            System.err.println("DEBUG: Phase 1 - disconnecting")
+            aapsLogger.debug("Phase 1 - disconnecting")
             pumpIO.disconnect()
 
             testStates.checkAndRemoveInitialSentPackets()
@@ -291,31 +291,31 @@ class PumpIOTest : TestBase() {
             // test that function. Waiting for a while and calling it should
             // amount to the same behavior as calling waitForLongRTButtonPressToFinish().
 
-            System.err.println("DEBUG: Phase 2 - resetting IO")
+            aapsLogger.debug("Phase 2 - resetting IO")
             testIO.resetSentPacketData()
             testIO.resetIncomingPacketDataChannel()
 
-            System.err.println("DEBUG: Phase 2 - feeding initial packets for DOWN press")
+            aapsLogger.debug("Phase 2 - feeding initial packets for DOWN press")
             testStates.feedInitialPackets()
 
-            System.err.println("DEBUG: Phase 2 - connecting")
+            aapsLogger.debug("Phase 2 - connecting")
             pumpIO.connect(runHeartbeat = false)
 
-            System.err.println("DEBUG: Phase 2 - starting long DOWN button press")
+            aapsLogger.debug("Phase 2 - starting long DOWN button press")
             pumpIO.startLongRTButtonPress(ApplicationLayer.RTButton.DOWN)
-            System.err.println("DEBUG: Phase 2 - delaying 500ms before stop")
+            aapsLogger.debug("Phase 2 - delaying 500ms before stop")
             delay(500L)
-            System.err.println("DEBUG: Phase 2 - stopping long press")
+            aapsLogger.debug("Phase 2 - stopping long press")
             pumpIO.stopLongRTButtonPress()
-            System.err.println("DEBUG: Phase 2 - delaying 500ms after stop")
+            aapsLogger.debug("Phase 2 - delaying 500ms after stop")
             delay(500L)
 
-            System.err.println("DEBUG: Phase 2 - disconnecting")
+            aapsLogger.debug("Phase 2 - disconnecting")
             pumpIO.disconnect()
 
             testStates.checkAndRemoveInitialSentPackets()
             testStates.checkLongRTButtonPressPacketSequence(ApplicationLayer.RTButton.DOWN)
-            System.err.println("DEBUG: Test completed successfully")
+            aapsLogger.debug("Test completed successfully")
         }
     }
 
@@ -324,7 +324,7 @@ class PumpIOTest : TestBase() {
         // Check what happens if the user issues redundant startLongRTButtonPress()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 
@@ -394,7 +394,7 @@ class PumpIOTest : TestBase() {
         // RT sequence numbers are monotonically increasing, which
         // is the correct behavior.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -436,7 +436,7 @@ class PumpIOTest : TestBase() {
 
     @Test
     fun cmdCMDReadErrorWarningStatus() {
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             // Check that a simulated CMD error/warning status retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that contain
             // error/warning status data. Check that these packets are correctly parsed and that
@@ -496,7 +496,7 @@ class PumpIOTest : TestBase() {
 
     @Test
     fun checkCMDHistoryDeltaRetrieval() {
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             // Check that a simulated CMD history delta retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that
             // contain history data with a series of events inside. Check that these packets

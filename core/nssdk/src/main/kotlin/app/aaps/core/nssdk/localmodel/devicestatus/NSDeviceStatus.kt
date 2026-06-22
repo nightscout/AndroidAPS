@@ -23,8 +23,7 @@ data class NSDeviceStatus(
 
     val uploader: Uploader? = null,
     val pump: Pump? = null,
-    val openaps: OpenAps? = null,
-    val configuration: Configuration? = null
+    val openaps: OpenAps? = null
 ) {
 
     @Serializable data class Pump(
@@ -55,19 +54,5 @@ data class NSDeviceStatus(
 
     @Serializable data class Uploader(
         val battery: Int? = null
-    )
-
-    @Serializable data class Configuration(
-        val pump: String? = null,
-        val version: String? = null,
-        val insulin: Int? = null,
-        val aps: String? = null,
-        val sensitivity: Int? = null,
-        val smoothing: String? = null,
-        val insulinConfiguration: JsonObject? = null,
-        val apsConfiguration: JsonObject? = null,
-        val sensitivityConfiguration: JsonObject? = null,
-        val overviewConfiguration: JsonObject? = null,
-        val safetyConfiguration: JsonObject? = null
     )
 }

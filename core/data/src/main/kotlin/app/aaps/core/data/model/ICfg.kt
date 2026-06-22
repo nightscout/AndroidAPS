@@ -91,8 +91,15 @@ data class ICfg(
         if (bolus.amount != 0.0) {
             val bolusTime = bolus.timestamp
             val t = (time - bolusTime) / 1000.0 / 60.0
-            val td = dia * 60 //getDIA() always >= MIN_DIA
-            val tp = peak.toDouble()
+            // Defensive clamp: the bilinear IOB model is only well-defined for 0 < tp < td/2. Corrupt
+            // iCfg (the v33 migration sentinel -1 before its repair, or a malformed NS-imported insulin
+            // config) would otherwise divide by zero, produce a negative tau, or — when td <= 0 — make
+            // the `t < td` gate never fire and silently contribute ZERO IOB, all of which mislead the
+            // loop into overdelivery. These bounds are MATH-validity floors only, NOT the medical limits
+            // (which are enforced upstream): legitimate peaks below HardLimits.MIN_PEAK (e.g. 30 min) and
+            // any dia >= MIN_DIA are preserved unchanged; only degenerate values are sanitized.
+            val td = (dia * 60).coerceAtLeast(MIN_DIA_MINUTES)
+            val tp = peak.toDouble().coerceIn(MIN_PEAK_MINUTES, td / 2.0 - 1.0)
             // force the IOB to 0 if over DIA hours have passed
             if (t < td) {
                 val tau = tp * (1 - tp / td) / (1 - 2 * tp / td)
@@ -105,5 +112,10 @@ data class ICfg(
         return result
     }
 
-    companion object;
+    companion object {
+        // Math-validity floors for iobCalcForTreatment. They only engage for corrupt/degenerate iCfg
+        // and are no-ops for real configs; they are NOT the medical HardLimits.
+        private const val MIN_DIA_MINUTES = 300.0 // 5 h (mirrors HardLimits.MIN_DIA); floors corrupt/sentinel DIA <= 0
+        private const val MIN_PEAK_MINUTES = 1.0  // just keeps tp > 0; real peaks (incl. sub-MIN_PEAK like 30 min) pass through
+    }
 }

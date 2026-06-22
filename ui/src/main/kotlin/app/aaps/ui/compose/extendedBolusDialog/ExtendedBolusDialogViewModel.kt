@@ -3,19 +3,18 @@ package app.aaps.ui.compose.extendedBolusDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.objects.runningMode.RunningModeGuard
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,18 +25,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 @Stable
 class ExtendedBolusDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
-    private val commandQueue: CommandQueue,
-    private val uel: UserEntryLogger,
     private val rh: ResourceHelper,
-    private val aapsLogger: AAPSLogger,
-    private val runningModeGuard: RunningModeGuard
+    private val batchExecutor: BatchExecutor,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ExtendedBolusDialogUiState())
@@ -45,6 +41,10 @@ class ExtendedBolusDialogViewModel @Inject constructor(
 
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
+        data object ShowNoActionDialog : SideEffect()
+
+        /** The MASTER prepared the action and returned its confirmation [lines]; show them, then [commit] [bolusId]. */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -55,17 +55,18 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     init {
+        // pumpDescription mirrors the master's pump on a client (RunningConfiguration); the master caps + validates at prepare.
         val pumpDescription = activePlugin.activePump.pumpDescription
         val maxInsulin = constraintChecker.getMaxExtendedBolusAllowed().value()
 
-        // Default to showing the loop-stop warning until the async closed-loop check
-        // resolves, so a closed-loop user can't briefly see the form and start typing
-        // before the warning gate appears.
+        // Default to showing the loop-stop warning until the async closed-loop check resolves, so a closed-loop user
+        // can't briefly see the form and start typing before the warning gate appears.
         _uiState.update {
             ExtendedBolusDialogUiState(
-                insulin = pumpDescription.extendedBolusStep,
+                insulin = pumpDescription.extendedBolusMinAmount,
                 durationMinutes = pumpDescription.extendedBolusDurationStep,
                 maxInsulin = maxInsulin,
+                minInsulin = pumpDescription.extendedBolusMinAmount,
                 extendedStep = pumpDescription.extendedBolusStep,
                 extendedDurationStep = pumpDescription.extendedBolusDurationStep,
                 extendedMaxDuration = pumpDescription.extendedBolusMaxDuration,
@@ -96,56 +97,46 @@ class ExtendedBolusDialogViewModel @Inject constructor(
         _uiState.update { it.copy(durationMinutes = value) }
     }
 
-    fun hasAction(): Boolean {
-        val state = uiState.value
-        val insulinAfterConstraints = constraintChecker.applyExtendedBolusConstraints(
-            ConstraintObject(state.insulin, aapsLogger)
-        ).value()
-        return insulinAfterConstraints > 0 && state.durationMinutes > 0
-    }
+    /**
+     * Tap-confirm → ask the MASTER to PREPARE (cap + author the confirmation). Client = signed round-trip; master =
+     * local. The user then confirms the MASTER's exact lines and [commit] delivers. appScope: the screen may navigate
+     * away (cancelling viewModelScope) while the round-trip is in flight.
+     */
+    fun prepareAndConfirm() {
+        // Ignore re-taps while a prepare is already in flight; the screen also disables Confirm via isPreparing.
+        if (uiState.value.isPreparing) return
+        appScope.launch {
+            val state = uiState.value
+            if (state.insulin <= 0.0 || state.durationMinutes <= 0.0) {
+                _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+                return@launch
+            }
+            _uiState.update { it.copy(isPreparing = true) }
+            try {
+                val action = BatchAction.ExtendedBolus(insulin = state.insulin, durationMinutes = state.durationMinutes.toInt())
+                val label = rh.gs(app.aaps.core.ui.R.string.extended_bolus)
+                when (val prepared = batchExecutor.prepare(listOf(action), Sources.ExtendedBolusDialog, label)) {
+                    is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
+                    // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the modal.
+                    is ActionProgress.Rejected ->
+                        if (prepared.reason == FailureReason.NotReachable) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                        else prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
 
-    private var confirmedState: ExtendedBolusDialogUiState? = null
-
-    fun buildConfirmationSummary(): List<String> {
-        val state = uiState.value
-        confirmedState = state
-        val lines = mutableListOf<String>()
-        val durationInMinutes = state.durationMinutes.toInt()
-
-        val insulinAfterConstraints = constraintChecker.applyExtendedBolusConstraints(
-            ConstraintObject(state.insulin, aapsLogger)
-        ).value()
-        lines.add(rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints))
-        lines.add(rh.gs(app.aaps.core.ui.R.string.duration) + ": " + rh.gs(app.aaps.core.ui.R.string.format_mins, durationInMinutes))
-        if (abs(insulinAfterConstraints - state.insulin) > 0.01) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.constraint_applied))
+                    else                       -> Unit // Unconfirmed → app-level modal
+                }
+            } finally {
+                _uiState.update { it.copy(isPreparing = false) }
+            }
         }
-
-        return lines
     }
 
-    fun confirmAndSave() {
-        viewModelScope.launch { confirmAndSaveSuspend() }
-    }
-
-    private suspend fun confirmAndSaveSuspend() {
-        val state = confirmedState ?: return
-        val durationInMinutes = state.durationMinutes.toInt()
-
-        val insulinAfterConstraints = constraintChecker.applyExtendedBolusConstraints(
-            ConstraintObject(state.insulin, aapsLogger)
-        ).value()
-
-        if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.EXTENDED_BOLUS)) return
-
-        uel.log(
-            action = Action.EXTENDED_BOLUS, source = Sources.ExtendedBolusDialog,
-            listValues = listOf(
-                ValueWithUnit.Insulin(insulinAfterConstraints),
-                ValueWithUnit.Minute(durationInMinutes)
-            )
-        )
-        val result = commandQueue.extendedBolus(insulinAfterConstraints, durationInMinutes)
-        if (!result.success) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+    /** Confirm the master's prepared extended bolus: deliver it exactly once. A master-local apply failure (pump comms) surfaces here. */
+    fun commit(bolusId: Long) {
+        appScope.launch {
+            val result = batchExecutor.commit(bolusId, Sources.ExtendedBolusDialog, rh.gs(app.aaps.core.ui.R.string.extended_bolus), pumpDirect = true)
+            if (result is ActionProgress.Rejected)
+                if (result.reason == FailureReason.NotReachable) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                else result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
+        }
     }
 }

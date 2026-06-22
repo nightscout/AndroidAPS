@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MasterOfflineBanner
+import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.preference.LocalHighlightKey
 import app.aaps.core.ui.compose.preference.LocalNavigateToCompose
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -110,6 +112,7 @@ fun PreferenceScreenView(
                         .verticalScrollIndicators(listState),
                     state = listState
                 ) {
+                    item { MasterOfflineBanner(editingEnabled = masterEditingEnabled()) }
                     addPreferenceContent(
                         content = screenDef,
                         onShowMessage = onShowMessage,

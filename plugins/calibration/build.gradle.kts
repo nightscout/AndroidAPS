@@ -11,12 +11,6 @@ plugins {
 
 android {
     namespace = "app.aaps.plugins.calibration"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
     buildFeatures {
         compose = true
     }
@@ -27,9 +21,6 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
     implementation(project(":core:ui"))
-
-    api(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

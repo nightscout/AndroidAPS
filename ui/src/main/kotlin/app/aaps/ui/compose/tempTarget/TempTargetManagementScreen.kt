@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -56,12 +55,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
-import app.aaps.core.ui.compose.formatMinutesAsDuration
+import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
@@ -87,7 +87,12 @@ fun TempTargetManagementScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
-    val isPlayMode = uiState.screenMode == ScreenMode.PLAY
+    // On a client whose master is unreachable, force VIEW-ONLY so preset (synced config) edits can't be made
+    // while they couldn't sync. DERIVED from current state (no setScreenMode side-effect) → deterministic at
+    // startup and flips the instant reachability changes. Master is never gated. Both preset edits AND the
+    // master-bound action FABs (Activate / Cancel) are gated by this on a client.
+    val editingEnabled = masterEditingEnabled()
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled
 
     // Set initial screen mode
     LaunchedEffect(initialMode) {
@@ -125,8 +130,6 @@ fun TempTargetManagementScreen(
 
     // Dialog states
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var showActivateDialog by remember { mutableStateOf(false) }
-    var showCancelDialog by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
 
@@ -141,33 +144,6 @@ fun TempTargetManagementScreen(
                 showDeleteDialog = false
             },
             onDismiss = { showDeleteDialog = false }
-        )
-    }
-
-    // Activate confirmation dialog
-    if (showActivateDialog) {
-        val confirmMessage = buildActivationMessage(viewModel, uiState)
-        OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.activate_profile).removeSuffix(" profile"),
-            message = confirmMessage,
-            onConfirm = {
-                viewModel.activateWithEditorValues(onSuccess = onNavigateBack)
-                showActivateDialog = false
-            },
-            onDismiss = { showActivateDialog = false }
-        )
-    }
-
-    // Cancel active TT confirmation dialog
-    if (showCancelDialog) {
-        OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.cancel),
-            message = viewModel.rh.gs(app.aaps.core.ui.R.string.confirm_cancel_temp_target),
-            onConfirm = {
-                viewModel.cancelActive()
-                showCancelDialog = false
-            },
-            onDismiss = { showCancelDialog = false }
         )
     }
 
@@ -233,7 +209,7 @@ fun TempTargetManagementScreen(
                     actions = {
                         if (isPlayMode) {
                             // Edit mode button (shown in PLAY mode)
-                            IconButton(onClick = onRequestEditMode) {
+                            IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                 Icon(
                                     imageVector = Icons.Filled.Edit,
                                     contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
@@ -258,227 +234,242 @@ fun TempTargetManagementScreen(
                 )
             }
         ) { paddingValues ->
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .clearFocusOnTap(focusManager)
             ) {
-                ContentContainer(
-                    isLoading = uiState.isLoading,
-                    isEmpty = uiState.presets.isEmpty()
-                ) {
-                    // Standalone active card only when active TT doesn't match any preset
-                    val hasStandaloneActiveTT = uiState.activeTT != null && uiState.activePresetIndex == null
-                    val cardCount = if (hasStandaloneActiveTT) {
-                        uiState.presets.size + 1
-                    } else {
-                        uiState.presets.size
-                    }
-
-                    // Use saved card index from ViewModel (survives rotation via @Singleton)
-                    val pagerState = rememberPagerState(
-                        initialPage = uiState.currentCardIndex.coerceIn(0, (cardCount - 1).coerceAtLeast(0)),
-                        pageCount = { cardCount }
-                    )
-
-                    // Handle scroll to page request (e.g., after adding new preset)
-                    // Depends on cardCount so it retries when pager updates with new page count
-                    LaunchedEffect(scrollToPage, cardCount) {
-                        scrollToPage?.let { page ->
-                            if (page < cardCount) {
-                                pagerState.animateScrollToPage(page)
-                                scrollToPage = null
-                            }
-                        }
-                    }
-
-                    // Update selected preset when pager changes
-                    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-                        if (!pagerState.isScrollInProgress) {
-                            viewModel.updateCurrentCardIndex(pagerState.currentPage)
-                            val presetIndex = if (hasStandaloneActiveTT && pagerState.currentPage > 0) {
-                                pagerState.currentPage - 1
-                            } else if (!hasStandaloneActiveTT) {
-                                pagerState.currentPage
-                            } else {
-                                null // Standalone active TT card selected
-                            }
-
-                            if (presetIndex != null) viewModel.selectPreset(presetIndex)
-                            else viewModel.selectActiveTT()
-                        }
-                        currentPage = pagerState.currentPage
-                    }
-
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        // TT Preset Carousel
-                        HorizontalPager(
-                            state = pagerState,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
-                            contentPadding = PaddingValues(horizontal = 64.dp),
-                            pageSpacing = 16.dp
-                        ) { page ->
-                            val isStandaloneActiveCard = hasStandaloneActiveTT && page == 0
-                            val presetIndex = when {
-                                isStandaloneActiveCard -> null
-                                hasStandaloneActiveTT  -> page - 1
-                                else                   -> page
-                            }
-                            val preset = presetIndex?.let { uiState.presets.getOrNull(it) }
-                            val isActivePreset = presetIndex != null && presetIndex == uiState.activePresetIndex
-
-                            TempTargetCarouselCard(
-                                preset = preset,
-                                activeTT = if (isStandaloneActiveCard || isActivePreset) uiState.activeTT else null,
-                                remainingTimeMs = uiState.remainingTimeMs,
-                                isSelected = pagerState.currentPage == page,
-                                units = viewModel.units,
-                                onExpired = { viewModel.refreshData() },
-                                modifier = Modifier
-                                    .graphicsLayer {
-                                        val pageOffset = (
-                                            (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                                            ).absoluteValue
-                                        // Scale effect for carousel
-                                        lerp(
-                                            start = 0.85f,
-                                            stop = 1f,
-                                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                        ).also { scale ->
-                                            scaleX = scale
-                                            scaleY = scale
-                                        }
-                                        // Alpha effect
-                                        alpha = lerp(
-                                            start = 0.5f,
-                                            stop = 1f,
-                                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                        )
-                                    }
-                            )
-                        }
-
-                        // Page indicator dots
-                        PageIndicatorDots(
-                            pageCount = cardCount,
-                            currentPage = pagerState.currentPage
-                        )
-
-                        // TT Editor (always visible)
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            TempTargetEditor(
-                                selectedPreset = uiState.selectedPreset,
-                                editorName = uiState.editorName,
-                                editorTarget = uiState.editorTarget,
-                                editorDuration = (uiState.editorDuration / 60000L).toInt(),
-                                eventTime = uiState.eventTime,
-                                eventTimeChanged = uiState.eventTimeChanged,
-                                notes = uiState.notes,
-                                showNotesField = uiState.showNotesField,
-                                units = viewModel.units,
-                                rh = viewModel.rh,
-                                onNameChange = viewModel::updateEditorName,
-                                onTargetChange = viewModel::updateEditorTarget,
-                                onDurationChange = { duration -> viewModel.updateEditorDuration(duration) },
-                                onDateClick = { showDatePicker = true },
-                                onTimeClick = { showTimePicker = true },
-                                onNotesChange = viewModel::updateNotes,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            // Extra space for floating toolbar
-                            Spacer(modifier = Modifier.height(80.dp))
-                        }
-                    }
-                }
-
-                // Mini FAB for Cancel (only visible when TT is active)
-                if (uiState.activeTT != null) {
-                    SmallFloatingActionButton(
-                        onClick = { showCancelDialog = true },
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(end = 16.dp, bottom = 88.dp),
-                        containerColor = MaterialTheme.colorScheme.error
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.cancel)
-                        )
-                    }
-                }
-
-                // Floating Toolbar with FAB (M3 style)
-                Row(
+                MasterOfflineBanner(editingEnabled = editingEnabled)
+                Box(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .clearFocusOnTap(focusManager)
                 ) {
-                    // Floating Toolbar — hidden in PLAY mode
-                    if (!isPlayMode) {
-                        Surface(
-                            shape = RoundedCornerShape(percent = 50),
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            shadowElevation = 6.dp,
-                            tonalElevation = 6.dp
+                    ContentContainer(
+                        isLoading = uiState.isLoading,
+                        isEmpty = uiState.presets.isEmpty()
+                    ) {
+                        // Standalone active card only when active TT doesn't match any preset
+                        val hasStandaloneActiveTT = uiState.activeTT != null && uiState.activePresetIndex == null
+                        val cardCount = if (hasStandaloneActiveTT) {
+                            uiState.presets.size + 1
+                        } else {
+                            uiState.presets.size
+                        }
+
+                        // Use saved card index from ViewModel (survives rotation via @Singleton)
+                        val pagerState = rememberPagerState(
+                            initialPage = uiState.currentCardIndex.coerceIn(0, (cardCount - 1).coerceAtLeast(0)),
+                            pageCount = { cardCount }
+                        )
+
+                        // Handle scroll to page request (e.g., after adding new preset)
+                        // Depends on cardCount so it retries when pager updates with new page count
+                        LaunchedEffect(scrollToPage, cardCount) {
+                            scrollToPage?.let { page ->
+                                if (page < cardCount) {
+                                    pagerState.animateScrollToPage(page)
+                                    scrollToPage = null
+                                }
+                            }
+                        }
+
+                        // Update selected preset when pager changes
+                        LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+                            if (!pagerState.isScrollInProgress) {
+                                viewModel.updateCurrentCardIndex(pagerState.currentPage)
+                                val presetIndex = if (hasStandaloneActiveTT && pagerState.currentPage > 0) {
+                                    pagerState.currentPage - 1
+                                } else if (!hasStandaloneActiveTT) {
+                                    pagerState.currentPage
+                                } else {
+                                    null // Standalone active TT card selected
+                                }
+
+                                if (presetIndex != null) viewModel.selectPreset(presetIndex)
+                                else viewModel.selectActiveTT()
+                            }
+                            currentPage = pagerState.currentPage
+                        }
+
+                        Column(
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(onClick = { viewModel.addNewPreset() }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Add,
-                                        contentDescription = "Add preset"
-                                    )
+                            // TT Preset Carousel
+                            HorizontalPager(
+                                state = pagerState,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp),
+                                contentPadding = PaddingValues(horizontal = 64.dp),
+                                pageSpacing = 16.dp
+                            ) { page ->
+                                val isStandaloneActiveCard = hasStandaloneActiveTT && page == 0
+                                val presetIndex = when {
+                                    isStandaloneActiveCard -> null
+                                    hasStandaloneActiveTT  -> page - 1
+                                    else                   -> page
                                 }
-                                // Revert button (only for fixed presets when editor values differ from defaults)
-                                val showRevert = uiState.selectedPreset?.isDeletable == false &&
-                                    viewModel.isEditorDifferentFromDefaults()
-                                if (showRevert) {
-                                    IconButton(onClick = { viewModel.revertToDefaults() }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Refresh,
-                                            contentDescription = stringResource(app.aaps.core.ui.R.string.revert_to_defaults)
-                                        )
-                                    }
-                                }
-                                IconButton(
-                                    onClick = { showDeleteDialog = true },
-                                    enabled = uiState.selectedPreset?.isDeletable == true
+                                val preset = presetIndex?.let { uiState.presets.getOrNull(it) }
+                                val isActivePreset = presetIndex != null && presetIndex == uiState.activePresetIndex
+
+                                TempTargetCarouselCard(
+                                    preset = preset,
+                                    activeTT = if (isStandaloneActiveCard || isActivePreset) uiState.activeTT else null,
+                                    remainingTimeMs = uiState.remainingTimeMs,
+                                    isSelected = pagerState.currentPage == page,
+                                    units = viewModel.units,
+                                    onExpired = { viewModel.refreshData() },
+                                    modifier = Modifier
+                                        .graphicsLayer {
+                                            val pageOffset = (
+                                                (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                                                ).absoluteValue
+                                            // Scale effect for carousel
+                                            lerp(
+                                                start = 0.85f,
+                                                stop = 1f,
+                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                            ).also { scale ->
+                                                scaleX = scale
+                                                scaleY = scale
+                                            }
+                                            // Alpha effect
+                                            alpha = lerp(
+                                                start = 0.5f,
+                                                stop = 1f,
+                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                            )
+                                        }
+                                )
+                            }
+
+                            // Page indicator dots
+                            PageIndicatorDots(
+                                pageCount = cardCount,
+                                currentPage = pagerState.currentPage
+                            )
+
+                            // TT Editor — hidden when offline on a client: tweaking is pointless when you can
+                            // neither Save (toolbar hidden) nor Activate (FAB hidden). Stays for the tweak-and-
+                            // activate one-off-TT workflow when the master is reachable (or on master).
+                            if (editingEnabled) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f)
+                                        .verticalScroll(rememberScrollState())
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Delete,
-                                        contentDescription = stringResource(R.string.remove_label),
-                                        tint = if (uiState.selectedPreset?.isDeletable == true)
-                                            MaterialTheme.colorScheme.error
-                                        else
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                    TempTargetEditor(
+                                        selectedPreset = uiState.selectedPreset,
+                                        editorName = uiState.editorName,
+                                        editorTarget = uiState.editorTarget,
+                                        editorDuration = (uiState.editorDuration / 60000L).toInt(),
+                                        eventTime = uiState.eventTime,
+                                        eventTimeChanged = uiState.eventTimeChanged,
+                                        notes = uiState.notes,
+                                        showNotesField = uiState.showNotesField,
+                                        units = viewModel.units,
+                                        rh = viewModel.rh,
+                                        onNameChange = viewModel::updateEditorName,
+                                        onTargetChange = viewModel::updateEditorTarget,
+                                        onDurationChange = { duration -> viewModel.updateEditorDuration(duration) },
+                                        onDateClick = { showDatePicker = true },
+                                        onTimeClick = { showTimePicker = true },
+                                        onNotesChange = viewModel::updateNotes,
+                                        modifier = Modifier.fillMaxWidth()
                                     )
+                                    // Extra space for floating toolbar
+                                    Spacer(modifier = Modifier.height(80.dp))
                                 }
                             }
                         }
                     }
 
-                    // FAB for primary action (Activate) — always visible
-                    AapsFab(
-                        onClick = { showActivateDialog = true }
+                    // Mini FAB for Cancel (only visible when TT is active). Hidden on a client whose master is
+                    // unreachable — canceling a TT is a master/NS action that couldn't be delivered.
+                    if (editingEnabled && uiState.activeTT != null) {
+                        SmallFloatingActionButton(
+                            onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(end = 16.dp, bottom = 88.dp),
+                            containerColor = MaterialTheme.colorScheme.error
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.cancel)
+                            )
+                        }
+                    }
+
+                    // Floating Toolbar with FAB (M3 style)
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.PlayArrow,
-                            contentDescription = stringResource(R.string.activate_label)
-                        )
+                        // Floating Toolbar — hidden in PLAY mode
+                        if (!isPlayMode) {
+                            Surface(
+                                shape = RoundedCornerShape(percent = 50),
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                shadowElevation = 6.dp,
+                                tonalElevation = 6.dp
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    IconButton(onClick = { viewModel.addNewPreset() }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Add,
+                                            contentDescription = "Add preset"
+                                        )
+                                    }
+                                    // Revert button (only for fixed presets when editor values differ from defaults)
+                                    val showRevert = uiState.selectedPreset?.isDeletable == false &&
+                                        viewModel.isEditorDifferentFromDefaults()
+                                    if (showRevert) {
+                                        IconButton(onClick = { viewModel.revertToDefaults() }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Refresh,
+                                                contentDescription = stringResource(app.aaps.core.ui.R.string.revert_to_defaults)
+                                            )
+                                        }
+                                    }
+                                    IconButton(
+                                        onClick = { showDeleteDialog = true },
+                                        enabled = uiState.selectedPreset?.isDeletable == true
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Delete,
+                                            contentDescription = stringResource(R.string.remove_label),
+                                            tint = if (uiState.selectedPreset?.isDeletable == true)
+                                                MaterialTheme.colorScheme.error
+                                            else
+                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        // FAB for primary action (Activate). Hidden on a client whose master is unreachable —
+                        // activating a TT is a master/remote action that couldn't be delivered.
+                        if (editingEnabled) {
+                            AapsFab(
+                                onClick = { viewModel.activateWithEditorValues(onSuccess = onNavigateBack) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.PlayArrow,
+                                    contentDescription = stringResource(R.string.activate_label)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -486,44 +477,4 @@ fun TempTargetManagementScreen(
     }
 }
 
-/**
- * Build activation confirmation message showing all details
- */
-private fun buildActivationMessage(
-    viewModel: TempTargetManagementViewModel,
-    uiState: TempTargetManagementUiState
-): String {
-    return buildString {
-        append(viewModel.rh.gs(app.aaps.core.ui.R.string.temporary_target))
-        append(": ")
-        // editorTarget is already in user units, convert to mg/dL for proper formatting
-        val targetMgdl = viewModel.profileUtil.convertToMgdl(uiState.editorTarget, viewModel.units)
-        append(viewModel.profileUtil.fromMgdlToStringInUnits(targetMgdl))
-        append("<br/>")
-        append(viewModel.rh.gs(app.aaps.core.ui.R.string.duration))
-        append(": ")
-        val durationMinutes = (uiState.editorDuration / 60000L).toInt()
-        append(formatMinutesAsDuration(durationMinutes, viewModel.rh))
-
-        if (uiState.selectedPreset != null) {
-            append("<br/>")
-            append(viewModel.rh.gs(app.aaps.core.ui.R.string.reason))
-            append(": ")
-            append(uiState.selectedPreset.getDisplayName(viewModel.rh))
-        }
-
-        if (uiState.eventTimeChanged) {
-            append("<br/>")
-            append(viewModel.rh.gs(app.aaps.core.ui.R.string.time))
-            append(": ")
-            append(viewModel.dateUtil.dateAndTimeString(uiState.eventTime))
-        }
-
-        if (uiState.notes.isNotBlank()) {
-            append("<br/>")
-            append(viewModel.rh.gs(app.aaps.core.ui.R.string.notes_label))
-            append(": ")
-            append(uiState.notes)
-        }
-    }
-}
+// (TT activation confirmation is now built by the master — see TempTargetManagementViewModel.activateWithEditorValues.)

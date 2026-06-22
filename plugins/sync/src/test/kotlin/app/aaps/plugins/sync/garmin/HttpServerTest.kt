@@ -72,14 +72,15 @@ internal class HttpServerTest: TestBase() {
     }
 
     @Test fun testRequest() {
-        val port = 28895
-        val reqUri = URI("http://127.0.0.1:$port/foo")
-        HttpServer(aapsLogger, port).use { server ->
+        // Bind an ephemeral port (0) and read the actual port back, so the test never collides with another
+        // process or a previous run's port lingering in TIME_WAIT — the source of intermittent bind failures.
+        HttpServer(aapsLogger, 0).use { server ->
             server.registerEndpoint("/foo")  { _: SocketAddress, uri: URI, _: String? ->
                     assertEquals(URI("/foo"), uri)
                     HttpURLConnection.HTTP_OK to "test"
                 }
             assertTrue(server.awaitReady(Duration.ofSeconds(10)))
+            val reqUri = URI("http://127.0.0.1:${server.localPort}/foo")
             val resp = reqUri.toURL().openConnection() as HttpURLConnection
             assertEquals(200, resp.responseCode)
             val content = (resp.content as InputStream).reader().use { r -> r.readText() }
@@ -88,10 +89,9 @@ internal class HttpServerTest: TestBase() {
     }
 
     @Test fun testRequest_NotFound() {
-        val port = 28895
-        val reqUri = URI("http://127.0.0.1:$port/foo")
-        HttpServer(aapsLogger, port).use { server ->
+        HttpServer(aapsLogger, 0).use { server ->
             assertTrue(server.awaitReady(Duration.ofSeconds(10)))
+            val reqUri = URI("http://127.0.0.1:${server.localPort}/foo")
             val resp = reqUri.toURL().openConnection() as HttpURLConnection
             assertEquals(404, resp.responseCode)
         }

@@ -3,6 +3,7 @@ package app.aaps.core.interfaces.nsclient
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
@@ -17,6 +18,7 @@ import app.aaps.core.data.model.TT
 interface StoreDataForDb {
 
     fun addToGlucoseValues(payload: MutableList<GV>): Boolean
+    fun addToCalibrationEntries(payload: MutableList<CAL>): Boolean
     fun addToBoluses(payload: BS): Boolean
     fun addToCarbs(payload: CA): Boolean
     fun addToTemporaryTargets(payload: TT): Boolean
@@ -30,6 +32,7 @@ interface StoreDataForDb {
     fun addToFoods(payload: MutableList<FD>): Boolean
 
     fun addToNsIdGlucoseValues(payload: GV): Boolean
+    fun addToNsIdCalibrationEntries(payload: CAL): Boolean
     fun addToNsIdBoluses(payload: BS): Boolean
     fun addToNsIdCarbs(payload: CA): Boolean
     fun addToNsIdTemporaryTargets(payload: TT): Boolean
@@ -50,6 +53,7 @@ interface StoreDataForDb {
     suspend fun storeTreatmentsToDb(fullSync: Boolean)
     suspend fun updateDeletedTreatmentsInDb()
     suspend fun storeGlucoseValuesToDb()
+    suspend fun storeCalibrationEntriesToDb()
     suspend fun storeFoodsToDb()
     fun scheduleNsIdUpdate()
     suspend fun updateNsIds()
@@ -60,6 +64,7 @@ interface StoreDataForDb {
      * arrivals only need 1 store cycle to drain the buffer.
      */
     fun requestStoreGlucoseValues()
+    fun requestStoreCalibrationEntries()
     fun requestStoreTreatments(fullSync: Boolean)
     fun requestStoreFoods()
     fun requestUpdateDeletedTreatments()

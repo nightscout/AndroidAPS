@@ -428,7 +428,7 @@ class AutotuneViewModel(
         if (atProfile.icSize > 1)
             warnings += rh.gs(R.string.autotune_ic_warning, atProfile.icSize, atProfile.ic)
         if (atProfile.isfSize > 1)
-            warnings += rh.gs(R.string.autotune_isf_warning, atProfile.isfSize, profileUtil.fromMgdlToUnits(atProfile.isf), profileFunction.getUnits().asText)
+            warnings += rh.gs(R.string.autotune_isf_warning, atProfile.isfSize, profileUtil.fromMgdlToUnits(atProfile.isf), profileFunction.getUnits().displayLabel)
         return warnings.joinToString("\n")
     }
 

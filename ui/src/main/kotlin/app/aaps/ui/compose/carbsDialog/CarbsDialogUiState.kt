@@ -20,6 +20,8 @@ data class CarbsDialogUiState(
 
     // Config (set once during init)
     val maxCarbs: Int = 0,
+    // Current COB snapshot (floored, ≥0): the magnitude limit for a negative entry (COB removal). 0 ⇒ negative unavailable.
+    val cobLimit: Int = 0,
     val carbsButtonIncrement1: Int = 5,
     val carbsButtonIncrement2: Int = 10,
     val carbsButtonIncrement3: Int = 20,

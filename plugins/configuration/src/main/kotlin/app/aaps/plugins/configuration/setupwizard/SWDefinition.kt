@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
@@ -66,7 +66,7 @@ class SWDefinition @Inject constructor(
     private val cryptoUtil: CryptoUtil,
     private val config: Config,
     private val hardLimits: HardLimits,
-    private val uiInteraction: UiInteraction,
+    private val nsClient: NsClient,
     private val aapsSchedulers: AapsSchedulers,
     private val swScreenProvider: Provider<SWScreen>,
     private val swEventListenerProvider: Provider<SWEventListener>,
@@ -197,8 +197,8 @@ class SWDefinition @Inject constructor(
             .add(swBreakProvider.get())
             .add(swInfoTextProvider.get().label(R.string.syncinfotext))
             .add(swBreakProvider.get())
-            .add(swEventListenerProvider.get().with(EventSWSyncStatus::class.java).label(R.string.status).initialStatus(activePlugin.activeNsClient?.status ?: ""))
-            .validator { activePlugin.activeNsClient?.connected == true && activePlugin.activeNsClient?.hasWritePermission == true }
+            .add(swEventListenerProvider.get().with(EventSWSyncStatus::class.java).label(R.string.status).initialStatus(nsClient.status))
+            .validator { nsClient.connected && nsClient.hasWritePermission }
 
     private val screenPatientName
         get() = swScreenProvider.get().with(app.aaps.core.keys.R.string.pref_title_patient_name)

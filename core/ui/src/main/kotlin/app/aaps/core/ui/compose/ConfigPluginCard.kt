@@ -79,10 +79,11 @@ fun ConfigPluginCard(
     onCardClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onOpenPluginClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    editingEnabled: Boolean = true
 ) {
     val selected = plugin.isEnabled
-    val canTap = plugin.canToggle && when (selectionMode) {
+    val canTap = plugin.canToggle && editingEnabled && when (selectionMode) {
         SelectionMode.SINGLE_SELECT -> !selected
         SelectionMode.MULTI_SELECT  -> true
     }
@@ -133,7 +134,7 @@ fun ConfigPluginCard(
                 Selector(
                     selectionMode = selectionMode,
                     selected = selected,
-                    enabled = plugin.canToggle
+                    enabled = plugin.canToggle && editingEnabled
                 )
             }
 

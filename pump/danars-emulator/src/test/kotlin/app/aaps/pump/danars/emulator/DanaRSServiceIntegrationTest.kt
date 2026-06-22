@@ -83,6 +83,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -136,6 +137,16 @@ class DanaRSServiceIntegrationTest : TestBase() {
 
     private val deviceName = "UHH00002TI"
     private val deviceAddress = "00:11:22:33:44:55"
+
+    @AfterEach
+    fun tearDown() {
+        if (::bleComm.isInitialized && bleComm.isConnected) {
+            bleComm.disconnect("test cleanup")
+        }
+        if (::emulatorTransport.isInitialized) {
+            emulatorTransport.awaitPendingCallbacks()
+        }
+    }
 
     @BeforeEach
     fun setup() {

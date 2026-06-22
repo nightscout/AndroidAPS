@@ -256,6 +256,30 @@ class NotificationManagerImpl @Inject constructor(
     }
 
     /**
+     * Silence and dismiss every active audible alarm — the global "mute all" path used by the Wear
+     * snooze/mute gesture, the full-screen acknowledge, and app onTerminate.
+     *
+     * Drops every audible URGENT notification from the registry so [refreshAlarmSound] stops the
+     * internal ([AlarmSoundPlayer.OWNER_INTERNAL]) player and clears [soundingKey]; then stops the
+     * full-screen ([AlarmSoundPlayer.OWNER_FULLSCREEN]) audio and cancels every alarm system
+     * notification (FSI + the silent sound ones). A visible full-screen ErrorActivity stays on
+     * screen but goes silent until the user dismisses it.
+     */
+    @Synchronized
+    override fun muteAllAlarms() {
+        val current = _notifications.value
+        val audible = current.filter { it.level == NotificationLevel.URGENT && it.soundRes != null && it.soundRes != 0 }
+        if (audible.isNotEmpty()) {
+            audible.forEach { cancelSilentAlarmNotification(it) }
+            _notifications.value = current - audible.toSet()
+        }
+        refreshAlarmSound()
+        alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
+        alarmNotificationManager.cancelAlarm()
+        aapsLogger.debug(LTag.NOTIFICATION, "Muted all alarms")
+    }
+
+    /**
      * Mutates `_notifications.value` — must run while holding this object's monitor.
      * Both current callers (`@Synchronized postInternal` via `removeExpired()` and
      * `@Synchronized cleanUp()`) satisfy that, but the @Synchronized annotation here makes

@@ -45,7 +45,10 @@
     - Use `head_limit` to cap number of results
 - **Suppress verbose Bash output:**
     - Use `--quiet` flag for gradle: `.\gradlew.bat assembleFullDebug --quiet --no-daemon`
-    - Pipe to `tail -50` for long outputs
+    - Pipe to `tail -50` only when you just need to *read* output — ⚠️ a pipe makes the reported exit
+      code the **pipe's** (e.g. `tail`'s), NOT gradle's, so a FAILED build/test looks like it passed.
+      For pass/fail, redirect instead: `./gradlew.bat … --no-daemon > build.log 2>&1` then grep the log
+      (`^e: ` for Kotlin errors, `BUILD FAILED`/`BUILD SUCCESSFUL`).
     - Avoid commands that dump entire logs
 - **Be specific in searches:**
     - Narrow glob patterns: `src/**/specific/*.kt` instead of `**/*.kt`
@@ -57,9 +60,6 @@
 
 ## User Preferences
 
-- **Use CRLF line endings, not LF** — This is a Windows repo. When writing or editing files,
-  preserve/produce CRLF (`\r\n`) line endings to avoid `git` warnings like
-  `LF will be replaced by CRLF the next time Git touches it`. Do NOT convert files to LF-only.
 - **NEVER make code changes without user confirmation** — When the user describes a problem or
   preference, propose the change first and wait for approval before editing code. Do NOT immediately
   edit files based on user feedback. The only exception is when the user explicitly says "do it",
@@ -142,6 +142,24 @@
   `.removeSuffix(":")`, or stripping characters from resource strings breaks localization. Different
   languages have different punctuation and formatting rules. If a string needs different formats,
   create separate resource strings instead.
+- **Never build user-facing text by concatenating strings in code** - Joining pieces like
+  `rh.gs(label) + ": " + value`, `value + " " + unit`, or `"$a/$b h"` is NOT translatable and breaks
+  RTL languages (the translator can't control the separator, order, or direction). Instead use a
+  **format-string resource template** with positional placeholders and let the value carry its own
+  unit:
+    - ❌ BAD: `rh.gs(R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(v, step)`
+    - ✅ GOOD:
+      `rh.gs(R.string.confirmation_line, rh.gs(R.string.bolus), decimalFormatter.toPumpSupportedBolusWithUnits(v, step))`
+      where `confirmation_line` is `"%1$s: %2$s"` — and prefer value+unit templates
+      (`format_insulin_units`, `format_carbs`, `pump_base_basal_rate`, `format_mins`,
+      `ProfileUtil.fromMgdlToStringWithUnits`) over a bare number. Most such templates already exist
+      in
+      `:core:ui`; reuse them before adding a new one.
+- **Add translator context to every new string via the `comment="..."` attribute** (not an XML
+  comment).
+  Explain each placeholder and give an example, mirroring existing strings:
+    - ✅
+      `<string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=min, %4$s=max. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>`
 - **In Compose code, use `stringResource()` not `ResourceHelper`** - Compose has built-in
   `stringResource(R.string.xyz)` function. Only use `ResourceHelper` (rh) in non-Composable contexts
   (ViewModels, regular functions). This keeps Compose code cleaner and more idiomatic.
@@ -201,6 +219,19 @@
 - If an approach requires more than 3 workarounds: **step back and reconsider the approach**
 - If you realize you're about to repeat a mistake from memory: **stop and follow the correct pattern
   **
+
+## On-Device Testing (ONLY on explicit request)
+
+Default stays **"Never install app automatically"** — only build / install / drive devices when the
+user explicitly asks. That request overrides the no-install rule; `connectedAndroidTest` still needs
+its own permission (it wipes the app). When asked:
+
+- Master runs the `full` flavor, a client runs an `aapsclient` flavor — build the needed APK(s) and
+  `adb install -r` (keep data; **never uninstall/wipe** the setup). Find devices via `adb devices -l`.
+- Drive the UI with **`uiautomator`** (dump hierarchy → tap by element `bounds`), not screenshots.
+- Verify behaviour from **`logcat`** (clear before the action, dump after, grep the relevant markers).
+- Use redirect-not-pipe for any gradle build/test so the real exit code shows (see caveat above).
+- Ask connected devices are test devices.
 
 ## Project Info
 

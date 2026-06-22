@@ -1,8 +1,6 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.interfaces.configuration.ConfigExportImport
-
-interface Sensitivity : ConfigExportImport {
+interface Sensitivity {
 
     enum class SensitivityType(val value: Int) {
         UNKNOWN(-1),

@@ -26,14 +26,14 @@ class CommandBolusTest : TestBaseWithProfile() {
     private fun newCommand(type: Command.CommandType = Command.CommandType.BOLUS, callback: Callback? = null) =
         CommandBolus(
             aapsLogger, rh, activePlugin, pumpEnactResultProvider, bolusProgressData,
-            info, callback, type
+            info, callback, type, BOLUS_GENERATION
         )
 
     @Test
     fun `execute returns pump result and marks complete on success`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
 
@@ -47,26 +47,28 @@ class CommandBolusTest : TestBaseWithProfile() {
     fun `execute clears progress data on failure`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(false).enacted(false)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
 
         val result = newCommand().execute()
 
         assertThat(result).isSameInstanceAs(pumpResult)
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
     fun `executeWithCallback forwards execute result to callback`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).executeWithCallback()
@@ -79,14 +81,16 @@ class CommandBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced)
 
         assertThat(received).isNotNull()
         assertThat(received!!.success).isTrue()
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
@@ -94,14 +98,16 @@ class CommandBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
 
         assertThat(received).isNotNull()
         assertThat(received!!.success).isFalse()
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
@@ -110,4 +116,8 @@ class CommandBolusTest : TestBaseWithProfile() {
         assertThat(newCommand(type = Command.CommandType.SMB_BOLUS).commandType).isEqualTo(Command.CommandType.SMB_BOLUS)
     }
 
+    private companion object {
+
+        const val BOLUS_GENERATION = 7L
+    }
 }

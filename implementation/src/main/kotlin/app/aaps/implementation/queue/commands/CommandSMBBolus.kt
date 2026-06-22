@@ -27,6 +27,7 @@ class CommandSMBBolus(
     override val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val detailedBolusInfo: DetailedBolusInfo,
     override val callback: Callback?,
+    private val bolusGeneration: Long,
 ) : Command {
 
     override val commandType: Command.CommandType = Command.CommandType.SMB_BOLUS
@@ -45,7 +46,8 @@ class CommandSMBBolus(
             aapsLogger.debug(LTag.PUMPQUEUE, "SMB bolus canceled. deliverAt: " + dateUtil.dateAndTimeString(detailedBolusInfo.deliverAtTheLatest))
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-        bolusProgressData.clear()
+        // Generation-scoped: never wipe a newer bolus that was enqueued behind this SMB (see BolusProgressData.clear).
+        bolusProgressData.clear(bolusGeneration)
         return r
     }
 
@@ -55,6 +57,6 @@ class CommandSMBBolus(
 
     override fun cancel(commentResId: Int, success: Boolean) {
         super.cancel(commentResId, success)
-        bolusProgressData.clear()
+        bolusProgressData.clear(bolusGeneration)
     }
 }

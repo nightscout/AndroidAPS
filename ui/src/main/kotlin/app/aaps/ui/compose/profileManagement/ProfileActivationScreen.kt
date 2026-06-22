@@ -53,13 +53,12 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
-import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.EventTimeRow
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.ui.R
@@ -103,7 +102,6 @@ fun ProfileActivationScreen(
     var timeshift by remember { mutableDoubleStateOf(0.0) }
     var withTT by remember { mutableStateOf(false) }
     var notes by remember { mutableStateOf("") }
-    var showConfirmDialog by remember { mutableStateOf(false) }
 
     // Date/time state
     val originalTimestamp = remember { initialTimestamp }
@@ -119,59 +117,6 @@ fun ProfileActivationScreen(
     // the percentage so the warning + the disabled Activate button track the current selection.
     val percentageInt = percentage.toInt()
     val pumpCompatible = remember(percentageInt, checkPumpCompatible) { checkPumpCompatible(percentageInt) }
-
-    // Format duration as "Xh Ym" when >= 60 minutes
-    val durationMinutes = duration.toInt()
-    val formattedDuration = if (durationMinutes >= 60) {
-        val hours = durationMinutes / 60
-        val mins = durationMinutes % 60
-        rh.gs(app.aaps.core.ui.R.string.format_hour_minute, hours, mins)
-    } else {
-        rh.gs(app.aaps.core.ui.R.string.format_mins, durationMinutes)
-    }
-
-    // Build confirmation message
-    val confirmationMessage = buildString {
-        append(rh.gs(app.aaps.core.ui.R.string.profile))
-        append(": ")
-        append(profileName)
-        if (duration > 0) {
-            append("<br/>")
-            append(rh.gs(app.aaps.core.ui.R.string.duration))
-            append(": ")
-            append(formattedDuration)
-        }
-        if (percentage.toInt() != 100) {
-            append("<br/>")
-            append(rh.gs(app.aaps.core.ui.R.string.percent))
-            append(": ")
-            append("${percentage.toInt()}%")
-        }
-        if (timeshift.toInt() != 0) {
-            append("<br/>")
-            append(rh.gs(R.string.timeshift_label))
-            append(": ")
-            append(rh.gs(app.aaps.core.ui.R.string.format_hours, timeshift))
-        }
-        if (showTTOption && withTT) {
-            append("<br/>")
-            append(rh.gs(app.aaps.core.ui.R.string.temporary_target))
-            append(": ")
-            append(rh.gs(app.aaps.core.ui.R.string.activity))
-        }
-        if (notes.isNotBlank()) {
-            append("<br/>")
-            append(rh.gs(app.aaps.core.ui.R.string.notes_label))
-            append(": ")
-            append(notes)
-        }
-        if (eventTimeChanged) {
-            append("<br/>")
-            append(rh.gs(app.aaps.core.ui.R.string.time))
-            append(": ")
-            append(dateUtil.dateAndTimeString(eventTime))
-        }
-    }
 
     // Date picker modal
     if (showDatePicker) {
@@ -201,27 +146,6 @@ fun ProfileActivationScreen(
         )
     }
 
-    // Confirmation dialog
-    if (showConfirmDialog) {
-        OkCancelDialog(
-            title = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
-            message = confirmationMessage,
-            onConfirm = {
-                showConfirmDialog = false
-                onActivate(
-                    duration.toInt(),
-                    percentage.toInt(),
-                    timeshift.toInt(),
-                    showTTOption && withTT,
-                    notes,
-                    eventTime,
-                    eventTimeChanged
-                )
-            },
-            onDismiss = { showConfirmDialog = false }
-        )
-    }
-
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -241,7 +165,17 @@ fun ProfileActivationScreen(
             Button(
                 onClick = {
                     focusManager.clearFocus()
-                    showConfirmDialog = true
+                    // Straight to the single master-authored confirmation (prepare → OkCancel(lines) → commit);
+                    // no bespoke screen confirm, so there's one confirm dialog with the per-action icon.
+                    onActivate(
+                        duration.toInt(),
+                        percentage.toInt(),
+                        timeshift.toInt(),
+                        showTTOption && withTT,
+                        notes,
+                        eventTime,
+                        eventTimeChanged
+                    )
                 },
                 enabled = pumpCompatible,
                 modifier = Modifier

@@ -1,6 +1,8 @@
 package app.aaps.core.ui.compose.navigation
 
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.PreferenceVisibility
 
 /**
  * Unified visual identity for UI elements.
@@ -10,11 +12,13 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
  * @param category Logical grouping for configuration screens and bottom sheets
  * @param searchable Whether this element appears in global search results
  * @param protection Protection level required for navigation
+ * @param visibility Runtime condition gating where this element may surface (e.g. in search)
  */
 enum class ElementType(
     val category: ElementCategory = ElementCategory.INTERNAL,
     val searchable: Boolean = false,
-    val protection: ProtectionCheck.Protection = ProtectionCheck.Protection.NONE
+    val protection: ProtectionCheck.Protection = ProtectionCheck.Protection.NONE,
+    val visibility: PreferenceVisibility = PreferenceVisibility.ALWAYS
 ) {
 
     // Treatment dialogs
@@ -56,6 +60,7 @@ enum class ElementType(
 
     // System
     AUTOMATION(category = ElementCategory.SYSTEM),
+    AUTOMATION_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
     PUMP(category = ElementCategory.SYSTEM),
     SETTINGS(category = ElementCategory.SYSTEM, protection = ProtectionCheck.Protection.PREFERENCES),
     QUICK_LAUNCH_CONFIG(category = ElementCategory.SYSTEM, searchable = true),
@@ -78,6 +83,12 @@ enum class ElementType(
     // Scenes (situation presets)
     SCENE(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
     SCENE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
+
+    // NSCv3 client control — paired devices that can issue signed commands
+    // Master only AND NSCv3-WS enabled — keeps search in lock-step with the Manage-sheet button (ManageViewModel).
+    AUTHORIZED_CLIENTS(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = PreferenceVisibility { !it.isClient && it.preferences.get(BooleanKey.NsClient3UseWs) }),
+    // Client only AND NSCv3-WS enabled (the transport client control rides) — in lock-step with its Manage-sheet button.
+    PAIR_WITH_MASTER(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = PreferenceVisibility { it.isClient && it.preferences.get(BooleanKey.NsClient3UseWs) }),
 
     // Running mode / loop (used by UserEntry)
     RUNNING_MODE(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),

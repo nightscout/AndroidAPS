@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -51,9 +50,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
@@ -82,7 +83,12 @@ fun QuickWizardManagementScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
-    val isPlayMode = uiState.screenMode == ScreenMode.PLAY
+    // On a client whose master is unreachable, force VIEW-ONLY so QuickWizard (synced config) edits can't be
+    // made while they couldn't sync. DERIVED from current state (no setScreenMode side-effect) → deterministic
+    // at startup and flips the instant reachability changes. Master is never gated. Both edits AND the
+    // master-bound Execute FAB are gated by this on a client.
+    val editingEnabled = masterEditingEnabled()
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled
 
     // Set initial screen mode
     LaunchedEffect(initialMode) {
@@ -186,7 +192,7 @@ fun QuickWizardManagementScreen(
                     actions = {
                         if (isPlayMode) {
                             // Edit mode button (shown in PLAY mode)
-                            IconButton(onClick = onRequestEditMode) {
+                            IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                 Icon(
                                     imageVector = Icons.Filled.Edit,
                                     contentDescription = stringResource(CoreR.string.switch_to_edit)
@@ -211,237 +217,243 @@ fun QuickWizardManagementScreen(
                 )
             }
         ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .clearFocusOnTap(focusManager)
-            ) {
-                ContentContainer(
-                    isLoading = uiState.isLoading,
-                    isEmpty = uiState.entries.isEmpty()
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)) {
+                MasterOfflineBanner(editingEnabled = editingEnabled)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .clearFocusOnTap(focusManager)
                 ) {
-                    val cardCount = uiState.entries.size
-
-                    // Use saved card index from ViewModel (survives rotation via @Singleton)
-                    val pagerState = rememberPagerState(
-                        initialPage = uiState.currentCardIndex.coerceIn(0, (cardCount - 1).coerceAtLeast(0)),
-                        pageCount = { cardCount }
-                    )
-
-                    // Handle scroll to page request (e.g., after adding new entry)
-                    LaunchedEffect(scrollToPage, cardCount) {
-                        scrollToPage?.let { page ->
-                            if (page < cardCount) {
-                                pagerState.animateScrollToPage(page)
-                                scrollToPage = null
-                            }
-                        }
-                    }
-
-                    // Update selected entry when pager changes
-                    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-                        if (!pagerState.isScrollInProgress) {
-                            val newPage = pagerState.currentPage
-                            // Check if we have unsaved changes before switching
-                            if (newPage != currentPage && viewModel.hasUnsavedChanges()) {
-                                // Show dialog and save pending page change
-                                pendingPageChange = newPage
-                                showUnsavedChangesDialog = true
-                                // Scroll back to current page
-                                pagerState.scrollToPage(currentPage)
-                            } else {
-                                viewModel.updateCurrentCardIndex(newPage)
-                                viewModel.selectEntry(newPage)
-                                currentPage = newPage
-                            }
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier.fillMaxSize()
+                    ContentContainer(
+                        isLoading = uiState.isLoading,
+                        isEmpty = uiState.entries.isEmpty()
                     ) {
-                        // QuickWizard Entry Carousel
-                        HorizontalPager(
-                            state = pagerState,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
-                            contentPadding = PaddingValues(horizontal = 64.dp),
-                            pageSpacing = 16.dp,
-                            userScrollEnabled = !viewModel.hasUnsavedChanges()  // Disable swipe if unsaved changes
-                        ) { page ->
-                            val entry = uiState.entries.getOrNull(page)
-                            if (entry != null) {
-                                QuickWizardCarouselCard(
-                                    entry = entry,
-                                    isSelected = pagerState.currentPage == page,
-                                    modifier = Modifier
-                                        .graphicsLayer {
-                                            val pageOffset = (
-                                                (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                                                ).absoluteValue
-                                            // Scale effect for carousel
-                                            lerp(
-                                                start = 0.85f,
-                                                stop = 1f,
-                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                            ).also { scale ->
-                                                scaleX = scale
-                                                scaleY = scale
-                                            }
-                                            // Alpha effect
-                                            alpha = lerp(
-                                                start = 0.5f,
-                                                stop = 1f,
-                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                            )
-                                        }
-                                )
-                            }
-                        }
+                        val cardCount = uiState.entries.size
 
-                        // Page indicator dots
-                        PageIndicatorDots(
-                            pageCount = cardCount,
-                            currentPage = pagerState.currentPage
+                        // Use saved card index from ViewModel (survives rotation via @Singleton)
+                        val pagerState = rememberPagerState(
+                            initialPage = uiState.currentCardIndex.coerceIn(0, (cardCount - 1).coerceAtLeast(0)),
+                            pageCount = { cardCount }
                         )
 
-                        // QuickWizard Editor (hidden in PLAY mode)
+                        // Handle scroll to page request (e.g., after adding new entry)
+                        LaunchedEffect(scrollToPage, cardCount) {
+                            scrollToPage?.let { page ->
+                                if (page < cardCount) {
+                                    pagerState.animateScrollToPage(page)
+                                    scrollToPage = null
+                                }
+                            }
+                        }
+
+                        // Update selected entry when pager changes
+                        LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+                            if (!pagerState.isScrollInProgress) {
+                                val newPage = pagerState.currentPage
+                                // Check if we have unsaved changes before switching
+                                if (newPage != currentPage && viewModel.hasUnsavedChanges()) {
+                                    // Show dialog and save pending page change
+                                    pendingPageChange = newPage
+                                    showUnsavedChangesDialog = true
+                                    // Scroll back to current page
+                                    pagerState.scrollToPage(currentPage)
+                                } else {
+                                    viewModel.updateCurrentCardIndex(newPage)
+                                    viewModel.selectEntry(newPage)
+                                    currentPage = newPage
+                                }
+                            }
+                        }
+
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .verticalScroll(rememberScrollState())
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            if (!isPlayMode && uiState.selectedIndex >= 0 && uiState.selectedIndex < uiState.entries.size) {
-                                QuickWizardEditor(
-                                    mode = uiState.editorMode,
-                                    buttonText = uiState.editorButtonText,
-                                    insulin = uiState.editorInsulin,
-                                    carbs = uiState.editorCarbs,
-                                    carbTime = uiState.editorCarbTime,
-                                    validFrom = uiState.editorValidFrom,
-                                    validTo = uiState.editorValidTo,
-                                    useBG = uiState.editorUseBG,
-                                    useCOB = uiState.editorUseCOB,
-                                    useIOB = uiState.editorUseIOB,
-                                    usePositiveIOBOnly = uiState.editorUsePositiveIOBOnly,
-                                    useTrend = uiState.editorUseTrend,
-                                    useSuperBolus = uiState.editorUseSuperBolus,
-                                    useTempTarget = uiState.editorUseTempTarget,
-                                    useAlarm = uiState.editorUseAlarm,
-                                    percentage = uiState.editorPercentage,
-                                    devicePhone = uiState.editorDevicePhone,
-                                    deviceWatch = uiState.editorDeviceWatch,
-                                    useEcarbs = uiState.editorUseEcarbs,
-                                    time = uiState.editorTime,
-                                    duration = uiState.editorDuration,
-                                    carbs2 = uiState.editorCarbs2,
-                                    showSuperBolusOption = uiState.showSuperBolusOption,
-                                    showWearOptions = uiState.showWearOptions,
-                                    maxCarbs = viewModel.getMaxCarbs(),
-                                    maxInsulin = viewModel.getMaxInsulin(),
-                                    rh = viewModel.rh,
-                                    onModeChange = viewModel::updateMode,
-                                    onButtonTextChange = viewModel::updateButtonText,
-                                    onInsulinChange = viewModel::updateInsulin,
-                                    onCarbsChange = viewModel::updateCarbs,
-                                    onCarbTimeChange = viewModel::updateCarbTime,
-                                    onValidFromChange = viewModel::updateValidFrom,
-                                    onValidToChange = viewModel::updateValidTo,
-                                    onUseBGChange = viewModel::updateUseBG,
-                                    onUseCOBChange = viewModel::updateUseCOB,
-                                    onUseIOBChange = viewModel::updateUseIOB,
-                                    onUsePositiveIOBOnlyChange = viewModel::updateUsePositiveIOBOnly,
-                                    onUseTrendChange = viewModel::updateUseTrend,
-                                    onUseSuperBolusChange = viewModel::updateUseSuperBolus,
-                                    onUseTempTargetChange = viewModel::updateUseTempTarget,
-                                    onUseAlarmChange = viewModel::updateUseAlarm,
-                                    onPercentageChange = viewModel::updatePercentage,
-                                    onDevicePhoneChange = viewModel::updateDevicePhone,
-                                    onDeviceWatchChange = viewModel::updateDeviceWatch,
-                                    onUseEcarbsChange = viewModel::updateUseEcarbs,
-                                    onTimeChange = viewModel::updateTime,
-                                    onDurationChange = viewModel::updateDuration,
-                                    onCarbs2Change = viewModel::updateCarbs2,
-                                    modifier = Modifier.fillMaxWidth()
+                            // QuickWizard Entry Carousel
+                            HorizontalPager(
+                                state = pagerState,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp),
+                                contentPadding = PaddingValues(horizontal = 64.dp),
+                                pageSpacing = 16.dp,
+                                userScrollEnabled = !viewModel.hasUnsavedChanges()  // Disable swipe if unsaved changes
+                            ) { page ->
+                                val entry = uiState.entries.getOrNull(page)
+                                if (entry != null) {
+                                    QuickWizardCarouselCard(
+                                        entry = entry,
+                                        isSelected = pagerState.currentPage == page,
+                                        modifier = Modifier
+                                            .graphicsLayer {
+                                                val pageOffset = (
+                                                    (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                                                    ).absoluteValue
+                                                // Scale effect for carousel
+                                                lerp(
+                                                    start = 0.85f,
+                                                    stop = 1f,
+                                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                                ).also { scale ->
+                                                    scaleX = scale
+                                                    scaleY = scale
+                                                }
+                                                // Alpha effect
+                                                alpha = lerp(
+                                                    start = 0.5f,
+                                                    stop = 1f,
+                                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                                )
+                                            }
+                                    )
+                                }
+                            }
+
+                            // Page indicator dots
+                            PageIndicatorDots(
+                                pageCount = cardCount,
+                                currentPage = pagerState.currentPage
+                            )
+
+                            // QuickWizard Editor (hidden in PLAY mode)
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                if (!isPlayMode && uiState.selectedIndex >= 0 && uiState.selectedIndex < uiState.entries.size) {
+                                    QuickWizardEditor(
+                                        mode = uiState.editorMode,
+                                        buttonText = uiState.editorButtonText,
+                                        insulin = uiState.editorInsulin,
+                                        carbs = uiState.editorCarbs,
+                                        carbTime = uiState.editorCarbTime,
+                                        validFrom = uiState.editorValidFrom,
+                                        validTo = uiState.editorValidTo,
+                                        useBG = uiState.editorUseBG,
+                                        useCOB = uiState.editorUseCOB,
+                                        useIOB = uiState.editorUseIOB,
+                                        usePositiveIOBOnly = uiState.editorUsePositiveIOBOnly,
+                                        useTrend = uiState.editorUseTrend,
+                                        useSuperBolus = uiState.editorUseSuperBolus,
+                                        useTempTarget = uiState.editorUseTempTarget,
+                                        useAlarm = uiState.editorUseAlarm,
+                                        percentage = uiState.editorPercentage,
+                                        devicePhone = uiState.editorDevicePhone,
+                                        deviceWatch = uiState.editorDeviceWatch,
+                                        useEcarbs = uiState.editorUseEcarbs,
+                                        time = uiState.editorTime,
+                                        duration = uiState.editorDuration,
+                                        carbs2 = uiState.editorCarbs2,
+                                        showSuperBolusOption = uiState.showSuperBolusOption,
+                                        showWearOptions = uiState.showWearOptions,
+                                        maxCarbs = viewModel.getMaxCarbs(),
+                                        maxInsulin = viewModel.getMaxInsulin(),
+                                        rh = viewModel.rh,
+                                        onModeChange = viewModel::updateMode,
+                                        onButtonTextChange = viewModel::updateButtonText,
+                                        onInsulinChange = viewModel::updateInsulin,
+                                        onCarbsChange = viewModel::updateCarbs,
+                                        onCarbTimeChange = viewModel::updateCarbTime,
+                                        onValidFromChange = viewModel::updateValidFrom,
+                                        onValidToChange = viewModel::updateValidTo,
+                                        onUseBGChange = viewModel::updateUseBG,
+                                        onUseCOBChange = viewModel::updateUseCOB,
+                                        onUseIOBChange = viewModel::updateUseIOB,
+                                        onUsePositiveIOBOnlyChange = viewModel::updateUsePositiveIOBOnly,
+                                        onUseTrendChange = viewModel::updateUseTrend,
+                                        onUseSuperBolusChange = viewModel::updateUseSuperBolus,
+                                        onUseTempTargetChange = viewModel::updateUseTempTarget,
+                                        onUseAlarmChange = viewModel::updateUseAlarm,
+                                        onPercentageChange = viewModel::updatePercentage,
+                                        onDevicePhoneChange = viewModel::updateDevicePhone,
+                                        onDeviceWatchChange = viewModel::updateDeviceWatch,
+                                        onUseEcarbsChange = viewModel::updateUseEcarbs,
+                                        onTimeChange = viewModel::updateTime,
+                                        onDurationChange = viewModel::updateDuration,
+                                        onCarbs2Change = viewModel::updateCarbs2,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+                                // Extra space for floating toolbar
+                                Spacer(modifier = Modifier.height(80.dp))
+                            }
+                        }
+                    }
+
+                    // Floating Toolbar with FAB (M3 style)
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Floating Toolbar — hidden in PLAY mode
+                        if (!isPlayMode) {
+                            Surface(
+                                shape = RoundedCornerShape(percent = 50),
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                shadowElevation = 6.dp,
+                                tonalElevation = 6.dp
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // Add button
+                                    IconButton(onClick = { viewModel.addNewEntry() }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Add,
+                                            contentDescription = stringResource(CoreR.string.add)
+                                        )
+                                    }
+                                    // Clone button
+                                    IconButton(
+                                        onClick = { viewModel.cloneCurrentEntry() },
+                                        enabled = uiState.entries.isNotEmpty()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.ContentCopy,
+                                            contentDescription = "Clone",
+                                            tint = if (uiState.entries.isNotEmpty())
+                                                MaterialTheme.colorScheme.onSurface
+                                            else
+                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                        )
+                                    }
+                                    // Delete button
+                                    IconButton(
+                                        onClick = { showDeleteDialog = true },
+                                        enabled = uiState.entries.isNotEmpty()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Delete,
+                                            contentDescription = stringResource(R.string.remove_label),
+                                            tint = if (uiState.entries.isNotEmpty())
+                                                MaterialTheme.colorScheme.error
+                                            else
+                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        // FAB for Execute/Play. Hidden on a client whose master is unreachable — executing a
+                        // QuickWizard is a (remote) action that couldn't be delivered.
+                        if (editingEnabled && uiState.entries.isNotEmpty()) {
+                            AapsFab(
+                                onClick = { onExecuteClick(uiState.selectedGuid) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.PlayArrow,
+                                    contentDescription = "Execute"
                                 )
                             }
-                            // Extra space for floating toolbar
-                            Spacer(modifier = Modifier.height(80.dp))
-                        }
-                    }
-                }
-
-                // Floating Toolbar with FAB (M3 style)
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Floating Toolbar — hidden in PLAY mode
-                    if (!isPlayMode) {
-                        Surface(
-                            shape = RoundedCornerShape(percent = 50),
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            shadowElevation = 6.dp,
-                            tonalElevation = 6.dp
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // Add button
-                                IconButton(onClick = { viewModel.addNewEntry() }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Add,
-                                        contentDescription = stringResource(CoreR.string.add)
-                                    )
-                                }
-                                // Clone button
-                                IconButton(
-                                    onClick = { viewModel.cloneCurrentEntry() },
-                                    enabled = uiState.entries.isNotEmpty()
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ContentCopy,
-                                        contentDescription = "Clone",
-                                        tint = if (uiState.entries.isNotEmpty())
-                                            MaterialTheme.colorScheme.onSurface
-                                        else
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                    )
-                                }
-                                // Delete button
-                                IconButton(
-                                    onClick = { showDeleteDialog = true },
-                                    enabled = uiState.entries.isNotEmpty()
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Delete,
-                                        contentDescription = stringResource(R.string.remove_label),
-                                        tint = if (uiState.entries.isNotEmpty())
-                                            MaterialTheme.colorScheme.error
-                                        else
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    // FAB for Execute/Play — always visible
-                    if (uiState.entries.isNotEmpty()) {
-                        AapsFab(
-                            onClick = { onExecuteClick(uiState.selectedGuid) }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.PlayArrow,
-                                contentDescription = "Execute"
-                            )
                         }
                     }
                 }

@@ -29,6 +29,10 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
     testImplementation(project(":shared:tests"))
+    // PumpIOTest extends TestBase and calls aapsLogger.debug(...); resolving that overload set
+    // requires AAPSLogger on the test classpath. :shared:tests pulls it via `implementation` so
+    // it's not transitively exposed — we ask for it directly here.
+    testImplementation(project(":core:interfaces"))
 
     testImplementation(libs.io.kotlintest.runner.junit5)
     testRuntimeOnly(libs.org.junit.jupiter.engine)

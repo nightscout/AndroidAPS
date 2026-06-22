@@ -3,6 +3,7 @@ package app.aaps.core.interfaces.db
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
@@ -29,6 +30,24 @@ import app.aaps.core.interfaces.aps.APSResult
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
+/**
+ * Read-only diagnostics gathered before a startup VACUUM.
+ * @property dbSizeBytes size of the main DB file incl. `-wal`/`-shm` (0 if it could not be read)
+ * @property availableBytes free space on the DB's volume, or -1 if unknown
+ * @property totalRows sum of rows across all tables
+ * @property deletableRows rows older than the retention window (the cleanup backlog)
+ * @property changeRows tracked-change rows (`referenceId IS NOT NULL`) across all tables
+ * @property report human-readable per-table counts (total / older-than-retention / tracked-changes)
+ */
+data class DatabaseMaintenanceInfo(
+    val dbSizeBytes: Long,
+    val availableBytes: Long,
+    val totalRows: Long,
+    val deletableRows: Long,
+    val changeRows: Long,
+    val report: String
+)
+
 interface PersistenceLayer {
 
     /**
@@ -54,6 +73,13 @@ interface PersistenceLayer {
      * before plugins/loop/sync start). May throw if the DB is busy/locked.
      */
     suspend fun vacuumDatabase()
+
+    /**
+     * Collect DB size, free space and per-table row counts (total, older-than-retention, tracked
+     * changes) for logging before a startup VACUUM. Read-only and failure-tolerant.
+     * @param retentionDays the cleanup window, used to count the deletable backlog (rows older than it)
+     */
+    suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceInfo
 
     // Flow-based change observation
     /**
@@ -477,6 +503,31 @@ interface PersistenceLayer {
      * @return List of modified records
      */
     suspend fun updateGlucoseValuesNsIds(glucoseValues: List<GV>): TransactionResult<GV>
+
+    // CALIBRATION ENTRIES
+    /** Get highest id in database (sync pointer). */
+    suspend fun getLastCalibrationEntryId(): Long?
+
+    /** Get next changed record after id (sync). */
+    suspend fun getNextSyncElementCalibrationEntry(id: Long): Pair<CAL, CAL>?
+
+    /** Valid (non-invalidated) calibration entries since [from], used by the calibration fit. */
+    suspend fun getValidCalibrationEntriesSince(from: Long): List<CAL>
+
+    /** All valid calibration entries. */
+    suspend fun getAllValidCalibrationEntries(): List<CAL>
+
+    /** Insert or update a locally created calibration entry (master side). */
+    suspend fun insertOrUpdateCalibrationEntry(calibrationEntry: CAL): TransactionResult<CAL>
+
+    /** Apply calibration entries received from NS (follower side), deduped by nightscoutId. */
+    suspend fun syncNsCalibrationEntries(calibrationEntries: List<CAL>): TransactionResult<CAL>
+
+    /** Invalidate calibration entry with id. */
+    suspend fun invalidateCalibrationEntry(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): TransactionResult<CAL>
+
+    /** Update NS id' of calibration entries in database. */
+    suspend fun updateCalibrationEntriesNsIds(calibrationEntries: List<CAL>): TransactionResult<CAL>
 
     // EPS
     /**

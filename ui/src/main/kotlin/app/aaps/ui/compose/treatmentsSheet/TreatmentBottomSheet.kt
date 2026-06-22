@@ -41,9 +41,8 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
-import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
+import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.ui.compose.main.QuickWizardItem
 import app.aaps.core.ui.R as CoreUiR
 
@@ -296,17 +295,8 @@ private fun TreatmentSettingsContent(
                     contentDescription = stringResource(CoreUiR.string.back)
                 )
             }
-            Text(
-                text = stringResource(CoreUiR.string.settings),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
-        ProvidePreferenceTheme {
-            AdaptivePreferenceList(
-                items = settingsDef.items
-            )
-        }
+        PreferenceSheetContent(settingsDef = settingsDef)
     }
 }
 

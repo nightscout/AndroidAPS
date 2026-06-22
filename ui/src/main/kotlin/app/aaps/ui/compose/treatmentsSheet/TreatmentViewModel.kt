@@ -76,6 +76,8 @@ class TreatmentViewModel @Inject constructor(
             preferences.observe(BooleanKey.OverviewShowCarbsButton).drop(1).map {},
             preferences.observe(BooleanKey.OverviewShowWizardButton).drop(1).map {},
             preferences.observe(BooleanKey.GeneralSimpleMode).drop(1).map {},
+            // QuickWizard entries changed (local edit or synced from the main phone).
+            quickWizard.changes.drop(1).map {},
         ).onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventRefreshOverview::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)

@@ -34,6 +34,16 @@ fun interface PreferenceVisibility {
         val ALWAYS = PreferenceVisibility { true }
 
         /**
+         * Visible only in client (AAPSCLIENT) mode — e.g. the "pair with master" screen.
+         */
+        val CLIENT_ONLY = PreferenceVisibility { it.isClient }
+
+        /**
+         * Visible only in master (non-AAPSCLIENT) mode — e.g. the "authorized clients" screen.
+         */
+        val MASTER_ONLY = PreferenceVisibility { !it.isClient }
+
+        /**
          * Visible only for non-patch pumps (e.g., insulin age preferences)
          */
         val NON_PATCH_PUMP = PreferenceVisibility { !it.isPatchPump }

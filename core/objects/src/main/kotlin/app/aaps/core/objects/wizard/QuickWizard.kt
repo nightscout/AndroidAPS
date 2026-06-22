@@ -2,6 +2,16 @@ package app.aaps.core.objects.wizard
 
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
@@ -15,11 +25,33 @@ class QuickWizard @Inject constructor(
     private val quickWizardEntryProvider: Provider<QuickWizardEntry>
 ) {
 
-    private var storage = JSONArray()
+    @Volatile private var storage = JSONArray()
+
+    private val _changes = MutableStateFlow(0)
+
+    /**
+     * Revision counter bumped on every entry-list change — a local edit OR a value synced from the
+     * main phone ([StringNonKey.QuickWizard] is `Bidirectional`). Consumers observe this to refresh;
+     * the in-memory cache is updated before each bump, so reading [list]/[get] right after observing
+     * returns fresh data. Initial value `0` so it composes in `combine(...)` without blocking.
+     */
+    val changes: StateFlow<Int> = _changes.asStateFlow()
+
+    // App-lifetime singleton: the subscription lives for the whole process, no cancellation needed.
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     init {
-        setData(JSONArray(preferences.get(StringNonKey.QuickWizard)))
+        storage = JSONArray(preferences.get(StringNonKey.QuickWizard))
         setGuidsForOldEntries()
+        // Keep the cache in lockstep with the persisted key. Covers edits from another screen and
+        // master→client sync (applied via putRemote, which writes the key without going through save()).
+        preferences.observe(StringNonKey.QuickWizard)
+            .drop(1) // initial value already loaded above
+            .onEach {
+                storage = JSONArray(it)
+                _changes.update { v -> v + 1 }
+            }
+            .launchIn(scope)
     }
 
     private fun setGuidsForOldEntries() {

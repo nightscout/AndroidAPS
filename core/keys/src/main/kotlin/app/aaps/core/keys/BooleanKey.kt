@@ -3,6 +3,9 @@ package app.aaps.core.keys
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.PreferenceVisibility
+import app.aaps.core.keys.interfaces.SyncChannel
+import app.aaps.core.keys.interfaces.SyncDirection
+import app.aaps.core.keys.interfaces.SyncSpec
 
 enum class BooleanKey(
     override val key: String,
@@ -21,30 +24,42 @@ enum class BooleanKey(
     override val engineeringModeOnly: Boolean = false,
     override val exportable: Boolean = true,
     override val visibility: PreferenceVisibility = PreferenceVisibility.ALWAYS,
-    override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS
+    override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS,
+    override val sync: SyncSpec? = null
 ) : BooleanPreferenceKey {
 
-    GeneralSimpleMode("simple_mode", true, R.string.pref_title_simple_mode),
+    GeneralSimpleMode(key = "simple_mode", defaultValue = true, titleResId = R.string.pref_title_simple_mode, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     GeneralInsulinConcentration(
-        "insulin_concentration_enabled", false, R.string.pref_title_insulin_concentration, R.string.pref_summary_insulin_concentration,
+        key = "insulin_concentration_enabled", defaultValue = false, titleResId = R.string.pref_title_insulin_concentration, summaryResId = R.string.pref_summary_insulin_concentration,
         defaultedBySM = true,
-        enabledCondition = PreferenceEnabledCondition { it.isConcentrationEnabled }
+        enabledCondition = PreferenceEnabledCondition { it.isConcentrationEnabled },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    OverviewKeepScreenOn("keep_screen_on", false, R.string.pref_title_keep_screen_on, R.string.pref_summary_keep_screen_on, calculatedDefaultValue = true),
-    OverviewShowTreatmentButton("show_treatment_button", false, R.string.pref_title_show_treatment_button, defaultedBySM = true, hideParentScreenIfHidden = true),
-    OverviewShowWizardButton("show_wizard_button", true, R.string.pref_title_show_wizard_button, defaultedBySM = true),
-    OverviewShowInsulinButton("show_insulin_button", true, R.string.pref_title_show_insulin_button, defaultedBySM = true),
-    OverviewShowCarbsButton("show_carbs_button", true, R.string.pref_title_show_carbs_button, defaultedBySM = true),
-    OverviewShowCgmButton("show_cgm_button", false, R.string.pref_title_show_cgm_button, R.string.pref_summary_show_cgm_button, defaultedBySM = true, showInNsClientMode = false),
-    OverviewShowCalibrationButton("show_calibration_button", false, R.string.pref_title_show_calibration_button, R.string.pref_summary_show_calibration_button, defaultedBySM = true, showInNsClientMode = false),
-    OverviewShowNotesInDialogs("show_notes_entry_dialogs", false, R.string.pref_title_show_notes_in_dialogs, defaultedBySM = true),
-    OverviewUseBolusAdvisor("use_bolus_advisor", true, R.string.pref_title_use_bolus_advisor, R.string.pref_summary_use_bolus_advisor, defaultedBySM = true),
-    OverviewUseBolusReminder("use_bolus_reminder", true, R.string.pref_title_use_bolus_reminder, R.string.pref_summary_use_bolus_reminder, defaultedBySM = true),
+    OverviewKeepScreenOn(key = "keep_screen_on", defaultValue = false, titleResId = R.string.pref_title_keep_screen_on, summaryResId = R.string.pref_summary_keep_screen_on, calculatedDefaultValue = true),
+    OverviewShowTreatmentButton(key = "show_treatment_button", defaultValue = false, titleResId = R.string.pref_title_show_treatment_button, defaultedBySM = true),
+    OverviewShowWizardButton(key = "show_wizard_button", defaultValue = true, titleResId = R.string.pref_title_show_wizard_button, defaultedBySM = true),
+    OverviewShowInsulinButton(key = "show_insulin_button", defaultValue = true, titleResId = R.string.pref_title_show_insulin_button, defaultedBySM = true),
+    OverviewShowCarbsButton(key = "show_carbs_button", defaultValue = true, titleResId = R.string.pref_title_show_carbs_button, defaultedBySM = true),
+    OverviewShowCgmButton(key = "show_cgm_button", defaultValue = false, titleResId = R.string.pref_title_show_cgm_button, summaryResId = R.string.pref_summary_show_cgm_button, defaultedBySM = true, showInNsClientMode = false),
+    OverviewShowCalibrationButton(
+        key = "show_calibration_button",
+        defaultValue = false,
+        titleResId = R.string.pref_title_show_calibration_button,
+        summaryResId = R.string.pref_summary_show_calibration_button,
+        defaultedBySM = true,
+        showInNsClientMode = false
+    ),
+    OverviewShowNotesInDialogs(key = "show_notes_entry_dialogs", defaultValue = false, titleResId = R.string.pref_title_show_notes_in_dialogs, defaultedBySM = true),
+    OverviewUseBolusAdvisor("use_bolus_advisor", true, R.string.pref_title_use_bolus_advisor, R.string.pref_summary_use_bolus_advisor, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    OverviewUseBolusReminder("use_bolus_reminder", true, R.string.pref_title_use_bolus_reminder, R.string.pref_summary_use_bolus_reminder, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
 
     @Deprecated("Remove support")
     OverviewUseSuperBolus("key_usersuperbolus", false, R.string.pref_title_use_super_bolus, R.string.pref_summary_use_super_bolus, defaultedBySM = true, hideParentScreenIfHidden = true),
 
-    PumpBtWatchdog("bt_watchdog", false, R.string.pref_title_bt_watchdog, R.string.pref_summary_bt_watchdog, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    PumpBtWatchdog(
+        "bt_watchdog", false, R.string.pref_title_bt_watchdog, R.string.pref_summary_bt_watchdog,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
 
     AlertMissedBgReading("enable_missed_bg_readings", false, R.string.pref_title_alert_missed_bg_reading),
     AlertPumpUnreachable("enable_pump_unreachable_alert", true, R.string.pref_title_alert_pump_unreachable),
@@ -57,27 +72,31 @@ enum class BooleanKey(
     BgSourceCreateSensorChange("dexcom_lognssensorchange", true, R.string.pref_title_bg_source_create_sensor_change, R.string.pref_summary_bg_source_create_sensor_change, defaultedBySM = true),
     BgSourceRandomBgRandomize("randombg_randomize", true, R.string.pref_title_random_bg_randomize, R.string.pref_summary_random_bg_randomize, defaultedBySM = true),
 
-    ApsUseDynamicSensitivity("use_dynamic_sensitivity", false, R.string.pref_title_aps_use_dynamic_sensitivity, R.string.pref_summary_aps_use_dynamic_sensitivity),
-    ApsUseAutosens("openapsama_useautosens", true, R.string.pref_title_aps_use_autosens, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity),
-    ApsUseSmb("use_smb", true, R.string.pref_title_aps_use_smb, R.string.pref_summary_aps_use_smb, defaultedBySM = true),
-    ApsUseSmbWithHighTt("enableSMB_with_high_temptarget", false, R.string.pref_title_aps_use_smb_with_high_tt, R.string.pref_summary_aps_use_smb_with_high_tt, defaultedBySM = true, dependency = ApsUseSmb),
+    ApsUseDynamicSensitivity("use_dynamic_sensitivity", false, R.string.pref_title_aps_use_dynamic_sensitivity, R.string.pref_summary_aps_use_dynamic_sensitivity, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsUseAutosens("openapsama_useautosens", true, R.string.pref_title_aps_use_autosens, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsUseSmb("use_smb", true, R.string.pref_title_aps_use_smb, R.string.pref_summary_aps_use_smb, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsUseSmbWithHighTt("enableSMB_with_high_temptarget", false, R.string.pref_title_aps_use_smb_with_high_tt, R.string.pref_summary_aps_use_smb_with_high_tt, defaultedBySM = true, dependency = ApsUseSmb, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsUseSmbAlways(
         "enableSMB_always", true, R.string.pref_title_aps_use_smb_always, R.string.pref_summary_aps_use_smb_always, defaultedBySM = true, dependency = ApsUseSmb,
-        visibility = PreferenceVisibility.ADVANCED_FILTERING
+        visibility = PreferenceVisibility.ADVANCED_FILTERING,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsUseSmbWithCob(
         "enableSMB_with_COB", true, R.string.pref_title_aps_use_smb_with_cob, R.string.pref_summary_aps_use_smb_with_cob, defaultedBySM = true, dependency = ApsUseSmb,
-        visibility = PreferenceVisibility { !it.preferences.get(ApsUseSmbAlways) || !it.advancedFilteringSupported }
+        visibility = PreferenceVisibility { !it.preferences.get(ApsUseSmbAlways) || !it.advancedFilteringSupported },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsUseSmbWithLowTt(
         "enableSMB_with_temptarget", true, R.string.pref_title_aps_use_smb_with_low_tt, R.string.pref_summary_aps_use_smb_with_low_tt, defaultedBySM = true, dependency = ApsUseSmb,
-        visibility = PreferenceVisibility { !it.preferences.get(ApsUseSmbAlways) || !it.advancedFilteringSupported }
+        visibility = PreferenceVisibility { !it.preferences.get(ApsUseSmbAlways) || !it.advancedFilteringSupported },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsUseSmbAfterCarbs(
         "enableSMB_after_carbs", true, R.string.pref_title_aps_use_smb_after_carbs, R.string.pref_summary_aps_use_smb_after_carbs, defaultedBySM = true, dependency = ApsUseSmb,
-        visibility = PreferenceVisibility { !it.preferences.get(ApsUseSmbAlways) && it.advancedFilteringSupported }
+        visibility = PreferenceVisibility { !it.preferences.get(ApsUseSmbAlways) && it.advancedFilteringSupported },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    ApsUseUam("use_uam", true, R.string.pref_title_aps_use_uam, R.string.pref_summary_aps_use_uam, defaultedBySM = true),
+    ApsUseUam("use_uam", true, R.string.pref_title_aps_use_uam, R.string.pref_summary_aps_use_uam, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsSensitivityRaisesTarget(
         "sensitivity_raises_target", true, R.string.pref_title_aps_sensitivity_raises_target, R.string.pref_summary_aps_sensitivity_raises_target, defaultedBySM = true,
         visibility = PreferenceVisibility {
@@ -86,7 +105,8 @@ enum class BooleanKey(
             } else {
                 it.preferences.get(ApsUseAutosens)
             }
-        }
+        },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsResistanceLowersTarget(
         "resistance_lowers_target", true, R.string.pref_title_aps_resistance_lowers_target, R.string.pref_summary_aps_resistance_lowers_target, defaultedBySM = true,
@@ -96,15 +116,16 @@ enum class BooleanKey(
             } else {
                 it.preferences.get(ApsUseAutosens)
             }
-        }
+        },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    ApsAlwaysUseShortDeltas("always_use_shortavg", false, R.string.pref_title_aps_always_use_short_deltas, R.string.pref_summary_aps_always_use_short_deltas, defaultedBySM = true, hideParentScreenIfHidden = true),
-    ApsDynIsfAdjustSensitivity("dynisf_adjust_sensitivity", false, R.string.pref_title_aps_dynisf_adjust_sensitivity, R.string.pref_summary_aps_dynisf_adjust_sensitivity, defaultedBySM = true, dependency = ApsUseDynamicSensitivity),
-    ApsAmaAutosensAdjustTargets("autosens_adjust_targets", true, R.string.pref_title_aps_autosens_adjust_targets, R.string.pref_summary_aps_autosens_adjust_targets, defaultedBySM = true),
-    ApsAutoIsfHighTtRaisesSens("high_temptarget_raises_sensitivity", false, R.string.pref_title_aps_high_tt_raises_sensitivity, R.string.pref_summary_aps_high_tt_raises_sensitivity, defaultedBySM = true),
-    ApsAutoIsfLowTtLowersSens("low_temptarget_lowers_sensitivity", false, R.string.pref_title_aps_low_tt_lowers_sensitivity, R.string.pref_summary_aps_low_tt_lowers_sensitivity, defaultedBySM = true),
-    ApsUseAutoIsfWeights("openapsama_enable_autoISF", false, R.string.pref_title_aps_use_autoisf_weights, R.string.pref_summary_aps_use_autoisf_weights, defaultedBySM = true),
-    ApsAutoIsfSmbOnEvenTarget("Enable alternative activation of SMB always", false, R.string.pref_title_aps_smb_on_even_target, R.string.pref_summary_aps_smb_on_even_target, defaultedBySM = true),
+    ApsAlwaysUseShortDeltas("always_use_shortavg", false, R.string.pref_title_aps_always_use_short_deltas, R.string.pref_summary_aps_always_use_short_deltas, defaultedBySM = true, hideParentScreenIfHidden = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsDynIsfAdjustSensitivity("dynisf_adjust_sensitivity", false, R.string.pref_title_aps_dynisf_adjust_sensitivity, R.string.pref_summary_aps_dynisf_adjust_sensitivity, defaultedBySM = true, dependency = ApsUseDynamicSensitivity, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsAmaAutosensAdjustTargets("autosens_adjust_targets", true, R.string.pref_title_aps_autosens_adjust_targets, R.string.pref_summary_aps_autosens_adjust_targets, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsAutoIsfHighTtRaisesSens("high_temptarget_raises_sensitivity", false, R.string.pref_title_aps_high_tt_raises_sensitivity, R.string.pref_summary_aps_high_tt_raises_sensitivity, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsAutoIsfLowTtLowersSens("low_temptarget_lowers_sensitivity", false, R.string.pref_title_aps_low_tt_lowers_sensitivity, R.string.pref_summary_aps_low_tt_lowers_sensitivity, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsUseAutoIsfWeights("openapsama_enable_autoISF", false, R.string.pref_title_aps_use_autoisf_weights, R.string.pref_summary_aps_use_autoisf_weights, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsAutoIsfSmbOnEvenTarget("Enable alternative activation of SMB always", false, R.string.pref_title_aps_smb_on_even_target, R.string.pref_summary_aps_smb_on_even_target, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
 
     MaintenanceEnableFabric("enable_fabric2", true, R.string.pref_title_maintenance_enable_fabric, defaultedBySM = true, hideParentScreenIfHidden = true),
     MaintenanceEnableExportSettingsAutomation("enable_unattended_export", false, R.string.pref_title_maintenance_enable_export_automation, defaultedBySM = false),
@@ -141,6 +162,13 @@ enum class BooleanKey(
     NsClientCreateAnnouncementsFromCarbsReq("ns_create_announcements_from_carbs_req", false, R.string.pref_title_ns_create_announcements_from_carbs_req, calculatedDefaultValue = true, showInNsClientMode = false),
     NsClientSlowSync("ns_sync_slow", false, R.string.pref_title_ns_slow_sync),
     NsClient3UseWs("ns_use_ws", true, R.string.pref_title_ns_use_ws, R.string.pref_summary_ns_use_ws),
+    NsClientAllowClientControl(
+        "ns_allow_client_control", false,
+        R.string.pref_title_ns_allow_client_control, R.string.pref_summary_ns_allow_client_control,
+        // No longer on the prefs screen — it's the stop/allow-communication switch on the Authorized clients screen.
+        // Default OFF, but ON in simple mode (resolved in PreferencesImpl.calculatedDefaultValue). Hidden on a client.
+        calculatedDefaultValue = true, showInNsClientMode = false
+    ),
     OpenHumansWifiOnly("oh_wifi_only", true, R.string.pref_title_openhumans_wifi_only),
     OpenHumansChargingOnly("oh_charging_only", false, R.string.pref_title_openhumans_charging_only),
     XdripSendStatus("xdrip_send_status", false, R.string.pref_title_xdrip_send_status),
@@ -156,9 +184,6 @@ enum class BooleanKey(
     WearNotifyOnSmb(key = "wear_notifySMB", defaultValue = true, titleResId = R.string.pref_title_wear_notify_on_smb, summaryResId = R.string.pref_summary_wear_notify_on_smb),
     WearBroadcastData(key = "wear_broadcast_data", defaultValue = false, titleResId = R.string.pref_title_wear_broadcast_data, summaryResId = R.string.pref_summary_wear_broadcast_data, showInApsMode = false, showInPumpControlMode = false),
 
-    @Deprecated("remove after migration")
-    WizardCalculationVisible("wizard_calculation_visible", defaultValue = false, titleResId = R.string.pref_title_wizard_calculation_visible),
-    WizardCorrectionPercent("wizard_correction_percent", defaultValue = false, titleResId = R.string.pref_title_wizard_correction_percent),
     SiteRotationManagePump("site_rotation_manage_pump", defaultValue = false, titleResId = R.string.pref_title_site_rotation_manage_pump),
     SiteRotationManageCgm("site_rotation_manage_cgm", defaultValue = false, titleResId = R.string.pref_title_site_rotation_manage_cgm),
 

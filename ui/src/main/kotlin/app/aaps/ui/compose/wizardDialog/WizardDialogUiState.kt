@@ -87,7 +87,7 @@ data class WizardDialogUiState(
     val hasBgData: Boolean = false,
     val bgAgeMinutes: Int = 0,
 
-    /** True when the entry must be recorded only (no pump delivery): pump unavailable, mode forbids bolus, or AAPSCLIENT. */
+    /** True when the entry must be recorded only (no pump delivery): pump unavailable or the mode forbids bolus. (A client delivers via the master, not record-only.) */
     val forcedRecordOnly: Boolean = false
 )
 

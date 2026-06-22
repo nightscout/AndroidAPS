@@ -128,9 +128,5 @@ class SWPlugin @Inject constructor(
         }
     }
 
-    private fun isMultiSelect(type: PluginType): Boolean =
-        type == PluginType.GENERAL ||
-            type == PluginType.CONSTRAINTS ||
-            type == PluginType.LOOP ||
-            type == PluginType.SYNC
+    private fun isMultiSelect(type: PluginType): Boolean = !type.singleSelect
 }

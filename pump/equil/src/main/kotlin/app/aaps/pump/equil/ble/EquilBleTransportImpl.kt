@@ -231,6 +231,10 @@ class EquilBleTransportImpl @Inject constructor(
         override fun connect(address: String): Boolean {
             if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) return false
             val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
+            // Release any previous client before opening a new one. Android caps concurrent GATT
+            // client interfaces; leaking them (connectGatt without close) leads to status 133 and
+            // an eventual inability to connect at all.
+            bluetoothGatt?.close()
             bluetoothGatt = device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
             return bluetoothGatt != null
         }

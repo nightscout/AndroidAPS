@@ -1,8 +1,6 @@
 package app.aaps.plugins.automation.compose
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,51 +19,52 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.compose.icons.IcAaps
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import app.aaps.core.ui.compose.AapsFab
-import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.plugins.automation.R
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
+// Standard Material disabled opacity, applied to the whole row when editing is disabled.
+private const val DISABLED_ROW_ALPHA = 0.38f
+
 @Composable
 fun AutomationScreen(
     state: AutomationUiState,
     onToggleEnabled: (position: Int, checked: Boolean) -> Unit,
-    onClickEvent: (position: Int) -> Unit,
-    onLongClickEvent: () -> Unit,
-    onToggleSelect: (position: Int, checked: Boolean) -> Unit,
+    onEditEvent: (position: Int) -> Unit,
+    onDeleteEvent: (position: Int) -> Unit,
     onMove: (from: Int, to: Int) -> Unit,
     onMoveFinished: () -> Unit,
     onAddClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // When false (client whose master is unreachable) the whole list is greyed out and
+    // non-interactive and the add FAB is hidden — edits couldn't sync to the master right now.
+    editingEnabled: Boolean = true
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -73,27 +72,32 @@ fun AutomationScreen(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                EventsList(
-                    state = state,
-                    onToggleEnabled = onToggleEnabled,
-                    onClickEvent = onClickEvent,
-                    onLongClickEvent = onLongClickEvent,
-                    onToggleSelect = onToggleSelect,
-                    onMove = onMove,
-                    onMoveFinished = onMoveFinished,
-                    modifier = Modifier.weight(1f)
-                )
+                MasterOfflineBanner(editingEnabled = editingEnabled)
+                if (state.events.isEmpty()) {
+                    EmptyState(modifier = Modifier.weight(1f))
+                } else {
+                    EventsList(
+                        state = state,
+                        onToggleEnabled = onToggleEnabled,
+                        onEditEvent = onEditEvent,
+                        onDeleteEvent = onDeleteEvent,
+                        onMove = onMove,
+                        onMoveFinished = onMoveFinished,
+                        editingEnabled = editingEnabled,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 LogPanel(
                     logHtml = state.logHtml,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            if (state.selectionMode == AutomationSelectionMode.None) {
+            if (editingEnabled) {
                 AapsFab(
                     onClick = onAddClick,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(16.dp)
+                        .padding(AapsSpacing.extraLarge)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -106,14 +110,36 @@ fun AutomationScreen(
 }
 
 @Composable
+private fun EmptyState(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(AapsSpacing.xxLarge),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.automation),
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Text(
+            text = stringResource(R.string.automation_empty_desc),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = AapsSpacing.medium)
+        )
+    }
+}
+
+@Composable
 private fun EventsList(
     state: AutomationUiState,
     onToggleEnabled: (Int, Boolean) -> Unit,
-    onClickEvent: (Int) -> Unit,
-    onLongClickEvent: () -> Unit,
-    onToggleSelect: (Int, Boolean) -> Unit,
+    onEditEvent: (Int) -> Unit,
+    onDeleteEvent: (Int) -> Unit,
     onMove: (Int, Int) -> Unit,
     onMoveFinished: () -> Unit,
+    editingEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     val lazyListState = rememberLazyListState()
@@ -124,135 +150,103 @@ private fun EventsList(
     LazyColumn(
         state = lazyListState,
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        contentPadding = PaddingValues(AapsSpacing.medium),
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
         itemsIndexed(
             items = state.events,
-            key = { _, e -> "${e.position}_${e.title}" }
+            key = { _, e -> e.key }
         ) { _, event ->
             ReorderableItem(
                 state = reorderState,
-                key = "${event.position}_${event.title}"
+                key = event.key
             ) { isDragging ->
-                val elevation = if (isDragging) 8.dp else 1.dp
+                val elevation = if (isDragging) AapsSpacing.medium else AapsSpacing.extraSmall
                 AutomationEventCard(
                     event = event,
-                    selectionMode = state.selectionMode,
                     elevation = elevation,
-                    dragModifier = Modifier.draggableHandle(onDragStopped = { onMoveFinished() }),
+                    editingEnabled = editingEnabled,
+                    dragModifier = if (editingEnabled && !event.readOnly) Modifier.draggableHandle(onDragStopped = { onMoveFinished() }) else Modifier,
                     onToggleEnabled = { checked -> onToggleEnabled(event.position, checked) },
-                    onClick = { onClickEvent(event.position) },
-                    onLongClick = onLongClickEvent,
-                    onToggleSelect = { checked -> onToggleSelect(event.position, checked) }
+                    onEdit = { onEditEvent(event.position) },
+                    onDelete = { onDeleteEvent(event.position) }
                 )
             }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AutomationEventCard(
     event: AutomationEventUi,
-    selectionMode: AutomationSelectionMode,
     elevation: Dp,
+    editingEnabled: Boolean,
     dragModifier: Modifier,
     onToggleEnabled: (Boolean) -> Unit,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit,
-    onToggleSelect: (Boolean) -> Unit
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
 ) {
-    val containerColor = when {
-        event.isSelected && selectionMode == AutomationSelectionMode.Remove ->
-            MaterialTheme.colorScheme.secondaryContainer
+    // Invalid actions are signalled by error-tinting the title — matching the Scenes screen's
+    // isInvalid treatment instead of a card border.
+    val nameColor = if (!event.actionsValid) MaterialTheme.colorScheme.error
+    else MaterialTheme.colorScheme.onSurface
 
-        else                                                                ->
-            MaterialTheme.colorScheme.surfaceContainer
-    }
-    val border = if (!event.actionsValid)
-        BorderStroke(1.dp, MaterialTheme.colorScheme.error)
-    else null
-    Surface(
-        color = containerColor,
-        tonalElevation = elevation,
-        shadowElevation = elevation,
-        shape = CardDefaults.elevatedShape,
-        border = border,
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+            .then(if (editingEnabled) Modifier else Modifier.alpha(DISABLED_ROW_ALPHA)),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = elevation)
     ) {
-        ListItem(
-            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-            headlineContent = {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AapsSpacing.large),
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // editingEnabled is folded into every control's `enabled` so the greyed row is both
+            // non-interactive AND accessibility-correct: a disabled control is skipped by TalkBack's
+            // activation but still readable. (A pointer-consuming overlay blocked touch only and leaked
+            // activation via accessibility services.) The drag handle is also disabled via dragModifier.
+            Checkbox(
+                checked = event.isEnabled,
+                onCheckedChange = onToggleEnabled,
+                enabled = !event.readOnly && editingEnabled
+            )
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = event.title,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold
+                    color = nameColor
                 )
-            },
-            supportingContent = { IconRow(event = event) },
-            leadingContent = when {
-                event.systemAction -> {
-                    {
-                        Icon(
-                            imageVector = IcAaps,
-                            contentDescription = stringResource(R.string.system_automation),
-                            modifier = Modifier.size(24.dp),
-                            tint = Color.Unspecified
-                        )
-                    }
-                }
-
-                event.userAction   -> {
-                    {
-                        AssistChip(
-                            onClick = onClick,
-                            label = { Text(stringResource(R.string.user_action)) },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = AapsTheme.elementColors.userEntry.copy(alpha = 0.25f)
-                            )
-                        )
-                    }
-                }
-
-                else               -> null
-            },
-            trailingContent = {
-                when (selectionMode) {
-                    AutomationSelectionMode.Remove -> Checkbox(
-                        checked = event.isSelected,
-                        onCheckedChange = onToggleSelect,
-                        enabled = !event.readOnly
-                    )
-
-                    AutomationSelectionMode.Sort   -> IconButton(
-                        onClick = {},
-                        modifier = dragModifier
-                    ) {
-                        Icon(
-                            Icons.Default.DragHandle,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.reorder)
-                        )
-                    }
-
-                    AutomationSelectionMode.None   ->
-                        if (event.readOnly) {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        } else {
-                            Switch(
-                                checked = event.isEnabled,
-                                onCheckedChange = onToggleEnabled
-                            )
-                        }
+                IconRow(event = event)
+            }
+            IconButton(onClick = onEdit, enabled = editingEnabled) {
+                Icon(Icons.Default.Edit, contentDescription = null)
+            }
+            if (event.readOnly) {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = stringResource(R.string.system_automation),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                IconButton(onClick = onDelete, enabled = editingEnabled) {
+                    Icon(Icons.Default.Delete, contentDescription = null)
                 }
             }
-        )
+            IconButton(
+                onClick = {},
+                modifier = dragModifier,
+                enabled = !event.readOnly && editingEnabled
+            ) {
+                Icon(
+                    Icons.Default.DragHandle,
+                    contentDescription = stringResource(app.aaps.core.ui.R.string.reorder)
+                )
+            }
+        }
     }
 }
 
@@ -262,7 +256,7 @@ private fun IconRow(event: AutomationEventUi) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp)
+            .padding(top = AapsSpacing.extraSmall)
     ) {
         event.triggerIcons.forEach { ai ->
             Icon(
@@ -270,7 +264,7 @@ private fun IconRow(event: AutomationEventUi) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(22.dp)
-                    .padding(end = 4.dp),
+                    .padding(end = AapsSpacing.small),
                 tint = ai.tint ?: MaterialTheme.colorScheme.onSurface
             )
         }
@@ -279,7 +273,7 @@ private fun IconRow(event: AutomationEventUi) {
             contentDescription = null,
             modifier = Modifier
                 .size(22.dp)
-                .padding(horizontal = 4.dp),
+                .padding(horizontal = AapsSpacing.small),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
         event.actionIcons.forEach { ai ->
@@ -288,7 +282,7 @@ private fun IconRow(event: AutomationEventUi) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(22.dp)
-                    .padding(end = 4.dp),
+                    .padding(end = AapsSpacing.small),
                 tint = ai.tint ?: MaterialTheme.colorScheme.onSurface
             )
         }
@@ -308,7 +302,7 @@ private fun LogPanel(logHtml: String, modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .heightIn(min = 100.dp, max = 140.dp)
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(horizontal = AapsSpacing.large, vertical = AapsSpacing.medium)
             ) {
                 Text(
                     text = htmlToAnnotated(logHtml),
@@ -328,10 +322,11 @@ private fun htmlToAnnotated(html: String): AnnotatedString {
 
 // ---------- Previews ----------
 
-private fun sampleState(selectionMode: AutomationSelectionMode = AutomationSelectionMode.None) =
+private fun sampleState() =
     AutomationUiState(
         events = listOf(
             AutomationEventUi(
+                key = 0,
                 position = 0,
                 title = "Morning wakeup TT",
                 isEnabled = true,
@@ -340,10 +335,10 @@ private fun sampleState(selectionMode: AutomationSelectionMode = AutomationSelec
                 systemAction = false,
                 actionsValid = true,
                 triggerIcons = listOf(AutomationIcon(IcAutomation)),
-                actionIcons = listOf(AutomationIcon(IcAutomation)),
-                isSelected = false
+                actionIcons = listOf(AutomationIcon(IcAutomation))
             ),
             AutomationEventUi(
+                key = 1,
                 position = 1,
                 title = "User: Snack reminder",
                 isEnabled = true,
@@ -352,36 +347,33 @@ private fun sampleState(selectionMode: AutomationSelectionMode = AutomationSelec
                 systemAction = false,
                 actionsValid = true,
                 triggerIcons = listOf(AutomationIcon(IcAutomation)),
-                actionIcons = listOf(AutomationIcon(IcAutomation)),
-                isSelected = selectionMode == AutomationSelectionMode.Remove
+                actionIcons = listOf(AutomationIcon(IcAutomation))
             ),
             AutomationEventUi(
+                key = 2,
                 position = 2,
                 title = "Broken rule (invalid actions)",
                 isEnabled = false,
-                readOnly = false,
+                readOnly = true,
                 userAction = false,
                 systemAction = true,
                 actionsValid = false,
                 triggerIcons = listOf(AutomationIcon(IcAutomation)),
-                actionIcons = listOf(AutomationIcon(IcAutomation)),
-                isSelected = false
+                actionIcons = listOf(AutomationIcon(IcAutomation))
             )
         ),
-        logHtml = "12:00 Morning wakeup TT triggered<br>12:05 Snack reminder dismissed",
-        selectionMode = selectionMode
+        logHtml = "12:00 Morning wakeup TT triggered<br>12:05 Snack reminder dismissed"
     )
 
 @androidx.compose.ui.tooling.preview.Preview(showBackground = true, widthDp = 380, heightDp = 640)
 @Composable
-private fun PreviewAutomationScreenIdle() {
+private fun PreviewAutomationScreen() {
     MaterialTheme {
         AutomationScreen(
             state = sampleState(),
             onToggleEnabled = { _, _ -> },
-            onClickEvent = {},
-            onLongClickEvent = {},
-            onToggleSelect = { _, _ -> },
+            onEditEvent = {},
+            onDeleteEvent = {},
             onMove = { _, _ -> },
             onMoveFinished = {},
             onAddClick = {}
@@ -391,31 +383,13 @@ private fun PreviewAutomationScreenIdle() {
 
 @androidx.compose.ui.tooling.preview.Preview(showBackground = true, widthDp = 380, heightDp = 640)
 @Composable
-private fun PreviewAutomationScreenRemove() {
+private fun PreviewAutomationScreenEmpty() {
     MaterialTheme {
         AutomationScreen(
-            state = sampleState(AutomationSelectionMode.Remove),
+            state = AutomationUiState(),
             onToggleEnabled = { _, _ -> },
-            onClickEvent = {},
-            onLongClickEvent = {},
-            onToggleSelect = { _, _ -> },
-            onMove = { _, _ -> },
-            onMoveFinished = {},
-            onAddClick = {}
-        )
-    }
-}
-
-@androidx.compose.ui.tooling.preview.Preview(showBackground = true, widthDp = 380, heightDp = 640)
-@Composable
-private fun PreviewAutomationScreenSort() {
-    MaterialTheme {
-        AutomationScreen(
-            state = sampleState(AutomationSelectionMode.Sort),
-            onToggleEnabled = { _, _ -> },
-            onClickEvent = {},
-            onLongClickEvent = {},
-            onToggleSelect = { _, _ -> },
+            onEditEvent = {},
+            onDeleteEvent = {},
             onMove = { _, _ -> },
             onMoveFinished = {},
             onAddClick = {}

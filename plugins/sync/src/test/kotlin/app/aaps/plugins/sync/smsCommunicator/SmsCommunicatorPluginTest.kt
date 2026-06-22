@@ -108,7 +108,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // Without this, the gate sees null mode and PumpCommandGate.check throws NPE.
         runBlocking { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            aapsLogger, rh, smsManager, preferences, constraintChecker, rxBus, profileFunction, profileUtil, activePlugin, insulin, profileRepository,
+            aapsLogger, rh, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, insulin, profileRepository,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
             runningModeGuard, testScope, repository
@@ -481,33 +481,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo(smsCommand)
         assertThat(smsCommunicatorPlugin.messages[1].text).contains(rh.gs(R.string.smscommunicator_remote_command_not_possible))
-
-        //AAPSCLIENT RESTART
-        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "AAPSCLIENT RESTART")
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("AAPSCLIENT RESTART")
-        assertThat(smsCommunicatorPlugin.messages[1].text).contains("AAPSCLIENT RESTART")
-
-        //AAPSCLIENT BLA BLA
-        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "AAPSCLIENT BLA BLA")
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("AAPSCLIENT BLA BLA")
-        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-
-        //AAPSCLIENT BLABLA
-        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP_LGS)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "AAPSCLIENT BLABLA")
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("AAPSCLIENT BLABLA")
-        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PUMP
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1020,6 +993,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Meal Bolus 1.00U delivered successfully\nVirtual Pump\nTarget 5.0 for 45 minutes")
+
+        //BOLUS 1 MEAL within the minimum remote-bolus distance must be rejected (meal form previously bypassed the spacing guard)
+        smsCommunicatorPlugin.lastRemoteBolusTime = dateUtilMocked.now() - 100
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "BOLUS 1 MEAL")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1 MEAL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote bolus not available. Try again later.")
     }
 
     @Test fun processCalTest() = runBlocking {

@@ -8,20 +8,17 @@ import org.junit.jupiter.api.Test
 class ActiveSceneStateTest {
 
     private val scene = Scene(id = "test", name = "Test")
-    private val priorState = ActiveSceneState.PriorState()
 
     private fun timedState(activatedAt: Long, durationMs: Long) = ActiveSceneState(
         scene = scene,
         activatedAt = activatedAt,
-        durationMs = durationMs,
-        priorState = priorState
+        durationMs = durationMs
     )
 
     private fun indefiniteState(activatedAt: Long) = ActiveSceneState(
         scene = scene,
         activatedAt = activatedAt,
-        durationMs = 0,
-        priorState = priorState
+        durationMs = 0
     )
 
     @Test

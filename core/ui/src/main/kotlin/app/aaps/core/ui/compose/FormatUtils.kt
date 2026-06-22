@@ -10,7 +10,7 @@ import kotlin.math.roundToInt
 import app.aaps.core.keys.R as KeysR
 
 /**
- * Formats minutes as duration string: "Xh Ym" when >= 60, "X mins" otherwise.
+ * Formats minutes as duration string: "X h Y min" when >= 60 (omits minutes if zero), "X min" otherwise.
  * Composable version using stringResource.
  */
 @Composable
@@ -20,14 +20,15 @@ fun formatMinutesAsDuration(minutes: Int): String {
     return if (abs >= 60) {
         val hours = abs / 60
         val mins = abs % 60
-        sign + stringResource(R.string.format_hour_minute, hours, mins)
+        sign + if (mins == 0) stringResource(R.string.format_hours_only, hours)
+        else stringResource(R.string.format_hour_minute, hours, mins)
     } else {
         stringResource(R.string.format_mins, minutes)
     }
 }
 
 /**
- * Formats minutes as duration string: "Xh Ym" when >= 60, "X mins" otherwise.
+ * Formats minutes as duration string: "X h Y min" when >= 60 (omits minutes if zero), "X min" otherwise.
  * Non-composable version using ResourceHelper.
  */
 fun formatMinutesAsDuration(minutes: Int, rh: ResourceHelper): String {
@@ -36,7 +37,8 @@ fun formatMinutesAsDuration(minutes: Int, rh: ResourceHelper): String {
     return if (abs >= 60) {
         val hours = abs / 60
         val mins = abs % 60
-        sign + rh.gs(R.string.format_hour_minute, hours, mins)
+        sign + if (mins == 0) rh.gs(R.string.format_hours_only, hours)
+        else rh.gs(R.string.format_hour_minute, hours, mins)
     } else {
         rh.gs(R.string.format_mins, minutes)
     }
@@ -47,7 +49,7 @@ fun formatMinutesAsDuration(minutes: Int, rh: ResourceHelper): String {
  * unit labels, and plain value formatting.
  *
  * Priority order:
- * 1. Minutes unit (unitLabelResId == units_min) → "Xh Ym" or "X mins"
+ * 1. Minutes unit (unitLabelResId == units_min) → "X h Y min" or "X min"
  * 2. valueFormatResId → stringResource with value (as Int if formatAsInt, else Double)
  * 3. unitLabel non-empty → "formatted_value unitLabel"
  * 4. Plain → valueFormat.format(value)

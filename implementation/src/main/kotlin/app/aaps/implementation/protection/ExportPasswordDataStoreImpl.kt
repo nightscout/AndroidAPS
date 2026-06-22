@@ -37,7 +37,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ExportPasswordDataStoreImpl @Inject constructor(
-    private var log: AAPSLogger,
+    private var aapsLogger: AAPSLogger,
     private var preferences: Preferences,
     private var config: Config
 ) : ExportPasswordDataStore {
@@ -104,12 +104,12 @@ class ExportPasswordDataStoreImpl @Inject constructor(
             val debug = fileListProvider.ensureExtraDirExists()?.findFile("DebugUnattendedExport") != null
             val debugDev = fileListProvider.ensureExtraDirExists()?.findFile("DebugUnattendedExportDev") != null
             if (debugDev) {
-                log.warn(LTag.CORE, "$MODULE: ExportPasswordDataStore running DEBUG(DEV) mode!")
+                aapsLogger.warn(LTag.CORE, "$MODULE: ExportPasswordDataStore running DEBUG(DEV) mode!")
                 /*** Debug/testing mode ***/
                 passwordValidityWindow = 20 * 60 * 1000L                // Valid for 20 min
                 passwordExpiryGracePeriod = passwordValidityWindow / 2    // Grace period 10 min
             } else if (debug) {
-                log.warn(LTag.CORE, "$MODULE: ExportPasswordDataStore running DEBUG mode!")
+                aapsLogger.warn(LTag.CORE, "$MODULE: ExportPasswordDataStore running DEBUG mode!")
                 /*** Debug mode ***/
                 passwordValidityWindow = 2 * 24 * 3600 * 1000L           // 2 Days (including grace period)
                 passwordExpiryGracePeriod = passwordValidityWindow / 2 // Grace period 1 days
@@ -117,7 +117,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
         }
         // END
 
-        log.info(LTag.CORE, "$MODULE: ExportPasswordDataStore is enabled: $exportPasswordStoreIsEnabled, expiry millis=$passwordValidityWindow")
+        aapsLogger.info(LTag.CORE, "$MODULE: ExportPasswordDataStore is enabled: $exportPasswordStoreIsEnabled, expiry millis=$passwordValidityWindow")
         return exportPasswordStoreIsEnabled
     }
 
@@ -128,7 +128,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
         if (!exportPasswordStoreEnabled()) return "" // Do nothing, return empty
 
         // Store & update to empty password and return
-        log.debug(LTag.CORE, "$MODULE: clearPasswordDataStore")
+        aapsLogger.debug(LTag.CORE, "$MODULE: clearPasswordDataStore")
         return this.clearPassword(context)
     }
 
@@ -138,7 +138,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
      */
     override fun putPasswordToDataStore(context: Context, password: String): String {
         if (!exportPasswordStoreEnabled()) return password // Just return the password
-        log.debug(LTag.CORE, "$MODULE: putPasswordToDataStore")
+        aapsLogger.debug(LTag.CORE, "$MODULE: putPasswordToDataStore")
         return this.storePassword(context, password)
     }
 
@@ -152,7 +152,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
         val passwordData = this.retrievePassword(context)
         with(passwordData) {
             if (password.isNotEmpty()) {  // And not expired
-                log.debug(LTag.CORE, "$MODULE: getPasswordFromDataStore")
+                aapsLogger.debug(LTag.CORE, "$MODULE: getPasswordFromDataStore")
                 return Triple(password, isExpired, isAboutToExpire)
             }
         }
@@ -233,7 +233,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
         if (passwordStr.isNotEmpty()) {
             val aliasInBlob = passwordStr.split(":").getOrNull(1)
             if (aliasInBlob != null && aliasInBlob != KEYSTORE_ALIAS) {
-                log.info(LTag.CORE, "$MODULE: legacy alias '$aliasInBlob' in stored password, clearing for re-entry with hardened key")
+                aapsLogger.info(LTag.CORE, "$MODULE: legacy alias '$aliasInBlob' in stored password, clearing for re-entry with hardened key")
                 clearPassword(context)
                 passwordStr = ""
                 timestampStr = ""

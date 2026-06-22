@@ -100,18 +100,24 @@ fun SecondaryGraphCompose(
     // Primary series = left axis (orderedTypes[0]), secondary series = right axis (orderedTypes[1])
     val primaryType = orderedTypes[0]
     val secondaryType = orderedTypes.getOrNull(1)
-    val isDualAxis = secondaryType != null
+
+    // Specific case: BGI and DEVIATIONS share the same mg/dL unit and should share the vertical scale
+    val shareAxis = (primaryType == SeriesType.BGI && secondaryType == SeriesType.DEVIATIONS) ||
+        (primaryType == SeriesType.DEVIATIONS && secondaryType == SeriesType.BGI)
+
+    val isDualAxis = secondaryType != null && !shareAxis
+    val primaryTypes = if (shareAxis) orderedTypes else listOf(primaryType)
 
     val hasIob = primaryType == SeriesType.IOB
     val hasCob = primaryType == SeriesType.COB
 
-    // Collect flows for primary series
+    // Collect flows for primary series (includes share flow for DEV and BGI if together on the same graph with shareAxis true)
     val iobData = if (hasIob) viewModel.iobGraphFlow.collectAsStateWithLifecycle().value else null
     val cobData = if (hasCob) viewModel.cobGraphFlow.collectAsStateWithLifecycle().value else null
     val treatmentData = if (hasIob || hasCob) viewModel.treatmentGraphFlow.collectAsStateWithLifecycle().value else null
     val absIobData = if (primaryType == SeriesType.ABS_IOB) viewModel.absIobGraphFlow.collectAsStateWithLifecycle().value else null
-    val bgiData = if (primaryType == SeriesType.BGI) viewModel.bgiGraphFlow.collectAsStateWithLifecycle().value else null
-    val deviationsData = if (primaryType == SeriesType.DEVIATIONS) viewModel.deviationsGraphFlow.collectAsStateWithLifecycle().value else null
+    val bgiData = if (SeriesType.BGI in primaryTypes) viewModel.bgiGraphFlow.collectAsStateWithLifecycle().value else null
+    val deviationsData = if (SeriesType.DEVIATIONS in primaryTypes) viewModel.deviationsGraphFlow.collectAsStateWithLifecycle().value else null
     val ratioData = if (primaryType == SeriesType.SENSITIVITY) viewModel.ratioGraphFlow.collectAsStateWithLifecycle().value else null
     val varSensData = if (primaryType == SeriesType.VAR_SENSITIVITY) viewModel.varSensGraphFlow.collectAsStateWithLifecycle().value else null
     val devSlopeData = if (primaryType == SeriesType.DEV_SLOPE) viewModel.devSlopeGraphFlow.collectAsStateWithLifecycle().value else null
@@ -123,8 +129,8 @@ fun SecondaryGraphCompose(
     // Basal overlay only when IOB is primary and single-axis (no room for basal with dual-axis)
     val basalData = if (hasIob && !isDualAxis) viewModel.basalGraphFlow.collectAsStateWithLifecycle().value else null
 
-    // Collect flow for secondary (right axis) series
-    val secondaryLineData = when (secondaryType) {
+    // Collect flow for secondary (right axis) series - (emptyList() if DEV and BGI together)
+    val secondaryLineData = if (!isDualAxis) emptyList() else when (secondaryType) {
         SeriesType.IOB             -> viewModel.iobGraphFlow.collectAsStateWithLifecycle().value.let {
             it.iob.map { p -> GraphDataPoint(p.timestamp, p.value) }
         }

@@ -4,6 +4,9 @@ import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.PreferenceVisibility
+import app.aaps.core.keys.interfaces.SyncChannel
+import app.aaps.core.keys.interfaces.SyncDirection
+import app.aaps.core.keys.interfaces.SyncSpec
 
 enum class IntKey(
     override val key: String,
@@ -26,7 +29,8 @@ enum class IntKey(
     override val exportable: Boolean = true,
     override val visibility: PreferenceVisibility = PreferenceVisibility.ALWAYS,
     override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS,
-    override val unitType: UnitType = UnitType.NONE
+    override val unitType: UnitType = UnitType.NONE,
+    override val sync: SyncSpec? = null
 ) : IntPreferenceKey {
 
     OverviewCarbsButtonIncrement1(
@@ -38,7 +42,8 @@ enum class IntKey(
         summaryResId = R.string.carb_increment_button_message,
         defaultedBySM = true,
         dependency = BooleanKey.OverviewShowCarbsButton,
-        unitType = UnitType.GRAMS
+        unitType = UnitType.GRAMS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     OverviewCarbsButtonIncrement2(
         key = "carbs_button_increment_2",
@@ -49,7 +54,8 @@ enum class IntKey(
         summaryResId = R.string.carb_increment_button_message,
         defaultedBySM = true,
         dependency = BooleanKey.OverviewShowCarbsButton,
-        unitType = UnitType.GRAMS
+        unitType = UnitType.GRAMS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     OverviewCarbsButtonIncrement3(
         key = "carbs_button_increment_3",
@@ -60,11 +66,30 @@ enum class IntKey(
         summaryResId = R.string.carb_increment_button_message,
         defaultedBySM = true,
         dependency = BooleanKey.OverviewShowCarbsButton,
-        unitType = UnitType.GRAMS
+        unitType = UnitType.GRAMS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
 
-    OverviewCageWarning(key = "statuslights_cage_warning", defaultValue = 48, min = 24, max = 240, titleResId = R.string.pref_title_cage_warning, defaultedBySM = true, unitType = UnitType.HOURS),
-    OverviewCageCritical(key = "statuslights_cage_critical", defaultValue = 72, min = 24, max = 240, titleResId = R.string.pref_title_cage_critical, defaultedBySM = true, unitType = UnitType.HOURS),
+    OverviewCageWarning(
+        key = "statuslights_cage_warning",
+        defaultValue = 48,
+        min = 24,
+        max = 240,
+        titleResId = R.string.pref_title_cage_warning,
+        defaultedBySM = true,
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewCageCritical(
+        key = "statuslights_cage_critical",
+        defaultValue = 72,
+        min = 24,
+        max = 240,
+        titleResId = R.string.pref_title_cage_critical,
+        defaultedBySM = true,
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     OverviewIageWarning(
         key = "statuslights_iage_warning",
         defaultValue = 72,
@@ -73,7 +98,8 @@ enum class IntKey(
         titleResId = R.string.pref_title_iage_warning,
         defaultedBySM = true,
         visibility = PreferenceVisibility.NON_PATCH_PUMP,
-        unitType = UnitType.HOURS
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     OverviewIageCritical(
         key = "statuslights_iage_critical",
@@ -83,19 +109,119 @@ enum class IntKey(
         titleResId = R.string.pref_title_iage_critical,
         defaultedBySM = true,
         visibility = PreferenceVisibility.NON_PATCH_PUMP,
-        unitType = UnitType.HOURS
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    OverviewSageWarning(key = "statuslights_sage_warning", defaultValue = 216, min = 24, max = 720, titleResId = R.string.pref_title_sage_warning, defaultedBySM = true, unitType = UnitType.HOURS),
-    OverviewSageCritical(key = "statuslights_sage_critical", defaultValue = 240, min = 24, max = 720, titleResId = R.string.pref_title_sage_critical, defaultedBySM = true, unitType = UnitType.HOURS),
-    OverviewSbatWarning(key = "statuslights_sbat_warning", defaultValue = 25, min = 0, max = 100, titleResId = R.string.pref_title_sbat_warning, defaultedBySM = true, unitType = UnitType.PERCENT),
-    OverviewSbatCritical(key = "statuslights_sbat_critical", defaultValue = 5, min = 0, max = 100, titleResId = R.string.pref_title_sbat_critical, defaultedBySM = true, unitType = UnitType.PERCENT),
-    OverviewBageWarning(key = "statuslights_bage_warning", defaultValue = 216, min = 24, max = 1000, titleResId = R.string.pref_title_bage_warning, defaultedBySM = true, unitType = UnitType.HOURS),
-    OverviewBageCritical(key = "statuslights_bage_critical", defaultValue = 240, min = 24, max = 1000, titleResId = R.string.pref_title_bage_critical, defaultedBySM = true, unitType = UnitType.HOURS),
-    OverviewResWarning(key = "statuslights_res_warning", defaultValue = 80, min = 0, max = 300, titleResId = R.string.pref_title_res_warning, defaultedBySM = true, unitType = UnitType.INSULIN_INT),
-    OverviewResCritical(key = "statuslights_res_critical", defaultValue = 10, min = 0, max = 300, titleResId = R.string.pref_title_res_critical, defaultedBySM = true, unitType = UnitType.INSULIN_INT),
-    OverviewBattWarning(key = "statuslights_bat_warning", defaultValue = 51, min = 0, max = 100, titleResId = R.string.pref_title_batt_warning, defaultedBySM = true, unitType = UnitType.PERCENT),
-    OverviewBattCritical(key = "statuslights_bat_critical", defaultValue = 26, min = 0, max = 100, titleResId = R.string.pref_title_batt_critical, defaultedBySM = true, unitType = UnitType.PERCENT),
-    OverviewBolusPercentage(key = "boluswizard_percentage", defaultValue = 100, min = 10, max = 100, titleResId = R.string.pref_title_bolus_percentage, summaryResId = R.string.deliverpartofboluswizard, unitType = UnitType.PERCENT),
+    OverviewSageWarning(
+        key = "statuslights_sage_warning",
+        defaultValue = 216,
+        min = 24,
+        max = 720,
+        titleResId = R.string.pref_title_sage_warning,
+        defaultedBySM = true,
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewSageCritical(
+        key = "statuslights_sage_critical",
+        defaultValue = 240,
+        min = 24,
+        max = 720,
+        titleResId = R.string.pref_title_sage_critical,
+        defaultedBySM = true,
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewSbatWarning(
+        key = "statuslights_sbat_warning",
+        defaultValue = 25,
+        min = 0,
+        max = 100,
+        titleResId = R.string.pref_title_sbat_warning,
+        defaultedBySM = true,
+        unitType = UnitType.PERCENT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewSbatCritical(
+        key = "statuslights_sbat_critical",
+        defaultValue = 5,
+        min = 0,
+        max = 100,
+        titleResId = R.string.pref_title_sbat_critical,
+        defaultedBySM = true,
+        unitType = UnitType.PERCENT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewBageWarning(
+        key = "statuslights_bage_warning",
+        defaultValue = 216,
+        min = 24,
+        max = 1000,
+        titleResId = R.string.pref_title_bage_warning,
+        defaultedBySM = true,
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewBageCritical(
+        key = "statuslights_bage_critical",
+        defaultValue = 240,
+        min = 24,
+        max = 1000,
+        titleResId = R.string.pref_title_bage_critical,
+        defaultedBySM = true,
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewResWarning(
+        key = "statuslights_res_warning",
+        defaultValue = 80,
+        min = 0,
+        max = 300,
+        titleResId = R.string.pref_title_res_warning,
+        defaultedBySM = true,
+        unitType = UnitType.INSULIN_INT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewResCritical(
+        key = "statuslights_res_critical",
+        defaultValue = 10,
+        min = 0,
+        max = 300,
+        titleResId = R.string.pref_title_res_critical,
+        defaultedBySM = true,
+        unitType = UnitType.INSULIN_INT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewBattWarning(
+        key = "statuslights_bat_warning",
+        defaultValue = 51,
+        min = 0,
+        max = 100,
+        titleResId = R.string.pref_title_batt_warning,
+        defaultedBySM = true,
+        unitType = UnitType.PERCENT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewBattCritical(
+        key = "statuslights_bat_critical",
+        defaultValue = 26,
+        min = 0,
+        max = 100,
+        titleResId = R.string.pref_title_batt_critical,
+        defaultedBySM = true,
+        unitType = UnitType.PERCENT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    OverviewBolusPercentage(
+        key = "boluswizard_percentage",
+        defaultValue = 100,
+        min = 10,
+        max = 100,
+        titleResId = R.string.pref_title_bolus_percentage,
+        summaryResId = R.string.deliverpartofboluswizard,
+        unitType = UnitType.PERCENT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     OverviewResetBolusPercentageTime(
         key = "key_reset_boluswizard_percentage_time",
         defaultValue = 16,
@@ -105,7 +231,8 @@ enum class IntKey(
         summaryResId = R.string.deliver_part_of_boluswizard_reset_time,
         defaultedBySM = true,
         engineeringModeOnly = true,
-        unitType = UnitType.MIN
+        unitType = UnitType.MIN,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ProtectionTimeout(
         key = "protection_timeout",
@@ -174,7 +301,7 @@ enum class IntKey(
         ),
         visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
-    SafetyMaxCarbs(key = "treatmentssafety_maxcarbs", defaultValue = 48, min = 1, max = 200, titleResId = R.string.pref_title_max_carbs, unitType = UnitType.GRAMS),
+    SafetyMaxCarbs(key = "treatmentssafety_maxcarbs", defaultValue = 48, min = 1, max = 200, titleResId = R.string.pref_title_max_carbs, unitType = UnitType.GRAMS, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     LoopOpenModeMinChange(
         key = "loop_openmode_min_change",
         defaultValue = 30,
@@ -185,12 +312,13 @@ enum class IntKey(
         defaultedBySM = true,
         unitType = UnitType.PERCENT
     ),
-    ApsMaxSmbFrequency(key = "smbinterval", defaultValue = 3, min = 1, max = 10, titleResId = R.string.pref_title_smb_frequency, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb, unitType = UnitType.MIN),
-    ApsMaxMinutesOfBasalToLimitSmb(key = "smbmaxminutes", defaultValue = 30, min = 15, max = 120, titleResId = R.string.pref_title_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb, unitType = UnitType.MIN),
+    ApsMaxSmbFrequency(key = "smbinterval", defaultValue = 3, min = 1, max = 10, titleResId = R.string.pref_title_smb_frequency, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb, unitType = UnitType.MIN, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsMaxMinutesOfBasalToLimitSmb(key = "smbmaxminutes", defaultValue = 30, min = 15, max = 120, titleResId = R.string.pref_title_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb, unitType = UnitType.MIN, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsUamMaxMinutesOfBasalToLimitSmb(
         key = "uamsmbmaxminutes", defaultValue = 30, min = 15, max = 120, titleResId = R.string.pref_title_uam_smb_max_minutes, summaryResId = R.string.uam_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb,
         visibility = PreferenceVisibility { it.preferences.get(BooleanKey.ApsUseUam) },
-        unitType = UnitType.MIN
+        unitType = UnitType.MIN,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsCarbsRequestThreshold(
         key = "carbsReqThreshold",
@@ -200,7 +328,8 @@ enum class IntKey(
         titleResId = R.string.pref_title_carbs_request_threshold,
         summaryResId = R.string.carbs_req_threshold_summary,
         defaultedBySM = true,
-        unitType = UnitType.GRAMS
+        unitType = UnitType.GRAMS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsAutoIsfHalfBasalExerciseTarget(
         key = "half_basal_exercise_target",
@@ -210,7 +339,8 @@ enum class IntKey(
         titleResId = R.string.pref_title_half_basal_exercise_target,
         summaryResId = R.string.half_basal_exercise_target_summary,
         defaultedBySM = true,
-        unitType = UnitType.MGDL
+        unitType = UnitType.MGDL,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsAutoIsfIobThPercent(
         key = "iob_threshold_percent",
@@ -220,7 +350,8 @@ enum class IntKey(
         titleResId = R.string.pref_title_iob_threshold_percent,
         summaryResId = R.string.openapsama_iob_threshold_percent_summary,
         defaultedBySM = true,
-        unitType = UnitType.PERCENT
+        unitType = UnitType.PERCENT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsDynIsfAdjustmentFactor(
         key = "DynISFAdjust",
@@ -230,7 +361,8 @@ enum class IntKey(
         titleResId = R.string.pref_title_dynisf_adjustment_factor,
         summaryResId = R.string.dyn_isf_adjust_summary,
         dependency = BooleanKey.ApsUseDynamicSensitivity,
-        unitType = UnitType.PERCENT
+        unitType = UnitType.PERCENT,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     AutosensPeriod(
         key = "openapsama_autosens_period",
@@ -240,7 +372,8 @@ enum class IntKey(
         titleResId = R.string.pref_title_autosens_period,
         summaryResId = R.string.openapsama_autosens_period_summary,
         calculatedDefaultValue = true,
-        unitType = UnitType.HOURS
+        unitType = UnitType.HOURS,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     MaintenanceLogsAmount(key = "maintenance_logs_amount", defaultValue = 2, min = 1, max = 10, titleResId = R.string.pref_title_logs_amount, defaultedBySM = true),
     AlertsStaleDataThreshold(

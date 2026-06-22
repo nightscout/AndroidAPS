@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.hilt.work.HiltWorkerFactory
@@ -82,6 +83,7 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.receivers.BTReceiver
@@ -166,6 +168,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
     @Inject lateinit var widgetUpdater: WidgetUpdater
     @Inject lateinit var runningModeReconciler: RunningModeReconciler
     @Inject lateinit var runningModeExpiryScheduler: RunningModeExpiryScheduler
+    @Inject lateinit var automationRuntime: AutomationRuntime
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     private lateinit var insulinLabel: String
@@ -239,6 +242,10 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                 runningModeReconciler.start()
                 runningModeExpiryScheduler.start()
 
+                // Standalone automation runtime (no longer a plugin). Loads definitions on all
+                // flavors; the processing loop + location service are master-only (gated internally).
+                automationRuntime.start()
+
                 // Data migrations (DB I/O)
                 dataMigrations()
 
@@ -257,19 +264,64 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
     // the SQLITE_NOMEM crash seen when VACUUM overlapped live DB activity).
     private suspend fun vacuumDatabaseIfDue() {
         val lastRun = preferences.get(LongNonKey.LastVacuumRun)
-        if (lastRun < dateUtil.now() - T.days(30).msecs()) {
-            config.updateInitProgress(getString(R.string.optimizing_database))
-            try {
-                persistenceLayer.vacuumDatabase()
-                // Only advance the timestamp on success, so a transient failure (e.g. DB busy
-                // because a persisted worker is running) is retried on a future launch instead
-                // of being suppressed for a month.
-                preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
-                aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
-            } catch (e: Exception) {
-                // DB maintenance must never abort app initialization.
-                aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)
+        if (lastRun >= dateUtil.now() - T.days(30).msecs()) return
+
+        // Crash-loop guard. VACUUM can die below the JVM (native SQLite abort / OOM) in a way no
+        // try/catch can intercept — the process just vanishes, leaving no log. If that happened last
+        // time, the committed flag below is still set (the finally never ran). Detect it, skip
+        // VACUUM so the app can boot, and back off a month instead of re-crashing on every launch.
+        if (preferences.get(BooleanNonKey.VacuumInProgress)) {
+            aapsLogger.error(LTag.CORE, "Previous startup VACUUM did not finish (likely native crash) — skipping for 30 days")
+            // Report to Firebase so we get a fleet-wide count of users hit by a crashing startup VACUUM.
+            fabricPrivacy.logCustom("db_vacuum_crash_recovered", Bundle())
+            preferences.put(BooleanNonKey.VacuumInProgress, false)
+            preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
+            return
+        }
+
+        config.updateInitProgress(getString(R.string.optimizing_database))
+        try {
+            // Log size + per-table counts (total / older-than-retention backlog / tracked changes)
+            // before VACUUM, so a crash report tells us whether the DB is the problem. 6*31 mirrors
+            // KeepAliveWorker.databaseCleanup's retention so "deletable" reflects the real backlog.
+            val info = persistenceLayer.databaseMaintenanceInfo(retentionDays = 6L * 31)
+            aapsLogger.info(LTag.CORE, "Startup DB maintenance, pre-VACUUM diagnostics:\n${info.report}")
+            // Crashlytics breadcrumb: attaches the diagnostics to any exception logged below.
+            fabricPrivacy.logMessage("Pre-VACUUM: ${info.report}")
+            val dbMb = info.dbSizeBytes / 1_048_576
+            // VACUUM rebuilds the whole DB into a temporary copy, so it needs roughly the DB size
+            // again in free space. Skip (and retry next launch) if there isn't enough, to avoid a
+            // SQLITE_FULL failure mid-rebuild.
+            if (info.availableBytes in 0 until info.dbSizeBytes * 2) {
+                val freeMb = info.availableBytes / 1_048_576
+                aapsLogger.warn(LTag.CORE, "Skipping startup VACUUM: free $freeMb MB < 2x DB $dbMb MB")
+                fabricPrivacy.logCustom("db_vacuum_skip_space", Bundle().apply {
+                    putLong("db_mb", dbMb)
+                    putLong("free_mb", freeMb)
+                })
+                return
             }
+            // Commit the marker synchronously BEFORE running: a plain put() uses apply() and may not
+            // reach disk before an early native abort (e.g. during the wal_checkpoint VACUUM starts with).
+            sp.edit(commit = true) { putBoolean(BooleanNonKey.VacuumInProgress.key, true) }
+            persistenceLayer.vacuumDatabase()
+            // Only advance the timestamp on success, so a transient failure (e.g. DB busy because a
+            // persisted worker is running) is retried on a future launch instead of suppressed for a month.
+            preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
+            aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
+            // Fleet overview of DB size / cleanup backlog / change-row volume across users.
+            fabricPrivacy.logCustom("db_vacuum_ok", Bundle().apply {
+                putLong("db_mb", dbMb)
+                putLong("deletable", info.deletableRows)
+                putLong("changes", info.changeRows)
+            })
+        } catch (e: Throwable) {
+            // Throwable, not just Exception: a JVM OutOfMemoryError here must not abort app init.
+            aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)
+            // Catchable failures (SQLiteException, OOM) → Crashlytics non-fatal for the overview.
+            fabricPrivacy.logException(e)
+        } finally {
+            preferences.put(BooleanNonKey.VacuumInProgress, false)
         }
     }
 
@@ -463,19 +515,22 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         // 3.3
         if (preferences.get(UnitDoubleKey.OverviewLowMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewLowMark)
         if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
-        if (preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
+        // These three migrate bidirectionally-synced keys. Skip on a client: it adopts the value from
+        // the master via sync, and a local put here would now trigger a client→master round-trip (modal)
+        // at startup. The master migrates and publishes; the client follows.
+        if (!config.AAPSCLIENT && preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
             preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanNonKey.GeneralSetupWizardProcessed))
         // Migrate from OpenAPSSMBDynamicISFPlugin
         if (sp.getBoolean("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled", false)) {
             sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled")
             sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Visible")
             sp.putBoolean("ConfigBuilder_APS_OpenAPSSMB_Enabled", true)
-            preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
+            if (!config.AAPSCLIENT) preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
         }
         // convert Double to Int
         try {
             val dynIsf = sp.getDouble("DynISFAdjust", 0.0)
-            if (dynIsf != 0.0 && dynIsf.toInt() != preferences.get(IntKey.ApsDynIsfAdjustmentFactor))
+            if (!config.AAPSCLIENT && dynIsf != 0.0 && dynIsf.toInt() != preferences.get(IntKey.ApsDynIsfAdjustmentFactor))
                 preferences.put(IntKey.ApsDynIsfAdjustmentFactor, dynIsf.toInt())
         } catch (_: Exception) { /* ignore */
         }
@@ -694,6 +749,11 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (sp.getDouble("activity_target", 140.0) == 0.0) sp.remove("activity_target")
         if (sp.getInt("hypo_duration", 60) == 0) sp.remove("hypo_duration")
         if (sp.getDouble("hypo_target", 160.0) == 0.0) sp.remove("hypo_target")
+
+        // Seeds the bidirectionally-synced TempTargetPresets. Skip on a client: it adopts the presets
+        // from the master via sync, and a local put here would trigger a client→master round-trip
+        // (modal) at startup. The master seeds and publishes; the client follows.
+        if (config.AAPSCLIENT) return
 
         // Check if migration already completed
         val existing = preferences.get(StringNonKey.TempTargetPresets)

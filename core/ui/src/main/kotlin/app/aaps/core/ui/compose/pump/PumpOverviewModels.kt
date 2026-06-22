@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.ui.compose.StatusLevel
@@ -49,6 +50,13 @@ data class PumpInfoGroup(
     var list: MutableList<PumpInfoRow> = mutableListOf()
 ): PumpInfoInterface
 
+/**
+ * PumpInfoRow with custom compose content.
+ */
+interface PumpInfoComposable: PumpInfoInterface {
+    fun composableContent(): @Composable () -> Unit
+    fun hasDividerOnEnd(): Boolean = false
+}
 
 /**
  * Action category for separating primary operational actions from device management actions.

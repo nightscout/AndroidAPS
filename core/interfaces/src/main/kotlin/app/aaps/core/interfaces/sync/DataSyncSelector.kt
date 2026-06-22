@@ -3,6 +3,7 @@ package app.aaps.core.interfaces.sync
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
@@ -26,6 +27,7 @@ interface DataSyncSelector {
 
     data class PairTemporaryTarget(override val value: TT, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairGlucoseValue(override val value: GV, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairCalibrationEntry(override val value: CAL, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairTherapyEvent(override val value: TE, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairFood(override val value: FD, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairBolus(override val value: BS, override val id: Long, override var confirmed: Boolean = false) : DataPair

@@ -36,7 +36,7 @@ class DataSyncWorker @AssistedInject constructor(
             nsClientRepository.addLog("● RUN", "Full sync finished")
             nsClientV3Plugin.endFullSync()
         }
-        if (activePlugin.activeNsClient?.hasWritePermission == true || nsClientV3Plugin.nsClientV3Service?.wsConnected == true) {
+        if (nsClientV3Plugin.hasWritePermission || nsClientV3Plugin.nsClientV3Service?.wsConnected == true) {
             nsClientRepository.addLog("► UPL", "Start")
             try {
                 // Hard cap so a hung HTTP call / dead WS can't keep the worker in
@@ -49,7 +49,7 @@ class DataSyncWorker @AssistedInject constructor(
                 return Result.failure(workDataOf("Error" to "Upload timed out"))
             }
         } else {
-            if (activePlugin.activeNsClient?.hasWritePermission == true)
+            if (nsClientV3Plugin.hasWritePermission)
                 nsClientRepository.addLog("► ERROR", "No write permission")
             else if (nsClientV3Plugin.nsClientV3Service?.wsConnected == true)
                 nsClientRepository.addLog("► ERROR", "Not connected")

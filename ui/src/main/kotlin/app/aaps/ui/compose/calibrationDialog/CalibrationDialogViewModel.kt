@@ -8,6 +8,9 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.data.ui.confirmationLines
 import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -31,6 +34,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 @HiltViewModel
 @Stable
@@ -125,11 +129,14 @@ class CalibrationDialogViewModel @Inject constructor(
 
     private var confirmedState: CalibrationDialogUiState? = null
 
-    fun buildConfirmationSummary(): List<String> {
+    fun buildConfirmationSummary(): List<ConfirmationLine> {
         val state = uiState.value
         confirmedState = state
         val bgText = profileUtil.stringInCurrentUnitsDetect(state.bg)
-        return listOf("${rh.gs(app.aaps.core.ui.R.string.bg_label)}: $bgText ${state.unitLabel}")
+        val bgWithUnit = rh.gs(CoreUiR.string.value_with_unit, bgText, state.unitLabel)
+        return confirmationLines {
+            line(ConfirmationRole.PRIMARY, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.bg_label), bgWithUnit))
+        }
     }
 
     fun confirmAndSave() {

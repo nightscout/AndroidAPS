@@ -3,14 +3,14 @@ package app.aaps.ui.di
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
-import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
-import app.aaps.ui.compose.scenes.SceneAutomationApiImpl
+import app.aaps.ui.compose.scenes.SceneIconResolverImpl
 
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.DialogSearchables
@@ -43,7 +43,9 @@ abstract class UiModule {
 
         @Binds fun bindWidgetUpdater(impl: WidgetUpdaterImpl): WidgetUpdater
 
-        @Binds fun bindSceneAutomationApi(impl: SceneAutomationApiImpl): SceneAutomationApi
+        // Scene icon resolution stays in :ui (the SceneIcons catalog lives here). The rest of the scene
+        // engine + its DI bindings moved to :implementation (SceneModule).
+        @Binds fun bindSceneIconResolver(impl: SceneIconResolverImpl): SceneIconResolver
 
         @Binds @IntoSet fun bindBuiltInSearchables(impl: BuiltInSearchables): SearchableProvider
         @Binds @IntoSet fun bindDialogSearchables(impl: DialogSearchables): SearchableProvider

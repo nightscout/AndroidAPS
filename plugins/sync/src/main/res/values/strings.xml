@@ -27,7 +27,7 @@
     <string name="authorized_clients_empty_title">No authorized clients</string>
     <string name="authorized_clients_empty_subtitle">Pair a client device to let it send signed commands to this master.</string>
     <string name="authorized_clients_disabled_title">Client control is off</string>
-    <string name="authorized_clients_disabled_subtitle">Turn on client control in NS Client settings to authorize client devices to send signed commands to this master.</string>
+    <string name="authorized_clients_disabled_subtitle">Turn on client control in settings to authorize client devices to send signed commands to this master.</string>
     <string name="authorized_clients_open_settings">Open settings</string>
     <string name="authorized_clients_name_dialog_title">New client</string>
     <string name="authorized_clients_name_placeholder">Device name</string>

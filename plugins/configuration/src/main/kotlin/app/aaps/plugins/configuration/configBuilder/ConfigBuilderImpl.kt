@@ -29,11 +29,17 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.configuration.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -57,6 +63,69 @@ class ConfigBuilderImpl @Inject constructor(
     override fun initialize() {
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
+        // Seed the synthetic ActivePlugin mirror from the local selection — MASTER ONLY. On a client this is
+        // intentionally skipped: now that these keys are Bidirectional, a startup put would publish the
+        // client's (possibly stale) local selection and clobber the master. The client's mirror is instead
+        // driven by the master's push and by the client's own gated switches (both already non-clobbering).
+        if (!config.AAPSCLIENT) regenerateActivePluginKeys()
+        startActivePluginObservers()   // adopt sync-driven selection changes (master↔client)
+    }
+
+    // ---- Active-plugin selection as synced keys (PR2: dual-write; the bespoke RunningConfiguration fields
+    // still serialize/apply in parallel until a later PR removes them). ----
+
+    /** Synthetic ActivePlugin key per SINGLE-SELECT category; null for multi-select. The type→key NAME map
+     *  must live here (StringNonKey is not visible to core:data/PluginType). Exhaustive — no `else`, so adding
+     *  a PluginType is a compile-forced decision. This wiring is guarded against the PluginType.singleSelect /
+     *  selectionSyncs SSOT in ConfigBuilderImplTest, so the key set and the flags can't drift.
+     *  internal (not private) only so that test can reach it. */
+    internal fun activePluginKey(type: PluginType): StringNonKey? = when (type) {
+        PluginType.APS                                                               -> StringNonKey.ActivePluginAps
+        PluginType.SENSITIVITY                                                       -> StringNonKey.ActivePluginSensitivity
+        PluginType.SMOOTHING                                                         -> StringNonKey.ActivePluginSmoothing
+        PluginType.CALIBRATION                                                       -> StringNonKey.ActivePluginCalibration
+        PluginType.PUMP                                                              -> StringNonKey.ActivePluginPump
+        PluginType.BGSOURCE                                                          -> StringNonKey.ActivePluginBgSource
+        PluginType.GENERAL, PluginType.CONSTRAINTS, PluginType.LOOP, PluginType.SYNC -> null  // multi-select: no single active
+    }
+
+    // SSOT = PluginType.selectionSyncs (the activePluginKey wiring is guarded against it in ConfigBuilderImplTest).
+    override val syncedSelectionTypes: List<PluginType> = PluginType.entries.filter { it.selectionSyncs }
+
+    // Post-commit refresh signal for the Configuration screen — emitted from performPluginSwitch AFTER the
+    // selection is fully applied (plugin state + storeSettings). Deliberately NOT the raw key flow: that
+    // fires on putRemote, which on a client→master adoption races the observer's performPluginSwitch, so a
+    // consumer would refresh BEFORE the switch and show the previous selection.
+    private val _activeSelectionChanges = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    override val activeSelectionChanges: Flow<Unit> = _activeSelectionChanges.asSharedFlow()
+
+    private fun activeIdOf(type: PluginType): String =
+        activePlugin.getSpecificPluginsList(type).firstOrNull { it.isEnabled(type) }?.pluginId ?: ""
+
+    /** Write the synthetic key from the current selection; guarded against no-op writes (avoids spurious publishes). */
+    private fun syncActivePluginKey(type: PluginType) {
+        val key = activePluginKey(type) ?: return
+        val id = activeIdOf(type)
+        if (preferences.get(key) != id) preferences.put(key, id)
+    }
+
+    private fun regenerateActivePluginKeys() = PluginType.entries.forEach { syncActivePluginKey(it) }
+
+    /** Adopt a sync-driven ActivePlugin change by switching the plugin. Runs on BOTH master and client — the
+     *  master must adopt client→master pushes (Bidirectional); a client-only gate is the known automation
+     *  regression. Echo is broken by `!isEnabled`: a self-write always names the currently-enabled plugin, so
+     *  it self-skips; only a genuinely different (remote) selection switches (setPluginEnabled does the lifecycle). */
+    private fun startActivePluginObservers() {
+        syncedSelectionTypes.forEach { type ->
+            val key = activePluginKey(type) ?: return@forEach
+            scope.launch {
+                preferences.observe(key).drop(1).collect { incoming ->
+                    if (incoming.isEmpty()) return@collect
+                    val plugin = activePlugin.getSpecificPluginsList(type).firstOrNull { it.pluginId == incoming } ?: return@collect
+                    if (!plugin.isEnabled(type)) performPluginSwitch(plugin, true, type)
+                }
+            }
+        }
     }
 
     private fun setAlwaysEnabledPluginsEnabled() {
@@ -180,7 +249,9 @@ class ConfigBuilderImpl @Inject constructor(
         changedPlugin.setPluginEnabled(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
         storeSettings("RemoteConfiguration")
+        syncActivePluginKey(type)   // mirror the new selection into the synced ActivePlugin key (echo-guarded)
         rxBus.send(EventConfigBuilderChange())
+        _activeSelectionChanges.tryEmit(Unit)   // post-commit: refresh the Configuration screen after the switch is applied
         logPluginStatus()
     }
 
@@ -209,9 +280,9 @@ class ConfigBuilderImpl @Inject constructor(
                         p.setPluginEnabled(type, false)
                     }
                 }
-            } else if (type != PluginType.SYNC) {
-                // enable first plugin in list
-                // NSC must not be selected
+            } else if (type.singleSelect) {
+                // a single-select category must always keep exactly one enabled — re-enable the first.
+                // (the only multi-select type reaching here is SYNC, via the NsClient case above.)
                 pluginsInCategory[0].setPluginEnabled(type, true)
             }
         }

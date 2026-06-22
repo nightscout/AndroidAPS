@@ -61,6 +61,9 @@ dependencies {
     // SMS Communicator (OTP + QR code)
     implementation(libs.com.eatthepath.java.otp)
     implementation(libs.com.github.kenglxn.qrgen.android)
+    // ZXing is pulled transitively by qrgen but SmsCommunicatorOtpScreen imports ErrorCorrectionLevel
+    // directly — declare it explicitly so a future qrgen upgrade can't silently drop the symbol.
+    implementation(libs.com.google.zxing.core)
 
     // Garmin
     api(libs.com.garmin.connectiq) { artifact { type = "aar" } }

@@ -46,6 +46,9 @@ enum class NotificationId(
     // Pump — general
     EXTENDED_BOLUS_DISABLED(IMPORTANT, PUMP),
     PUMP_ERROR(URGENT, PUMP),
+    // A user/remote (non-SMB) bolus failed to deliver — surfaced once, here, from the executor (the entry
+    // dialog is gone by the time the async result arrives). SMB failures stay silent (the loop self-corrects).
+    BOLUS_DELIVERY_FAILED(URGENT, PUMP),
     WRONG_SERIAL_NUMBER(NORMAL, PUMP),
     WRONG_BASAL_STEP(NORMAL, PUMP),
     WRONG_DRIVER(NORMAL, PUMP),
@@ -133,6 +136,7 @@ enum class NotificationId(
     NS_URGENT_ALARM(URGENT, SYNC),
     NS_MALFUNCTION(IMPORTANT, SYNC),
     NSCLIENT_VERSION_DOES_NOT_MATCH(NORMAL, SYNC),
+    NSCLIENT_PAIRING_ORPHAN(NORMAL, SYNC),
     OPEN_HUMANS_SIGNED_OUT(NORMAL, SYNC),
 
     // Sync — SMS

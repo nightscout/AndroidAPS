@@ -4,21 +4,18 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.pump.defs.PumpDescription
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.objects.runningMode.RunningModeGuard
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,19 +26,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 @Stable
 class TempBasalDialogViewModel @Inject constructor(
-    private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val commandQueue: CommandQueue,
-    private val uel: UserEntryLogger,
     private val rh: ResourceHelper,
-    private val aapsLogger: AAPSLogger,
-    private val runningModeGuard: RunningModeGuard
+    private val batchExecutor: BatchExecutor,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TempBasalDialogUiState())
@@ -49,6 +42,10 @@ class TempBasalDialogViewModel @Inject constructor(
 
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
+        data object ShowNoActionDialog : SideEffect()
+
+        /** The MASTER prepared the action and returned its confirmation [lines]; show them, then [commit] [bolusId]. */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -63,6 +60,8 @@ class TempBasalDialogViewModel @Inject constructor(
     }
 
     private suspend fun initialize() {
+        // On a client the VirtualPump mirrors the master's pump (RunningConfiguration), so the style + ranges below
+        // are already the master's. The master re-validates at prepare and refuses if the client's config is stale.
         val pumpDescription = activePlugin.activePump.pumpDescription
         val isPercentPump = pumpDescription.tempBasalStyle and PumpDescription.PERCENT == PumpDescription.PERCENT
         val profile = profileFunction.getProfile()
@@ -97,80 +96,47 @@ class TempBasalDialogViewModel @Inject constructor(
         _uiState.update { it.copy(durationMinutes = value) }
     }
 
-    fun hasAction(): Boolean {
-        val state = uiState.value
-        return state.durationMinutes > 0
-    }
+    /**
+     * Tap-confirm → ask the MASTER to PREPARE (validate against its pump, cap, author the confirmation). Client = signed
+     * round-trip; master = local. The user then confirms the MASTER's exact lines and [commit] applies it. appScope: the
+     * screen may navigate away (cancelling viewModelScope) while the round-trip is in flight.
+     */
+    fun prepareAndConfirm() {
+        // Ignore re-taps while a prepare is already in flight; the screen also disables Confirm via isPreparing.
+        if (uiState.value.isPreparing) return
+        appScope.launch {
+            val state = uiState.value
+            if (state.durationMinutes <= 0.0) {
+                _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+                return@launch
+            }
+            _uiState.update { it.copy(isPreparing = true) }
+            try {
+                val rate = if (state.isPercentPump) state.basalPercent else state.basalAbsolute
+                val action = BatchAction.TempBasal(rate = rate, isPercent = state.isPercentPump, durationMinutes = state.durationMinutes.toInt())
+                val label = rh.gs(app.aaps.core.ui.R.string.tempbasal_label)
+                when (val prepared = batchExecutor.prepare(listOf(action), Sources.TempBasalDialog, label)) {
+                    is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
+                    // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the modal.
+                    is ActionProgress.Rejected ->
+                        if (prepared.reason == FailureReason.NotReachable) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                        else prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
 
-    private var confirmedState: TempBasalDialogUiState? = null
-
-    fun buildConfirmationSummary(): List<String> {
-        val state = uiState.value
-        confirmedState = state
-        val profile = uiState.value.profile ?: return emptyList()
-        val lines = mutableListOf<String>()
-        val durationInMinutes = state.durationMinutes.toInt()
-
-        if (state.isPercentPump) {
-            val basalPercentInput = state.basalPercent.toInt()
-            val percent = constraintChecker.applyBasalPercentConstraints(
-                ConstraintObject(basalPercentInput, aapsLogger), profile
-            ).value()
-            lines.add(rh.gs(app.aaps.core.ui.R.string.tempbasal_label) + ": $percent%")
-            lines.add(rh.gs(app.aaps.core.ui.R.string.duration) + ": " + rh.gs(app.aaps.core.ui.R.string.format_mins, durationInMinutes))
-            if (percent != basalPercentInput) lines.add(rh.gs(app.aaps.core.ui.R.string.constraint_applied))
-        } else {
-            val basalAbsoluteInput = state.basalAbsolute
-            val absolute = constraintChecker.applyBasalConstraints(
-                ConstraintObject(basalAbsoluteInput, aapsLogger), profile
-            ).value()
-            lines.add(rh.gs(app.aaps.core.ui.R.string.tempbasal_label) + ": " + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, absolute))
-            lines.add(rh.gs(app.aaps.core.ui.R.string.duration) + ": " + rh.gs(app.aaps.core.ui.R.string.format_mins, durationInMinutes))
-            if (abs(absolute - basalAbsoluteInput) > 0.01) lines.add(rh.gs(app.aaps.core.ui.R.string.constraint_applied))
+                    else                       -> Unit // Unconfirmed → app-level modal
+                }
+            } finally {
+                _uiState.update { it.copy(isPreparing = false) }
+            }
         }
-
-        return lines
     }
 
-    fun confirmAndSave() {
-        viewModelScope.launch { confirmAndSaveSuspend() }
-    }
-
-    private suspend fun confirmAndSaveSuspend() {
-        val state = confirmedState ?: return
-        val profile = profileFunction.getProfile() ?: return
-        val durationInMinutes = state.durationMinutes.toInt()
-
-        if (state.isPercentPump) {
-            val percent = constraintChecker.applyBasalPercentConstraints(
-                ConstraintObject(state.basalPercent.toInt(), aapsLogger), profile
-            ).value()
-            val gateKind = if (percent == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
-            if (runningModeGuard.checkWithSnackbar(gateKind)) return
-            uel.log(
-                action = Action.TEMP_BASAL, source = Sources.TempBasalDialog,
-                listValues = listOf(
-                    ValueWithUnit.Percent(percent),
-                    ValueWithUnit.Minute(durationInMinutes)
-                )
-            )
-            val result = commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
-            if (!result.success) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
-        } else {
-            val absolute = constraintChecker.applyBasalConstraints(
-                ConstraintObject(state.basalAbsolute, aapsLogger), profile
-            ).value()
-            val gateKind = if (absolute == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
-            if (runningModeGuard.checkWithSnackbar(gateKind)) return
-            uel.log(
-                action = Action.TEMP_BASAL, source = Sources.TempBasalDialog,
-                listValues = listOf(
-                    ValueWithUnit.Insulin(absolute),
-                    ValueWithUnit.Minute(durationInMinutes)
-                )
-            )
-            val result = commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
-            if (!result.success) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+    /** Confirm the master's prepared temp basal: apply it exactly once. A master-local apply failure (pump comms) surfaces here. */
+    fun commit(bolusId: Long) {
+        appScope.launch {
+            val result = batchExecutor.commit(bolusId, Sources.TempBasalDialog, rh.gs(app.aaps.core.ui.R.string.tempbasal_label), pumpDirect = true)
+            if (result is ActionProgress.Rejected)
+                if (result.reason == FailureReason.NotReachable) _sideEffect.tryEmit(SideEffect.ShowDeliveryError(rh.gs(app.aaps.core.ui.R.string.clientcontrol_fail_not_reachable)))
+                else result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
         }
     }
 }

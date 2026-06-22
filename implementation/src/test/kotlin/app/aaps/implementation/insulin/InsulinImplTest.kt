@@ -59,11 +59,6 @@ class InsulinImplTest : TestBase() {
     }
 
     @Test
-    fun getIdTest() {
-        assertThat(sut.id).isEqualTo(InsulinType.OREF_FREE_PEAK)
-    }
-
-    @Test
     fun getFriendlyNameTest() {
         assertThat(sut.friendlyName).isEqualTo("Free-Peak Oref")
     }
@@ -75,18 +70,20 @@ class InsulinImplTest : TestBase() {
         // insulin DIA/peak used in IOB/COB math) until the process is restarted. See collectResilient.
         val changes = MutableSharedFlow<List<EPS>>(extraBufferCapacity = 8)
         whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(changes)
-        // First EPS change makes updateCachedICfg() throw; the second must still be processed.
+        // Call order: init's one-off cache seed (returns null), then the two EPS-driven refreshes.
+        // The first EPS change makes updateCachedICfg() throw; the second must still be processed.
         whenever(profileFunction.getProfile())
-            .thenThrow(RuntimeException("induced failure"))
-            .thenReturn(null)
+            .thenReturn(null)                               // init: appScope.launch { updateCachedICfg() }
+            .thenThrow(RuntimeException("induced failure"))  // 1st EPS change, caught by collectResilient
+            .thenReturn(null)                               // 2nd EPS change must still reach updateCachedICfg()
         val localSut = InsulinImpl(preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel, CoroutineScope(Dispatchers.Unconfined))
         assertThat(localSut).isNotNull() // keep reference; collector is launched in its init
 
         changes.tryEmit(emptyList()) // 1st: getProfile() throws, caught by collectResilient
         changes.tryEmit(emptyList()) // 2nd: must still reach updateCachedICfg()
 
-        // == 1 if the first throw had cancelled the collector.
-        verify(profileFunction, times(2)).getProfile()
+        // 3 = seed + both EPS changes. Would be 2 if the first throw had cancelled the collector.
+        verify(profileFunction, times(3)).getProfile()
     }
 
     @Test
@@ -114,4 +111,5 @@ class InsulinImplTest : TestBase() {
         treatment.amount = 10.0
         assertThat(treatment.iobCalc(time).iobContrib).isWithin(0.01).of(0.0)
     }
+
 }

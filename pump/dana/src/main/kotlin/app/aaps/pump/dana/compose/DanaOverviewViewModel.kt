@@ -35,6 +35,7 @@ import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
+import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
@@ -184,6 +185,13 @@ open class DanaOverviewViewModel @Inject constructor(
     }
 
     /**
+     * Override in subclasses to surface a variant-specific persistent error banner on top of the
+     * overview (e.g. DanaRS shows "not paired" when configured but the device is not bonded).
+     * Only used when there is no live communication status to display. Default: no banner.
+     */
+    protected open fun errorBanner(isConfigured: Boolean, isInitialized: Boolean): StatusBanner? = null
+
+    /**
      * Override in subclasses to add variant-specific management actions (e.g., BLE pair/unpair for DanaRS).
      */
     protected open fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<PumpAction> = buildList {
@@ -222,12 +230,16 @@ open class DanaOverviewViewModel @Inject constructor(
         }
     }
 
+    // Initial placeholder state, evaluated during construction. Must NOT invoke the open
+    // errorBanner() hook: subclass fields it relies on aren't initialized yet (superclass
+    // constructor runs first). The real banner appears once the uiState flow emits on subscribe.
     private fun buildInitialState(): PumpOverviewUiState = buildUiState(
         lastConnectionTime = danaPump.lastConnection,
         reservoir = danaPump.reservoirRemainingUnits,
         battery = danaPump.batteryRemaining,
         lastBolusTime = danaPump.lastBolusTime,
-        lastBolusAmount = danaPump.lastBolusAmount
+        lastBolusAmount = danaPump.lastBolusAmount,
+        includeErrorBanner = false
     )
 
     private fun buildUiState(
@@ -235,13 +247,13 @@ open class DanaOverviewViewModel @Inject constructor(
         reservoir: Double,
         battery: Int?,
         lastBolusTime: Long?,
-        lastBolusAmount: Double?
+        lastBolusAmount: Double?,
+        includeErrorBanner: Boolean = true
     ): PumpOverviewUiState {
         val pump = danaPump
         val activePump = activePlugin.activePump
 
         // Communication status (shared: pump status + queue)
-        val statusBanner = communicationStatus.statusBanner()
         val queueStatus = communicationStatus.queueStatus()
 
         // Last connection
@@ -303,6 +315,11 @@ open class DanaOverviewViewModel @Inject constructor(
 
         val isConfigured = activePump.isConfigured()
         val isInitialized = activePump.isInitialized()
+
+        // Status banner: prefer live communication status; fall back to a persistent error banner
+        // (e.g. not paired) supplied by variant subclasses when the pump is idle.
+        val statusBanner = communicationStatus.statusBanner()
+            ?: if (includeErrorBanner) errorBanner(isConfigured, isInitialized) else null
 
         // Info rows
         val infoRows = if (!isConfigured) emptyList() else buildList {

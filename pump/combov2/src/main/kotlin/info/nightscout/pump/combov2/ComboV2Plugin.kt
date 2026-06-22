@@ -52,6 +52,7 @@ import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.base.DisplayFrame
 import info.nightscout.comboctl.base.NullDisplayFrame
 import info.nightscout.comboctl.base.PairingPIN
+import info.nightscout.comboctl.base.ProgressReport
 import info.nightscout.comboctl.main.BasalProfile
 import info.nightscout.comboctl.main.QuantityNotChangingException
 import info.nightscout.comboctl.main.RTCommandProgressStage
@@ -67,6 +68,7 @@ import info.nightscout.pump.combov2.keys.ComboLongNonKey
 import info.nightscout.pump.combov2.keys.ComboStringNonKey
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -83,6 +85,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -1403,8 +1407,15 @@ class ComboV2Plugin @Inject constructor(
 
     /*** Pairing API ***/
 
-    fun getPairingProgressFlow() =
-        pumpManager?.pairingProgressFlow ?: throw IllegalStateException("Attempting access uninitialized pump manager")
+    // Fallback emitted while pumpManager is null (driver still in NotInitialized
+    // state, e.g. Bluetooth permission not yet granted / Bluetooth disabled). This
+    // keeps getPairingProgressFlow() non-throwing so the pair-wizard ViewModel can
+    // be constructed and render its DriverNotInitialized screen instead of crashing.
+    private val idlePairingProgressFlow =
+        MutableStateFlow(ProgressReport(stageNumber = 0, numStages = 0, stage = BasicProgressStage.Idle, overallProgress = 0.0)).asStateFlow()
+
+    fun getPairingProgressFlow(): StateFlow<ProgressReport> =
+        pumpManager?.pairingProgressFlow ?: idlePairingProgressFlow
 
     fun resetPairingProgress() = pumpManager?.resetPairingProgress()
 
@@ -1568,6 +1579,15 @@ class ComboV2Plugin @Inject constructor(
     // finishes, the state is checked. Use isSuspended() instead.
     private val _driverStateUIFlow = MutableStateFlow<DriverState>(DriverState.NotInitialized)
     val driverStateUIFlow = _driverStateUIFlow.asStateFlow()
+
+    // Reactive variant of the pairing progress flow for UI that is constructed once and
+    // must keep working across a NotInitialized -> Disconnected transition: re-subscribes
+    // to the real pairing progress flow once pumpManager becomes available (the driver
+    // state flips to Disconnected right after pumpManager is set). Declared after
+    // driverStateUIFlow so it is not referenced before initialization.
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pairingProgressUiFlow: Flow<ProgressReport> =
+        driverStateUIFlow.flatMapLatest { getPairingProgressFlow() }
 
     // "Activity" is not to be confused with the Android Activity class.
     // An "activity" is something that a command does, for example

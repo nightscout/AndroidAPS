@@ -29,7 +29,7 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
     private fun newCommand(info: DetailedBolusInfo, callback: Callback? = null) =
         CommandSMBBolus(
             aapsLogger, rh, dateUtil, activePlugin, persistenceLayer, preferences, bolusProgressData,
-            pumpEnactResultProvider, info, callback
+            pumpEnactResultProvider, info, callback, BOLUS_GENERATION
         )
 
     private fun smbInfo(deliverAtTheLatest: Long = System.currentTimeMillis()) =
@@ -49,7 +49,7 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
@@ -59,14 +59,14 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         val info = smbInfo()
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
 
         val result = newCommand(info).execute()
 
         assertThat(result).isSameInstanceAs(pumpResult)
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
@@ -80,7 +80,7 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
@@ -101,12 +101,14 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         val info = smbInfo()
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
-            onBlocking { deliverTreatment(info) } doReturn pumpResult
+            on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(info, callback).executeWithCallback()
@@ -119,14 +121,16 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(smbInfo(), callback).cancel(app.aaps.core.ui.R.string.command_replaced)
 
         assertThat(received).isNotNull()
         assertThat(received!!.success).isTrue()
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
@@ -134,18 +138,25 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
         var received: PumpEnactResult? = null
         val callback = object : Callback() {
-            override fun run() { received = result }
+            override fun run() {
+                received = result
+            }
         }
 
         newCommand(smbInfo(), callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
 
         assertThat(received).isNotNull()
         assertThat(received!!.success).isFalse()
-        verify(bolusProgressData).clear()
+        verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
     fun `commandType is SMB_BOLUS`() {
         assertThat(newCommand(smbInfo()).commandType).isEqualTo(Command.CommandType.SMB_BOLUS)
+    }
+
+    private companion object {
+
+        const val BOLUS_GENERATION = 7L
     }
 }

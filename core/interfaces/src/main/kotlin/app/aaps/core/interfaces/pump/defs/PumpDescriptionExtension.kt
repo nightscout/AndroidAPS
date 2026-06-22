@@ -41,6 +41,7 @@ fun PumpDescription.fillFor(pumpType: PumpType): PumpDescription {
     isPatchPump = pumpType.isPatchPump()
     maxReservoirReading = pumpType.maxReservoirReading()
     useHardwareLink = pumpType.useHardwareLink
+    pumpType.extendedBolusSettings()?.minDose?.let { extendedBolusMinAmount = it }
 
     return this
 }

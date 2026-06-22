@@ -26,7 +26,9 @@ import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ConfigPluginCard
+import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.SelectionMode
+import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 
 @Composable
@@ -81,12 +83,21 @@ fun PluginCategoryScreen(
         val hintRes = if (category.isMultiSelect) R.string.configbuilder_pick_many_hint
         else R.string.configbuilder_pick_one_hint
         val noneSelected = !category.isMultiSelect && category.plugins.none { it.isEnabled }
+        // Offline-gating applies ONLY to synced categories — those control the master's selection, so they
+        // need the master reachable. Non-synced categories (SYNC/GENERAL/pump/etc.) are local config and stay
+        // editable offline (no banner, no gate).
+        val editingEnabled = !category.synced || masterEditingEnabled()
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            if (!editingEnabled) {
+                item(key = "offline-banner") {
+                    MasterOfflineBanner(editingEnabled = editingEnabled)
+                }
+            }
             item(key = "hint") {
                 Text(
                     text = stringResource(hintRes),
@@ -111,7 +122,8 @@ fun PluginCategoryScreen(
                         onPluginEnableToggle(plugin.id, category.type, !plugin.isEnabled)
                     },
                     onSettingsClick = { onNavigate(NavigationRequest.PluginPreferences(plugin.id)) },
-                    onOpenPluginClick = { onNavigate(NavigationRequest.Plugin(plugin.id)) }
+                    onOpenPluginClick = { onNavigate(NavigationRequest.Plugin(plugin.id)) },
+                    editingEnabled = editingEnabled
                 )
             }
         }

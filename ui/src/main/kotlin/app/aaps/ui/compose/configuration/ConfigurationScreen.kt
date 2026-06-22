@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.preference.SyncBadge
 
 @Composable
 fun ConfigurationScreen(
@@ -130,6 +131,8 @@ private fun CategoryRow(
                 overflow = TextOverflow.Ellipsis
             )
         }
+        // Synced (master-linked) category: the same PhonelinkRing badge used on synced preference rows.
+        SyncBadge(visible = category.synced, modifier = Modifier.padding(end = 8.dp))
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
