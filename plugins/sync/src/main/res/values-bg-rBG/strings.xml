@@ -25,7 +25,6 @@
     <string name="authorized_clients_empty_title">Няма позволени клиенти</string>
     <string name="authorized_clients_empty_subtitle">Свържете клиентско устройство за да изпраща подписани команди до този телефон.</string>
     <string name="authorized_clients_disabled_title">Отдалеченият контрол е изключен</string>
-    <string name="authorized_clients_disabled_subtitle">Включете контрол в NS Client настройките за да разрешите други устройства да изпращат команди до този телефон. </string>
     <string name="authorized_clients_open_settings">Отвори настройки</string>
     <string name="authorized_clients_name_dialog_title">Нов клиент</string>
     <string name="authorized_clients_name_placeholder">Име на устройство</string>
