@@ -360,6 +360,7 @@
     <string name="scene_deactivate">End Scene</string>
     <string name="scene_active">Active</string>
     <string name="scene_ended">Scene ended</string>
+    <string name="scene_end_active">End active scene</string>
     <string name="scene_confirm_activate">Activate scene \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">End scene \"%1$s\" and revert changes?</string>
     <string name="scene_conflict_active_tt">Active temporary target will be replaced</string>
@@ -367,7 +368,8 @@
     <string name="scene_conflict_active_running_mode">Active running mode will be replaced</string>
     <string name="scene_conflict_active_scene">Active scene \"%1$s\" will be ended first</string>
     <string name="scene_action_tt">Temp target: %1$s</string>
-    <string name="scene_action_profile">Profile: %1$s %2$d%%</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profile: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profile: %1$d%%</string>
     <string name="scene_action_smb_on">Enable SMB</string>
     <string name="scene_action_smb_off">Disable SMB</string>
     <string name="scene_action_running_mode">Running mode: %1$s</string>
