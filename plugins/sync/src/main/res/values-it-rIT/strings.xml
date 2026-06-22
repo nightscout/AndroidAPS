@@ -25,6 +25,7 @@
     <string name="authorized_clients_empty_title">Client non autorizzati</string>
     <string name="authorized_clients_empty_subtitle">Associa un dispositivo client per lasciare che invii comandi firmati a questo master.</string>
     <string name="authorized_clients_disabled_title">Il controllo del client è spento</string>
+    <string name="authorized_clients_disabled_subtitle">Attiva il controllo client nelle impostazioni del client NS per autorizzare i dispositivi client a inviare comandi firmati a questo master.</string>
     <string name="authorized_clients_open_settings">Apri impostazioni</string>
     <string name="authorized_clients_name_dialog_title">Nuovo client</string>
     <string name="authorized_clients_name_placeholder">Nome dispositivo</string>
