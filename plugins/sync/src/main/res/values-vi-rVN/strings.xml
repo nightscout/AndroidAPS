@@ -25,6 +25,7 @@
     <string name="authorized_clients_empty_title">Không có thiết bị phụ nào được ủy quyền</string>
     <string name="authorized_clients_empty_subtitle">Ghép đôi một thiết bị phụ để cho phép thiết bị đó gửi các lệnh đã ký xác thực đến thiết bị chính này.</string>
     <string name="authorized_clients_disabled_title">Điều khiển từ thiết bị phụ đang tắt</string>
+    <string name="authorized_clients_disabled_subtitle">Bật điều khiển từ thiết bị phụ trong phần Cài đặt để cho phép các thiết bị phụ gửi các lệnh đã ký xác thực đến thiết bị chính này.</string>
     <string name="authorized_clients_open_settings">Mở cài đặt</string>
     <string name="authorized_clients_name_dialog_title">Thêm máy phụ</string>
     <string name="authorized_clients_name_placeholder">Tên thiết bị</string>
@@ -160,6 +161,7 @@
     <string name="full_xdrip_sync_comment">Đồng bộ đầy đủ? Quá trình này có thể mất một thời gian và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Vui lòng thử lại.</string>
     <string name="wear_action_loop_state_invalid">Trạng thái vòng lặp không hợp lệ</string>
+    <string name="wear_action_running_mode_title">Chế độ thể dục</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nThời gian: %2$d phút</string>
     <string name="wear_action_loop_state_now_closed">Vòng lặp đóng</string>
     <string name="wear_action_loop_state_now_lgs">Tạm dừng khi đường huyết thấp</string>
