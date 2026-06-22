@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">Dočasný bazál %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Doba trvání TBR musí být větší než nula, a musí být násobkem %1$s minut.</string>
+    <string name="equil_basal_exceeds_max">Profilová bazální dávka %1$s U/h překračuje maximální bazální dávku %2$s U/h. Zvyšte maximální bazál a připojte pumpu.</string>
     <string name="equil_not_enough_insulin">V zásobníku nezbývá dostatek inzulínu</string>
     <string name="equil_low_battery">Slabá baterie</string>
     <string name="equil_low_insulin">V zásobníku nezbývá dostatek inzulínu</string>
