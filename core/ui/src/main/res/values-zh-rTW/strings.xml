@@ -357,7 +357,7 @@
     <string name="scene_conflict_active_running_mode">目前啟用中的執行模式將被取代</string>
     <string name="scene_conflict_active_scene">作用中的場景 \"%1$s\" 會先結束</string>
     <string name="scene_action_tt">臨時目標: %1$s</string>
-    <string name="scene_action_profile">設定檔: %1$s %2$d%%</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">設定檔: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">啟用微量注射</string>
     <string name="scene_action_smb_off">停用微量注射</string>
     <string name="scene_action_running_mode">執行模式：%1$s</string>
