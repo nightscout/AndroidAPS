@@ -350,6 +350,7 @@
     <string name="scene_deactivate">Avslutt scene</string>
     <string name="scene_active">Aktiv</string>
     <string name="scene_ended">Scene avsluttet</string>
+    <string name="scene_end_active">Avslutt aktiv scene</string>
     <string name="scene_confirm_activate">Aktivere scene \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Avslutte scene \"%1$s\" og tilbakestille endringer?</string>
     <string name="scene_conflict_active_tt">Dette vil erstatte et aktivt midlertidig mål</string>
@@ -358,6 +359,7 @@
     <string name="scene_conflict_active_scene">Aktiv scene \"%1$s\" vil bli avsluttet først</string>
     <string name="scene_action_tt">Midlertidig mål: %1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Aktiver SMB</string>
     <string name="scene_action_smb_off">Deaktiver SMB</string>
     <string name="scene_action_running_mode">Kjøremodus: %1$s</string>
