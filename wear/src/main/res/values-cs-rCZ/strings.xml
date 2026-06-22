@@ -85,8 +85,6 @@
     <string name="action_tempt_confirmation">Požadován dočasný cíl</string>
     <string name="action_quick_wizard_confirmation">Požadován rychlý bolus</string>
     <string name="action_user_action_confirmation">Požadována Uživatelská akce</string>
-    <string name="action_scene_confirmation">Aktivovat scénu</string>
-    <string name="scene_stop">ZASTAVIT</string>
     <string name="action_treatment_confirmation">Požadováno ošetření</string>
     <string name="action_bolus_confirmation">Požadován bolus</string>
     <string name="action_wizard_confirmation">Požadován kalkulátor</string>
