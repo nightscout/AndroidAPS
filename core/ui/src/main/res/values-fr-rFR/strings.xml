@@ -337,7 +337,7 @@
     <string name="scene_conflict_active_running_mode">Le mode actif sera remplacé</string>
     <string name="scene_conflict_active_scene">Le scénario actif «%1$s» sera terminée en premier</string>
     <string name="scene_action_tt">Cible Temp : %1$s</string>
-    <string name="scene_action_profile">Profil : %1$s %2$d%%</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil : %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Activer SMB</string>
     <string name="scene_action_smb_off">Désactiver SMB</string>
     <string name="scene_action_running_mode">Mode actif : %1$s</string>
