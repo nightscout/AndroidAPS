@@ -85,8 +85,6 @@
     <string name="action_tempt_confirmation">Заявен Временен базал</string>
     <string name="action_quick_wizard_confirmation">Заявен Съветник</string>
     <string name="action_user_action_confirmation">Изисква потвърждение</string>
-    <string name="action_scene_confirmation">Активирай сценарий</string>
-    <string name="scene_stop">СТОП</string>
     <string name="action_treatment_confirmation">Заявена Терапия</string>
     <string name="action_bolus_confirmation">Заявен Болус</string>
     <string name="action_wizard_confirmation">Заявено Изчисление</string>
