@@ -252,7 +252,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout-versjon:</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="engineering_mode_enabled">Engineering mode aktivert</string>
-    <string name="back">Bakside</string>
+    <string name="back">Tilbake</string>
     <string name="next">Neste</string>
     <string name="pref_syncs_with_main_phone">Synkroniseres med hovedtelefonen</string>
     <string name="show_hide_records">Skjul loop-poster</string>
