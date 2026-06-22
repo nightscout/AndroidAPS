@@ -25,7 +25,6 @@
     <string name="authorized_clients_empty_title">No hay clientes autorizados</string>
     <string name="authorized_clients_empty_subtitle">Vincula un dispositivo cliente para permitirle enviar comandos firmados a este maestro</string>
     <string name="authorized_clients_disabled_title">El control del cliente está desactivado</string>
-    <string name="authorized_clients_disabled_subtitle">Activa el control del cliente en los ajustes de NS Client para autorizar a los dispositivos cliente a enviar comandos firmados a este maestro</string>
     <string name="authorized_clients_open_settings">Abrir ajustes</string>
     <string name="authorized_clients_name_dialog_title">Nuevo cliente</string>
     <string name="authorized_clients_name_placeholder">Nombre del dispositivo</string>
