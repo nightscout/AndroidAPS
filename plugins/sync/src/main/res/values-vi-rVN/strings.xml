@@ -25,7 +25,6 @@
     <string name="authorized_clients_empty_title">Không có thiết bị phụ nào được ủy quyền</string>
     <string name="authorized_clients_empty_subtitle">Ghép đôi một thiết bị phụ để cho phép thiết bị đó gửi các lệnh đã ký xác thực đến thiết bị chính này.</string>
     <string name="authorized_clients_disabled_title">Điều khiển từ thiết bị phụ đang tắt</string>
-    <string name="authorized_clients_disabled_subtitle">Bật điều khiển từ thiết bị phụ trong cài đặt NS Client để cho phép các thiết bị phụ gửi các lệnh đã ký xác thực đến thiết bị chính này.</string>
     <string name="authorized_clients_open_settings">Mở cài đặt</string>
     <string name="authorized_clients_name_dialog_title">Thêm máy phụ</string>
     <string name="authorized_clients_name_placeholder">Tên thiết bị</string>
