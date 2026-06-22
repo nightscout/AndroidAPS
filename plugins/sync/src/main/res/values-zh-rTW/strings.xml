@@ -25,7 +25,6 @@
     <string name="authorized_clients_empty_title">沒有已授權的用戶端</string>
     <string name="authorized_clients_empty_subtitle">將用戶端裝置配對，以允許它向此主裝置傳送簽章的指令。</string>
     <string name="authorized_clients_disabled_title">用戶端控制已關閉</string>
-    <string name="authorized_clients_disabled_subtitle">請在 NS 用戶端設定中開啟用戶端控制，以授權用戶端裝置向此主裝置傳送簽章的指令。</string>
     <string name="authorized_clients_open_settings">開啟設定</string>
     <string name="authorized_clients_name_dialog_title">新增用戶端</string>
     <string name="authorized_clients_name_placeholder">裝置名稱</string>
