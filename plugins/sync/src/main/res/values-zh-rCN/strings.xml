@@ -25,7 +25,6 @@
     <string name="authorized_clients_empty_title">没有已授权的客户端</string>
     <string name="authorized_clients_empty_subtitle">配对客户端设备，以允许其向此主机发送已签名的命令。</string>
     <string name="authorized_clients_disabled_title">客户端控制已关闭</string>
-    <string name="authorized_clients_disabled_subtitle">在 NS 客户端设置中开启客户端控制，以授权客户端设备向此主机发送已签名的命令。</string>
     <string name="authorized_clients_open_settings">打开设置</string>
     <string name="authorized_clients_name_dialog_title">新客户端</string>
     <string name="authorized_clients_name_placeholder">设备名称</string>
