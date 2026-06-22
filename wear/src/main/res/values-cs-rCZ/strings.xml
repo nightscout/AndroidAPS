@@ -240,6 +240,8 @@
     <string name="wizard_carbs_format">%1$d g sacharidů</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_confirmation_sent">Odesláno</string>
+    <string name="contacting_master">Kontaktuji hlavní zařízení…</string>
+    <string name="contacting_master_unknown">Neznámý stav — zkontrolujte telefon</string>
     <string name="tile_settings">Nastavení dlaždice</string>
     <string name="loop_status_error">Nepodařilo se načíst stav</string>
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
