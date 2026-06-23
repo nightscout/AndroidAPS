@@ -85,6 +85,8 @@
     <string name="action_tempt_confirmation">临时目标请求</string>
     <string name="action_quick_wizard_confirmation">快速向导请求</string>
     <string name="action_user_action_confirmation">请求用户操作</string>
+    <string name="action_scene_confirmation">情景请求</string>
+    <string name="scene_end">结束</string>
     <string name="action_treatment_confirmation">治疗请求</string>
     <string name="action_bolus_confirmation">大剂量请求</string>
     <string name="action_wizard_confirmation">计算请求</string>
@@ -237,6 +239,8 @@
     <string name="title_activity_suspend_loop">暂停闭环</string>
     <string name="wizard_carbs_format">%1$d 克碳水化合物</string>
     <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">已发送</string>
     <string name="contacting_master">正在联系主机…</string>
     <string name="contacting_master_unknown">状态未知 - 请检查手机</string>
