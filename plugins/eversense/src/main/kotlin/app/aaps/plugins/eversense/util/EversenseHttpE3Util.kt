@@ -153,7 +153,8 @@ class EversenseHttpE3Util {
             preferences: SharedPreferences,
             readings: List<EversenseCGMResult>,
             transmitterSerialNumber: String,
-            calibrations: List<CalibrationHistoryItem> = emptyList()
+            calibrations: List<CalibrationHistoryItem> = emptyList(),
+            alerts: List<app.aaps.plugins.eversense.models.ActiveAlarm> = emptyList()
         ): Boolean {
             if (readings.isEmpty()) return true
             val token = getOrRefreshToken(preferences) ?: run {
@@ -167,7 +168,7 @@ class EversenseHttpE3Util {
                 val sgBytes     = EversenseDmsBinaryCodec.buildSgBytes(readings)
                 val mgBytes     = if (calibrations.isNotEmpty()) EversenseDmsBinaryCodec.buildMgBytes(calibrations) else EversenseDmsBinaryCodec.buildEmptyMgBytes()
                 val patientBytes = EversenseDmsBinaryCodec.buildEmptyPatientBytes()
-                val alertBytes  = EversenseDmsBinaryCodec.buildAlertBytes(sensorId)
+                val alertBytes  = EversenseDmsBinaryCodec.buildAlertBytes(sensorId, alerts, readings.lastOrNull()?.datetime ?: System.currentTimeMillis(), readings.lastOrNull()?.glucoseInMgDl ?: 0)
 
                 EversenseLogger.info(TAG, "E3 PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber'")
 

@@ -20,6 +20,22 @@ enum class EversenseAlarm(val code: Int) {
     SENSOR_GRACE(66), SENSOR_SYNC_CONFIRMED(67), TX_DOCKED(68),
     TX_UNDOCKED(69), TWO_CAL(90), UNKNOWN(255);
 
+    val dmsCode: Int get() = when (this) {
+        LOW_GLUCOSE -> 0
+        HIGH_GLUCOSE -> 1
+        RATE_FALLING -> 4
+        RATE_RISING -> 5
+        PREDICTIVE_LOW -> 6
+        PREDICTIVE_HIGH -> 7
+        CALIBRATION_NOW -> 8
+        CALIBRATION_REQUIRED -> 9
+        CALIBRATION_GRACE_PERIOD -> 10
+        CALIBRATION_EXPIRED -> 11
+        SERIOUSLY_LOW -> 12
+        SERIOUSLY_HIGH -> 13
+        else -> 255
+    }
+
     val title: String get() = when (this) {
         CRITICAL_FAULT -> "Transmitter Error"
         SENSOR_RETIRED, SENSOR_GRACE, SENSOR_RETIRING_SOON_1, SENSOR_RETIRING_SOON_3,

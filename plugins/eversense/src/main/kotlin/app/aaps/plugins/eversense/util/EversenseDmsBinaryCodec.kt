@@ -122,15 +122,26 @@ internal object EversenseDmsBinaryCodec {
      * Build the alertBytes base64 blob with zero alert records.
      * The header includes the raw sensor ID bytes followed by a zero-count field.
      */
-    fun buildAlertBytes(sensorId: String): String {
+    fun buildAlertBytes(sensorId: String, alerts: List<app.aaps.plugins.eversense.models.ActiveAlarm> = emptyList(), datetime: Long = 0, glucoseInMgDl: Int = 0): String {
         // Header: 93 01 00 + count(2 bytes LE) + sensorIdBytes + 00  → 0 alerts
+        val uploadable = alerts.filter { it.code.dmsCode != 255 }
         val baos = ByteArrayOutputStream()
-        baos.write(byteArrayOf(0x93.toByte(), 0x01, 0x00, 0x00, 0x00))
+        baos.write(byteArrayOf(0x93.toByte(), 0x01, 0x00))
+        baos.write(int16LE(uploadable.size))
         if (sensorId.isNotEmpty()) {
             val sensorIdBytes = sensorId.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
             baos.write(sensorIdBytes)
         }
         baos.write(0x00)
+        uploadable.forEachIndexed { idx, a ->
+            baos.write(int16LE(idx + 1))
+            baos.write(calcDateBytes(datetime))
+            baos.write(calcTimeBytes(datetime))
+            baos.write(a.code.dmsCode)
+            baos.write(int16LE(glucoseInMgDl))
+            baos.write(int16LE(0))
+            baos.write(int16LE(0))
+        }
         return Base64.getEncoder().encodeToString(baos.toByteArray())
     }
 
