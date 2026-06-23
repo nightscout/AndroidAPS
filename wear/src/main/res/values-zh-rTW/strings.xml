@@ -85,6 +85,8 @@
     <string name="action_tempt_confirmation">已請求臨時目標</string>
     <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
     <string name="action_user_action_confirmation">用戶操作請求</string>
+    <string name="action_scene_confirmation">已請求場景</string>
+    <string name="scene_end">結束</string>
     <string name="action_treatment_confirmation">已請求治療</string>
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
@@ -237,6 +239,8 @@
     <string name="title_activity_suspend_loop">暫停循環</string>
     <string name="wizard_carbs_format">%1$d 克碳水化合物</string>
     <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">已送出</string>
     <string name="contacting_master">正在聯絡主控端…</string>
     <string name="contacting_master_unknown">狀態未知 — 請檢查智慧型手機</string>
