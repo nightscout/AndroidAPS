@@ -350,6 +350,7 @@
     <string name="scene_deactivate">Fine Scena</string>
     <string name="scene_active">Attivo</string>
     <string name="scene_ended">Scena conclusa</string>
+    <string name="scene_end_active">Fine scena attiva</string>
     <string name="scene_confirm_activate">Attivare la scena \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Terminare la scena \"%1$s\" e ripristinare le modifiche?</string>
     <string name="scene_conflict_active_tt">Il target temporaneo attivo verrà sostituito</string>
@@ -358,6 +359,7 @@
     <string name="scene_conflict_active_scene">Scena attiva \"%1$s\" sarà terminata prima</string>
     <string name="scene_action_tt">Temp-Target %1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profilo: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profilo: %1$d%%</string>
     <string name="scene_action_smb_on">Abilita SMB</string>
     <string name="scene_action_smb_off">Disabilita SMB</string>
     <string name="scene_action_running_mode">Modalità in esecuzione: %1$s</string>
