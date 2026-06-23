@@ -84,6 +84,8 @@
     <string name="action_tempt_confirmation">Target temporaneo richiesto</string>
     <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
     <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
+    <string name="action_scene_confirmation">Scena Richiesta</string>
+    <string name="scene_end">Fine</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>
@@ -235,6 +237,8 @@
     <string name="title_activity_suspend_loop">Sospendi loop</string>
     <string name="wizard_carbs_format">%1$d g carboidrati</string>
     <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Inviato</string>
     <string name="contacting_master">Contatto master…</string>
     <string name="contacting_master_unknown">Stato sconosciuto — controlla il telefono</string>
