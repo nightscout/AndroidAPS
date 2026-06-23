@@ -350,6 +350,7 @@
     <string name="scene_deactivate">结束情景</string>
     <string name="scene_active">已激活</string>
     <string name="scene_ended">情景已结束</string>
+    <string name="scene_end_active">结束激活情景</string>
     <string name="scene_confirm_activate">激活情景 \"%1$s\"？</string>
     <string name="scene_confirm_deactivate">结束情景 \"%1$s\" 并恢复更改？</string>
     <string name="scene_conflict_active_tt">当前启用的临时目标将被替换</string>
@@ -358,6 +359,7 @@
     <string name="scene_conflict_active_scene">当前已激活的情景 \"%1$s\" 将先结束</string>
     <string name="scene_action_tt">临时目标：%1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">配置文件：%1$s%2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">配置文件：%1$d%%</string>
     <string name="scene_action_smb_on">启用微型大剂量</string>
     <string name="scene_action_smb_off">禁用微型大剂量</string>
     <string name="scene_action_running_mode">运行模式：%1$s</string>
