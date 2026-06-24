@@ -24,7 +24,6 @@
     <string name="omnipod_dash_not_enough_insulin">אין מספיק אינסולין במכל</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">פקודה לא מאושרת</string>
     <string name="requested_by_user" comment="26 characters max for translation">התבקש ע\"י המשתמש</string>
-    <string name="profile_set_ok">הפרופיל הוגדר בהצלחה</string>
     <string name="suspend_delivery_is_unconfirmed">השעיית הזרקת האינסולין לא אושרה! נא לרענן ידנית את סטטוס הפוד מלשונית Omnipod ולהמשיך את ההזרקה במידה ונדרש.</string>
     <string name="insulin_delivery_suspended">הזרקת האינסולין מופסקת</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">אזור הזמן בפוד שונה מאזור הזמן בטלפון. ערכי הבאזלי אינם נכונים. החליפו פרופיל כדי לתקן</string>
