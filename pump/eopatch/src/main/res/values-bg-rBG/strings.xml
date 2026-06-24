@@ -13,7 +13,6 @@
     <string name="eopatch_base_basal_rate">Базова базална стойност</string>
     <string name="eopatch_temp_basal_rate">Временна базална стойност</string>
     <string name="invalid_basal_rate">Базалната стойност на профила е по-малка от 0,05 Е/час. EOPatch има минимална инжекционна единица от 0,05U. Моля, опитайте отново, след като зададете профила на повече от тази стойност.</string>
-    <string name="no_profile_selected">Няма избран профил. Моля, изберете профил и опитайте отново.</string>
     <string name="symbol_day">ден</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
