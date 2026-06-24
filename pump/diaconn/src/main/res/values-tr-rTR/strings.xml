@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Eşleştirmeyi Sıfırla</string>
     <string name="diaconn_pairing">Diaconn Pompa Eşleştirme</string>
     <string name="diaconn_g8_history_alarm">Alarmlar</string>
     <string name="diaconn_g8_history_basalhours">Bazal Saatler</string>
@@ -13,7 +12,6 @@
     <string name="largetimediff">Büyük zaman farkı:\nPompadaki süre 1,5 saatten fazla kapalı.\nLütfen zamanı pompada manuel olarak ayarlayın ve pompadan geçmişi okumanın beklenmeyen davranışlara neden olmadığından emin olun.\nMümkünse zamanı değiştirmeden önce geçmişi kaldırın veya son yanlış geçmiş girişinden sonra bir DIA için kapalı döngüyü devre dışı bırakın.</string>
     <string name="approachingdailylimit">İnsülin günlük sınırına yaklaşıyor</string>
     <string name="startingbolus">Bolus gönderimini başlatma</string>
-    <string name="waitingforestimatedbolusend">Tahmini bolus sonu bekleniyor</string>
     <string name="stoppingtempbasal">Geçici bazal durdurma</string>
     <string name="settingtempbasal">Geçici bazal ayarı</string>
     <string name="settingextendedbolus">Yayma bolus ayarı</string>
@@ -31,7 +29,6 @@
     <string name="bolus_step">Bolus Adımı</string>
     <string name="basal_step">Bazal Adımı</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla eşleştirin!</string>
-    <string name="processinghistory">"Etkinlik İşleniyor "</string>
     <string name="diaconn_g8_history_tempbasal">Geçici Bazal</string>
     <string name="diaconng8_pump_settings">Diaconn pompa Ayarları</string>
     <string name="diaconn_g8_pumpalarm">Ses</string>
