@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="objectives_button_start">Začátek</string>
-    <string name="objectives_button_verify">Kontrola</string>
+    <string name="objectives_button_verify">Zkontrolovat</string>
     <string name="nth_objective">%1$d. cíl</string>
     <string name="objectivenotstarted">Výukový cíl %1$d nespuštěn</string>
     <string name="objectivenotfinished">Výukový cíl %1$d nedokončen</string>
