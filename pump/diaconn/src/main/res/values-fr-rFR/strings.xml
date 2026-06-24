@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Réinit. Appairage</string>
     <string name="diaconn_pairing">Appairage pompe Diaconn</string>
     <string name="diaconn_g8_history_alarm">Alarmes</string>
     <string name="diaconn_g8_history_basalhours">Heures Basal</string>
@@ -14,7 +13,6 @@
     <string name="largetimedifftitle">Différence horaire importante</string>
     <string name="approachingdailylimit">Limite quotidienne d\'insuline proche</string>
     <string name="startingbolus">Injection du bolus démarrée</string>
-    <string name="waitingforestimatedbolusend">En attente de la fin du bolus estimé</string>
     <string name="gettingbolusstatus">Obtenir l\'état du bolus</string>
     <string name="stoppingtempbasal">Arrêter basal temp</string>
     <string name="settingtempbasal">Définir basal temp</string>
@@ -33,7 +31,6 @@
     <string name="bolus_step">Incrément Bolus</string>
     <string name="basal_step">Incrément Basal</string>
     <string name="pairfirst">Veuillez appairer votre pompe avec votre téléphone !</string>
-    <string name="processinghistory">"Traitement d'événement "</string>
     <string name="diaconn_g8_history_tempbasal">Basal Temp.</string>
     <string name="diaconng8_pump_settings">Paramètres pompe Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Son</string>
