@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">Error al actualizar el perfil basal</string>
     <string name="no_valid_basal_rate">No se leyó una tasa basal válida de la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
-    <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
     <string name="loop_disabled_by_user">Lazo deshabilitado por el usuario</string>
     <string name="event_type">Tipo de evento</string>
     <string name="mgdl">mg/dL</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">Elija uno. Solo puede haber uno activo a la vez</string>
     <string name="configbuilder_pick_many_hint">Seleccione todas las opciones que correspondan</string>
     <string name="configbuilder_no_selection_warning">No se ha seleccionado ningún complemento en esta categoría</string>
-    <string name="simple_mode">Modo simple</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
     <string name="no_compose_preferences">No hay preferencias disponibles para este complemento</string>
-    <string name="plugin_no_preferences">El complemento no admite preferencias</string>
     <string name="confirm_password_hint">Confirmar la contraseña</string>
     <string name="confirm_pin_hint">Confirmar PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">Silenciar</string>
     <string name="success">Exito</string>
     <string name="advanced_settings_title">Ajustes avanzados</string>
-    <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
     <string name="extended_bolus">Bolo extendido</string>
     <string name="paused">Pausado</string>
     <string name="running">Funcionando</string>
@@ -201,7 +197,6 @@
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
     <string name="percentage_label">Porcentaje</string>
-    <string name="timeshift_label">Desplazamiento temporal</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
@@ -265,7 +260,6 @@
     <string name="basalprofilenotaligned">Valores basales no alineados a las horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor basal cambiado al valor mínimo soportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor basal reemplazado por el valor máximo soportado: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -368,7 +362,6 @@
     <string name="scene_management_desc">Crear, editar y gestionar escenas</string>
     <string name="scene_action_count">%1$d acciones</string>
     <string name="scene_start_from_template">Empezar desde plantilla</string>
-    <string name="scene_editor_reason">Motivo</string>
     <string name="scene_editor_target">Objetivo</string>
     <string name="scene_editor_tt_preset">Ajuste preestablecido de objetivo temporal</string>
     <string name="scene_editor_no_tt_presets">Sin ajustes de objetivo temporal configurados</string>
@@ -399,10 +392,8 @@
     <string name="clientcontrol_action_cancel_temp_target">Cancelar objetivo temporal</string>
     <string name="clientcontrol_action_activate_scene">Activar escena %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Finalizar escena</string>
-    <string name="clientcontrol_action_activate_insulin">Activar insulina %1$s</string>
     <string name="clientcontrol_action_update_settings">Actualizar ajustes</string>
     <string name="clientcontrol_action_deliver_bolus">Administrar bolo</string>
-    <string name="clientcontrol_action_record_bolus">Registrar bolo</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un maestro</string>
     <string name="clientcontrol_fail_not_reachable">El maestro está fuera de línea</string>
@@ -485,7 +476,6 @@
     <string name="activation">Activación</string>
     <string name="temp_target_management">Objetivo temporal</string>
     <string name="revert_to_defaults">Restablecer valores predeterminados</string>
-    <string name="confirm_cancel_temp_target">¿Cancelar el objetivo temporal activo?</string>
     <string name="loop">Lazo</string>
     <string name="ns">NS</string>
     <string name="record">Registro</string>
@@ -671,8 +661,6 @@
     <string name="no_profile_selected">Ningún perfil seleccionado</string>
     <string name="missing_profile_name">Falta el nombre del perfil</string>
     <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
-    <string name="profile_activation_failed">Error al activar el perfil</string>
-    <string name="profile_switch_save_failed">No se pudo guardar el cambio de perfil. Por favor, inténtalo de nuevo</string>
     <string name="profile_basal_not_compatible_with_pump">La tasa basal no es compatible con la bomba actual y no se puede activar. Reduce el porcentaje o ajusta la tasa basal</string>
     <string name="profile_pump_incompatible_label">Límite de la bomba</string>
     <string name="error_in_ic_values">Error en los valores de Ratio de Hidratos (IC)</string>
@@ -753,12 +741,9 @@
     <string name="wizard_calculation">Cálculos</string>
     <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Eliminación máxima: %1$d g (carbohidratos activos)</string>
-    <string name="carb_equal_zero_no_action">Carbs = 0. ¡No se toma ningua acción!</string>
-    <string name="bolus_equal_zero_no_action">Bolo = 0. ¡No se ha realizado ninguna acción!</string>
     <string name="wizard_no_insulin_required">No se requiere insulina</string>
     <string name="wizard_no_actual_bg">¡No hay valor de glucosa reciente en el que basar el cálculo!</string>
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
-    <string name="wizard_no_cob">COB desconocido! ¿Valor de glucosa ausente o reincio reciente de la aplicación?</string>
     <string name="wizard_carbs_constraint">¡Violación de restricción de carbohidratos!</string>
     <string name="wizard_trend_detail">Tendencia 15 min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">¡Violación de restricciones de insulina!\nNo se puede entregar %1$.2fU</string>
@@ -1083,6 +1068,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PASOS</string>
-    <string name="remove_items">Eliminar elementos</string>
-    <string name="sort_items">Ordenar elementos</string>
 </resources>
