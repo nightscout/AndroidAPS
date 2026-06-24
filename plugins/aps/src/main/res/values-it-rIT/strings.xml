@@ -40,7 +40,6 @@
     <string name="maxvalueinpreferences">valore max nelle preferenze</string>
     <string name="hardlimit">limite fisso</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Picco</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
     <string name="pump_not_initialized">Micro non inizializzato!</string>
