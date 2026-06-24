@@ -63,6 +63,7 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">立即傳送</string>
     <string name="queue">佇列:</string>
+    <string name="status_label">狀態:</string>
     <string name="clear_log">清除日誌</string>
     <string name="full_sync">完全同步</string>
     <string name="full_sync_comment">完全同步？這可能需要很多小時，直到完成前您都不會看到新的資料在 NS 上。</string>
