@@ -99,7 +99,6 @@
     <string name="basalprofilenotaligned">Bazalne vrijednosti nisu usklađene sa satima: %1$s</string>
     <string name="minimalbasalvaluereplaced">Bazalna vrijednost zamijenjena minimalnom podržanom vrijednošću: %1$s</string>
     <string name="maximumbasalvaluereplaced">Bazalna vrijednost zamijenjena maksimalnom podržanom vrijednošću: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
