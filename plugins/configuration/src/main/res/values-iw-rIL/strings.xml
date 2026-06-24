@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
     <string name="syncinfotext">סנכרון נתונים לענן. ניתן לדלג על החלק הזה עכשיו אבל לא תוכלו לעבור משימות עד שתגדירו את קליינט הנייטסקאוט או Tidepool.</string>
-    <string name="status">סטטוס: </string>
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="profile">פרופיל</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
