@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">重置配對資訊？</string>
     <string name="diaconn_pairing">Diaconn 幫浦配對</string>
     <string name="diaconn_g8_history_alarm">警報</string>
     <string name="diaconn_g8_history_basalhours">基礎速率小時</string>
@@ -13,6 +14,7 @@
     <string name="largetimedifftitle">時間差異過大</string>
     <string name="approachingdailylimit">接近每日胰島素限制</string>
     <string name="startingbolus">開始注射</string>
+    <string name="waitingforbolusend">等待預估的注射結束</string>
     <string name="gettingbolusstatus">正在取得注射狀態</string>
     <string name="stoppingtempbasal">停止臨時基礎速率</string>
     <string name="settingtempbasal">設置臨時基礎速率</string>
@@ -31,6 +33,7 @@
     <string name="bolus_step">注射步進</string>
     <string name="basal_step">基礎步進</string>
     <string name="pairfirst">請先將幫浦與手機配對！</string>
+    <string name="processinghistory">處理事件</string>
     <string name="diaconn_g8_history_tempbasal">臨時基礎速率</string>
     <string name="diaconng8_pump_settings">Diaconn 幫浦設置</string>
     <string name="diaconn_g8_pumpalarm">警報音</string>
