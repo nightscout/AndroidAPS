@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Zrušiť párovanie</string>
     <string name="diaconn_pairing">Párovanie pumpy Diaconn</string>
     <string name="diaconn_g8_history_alarm">Alarmy</string>
     <string name="diaconn_g8_history_basalhours">Hodinové bazály</string>
@@ -14,7 +13,6 @@
     <string name="largetimedifftitle">Veľký rozdiel v čase</string>
     <string name="approachingdailylimit">Blíži sa denný limit inzulínu</string>
     <string name="startingbolus">Spúšťam podávanie bolusu</string>
-    <string name="waitingforestimatedbolusend">Čakanie na predpokladaný koniec bolusu</string>
     <string name="gettingbolusstatus">Načítavam stav bolusov</string>
     <string name="stoppingtempbasal">Zastavujem dočasný bazál</string>
     <string name="settingtempbasal">Nastavujem dočasný bazál</string>
@@ -33,7 +31,6 @@
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
     <string name="pairfirst">Prosím spárujte pumpu s telefónom!</string>
-    <string name="processinghistory">"Spracúvam udalosť "</string>
     <string name="diaconn_g8_history_tempbasal">Dočasný Bazál</string>
     <string name="diaconng8_pump_settings">Nastavenie pumpy Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Zvuk</string>
