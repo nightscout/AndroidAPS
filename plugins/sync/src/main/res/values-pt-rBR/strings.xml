@@ -9,14 +9,12 @@
     <string name="blocked_by_connectivity">Bloqueado pelas opções de conectividade</string>
     <string name="unsupported_ns_version">Versão não suportada do Nightscout</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSCLIENT não tem permissão de escrita. Senha da API errada?</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">Entregar agora</string>
     <string name="queue">Fila:</string>
-    <string name="status">Status:</string>
     <string name="clear_log">Limpar registros</string>
     <string name="full_sync">Sincronização completa</string>
     <string name="full_sync_comment">Sincronização completa? O processo pode levar muitas horas e durante esse período você não verá novos dados no NS.</string>
@@ -36,7 +34,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Enviar dados de glicemia para xDrip+</string>
     <string name="xdrip_status_settings">linha do estado do Xdrip+ (relógio)</string>
-    <string name="disabled_loop">Loop Desativado</string>
     <string name="xdrip_not_installed">xDrip+ não está instalado</string>
     <string name="calibration_sent">Calibração enviada para o xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Enviar dados de glicose e tratamentos para xDrip+. A fonte de dados \"xDrip+ Sync Seguidor\" deve ser selecionada e a aceitação de dados deve estar ativada nas configurações - Configurações entre apps - Aceitar Glucose/Tratamentos</string>
@@ -67,7 +64,6 @@
     <string name="pump_fetching_data">tentando buscar dados da Bomba.</string>
     <string name="pump_old_data">TDD: Dados ainda antigos! Não é possível carregar da bomba.</string>
     <string name="units_short">U</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nenhum perfil ativo definido!</string>
     <string name="target_only_aps_mode">Alvos só se aplicam no modo APS!</string>
