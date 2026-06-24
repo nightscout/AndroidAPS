@@ -14,7 +14,6 @@
     <string name="pump_setting_failed">Wpisanie ustawień użytkownika do pompy nie powiodło się!</string>
     <string name="pump_sync_error">Wystąpił błąd podczas synchronizacji historii z pompy, rekord został pominięty. Zajżyj to dialogu Terapia, aby sprawdzić, czy bolus został poprawnie zsynchronizowany. Wycisz to powiadomienie, a jeśli błąd nadal występuje zmień patch lub bazę pompy.</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Ostatnie połączenie</string>
     <string name="active_bolus_label">Aktywny bolus</string>
     <string name="pump_state_label">Status pompy</string>
     <string name="active_alarms_label">Aktywne alarmy</string>
