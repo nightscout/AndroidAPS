@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Error en actualitzar el perfil de basal</string>
     <string name="no_valid_basal_rate">No s\'ha pogut llegir de la bomba cap ràtio vàlida de basal</string>
     <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
-    <string name="loop_disabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
     <string name="event_type">Tipus d\'esdeveniment</string>
     <string name="save">Desar</string>
     <string name="snooze">Postposar</string>
@@ -38,7 +37,6 @@
     <string name="mute5min">Silenciar 5 minuts</string>
     <string name="mute">Silenciar</string>
     <string name="success">Correcte</string>
-    <string name="extendedbolusdeliveryerror">Error en lliurar bolus estès</string>
     <string name="extended_bolus">Bolus estès</string>
     <string name="paused">En pausa</string>
     <string name="tdd_total">TDD Total</string>
@@ -118,7 +116,6 @@
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valors basals no alineats amb les hores: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor basal reemplaçat pel màxim valor acceptat: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
