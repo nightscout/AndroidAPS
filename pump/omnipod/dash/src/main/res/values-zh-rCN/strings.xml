@@ -28,7 +28,6 @@
     <string name="omnipod_dash_not_enough_insulin">储药器中的胰岛素不足</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">未确认命令</string>
     <string name="requested_by_user" comment="26 characters max for translation">用户请求</string>
-    <string name="profile_set_ok">配置文件设置成功</string>
     <string name="suspend_delivery_is_unconfirmed">暂停输注尚未确认！请从 Omnipod 标签页手动刷新 Pod 状态，并在需要时恢复输注。</string>
     <string name="insulin_delivery_suspended">胰岛素输注已暂停</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Pod 上的时区与手机上的时区不同。基础速率不正确。请切换配置文件以解决问题</string>
