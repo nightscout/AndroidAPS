@@ -81,6 +81,8 @@ class SetupWizardE2ETest {
     fun setUp() {
         // Separate process → safe to wipe the app under test for a guaranteed-fresh wizard.
         device.executeShellCommand("pm clear $PKG")
+        // Start logcat fresh so the DB-insert assertions only match THIS run's records.
+        device.executeShellCommand("logcat -c")
         // Heads-up banners (e.g. the profile-switch "loop disabled" toast) must not cover the UI.
         device.executeShellCommand("settings put global heads_up_notifications_enabled 0")
         // Grant notifications up-front so the wizard's permission step is a no-op.
@@ -98,21 +100,25 @@ class SetupWizardE2ETest {
         deliverManualBolus(units = "1.0", confirmButtonLabel = "1.00 U")
         // IOB on the overview reflects the just-delivered bolus. The recompute can lag a few
         // seconds behind delivery, so allow a generous window (the value stays "1.00 U" within it).
-        assertVisible("1.00 U", timeout = 40_000)
+        assertVisible("1.00 U", timeout = 40_000)               // UI: IOB on the overview
+        assertDbInsert("Bolus", "amount=1\\.0,")                // DB: the bolus row was persisted
 
         deliverCarbs(grams = "20", confirmButtonLabel = "20 g")
         // Returning to the overview (active-profile chip present) confirms the carb dialog flow
         // completed; COB on the overview lags a full calc cycle, so it isn't asserted directly here.
-        assertVisible("LocalProfile1")
+        assertVisible("LocalProfile1")                          // UI: back on the overview
+        assertDbInsert("Carbs", "amount=20\\.0,")               // DB: the carbs row was persisted
 
         activateTempTarget()
         // The overview target chip switches from the profile range to the 90 mg/dL temp target,
         // shown as "90 (<minutes>')". Match the stable prefix since the countdown changes.
-        assertTextContains("90 (")
+        assertTextContains("90 (")                              // UI: target chip
+        assertDbInsert("TemporaryTarget")                       // DB: the temp target was persisted
 
         enableOpenLoop()
         // The chip now reflects open-loop mode ("Open Loop" / "Open loop"); match leniently.
-        assertContains("Open Loop")
+        assertContains("Open Loop")                             // UI: loop-mode chip
+        assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
     }
 
     // ---- wizard -------------------------------------------------------------------------------
@@ -174,6 +180,7 @@ class SetupWizardE2ETest {
         openVia("Do Profile Switch", expect = "Activate")
         clickLowest("Activate")       // the bottom action button, not the screen title
         click("OK")                   // confirmation
+        assertDbInsert("ProfileSwitch") // DB: the profile switch was persisted
         // The switch posts a "loop disabled" heads-up that can cover the top-left Close button, so
         // leave the Activate screen with Back (coordinate-independent) instead of tapping Close.
         pressBackUntil("Next")        // activate screen → wizard
@@ -268,6 +275,24 @@ class SetupWizardE2ETest {
         }
     }
 
+    /**
+     * Verifies a row was actually persisted, by asserting the persistence layer's insert log line
+     * (`Inserted <entity> …`, optionally also matching [valueFragment] on the same line). The app DB
+     * can't be queried from here (no on-device `sqlite3` + the test runs as a different uid), so this
+     * confirms the Room insert ran — which is what writes the row. logcat is cleared in [setUp], so
+     * only this run's inserts match.
+     */
+    private fun assertDbInsert(entity: String, valueFragment: String? = null, timeout: Long = STEP_TIMEOUT) {
+        val regex = "Inserted $entity\\b" + (valueFragment?.let { ".*$it" }.orEmpty())
+        val pattern = Pattern.compile(regex)
+        val end = SystemClock.uptimeMillis() + timeout
+        while (SystemClock.uptimeMillis() < end) {
+            if (pattern.matcher(device.executeShellCommand("logcat -d -s DATABASE:D")).find()) return
+            device.waitForIdle(IDLE_MS)
+        }
+        error("No DB insert matching /$regex/ in logcat within ${timeout}ms — '$entity' was not persisted")
+    }
+
     // ---- ui helpers ---------------------------------------------------------------------------
 
     private fun launchApp() {
@@ -338,7 +363,7 @@ class SetupWizardE2ETest {
     /** Clicks [label], retrying until [appears] is visible — for occasionally-flaky open transitions. */
     private fun clickUntilVisible(label: String, appears: BySelector, attempts: Int = 3) {
         repeat(attempts) {
-            click(label)
+            runCatching { click(label) } // tolerate a stale-exhausted click; the loop retries the open
             if (device.wait(Until.findObject(appears), STEP_TIMEOUT) != null) return
         }
         error("'$appears' never appeared after $attempts clicks on '$label'")
@@ -396,10 +421,11 @@ class SetupWizardE2ETest {
 
     /**
      * Re-runs [block] when a node goes stale mid-interaction. Compose recomposes frequently (e.g.
-     * the IME animating in), invalidating the AccessibilityNodeInfo between find and click; each
-     * retry re-finds a fresh node.
+     * the IME animating in, or a screen still transitioning), invalidating the AccessibilityNodeInfo
+     * between find and click; each retry re-finds a fresh node. Slow CI emulators (headless API-31
+     * swiftshader) recompose for longer, so this retries generously and settles between attempts.
      */
-    private inline fun withStaleRetry(times: Int = 4, block: () -> Unit) {
+    private inline fun withStaleRetry(times: Int = STALE_RETRIES, block: () -> Unit) {
         var last: StaleObjectException? = null
         repeat(times) {
             try {
@@ -407,10 +433,10 @@ class SetupWizardE2ETest {
                 return
             } catch (e: StaleObjectException) {
                 last = e
-                device.waitForIdle(IDLE_MS)
+                device.waitForIdle(STALE_SETTLE_MS) // let the recomposing screen settle before re-finding
             }
         }
-        throw last ?: IllegalStateException("withStaleRetry exhausted without an error")
+        throw last ?: IllegalStateException("withStaleRetry exhausted after $times attempts (node kept going stale)")
     }
 
     /** Scrolls the first scrollable container down until [label] appears, then returns it. */
@@ -500,6 +526,8 @@ class SetupWizardE2ETest {
         private const val IDLE_MS = 300L
         private const val MAX_SCROLLS = 12
         private const val SET_TEXT_ATTEMPTS = 3
+        private const val STALE_RETRIES = 10        // generous: slow CI emulators recompose for longer
+        private const val STALE_SETTLE_MS = 700L    // wait for the screen to settle between stale retries
         private val EDIT_TEXT: BySelector = By.clazz("android.widget.EditText")
     }
 }
