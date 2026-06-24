@@ -15,7 +15,6 @@
     <string name="pump_sync_error">Erreur lors de la synchronisation de l\'historique de la pompe, un enregistrement a été ignoré. Vérifiez l\'onglet de traitement pour vérifier si le bolus est correctement synchronisé. Mettez en veille et si l\'erreur continue d\'apparaître, changer le patch ou la pompe.</string>
     <string name="patch_reset_after_primed_error">Le Patch a été réinitialisé après l\'amorçage ! Supprimez le Patch et démarrez un nouveau Patch.</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Dernière connexion</string>
     <string name="active_bolus_label">Bolus actif</string>
     <string name="pump_state_label">État de la pompe</string>
     <string name="active_alarms_label">Alarmes actives</string>
