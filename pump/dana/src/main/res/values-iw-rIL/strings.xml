@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">מקבל סטטוס בזאלי זמני</string>
     <string name="gettingpumpsettings">מקבל הגדרות משאבה</string>
     <string name="gettingpumptime">מקבל תאריך ושעת המשאבה</string>
-    <string name="largetimedifftitle">הפרש זמן גדול</string>
     <string name="largetimediff">הפרש זמן גדול:\nשעון המשאבה לא מכוון במעל ל-1.5 שעות.\n נא להתאים את השעון במשאבה באופן ידני ולוודא כי קריאת ההיסטוריה מהמשאבה אינה גורמת להתנהגות בלתי צפויה.\nבמידת האפשר, מחקו את ההיסטוריה מהמשאבה לפני שתשנו את השעה או השביתו את הלולאה הסגורה למשך פעילות אינסולין (DIA) לאחר רשומת ההיסטוריה השגויה האחרונה אך לפחות DIA אחד מעכשיו.</string>
     <string name="pairfirst">נא לצמד את המשאבה עם הטלפון שלכם!</string>
     <string name="approachingdailylimit">מתקרב למגבלת האינסולין היומית</string>
