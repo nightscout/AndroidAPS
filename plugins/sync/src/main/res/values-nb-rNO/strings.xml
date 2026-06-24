@@ -10,7 +10,6 @@
     <string name="no_connectivity">Ingen internettforbindelse</string>
     <string name="unsupported_ns_version">Versjonen av Nightscout støttes ikke</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSCLIENT har ingen skriverettighet. Feil API-nøkkel?</string>
     <string name="ns_client_v3_short_name">NSV3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Autoriserte klienter</string>
@@ -24,9 +23,6 @@
     <string name="authorized_clients_pending_expires_in">Sammenkoblingen utløper om %1$ss</string>
     <string name="authorized_clients_empty_title">Ingen autoriserte klienter</string>
     <string name="authorized_clients_empty_subtitle">Koble til en klientenhet for å la den sende signerte kommandoer til denne hovedenheten.</string>
-    <string name="authorized_clients_disabled_title">Klientstyring er deaktivert</string>
-    <string name="authorized_clients_disabled_subtitle">Aktiver klientstyring i innstillingene for å autorisere klientenheter til å sende signerte kommandoer til denne hovedenheten.</string>
-    <string name="authorized_clients_open_settings">Åpne innstillinger</string>
     <string name="authorized_clients_name_dialog_title">Ny klient</string>
     <string name="authorized_clients_name_placeholder">Enhetsnavn</string>
     <string name="authorized_clients_delete_dialog_title">Tilbakekalle tilgang?</string>
@@ -67,7 +63,7 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Lever nå</string>
     <string name="queue">Kø:</string>
-    <string name="status">Status:</string>
+    <string name="status_label">Status:</string>
     <string name="clear_log">Tøm logg</string>
     <string name="full_sync">Full synkronisering</string>
     <string name="full_sync_comment">Full synkronisering? Dette kan ta mange timer og du ser ikke nye data i NS før dette er ferdig.</string>
@@ -88,7 +84,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Send data til xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ avansert statuslinje</string>
-    <string name="disabled_loop">Loop deaktivert</string>
     <string name="xdrip_not_installed">xDrip+ ikke installert</string>
     <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Send data om glukose og behandling til xDrip+. Velg datakilde \"xDrip+ Sync Følger\" og aktiver mottak av data under Innstillinger - Inter-app innstillinger - Aksepter glukose/behandlinger</string>
@@ -135,7 +130,6 @@
     <string name="pump_fetching_data">prøver å lese data fra pumpen.</string>
     <string name="pump_old_data">TDD: Fortsatt gamle data! Kan ikke lese fra pumpe.</string>
     <string name="units_short">E</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
     <string name="target_only_aps_mode">Mål gjelder bare i APS-modus!</string>
@@ -162,18 +156,6 @@
     <string name="wear_action_loop_state_unauthorized">Vennligst prøv igjen.</string>
     <string name="wear_action_loop_state_invalid">Ugyldig loop-status forespurt</string>
     <string name="wear_action_running_mode_title">Kjøremodus</string>
-    <string name="wear_action_loop_state_changed_with_duration">%1$s\nVarighet: %2$d min</string>
-    <string name="wear_action_loop_state_now_closed">Lukket loop</string>
-    <string name="wear_action_loop_state_now_lgs">Stopp ved lavt BS</string>
-    <string name="wear_action_loop_state_now_open">Åpen loop</string>
-    <string name="wear_action_loop_state_now_suspended">Pause loop</string>
-    <string name="wear_action_loop_state_now_resumed">Gjenoppta loop</string>
-    <string name="wear_action_loop_state_now_disabled">Deaktiver loop</string>
-    <string name="wear_action_loop_state_now_pump_suspended">Pumpe pauset</string>
-    <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
-    <string name="wear_action_loop_state_now_invalid">Ugyldig</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Koble fra pumpen</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Koble til pumpen</string>
     <string name="garmin_request_key">Be om nøkkel</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS-kommunikasjon</string>
