@@ -28,7 +28,6 @@
     <string name="omnipod_dash_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrdený príkaz</string>
     <string name="requested_by_user" comment="26 characters max for translation">Požadované používateľom</string>
-    <string name="profile_set_ok">Profil nastavený úspešne</string>
     <string name="suspend_delivery_is_unconfirmed">Pozastavenie podávania inzulínu je nepotvrdené! Prosím aktualizujte stav Podu zo záložky Omnipod a ak je to potrebné, obnovte podávanie inzulínu.</string>
     <string name="insulin_delivery_suspended">Podávanie inzulínu je pozastavené</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Časové pásmo Podu je rozdielne s s časovým pásmom telefónu. Bazálna dávka je nesprávna. Pre nápravu prepnite profil</string>
