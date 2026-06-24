@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
     <string name="syncinfotext">Synchronizuj dane z chmurą. Możesz teraz pominąć ten krok, ale nie będziesz w stanie przejść zadań dopóki nie skonfigurujesz połączenia z Nightscout lub Tidepool.</string>
-    <string name="status">Status:</string>
     <string name="diawarning">Pamiętaj: nowe profile insuliny wymagają ustawienia DIA (czas działania insuliny) powyżej 5h. DIA między 5-6h na nowym profilu odpowiada 3h DIA na starych profilach insuliny.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Zmień profil</string>
