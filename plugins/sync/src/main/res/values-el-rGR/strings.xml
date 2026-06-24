@@ -9,14 +9,12 @@
     <string name="blocked_by_connectivity">Αποκλεισμός από τις επιλογές συνδεσιμότητας</string>
     <string name="unsupported_ns_version">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">Ο NSCLIENT δεν έχει άδεια εγγραφής. Λάθος κωδικός API;</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">Έγχυση τώρα</string>
     <string name="queue">Σειρά:</string>
-    <string name="status">Κατάσταση:</string>
     <string name="clear_log">Διαγραφή αρχείου καταγραφής</string>
     <string name="full_sync">Πλήρης συγχρονισμός</string>
     <string name="full_sync_comment">Πλήρης συγχρονισμός; Μπορεί να χρειαστούν πολλές ώρες και μέχρι να ολοκληρωθεί δε θα δείτε νέα δεδομένα στο NS.</string>
@@ -36,7 +34,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Αποστολή δεδομένων στο xDrip+</string>
     <string name="xdrip_status_settings">Γραμμή Κατάστασης xDrip+ Για Προχωρημένους</string>
-    <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
     <string name="xdrip_not_installed">xDrip+ μη εγκατεστημένο</string>
     <string name="calibration_sent">Το καλιμπράρισμα εστάλει στο xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Αποστολή δεδομένων γλυκόζης και θεραπειών στο xDrip +. Η πηγή δεδομένων \"συγχρονισμός xDrip+ Ακόλουθος\" πρέπει να επιλεγεί και η αποδοχή δεδομένων πρέπει να ενεργοποιηθεί στις Ρυθμίσεις - Ρυθμίσεις Inter-app - Αποδοχή Γλυκόζης/Θεραπειών</string>
@@ -67,7 +64,6 @@
     <string name="pump_fetching_data">προσπάθεια λήψης δεδομένων από την αντλία.</string>
     <string name="pump_old_data">TDD: Ακόμα είναι παλιά τα δεδομένα! Δεν μπορεί να φορτωθεί από την αντλία.</string>
     <string name="units_short">U</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">ω</string>
     <string name="no_active_profile">Μη ενεργή αλλαγή προφίλ!</string>
     <string name="target_only_aps_mode">Οι στόχοι ισχύουν μόνο στη λειτουργία APS!</string>
