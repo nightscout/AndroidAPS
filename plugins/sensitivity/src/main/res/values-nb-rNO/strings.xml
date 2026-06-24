@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_plugin_shortname">SENS</string>
     <string name="sensitivity_oref1">Sensitivitet Oref1</string>
     <string name="sensitivity_aaps">Sensitivitet AAPS</string>
     <string name="sensitivity_weighted_average">Sensitivitet vektet middelverdi</string>
