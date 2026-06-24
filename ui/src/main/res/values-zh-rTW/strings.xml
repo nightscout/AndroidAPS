@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">已套用碳水化合物限制</string>
     <string name="no_temp_basal_running">沒有正在執行的臨時基礎率</string>
-    <string name="temp_target_short">臨時目標</string>
     <string name="start_activity_tt">開始活動(臨時目標)</string>
     <string name="start_eating_soon_tt">即將開始用餐 (臨時目標)</string>
     <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">使用者個人檔案說明用於顯示男性、女性或兒童最常見的可用部位</string>
     <string name="site_management">部位管理設定檔</string>
     <string name="site_management_description">在此設定您要管理幫浦部位、CGM 部位，或兩者。此設定會在每次偵測到新的項目時，自動顯示部位管理對話視窗</string>
-    <string name="update_site_change">更新穿刺部位位置</string>
     <string name="edit_site">編輯</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">位置箭頭：%1$s</string>
@@ -146,7 +143,6 @@
     <string name="clientcontrol_pending_working_title">正在套用…</string>
     <string name="clientcontrol_pending_working_text">正在等候主控端確認…</string>
     <string name="clientcontrol_pending_rejected_title">未套用</string>
-    <string name="clientcontrol_pending_rejected_text">主控端無法套用此請求。</string>
     <string name="clientcontrol_pending_failed_format">%1$s 無法完成。
 %2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
@@ -155,7 +151,6 @@
     <string name="clientcontrol_pending_partial_format">%1$s was applied, but some actions couldn\'t be.
 Check the active state.</string>
     <string name="clientcontrol_pending_unconfirmed_title">無法確認</string>
-    <string name="clientcontrol_pending_unconfirmed_text">請求已送出，但主裝置未及時確認。可能已套用，也可能未套用 — 若同步回來，此畫面會更新。</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">已送出 %1$s，但未收到確認。
 %2$s
@@ -163,27 +158,13 @@ Check the active state.</string>
     <string name="clientcontrol_pending_stop_waiting">停止等待</string>
     <string name="a11y_add_new_insulin">新增胰島素</string>
     <string name="a11y_delete_current_insulin">刪除目前的胰島素</string>
-    <string name="activate_insulin_no_profile">未找到啟用中的設定檔</string>
-    <string name="activate_insulin_new_insulin">新的胰島素：%1$s</string>
-    <string name="activate_insulin_remaining">剩餘：%1$d 分鐘</string>
-    <string name="activate_insulin_profile_switch">將建立設定檔切換：\n\n<b>%1$s</b></string>
     <string name="load_peak_from">載入峰值來源</string>
     <string name="cannot_delete_last_insulin">無法刪除最後一個胰島素</string>
     <string name="cannot_delete_active_insulin">無法刪除目前使用中的胰島素</string>
     <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
-    <string name="timeshift_label">時間偏移</string>
     <string name="percentage_label">百分比</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">暫停循環 1 小時</string>
-    <string name="suspendloopfor2h">暫停循環 2 小時</string>
-    <string name="suspendloopfor3h">暫停循環 3 小時</string>
-    <string name="suspendloopfor10h">暫停循環 10 小時</string>
     <string name="disconnectpump">中斷幫浦連線</string>
-    <string name="disconnectpumpfor15m">中斷幫浦連線 15 分鐘</string>
-    <string name="disconnectpumpfor30m">中斷幫浦連線 30 分鐘</string>
-    <string name="disconnectpumpfor1h">中斷幫浦連線 1 小時</string>
-    <string name="disconnectpumpfor2h">中斷幫浦連線 2 小時</string>
-    <string name="disconnectpumpfor3h">中斷幫浦連線 3 小時</string>
     <string name="resume">恢復</string>
     <string name="reconnect">重新連線幫浦</string>
     <string name="duration15m">15 分鐘</string>
@@ -316,8 +297,6 @@ Check the active state.</string>
     <string name="quick_launch_no_profiles">請在本機設定檔中建立設定檔，以便在此使用</string>
     <string name="quick_launch_edit_profile_preset">編輯設定檔預設</string>
     <string name="quick_launch_profile_permanent">永久</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d 分鐘</string>
     <string name="select_arrow">選擇箭頭</string>
     <string name="loop_accept_nav_label">循環</string>
     <string name="loop_accept_set_basal_question">接受新的臨時基礎率：</string>
