@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Constrângere de carbohidrați aplicată</string>
     <string name="no_temp_basal_running">Nicio bazală temporară în funcțiune</string>
-    <string name="temp_target_short">Țintă temporară</string>
     <string name="start_activity_tt">Start Țintă Temporară activitate</string>
     <string name="start_eating_soon_tt">Start Țintă Temporară mănânc-în-curând</string>
     <string name="start_hypo_tt">Start Țintă Temporară hipoglicemie</string>
@@ -49,7 +47,6 @@
     <string name="user_profile_description">Descrierea profilului utilizatorului este utilizată pentru a afișa cele mai frecvente locuri de inserție disponibile pentru bărbați, femei sau copii</string>
     <string name="site_management">Profil Administrare Loc Inserție</string>
     <string name="site_management_description">Veți seta aici dacă doriți să gestionați locul de inserție al pompei, al CGM-ului sau ambele. Această setare va fi folosită pentru a trimite automat dialogul de administrare al locului de inserție la fiecare intrare detectată nouă</string>
-    <string name="update_site_change">Actualizați locul de inserție</string>
     <string name="edit_site">Editați</string>
     <string name="record_site_location">Locul de inserție: %1$s</string>
     <string name="record_site_arrow">Săgeata locului de inserție: %1$s</string>
@@ -143,27 +140,13 @@
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
     <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
-    <string name="activate_insulin_no_profile">Niciun profil activ găsit</string>
-    <string name="activate_insulin_new_insulin">Noua insulină: %1$s</string>
-    <string name="activate_insulin_remaining">Rămase: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Schimbarea profilului va fi creată:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Încărcați maxim de la</string>
     <string name="cannot_delete_last_insulin">Nu se poate șterge ultima insulină</string>
     <string name="cannot_delete_active_insulin">Nu se poate șterge insulina activă</string>
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
-    <string name="timeshift_label">Decalare temporală</string>
     <string name="percentage_label">Procentaj</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspendați bucla pentru 1h</string>
-    <string name="suspendloopfor2h">Suspendați bucla pentru 2h</string>
-    <string name="suspendloopfor3h">Suspendați bucla pentru 3h</string>
-    <string name="suspendloopfor10h">Suspendați bucla pentru 10h</string>
     <string name="disconnectpump">Deconectați pompa</string>
-    <string name="disconnectpumpfor15m">Deconectați pompa pentru 15 minute</string>
-    <string name="disconnectpumpfor30m">Deconectați pompa pentru 30 minute</string>
-    <string name="disconnectpumpfor1h">Deconectați pompa pentru 1h</string>
-    <string name="disconnectpumpfor2h">Deconectați pompa pentru 2h</string>
-    <string name="disconnectpumpfor3h">Deconectați pompa pentru 3h</string>
     <string name="resume">Restabiliți</string>
     <string name="reconnect">Reconectați pompa</string>
     <string name="duration15m">15 minute</string>
@@ -296,8 +279,6 @@
     <string name="quick_launch_no_profiles">Creați profiluri în Profilul Local pentru a le folosi aici</string>
     <string name="quick_launch_edit_profile_preset">Editați presetarea profilului</string>
     <string name="quick_launch_profile_permanent">Permanent</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Selectați Săgeată</string>
     <string name="loop_accept_nav_label">Buclă</string>
     <string name="loop_accept_set_basal_question">Acceptați noua bazală temporară:</string>
