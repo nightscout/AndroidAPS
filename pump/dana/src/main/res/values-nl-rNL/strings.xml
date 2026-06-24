@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Ophalen van tijdelijke basaal status</string>
     <string name="gettingpumpsettings">Pomp instellingen ophalen</string>
     <string name="gettingpumptime">Pomp tijd ophalen</string>
-    <string name="largetimedifftitle">Groot tijdsverschil</string>
     <string name="largetimediff">Groot tijdsverschil:\nDe tijd in de pomp wijkt meer dan 1,5 uur af.\nStel de tijd handmatig in op de pomp en zorg ervoor dat het uitlezen van de geschiedenis van de pomp geen onverwacht gedrag veroorzaakt.\nIndien mogelijk verwijder de geschiedenis uit de pomp pomp voor het wijzigen van de tijd of schakel de Closed Loop uit voor één DIA na de laatste verkeerde invoer van de geschiedenis, maar vanaf nu minstens één DIA.</string>
     <string name="pairfirst">Aub de pomp koppelen met je telefoon!</string>
     <string name="approachingdailylimit">Insuline daglimiet bereikt</string>
