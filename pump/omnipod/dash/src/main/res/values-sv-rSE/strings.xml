@@ -23,7 +23,6 @@
     <string name="omnipod_dash_not_enough_insulin">Inte tillräckligt med insulin kvar i reservoaren</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Obekräftat kommando</string>
     <string name="requested_by_user" comment="26 characters max for translation">Begärt av användare</string>
-    <string name="profile_set_ok">Profilen sparad</string>
     <string name="suspend_delivery_is_unconfirmed">Avstängd leverans är ej bekräftad! Vänligen uppdatera Podstatus manuellt från Omnipod-fliken och återuppta leverans vid behov.</string>
     <string name="insulin_delivery_suspended">Insulinleverans är pausad</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Podden tidszon skiljer sig från telefonens. Basaldos är felaktig. Gör ett profilbyte för att åtgärda</string>
