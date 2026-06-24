@@ -11,7 +11,6 @@
     <string name="patch_not_active">Patch가 활성화되지 않음</string>
     <string name="pump_setting_failed">펌프에 사용자 설정 실패함!</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">마지막 연결</string>
     <string name="active_bolus_label">활성 bolus</string>
     <string name="pump_state_label">펌프 상태</string>
     <string name="active_alarms_label">알람 활성화</string>
