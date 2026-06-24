@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automatisering</string>
-    <string name="automation_description">Brugerdefinerede automatiseringsopgaver</string>
     <string name="automation_missing_task_name">Indtast et opgavenavn.</string>
     <string name="automation_missing_trigger">Angiv mindst én udløser.</string>
     <string name="automation_missing_action">Angiv venligst mindst én handling.</string>
@@ -17,7 +15,6 @@
     <string name="alreadyset">Allerede sat</string>
     <string name="profilepercentage">Profil procent</string>
     <string name="startprofileforever">Start profil %1$d%%</string>
-    <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS til alle numre</string>
     <string name="sendsmsactiontext">Send SMS med tekst</string>
