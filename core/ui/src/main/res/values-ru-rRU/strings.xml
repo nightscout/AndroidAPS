@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">не удалось обновить базальный профиль</string>
     <string name="no_valid_basal_rate">На помпе не найдены валидные записи о базалe</string>
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
-    <string name="loop_disabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
     <string name="event_type">тип события</string>
     <string name="save">Сохранить</string>
     <string name="snooze">Убрать оповещение</string>
@@ -39,7 +38,6 @@
     <string name="mute">Отключить звук</string>
     <string name="success">Успешно</string>
     <string name="advanced_settings_title">Дополнительные настройки</string>
-    <string name="extendedbolusdeliveryerror">Ошибка подачи пролонгированного болюса</string>
     <string name="extended_bolus">Пролонгированный болюс</string>
     <string name="paused">На паузе</string>
     <string name="tdd_total">Суммарный суточный инсулин TDD</string>
@@ -165,7 +163,6 @@
     <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
     <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>
     <string name="maximumbasalvaluereplaced">Значение базала заменено максимальной поддерживаемой величиной: %1$s</string>
-    <string name="profile_per_unit">/ед</string>
     <string name="profile_ins_units_per_hour">ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
@@ -434,10 +431,8 @@
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
     <string name="advisoralarm">Напомнить о еде</string>
     <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
-    <string name="carb_equal_zero_no_action">Carbs = 0. Никаких мер не принято!</string>
     <string name="wizard_no_actual_bg">Нет данных ГК для основы расчета!</string>
     <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
-    <string name="wizard_no_cob">Неизвестный COB! Отсутствуют данные ГК или приложения недавно перезапущено?</string>
     <string name="wizard_carbs_constraint">Нарушено ограничение по углеводам!</string>
     <string name="wizard_constraint_bolus_size">Нарушено ограничение по инсулину!\nНевозможно подать %1$.2fед</string>
     <string name="wizard_pump_not_available">Нет помпы!</string>
