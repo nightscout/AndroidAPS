@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Αποτυχία αναβάθμισης βασικού προφίλ</string>
     <string name="no_valid_basal_rate">Διαβάζεται από την αντλία μη έγκυρος βασικός ρυθμός</string>
     <string name="limiting_iob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
-    <string name="loop_disabled">ΤΟ ΚΥΚΛΩΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΘΗΚΕ ΑΠΟ ΠΕΡΙΟΡΙΣΜΟΥΣ</string>
     <string name="event_type">Τύπος Συμβάντος</string>
     <string name="save">Αποθήκευση</string>
     <string name="snooze">Αναβολή</string>
@@ -39,7 +38,6 @@
     <string name="mute">Σίγαση</string>
     <string name="success">Επιτυχία</string>
     <string name="advanced_settings_title">Ρυθμίσεις για Προχωρημένους</string>
-    <string name="extendedbolusdeliveryerror">Σφάλμα έγχυσης εκτεταμένου bolus</string>
     <string name="extended_bolus">Εκτεταμένο bolus</string>
     <string name="paused">Παύση</string>
     <string name="tdd_total">TDD σύνολο</string>
@@ -143,7 +141,6 @@
     <string name="basalprofilenotaligned">Οι τιμές του βασικού ρυθμού δεν αντιστοιχούν σε ώρες: %1$s</string>
     <string name="minimalbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την ελάχιστη υποστηριζόμενη τιμή: %1$s</string>
     <string name="maximumbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την μέγιστη υποστηριζόμενη τιμή: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -364,7 +361,6 @@
     <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
     <string name="wizard_no_actual_bg">Δεν υπάρχει πρόσφατή γλυκόζη αίματος για να γίνει υπολογισμός!</string>
     <string name="wizard_no_active_profile">Δεν ορίστηκε ενεργό προφίλ!</string>
-    <string name="wizard_no_cob">Άγνωστο COB! Λείπει Η ανάγνωση γλυκόζης αίματος ή έγινε πρόσφατα επανεκκίνηση της εφαρμογής;</string>
     <string name="wizard_carbs_constraint">Παραβίαση περιορισμού υδατανθράκων!</string>
     <string name="wizard_constraint_bolus_size">Παραβίαση περιορισμού ινσουλίνης!\nΔεν μπορούν να χορηγηθούν %1$.2fU</string>
     <string name="wizard_pump_not_available">Δεν υπάρχει διαθέσιμη αντλία!</string>
