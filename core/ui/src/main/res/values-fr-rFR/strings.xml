@@ -29,7 +29,6 @@
     <string name="failed_update_basal_profile">La mise à jour du profil basal a échouée</string>
     <string name="no_valid_basal_rate">Aucun débit basal valide lu depuis la pompe</string>
     <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
-    <string name="loop_disabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
     <string name="loop_disabled_by_user">Boucle désactivée par l\'utilisateur</string>
     <string name="event_type">Type d\'évènement</string>
     <string name="save">Enregistrer</string>
@@ -51,11 +50,9 @@
     <string name="configbuilder_pick_one_hint">Choisissez-en un. Un seul peut être actif à la fois.</string>
     <string name="configbuilder_pick_many_hint">Choisissez toutes les options qui s\'appliquent.</string>
     <string name="configbuilder_no_selection_warning">Aucun plugin n\'est sélectionné dans cette catégorie.</string>
-    <string name="simple_mode">Mode simple</string>
     <string name="expand">Développer</string>
     <string name="collapse">Replier</string>
     <string name="no_compose_preferences">Pas de préférence disponibles pour ce plugin</string>
-    <string name="plugin_no_preferences">Le plugin ne prend pas en charge les préférences</string>
     <string name="confirm_password_hint">Confirmez le mot de passe</string>
     <string name="confirm_pin_hint">Confirmer le code PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s %2$s (%3$s – %4$s)</string>
@@ -88,7 +85,6 @@
     <string name="mute">Muet</string>
     <string name="success">Succès</string>
     <string name="advanced_settings_title">Paramètres Avancés</string>
-    <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
     <string name="extended_bolus">Bolus étendu</string>
     <string name="paused">En pause</string>
     <string name="running">En cours d\'exécution</string>
@@ -247,7 +243,6 @@
     <string name="basalprofilenotaligned">Valeurs des débits de basal non alignées sur des heures: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %1$s</string>
     <string name="maximumbasalvaluereplaced">Valeur de basal remplacée par la valeur maximale autorisée : %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -346,7 +341,6 @@
     <string name="scene_management_desc">Créer, éditer et gérer les scénarii</string>
     <string name="scene_action_count">%1$d actions</string>
     <string name="scene_start_from_template">Créer à partir d\'un modèle</string>
-    <string name="scene_editor_reason">Raison</string>
     <string name="scene_editor_target">Cible</string>
     <string name="scene_editor_tt_preset">Préréglage CT</string>
     <string name="scene_editor_no_tt_presets">Aucun préréglage CT défini</string>
@@ -431,7 +425,6 @@
     <string name="activation">Activation</string>
     <string name="temp_target_management">Cible Temp</string>
     <string name="revert_to_defaults">Rétablir aux valeurs par défaut</string>
-    <string name="confirm_cancel_temp_target">Annuler Cible Temporaire active ?</string>
     <string name="loop">Boucle</string>
     <string name="ns">NS</string>
     <string name="record">Enregistrement</string>
@@ -616,8 +609,6 @@
     <string name="no_profile_selected">Aucun profil séléctionné</string>
     <string name="missing_profile_name">Nom de profil manquant</string>
     <string name="profile_not_saved_activate">Profil non enregistré. Veuillez enregistrer le profil avant de l\'activer.</string>
-    <string name="profile_activation_failed">L\'activation du profil a échoué</string>
-    <string name="profile_switch_save_failed">Le changement de profil n\'a pas pu être enregistré. Veuillez réessayer.</string>
     <string name="profile_basal_not_compatible_with_pump">Le débit de base n\'est pas compatible avec la pompe actuelle et ne peut pas être activé. Réduisez le pourcentage ou ajustez le débit de basel.</string>
     <string name="profile_pump_incompatible_label">Limite de la pompe</string>
     <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
@@ -697,12 +688,9 @@
     <string name="wizard_include_cob">Inclure GA</string>
     <string name="wizard_calculation">Calcul</string>
     <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
-    <string name="carb_equal_zero_no_action">Glucides = 0. Aucune action !</string>
-    <string name="bolus_equal_zero_no_action">Bolus = 0. Aucune action !</string>
     <string name="wizard_no_insulin_required">Pas d\'insuline requise</string>
     <string name="wizard_no_actual_bg">Pas de glycémie récente pour calculer !</string>
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
-    <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
     <string name="wizard_carbs_constraint">Violation de contrainte des glucides!</string>
     <string name="wizard_trend_detail">Tendance 15 min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Violation de contrainte d\'insuline!\nImpossible de délivrer %1$.2fU</string>
@@ -1024,6 +1012,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">V_SI</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAS</string>
-    <string name="remove_items">Supprimer les entrées</string>
-    <string name="sort_items">Trier les entrées</string>
 </resources>
