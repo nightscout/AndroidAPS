@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Brug værdien af den største mængde mad du plejer at indtage\n</string>
     <string name="syncinfotext">Synkronisér data til skyen. Du kan springe denne del nu, men du vil ikke være i stand til at passere mål, før du opretter en Nightscout- eller Tidepool-klient.</string>
-    <string name="status">Status:</string>
     <string name="diawarning">Husk: nye insulinprofiler kræver DIA mindst 5 timer. DIA 5-6 timer på ny profil er lig med DIA 3 timer på gamle insulinprofiler.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Skift profil</string>
