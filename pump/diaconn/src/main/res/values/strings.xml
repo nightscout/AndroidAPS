@@ -1,5 +1,5 @@
 <resources>
-    <string name="resetpairing">Reset Pairing</string>
+    <string name="resetpairing">Reset pairing information?</string>
     <string name="diaconn_pairing">Diaconn Pump Pairing</string>
     <string name="diaconn_g8_history_alarm">Alarms</string>
     <string name="diaconn_g8_history_basalhours">Basal Hours</string>
@@ -13,7 +13,7 @@
     <string name="largetimedifftitle">Large time difference</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
     <string name="startingbolus">Starting bolus delivery</string>
-    <string name="waitingforestimatedbolusend">Waiting for estimated bolus end</string>
+    <string name="waitingforbolusend">Waiting for estimated bolus end</string>
     <string name="gettingbolusstatus">Getting bolus status</string>
     <string name="stoppingtempbasal">Stopping temp basal</string>
     <string name="settingtempbasal">Setting temp basal</string>
@@ -33,7 +33,7 @@
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
-    <string name="processinghistory">"Processing Event "</string>
+    <string name="processinghistory">Processing event</string>
     <string name="diaconn_g8_history_tempbasal">Temp Basal</string>
     <string name="diaconng8_pump_settings">Diaconn pump Settings</string>
     <string name="diaconn_g8_pumpalarm">Sound</string>
