@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automatización</string>
-    <string name="automation_description">Tareas de automatización definidas por el usuario</string>
     <string name="automation_enabled">Activado</string>
     <string name="automation_read_only">Solo lectura</string>
     <string name="automation_new_rule">Nueva regla</string>
@@ -54,7 +52,6 @@
     <string name="alreadyset">Set listo</string>
     <string name="profilepercentage">Porcentaje de perfil</string>
     <string name="startprofileforever">Iniciar el perfil %1$d%%</string>
-    <string name="percent_u">Porcentaje [%]:</string>
     <string name="sendsmsactionlabel">Enviar a %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS a todos los números</string>
     <string name="sendsmsactiontext">Mandar mensaje SMS</string>
