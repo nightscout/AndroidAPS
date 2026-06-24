@@ -40,7 +40,7 @@
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
     <string name="hardlimit">hard begrensning</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Topp</string>
+    <string name="autotune_peak">Topp</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">En bolus er gitt i løpet av de siste 3 minuttene, dropper SMB</string>
     <string name="pump_not_initialized">Pumpen er ikke initialisert!</string>
