@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">Приложено ограничение на въглехидрати</string>
     <string name="no_temp_basal_running">Няма временен базал</string>
-    <string name="temp_target_short">Вр.цел</string>
     <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
     <string name="start_eating_soon_tt">Старт на вр. цел за хранене</string>
     <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">Потребителският профил се използва за най-честите места при мъж, жена или дете</string>
     <string name="site_management">Профил на локаците</string>
     <string name="site_management_description">Тук ще изберете ако искате да проследявате местата на помпа, сензор или и двете. Това ще ви пита за мястото при всяка смяна</string>
-    <string name="update_site_change">Смени локация</string>
     <string name="edit_site">Редакция</string>
     <string name="record_site_location">Локация: %1$s</string>
     <string name="record_site_arrow">Локация стрелка: %1$s</string>
@@ -146,40 +143,24 @@
     <string name="clientcontrol_pending_working_title">Прилагане…</string>
     <string name="clientcontrol_pending_working_text">Чакам потвърждение от главния…</string>
     <string name="clientcontrol_pending_rejected_title">НЕ е приложено. Отказан</string>
-    <string name="clientcontrol_pending_rejected_text">Главният телефон не иска да приложи тази промяна.</string>
     <string name="clientcontrol_pending_failed_format">%1$s не може да приложи.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Приложено частично</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">%1$s е приложен, но не с всички промени.\nПроверете активните промени.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Не може да бъде потвърдено вече</string>
-    <string name="clientcontrol_pending_unconfirmed_text">Искането е изпратено но главният не е потвърдил навреме. Може да не е било приложено. Този екран ще се обнови при следваща синхронизация.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s е изпратено но не се върна потвърждение.\n%2$s\nЩе се появи тук при потвърждение от главния телефон.</string>
     <string name="clientcontrol_pending_stop_waiting">Спри да чакаш</string>
     <string name="a11y_add_new_insulin">Добавяне на нов инсулин</string>
     <string name="a11y_delete_current_insulin">Изтриване на текущия инсулин</string>
-    <string name="activate_insulin_no_profile">Няма активен профили</string>
-    <string name="activate_insulin_new_insulin">Нов инсулин: %1$s</string>
-    <string name="activate_insulin_remaining">Остават: %1$d мин</string>
-    <string name="activate_insulin_profile_switch">Смяна на профил ще бъде създадена:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Избери пик от</string>
     <string name="cannot_delete_last_insulin">Не мога да изтрия последния инсулин</string>
     <string name="cannot_delete_active_insulin">Не мога да изтрия текущия инсулин</string>
     <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
-    <string name="timeshift_label">Време на отместване</string>
     <string name="percentage_label">% от профила</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Изключи APS за 1ч</string>
-    <string name="suspendloopfor2h">Изключи APS за 2ч</string>
-    <string name="suspendloopfor3h">Изключи APS за 3ч</string>
-    <string name="suspendloopfor10h">Изключи APS за 10 ч</string>
     <string name="disconnectpump">Изключване на помпата</string>
-    <string name="disconnectpumpfor15m">Изключи помпата за 15 мин.</string>
-    <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
-    <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
-    <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>
-    <string name="disconnectpumpfor3h">Изключи помпата за 3 ч</string>
     <string name="resume">Възстанови</string>
     <string name="reconnect">Свържи помпа</string>
     <string name="duration15m">15 мин</string>
@@ -312,8 +293,6 @@
     <string name="quick_launch_no_profiles">Създайте профили в локален профил за да ги използвате тук</string>
     <string name="quick_launch_edit_profile_preset">Редактиране на профил</string>
     <string name="quick_launch_profile_permanent">Постоянно</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d мин</string>
     <string name="select_arrow">Изберете стрелка</string>
     <string name="loop_accept_nav_label">Кръг</string>
     <string name="loop_accept_set_basal_question">Приложи нов временен базал:</string>
