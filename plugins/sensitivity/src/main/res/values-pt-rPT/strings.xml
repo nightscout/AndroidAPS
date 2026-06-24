@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivity_oref1">Sensibilidade Oref1</string>
     <string name="sensitivity_aaps">Sensibilidade AAPS</string>
     <string name="sensitivity_weighted_average">Média ponderada da Sensibilidade</string>
