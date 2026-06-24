@@ -26,7 +26,6 @@
     <string name="equil_change">Pakeisti pompą</string>
     <string name="equil_change_content">Atjunkite pompą nuo jos pagrindo.</string>
     <string name="equil_unpair_alert">Ar tikrai norite atsisakyti kontrolės per %1$s?</string>
-    <string name="equil_devices_number_hint">Įrenginio numeris</string>
     <string name="equil_record_basal">Valandinė bazė  %1$s vv/val.</string>
     <string name="equil_record_basal_temp">Laikina valandinė bazė %1$s vv/val.</string>
     <string name="equil_record_bolus">Bolusas %1$s vv</string>
@@ -134,12 +133,10 @@
     <string name="equil_hint1">Po to, kai uždėsite pompą ant pagrindo plokštės, pasirinkite, ar norite išstumti orą iš įvestos adatos.</string>
     <string name="equil_unbind">Atsieti įrenginį</string>
     <string name="equil_assemble">Prašome surinkti pompą, pripildytą rezervuarą ir įkrautą bateriją</string>
-    <string name="equil_devices_number">Įveskite naujos pompos ID</string>
     <string name="equil_insert">Prašome užpildyti rezervuarą iki kol ant adatos galo pasirodys insulino lašelis</string>
     <string name="equil_insert2">Pompa neturi būti ant pompos pagrindo.</string>
     <string name="equil_attach">Prijunkite pompą prie jos pagrindo</string>
     <string name="equil_hint2">Užpildyti kaniulę</string>
     <string name="equil_pump_updated">Pompa atnaujinta</string>
     <string name="equil_replace_reservoir">Rezervuaras tuščias. Pakeiskite rezervuarą</string>
-    <string name="error_mustbe6hexadidits">Turi būti 6 simboliai iš ABCDEF0123456789</string>
 </resources>
