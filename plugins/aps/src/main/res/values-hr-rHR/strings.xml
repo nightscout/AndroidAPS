@@ -14,7 +14,6 @@
     <string name="openapsma_request_label">Zahtjev</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
-    <string name="insulin_peak">Peak</string>
     <!--    Loop -->
     <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
     <!-- Autotune -->
