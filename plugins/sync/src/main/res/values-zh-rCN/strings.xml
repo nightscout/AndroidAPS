@@ -10,7 +10,6 @@
     <string name="no_connectivity">没有连线</string>
     <string name="unsupported_ns_version">不支持的 Nightscout 版本</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSCLIENT 没有写权限。可能是NS的 API 密钥输错了？</string>
     <string name="ns_client_v3_short_name">NSV3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">已授权的客户端</string>
@@ -24,9 +23,6 @@
     <string name="authorized_clients_pending_expires_in">配对将在 %1$s 秒后过期</string>
     <string name="authorized_clients_empty_title">没有已授权的客户端</string>
     <string name="authorized_clients_empty_subtitle">配对客户端设备，以允许其向此主机发送已签名的命令。</string>
-    <string name="authorized_clients_disabled_title">客户端控制已关闭</string>
-    <string name="authorized_clients_disabled_subtitle">在设置中开启客户端控制，以授权客户端设备向此主机发送已签名的命令。</string>
-    <string name="authorized_clients_open_settings">打开设置</string>
     <string name="authorized_clients_name_dialog_title">新客户端</string>
     <string name="authorized_clients_name_placeholder">设备名称</string>
     <string name="authorized_clients_delete_dialog_title">撤销访问权限？</string>
@@ -67,7 +63,6 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">立即输注</string>
     <string name="queue">队列：</string>
-    <string name="status">状态:</string>
     <string name="clear_log">清除日志</string>
     <string name="full_sync">完全同步</string>
     <string name="full_sync_comment">完全同步数据? 这可能需要很长时间，在完成以前你将无法在NS中看到新数据。</string>
@@ -88,7 +83,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">发送数据到 xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ 状态行高级设置</string>
-    <string name="disabled_loop">闭环禁用</string>
     <string name="xdrip_not_installed">没有安装xDrip+</string>
     <string name="calibration_sent">校准发送到 xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">将血糖和治疗数据发送至 xDrip+。必须选择数据源“xDrip+ Sync Follower”，并在“设置”-“应用间设置”-“接受血糖/治疗”中启用数据接收功能</string>
@@ -135,7 +129,6 @@
     <string name="pump_fetching_data">正在尝试从胰岛素泵获取数据。</string>
     <string name="pump_old_data">TDD：仍然是旧数据！无法从泵加载。</string>
     <string name="units_short">单位</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">时</string>
     <string name="no_active_profile">没有激活的个人配置切换！</string>
     <string name="target_only_aps_mode">目标仅适用于APS模式！</string>
@@ -162,18 +155,6 @@
     <string name="wear_action_loop_state_unauthorized">请重试。</string>
     <string name="wear_action_loop_state_invalid">请求无效的循环状态</string>
     <string name="wear_action_running_mode_title">运行模式</string>
-    <string name="wear_action_loop_state_changed_with_duration">%1$s\n持续时间： %2$d 分钟</string>
-    <string name="wear_action_loop_state_now_closed">闭环</string>
-    <string name="wear_action_loop_state_now_lgs">低血糖维持模式</string>
-    <string name="wear_action_loop_state_now_open">开环</string>
-    <string name="wear_action_loop_state_now_suspended">暂停闭环</string>
-    <string name="wear_action_loop_state_now_resumed">恢复闭环</string>
-    <string name="wear_action_loop_state_now_disabled">禁用闭环</string>
-    <string name="wear_action_loop_state_now_pump_suspended">泵暂停了</string>
-    <string name="wear_action_loop_state_now_superbolus">超级大剂量Superbolus</string>
-    <string name="wear_action_loop_state_now_invalid">无效</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">断开泵连接</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">重新连接泵</string>
     <string name="garmin_request_key">请求密钥</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS短信通讯器</string>
