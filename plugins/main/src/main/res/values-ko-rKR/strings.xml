@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disabled_loop">Loop 중지됨</string>
     <string name="nav_history_browser">이력 브라우저</string>
     <string name="sensor_label">센서</string>
     <string name="insulin_label">인슐린</string>
