@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Restrições de carboidatros aplicada</string>
-    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Iniciar atividade TT</string>
     <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
@@ -32,19 +30,9 @@
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
-    <string name="timeshift_label">Alteração Turno</string>
     <string name="percentage_label">Porcentagem</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspender loop por 1h</string>
-    <string name="suspendloopfor2h">Suspender loop por 2h</string>
-    <string name="suspendloopfor3h">Suspender loop por 3h</string>
-    <string name="suspendloopfor10h">Suspender loop por 10h</string>
     <string name="disconnectpump">Bomba Desconectada</string>
-    <string name="disconnectpumpfor15m">Desconectar bomba por 15 min</string>
-    <string name="disconnectpumpfor30m">Desconectar bomba por 30 min</string>
-    <string name="disconnectpumpfor1h">Desconectar bomba por 1 h</string>
-    <string name="disconnectpumpfor2h">Desconectar bomba por 2 h</string>
-    <string name="disconnectpumpfor3h">Desconectar bomba por 3 h</string>
     <string name="resume">Continuar</string>
     <string name="reconnect">Reconectar Bomba</string>
     <string name="duration15m">15 min</string>
