@@ -49,8 +49,8 @@ class GetPatientSettingsPacket : EversenseBasePacket() {
         return Response(
             vibrateMode = receivedData[44].toInt() != 0x00,
             highGlucoseEnabled = receivedData[59].toInt() != 0x00,
-            lowGlucoseAlarmInMgDl = receivedData.copyOfRange(60, 62).toShort().toInt(),
-            highGlucoseAlarmInMgDl = receivedData.copyOfRange(63, 65).toShort().toInt(),
+            highGlucoseAlarmInMgDl = receivedData.copyOfRange(60, 62).toShort().toInt(),
+            lowGlucoseAlarmInMgDl = receivedData.copyOfRange(63, 65).toShort().toInt(),
             predictionLowEnabled = receivedData[55].toInt() != 0x00,
             predictionHighEnabled = receivedData[57].toInt() != 0x00,
             predictionFallingInterval = receivedData[56].toInt(),
