@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Restriction de bolus appliquée</string>
     <string name="no_temp_basal_running">Pas basal temp en cours</string>
-    <string name="temp_target_short">CT</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
     <string name="start_hypo_tt">Début Traitement Hypo</string>
@@ -49,7 +47,6 @@
     <string name="user_profile_description">La description du profil utilisateur est utilisée pour montrer les sites les plus fréquents disponibles pour un homme, une femme ou un enfant</string>
     <string name="site_management">Paramètres de gestion du site</string>
     <string name="site_management_description">Sélectionnez si vous souhaitez gérer le site de la pompe, le site MGC ou les deux. Ce paramètre permettra d\'ouvrir automatiquement la boîte de dialogue de gestion du site à chaque nouvelle entrée détectée</string>
-    <string name="update_site_change">Mettre à jour la localisation du site</string>
     <string name="edit_site">Éditer</string>
     <string name="record_site_location">Site : %1$s</string>
     <string name="record_site_arrow">Flèche : %1$s</string>
@@ -143,27 +140,13 @@
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="a11y_add_new_insulin">Ajouter une nouvelle insuline</string>
     <string name="a11y_delete_current_insulin">Supprimer l\'insuline actuelle</string>
-    <string name="activate_insulin_no_profile">Aucun profil actif trouvé</string>
-    <string name="activate_insulin_new_insulin">Nouvelle insuline : %1$s</string>
-    <string name="activate_insulin_remaining">Restant : %1$d min</string>
-    <string name="activate_insulin_profile_switch">Un changement de profil sera créé :\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Charger le pic depuis</string>
     <string name="cannot_delete_last_insulin">Impossible de supprimer la dernière insuline</string>
     <string name="cannot_delete_active_insulin">Impossible de supprimer l\'insuline active</string>
     <string name="reuse_profile_pct_hours">Réutiliser %1$d%% %2$dh</string>
-    <string name="timeshift_label">Décalage horaire</string>
     <string name="percentage_label">Pourcentage</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspendre la boucle pendant 1h</string>
-    <string name="suspendloopfor2h">Suspendre la boucle pendant 2h</string>
-    <string name="suspendloopfor3h">Suspendre la boucle pendant 3h</string>
-    <string name="suspendloopfor10h">Suspendre la boucle pendant 10h</string>
     <string name="disconnectpump">Déconnecter la pompe</string>
-    <string name="disconnectpumpfor15m">Déconnecter la pompe pendant 15 min</string>
-    <string name="disconnectpumpfor30m">Déconnecter la pompe pendant 30 min</string>
-    <string name="disconnectpumpfor1h">Déconnecter la pompe pendant 1 h</string>
-    <string name="disconnectpumpfor2h">Déconnecter la pompe 2 h</string>
-    <string name="disconnectpumpfor3h">Déconnecter la pompe pendant 3 h</string>
     <string name="resume">Reprendre</string>
     <string name="reconnect">Reconnecter la pompe</string>
     <string name="duration15m">15 min</string>
@@ -296,8 +279,6 @@
     <string name="quick_launch_no_profiles">Créez des profils dans le gestionnaire de profils pour les utiliser ici</string>
     <string name="quick_launch_edit_profile_preset">Modifier le préréglage du profil</string>
     <string name="quick_launch_profile_permanent">Permanent</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Sélectionner flèche</string>
     <string name="loop_accept_nav_label">Boucle</string>
     <string name="loop_accept_set_basal_question">Accepter nouveau Basal Temp :</string>
