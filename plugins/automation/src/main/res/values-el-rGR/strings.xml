@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Αυτόματο</string>
     <string name="automation">Αυτοματισμός</string>
-    <string name="automation_description">Καθορισμένες από το χρήστη εργασίες αυτοματοποίησης</string>
     <string name="automation_missing_task_name">Παρακαλώ εισάγετε όνομα εργασίας.</string>
     <string name="automation_missing_trigger">Προσδιορίστε τουλάχιστον ένα σύστημα ενεργοποίηση.</string>
     <string name="automation_missing_action">Προσδιορίστε τουλάχιστον μία ενέργεια.</string>
@@ -17,7 +15,6 @@
     <string name="alreadyset">Ήδη καθορισμένο</string>
     <string name="profilepercentage">Προφίλ ποσοστό</string>
     <string name="startprofileforever">Έναρξη προφίλ %1$d%%</string>
-    <string name="percent_u">Ποσοστό [%]:</string>
     <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
     <string name="sendsmsactiondescription">Αποστολή SMS σε όλους τους αριθμούς</string>
     <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
