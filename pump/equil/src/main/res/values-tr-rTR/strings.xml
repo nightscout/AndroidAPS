@@ -26,7 +26,6 @@
     <string name="equil_change">Pompayı değiştir</string>
     <string name="equil_change_content">Lütfen pompayı tabandan ayırın.</string>
     <string name="equil_unpair_alert">%1$s üzerindeki kontrolü bırakmak istediğinizden emin misiniz?</string>
-    <string name="equil_devices_number_hint">Cihaz numarası</string>
     <string name="equil_record_basal">Bazal oranı %1$s Ü/S</string>
     <string name="equil_record_basal_temp">Geçici bazal oranı %1$s Ü/S</string>
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
@@ -128,12 +127,10 @@
     <string name="equil_hint1">Pompayı tabana yerleştirdikten sonra, havanın kalıcı iğneden boşaltılıp boşaltılmayacağını seçin.</string>
     <string name="equil_unbind">Eşleştirmeyi sonlandır</string>
     <string name="equil_assemble">Lütfen pompayı, dolu rezervuarı ve şarj edilmiş pili birleştirin</string>
-    <string name="equil_devices_number">Yeni pompa kimliğini girin</string>
     <string name="equil_insert">Lütfen iğne ucunda bir damla insülin kalana kadar rezervuarı doldurun</string>
     <string name="equil_insert2">Pompa, pompa tabanı üzerinde olmamalıdır.</string>
     <string name="equil_attach">Lütfen pompayı tabana takın</string>
     <string name="equil_hint2">Kanul dolumu</string>
     <string name="equil_pump_updated">Pompa güncellendi</string>
     <string name="equil_replace_reservoir">Rezervuar boş. Lütfen rezervuarı değiştirin</string>
-    <string name="error_mustbe6hexadidits">6 karakter olmalı ve ABCDEF0123456789 kullanılmalıdır</string>
 </resources>
