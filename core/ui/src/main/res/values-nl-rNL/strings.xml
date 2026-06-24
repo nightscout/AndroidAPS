@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Update basaal profiel mislukt</string>
     <string name="no_valid_basal_rate">Geen correcte basale snelheid van pomp kunnen lezen</string>
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
-    <string name="loop_disabled">LOOP UITGESCHAKELD DOOR BEPERKINGEN</string>
     <string name="event_type">Gebeurtenis type</string>
     <string name="save">Opslaan</string>
     <string name="snooze">Sluimeren</string>
@@ -39,7 +38,6 @@
     <string name="mute">Geluid dempen</string>
     <string name="success">Succes</string>
     <string name="advanced_settings_title">Geavanceerde instellingen</string>
-    <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="paused">Gepauzeerd</string>
     <string name="tdd_total">TDD Totaal</string>
@@ -165,7 +163,6 @@
     <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
     <string name="minimalbasalvaluereplaced">Minimum basaalwaarde is vervangen door minimaal ondersteunde waarde: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basale waarde vervangen door maximale ondersteunde waarde: %1$s</string>
-    <string name="profile_per_unit">/E</string>
     <string name="profile_ins_units_per_hour">E/u</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
@@ -434,10 +431,8 @@
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
     <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
-    <string name="carb_equal_zero_no_action">Koolhydraten = 0. Geen actie!</string>
     <string name="wizard_no_actual_bg">Geen recente BG om de berekening op te baseren!</string>
     <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
-    <string name="wizard_no_cob">Onbekende COB! BG uitlezing ontbreekt of de recente app herstart?</string>
     <string name="wizard_carbs_constraint">Koolhydraten beperking overschreden!</string>
     <string name="wizard_constraint_bolus_size">Insuline beperking!\nKan %1$.2fE niet leveren</string>
     <string name="wizard_pump_not_available">Geen pomp beschikbaar!</string>
