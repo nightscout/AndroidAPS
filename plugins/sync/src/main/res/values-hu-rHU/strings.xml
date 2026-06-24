@@ -9,7 +9,6 @@
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
-    <string name="status">Állapot:</string>
     <string name="clear_log">Napló törlése</string>
     <!-- Tidepool -->
     <string name="tidepool">Tidepool</string>
@@ -22,7 +21,6 @@
     <string name="pump_status">Pumpa állapot</string>
     <string name="wear_general_settings">Általános beállítások</string>
     <string name="units_short">E</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">ó</string>
     <string name="target_only_aps_mode">A célértékek csak APS módra vonatkoznak!</string>
     <string name="no_history">Nincs előzményadat!</string>
