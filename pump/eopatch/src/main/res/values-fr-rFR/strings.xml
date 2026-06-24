@@ -13,7 +13,6 @@
     <string name="eopatch_base_basal_rate">Débit de Basal</string>
     <string name="eopatch_temp_basal_rate">Débit de Basal Temp.</string>
     <string name="invalid_basal_rate">Le basal du profil est inférieur à 0,05 U/h. EOPatch a une quantité d\'injection minimale de 0,05 U. Veuillez réessayer après avoir défini des débits de basal supérieurs à la quantité d\'injection minimale.</string>
-    <string name="no_profile_selected">Aucun profil sélectionné. Veuillez sélectionner un profil et réessayez.</string>
     <string name="symbol_day">jour</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
