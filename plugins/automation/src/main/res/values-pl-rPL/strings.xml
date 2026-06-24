@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automatyzacja</string>
-    <string name="automation_description">Zadania zautomatyzowane zdefiniowane przez użytrkownika</string>
     <string name="automation_missing_task_name">Proszę wpisać nazwę zadania.</string>
     <string name="automation_missing_trigger">Proszę podać przynajmniej jedno wywołanie.</string>
     <string name="automation_missing_action">Proszę podać przynajmniej jedną akcję.</string>
@@ -19,7 +17,6 @@
     <string name="alreadyset">Już ustawiono</string>
     <string name="profilepercentage">Procent profilu</string>
     <string name="startprofileforever">Uruchom profil %1$d%%</string>
-    <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Wyślij SMS: %1$s</string>
     <string name="sendsmsactiondescription">Wyślij SMS do wszystkich numerów</string>
     <string name="sendsmsactiontext">Wyślij SMS z tekstem</string>
