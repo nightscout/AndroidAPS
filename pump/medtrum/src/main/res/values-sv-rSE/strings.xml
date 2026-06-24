@@ -11,7 +11,6 @@
     <string name="patch_not_active">Podden är inte aktiverad</string>
     <string name="pump_setting_failed">Kunde inte spara användarinställningarna till pumpen!</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Senast ansluten</string>
     <string name="active_bolus_label">Aktiv bolus</string>
     <string name="pump_state_label">Pumpstatus</string>
     <string name="active_alarms_label">Aktiva larm</string>
