@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sensitivity_plugin_shortname">敏感度</string>
     <string name="sensitivity_oref1">敏感度 Oref1</string>
     <string name="sensitivity_aaps">敏感度 AAPS</string>
     <string name="sensitivity_weighted_average">敏感度 加權平均</string>
