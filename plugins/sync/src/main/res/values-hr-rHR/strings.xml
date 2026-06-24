@@ -17,7 +17,6 @@
     <string name="description_tidepool">Učitava podatke u Tidepool</string>
     <string name="upload_now">Pošalji sada</string>
     <!-- Xdrip StatusLine -->
-    <string name="disabled_loop">Petlja onemogućena</string>
     <string name="xdrip_not_installed">xDrip+ nije instaliran</string>
     <string name="calibration_sent">Kalibracija poslana na xDrip+</string>
     <!--    DataBroadcast-->
