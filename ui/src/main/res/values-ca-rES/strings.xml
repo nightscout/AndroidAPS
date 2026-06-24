@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Restricció de carbs. aplicada</string>
-    <string name="temp_target_short">OT</string>
     <string name="start_activity_tt">Iniciar OT: Esport</string>
     <string name="start_eating_soon_tt">Iniciar OT: Menjar aviat</string>
     <string name="start_hypo_tt">Iniciar OT: Hipo</string>
@@ -30,19 +28,9 @@
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Reutilitzar %1$d%% %2$dh</string>
-    <string name="timeshift_label">Decalatge horari</string>
     <string name="percentage_label">Percentatge</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Aturar el llaç 1h</string>
-    <string name="suspendloopfor2h">Aturar el llaç 2h</string>
-    <string name="suspendloopfor3h">Aturar el llaç 3h</string>
-    <string name="suspendloopfor10h">Aturar el llaç 10h</string>
     <string name="disconnectpump">Desconnectar bomba</string>
-    <string name="disconnectpumpfor15m">Desconnectar bomba 15 min</string>
-    <string name="disconnectpumpfor30m">Desconnectar bomba 30 min</string>
-    <string name="disconnectpumpfor1h">Desconnectar bomba 1 h</string>
-    <string name="disconnectpumpfor2h">Desconnectar bomba 2 h</string>
-    <string name="disconnectpumpfor3h">Desconnectar bomba 3 h</string>
     <string name="resume">Reprendre</string>
     <string name="reconnect">Reconnectar bomba</string>
     <string name="duration15m">15 min</string>
