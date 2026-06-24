@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
     <string name="nav_history_browser">Prehliadač histórie</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Inzulín</string>
