@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Επαναφορά σύζευξης</string>
     <string name="diaconn_pairing">Σύζευξη Αντλίας Diaconn</string>
     <string name="diaconn_g8_history_alarm">Συναγερμοί</string>
     <string name="diaconn_g8_history_basalhours">Ώρες Βασικού</string>
@@ -13,7 +12,6 @@
     <string name="largetimediff">Μεγάλη χρονική διαφορά:\nΗ ώρα στην αντλία διαφέρει περισσότερο από 1,5 ώρες. \nΠαρακαλώ ρυθμίστε την ώρα χειροκίνητα στην αντλία και βεβαιωθείτε ότι η ανάγνωση του ιστορικού από την αντλία δεν προκαλεί απροσδόκητη συμπεριφορά. \nΑν είναι δυνατόν, αφαιρέστε το ιστορικό από την αντλία πριν την αλλαγή της ώρας ή κλείστε το κλειστό κύκλωμα για μία DIA μετά την τελευταία λάθος καταχώρηση ιστορικού αλλά κατ΄ελάχιστο μία DIA από τώρα.</string>
     <string name="approachingdailylimit">Φτάνετε το ημερήσιο όριο ινσουλίνης</string>
     <string name="startingbolus">Έναρξη bolus</string>
-    <string name="waitingforestimatedbolusend">Αναμονή για τέλος εκτιμώμενου bolus</string>
     <string name="stoppingtempbasal">Σταμάτημα Προσ Ρυθμού</string>
     <string name="settingtempbasal">Ρύθμιση Προσ Ρυθμού</string>
     <string name="settingextendedbolus">Ρύθμιση εκτεταμμένου bolus</string>
@@ -31,7 +29,6 @@
     <string name="bolus_step">Βήμα Bolus</string>
     <string name="basal_step">Βήμα Βασικού</string>
     <string name="pairfirst">Παρακαλώ συνδέστε την αντλία στο τηλέφωνο!</string>
-    <string name="processinghistory">"Επεξεργασία συμβάντος "</string>
     <string name="diaconn_g8_history_tempbasal">Προσωρινός βασικός ρυθμός</string>
     <string name="diaconng8_pump_settings">Ρυθμίσεις Αντλίας Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Ήχος</string>
