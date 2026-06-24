@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Използвай стойностите от вашето най-голямо хранене, което обикновено консумирате</string>
     <string name="syncinfotext">Синхронизирайте данни в облака. Можете да пропуснете тази част сега, но няма да можете да преминавате цели, докато не настроите Nightscout или Tidepool клиент.</string>
-    <string name="status">Статус:</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="profile">Профил</string>
     <string name="doprofileswitch">Смени профил</string>
