@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Oto</string>
     <string name="automation">Otomasyon</string>
-    <string name="automation_description">Kullanıcı tanımlı otomasyon görevleri</string>
     <string name="automation_missing_task_name">Lütfen bir görev adı girin.</string>
     <string name="automation_missing_trigger">Lütfen en az bir tetikleyici belirtin.</string>
     <string name="automation_missing_action">Lütfen en az bir işlem belirtin.</string>
@@ -19,7 +17,6 @@
     <string name="alreadyset">Zaten ayarlanmış</string>
     <string name="profilepercentage">Profil yüzdesi</string>
     <string name="startprofileforever">Profil %1$d%% başladı</string>
-    <string name="percent_u">Yüzde [%]:</string>
     <string name="sendsmsactionlabel">SMS gönder: %1$s</string>
     <string name="sendsmsactiondescription">Tüm numaralara SMS gönder</string>
     <string name="sendsmsactiontext">Metin ile SMS gönder</string>
