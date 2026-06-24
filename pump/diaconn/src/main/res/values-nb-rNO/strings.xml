@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Slett sammenkobling</string>
+    <string name="resetpairing">Tilbakestille paringsinformasjonen?</string>
     <string name="diaconn_pairing">Diaconn pumpe sammenkobling</string>
     <string name="diaconn_g8_history_alarm">Alarmer</string>
     <string name="diaconn_g8_history_basalhours">Basal timer</string>
@@ -14,7 +14,7 @@
     <string name="largetimedifftitle">Stor tidsforskjell</string>
     <string name="approachingdailylimit">Maksimal daglig insulindose er snart nådd</string>
     <string name="startingbolus">Starter boluslevering</string>
-    <string name="waitingforestimatedbolusend">Venter på avsluttet bolus dosering</string>
+    <string name="waitingforbolusend">Venter på estimert bolusslutt</string>
     <string name="gettingbolusstatus">Henter status for bolus</string>
     <string name="stoppingtempbasal">Stopper midlertidig basal</string>
     <string name="settingtempbasal">Setter midlertidig basal</string>
@@ -33,7 +33,7 @@
     <string name="bolus_step">Bolus trinn</string>
     <string name="basal_step">Basal trinn</string>
     <string name="pairfirst">Vennligst sammenkobl pumpen med mobilen!</string>
-    <string name="processinghistory">"Behandler hendelse "</string>
+    <string name="processinghistory">Behandler hendelse</string>
     <string name="diaconn_g8_history_tempbasal">Midlertidig basal</string>
     <string name="diaconng8_pump_settings">Diaconn pumpe innstillinger</string>
     <string name="diaconn_g8_pumpalarm">Lyd</string>
