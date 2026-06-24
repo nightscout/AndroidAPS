@@ -15,7 +15,6 @@
     <string name="pump_sync_error">Грешка при синхронизацията с историята на помпата. Някой записи са игнорирани. Проверете в Лечения дали болусите са правилни. Отложете и при нова такава грешла сменете базата на пач помпата.</string>
     <string name="patch_reset_after_primed_error">Нулиране на пач е открито след пълненето! Махнете пача и стартирайте нов.</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Последно свързване</string>
     <string name="active_bolus_label">Активен болус</string>
     <string name="pump_state_label">Състояние на помпата</string>
     <string name="active_alarms_label">Активни аларми</string>
