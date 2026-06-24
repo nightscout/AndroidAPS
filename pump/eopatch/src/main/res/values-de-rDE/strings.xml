@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Basis-Basalrate</string>
     <string name="eopatch_temp_basal_rate">Temporäre Basalrate</string>
     <string name="invalid_basal_rate">Die Basis des Profils ist weniger als 0,05 U/Std. EOPatch hat eine minimale Injektionseinheit von 0,05U. Bitte versuchen Sie es erneut, nachdem Sie das Profil auf mehr als die minimale Einspritzeinheit gesetzt haben.</string>
-    <string name="no_profile_selected">Kein Profil ausgewählt. Bitte wählen Sie ein Profil und versuchen Sie es erneut.</string>
     <string name="symbol_day">Tag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
