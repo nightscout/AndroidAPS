@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Авто</string>
     <string name="automation">Автоматизация</string>
-    <string name="automation_description">Заданные пользователем задачи автоматизации</string>
     <string name="automation_missing_task_name">Введите название задачи.</string>
     <string name="automation_missing_trigger">Укажите хотя бы один триггер.</string>
     <string name="automation_missing_action">Укажите хотя бы одно действие.</string>
@@ -19,7 +17,6 @@
     <string name="alreadyset">Уже установлено</string>
     <string name="profilepercentage">Процент профиля</string>
     <string name="startprofileforever">Начать профиль %1$d%%</string>
-    <string name="percent_u">Процент [%]:</string>
     <string name="sendsmsactionlabel">Отправить SMS: %1$s</string>
     <string name="sendsmsactiondescription">Отправить SMS на все номера</string>
     <string name="sendsmsactiontext">Отправить SMS с текстом</string>
