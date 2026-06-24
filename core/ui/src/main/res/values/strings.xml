@@ -396,6 +396,7 @@
     <string name="scene_profile_not_found">Profile \"%1$s\" not found</string>
     <string name="scene_lock_banner_master_offline">Master device unreachable. Scene controls will resume when connection is restored.</string>
     <string name="master_offline_banner">Master device unreachable. Editing is disabled until the connection is restored.</string>
+    <string name="master_control_disabled_banner">Master has disabled remote control. Editing is disabled until it is re-enabled on the master.</string>
     <string name="scene_lock_reason_master_offline">Master disconnected</string>
     <string name="scene_lock_reason_scene_active">Stop the running scene first</string>
 
