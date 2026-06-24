@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">применено ограничение углеводов</string>
-    <string name="temp_target_short">ВЦ</string>
     <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
     <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
     <string name="start_hypo_tt">Начать временную цель ТТ Гипо</string>
@@ -45,19 +43,9 @@
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
-    <string name="timeshift_label">Сдвиг по времени</string>
     <string name="percentage_label">В процентах</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Приостановить цикл на 1 час</string>
-    <string name="suspendloopfor2h">Приостановить цикл на 2 часа</string>
-    <string name="suspendloopfor3h">Приостановить цикл на 3 часа</string>
-    <string name="suspendloopfor10h">Приостановить цикл на 10 часов</string>
     <string name="disconnectpump">Отсоединить помпу</string>
-    <string name="disconnectpumpfor15m">Отсоединить помпу на 15 мин</string>
-    <string name="disconnectpumpfor30m">Отсоединить помпу на 30 мин</string>
-    <string name="disconnectpumpfor1h">Отсоединить помпу на 1 час</string>
-    <string name="disconnectpumpfor2h">Отсоединить помпу на 2 час</string>
-    <string name="disconnectpumpfor3h">Отсоединить помпу на 3 часа</string>
     <string name="resume">Возобновить</string>
     <string name="reconnect">Возобновить соединение с помпой</string>
     <string name="duration15m">15 мин</string>
