@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Nieudane uaktualnienie profilu bazy</string>
     <string name="no_valid_basal_rate">Brak prawidłowej dawki bazowej odczytanej z pompy</string>
     <string name="limiting_iob">Ograniczam IOB do %1$.1f U z uwagi na %2$s</string>
-    <string name="loop_disabled">PĘTLA WYLĄCZONA Z UWAGI NA OGRANICZENIA</string>
     <string name="event_type">Typ zdarzenia</string>
     <string name="save">ZACHOWAJ</string>
     <string name="snooze">Wycisz</string>
@@ -39,7 +38,6 @@
     <string name="mute">Wycisz</string>
     <string name="success">Sukces</string>
     <string name="advanced_settings_title">Ustawienia zaawansowane</string>
-    <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
     <string name="extended_bolus">Bolus Przedłużony</string>
     <string name="paused">Wstrzymano</string>
     <string name="tdd_total">TDD Całkowita</string>
@@ -165,7 +163,6 @@
     <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
     <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
     <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -434,10 +431,8 @@
     <string name="bolus_recorded_only">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
     <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
-    <string name="carb_equal_zero_no_action">Węglowodany = 0. Nie podjęto żadnych działań!</string>
     <string name="wizard_no_actual_bg">Brak niezbędnego do obliczeń bieżącego pomiaru glikemi!</string>
     <string name="wizard_no_active_profile">Nie ustawiono aktywnego profilu!</string>
-    <string name="wizard_no_cob">Nieznane COB! Może brakuje odczytu glikemii lub niedawno zrestartowano aplikację?</string>
     <string name="wizard_carbs_constraint">Naruszenie ograniczeń węglowodanów!</string>
     <string name="wizard_constraint_bolus_size">Naruszenie ograniczeń insuliny!\nNie można podać %1$.2fU</string>
     <string name="wizard_pump_not_available">Pompa niedostępna!</string>
