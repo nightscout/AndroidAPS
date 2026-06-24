@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Получава статус на временен базал</string>
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
-    <string name="largetimedifftitle">Голяма времева разлика</string>
     <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
     <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
