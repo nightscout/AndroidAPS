@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Koppeling verwijderen</string>
     <string name="diaconn_pairing">Diaconn Pomp Koppeling</string>
     <string name="diaconn_g8_history_alarm">Alarmen</string>
     <string name="diaconn_g8_history_basalhours">Basaal uren</string>
@@ -13,7 +12,6 @@
     <string name="largetimediff">Groot tijdsverschil:\nTijd in de pomp staat meer dan 1,5 uur uit.\nPas de tijd handmatig aan op de pomp en zorg ervoor dat het lezen van geschiedenis uit de pomp geen onverwacht gedrag veroorzaakt.\nindien mogelijk verwijder de geschiedenis van de pomp voordat je de tijd wijzigt of schakel de closed loop uit voor een DIA na het laatste verkeerde geschiedenis-invoer, maar vanaf nu minimaal één DIA.</string>
     <string name="approachingdailylimit">Insuline daglimiet aan het benaderen</string>
     <string name="startingbolus">Bolus toediening gestart</string>
-    <string name="waitingforestimatedbolusend">Wachten op het geschatte bolus einde</string>
     <string name="stoppingtempbasal">Stoppen van tijdelijk basaal</string>
     <string name="settingtempbasal">Instellen tijdelijk basaal</string>
     <string name="settingextendedbolus">Instellen van vertraagde bolus</string>
@@ -31,7 +29,6 @@
     <string name="bolus_step">Bolus Stap</string>
     <string name="basal_step">Basaal Stap</string>
     <string name="pairfirst">A.u.b. de pomp koppelen met je telefoon!</string>
-    <string name="processinghistory">"Gebeurtenis wordt uitgevoerd "</string>
     <string name="diaconn_g8_history_tempbasal">Tijdelijk basaal</string>
     <string name="diaconng8_pump_settings">Diaconn pomp instellingen</string>
     <string name="diaconn_g8_pumpalarm">Geluid</string>
