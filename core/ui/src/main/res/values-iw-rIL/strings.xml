@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">עדכון הפרופיל הבזאלי נכשל</string>
     <string name="no_valid_basal_rate">לא התקבל מינון בזאלי תקף מהמשאבה</string>
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
-    <string name="loop_disabled">הלולאה הופסקה עקב המגבלות שבתוקף</string>
     <string name="event_type">סוג האירוע</string>
     <string name="save">שמירה</string>
     <string name="snooze">נודניק</string>
@@ -39,7 +38,6 @@
     <string name="mute">השתק</string>
     <string name="success">הצלחה</string>
     <string name="advanced_settings_title">הגדרות מתקדמות</string>
-    <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="paused">מושהה</string>
     <string name="tdd_total">מינון יומי מצטבר כולל</string>
@@ -148,7 +146,6 @@
     <string name="basalprofilenotaligned">ערכי הבזאלי לא מותאמים לשעות: %1$s</string>
     <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
     <string name="maximumbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
-    <string name="profile_per_unit">/יח\'</string>
     <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
@@ -372,10 +369,8 @@
     <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
-    <string name="carb_equal_zero_no_action">פחמ\' = 0. לא נעשתה פעולה!</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
-    <string name="wizard_no_cob">הפחמימות הפעילות לא ידועות! חסרות קריאות סוכר או שאותחל היישום לאחרונה?</string>
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
     <string name="wizard_constraint_bolus_size">הופעלה מגבלת אינסולין!\nלא ניתן להזריק %1$.2f יח\'</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
