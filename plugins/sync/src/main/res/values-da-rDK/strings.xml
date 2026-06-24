@@ -9,14 +9,12 @@
     <string name="blocked_by_connectivity">Blokeret af forbindelsesmuligheder</string>
     <string name="unsupported_ns_version">Ikke understøttet version af Nightscout</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSCLIENT har ingen skrivetilladelse. Forkert API-secret?</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">Afgiver nu</string>
     <string name="queue">Kø:</string>
-    <string name="status">Status:</string>
     <string name="clear_log">Ryd log</string>
     <string name="full_sync">Fuld synkronisering</string>
     <string name="full_sync_comment">Fuld synkronisering? Det kan tage mange timer, og indtil du er færdig, vil du ikke se nye data i NS.</string>
@@ -36,7 +34,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Send data til xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Statuslinje Avanceret</string>
-    <string name="disabled_loop">Loop deaktiveret</string>
     <string name="xdrip_not_installed">xDrip+ ikke installeret</string>
     <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Send glukose og behandlingsdata til xDrip+. Datakilde \"xDrip+ Sync Follower\" skal vælges og accept af data skal være aktiveret i Indstillinger - \"Inter-app settings\" - \"Accept Glucose\"/\"Treatments\"</string>
@@ -68,7 +65,6 @@
     <string name="pump_fetching_data">forsøger at hente data fra pumpen.</string>
     <string name="pump_old_data">TDD: Stadig gammel data! Kan ikke indlæse fra pumpen.</string>
     <string name="units_short">IE</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Ingen aktiv profilskift!</string>
     <string name="target_only_aps_mode">Mål gælder kun i APS-tilstand!</string>
