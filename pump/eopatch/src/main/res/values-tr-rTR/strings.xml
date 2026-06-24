@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Temel Bazal Oranı</string>
     <string name="eopatch_temp_basal_rate">Geçici Bazal Oranı</string>
     <string name="invalid_basal_rate">Profilin bazal değeri 0,05 Ü/sa\'ten azdır. EOPatch, minimum 0,05Ü enjeksiyon ünitesine sahiptir. Profili minimum enjeksiyon ünitesinden daha fazlasına ayarladıktan sonra lütfen tekrar deneyin.</string>
-    <string name="no_profile_selected">Profil seçilmedi. Lütfen bir profil seçin ve tekrar deneyin.</string>
     <string name="symbol_day">gün</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
