@@ -34,7 +34,6 @@
     <string name="equil_change">Changer la pompe</string>
     <string name="equil_change_content">Veuillez détacher la pompe de la plaque de base.</string>
     <string name="equil_unpair_alert">Êtes-vous sûr de vouloir abandonner le contrôle de %1$s?</string>
-    <string name="equil_devices_number_hint">Numéro de série</string>
     <string name="equil_record_basal">Débit de base %1$s U/h</string>
     <string name="equil_record_basal_temp">Débit de basale temporaire %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
@@ -139,7 +138,6 @@
     <string name="equil_unbind">Dissocier l\'appareil</string>
     <string name="equil_device_unpaired">Appareil non appairé</string>
     <string name="equil_assemble">Veuillez assembler la pompe, le réservoir rempli et la batterie chargée</string>
-    <string name="equil_devices_number">Entrer le nouvel identifiant de la pompe</string>
     <string name="equil_pair_password_title">Entrez le mot de passe de %1$s</string>
     <string name="equil_insert">Veuillez amorcer le réservoir jusqu\'à ce qu\'il y ait une goutte d\'insuline sur la pointe de l\'aiguille</string>
     <string name="equil_insert2">La pompe ne doit pas être sur la base de la pompe.</string>
@@ -147,6 +145,5 @@
     <string name="equil_hint2">Amorcer la canule</string>
     <string name="equil_pump_updated">Pompe mise à jour</string>
     <string name="equil_replace_reservoir">Le réservoir est vide. Veuillez remplacer le réservoir</string>
-    <string name="error_mustbe6hexadidits">Doit avoir 6 caractères parmi ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Échec de la commande de dissociation. La pompe sera supprimée de toute façon. Le mot de passe défini lors de l\'appairage n\'est pas supprimé de la pompe.</string>
 </resources>
