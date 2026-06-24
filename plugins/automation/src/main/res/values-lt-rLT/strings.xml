@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automatizacija</string>
-    <string name="automation_description">Naudotojo nustatytos automatizavimo užduotys</string>
     <string name="automation_missing_task_name">Įveskite užduoties pavadinimą.</string>
     <string name="automation_missing_trigger">Nurodykite mažiausiai vieną sąlygą.</string>
     <string name="automation_missing_action">Nurodykite mažiausiai vieną veiksmą.</string>
@@ -19,7 +17,6 @@
     <string name="alreadyset">Jau nustatyta</string>
     <string name="profilepercentage">Profilio procentas</string>
     <string name="startprofileforever">Pradėti profilį %1$d%%</string>
-    <string name="percent_u">Procentais [%]:</string>
     <string name="sendsmsactionlabel">Siųsti SMS: %1$s</string>
     <string name="sendsmsactiondescription">Siųsti SMS į visus numerius</string>
     <string name="sendsmsactiontext">Išsiųsti SMS žinutę su tekstu</string>
