@@ -63,6 +63,7 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Invia ora</string>
     <string name="queue">Coda:</string>
+    <string name="status_label">Stato:</string>
     <string name="clear_log">Cancella log</string>
     <string name="full_sync">Sincronizzazione completa</string>
     <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
