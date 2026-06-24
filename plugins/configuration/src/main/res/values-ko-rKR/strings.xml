@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">평소 섭취하는 가장 많은 양의 탄수화물 값을 사용하세요.\n</string>
     <string name="syncinfotext">데이터 클라우드에 동기화합니다. 지금 이 부분을 건너뛸 수 있지만 Nightscout 또는 Tidepool 클라이언트를 설정할 때까지목표를 전달할 수 없습니다.</string>
-    <string name="status">상태:</string>
     <string name="diawarning">새로운 인슐린 프로파일은 최소 5시간의 DIA가 요구됩니다. 새로운 프로파일의 DIA 5-6시간은 구식 인슐린 프로파일의 DIA 3시간과 동일합니다.</string>
     <string name="profile">프로파일</string>
     <string name="doprofileswitch">프로파일 변경 실행</string>
