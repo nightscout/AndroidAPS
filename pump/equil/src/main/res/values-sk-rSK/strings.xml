@@ -34,7 +34,6 @@
     <string name="equil_change">Vymeniť pumpu</string>
     <string name="equil_change_content">Vyberte pumpu zo základne.</string>
     <string name="equil_unpair_alert">Naozaj sa chcete vzdať kontroly nad %1$s?</string>
-    <string name="equil_devices_number_hint">Číslo zariadenia</string>
     <string name="equil_record_basal">Bazálna dávka %1$s U/h</string>
     <string name="equil_record_basal_temp">Dočasný bazál %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
@@ -146,7 +145,6 @@ Pravidlo pre tvorbu hesla: musí mať 4 znaky a musí obsahovať znaky z tejto s
     <string name="equil_unbind">Zrušiť párovanie zariadenia</string>
     <string name="equil_device_unpaired">Zariadenie odpárované</string>
     <string name="equil_assemble">Prosím, zostavte pumpu, naplnený zásobník a nabitú batériu</string>
-    <string name="equil_devices_number">Zadajte ID novej pumpy</string>
     <string name="equil_pair_password_title">Zadajte heslo pre %1$s</string>
     <string name="equil_insert">Prosím naplňte zásobník, pokiaľ sa na ihle neobjaví kvapka inzulínu</string>
     <string name="equil_insert2">Pumpa nesmie byť pripojená k základni.</string>
@@ -154,6 +152,5 @@ Pravidlo pre tvorbu hesla: musí mať 4 znaky a musí obsahovať znaky z tejto s
     <string name="equil_hint2">Naplniť kanylu</string>
     <string name="equil_pump_updated">Pumpa aktualizovaná</string>
     <string name="equil_replace_reservoir">Zásobník je prázdny. Prosím vymeňte zásobník</string>
-    <string name="error_mustbe6hexadidits">Musí byť 6 znakov z ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Príkaz na odpárovanie zlyhal. Pumpa bude aj tak odstránená. Heslo nastavené počas párovania nie je z pumpy odstránené.</string>
 </resources>
