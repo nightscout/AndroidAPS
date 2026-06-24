@@ -28,7 +28,6 @@
     <string name="omnipod_dash_not_enough_insulin">В резервуаре недостаточно инсулина</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Неподтвержденная команда</string>
     <string name="requested_by_user" comment="26 characters max for translation">Запрошено пользователем</string>
-    <string name="profile_set_ok">Профиль успешно установлен</string>
     <string name="suspend_delivery_is_unconfirmed">Приостановка подачи не подтверждена! Обновите статус Pod вручную на вкладке Omnipod и, при необходимости, возобновите подачу.</string>
     <string name="insulin_delivery_suspended">Введение инсулина приостановлено</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Часовой пояс Pod отличается от часового пояса на телефоне. Базальная скорость неверна. Переключите профиль для исправления</string>
