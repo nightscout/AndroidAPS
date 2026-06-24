@@ -197,6 +197,7 @@
     <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
     <string name="profile">設定檔</string>
     <string name="percentage_label">百分比</string>
+    <string name="timeshift_label">時間偏移</string>
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
