@@ -34,7 +34,6 @@
     <string name="equil_change">Vyměnit pumpu</string>
     <string name="equil_change_content">Vyjměte pumpu ze základny.</string>
     <string name="equil_unpair_alert">Opravdu se chcete vzdát kontroly nad %1$s?</string>
-    <string name="equil_devices_number_hint">Číslo zařízení</string>
     <string name="equil_record_basal">Bazál %1$s U/h</string>
     <string name="equil_record_basal_temp">Dočasný bazál %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
@@ -146,7 +145,6 @@
     <string name="equil_unbind">Zrušit párování zařízení</string>
     <string name="equil_device_unpaired">Zařízení odpárováno</string>
     <string name="equil_assemble">Prosím, sestavte pumpu, naplněný zásobník a nabitou baterii</string>
-    <string name="equil_devices_number">Zadejte ID nové pumpy</string>
     <string name="equil_pair_password_title">Zadejte heslo pro %1$s</string>
     <string name="equil_insert">Prosím naplňte zásobník, dokud se na jehle neobjeví kapička inzulínu</string>
     <string name="equil_insert2">Pumpa nesmí být připojena k základně.</string>
@@ -154,6 +152,5 @@
     <string name="equil_hint2">Naplnit kanylu</string>
     <string name="equil_pump_updated">Pumpa aktualizována</string>
     <string name="equil_replace_reservoir">Zásobník je prázdný. Prosím vyměňte zásobník</string>
-    <string name="error_mustbe6hexadidits">Musí mít 6 znaků z ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Příkaz pro odpárování se nezdařil. Pumpa bude přesto odstraněna. Heslo nastavené během párování není z pumpy odebráno.</string>
 </resources>
