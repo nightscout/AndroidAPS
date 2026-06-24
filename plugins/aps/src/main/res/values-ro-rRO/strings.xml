@@ -40,7 +40,6 @@
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="hardlimit">limită fizică</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Vârf</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">S-a administrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
     <string name="pump_not_initialized">Pompa nu este inițializată!</string>
