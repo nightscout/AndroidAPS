@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automatizare</string>
-    <string name="automation_description">Activități automate definite de utilizator</string>
     <string name="automation_enabled">Activat</string>
     <string name="automation_read_only">Doar citire</string>
     <string name="automation_new_rule">Regulă nouă</string>
@@ -53,7 +51,6 @@
     <string name="alreadyset">Deja setat</string>
     <string name="profilepercentage">Procentajul profilului</string>
     <string name="startprofileforever">Porniți profilul %1$d%%</string>
-    <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Trimiteți SMS: %1$s</string>
     <string name="sendsmsactiondescription">Trimiteți SMS către toate numerele</string>
     <string name="sendsmsactiontext">Trimiteți SMS cu text</string>
