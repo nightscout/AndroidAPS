@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">使用您通常吃的最大食物的值\n</string>
     <string name="syncinfotext">將資料同步到雲端。您現在可以跳過此部分，但在設置Nightscout或Tidepool客戶端之前，您將無法完成目標。</string>
-    <string name="status">狀態：</string>
     <string name="diawarning">請記住：新胰島素檔案需要至少5小時的DIA。在新檔案上DIA 5-6小時等於舊胰島素檔案上的DIA 3小時。</string>
     <string name="profile">檔案</string>
     <string name="doprofileswitch">切換檔案</string>
