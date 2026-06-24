@@ -5,7 +5,6 @@
     <string name="setupwizard_finish">BEFEJEZ</string>
     <string name="display_settings">Megjelenítési beállítások</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
-    <string name="status">Állapot:</string>
     <string name="profile">Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
     <!-- Provider-agnostic cloud export/import strings -->
