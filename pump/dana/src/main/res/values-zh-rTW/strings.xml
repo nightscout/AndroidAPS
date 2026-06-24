@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">獲取臨時基礎速率狀態</string>
     <string name="gettingpumpsettings">獲取幫浦設定</string>
     <string name="gettingpumptime">獲取幫浦時間</string>
-    <string name="largetimedifftitle">時間差異過大</string>
     <string name="largetimediff">時間差異過大：\n幫浦時間超過 1.5 小時不準確。\n請手動調整幫浦上的時間並確保從幫浦讀取歷史紀錄不會導致意外行為。\n如果可能，在更改時間之前從幫浦中移除歷史紀錄，或者在最後一個錯誤的歷史紀錄條目後停用閉環一個 DIA，但最少停用一個 DIA。</string>
     <string name="pairfirst">請將您的幫浦與您的手機配對！</string>
     <string name="approachingdailylimit">接近每日胰島素限制</string>
