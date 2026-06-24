@@ -30,7 +30,6 @@ Hãy chắc chắn bơm hết toàn bộ lượng insulin trong ống tiêm, nga
     <string name="omnipod_dash_not_enough_insulin">Insulin trong pod không đủ</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Lệnh chưa được xác nhận</string>
     <string name="requested_by_user" comment="26 characters max for translation">Người dùng yêu cầu</string>
-    <string name="profile_set_ok">Cấu hình đã được cài đặt</string>
     <string name="suspend_delivery_is_unconfirmed">Việc tạm dừng tiêm chưa được xác nhận! Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod và tiếp tục tiêm nếu cần.</string>
     <string name="insulin_delivery_suspended">Việc tiêm insulin đã bị tạm dừng</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Múi giờ trên Pod khác với múi giờ trên điện thoại. Tốc độ liều nền không chính xác. Vui lòng chuyển cấu hình để khắc phục</string>
