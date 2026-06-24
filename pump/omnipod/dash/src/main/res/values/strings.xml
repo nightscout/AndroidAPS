@@ -35,7 +35,6 @@
 
     <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
-    <string name="profile_set_ok">Profile set OK</string>
     <string name="suspend_delivery_is_unconfirmed">Suspend delivery is unconfirmed! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
     <string name="insulin_delivery_suspended">Insulin delivery suspended</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Timezone on pod is different from the timezone on phone. Basal rate is incorrect. Switch profile to fix</string>
