@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Sử dụng giá trị của bữa ăn lớn nhất bạn thường ăn</string>
     <string name="syncinfotext">Đồng bộ dữ liệu lên đám mây. Bạn có thể bỏ qua bước này ngay bây giờ, nhưng sẽ không thể hoàn thành các mục tiêu cho đến khi bạn thiết lập client Nightscout hoặc Tidepool.</string>
-    <string name="status">Trạng thái:</string>
     <string name="diawarning">Lưu ý: Các cấu hình insulin mới yêu cầu DIA ít nhất 5 giờ. DIA 5–6 giờ trên cấu hình mới tương đương với DIA 3 giờ trên cấu hình insulin cũ.</string>
     <string name="profile">Cấu hình</string>
     <string name="doprofileswitch">Chuyển cấu hình</string>
