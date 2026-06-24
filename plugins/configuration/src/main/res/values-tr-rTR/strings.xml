@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
     <string name="syncinfotext">Verileri bulutla senkronize edin. Bu kısmı şimdi atlayabilirsiniz, ancak Nightscout veya Tidepool istemcisini kurmadan görevleri geçemezsiniz.</string>
-    <string name="status">Durum:</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profil Değişimi Yap</string>
