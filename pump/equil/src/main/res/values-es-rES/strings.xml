@@ -34,7 +34,6 @@
     <string name="equil_change">Cambiar bomba</string>
     <string name="equil_change_content">Desmonte la bomba de la placa base.</string>
     <string name="equil_unpair_alert">¿Estás seguro de que quieres renunciar al control sobre %1$s?</string>
-    <string name="equil_devices_number_hint">Número de dispositivo</string>
     <string name="equil_record_basal">Tasa basal %1$s U/H</string>
     <string name="equil_record_basal_temp">Tasa basal temporal %1$s U/H</string>
     <string name="equil_record_bolus">Bolo %1$s U</string>
@@ -140,7 +139,6 @@
     <string name="equil_unbind">Desemparejar dispositivo</string>
     <string name="equil_device_unpaired">Dispositivo desemparejado</string>
     <string name="equil_assemble">Por favor, monta la bomba, el reservorio lleno y la batería cargada</string>
-    <string name="equil_devices_number">Introducir nuevo ID de la bomba</string>
     <string name="equil_pair_password_title">Introducir contraseña para %1$s</string>
     <string name="equil_insert">Ceba el depósito hasta que haya una gota de insulina en la punta de la aguja</string>
     <string name="equil_insert2">La bomba no debe estar sobre su base.</string>
@@ -148,6 +146,5 @@
     <string name="equil_hint2">Cebado de cánula</string>
     <string name="equil_pump_updated">Bomba actualizada</string>
     <string name="equil_replace_reservoir">El reservorio está vacío. Por favor, sustituya el reservorio</string>
-    <string name="error_mustbe6hexadidits">Debe contener 6 caracteres de ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Comando de desemparejamiento fallido. La bomba se eliminará de todos modos. La contraseña establecida durante el emparejamiento no se eliminará de la bomba.</string>
 </resources>
