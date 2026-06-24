@@ -34,7 +34,6 @@
     <string name="equil_change">更換幫浦</string>
     <string name="equil_change_content">請將幫浦從底座上拆下。</string>
     <string name="equil_unpair_alert">您確定要放棄控制%1$s嗎？</string>
-    <string name="equil_devices_number_hint">設備號碼</string>
     <string name="equil_record_basal">基礎速率 %1$s U/H</string>
     <string name="equil_record_basal_temp">臨時基礎速率 %1$s U/H</string>
     <string name="equil_record_bolus">注射 %1$s U</string>
@@ -137,7 +136,6 @@
     <string name="equil_unbind">取消配對設備</string>
     <string name="equil_device_unpaired">裝置已解除配對</string>
     <string name="equil_assemble">請組裝幫浦、已填充的儲液盒和已充電的電池</string>
-    <string name="equil_devices_number">輸入新幫浦ID</string>
     <string name="equil_pair_password_title">輸入 %1$s 的密碼</string>
     <string name="equil_insert">請填充儲液盒，直到針尖有胰島素滴落</string>
     <string name="equil_insert2">幫浦不得在幫浦底座上。</string>
@@ -145,6 +143,5 @@
     <string name="equil_hint2">填充套管</string>
     <string name="equil_pump_updated">幫浦已更新</string>
     <string name="equil_replace_reservoir">儲液盒已空。請更換儲液盒</string>
-    <string name="error_mustbe6hexadidits">必須為ABCDEF0123456789的6個字符</string>
     <string name="equil_removed_anyway">無法解除配對，但仍會移除幫浦。配對時設定的密碼仍保留在幫浦中。</string>
 </resources>
