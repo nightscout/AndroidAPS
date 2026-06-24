@@ -6,14 +6,12 @@
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">Administrar agora</string>
     <string name="queue">Fila de espera:</string>
-    <string name="status">Estado:</string>
     <string name="clear_log">Limpar Registo</string>
     <string name="full_sync">Sincronização completa</string>
     <string name="full_sync_comment">Sincronização completa? Pode levar muitas horas até terminar e não irá ver dados novos no NS.</string>
@@ -26,7 +24,6 @@
     <string name="description_tidepool">Enviar dados para Tidepool</string>
     <string name="upload_now">Fazer o upload agora</string>
     <!-- Xdrip StatusLine -->
-    <string name="disabled_loop">Loop Desactivado</string>
     <string name="xdrip_not_installed">xDrip+ não está instalado</string>
     <string name="calibration_sent">Calibração enviada para xDrip+</string>
     <!--    DataBroadcast-->
