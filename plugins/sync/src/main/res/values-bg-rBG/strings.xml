@@ -10,7 +10,6 @@
     <string name="no_connectivity">Няма връзка</string>
     <string name="unsupported_ns_version">Несъвместима версия на Nightscout</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSClient няма права за запис. Грешна API парола?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Оторизирани клиенти</string>
@@ -24,8 +23,6 @@
     <string name="authorized_clients_pending_expires_in">Разрешението изтича след %1$sсек</string>
     <string name="authorized_clients_empty_title">Няма позволени клиенти</string>
     <string name="authorized_clients_empty_subtitle">Свържете клиентско устройство за да изпраща подписани команди до този телефон.</string>
-    <string name="authorized_clients_disabled_title">Отдалеченият контрол е изключен</string>
-    <string name="authorized_clients_open_settings">Отвори настройки</string>
     <string name="authorized_clients_name_dialog_title">Нов клиент</string>
     <string name="authorized_clients_name_placeholder">Име на устройство</string>
     <string name="authorized_clients_delete_dialog_title">Поднови достъп?</string>
@@ -66,7 +63,6 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Изпрати сега</string>
     <string name="queue">Опашка:</string>
-    <string name="status">Статус:</string>
     <string name="clear_log">Изчисти лога</string>
     <string name="full_sync">Пълна синхронизация</string>
     <string name="full_sync_comment">Пълна синхронизация? Може да отнеме много часове и докато не приключи вие няма да виждате нови данни в NS.</string>
@@ -87,7 +83,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Изпращай данни за КЗ към xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ линия със статута (часовник)</string>
-    <string name="disabled_loop">Цикъл изключен</string>
     <string name="xdrip_not_installed">xDrip+ не е инсталиран</string>
     <string name="calibration_sent">Калибрацията е изпратена към xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Изпратете данни за глюкоза и лечения до xDrip+. Трябва да бъде избран източник на данни „xDrip+ Sync Follower“ и приемането на данни трябва да е разрешено в Settings - Inter-app settings - Accept Glucose/Treatments</string>
@@ -134,7 +129,6 @@
     <string name="pump_fetching_data">опитвам се да изтегля данни от помпата.</string>
     <string name="pump_old_data">ОДД: Все още стари данни! Не може да се заредят от помпата.</string>
     <string name="units_short">Ед.</string>
-    <string name="grams_short">гр.</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Не е настроен активен профил!</string>
     <string name="target_only_aps_mode">Целите се прилагат само в режим АПС!</string>
@@ -160,18 +154,6 @@
     <string name="full_xdrip_sync_comment">Пълна синхронизация? Ще отнеме малко време и до тогава няма да виждате данните в xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Опитайте отново.</string>
     <string name="wear_action_loop_state_invalid">Грешен статус на цикъла е поискан</string>
-    <string name="wear_action_loop_state_changed_with_duration">%1$s\nПродължителност: %2$d мин</string>
-    <string name="wear_action_loop_state_now_closed">Затворен кръг</string>
-    <string name="wear_action_loop_state_now_lgs">Сприране при ниска захар LGS</string>
-    <string name="wear_action_loop_state_now_open">Отворен кръг</string>
-    <string name="wear_action_loop_state_now_suspended">Прекъсни кръга</string>
-    <string name="wear_action_loop_state_now_resumed">Пусни кръга</string>
-    <string name="wear_action_loop_state_now_disabled">Изключи кръга</string>
-    <string name="wear_action_loop_state_now_pump_suspended">Помпата е изключена</string>
-    <string name="wear_action_loop_state_now_superbolus">Суперболус</string>
-    <string name="wear_action_loop_state_now_invalid">Грешен</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Разкачи помпа</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Закачи помпа</string>
     <string name="garmin_request_key">Ключ</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS комуникатор</string>
