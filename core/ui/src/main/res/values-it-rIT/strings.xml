@@ -197,6 +197,7 @@
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
     <string name="percentage_label">Percentuale</string>
+    <string name="timeshift_label">Sfasamento temporale</string>
     <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
@@ -385,6 +386,7 @@
     <string name="scene_profile_not_found">Profilo \"%1$s\" non trovato</string>
     <string name="scene_lock_banner_master_offline">Dispositivo master irraggiungibile. I controlli della scena riprenderanno quando la connessione viene ripristinata.</string>
     <string name="master_offline_banner">Dispositivo master irraggiungibile. La modifica è disabilitata fino al ripristino della connessione.</string>
+    <string name="master_control_disabled_banner">Il Master ha disabilitato il controllo remoto. La modifica è disabilitata fino a quando non viene riattivata sul master.</string>
     <string name="scene_lock_reason_master_offline">Master disconnesso</string>
     <string name="scene_lock_reason_scene_active">Ferma prima la scena in esecuzione</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
