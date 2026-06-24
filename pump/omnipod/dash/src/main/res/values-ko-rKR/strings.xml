@@ -24,7 +24,6 @@
     <string name="omnipod_dash_not_enough_insulin">레저버에 남은 인슐린이 충분하지 않음</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">확인되지 않은 명령</string>
     <string name="requested_by_user" comment="26 characters max for translation">사용자에 의해 요청됨</string>
-    <string name="profile_set_ok">프로파일 설정 완료</string>
     <string name="suspend_delivery_is_unconfirmed">중단된 주입량이 확인되지 않음! 필요하다면, Omnipod 탭에서 Pod 상태를 수동으로 업데이트하고 재시작하십시오.</string>
     <string name="insulin_delivery_suspended">인슐린 주입이 중지됨</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Pod의 시간대가 핸드폰의 시간대와 다릅니다. Basal양이 부정확합니다. 수정을 위해 프로파일을 변경하세요.</string>
