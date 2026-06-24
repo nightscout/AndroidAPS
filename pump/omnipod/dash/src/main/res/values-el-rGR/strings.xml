@@ -24,7 +24,6 @@
     <string name="omnipod_dash_not_enough_insulin">Δεν υπάρχει αρκετή ινσουλίνη στη δεξαμενή</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Ανεπιβεβαίωτη εντολή</string>
     <string name="requested_by_user" comment="26 characters max for translation">Ζητήθηκε από το χρήστη</string>
-    <string name="profile_set_ok">Ρύθμιση προφίλ OK</string>
     <string name="suspend_delivery_is_unconfirmed">Δεν επιβεβαιώθηκε η αναστολή! Παρακαλώ χειροκίνητα ανανεώστε την κατάσταση του Pod από τη καρτέλα Omnipod και συνεχίστε τη χορήγηση αν χρειαστεί.</string>
     <string name="insulin_delivery_suspended">Αναστολή χορήγησης ινσουλίνης</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Η ζώνη ώρας στο pod είναι διαφορετική από τη ζώνη ώρας στο τηλέφωνο. Ο βασικός ρυθμός είναι εσφαλμένος. Αλλάξτε το προφίλ για διόρθωση</string>
