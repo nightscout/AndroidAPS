@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">Impossibile aggiornare il profilo basale</string>
     <string name="no_valid_basal_rate">Nessuna velocità basale valida letta dal micro</string>
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
-    <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
     <string name="loop_disabled_by_user">Loop disabilitato dall\'utente</string>
     <string name="event_type">Tipo evento</string>
     <string name="mgdl">mg/dL</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">Sceglierne uno. Solo uno alla volta può essere attivo.</string>
     <string name="configbuilder_pick_many_hint">Scegli tutte le opzioni che si applicano.</string>
     <string name="configbuilder_no_selection_warning">Nessun plugin selezionato in questa categoria.</string>
-    <string name="simple_mode">Modalità semplice</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Contrai</string>
     <string name="no_compose_preferences">Nessuna preferenza disponibile per questo plugin</string>
-    <string name="plugin_no_preferences">Il plugin non supporta le preferenze</string>
     <string name="confirm_password_hint">Conferma la password</string>
     <string name="confirm_pin_hint">Conferma il PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">Muto</string>
     <string name="success">OK</string>
     <string name="advanced_settings_title">Impostazioni avanzate</string>
-    <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="extended_bolus">Bolo esteso</string>
     <string name="paused">In pausa</string>
     <string name="running">In esecuzione</string>
@@ -201,7 +197,6 @@
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
     <string name="percentage_label">Percentuale</string>
-    <string name="timeshift_label">Timeshift</string>
     <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
@@ -265,7 +260,6 @@
     <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valore basale sostituito dal massimo valore supportato: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -368,7 +362,6 @@
     <string name="scene_management_desc">Crea, modifica e gestisci scene</string>
     <string name="scene_action_count">Azioni %1$d</string>
     <string name="scene_start_from_template">Inizia da un modello</string>
-    <string name="scene_editor_reason">Motivo</string>
     <string name="scene_editor_target">Target</string>
     <string name="scene_editor_tt_preset">TT preset</string>
     <string name="scene_editor_no_tt_presets">Nessun preset TT configurato</string>
@@ -399,10 +392,8 @@
     <string name="clientcontrol_action_cancel_temp_target">Cancella temp target</string>
     <string name="clientcontrol_action_activate_scene">Attivare la scena %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Fine Scena</string>
-    <string name="clientcontrol_action_activate_insulin">Attiva insulina %1$s</string>
     <string name="clientcontrol_action_update_settings">Aggiorna le impostazioni</string>
     <string name="clientcontrol_action_deliver_bolus">Eroga bolo</string>
-    <string name="clientcontrol_action_record_bolus">Registra bolo</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Questo dispositivo non è abbinato a un master.</string>
     <string name="clientcontrol_fail_not_reachable">Il master è offline.</string>
@@ -485,7 +476,6 @@
     <string name="activation">Attivazione</string>
     <string name="temp_target_management">Target Temporaneo</string>
     <string name="revert_to_defaults">Ripristino delle impostazioni predefinite</string>
-    <string name="confirm_cancel_temp_target">Annullare il target temporaneo attivo?</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -671,8 +661,6 @@
     <string name="no_profile_selected">Nessun profilo selezionato</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
     <string name="profile_not_saved_activate">Profilo non salvato. Si prega di salvare il profilo prima di attivarlo.</string>
-    <string name="profile_activation_failed">Attivazione del profilo fallita</string>
-    <string name="profile_switch_save_failed">Il cambio del profilo non può essere salvato. Per favore riprova.</string>
     <string name="profile_basal_not_compatible_with_pump">La velocità basale non è compatibile col micro corrente e non può essere attivata. Ridurre la percentuale o regolare la velocità basale.</string>
     <string name="profile_pump_incompatible_label">Limite micro</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
@@ -753,12 +741,9 @@
     <string name="wizard_calculation">Calcolo</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Rimozione massima: %1$d g (carboidrati a bordo)</string>
-    <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
-    <string name="bolus_equal_zero_no_action">Bolo = 0. Nessuna azione intrapresa!</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
-    <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
     <string name="wizard_carbs_constraint">Violazione vincolo CHO!</string>
     <string name="wizard_trend_detail">Tendenza 15min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Violazione vincolo insulina!\nImpossibile erogare %1$.2fU</string>
@@ -1083,6 +1068,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
-    <string name="remove_items">Rimuovi elementi</string>
-    <string name="sort_items">Ordina elementi</string>
 </resources>
