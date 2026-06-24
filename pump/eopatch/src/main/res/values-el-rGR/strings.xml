@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Βάση Βασικού Ρυθμού</string>
     <string name="eopatch_temp_basal_rate">Προσωρινός Βασικός Ρυθμός</string>
     <string name="invalid_basal_rate">Ο βασικός ρυθμός του προφίλ είναι μικρότερος από 0,05 U / ώρα. Η EOPatch έχει ελάχιστη μονάδα έγχυσης 0. 5U. Προσπαθήστε ξανά μετά τη ρύθμιση του προφίλ σε περισσότερο από την ελάχιστη μονάδα έγχυσης.</string>
-    <string name="no_profile_selected">Δεν επιλέχθηκε προφίλ. Παρακαλώ επιλέξτε προφίλ και προσπαθήστε ξανά.</string>
     <string name="symbol_day">ημέρα</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
