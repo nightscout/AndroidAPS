@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">기본 basal 양</string>
     <string name="eopatch_temp_basal_rate">임시 basal 양</string>
     <string name="invalid_basal_rate">프로파일의 basal이 0.05 U/보다 적습니다. EOPatch의 최소 주입량은 0.05U입니다. 최소 주입량보다 높게 프로파일 설정 후 다시 시도하십시오.</string>
-    <string name="no_profile_selected">프로파일이 선택되지 않았습니다. 프로파일을 선택하고 다시 시도하십시오.</string>
     <string name="symbol_day">일</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
