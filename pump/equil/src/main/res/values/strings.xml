@@ -42,7 +42,6 @@
     <string name="equil_change_content">Please detach the pump from the base plate.</string>
 
     <string name="equil_unpair_alert">Are you sure you want to relinquish control over %1$s?</string>
-    <string name="equil_devices_number_hint">Device number</string>
     <string name="equil_record_basal">Basal rate %1$s U/H</string>
     <string name="equil_record_basal_temp">Temporary basal rate %1$s U/H</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
@@ -161,7 +160,6 @@
     <string name="equil_unbind">Unpair device</string>
     <string name="equil_device_unpaired">Device unpaired</string>
     <string name="equil_assemble">Please assemble the pump, the filled reservoir and the charged battery</string>
-    <string name="equil_devices_number">Enter new pump ID</string>
     <string name="equil_pair_password_title">Enter password for %1$s</string>
     <string name="equil_insert">Please prime the reservoir until there is a drop of insulin on the needle tip</string>
     <string name="equil_insert2">The pump must not be on the pump base.</string>
@@ -170,6 +168,5 @@
     <string name="equil_pump_updated">Pump updated</string>
 
     <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
-    <string name="error_mustbe6hexadidits">Must be 6 characters of ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Unpair command failed. Pump will be removed anyway. Password set during pairing is not removed from the pump.</string>
 </resources>
