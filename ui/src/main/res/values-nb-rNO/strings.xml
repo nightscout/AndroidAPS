@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
     <string name="no_temp_basal_running">Ingen midlertidig basal kjører</string>
-    <string name="temp_target_short">Midlertidig mål</string>
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
     <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">Brukerprofilbeskrivelsen brukes til å vise de mest brukte stedene for en mann, en kvinne eller et barn</string>
     <string name="site_management">Profil for stedsadministrasjon</string>
     <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, sensorområde eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
-    <string name="update_site_change">Oppdater stedplassering</string>
     <string name="edit_site">Rediger</string>
     <string name="record_site_location">Infusjonssted: %1$s</string>
     <string name="record_site_arrow">Områdepil: %1$s</string>
@@ -146,40 +143,24 @@
     <string name="clientcontrol_pending_working_title">Utfører…</string>
     <string name="clientcontrol_pending_working_text">Venter på bekreftelse fra hovedenhet…</string>
     <string name="clientcontrol_pending_rejected_title">Ikke utført</string>
-    <string name="clientcontrol_pending_rejected_text">Hovedenheten kunne ikke utføre denne forespørselen.</string>
     <string name="clientcontrol_pending_failed_format">%1$s kunne ikke utføres.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Delvis utført</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">%1$s ble utført, men enkelte handlinger kunne ikke utføres.\nKontroller gjeldende status.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Kunne ikke bekrefte</string>
-    <string name="clientcontrol_pending_unconfirmed_text">Forespørselen ble sendt, men hovedenheten bekreftet ikke i tide. Den kan ha blitt utført eller ikke — dette skjermbildet oppdateres dersom status synkroniseres tilbake.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s ble sendt, men ingen bekreftelse ble mottatt.\n%2$s\nDet vil vises her dersom/når hovedenheten utfører handlingen.</string>
     <string name="clientcontrol_pending_stop_waiting">Slutt å vente</string>
     <string name="a11y_add_new_insulin">Legg til nytt insulin</string>
     <string name="a11y_delete_current_insulin">Slett nåværende insulin</string>
-    <string name="activate_insulin_no_profile">Ingen aktiv profil funnet</string>
-    <string name="activate_insulin_new_insulin">Nytt insulin: %1$s</string>
-    <string name="activate_insulin_remaining">Gjenværende: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Profilbytte vil bli opprettet:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Last topp fra</string>
     <string name="cannot_delete_last_insulin">Kan ikke slette siste insulin</string>
     <string name="cannot_delete_active_insulin">Kan ikke slette aktivt insulin</string>
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
-    <string name="timeshift_label">Tidsforskyving</string>
     <string name="percentage_label">Prosent</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Pause loop i 1t</string>
-    <string name="suspendloopfor2h">Pause loop i 2t</string>
-    <string name="suspendloopfor3h">Pause loop i 3t</string>
-    <string name="suspendloopfor10h">Pause loop i 10t</string>
     <string name="disconnectpump">Koble fra pumpen</string>
-    <string name="disconnectpumpfor15m">Koble fra pumpen i 15 min</string>
-    <string name="disconnectpumpfor30m">Koble fra pumpen i 30 min</string>
-    <string name="disconnectpumpfor1h">Koble fra pumpen i 1t</string>
-    <string name="disconnectpumpfor2h">Koble fra pumpen i 2t</string>
-    <string name="disconnectpumpfor3h">Koble fra pumpen i 3t</string>
     <string name="resume">Gjenoppta</string>
     <string name="reconnect">Koble til pumpen</string>
     <string name="duration15m">15 min</string>
@@ -312,8 +293,6 @@
     <string name="quick_launch_no_profiles">Opprett profiler i Lokal profil for å bruke dem her</string>
     <string name="quick_launch_edit_profile_preset">Rediger forhåndsinnstilling for profil</string>
     <string name="quick_launch_profile_permanent">Permanent</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Velg pil</string>
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Godta ny midlertidig basal:</string>
