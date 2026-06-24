@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">ערך בזאלי בסיסי</string>
     <string name="eopatch_temp_basal_rate">מינון בזאלי זמני</string>
     <string name="invalid_basal_rate">הבאזלי של הפרופיל קטן מ-0.05 U/hr. ל-EOPatch יש יחידת הזרקה מינימלית של 0.05U. נא לנסות שוב לאחר הגדרת פרופיל ליותר מיחידת ההזרקה המינימלית.</string>
-    <string name="no_profile_selected">לא נבחר פרופיל. נא לבחור פרופיל ולנסות שוב.</string>
     <string name="symbol_day">יום</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
