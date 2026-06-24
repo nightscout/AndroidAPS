@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Kopplung zurücksetzen</string>
     <string name="diaconn_pairing">Diaconn Pumpe verbinden</string>
     <string name="diaconn_g8_history_alarm">Alarme</string>
     <string name="diaconn_g8_history_basalhours">Basal-Stunden</string>
@@ -13,7 +12,6 @@
     <string name="largetimediff">Großer Zeitunterschied:\nDie Zeit in der Pumpe weicht um mindestens 1,5 Stunden ab.\nPasse die Zeit auf der Pumpe manuell an und lösche zuvor - falls möglich - die Pumpenhistorie.\nAlternativ kannst Du den Loop für die Stunden der Insulinwirkzeit (DIA) deaktivieren.</string>
     <string name="approachingdailylimit">Tagesinsulin-Limit wird bald erreicht</string>
     <string name="startingbolus">Bolus-Abgabe gestartet</string>
-    <string name="waitingforestimatedbolusend">Warte auf das geschätze Bolus-Ende</string>
     <string name="stoppingtempbasal">TBR wird abgebrochen</string>
     <string name="settingtempbasal">TBR wird gesetzt</string>
     <string name="settingextendedbolus">Verzögerter Bolus wird gesetzt</string>
@@ -31,7 +29,6 @@
     <string name="bolus_step">Bolus-Schritt</string>
     <string name="basal_step">Basal-Schritt</string>
     <string name="pairfirst">Bitte kopple deine Pumpe mit deinem Telefon!</string>
-    <string name="processinghistory">"Ereignis wird verarbeitet "</string>
     <string name="diaconn_g8_history_tempbasal">Temporäre Basalrate</string>
     <string name="diaconng8_pump_settings">Diaconn-Pumpen Einstellungen</string>
     <string name="diaconn_g8_pumpalarm">Töne</string>
