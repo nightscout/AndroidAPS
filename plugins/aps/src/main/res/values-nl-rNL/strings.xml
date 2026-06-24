@@ -39,7 +39,6 @@
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
     <string name="hardlimit">max limiet (SC)</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Piek</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
     <string name="pump_not_initialized">Pomp niet geïnitialiseerd!</string>
