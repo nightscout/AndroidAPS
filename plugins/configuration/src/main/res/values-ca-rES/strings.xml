@@ -18,7 +18,6 @@
     <string name="master_password_summary">La clau mestra es fa servir per encriptar la còpia de seguretat i per editar la seguretat a l\'aplicació. Recordeu-la o emmagatzemeu-la en un lloc segur.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Utilitzeu valors del vostre àpat més gros habitualment\n</string>
-    <string name="status">Estat:</string>
     <string name="diawarning">Si us plau recordeu: els nous perfils d\'insulina requereixen una DIA de al menys 5h. Una DIA de 5-6h a un perfil nou és equivalent a DIA de 3h d\'un perfil antic.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Canviar de perfil</string>
