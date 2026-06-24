@@ -386,6 +386,7 @@
     <string name="scene_profile_not_found">找不到設定檔 \"%1$s\"</string>
     <string name="scene_lock_banner_master_offline">無法連線到主裝置。恢復連線後將繼續提供情境控制。</string>
     <string name="master_offline_banner">無法連線到主裝置。連線恢復前，編輯功能已停用。</string>
+    <string name="master_control_disabled_banner">Master 已停用遠端控制。在 Master 重新啟用之前，無法進行編輯。</string>
     <string name="scene_lock_reason_master_offline">主裝置已中斷連線</string>
     <string name="scene_lock_reason_scene_active">請先停止正在執行的情境</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
