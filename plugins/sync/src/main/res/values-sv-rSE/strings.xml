@@ -9,14 +9,12 @@
     <string name="blocked_by_connectivity">Blockerad av anslutningsinställningar</string>
     <string name="unsupported_ns_version">Versionen av Nightscout stöds inte</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NS Client kan inte uppdatera Nightscout. Fel API secret?</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">Synkronisera nu</string>
     <string name="queue">Kö:</string>
-    <string name="status">Status:</string>
     <string name="clear_log">Töm logg</string>
     <string name="full_sync">Full synkronisering</string>
     <string name="full_sync_comment">Full synkronisering? Det kan ta flera timmar du kommer inte att se nya data i NS förrän den är klar.</string>
@@ -36,7 +34,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Skicka data till xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Avancerad Statusrad</string>
-    <string name="disabled_loop">Loop inaktiverad</string>
     <string name="xdrip_not_installed">xDrip+ inte installerat</string>
     <string name="calibration_sent">Kalibrering skickad till xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Skicka glukos och behandlingsdata till xDrip+. Datakällan \"xDrip+ Sync Follower\" måste väljas och godkännande av data måste aktiveras i Inställningar - Inter-app-inställningar - Acceptera Glukos/Behandlingar</string>
@@ -68,7 +65,6 @@
     <string name="pump_fetching_data">försöker hämta data från pump.</string>
     <string name="pump_old_data">TDD: Fortfarande gamla data! Kan inte hämta från pump.</string>
     <string name="units_short">U</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Ingen aktiv profil!</string>
     <string name="target_only_aps_mode">Målen gäller endast i APS-läge!</string>
