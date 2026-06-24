@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">Chyba při nastavení bazálního profilu</string>
     <string name="no_valid_basal_rate">Z pumpy nepřečten žádný platný bazál</string>
     <string name="limiting_iob">IOB omezeno na %1$.1f U: %2$s</string>
-    <string name="loop_disabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="loop_disabled_by_user">Smyčka zakázána uživatelem</string>
     <string name="event_type">Typ události</string>
     <string name="mgdl">mg/dL</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Pouze jeden může být aktivní.</string>
     <string name="configbuilder_pick_many_hint">Zvolte, co se použije.</string>
     <string name="configbuilder_no_selection_warning">V této kategorii není vybrán žádný plugin.</string>
-    <string name="simple_mode">Jednoduchý režim</string>
     <string name="expand">Rozbalit</string>
     <string name="collapse">Sbalit</string>
     <string name="no_compose_preferences">Pro tento plugin nejsou dostupné žádné předvolby</string>
-    <string name="plugin_no_preferences">Plugin nepodporuje předvolby</string>
     <string name="confirm_password_hint">Potvrďte heslo</string>
     <string name="confirm_pin_hint">Potvrďte PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s - %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">Ztlumit</string>
     <string name="success">Úspěch</string>
     <string name="advanced_settings_title">Rozšířená nastavení</string>
-    <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
     <string name="extended_bolus">Prodloužený bolus</string>
     <string name="paused">Pozastaveno</string>
     <string name="running">Běží</string>
@@ -201,7 +197,6 @@
     <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procenta</string>
-    <string name="timeshift_label">Posun času</string>
     <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
     <string name="overview_treatment_label">Ošetření</string>
     <string name="copytolocalprofile">Vytvořit z tohoto profilu nový profil?</string>
@@ -265,7 +260,6 @@
     <string name="basalprofilenotaligned">Hodnoty bazálů nejsou zarovnané na celé hodiny: %1$s</string>
     <string name="minimalbasalvaluereplaced">Hodnota bazálu byla nahrazena minimální možnou: %1$s</string>
     <string name="maximumbasalvaluereplaced">Hodnota bazálu nahrazena maximální možnou: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -368,7 +362,6 @@
     <string name="scene_management_desc">Vytvoření, úprava a správa scén</string>
     <string name="scene_action_count">%1$d akcí</string>
     <string name="scene_start_from_template">Začít ze šablony</string>
-    <string name="scene_editor_reason">Důvod</string>
     <string name="scene_editor_target">Cíl</string>
     <string name="scene_editor_tt_preset">Předvolba TT</string>
     <string name="scene_editor_no_tt_presets">Žádné předvolby TT nejsou nastaveny</string>
@@ -399,10 +392,8 @@
     <string name="clientcontrol_action_cancel_temp_target">Zrušit dočasný cíl</string>
     <string name="clientcontrol_action_activate_scene">Aktivovat scénu \"%1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Ukončit scénu</string>
-    <string name="clientcontrol_action_activate_insulin">Aktivovat inzulín %1$s</string>
     <string name="clientcontrol_action_update_settings">Aktualizovat nastavení</string>
     <string name="clientcontrol_action_deliver_bolus">Odeslat bolus</string>
-    <string name="clientcontrol_action_record_bolus">Zaznamenat bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Toto zařízení není spárováno s hlavním zařízením.</string>
     <string name="clientcontrol_fail_not_reachable">Hlavní zařízení je nedostupné.</string>
@@ -485,7 +476,6 @@
     <string name="activation">Aktivace</string>
     <string name="temp_target_management">Dočasný cíl</string>
     <string name="revert_to_defaults">Vrátit na výchozí</string>
-    <string name="confirm_cancel_temp_target">Zrušit aktivní dočasný cíl?</string>
     <string name="loop">Smyčka</string>
     <string name="ns">NS</string>
     <string name="record">Záznam</string>
@@ -671,8 +661,6 @@
     <string name="no_profile_selected">Nebyl vybrán žádný profil</string>
     <string name="missing_profile_name">Chybí název profilu</string>
     <string name="profile_not_saved_activate">Profil nebyl uložen. Před aktivací prosím uložte profil.</string>
-    <string name="profile_activation_failed">Aktivace profilu selhala</string>
-    <string name="profile_switch_save_failed">Přepnutí profilu nelze uložit. Zkuste to prosím znovu.</string>
     <string name="profile_basal_not_compatible_with_pump">Bazál není kompatibilní s aktuální pumpou a nemůže být aktivován. Snížte procenta nebo upravte bazální dávku.</string>
     <string name="profile_pump_incompatible_label">Limit pumpy</string>
     <string name="error_in_ic_values">Chyba v hodnotách IC</string>
@@ -753,12 +741,9 @@
     <string name="wizard_calculation">Výpočet</string>
     <string name="no_action_selected">Žádná akce nevybrána, nic se neprovede</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max. odebrání: %1$dg (COB)</string>
-    <string name="carb_equal_zero_no_action">Sacharidy = 0. Žádná akce!</string>
-    <string name="bolus_equal_zero_no_action">Bolus = 0. Žádná akce nebyla provedena!</string>
     <string name="wizard_no_insulin_required">Inzulín není potřeba</string>
     <string name="wizard_no_actual_bg">Žádná aktuální glykémie k výpočtu!</string>
     <string name="wizard_no_active_profile">Není nastaven žádný aktivní profil!</string>
-    <string name="wizard_no_cob">Neznámý COB! Chybějící glykémie nebo nedávný restart aplikace?</string>
     <string name="wizard_carbs_constraint">Sacharidy mimo povolený rozsah!</string>
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Inzulím mimo povolený rozsah!\nNelze podat %1$.2fU</string>
@@ -1089,6 +1074,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENZ%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSEN</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">KROKY</string>
-    <string name="remove_items">Odstranit položky</string>
-    <string name="sort_items">Seřadit položky</string>
 </resources>
