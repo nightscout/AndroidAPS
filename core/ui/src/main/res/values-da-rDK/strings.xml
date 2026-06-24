@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Opdatering af basal profil mislykkedes</string>
     <string name="no_valid_basal_rate">Ingen gyldig basal rate læst fra pumpen</string>
     <string name="limiting_iob">Begrænser IOB til %1$.1f IE på grund af %2$s</string>
-    <string name="loop_disabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
     <string name="event_type">Hændelsestype</string>
     <string name="save">Gem</string>
     <string name="snooze">Udsæt</string>
@@ -39,7 +38,6 @@
     <string name="mute">Lydløs</string>
     <string name="success">Succes</string>
     <string name="advanced_settings_title">Avancerede indstillinger</string>
-    <string name="extendedbolusdeliveryerror">Forlænget bolus leveringsfejl</string>
     <string name="extended_bolus">Forlænget bolus</string>
     <string name="paused">Pauset</string>
     <string name="tdd_total">TDD Total</string>
@@ -143,7 +141,6 @@
     <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal dosis erstattet af maximal understøttet dosis: %1$s</string>
-    <string name="profile_per_unit">/IE</string>
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
@@ -364,7 +361,6 @@
     <string name="no_action_selected">Ingen handling valgt, intet vil ske</string>
     <string name="wizard_no_actual_bg">Ingen nylig BG til at basere beregningen på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
-    <string name="wizard_no_cob">Ukendt COB! BG læsning mangler eller nylig app genstart?</string>
     <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
     <string name="wizard_constraint_bolus_size">Overtrædelse af insulinbegrænsning!\nKan ikke levere %1$.2fE</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgængelig!</string>
