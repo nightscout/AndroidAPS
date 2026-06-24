@@ -20,6 +20,7 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
     <string name="syncinfotext">Sincronizza i dati nel cloud. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non avrai impostato il client Nightscout o Tidepool.</string>
+    <string name="status_label">Stato:</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5-6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
     <string name="profile">Profilo</string>
     <string name="doprofileswitch">Cambia profilo</string>
