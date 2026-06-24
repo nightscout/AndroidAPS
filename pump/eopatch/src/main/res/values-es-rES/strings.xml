@@ -13,7 +13,6 @@
     <string name="eopatch_base_basal_rate">Tasa basal programada</string>
     <string name="eopatch_temp_basal_rate">Tasa basal temporal</string>
     <string name="invalid_basal_rate">La tasa basal del perfil es inferior a 0.05 U/h. EOPatch tiene una unidad de inyección mínima de 0.05U. Por favor, inténtelo de nuevo, después de ajustar el perfil usando la unidad de inyección mínima</string>
-    <string name="no_profile_selected">No se ha seleccionado ningún perfil. Por favor, seleccione un perfil e inténtelo de nuevo.</string>
     <string name="symbol_day">día</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
