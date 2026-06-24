@@ -29,7 +29,6 @@
     <string name="omnipod_dash_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Непотвърдена команда</string>
     <string name="requested_by_user" comment="26 characters max for translation">Заявено от потребителя</string>
-    <string name="profile_set_ok">Профилът е зададен OK</string>
     <string name="suspend_delivery_is_unconfirmed">Спирането на доставката не е потвърдено! Моля, опреснете ръчно състоянието на Pod от раздела Omnipod и възобновете доставката, ако е необходимо.</string>
     <string name="insulin_delivery_suspended">Доставянето на инсулин е спряно</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Часовата зона на pod е различна от часовата зона на телефона. Базалната доза е неправилна. Превключете профила, за да коригирате</string>
