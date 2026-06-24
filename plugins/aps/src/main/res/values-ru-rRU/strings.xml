@@ -39,7 +39,6 @@
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Пик</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
     <string name="pump_not_initialized">Помпа не инициализирована!</string>
