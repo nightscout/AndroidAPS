@@ -40,7 +40,6 @@
     <string name="maxvalueinpreferences">偏好設定中的最大值</string>
     <string name="hardlimit">硬限制</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">高峰</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">在過去3分鐘內已經進行了一次注射，跳過SMB</string>
     <string name="pump_not_initialized">幫浦未初始化！</string>
