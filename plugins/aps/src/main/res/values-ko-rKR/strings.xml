@@ -36,7 +36,6 @@
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드한계</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">피크</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">최근 3분 이내에 Bolus가 주입되었습니다. SMB를 건너뜁니다.</string>
     <string name="pump_not_initialized">펌프가 초기화 되지 않았습니다!</string>
