@@ -12,7 +12,6 @@
     <string name="patch_not_active">Patch ikke aktiveret</string>
     <string name="pump_setting_failed">Indstilling af brugerindstillinger til pumpe mislykkedes!</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Sidst forbundet</string>
     <string name="active_bolus_label">Aktiv bolus</string>
     <string name="pump_state_label">Pumpe tilstand</string>
     <string name="active_alarms_label">Aktive alarmer</string>
