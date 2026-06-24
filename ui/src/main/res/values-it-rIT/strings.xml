@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">Vincolo CHO applicato</string>
     <string name="no_temp_basal_running">Nessuna basale temporanea in esecuzione</string>
-    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Avvia TT Attività fisica</string>
     <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
     <string name="start_hypo_tt">Avvia TT Ipoglicemia</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">La descrizione del profilo utente viene utilizzata per mostrare i siti più frequenti disponibili per un uomo, una donna o un bambino</string>
     <string name="site_management">Profilo Di Gestione Sito</string>
     <string name="site_management_description">Imposta qui se vuoi gestire il sito del micro, il sito del CGM o entrambi. Questa impostazione verrà utilizzata per inviare automaticamente la finestra di gestione del sito su ogni nuovo inserimento rilevato</string>
-    <string name="update_site_change">Aggiorna Posizione Sito</string>
     <string name="edit_site">Modifica</string>
     <string name="record_site_location">Posizione Del Sito: %1$s</string>
     <string name="record_site_arrow">Freccia Del Sito: %1$s</string>
@@ -146,40 +143,24 @@
     <string name="clientcontrol_pending_working_title">Applicazione…</string>
     <string name="clientcontrol_pending_working_text">In attesa che il master confermi…</string>
     <string name="clientcontrol_pending_rejected_title">Non Applicato</string>
-    <string name="clientcontrol_pending_rejected_text">Il master non può applicare questa richiesta.</string>
     <string name="clientcontrol_pending_failed_format">%1$s non può essere fatto.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Parzialmente applicato</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">%1$s è stato applicato, ma alcune azioni non possono esserlo.\nControlla lo stato attivo.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Impossibile confermare</string>
-    <string name="clientcontrol_pending_unconfirmed_text">La richiesta è stata inviata ma il master non ha confermato in tempo. Potrebbe essere stato applicato come potrebbe non essere stato applicato: questa schermata si aggiornerà se si sincronizza.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s è stato inviato, ma non è tornata alcuna conferma.\n%2$s\nApparirà qui se/quando il master lo applica.</string>
     <string name="clientcontrol_pending_stop_waiting">Smetti di aspettare</string>
     <string name="a11y_add_new_insulin">Aggiungi nuova insulina</string>
     <string name="a11y_delete_current_insulin">Elimina insulina corrente</string>
-    <string name="activate_insulin_no_profile">Nessun profilo attivo trovato</string>
-    <string name="activate_insulin_new_insulin">Nuova insulina: %1$s</string>
-    <string name="activate_insulin_remaining">Rimanente: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Lo switch del profilo verrà creato:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Picco di carico da</string>
     <string name="cannot_delete_last_insulin">Impossibile cancellare l\'ultima insulina</string>
     <string name="cannot_delete_active_insulin">Impossibile eliminare l\'insulina attiva</string>
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
-    <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentuale</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Sospendi loop per 1h</string>
-    <string name="suspendloopfor2h">Sospendi loop per 2h</string>
-    <string name="suspendloopfor3h">Sospendi loop per 3h</string>
-    <string name="suspendloopfor10h">Sospendi loop per 10h</string>
     <string name="disconnectpump">Disconnetti micro</string>
-    <string name="disconnectpumpfor15m">Disconnetti micro per 15 min</string>
-    <string name="disconnectpumpfor30m">Disconnetti micro per 30 min</string>
-    <string name="disconnectpumpfor1h">Disconnetti micro per 1 h</string>
-    <string name="disconnectpumpfor2h">Disconnetti micro per 2 h</string>
-    <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
     <string name="resume">Riprendi</string>
     <string name="reconnect">Riconnetti micro</string>
     <string name="duration15m">15 min</string>
@@ -312,8 +293,6 @@
     <string name="quick_launch_no_profiles">Crea profili in Profilo Locale per usarli qui</string>
     <string name="quick_launch_edit_profile_preset">Modifica preimpostazione profilo</string>
     <string name="quick_launch_profile_permanent">Permanente</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Seleziona Freccia</string>
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Accetta nuova basale temporanea:</string>
