@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Primijenjeno je ograničenje ugljikohidrata</string>
-    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Započni aktivnost TT</string>
     <string name="start_eating_soon_tt">Započnite uskoro počnite jesti TT</string>
     <string name="start_hypo_tt">Pokrenite Hypo TT</string>
