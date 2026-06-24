@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automation</string>
-    <string name="automation_description">Användardefinierade automationer</string>
     <string name="automation_missing_task_name">Ange ett namn för uppgiften.</string>
     <string name="automation_missing_trigger">Specificera åtminstone en utlösare.</string>
     <string name="automation_missing_action">Specificera åtminstone en åtgärd.</string>
@@ -17,7 +15,6 @@
     <string name="alreadyset">Redan satt</string>
     <string name="profilepercentage">Procent av profil</string>
     <string name="startprofileforever">Byt till profil %1$d%%</string>
-    <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Skicka SMS: %1$s</string>
     <string name="sendsmsactiondescription">Skicka SMS till alla nummer</string>
     <string name="sendsmsactiontext">Skicka SMS med text</string>
