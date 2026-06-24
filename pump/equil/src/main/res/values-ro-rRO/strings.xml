@@ -35,7 +35,6 @@
     <string name="equil_change">Schimbați pompa</string>
     <string name="equil_change_content">Detașați pompa de pe placa de bază.</string>
     <string name="equil_unpair_alert">Sunteți sigur că vreți să renunțați la controlul asupra %1$s?</string>
-    <string name="equil_devices_number_hint">Numărul dispozitivului</string>
     <string name="equil_record_basal">Rată bazală %1$s U/h</string>
     <string name="equil_record_basal_temp">Rată bazală temporară %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
@@ -143,7 +142,6 @@
     <string name="equil_unbind">Dezasociați dispozitiv</string>
     <string name="equil_device_unpaired">Dispozitiv dezasociat</string>
     <string name="equil_assemble">Vă rog asamblați pompa, rezervorul umplut și bateria încărcată</string>
-    <string name="equil_devices_number">Introduceți noul ID al pompei</string>
     <string name="equil_pair_password_title">Introduceți parola pentru %1$s</string>
     <string name="equil_insert">Vă rog să amorsați rezervorul până când se vede o picătură de insulină în vârful acului</string>
     <string name="equil_insert2">Pompa nu trebuie să fie pusă pe baza pompei.</string>
@@ -151,6 +149,5 @@
     <string name="equil_hint2">Amorsați canula</string>
     <string name="equil_pump_updated">Pompă actualizată</string>
     <string name="equil_replace_reservoir">Rezervorul este gol. Vă rog schimbați rezervorul</string>
-    <string name="error_mustbe6hexadidits">Trebuie să conțină 6 caractere din șirul ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Comanda de anulare a eșuat. Pompa va fi ștearsă oricum. Parola setată în timpul asocierii nu este eliminată din pompă.</string>
 </resources>
