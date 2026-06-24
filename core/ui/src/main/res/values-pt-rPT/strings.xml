@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Falha a actualizar perfil da basal</string>
     <string name="no_valid_basal_rate">Nenhum valor de basal válido foi lido da bomba</string>
     <string name="limiting_iob">A limitar IA para %1$.1f U porque %2$s</string>
-    <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="event_type">Tipo de evento</string>
     <string name="save">Guardar</string>
     <string name="snooze">Silenciar</string>
@@ -39,7 +38,6 @@
     <string name="mute">Silêncio</string>
     <string name="success">Sucesso</string>
     <string name="advanced_settings_title">Configurações Avançadas</string>
-    <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
     <string name="extended_bolus">Bólus Prolongado</string>
     <string name="paused">Em pausa</string>
     <string name="tdd_total">TID Total</string>
@@ -143,7 +141,6 @@
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
