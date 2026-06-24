@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Pritaikytas AV apribojimas</string>
-    <string name="temp_target_short">LT</string>
     <string name="start_activity_tt">Pradėti Aktyvumo LT</string>
     <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
     <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
@@ -33,19 +31,9 @@
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
-    <string name="timeshift_label">Laiko perstūmimas</string>
     <string name="percentage_label">Procentais</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Sustabdyti ciklą 1 val</string>
-    <string name="suspendloopfor2h">Sustabdyti ciklą 2 val</string>
-    <string name="suspendloopfor3h">Sustabdyti ciklą 3 val</string>
-    <string name="suspendloopfor10h">Sustabdyti ciklą 10 val</string>
     <string name="disconnectpump">Atjungti pompą</string>
-    <string name="disconnectpumpfor15m">Atjungti pompą 15 min</string>
-    <string name="disconnectpumpfor30m">Atjungti pompą 30 min</string>
-    <string name="disconnectpumpfor1h">Atjungti pompą 1 val</string>
-    <string name="disconnectpumpfor2h">Atjungti pompą 2 val</string>
-    <string name="disconnectpumpfor3h">Atjungti pompą 3 val</string>
     <string name="resume">Atnaujinti</string>
     <string name="reconnect">Prijungti pompą</string>
     <string name="duration15m">15 min</string>
