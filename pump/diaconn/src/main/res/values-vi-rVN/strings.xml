@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Đặt lại ghép đôi</string>
     <string name="diaconn_pairing">Ghép đôi máy bơm Diaconn</string>
     <string name="diaconn_g8_history_alarm">Cảnh báo</string>
     <string name="diaconn_g8_history_basalhours">Khung giờ basal</string>
@@ -14,7 +13,6 @@
     <string name="largetimedifftitle">Chênh lệch múi giờ lớn</string>
     <string name="approachingdailylimit">Sắp đạt giới hạn insulin hằng ngày</string>
     <string name="startingbolus">Đang tiêm bolus</string>
-    <string name="waitingforestimatedbolusend">Đang chờ kết thúc liều bolus ước tính</string>
     <string name="gettingbolusstatus">Đang cập nhật trạng thái tiêm</string>
     <string name="stoppingtempbasal">Đang dừng liều nền tạm thời</string>
     <string name="settingtempbasal">Đang cài đặt liều nền tạm thời</string>
@@ -33,7 +31,6 @@
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
     <string name="pairfirst">Hãy kết nối Bơm với điện thoại của bạn!</string>
-    <string name="processinghistory">"Đang xử lý sự kiện "</string>
     <string name="diaconn_g8_history_tempbasal">Liều nền tạm thời</string>
     <string name="diaconng8_pump_settings">Cài đặt Bơm Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Âm thanh</string>
