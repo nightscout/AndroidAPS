@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">Неуспешно обновяване на базалния профил</string>
     <string name="no_valid_basal_rate">Няма валиден базал в помпата</string>
     <string name="limiting_iob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
-    <string name="loop_disabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="loop_disabled_by_user">Кръгът изключен от потребителя</string>
     <string name="event_type">Тип събитие</string>
     <string name="save">Съхрани</string>
@@ -56,11 +55,9 @@
     <string name="configbuilder_pick_one_hint">Изберете един. Само един може да бъде активен.</string>
     <string name="configbuilder_pick_many_hint">Изберете всички валидни.</string>
     <string name="configbuilder_no_selection_warning">Няма избрани в тази категория.</string>
-    <string name="simple_mode">Опростен режим</string>
     <string name="expand">Разшири</string>
     <string name="collapse">Свий</string>
     <string name="no_compose_preferences">Няма настройки за този плъгин</string>
-    <string name="plugin_no_preferences">Плъгинът не поддържа настройки</string>
     <string name="confirm_password_hint">Пордете парола</string>
     <string name="confirm_pin_hint">Потвърдете ПИН</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -93,7 +90,6 @@
     <string name="mute">Заглушаване</string>
     <string name="success">Успешен</string>
     <string name="advanced_settings_title">Разширени настройки</string>
-    <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
     <string name="extended_bolus">Удължен болус</string>
     <string name="paused">Пауза</string>
     <string name="running">Работи</string>
@@ -193,7 +189,6 @@
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
     <string name="percentage_label">Процент</string>
-    <string name="timeshift_label">Отместване</string>
     <string name="confirm_remove_multiple_items">Сигурен ли сте, че искате да премахнете %1$d елементи?</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
@@ -257,7 +252,6 @@
     <string name="basalprofilenotaligned">Базалните стойности не са за кръгли часове: %1$s</string>
     <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално поддържаната стойност: %1$s</string>
     <string name="maximumbasalvaluereplaced">Базалната стойност е заместена от максимално поддържаната стойност %1$s</string>
-    <string name="profile_per_unit">/Е</string>
     <string name="profile_ins_units_per_hour">Е/ч</string>
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
@@ -358,7 +352,6 @@
     <string name="scene_management_desc">Създай, редактирай и управлявай сценарии</string>
     <string name="scene_action_count">%1$d действия</string>
     <string name="scene_start_from_template">Стартирай от темплейт</string>
-    <string name="scene_editor_reason">Причина</string>
     <string name="scene_editor_target">Цел</string>
     <string name="scene_editor_tt_preset">Шаблон на цел</string>
     <string name="scene_editor_no_tt_presets">Няма дефинирани шаблони за цел</string>
@@ -389,10 +382,8 @@
     <string name="clientcontrol_action_cancel_temp_target">Спри временна цел</string>
     <string name="clientcontrol_action_activate_scene">Стартирай сценарий %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Приключи сценария</string>
-    <string name="clientcontrol_action_activate_insulin">Активирай инсулин %1$s</string>
     <string name="clientcontrol_action_update_settings">Обнови настройките</string>
     <string name="clientcontrol_action_deliver_bolus">Стартирай болус</string>
-    <string name="clientcontrol_action_record_bolus">Запиши болус</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Телефонът не е свързан с главния.</string>
     <string name="clientcontrol_fail_not_reachable">Главният телефон няма интернет връзка.</string>
@@ -475,7 +466,6 @@
     <string name="activation">Активиране</string>
     <string name="temp_target_management">Временна цел</string>
     <string name="revert_to_defaults">Върни стандартната</string>
-    <string name="confirm_cancel_temp_target">Да спра активната временна цел?</string>
     <string name="loop">Кръг - Loop</string>
     <string name="ns">Найтскаут</string>
     <string name="record">Запиши</string>
@@ -661,8 +651,6 @@
     <string name="no_profile_selected">Няма избран профил</string>
     <string name="missing_profile_name">Няма име на профила</string>
     <string name="profile_not_saved_activate">Профила не е запазен. Моля съхранете го преди активация.</string>
-    <string name="profile_activation_failed">Активацията неуспешна</string>
-    <string name="profile_switch_save_failed">Не мога да направя смяна на профил. Опитайте отново.</string>
     <string name="profile_basal_not_compatible_with_pump">Базалът не се поддържа от помпата. Намалете процента или стойността на базала.</string>
     <string name="profile_pump_incompatible_label">Лимит на помпата</string>
     <string name="error_in_ic_values">Грешка в стойностите на инс/въгл</string>
@@ -742,12 +730,9 @@
     <string name="wizard_include_cob">Включи въглехидрати</string>
     <string name="wizard_calculation">Калкулация</string>
     <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
-    <string name="carb_equal_zero_no_action">Въглехидрати = 0. Не е необходимо действие!</string>
-    <string name="bolus_equal_zero_no_action">Булус = 0. Няма нужда от действие!</string>
     <string name="wizard_no_insulin_required">Няма нужда от инсулин</string>
     <string name="wizard_no_actual_bg">Не е налична кръвна захар, върху която да се изчисли!</string>
     <string name="wizard_no_active_profile">Не е настроен активен профил!</string>
-    <string name="wizard_no_cob">Няма информация за активни въглехидрати! Липсваща информация за кръвна захар или рестартиране на приложението?</string>
     <string name="wizard_carbs_constraint">Нарушение на въхлехидратните ограничения!</string>
     <string name="wizard_trend_detail">15мин промяна (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Нарушение в ограничението на инсулин!\nНе може да бъде доставен %1$.2fЕ</string>
@@ -1070,6 +1055,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">ЧУВСТВ%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">ПРОМ ЧУВСТВ</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">КРАЧКИ</string>
-    <string name="remove_items">Премахни някои</string>
-    <string name="sort_items">Сортиране</string>
 </resources>
