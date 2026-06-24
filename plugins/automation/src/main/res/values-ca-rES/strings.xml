@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automatització</string>
-    <string name="automation_description">Tasques d\'automatització definides per l\'usuari</string>
     <string name="automation_missing_task_name">Introduïu un nom de tasca.</string>
     <string name="automation_missing_trigger">Especifiqueu almenys un activador.</string>
     <string name="automation_missing_action">Especifiqueu almenys una acció.</string>
@@ -17,7 +15,6 @@
     <string name="alreadyset">Ja definit</string>
     <string name="profilepercentage">Percentatge de perfil</string>
     <string name="startprofileforever">Iniciar perfil %1$d%%</string>
-    <string name="percent_u">Percentatge [%]:</string>
     <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS a tots els números</string>
     <string name="sendsmsactiontext">Enviar SMS amb text</string>
