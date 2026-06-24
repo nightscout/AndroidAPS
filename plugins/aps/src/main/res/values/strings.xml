@@ -45,7 +45,7 @@
     <string name="hardlimit">hard limit</string>
 
     <!--    Autotune   -->
-    <string name="insulin_peak">Peak</string>
+    <string name="autotune_peak">Peak</string>
 
     <!--    Loop -->
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
