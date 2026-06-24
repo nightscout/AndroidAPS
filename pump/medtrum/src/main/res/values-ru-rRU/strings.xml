@@ -14,7 +14,6 @@
     <string name="pump_setting_failed">Сбой передачи пользовательских настроек на помпу!</string>
     <string name="pump_sync_error">Ошибка при синхронизации журнала с помпы, запись пропущена. Проверьте вкладку терапии, правильно ли синхронизированы болюсы. Уберите предупреждение, а если ошибка повторится, замените патч или базу помпы.</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Последнее подключение</string>
     <string name="active_bolus_label">Активный болюс</string>
     <string name="pump_state_label">Статус помпы</string>
     <string name="active_alarms_label">Активные оповещения</string>
