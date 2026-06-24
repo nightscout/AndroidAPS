@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Automatikus</string>
     <string name="automation">Automatizálás</string>
     <string name="alarm_short">Riasztás:</string>
     <string name="or">vagy</string>
