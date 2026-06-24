@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Status der TBR wird ermittelt</string>
     <string name="gettingpumpsettings">Pumpen-Einstellungen werden ermittelt</string>
     <string name="gettingpumptime">Zeiteinstellung der Pumpe wird ermittelt</string>
-    <string name="largetimedifftitle">Große Zeitdifferenz</string>
     <string name="largetimediff">Großer Zeitunterschied:\nDie Zeit in der Pumpe weicht um mindestens 1,5 Stunden ab.\nPasse die Zeit auf der Pumpe manuell an und lösche zuvor - falls möglich - die Pumpenhistorie.\nAlternativ kannst Du den Loop für die Stunden der Insulinwirkzeit (DIA) deaktivieren.</string>
     <string name="pairfirst">Bitte kopple deine Pumpe mit deinem Telefon!</string>
     <string name="approachingdailylimit">Tagesinsulin-Limit wird bald erreicht</string>
