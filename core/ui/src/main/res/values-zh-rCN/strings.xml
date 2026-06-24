@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">更新基础率配置文件失败</string>
     <string name="no_valid_basal_rate">从泵中无法读取有效的基础率</string>
     <string name="limiting_iob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
-    <string name="loop_disabled">按约束条件禁用循环</string>
     <string name="loop_disabled_by_user">用户禁用闭环</string>
     <string name="event_type">事件类型</string>
     <string name="mgdl">mg/dL</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">请选择一个。一次只能激活一个。</string>
     <string name="configbuilder_pick_many_hint">选择所有适用的项。</string>
     <string name="configbuilder_no_selection_warning">此类别中未选择任何插件。</string>
-    <string name="simple_mode">简单模式</string>
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
     <string name="no_compose_preferences">此插件没有可用的首选项设置</string>
-    <string name="plugin_no_preferences">插件不支持首选项设置</string>
     <string name="confirm_password_hint">确认密码</string>
     <string name="confirm_pin_hint">确认 PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">静音</string>
     <string name="success">成功</string>
     <string name="advanced_settings_title">高级设置</string>
-    <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
     <string name="paused">已暂停</string>
     <string name="running">运行中</string>
@@ -201,7 +197,6 @@
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
     <string name="percentage_label">百分比</string>
-    <string name="timeshift_label">时间偏移</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
@@ -265,7 +260,6 @@
     <string name="basalprofilenotaligned">基础率值与小时数不一致:%1$s</string>
     <string name="minimalbasalvaluereplaced">基础率已设为支持的最小值：%1$s</string>
     <string name="maximumbasalvaluereplaced">基础率值被泵支持的最大值:%1$s 替换了</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">克/U</string>
     <!--    ProfileFunction-->
@@ -368,7 +362,6 @@
     <string name="scene_management_desc">创建、编辑和管理情景</string>
     <string name="scene_action_count">%1$d 个动作</string>
     <string name="scene_start_from_template">从模板开始</string>
-    <string name="scene_editor_reason">原因</string>
     <string name="scene_editor_target">目标</string>
     <string name="scene_editor_tt_preset">临时目标预设</string>
     <string name="scene_editor_no_tt_presets">未配置任何临时目标预设</string>
@@ -399,10 +392,8 @@
     <string name="clientcontrol_action_cancel_temp_target">取消临时目标</string>
     <string name="clientcontrol_action_activate_scene">激活情景 %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">结束情景</string>
-    <string name="clientcontrol_action_activate_insulin">激活胰岛素 %1$s</string>
     <string name="clientcontrol_action_update_settings">更新设置</string>
     <string name="clientcontrol_action_deliver_bolus">输注大剂量</string>
-    <string name="clientcontrol_action_record_bolus">记录大剂量</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">此设备未与主机配对。</string>
     <string name="clientcontrol_fail_not_reachable">主机已离线。</string>
@@ -485,7 +476,6 @@
     <string name="activation">激活</string>
     <string name="temp_target_management">临时目标</string>
     <string name="revert_to_defaults">恢复为默认值</string>
-    <string name="confirm_cancel_temp_target">取消活动的临时目标？</string>
     <string name="loop">闭环</string>
     <string name="ns">NS</string>
     <string name="record">记录</string>
@@ -671,8 +661,6 @@
     <string name="no_profile_selected">未选择配置文件</string>
     <string name="missing_profile_name">缺少配置文件名称</string>
     <string name="profile_not_saved_activate">配置文件未保存。请在激活前保存配置文件。</string>
-    <string name="profile_activation_failed">配置文件激活失败</string>
-    <string name="profile_switch_save_failed">配置文件切换未能保存，请重试。</string>
     <string name="profile_basal_not_compatible_with_pump">基础率与当前泵不兼容，无法激活。请降低百分比或调整基础率。</string>
     <string name="profile_pump_incompatible_label">泵限制</string>
     <string name="error_in_ic_values">IC 数值错误</string>
@@ -753,12 +741,9 @@
     <string name="wizard_calculation">计算</string>
     <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">最大移除：%1$d g（COB）</string>
-    <string name="carb_equal_zero_no_action">碳水化合物 = 0。未采取任何措施！</string>
-    <string name="bolus_equal_zero_no_action">大剂量 = 0。未采取任何措施！</string>
     <string name="wizard_no_insulin_required">不需要胰岛素</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
     <string name="wizard_no_active_profile">没有激活的个人配置文件！</string>
-    <string name="wizard_no_cob">未知的活性碳水！血糖读取缺失或最近重新启动了应用程序？</string>
     <string name="wizard_carbs_constraint">碳水违反约束条件!</string>
     <string name="wizard_trend_detail">15分钟趋势(%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">胰岛素剂量违法约束！\n无法输注 %1$.2fU</string>
@@ -1080,6 +1065,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
-    <string name="remove_items">删除项目</string>
-    <string name="sort_items">项目排序</string>
 </resources>
