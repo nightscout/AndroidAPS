@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Eliminar Emparejamiento</string>
     <string name="diaconn_pairing">Emparejamiento de Bomba Diaconn</string>
     <string name="diaconn_g8_history_alarm">Alarmas</string>
     <string name="diaconn_g8_history_basalhours">Horas Basales</string>
@@ -14,7 +13,6 @@
     <string name="largetimedifftitle">Gran diferencia horaria</string>
     <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>
     <string name="startingbolus">Iniciando entrega del bolo</string>
-    <string name="waitingforestimatedbolusend">Esperando el final del bolo estimado</string>
     <string name="gettingbolusstatus">Obteniendo estado del bolo</string>
     <string name="stoppingtempbasal">Parando basal temporal</string>
     <string name="settingtempbasal">Ajustando basal temporal</string>
@@ -33,7 +31,6 @@
     <string name="bolus_step">Incremento de bolo</string>
     <string name="basal_step">Paso Basal</string>
     <string name="pairfirst">Por favor, ¡empareja tu bomba con el teléfono!</string>
-    <string name="processinghistory">"Procesando evento "</string>
     <string name="diaconn_g8_history_tempbasal">Basal Temporal</string>
     <string name="diaconng8_pump_settings">Ajustes de la bomba Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Sonido</string>
