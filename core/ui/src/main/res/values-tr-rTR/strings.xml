@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Bazal profiliniz güncellenemedi</string>
     <string name="no_valid_basal_rate">Pompadan okunan geçerli bir bazal oranı yok</string>
     <string name="limiting_iob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
-    <string name="loop_disabled">DÖNGÜ KISITLAMALARDAN DEVREDIŞI BIRAKILDI</string>
     <string name="event_type">Etkinlik tipi</string>
     <string name="save">Kaydet</string>
     <string name="snooze">Ertele</string>
@@ -39,7 +38,6 @@
     <string name="mute">Sessiz</string>
     <string name="success">Başarılı</string>
     <string name="advanced_settings_title">Gelişmiş Ayarlar</string>
-    <string name="extendedbolusdeliveryerror">Yayma bolus iletim hatası</string>
     <string name="extended_bolus">Yayma Bolus</string>
     <string name="paused">Duraklatıldı</string>
     <string name="tdd_total">GTD Toplam</string>
@@ -161,7 +159,6 @@
     <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
     <string name="minimalbasalvaluereplaced">Desteklenen minimum değerle değiştirilen bazal değer: %1$s</string>
     <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %1$s</string>
-    <string name="profile_per_unit">/Ü</string>
     <string name="profile_ins_units_per_hour">Ü/s</string>
     <string name="profile_carbs_per_unit">g/Ü</string>
     <!--    ProfileFunction-->
@@ -390,10 +387,8 @@
     <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
     <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
-    <string name="carb_equal_zero_no_action">Karb = 0. Hiçbir şey yapılmadı!</string>
     <string name="wizard_no_actual_bg">Hesaplamayı temel alacak yeni bir KŞ yok!</string>
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="wizard_no_cob">Aktif karbonhidrat (AKRB) bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
     <string name="wizard_constraint_bolus_size">İnsülin kısıtlaması ihlali!\n%1$.2fÜ iletilemez</string>
     <string name="wizard_pump_not_available">Pompa mevcut değil!</string>
