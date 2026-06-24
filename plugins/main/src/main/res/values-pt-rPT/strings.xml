@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disabled_loop">Loop Desactivado</string>
     <string name="nav_history_browser">Navegador do histórico</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulina</string>
