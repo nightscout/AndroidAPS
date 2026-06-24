@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Podstawowa dawka bazowa</string>
     <string name="eopatch_temp_basal_rate">Tymczasowa dawka bazowa</string>
     <string name="invalid_basal_rate">Dawka bazowa w profilu jest mniejsza niż 0,05 U/godz. Minimalna pojemność iniekcji na pompie EOPatch wynosi 0.05 U. Skoryguj profil używając dawek bazy większych niż minimalne możliwe do wstrzyknięcia i spróbuj ponownie.</string>
-    <string name="no_profile_selected">Nie wybrano profilu. Wybierz profil i spróbuj ponownie.</string>
     <string name="symbol_day">dzień</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
