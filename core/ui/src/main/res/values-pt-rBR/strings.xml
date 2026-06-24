@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Falha ao atualizar o perfil basal</string>
     <string name="no_valid_basal_rate">Nenhum valor de basal temporaria valido foi lido da bomba</string>
     <string name="limiting_iob">A limitar IOB para %1$.1f U porque %2$s</string>
-    <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="event_type">Tipo de evento</string>
     <string name="save">Salvar</string>
     <string name="snooze">Silenciar</string>
@@ -39,7 +38,6 @@
     <string name="mute">Silenciar</string>
     <string name="success">Sucesso</string>
     <string name="advanced_settings_title">Configurações Avançadas</string>
-    <string name="extendedbolusdeliveryerror">Erro na entrega Bólus Estendido</string>
     <string name="extended_bolus">Bólus estendido</string>
     <string name="paused">Pausado</string>
     <string name="tdd_total">DDT Total</string>
@@ -143,7 +141,6 @@
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -364,7 +361,6 @@
     <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
     <string name="wizard_no_actual_bg">Nenhuma glicemia recente para base de cálculo!</string>
     <string name="wizard_no_active_profile">Nenhum perfil ativo definido!</string>
-    <string name="wizard_no_cob">CA desconhecido! Leitura de Glicemia faltando ou reinício recente do app?</string>
     <string name="wizard_carbs_constraint">Violação da restrição de carboidrato!</string>
     <string name="wizard_constraint_bolus_size">Violação de restrição de insulina!\nNão é possível entregar %1$.2fU</string>
     <string name="wizard_pump_not_available">Nenhuma bomba disponível!</string>
