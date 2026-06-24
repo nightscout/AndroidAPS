@@ -23,7 +23,6 @@
     <string name="omnipod_dash_not_enough_insulin">Não há insulina suficiente no reservatório</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando não confirmado</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado pelo utilizador</string>
-    <string name="profile_set_ok">Definição de perfil OK</string>
     <string name="suspend_delivery_is_unconfirmed">A suspensão da administração não está confirmada! Por favor, atualize manualmente o estado do Pod na guia Omnipod e retome a administração, se necessário.</string>
     <string name="insulin_delivery_suspended">Entrega de insulina suspensa</string>
 </resources>
