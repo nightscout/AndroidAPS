@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">Failed to update basal profile</string>
     <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
-    <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="loop_disabled_by_user">Loop disabled by user</string>
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dL</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">Choose one. Only one can be active at a time.</string>
     <string name="configbuilder_pick_many_hint">Choose any that apply.</string>
     <string name="configbuilder_no_selection_warning">No plugin is selected in this category.</string>
-    <string name="simple_mode">Simple mode</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
     <string name="no_compose_preferences">No preferences available for this plugin</string>
-    <string name="plugin_no_preferences">Plugin does not support preferences</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="confirm_pin_hint">Confirm PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">Mute</string>
     <string name="success">Success</string>
     <string name="advanced_settings_title">Advanced Settings</string>
-    <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="extended_bolus">Extended bolus</string>
     <string name="paused">Paused</string>
     <string name="running">Running</string>
@@ -201,7 +197,7 @@
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
     <string name="percentage_label">Percentage</string>
-    <string name="timeshift_label">Timeshift</string>
+    <string name="timeshift_label">Time shift</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="copytolocalprofile">Create new profile from this profile?</string>
@@ -268,7 +264,6 @@
     <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal value replaced by minimum supported value: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal value replaced by maximum supported value: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
 
@@ -378,7 +373,6 @@
     <string name="scene_management_desc">Create, edit, and manage scenes</string>
     <string name="scene_action_count">%1$d actions</string>
     <string name="scene_start_from_template">Start from template</string>
-    <string name="scene_editor_reason">Reason</string>
     <string name="scene_editor_target">Target</string>
     <string name="scene_editor_tt_preset">TT preset</string>
     <string name="scene_editor_no_tt_presets">No TT presets configured</string>
@@ -410,10 +404,8 @@
     <string name="clientcontrol_action_cancel_temp_target">Cancel temp target</string>
     <string name="clientcontrol_action_activate_scene">Activate scene %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">End scene</string>
-    <string name="clientcontrol_action_activate_insulin">Activate insulin %1$s</string>
     <string name="clientcontrol_action_update_settings">Update settings</string>
     <string name="clientcontrol_action_deliver_bolus">Deliver bolus</string>
-    <string name="clientcontrol_action_record_bolus">Record bolus</string>
 
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">This device isn\'t paired with a master.</string>
@@ -497,7 +489,6 @@
     <string name="activation">Activation</string>
     <string name="temp_target_management">Temp Target</string>
     <string name="revert_to_defaults">Revert to defaults</string>
-    <string name="confirm_cancel_temp_target">Cancel active temporary target?</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -693,8 +684,6 @@
     <string name="no_profile_selected">No profile selected</string>
     <string name="missing_profile_name">Missing profile name</string>
     <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
-    <string name="profile_activation_failed">Profile activation failed</string>
-    <string name="profile_switch_save_failed">Profile switch could not be saved. Please try again.</string>
     <string name="profile_basal_not_compatible_with_pump">Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.</string>
     <string name="profile_pump_incompatible_label">Pump limit</string>
     <string name="error_in_ic_values">Error in IC values</string>
@@ -781,12 +770,9 @@
     <string name="wizard_calculation">Calculation</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max removal: %1$d g (carbs on board)</string>
-    <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>
-    <string name="bolus_equal_zero_no_action">Bolus = 0. No action taken!</string>
     <string name="wizard_no_insulin_required">No insulin required</string>
     <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
     <string name="wizard_no_active_profile">No active profile set!</string>
-    <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
     <string name="wizard_carbs_constraint">Carb constraint violation!</string>
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
@@ -1151,8 +1137,6 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
-    <string name="remove_items">Remove Items</string>
-    <string name="sort_items">Sort Items</string>
 
 
 </resources>
