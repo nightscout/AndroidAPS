@@ -24,7 +24,6 @@
     <string name="omnipod_dash_not_enough_insulin">Niet voldoende insuline in het reservoir</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Onbevestigde opdracht</string>
     <string name="requested_by_user" comment="26 characters max for translation">Aangevraagd door gebruiker</string>
-    <string name="profile_set_ok">Profiel succesvol ingesteld</string>
     <string name="suspend_delivery_is_unconfirmed">Onderbreken insuline levering niet bevestigd! Vernieuw de Pod-status handmatig op het Omnipod tabblad en hervat de levering indien nodig.</string>
     <string name="insulin_delivery_suspended">Insuline levering is opgeschort</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Tijdzone op pod verschilt van de tijdzone op de telefoon. Basaal stand is onjuist. Wissel profiel om het op te lossen</string>
