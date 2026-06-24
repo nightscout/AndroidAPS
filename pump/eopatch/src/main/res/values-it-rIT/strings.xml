@@ -13,6 +13,7 @@
     <string name="eopatch_base_basal_rate">Velocità basale originale</string>
     <string name="eopatch_temp_basal_rate">Velocità basale temporanea</string>
     <string name="invalid_basal_rate">La basale del profilo è inferiore a 0.05 U/h. EOPatch ha un’unità di iniezione minima di 0.05U. Riprova dopo aver impostato il profilo a più dell\'unità di iniezione minima.</string>
+    <string name="no_profile_selected_try_again">Nessun profilo selezionato. Seleziona un profilo e riprova.</string>
     <string name="symbol_day">giorno</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
