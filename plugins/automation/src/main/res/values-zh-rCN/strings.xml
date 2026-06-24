@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">自动</string>
     <string name="automation">自动操作</string>
-    <string name="automation_description">用户定义的自动化任务</string>
     <string name="automation_enabled">已启用</string>
     <string name="automation_read_only">只读</string>
     <string name="automation_new_rule">新规则</string>
@@ -54,7 +52,6 @@
     <string name="alreadyset">已使用</string>
     <string name="profilepercentage">配置文件的百分比</string>
     <string name="startprofileforever">启动配置文件 %1$d%%</string>
-    <string name="percent_u">百分百(%)</string>
     <string name="sendsmsactionlabel">发送 SMS: %1$s</string>
     <string name="sendsmsactiondescription">将 SMS 发送到所有号码</string>
     <string name="sendsmsactiontext">使用文本发送 SMS</string>
