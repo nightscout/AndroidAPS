@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">자동</string>
     <string name="automation">자동화</string>
-    <string name="automation_description">사용자 정의 자동화 작업</string>
     <string name="automation_missing_task_name">작업 이름을 입력하세요.</string>
     <string name="automation_missing_trigger">적어도 하나의 트리거를 지정하세요.</string>
     <string name="automation_missing_action">적어도 하나의 액션을 지정하세요.</string>
@@ -17,7 +15,6 @@
     <string name="alreadyset">이미 설정됨</string>
     <string name="profilepercentage">프로파일 퍼센트</string>
     <string name="startprofileforever">프로파일 %1$d%% 시작</string>
-    <string name="percent_u">퍼센트 [%]:</string>
     <string name="sendsmsactionlabel">SMS 전송: %1$s</string>
     <string name="sendsmsactiondescription">모든 번호에 SMS 전송</string>
     <string name="sendsmsactiontext">문자 포함된 SMS 보내기</string>
