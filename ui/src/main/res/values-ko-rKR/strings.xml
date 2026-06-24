@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">탄수화물 제한이 적용되었습니다</string>
-    <string name="temp_target_short">임시목표</string>
     <string name="start_activity_tt">활동 임시목표 시작</string>
     <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
     <string name="start_hypo_tt">저혈당 임시목표 시작</string>
@@ -32,19 +30,9 @@
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
-    <string name="timeshift_label">시간 이동</string>
     <string name="percentage_label">퍼센트</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">1시간동안 Loop 일시중지</string>
-    <string name="suspendloopfor2h">2시간동안 Loop 일시중지</string>
-    <string name="suspendloopfor3h">3시간동안 Loop 일시중지</string>
-    <string name="suspendloopfor10h">10시간동안 Loop 일시중지</string>
     <string name="disconnectpump">펌프 일시중지</string>
-    <string name="disconnectpumpfor15m">15분동안 펌프 일시중지</string>
-    <string name="disconnectpumpfor30m">30분동안 펌프 일시중지</string>
-    <string name="disconnectpumpfor1h">1시간동안 펌프 일시중지</string>
-    <string name="disconnectpumpfor2h">2시간동안 펌프 일시중지</string>
-    <string name="disconnectpumpfor3h">3시간동안 펌프 일시중지</string>
     <string name="resume">재실행</string>
     <string name="reconnect">펌프 재연결</string>
     <string name="duration15m">15분</string>
