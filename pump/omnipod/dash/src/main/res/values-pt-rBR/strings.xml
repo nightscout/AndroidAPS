@@ -23,7 +23,6 @@
     <string name="omnipod_dash_not_enough_insulin">Não há insulina suficiente no reservatório</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando não confirmado</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado pelo usuário</string>
-    <string name="profile_set_ok">Configuração de perfil completo</string>
     <string name="suspend_delivery_is_unconfirmed">A suspensão da entrega não foi confirmada! Por favor, atualize manualmente o status do Pod na guia Omnipod e retome a entrega, se necessário.</string>
     <string name="insulin_delivery_suspended">Entrega de insulina suspensa</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Fuso horário no pod é diferente do fuso horário no telefone. A taxa de basal está incorreta. Alterne o perfil para corrigir</string>
