@@ -28,7 +28,6 @@
     <string name="omnipod_dash_not_enough_insulin">儲液槽中的胰島素不足</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">指令未確認</string>
     <string name="requested_by_user" comment="26 characters max for translation">用戶請求</string>
-    <string name="profile_set_ok">設定檔設置成功</string>
     <string name="suspend_delivery_is_unconfirmed">輸送暫停未確認！請手動從 Omnipod 頁面重新整理幫浦狀態，並視需要恢復輸送。</string>
     <string name="insulin_delivery_suspended">胰島素輸送已暫停</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">幫浦上的時區與手機上的時區不同。基礎率不正確。請切換設定檔以便修復</string>
