@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">מחיקת צימוד</string>
     <string name="diaconn_pairing">צימוד משאבת Diaconn</string>
     <string name="diaconn_g8_history_alarm">התראות</string>
     <string name="diaconn_g8_history_basalhours">שעות בזאליות</string>
@@ -13,7 +12,6 @@
     <string name="largetimediff">הפרש זמנים גדול:\nשעון המשאבה לא מכוון במעלה משעה וחצי.\n נא להתאים את שעון המשאבה באופן ידני ולוודא כי קריאת ההיסטוריה מהמשאבה אינה גורמת להתנהגות בלתי צפויה.\nבמידת האפשר, מחקו את ההיסטוריה מהמשאבה לפני שתשנו את השעה או השביתו את הלולאה הסגורה למשך פעילות אינסולין (DIA) לאחר רשומת ההיסטוריה השגויה האחרונה אך לפחות DIA אחד מעכשיו.</string>
     <string name="approachingdailylimit">מתקרב למגבלת האינסולין היומית</string>
     <string name="startingbolus">מתחיל מתן בולוס</string>
-    <string name="waitingforestimatedbolusend">ממתין לסיום הבולוס</string>
     <string name="stoppingtempbasal">מפסיק בזאלי זמני</string>
     <string name="settingtempbasal">מגדיר בזאלי זמני</string>
     <string name="settingextendedbolus">מגדיר בולוס ממושך</string>
@@ -31,7 +29,6 @@
     <string name="bolus_step">צעד במינון בולוס</string>
     <string name="basal_step">צעד במינון בזאלי</string>
     <string name="pairfirst">נא לצמד את המשאבה עם הטלפון שלכם!</string>
-    <string name="processinghistory">"מעבד אירוע "</string>
     <string name="diaconn_g8_history_tempbasal">בזאלי זמני</string>
     <string name="diaconng8_pump_settings">הגדרות משאבת Diaconn</string>
     <string name="diaconn_g8_pumpalarm">צלילים</string>
