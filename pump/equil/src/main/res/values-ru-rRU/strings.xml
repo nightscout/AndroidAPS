@@ -26,7 +26,6 @@
     <string name="equil_change">Заменить помпу</string>
     <string name="equil_change_content">Отсоедините помпу от базы.</string>
     <string name="equil_unpair_alert">Вы уверены, что вы хотите отказаться от контроля над %1$s?</string>
-    <string name="equil_devices_number_hint">№ устройства</string>
     <string name="equil_record_basal">Базальная скорость%1$s ед/ч</string>
     <string name="equil_record_basal_temp">Временная базальная скорость%1$sU/H</string>
     <string name="equil_record_bolus">Bolus%1$s ед</string>
@@ -135,13 +134,11 @@
     <string name="equil_unbind">Разъединить устройство</string>
     <string name="equil_device_unpaired">Устройство разъединено</string>
     <string name="equil_assemble">Соберите помпу, резервуар и заряженную батарею</string>
-    <string name="equil_devices_number">Введите идентификационный номер новой помпы</string>
     <string name="equil_insert">Выполните заполнение до появления капли инсулина на кончике иглы</string>
     <string name="equil_insert2">Помпа не должна находиться на платформе.</string>
     <string name="equil_attach">Присоедините помпу к платформе</string>
     <string name="equil_hint2">Заполните катетер</string>
     <string name="equil_pump_updated">Помпа обновлена</string>
     <string name="equil_replace_reservoir">Резервуар пуст. Замените резервуар</string>
-    <string name="error_mustbe6hexadidits">Должно быть 6 символов: из этих: ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Ошибка при выполнении команды Разъединить. Помпа будет удалена в любом случае. Пароль, установленный при сопряжении, не удаляется из помпы.</string>
 </resources>
