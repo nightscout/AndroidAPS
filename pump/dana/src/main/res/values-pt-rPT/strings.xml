@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">A obter o status da basal temporária</string>
     <string name="gettingpumpsettings">A obter as definições da bomba</string>
     <string name="gettingpumptime">A obter hora bomba</string>
-    <string name="largetimedifftitle">Grande diferença Horária</string>
     <string name="largetimediff">Grande diferença horária:\n A diferença de hora para a bomba é superior a 1.5h.\nPor favor ajuste manualmente a hora na bomba e certifique-se que a leitura do histórico da bomba não provoca problemas.\nSe possível apague o histórico da bomba antes de modificar a hora ou desabilite o loop durante toda a duração de acção da insulina (DIA) depois da ultima entrada no histórico da bomba ou mais um DIA desde o momento da correcção, qual delas seja a que mantenha o loop aberto durante mais tempo.</string>
     <string name="pairfirst">Emparelhe a sua bomba com o seu telefone!</string>
     <string name="approachingdailylimit">Aproximação do limite diário de insulina</string>
