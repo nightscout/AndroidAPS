@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">Không thể cập nhật cấu hình liều nền</string>
     <string name="no_valid_basal_rate">Không đọc được liều basal hợp lệ từ bơm</string>
     <string name="limiting_iob">Giới hạn IOB: %1$.1f U – Lý do: %2$s.</string>
-    <string name="loop_disabled">VÒNG LẶP BỊ TẮT DO GIỚI HẠN AN TOÀN</string>
     <string name="loop_disabled_by_user">Vòng lặp đã bị người dùng tắt</string>
     <string name="event_type">Loại sự kiện</string>
     <string name="mgdl">mg/dl</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">Hãy chọn một. Chỉ một cái có thể hoạt động tại một thời điểm.</string>
     <string name="configbuilder_pick_many_hint">Chọn tất cả mục phù hợp.</string>
     <string name="configbuilder_no_selection_warning">Chưa có plugin nào được chọn trong danh mục này.</string>
-    <string name="simple_mode">Chế độ đơn giản</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>
     <string name="no_compose_preferences">Plugin này không có cài đặt Compose</string>
-    <string name="plugin_no_preferences">Plugin không hỗ trợ cài đặt</string>
     <string name="confirm_password_hint">Xác nhận mật khẩu</string>
     <string name="confirm_pin_hint">Xác nhận mã PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">Im lặng</string>
     <string name="success">Thành công</string>
     <string name="advanced_settings_title">Cài đặt nâng cao</string>
-    <string name="extendedbolusdeliveryerror">Tiêm liều Bolus kéo dài thất bại</string>
     <string name="extended_bolus">Liều Bolus kéo dài</string>
     <string name="paused">Đã tạm dừng</string>
     <string name="running">Đang chạy</string>
@@ -201,7 +197,6 @@
     <string name="profileswitch_ismissing">Thiếu Chuyển đổi Cấu hình. Vui lòng thực hiện chuyển đổi cấu hình hoặc nhấn “Kích hoạt cấu hình” trong cấu hình cục bộ.</string>
     <string name="profile">Cấu hình</string>
     <string name="percentage_label">Phần trăm</string>
-    <string name="timeshift_label">Điều chỉnh thời gian</string>
     <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không</string>
     <string name="overview_treatment_label">Điều trị</string>
     <string name="copytolocalprofile">Tạo cấu hình mới từ cấu hình này không?</string>
@@ -265,7 +260,6 @@
     <string name="basalprofilenotaligned">Giá trị liều nền không khớp với giờ: %1$s</string>
     <string name="minimalbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối thiểu được hỗ trợ: %1$s</string>
     <string name="maximumbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối đa được hỗ trợ: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -368,7 +362,6 @@
     <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các ngữ cảnh</string>
     <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
-    <string name="scene_editor_reason">Lý do</string>
     <string name="scene_editor_target">Mục tiêu</string>
     <string name="scene_editor_tt_preset">Thiết lập sẵn TT</string>
     <string name="scene_editor_no_tt_presets">Chưa cấu hình thiết lập sẵn TT nào</string>
@@ -399,10 +392,8 @@
     <string name="clientcontrol_action_cancel_temp_target">Hủy mục tiêu tạm thời</string>
     <string name="clientcontrol_action_activate_scene">Kích hoạt ngữ cảnh “%1$s”</string>
     <string name="clientcontrol_action_deactivate_scene">Kết thúc ngữ cảnh</string>
-    <string name="clientcontrol_action_activate_insulin">Kích hoạt insulin %1$s</string>
     <string name="clientcontrol_action_update_settings">Cập nhật cài đặt</string>
     <string name="clientcontrol_action_deliver_bolus">Tiêm liều bolus</string>
-    <string name="clientcontrol_action_record_bolus">Ghi lại liều bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Thiết bị này chưa được ghép đôi với thiết bị chính.</string>
     <string name="clientcontrol_fail_not_reachable">Thiết bị chính đang ngoại tuyến.</string>
@@ -485,7 +476,6 @@
     <string name="activation">Kích hoạt</string>
     <string name="temp_target_management">Mục tiêu tạm thời</string>
     <string name="revert_to_defaults">Khôi phục về mặc định</string>
-    <string name="confirm_cancel_temp_target">Hủy mục tiêu tạm thời đang hoạt động?</string>
     <string name="loop">Vòng lặp</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -671,8 +661,6 @@
     <string name="no_profile_selected">Chưa chọn hồ sơ</string>
     <string name="missing_profile_name">Thiếu tên cấu hình</string>
     <string name="profile_not_saved_activate">Cấu hình điều trị chưa được lưu. Vui lòng lưu trước khi kích hoạt.</string>
-    <string name="profile_activation_failed">Kích hoạt cấu hình thất bại</string>
-    <string name="profile_switch_save_failed">Không thể lưu thay đổi cấu hình. Vui lòng thử lại.</string>
     <string name="profile_basal_not_compatible_with_pump">Tỷ lệ liều nền không tương thích với máy bơm hiện tại và không thể được kích hoạt. Hãy giảm tỷ lệ phần trăm hoặc điều chỉnh tỷ lệ liều nền.</string>
     <string name="profile_pump_incompatible_label">Giới hạn Bơm</string>
     <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
@@ -753,12 +741,9 @@
     <string name="wizard_calculation">Tính toán</string>
     <string name="no_action_selected">Không có hành động nào được chọn, sẽ không có gì xảy ra</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Loại bỏ tối đa: %1$d g (carb đang hoạt động)</string>
-    <string name="carb_equal_zero_no_action">Carb = 0. Không có hành động nào được thực hiện!</string>
-    <string name="bolus_equal_zero_no_action">Bolus = 0. Không thực hiện hành động nào!</string>
     <string name="wizard_no_insulin_required">Không cần insulin</string>
     <string name="wizard_no_actual_bg">Chưa có BG gần đây để tính toán!</string>
     <string name="wizard_no_active_profile">Chưa có cấu hình nào hoạt động!</string>
-    <string name="wizard_no_cob">COB không xác định! Thiếu dữ liệu BG hoặc ứng dụng vừa khởi động lại?</string>
     <string name="wizard_carbs_constraint">Vi phạm giới hạn carb!</string>
     <string name="wizard_trend_detail">Xu hướng 15 phút (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Vượt giới hạn insulin!\nKhông thể tiêm %1$.2fU</string>
@@ -1080,6 +1065,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
-    <string name="remove_items">Xóa mục</string>
-    <string name="sort_items">Sắp xếp các mục</string>
 </resources>
