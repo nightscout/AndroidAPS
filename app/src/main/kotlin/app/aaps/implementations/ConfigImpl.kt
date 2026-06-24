@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import dagger.Lazy
-import dagger.Reusable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -16,9 +15,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+// @Singleton (not @Reusable): Config owns the single app-global init-progress flow that
+// ComposeMainActivity's splash gate observes; a guaranteed single instance keeps that flow shared
+// (also required so an instrumented test can flip initCompleted() on the same instance the UI reads).
 @Suppress("KotlinConstantConditions")
-@Reusable
+@Singleton
 class ConfigImpl @Inject constructor(
     private val fileListProvider: Lazy<FileListProvider>
 ) : Config {

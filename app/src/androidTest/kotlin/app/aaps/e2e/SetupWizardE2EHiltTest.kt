@@ -1,6 +1,8 @@
 package app.aaps.e2e
 
+import android.content.Context
 import android.os.SystemClock
+import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
@@ -10,118 +12,158 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
+import app.aaps.ComposeMainActivity
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.implementation.plugin.PluginStore
+import app.aaps.plugins.aps.utils.StaticInjector
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.RuleChain
-import org.junit.rules.TestWatcher
-import org.junit.rules.Timeout
-import org.junit.runner.Description
 import org.junit.runner.RunWith
 import java.io.File
 import java.util.regex.Pattern
+import javax.inject.Inject
 
 /**
- * Black-box end-to-end UI test that drives a **fresh** AAPS install all the way from the setup
- * wizard to a running, open-loop app and exercises the core treatment actions:
+ * **In-process** end-to-end UI test: drives a fresh AAPS setup wizard all the way to a running,
+ * open-loop app and exercises the core treatments:
  *
  *  fresh start → EULA → master password → units → patient safety → BG source (default) →
  *  create + activate a profile → Virtual Pump → OpenAPS SMB → Sensitivity Oref1 → start objective 1 →
- *  FINISH → manual bolus (assert IOB) → carbs → activate a temp target (assert the target chip) →
- *  enable Open Loop (assert mode).
+ *  FINISH → manual bolus (assert IOB + DB) → carbs (assert DB) → temp target (assert chip + DB) →
+ *  enable Open Loop (assert mode + DB).
  *
- * ## How it runs (and why this is its own module)
- * This lives in the standalone `:e2e` (`com.android.test`) module, which instruments `:app` from its
- * own process. So the app under test runs as the **real production [app.aaps.MainApp]** — there is no
- * Hilt test-app swap (which would hang the splash) and no system-property gymnastics. Because the test
- * is a separate process, [setUp] can `pm clear` the app for guaranteed fresh wizard state. It is run by
- * the module's standard connected-test task, so **CI runs it with no manual steps**:
- * ```
- * ./gradlew.bat :e2e:connectedFullDebugAndroidTest      # builds :app:fullDebug + this, installs, runs
- * ```
+ * ## Why this lives in `:app/androidTest` (vs the standalone `:e2e` module)
+ * Running here, the test executes **in the app process** under the Hilt test application. That has two
+ * payoffs the black-box `:e2e` module can't give: it **produces app code coverage** (collected from the
+ * app process by jacoco) and it is **runnable from the Studio gutter**. It rides the existing
+ * `:app:connectedFullDebugAndroidTest` in CI with no extra config.
+ *
+ * The cost is that the Hilt test app doesn't run `MainApp.onCreate`, so [setUp] reproduces the minimum
+ * the UI needs: register the plugins, flip the init-complete gate [ComposeMainActivity]'s splash reads,
+ * and clear SharedPreferences for a fresh wizard (there is no `pm clear` in-process — it would kill the
+ * test). [Config] is `@Singleton` so the instance we flip is the one the activity observes.
  *
  * ## Why it is inherently fragile (read before editing)
- * A full-wizard E2E depends on screen text, scroll positions and timing. Selectors are matched
- * **case-insensitively against text OR content-description** to survive styling (e.g. all-caps
- * buttons); navigation is **verified-with-retry** ([tapNext]/[openVia]) because the wizard enables
- * Next a beat before a step is ready; profile number fields are filled with **real key events**
- * (the accessibility set-text action doesn't update their state); confirm buttons behind the IME are
- * reached only after [hideKeyboard]. Text is English-only — run on a device set to English. No
- * synthetic BG source is selected: none of the assertions depend on BG actually flowing, so the
- * engineering-mode-gated Random BG is intentionally skipped.
+ * Same as any full-wizard E2E: selectors match **case-insensitively against text OR content-desc**;
+ * navigation is **verified-with-retry** ([tapNext]/[openVia]); profile number fields use **real key
+ * events**; confirm buttons behind the IME are reached only after [hideKeyboard]. English-only.
  */
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class SetupWizardE2ETest {
+class SetupWizardE2EHiltTest {
+
+    @get:Rule val hiltRule = HiltAndroidRule(this)
+
+    // The plugin/config init that MainApp does in onCreate (the Hilt test app can't). Inlined rather
+    // than inherited from HiltInstrumentedTest so SharedPreferences can be cleared BEFORE the graph
+    // initializes (see setUp) — order matters for a clean fresh-app boot.
+    @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
+    @Inject lateinit var configBuilder: ConfigBuilder
+    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    @Inject lateinit var config: Config
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val device: UiDevice get() = UiDevice.getInstance(instrumentation)
 
-    /** On failure, snapshot the window hierarchy to the test's files dir for post-mortem inspection. */
-    private val dumpOnFailure: TestWatcher = object : TestWatcher() {
-        override fun failed(e: Throwable, description: Description) {
-            runCatching {
-                device.dumpWindowHierarchy(File(instrumentation.context.getExternalFilesDir(null), "e2e_fail.xml"))
-            }
-        }
-    }
-
-    /**
-     * Hard safety net. Every individual wait in this test is already bounded by a timeout, but this
-     * caps the whole run (incl. [setUp]) so an unforeseen hang fails the test and frees the device,
-     * instead of blocking the CI job. Generous vs. the ~3 min normal run to avoid false failures on
-     * slow CI emulators.
-     */
-    private val globalTimeout: Timeout = Timeout.seconds(600)
-
-    // Timeout is the OUTER rule so it also bounds setUp(); dumpOnFailure snapshots the screen on failure.
-    @get:Rule
-    val rules: RuleChain = RuleChain.outerRule(globalTimeout).around(dumpOnFailure)
-
     @Before
     fun setUp() {
-        // Separate process → safe to wipe the app under test for a guaranteed-fresh wizard.
-        device.executeShellCommand("pm clear $PKG")
-        // Start logcat fresh so the DB-insert assertions only match THIS run's records.
-        device.executeShellCommand("logcat -c")
+        // Clear SharedPreferences for a fresh wizard BEFORE the Hilt graph reads any prefs (there is no
+        // pm clear in-process — it would kill the test). Doing it before hiltRule.inject() matters: every
+        // singleton then initializes against empty prefs and seeds its defaults exactly like a fresh app
+        // (e.g. InsulinImpl seeds a default insulin; clearing AFTER init left its list empty → AppContent
+        // crashed in getICfg). Then reproduce the bits of MainApp.onCreate the UI needs.
+        clearAllSharedPrefs()
+        hiltRule.inject()
+        preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, false) // force the wizard to show
+        pluginStore.plugins = pluginList
+        configBuilder.initialize()
+        config.initCompleted()                                            // flip splash gate → AppContent renders
+        // Pre-seed objective 1 as started: the wizard gates its FINISH button on
+        // objectives[FIRST].isStarted, and the UI "Start" runs an NTP network-time check that can't
+        // complete under the Hilt test app (no connectivity wiring from MainApp.onCreate).
+        objectivesPlugin.objectives.firstOrNull()?.startedOn = System.currentTimeMillis()
         // Heads-up banners (e.g. the profile-switch "loop disabled" toast) must not cover the UI.
         device.executeShellCommand("settings put global heads_up_notifications_enabled 0")
+        // Start logcat fresh so the DB-insert assertions only match THIS run's records.
+        device.executeShellCommand("logcat -c")
         // Grant notifications up-front so the wizard's permission step is a no-op.
         runCatching {
             instrumentation.uiAutomation.grantRuntimePermission(PKG, "android.permission.POST_NOTIFICATIONS")
         }
-        launchApp()
+    }
+
+    @After
+    fun tearDown() {
+        // Don't poison sibling instrumented tests with the wizard config we just wrote.
+        clearAllSharedPrefs()
     }
 
     @Test
     fun fresh_install_to_open_loop_with_core_treatments() {
-        completeSetupWizard()
-        assertVisible("LocalProfile1") // active profile chip proves the wizard finished → on overview
+        val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
+        try {
+            walkthrough()
+        } catch (t: Throwable) {
+            logScreen("E2E_SCREEN") // capture the LIVE failing screen before the activity is torn down
+            throw t
+        } finally {
+            scenario.close()
+        }
+    }
 
-        deliverManualBolus(units = "1.0", confirmButtonLabel = "1.00 U")
-        // IOB on the overview reflects the just-delivered bolus. The recompute can lag a few
-        // seconds behind delivery, so allow a generous window (the value stays "1.00 U" within it).
-        assertVisible("1.00 U", timeout = 40_000)               // UI: IOB on the overview
-        assertDbInsert("Bolus", "amount=1\\.0,")                // DB: the bolus row was persisted
+    private fun walkthrough() {
+            waitForWizard()
+            completeSetupWizard()
+            assertVisible("LocalProfile1") // active profile chip proves the wizard finished → on overview
 
-        deliverCarbs(grams = "20", confirmButtonLabel = "20 g")
-        // Returning to the overview (active-profile chip present) confirms the carb dialog flow
-        // completed; COB on the overview lags a full calc cycle, so it isn't asserted directly here.
-        assertVisible("LocalProfile1")                          // UI: back on the overview
-        assertDbInsert("Carbs", "amount=20\\.0,")               // DB: the carbs row was persisted
+            deliverManualBolus(units = "1.0", confirmButtonLabel = "1.00 U")
+            // IOB on the overview reflects the just-delivered bolus. The recompute can lag a few
+            // seconds behind delivery, so allow a generous window (the value stays "1.00 U" within it).
+            assertVisible("1.00 U", timeout = 40_000)               // UI: IOB on the overview
+            assertDbInsert("Bolus", "amount=1\\.0,")                // DB: the bolus row was persisted
 
-        activateTempTarget()
-        // The overview target chip switches from the profile range to the 90 mg/dL temp target,
-        // shown as "90 (<minutes>')". Match the stable prefix since the countdown changes.
-        assertTextContains("90 (")                              // UI: target chip
-        assertDbInsert("TemporaryTarget")                       // DB: the temp target was persisted
+            deliverCarbs(grams = "20", confirmButtonLabel = "20 g")
+            // Returning to the overview (active-profile chip present) confirms the carb dialog flow
+            // completed; COB on the overview lags a full calc cycle, so it isn't asserted directly here.
+            assertVisible("LocalProfile1")                          // UI: back on the overview
+            assertDbInsert("Carbs", "amount=20\\.0,")               // DB: the carbs row was persisted
 
-        enableOpenLoop()
-        // The chip now reflects open-loop mode ("Open Loop" / "Open loop"); match leniently.
-        assertContains("Open Loop")                             // UI: loop-mode chip
-        assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
+            activateTempTarget()
+            // The overview target chip shows the active temp target as "100 (<minutes>')" — the "(" /
+            // countdown is what distinguishes an active temp target from the plain profile target.
+            assertTextContains("100 (")                             // UI: target chip
+            assertDbInsert("TemporaryTarget")                       // DB: the temp target was persisted
+
+            enableOpenLoop()
+            // The chip now reflects open-loop mode ("Open Loop" / "Open loop"); match leniently.
+            assertContains("Open Loop")                             // UI: loop-mode chip
+            assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
     }
 
     // ---- wizard -------------------------------------------------------------------------------
+
+    /** Waits for the wizard to be reachable, dismissing the permissions sheet that covers Next. */
+    private fun waitForWizard() {
+        val end = SystemClock.uptimeMillis() + INIT_TIMEOUT
+        while (SystemClock.uptimeMillis() < end) {
+            dismissBlockingSheetIfPresent()
+            if (device.findObject(byText("Next")) != null) return
+            device.waitForIdle(IDLE_MS)
+        }
+        error("Wizard 'Next' never appeared within ${INIT_TIMEOUT}ms — UI stuck on splash or wizard not shown")
+    }
 
     private fun completeSetupWizard() {
         dismissBlockingSheetIfPresent()
@@ -195,10 +237,8 @@ class SetupWizardE2ETest {
         // 16. Sensitivity — Sensitivity Oref1 is the default selection
         tapNext("Objectives")
 
-        // 17. Objectives — start objective 1, then finish
-        openVia("Open Objectives", expect = "Start")
-        click("Start")
-        openVia("Back", expect = "FINISH")          // objectives list → wizard (in-app Back; system Back is a no-op here)
+        // 17. Objectives — objective 1 was pre-seeded as started in setUp(), so the wizard's final
+        // step offers FINISH directly (the UI "Start" needs an NTP check that can't run in-process).
         openVia("FINISH", expect = "LocalProfile1")  // wizard → overview (active profile chip)
     }
 
@@ -248,9 +288,12 @@ class SetupWizardE2ETest {
 
     private fun activateTempTarget() {
         openVia("Manage", expect = "Temp Target")      // overview quick-launch → manage sheet
-        openVia("Temp Target", expect = "Activate")    // → temp-target screen (pre-set "Eating Soon")
-        openVia("Activate", expect = "OK")             // activate the preset → confirmation
-        click("OK")                                    // "Target: 90.0 mg/dL ... Eating Soon"
+        openVia("Temp Target", expect = "Activate")    // → temp-target screen
+        // The real app seeds default presets (Eating Soon = 90 …) on first run; the Hilt test app
+        // doesn't, so the screen has no presets and "Activate" applies a temp target at the profile
+        // target (100, set in createLocalProfile) instead.
+        openVia("Activate", expect = "OK")             // activate → confirmation
+        click("OK")
     }
 
     private fun enableOpenLoop() {
@@ -278,9 +321,8 @@ class SetupWizardE2ETest {
     /**
      * Verifies a row was actually persisted, by asserting the persistence layer's insert log line
      * (`Inserted <entity> …`, optionally also matching [valueFragment] on the same line). The app DB
-     * can't be queried from here (no on-device `sqlite3` + the test runs as a different uid), so this
-     * confirms the Room insert ran — which is what writes the row. logcat is cleared in [setUp], so
-     * only this run's inserts match.
+     * isn't directly queryable here (no on-device `sqlite3`), so this confirms the Room insert ran —
+     * which is what writes the row. logcat is cleared in [bootRealUi], so only this run's inserts match.
      */
     private fun assertDbInsert(entity: String, valueFragment: String? = null, timeout: Long = STEP_TIMEOUT) {
         val regex = "Inserted $entity\\b" + (valueFragment?.let { ".*$it" }.orEmpty())
@@ -294,23 +336,6 @@ class SetupWizardE2ETest {
     }
 
     // ---- ui helpers ---------------------------------------------------------------------------
-
-    private fun launchApp() {
-        // Launch the main activity explicitly via shell so a blind launch can't hit LeakCanary's
-        // "Leaks" launcher activity that debug builds register under the same package.
-        device.executeShellCommand("am start -n $PKG/$MAIN_ACTIVITY")
-        device.wait(Until.hasObject(By.pkg(PKG).depth(0)), LAUNCH_TIMEOUT)
-        // The app shows a heavy init splash, then the Welcome screen — usually UNDER a "Permissions
-        // required" sheet that covers the Next button. Poll for Next while dismissing the sheet, so we
-        // proceed the moment the wizard is reachable instead of waiting out the whole INIT_TIMEOUT
-        // (a dead ~60s) for a Next that's hidden behind the sheet.
-        val end = SystemClock.uptimeMillis() + INIT_TIMEOUT
-        while (SystemClock.uptimeMillis() < end) {
-            dismissBlockingSheetIfPresent()
-            if (device.findObject(byText("Next")) != null) return
-            device.waitForIdle(IDLE_MS)
-        }
-    }
 
     /** Case-insensitive selector matching visible text. */
     private fun byText(s: String): BySelector =
@@ -516,12 +541,31 @@ class SetupWizardE2ETest {
         }
     }
 
+    /** Logs every on-screen text/content-desc under [tag] (chunked; logcat truncates long lines). */
+    private fun logScreen(tag: String) {
+        runCatching {
+            val items = device.findObjects(By.pkg(PKG)).mapNotNull { o ->
+                val txt = runCatching { o.text }.getOrNull()?.takeIf { it.isNotBlank() }
+                val desc = runCatching { o.contentDescription }.getOrNull()?.takeIf { it.isNotBlank() }
+                if (txt != null || desc != null) "[t=$txt|d=$desc]" else null
+            }
+            items.joinToString(" ").chunked(3500).forEachIndexed { i, c -> android.util.Log.e(tag, "$i $c") }
+        }
+    }
+
+    /** Wipes all SharedPreferences for a fresh wizard, since `pm clear` would kill the in-process test. */
+    private fun clearAllSharedPrefs() {
+        val ctx = instrumentation.targetContext
+        File(ctx.applicationInfo.dataDir, "shared_prefs").listFiles()?.forEach { f ->
+            if (f.name.endsWith(".xml"))
+                ctx.getSharedPreferences(f.name.removeSuffix(".xml"), Context.MODE_PRIVATE).edit().clear().commit()
+        }
+    }
+
     companion object {
 
         private const val PKG = "info.nightscout.androidaps"
-        private const val MAIN_ACTIVITY = "app.aaps.ComposeMainActivity"
-        private const val LAUNCH_TIMEOUT = 20_000L
-        private const val INIT_TIMEOUT = 60_000L  // MainApp async init + splash before the wizard
+        private const val INIT_TIMEOUT = 60_000L  // splash → wizard (init already flipped, so usually fast)
         private const val STEP_TIMEOUT = 15_000L
         private const val IDLE_MS = 300L
         private const val MAX_SCROLLS = 12

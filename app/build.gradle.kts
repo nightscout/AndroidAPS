@@ -224,6 +224,9 @@ dependencies {
     testImplementation(project(":shared:tests"))
     androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(libs.androidx.test.rules)
+    // UiAutomator for the in-process E2E UI test (app/src/androidTest/.../e2e). Drives the real
+    // Compose UI (booted under the Hilt test app) via the accessibility bridge.
+    androidTestImplementation(libs.androidx.test.uiautomator)
     // Initializes WorkManager for instrumented tests (BaseTestApp), since the production
     // Configuration.Provider/manifest initializer don't apply under the Hilt test application.
     androidTestImplementation(libs.androidx.work.testing)
