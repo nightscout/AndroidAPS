@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Standard basal rate</string>
     <string name="eopatch_temp_basal_rate">Midlertidig basal rate</string>
     <string name="invalid_basal_rate">Profilens basal er under 0.05 IE/t. EOPatch har en minimum injektionsenhed på 0.05IE. Prøv venligst igen efter profilen er sat til mere end den mindste injektionsenhed.</string>
-    <string name="no_profile_selected">Ingen profil valgt. Vælg venligst en profil og prøv igen.</string>
     <string name="symbol_day">dag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
