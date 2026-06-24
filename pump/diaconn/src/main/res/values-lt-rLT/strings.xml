@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Panaikinti sąsają</string>
     <string name="diaconn_pairing">Diaconn pompos sąsaja</string>
     <string name="diaconn_g8_history_alarm">Aliarmai</string>
     <string name="diaconn_g8_history_basalhours">Valandinė bazė</string>
@@ -13,7 +12,6 @@
     <string name="largetimediff">Didelis laiko skirtumas:\nLaikas pompoje skiriasi daugiau nei 1,5 val.\nNustatykite laiką pompoje rankiniu būdu ir įsitikinkite, kad įrašai iš pompos istorijos nesukels netikėtų sistemos veiksmų.\nJei įmanoma, ištrinkite istoriją pompoje prieš keisdami laiką arba atjunkite uždarąjį ciklą vienai IVT po paskutinio neteisingo istorijos įrašo ar mažiausiai vienai IVT nuo dabar.</string>
     <string name="approachingdailylimit">Artėja paros insulino limitas</string>
     <string name="startingbolus">Pradedamas boluso leidimas</string>
-    <string name="waitingforestimatedbolusend">Laukiama boluso suleidimo pabaigos</string>
     <string name="stoppingtempbasal">Stabdoma laikina bazė</string>
     <string name="settingtempbasal">Laikinos bazės nustatymas</string>
     <string name="settingextendedbolus">Ištęsto boluso nustatymas</string>
@@ -31,7 +29,6 @@
     <string name="bolus_step">Boluso žingsnis</string>
     <string name="basal_step">Bazės žingsnis</string>
     <string name="pairfirst">Susiekite pompą su telefonu!</string>
-    <string name="processinghistory">"Apdorojama "</string>
     <string name="diaconn_g8_history_tempbasal">Laikina bazė</string>
     <string name="diaconng8_pump_settings">Diaconn pompos nustatymai</string>
     <string name="diaconn_g8_pumpalarm">Garsas</string>
