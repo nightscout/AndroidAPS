@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Gaunamas laikinos bazės statusas</string>
     <string name="gettingpumpsettings">Gaunami pompos nustatymai</string>
     <string name="gettingpumptime">Gaunamas pompos laikas</string>
-    <string name="largetimedifftitle">Didelis laiko neatitikimas</string>
     <string name="largetimediff">Didelis laiko skirtumas:\nLaikas pompoje skiriasi daugiau nei 1,5 val.\nNustatykite laiką pompoje rankiniu būdu ir įsitikinkite, kad įrašai iš pompos istorijos nesukelia netikėtų sistemos veiksmų.\nJei įmanoma, ištrinkite istoriją pompoje prieš keisdami laiką arba atjunkite uždarąjį ciklą vienai IVT po paskutinio neteisingo istorijos įrašo ar mažiausiai vienai IVT nuo dabar.</string>
     <string name="pairfirst">Susiekite pompą su telefonu!</string>
     <string name="approachingdailylimit">Artėja paros insulino limitas</string>
