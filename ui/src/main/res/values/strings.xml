@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">Carbs constraint applied</string>
     <string name="no_temp_basal_running">No temp basal running</string>
-    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
@@ -57,7 +55,6 @@
     <string name="user_profile_description">User Profile Description is used to show most frequent sites available for a man, a woman or a child</string>
     <string name="site_management">Site Management Profile</string>
     <string name="site_management_description">You will set here if you want to manage Pump site, CGM site or both. This setting will be used to automatically send the site management dialog on each detected new entry</string>
-    <string name="update_site_change">Update Site Location</string>
     <string name="edit_site">Edit</string>
     <string name="record_site_location">Site Location: %1$s</string>
     <string name="record_site_arrow">Site Arrow: %1$s</string>
@@ -157,42 +154,26 @@
     <string name="clientcontrol_pending_working_title">Applying…</string>
     <string name="clientcontrol_pending_working_text">Waiting for the master to confirm…</string>
     <string name="clientcontrol_pending_rejected_title">Not applied</string>
-    <string name="clientcontrol_pending_rejected_text">The master could not apply this request.</string>
     <string name="clientcontrol_pending_failed_format">%1$s couldn\'t be done.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Partly applied</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">%1$s was applied, but some actions couldn\'t be.\nCheck the active state.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Couldn\'t confirm</string>
-    <string name="clientcontrol_pending_unconfirmed_text">The request was sent but the master didn\'t confirm in time. It may or may not have been applied — this screen will update if it syncs back.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s was sent, but no confirmation came back.\n%2$s\nIt will appear here if/when the master applies it.</string>
     <string name="clientcontrol_pending_stop_waiting">Stop waiting</string>
     <string name="a11y_add_new_insulin">Add new insulin</string>
     <string name="a11y_delete_current_insulin">Delete current insulin</string>
-    <string name="activate_insulin_no_profile">No active profile found</string>
-    <string name="activate_insulin_new_insulin">New insulin: %1$s</string>
-    <string name="activate_insulin_remaining">Remaining: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Profile switch will be created:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Load peak from</string>
     <string name="cannot_delete_last_insulin">Cannot delete the last insulin</string>
     <string name="cannot_delete_active_insulin">Cannot delete the active insulin</string>
 
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
-    <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentage</string>
 
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspend loop for 1h</string>
-    <string name="suspendloopfor2h">Suspend loop for 2h</string>
-    <string name="suspendloopfor3h">Suspend loop for 3h</string>
-    <string name="suspendloopfor10h">Suspend loop for 10 h</string>
     <string name="disconnectpump">Disconnect pump</string>
-    <string name="disconnectpumpfor15m">Disconnect pump for 15 min</string>
-    <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
-    <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
-    <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
-    <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
     <string name="resume">Resume</string>
     <string name="reconnect">Reconnect Pump</string>
     <string name="duration15m">15 mins</string>
@@ -335,8 +316,6 @@
     <string name="quick_launch_no_profiles">Create profiles in Local Profile to use them here</string>
     <string name="quick_launch_edit_profile_preset">Edit profile preset</string>
     <string name="quick_launch_profile_permanent">Permanent</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Select Arrow</string>
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Accept new temp basal:</string>
