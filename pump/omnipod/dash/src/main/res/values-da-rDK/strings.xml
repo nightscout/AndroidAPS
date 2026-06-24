@@ -24,7 +24,6 @@
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin tilbage i pod.</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Ubekræftet kommando</string>
     <string name="requested_by_user" comment="26 characters max for translation">Anmodet af bruger</string>
-    <string name="profile_set_ok">Profil sat OK</string>
     <string name="suspend_delivery_is_unconfirmed">Pausér insulintilførsel er ubekræftet! Genstart venligst manuelt Pod-statussen fra Omnipod-fanen og start tilførsel igen hvis nødvendigt.</string>
     <string name="insulin_delivery_suspended">Insulintilførsel pauseret</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Tidszone på pod er forskellig fra tidszone på telefon. Basalrate er forkert. Skift profil for at rette</string>
