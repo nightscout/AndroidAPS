@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">אוטומטי</string>
     <string name="automation">אוטומציה</string>
-    <string name="automation_description">פעולות אוטומציה המוגדרות ע\"י המשתמש</string>
     <string name="automation_missing_task_name">נא להזין שם לפעולה.</string>
     <string name="automation_missing_trigger">נא לציין טריגר אחד לפחות.</string>
     <string name="automation_missing_action">נא לציין פעולה אחת לפחות.</string>
@@ -17,7 +15,6 @@
     <string name="alreadyset">כבר מוגדר</string>
     <string name="profilepercentage">אחוז הפרופיל</string>
     <string name="startprofileforever">הפעלת פרופיל %1$d%%</string>
-    <string name="percent_u">אחוז [%]:</string>
     <string name="sendsmsactionlabel">שליחת מסרון: %1$s</string>
     <string name="sendsmsactiondescription">שליחת מסרונים לכל המספרים</string>
     <string name="sendsmsactiontext">שליחת מסרון עם טקסט</string>
