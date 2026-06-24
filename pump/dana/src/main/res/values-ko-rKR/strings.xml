@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">임시Basal 상태 가져오는중</string>
     <string name="gettingpumpsettings">펌프설정 가져오는중</string>
     <string name="gettingpumptime">펌프시간 가져오는중</string>
-    <string name="largetimedifftitle">큰 시간 차이</string>
     <string name="largetimediff">큰 시간 차이:\n펌프의 시간과 1.5시간 이상 차이가 납니다.\n펌프의 이력에서 잘못된 시간을 읽어들임으로써 예상치 못한 행동이 발생하지 않도록 펌프의 시간을 수동으로 변경하세요.\n가능하면 시간을 변경하기 전에 펌프의 이력을 삭제하거나, 설정된 DIA 시간동안 Closed Loop를 비활성화 하세요.</string>
     <string name="pairfirst">펌프를 폰과 동기화 하십시오</string>
     <string name="approachingdailylimit">인슐린 일 허용량에 근접중</string>
