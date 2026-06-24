@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">更新基礎率設定失敗</string>
     <string name="no_valid_basal_rate">未從幫浦讀取到有效的基礎率</string>
     <string name="limiting_iob">因 %2$s 限制 IOB 為 %1$.1f U</string>
-    <string name="loop_disabled">循環因限制已停用</string>
     <string name="loop_disabled_by_user">循環已被使用者停用</string>
     <string name="event_type">事件類型</string>
     <string name="mgdl">mg/dL</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">選擇一個。同一時間只能啟用一個。</string>
     <string name="configbuilder_pick_many_hint">選擇所有適用的。</string>
     <string name="configbuilder_no_selection_warning">此分類未選擇任何外掛。</string>
-    <string name="simple_mode">簡易模式</string>
     <string name="expand">展開</string>
     <string name="collapse">收合</string>
     <string name="no_compose_preferences">此外掛沒有可用的偏好設定</string>
-    <string name="plugin_no_preferences">此外掛不支援偏好設定</string>
     <string name="confirm_password_hint">確認密碼</string>
     <string name="confirm_pin_hint">確認 PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">靜音</string>
     <string name="success">成功</string>
     <string name="advanced_settings_title">進階設定</string>
-    <string name="extendedbolusdeliveryerror">延長注射錯誤</string>
     <string name="extended_bolus">延長注射</string>
     <string name="paused">已暫停</string>
     <string name="running">執行中</string>
@@ -201,7 +197,6 @@
     <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
     <string name="profile">設定檔</string>
     <string name="percentage_label">百分比</string>
-    <string name="timeshift_label">時間偏移</string>
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
@@ -265,7 +260,6 @@
     <string name="basalprofilenotaligned">基礎率值未對齊小時：%1$s</string>
     <string name="minimalbasalvaluereplaced">基礎率值已被最低支援值取代：%1$s</string>
     <string name="maximumbasalvaluereplaced">基礎率值已被最高支援值取代：%1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -368,7 +362,6 @@
     <string name="scene_management_desc">建立、編輯與管理場景</string>
     <string name="scene_action_count">%1$d 個動作</string>
     <string name="scene_start_from_template">從範本開始</string>
-    <string name="scene_editor_reason">原因</string>
     <string name="scene_editor_target">目標</string>
     <string name="scene_editor_tt_preset">臨時目標預設</string>
     <string name="scene_editor_no_tt_presets">尚未設定任何臨時目標預設</string>
@@ -399,10 +392,8 @@
     <string name="clientcontrol_action_cancel_temp_target">取消臨時目標</string>
     <string name="clientcontrol_action_activate_scene">啟動情境 %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">結束情境</string>
-    <string name="clientcontrol_action_activate_insulin">啟用胰島素 %1$s</string>
     <string name="clientcontrol_action_update_settings">更新設定</string>
     <string name="clientcontrol_action_deliver_bolus">施打注射</string>
-    <string name="clientcontrol_action_record_bolus">紀錄注射</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">此裝置未與主裝置配對。</string>
     <string name="clientcontrol_fail_not_reachable">主裝置已離線。</string>
@@ -487,7 +478,6 @@
     <string name="activation">註冊</string>
     <string name="temp_target_management">臨時目標</string>
     <string name="revert_to_defaults">還原為預設值</string>
-    <string name="confirm_cancel_temp_target">要取消目前啟用中的臨時目標？</string>
     <string name="loop">循環</string>
     <string name="ns">NS</string>
     <string name="record">紀錄</string>
@@ -673,8 +663,6 @@
     <string name="no_profile_selected">未選擇設定檔</string>
     <string name="missing_profile_name">缺少設定檔名稱</string>
     <string name="profile_not_saved_activate">設定檔未儲存。請先儲存設定檔再啟用。</string>
-    <string name="profile_activation_failed">設定檔啟用失敗</string>
-    <string name="profile_switch_save_failed">設定檔切換無法儲存。請再試一次。</string>
     <string name="profile_basal_not_compatible_with_pump">基礎率與目前的幫浦不相容，因此無法啟用。請降低百分比，或調整基礎率。</string>
     <string name="profile_pump_incompatible_label">幫浦限制</string>
     <string name="error_in_ic_values">IC 數值錯誤</string>
@@ -755,12 +743,9 @@
     <string name="wizard_calculation">計算</string>
     <string name="no_action_selected">未選擇任何操作，無事發生</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">最多移除：%1$d 克（COB）</string>
-    <string name="carb_equal_zero_no_action">碳水化合物 = 0。未採取任何行動！</string>
-    <string name="bolus_equal_zero_no_action">注射 = 0。未採取任何動作！</string>
     <string name="wizard_no_insulin_required">不需要胰島素</string>
     <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
     <string name="wizard_no_active_profile">未設置活動設定檔！</string>
-    <string name="wizard_no_cob">未知的 COB！缺少血糖讀取值或最近的應用程式重啟？</string>
     <string name="wizard_carbs_constraint">碳水化合物限制違規！</string>
     <string name="wizard_trend_detail">15 分鐘趨勢 (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">胰島素限制違規！\n無法傳送 %1$.2fU</string>
@@ -1082,6 +1067,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
-    <string name="remove_items">移除項目</string>
-    <string name="sort_items">排序項目</string>
 </resources>
