@@ -39,7 +39,6 @@
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
     <string name="hardlimit">Nekeičiama riba</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Pikas</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Bolusas buvo suleistas per paskutines 3 minutes, SMB praleidžiamas</string>
     <string name="pump_not_initialized">Pompa neprijungta!</string>
