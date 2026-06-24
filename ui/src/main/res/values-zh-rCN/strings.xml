@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">碳水化合物约束条件应用了</string>
     <string name="no_temp_basal_running">无临时基础率运行中</string>
-    <string name="temp_target_short">临时目标</string>
     <string name="start_activity_tt">开始运动临时目标</string>
     <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
     <string name="start_hypo_tt">开始低的临时目标</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">用户信息描述用于显示男性、女性或儿童最常用的部位</string>
     <string name="site_management">部位管理配置</string>
     <string name="site_management_description">在这里设置是否管理输注部位、CGM 传感器部位，或两者同时管理。该设置将用于在每次检测到新记录时，自动弹出部位更换提醒对话框</string>
-    <string name="update_site_change">更新部位位置</string>
     <string name="edit_site">编辑</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">部位箭头: %1$s</string>
@@ -146,40 +143,24 @@
     <string name="clientcontrol_pending_working_title">正在应用…</string>
     <string name="clientcontrol_pending_working_text">正在等待主机确认…</string>
     <string name="clientcontrol_pending_rejected_title">未应用</string>
-    <string name="clientcontrol_pending_rejected_text">主机无法应用此请求。</string>
     <string name="clientcontrol_pending_failed_format">%1$s 无法完成。\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">部分应用</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">%1$s 已应用，但某些操作无法执行。\n请检查当前状态。</string>
     <string name="clientcontrol_pending_unconfirmed_title">无法确认</string>
-    <string name="clientcontrol_pending_unconfirmed_text">请求已发送，但主机未及时确认。操作可能已应用也可能未应用——如果同步回来，此界面将进行更新。</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s 已发送，但未收到确认。\n%2$s\n 如果主机应用了该操作，它将在此处显示。</string>
     <string name="clientcontrol_pending_stop_waiting">停止等待</string>
     <string name="a11y_add_new_insulin">新增胰岛素</string>
     <string name="a11y_delete_current_insulin">删除当前的胰岛素</string>
-    <string name="activate_insulin_no_profile">未找到生效的配置文件</string>
-    <string name="activate_insulin_new_insulin">新的胰岛素：%1$s</string>
-    <string name="activate_insulin_remaining">剩余： %1$d 分钟</string>
-    <string name="activate_insulin_profile_switch">将创建配置文件切换：\n\n<b>%1$s</b></string>
     <string name="load_peak_from">载入峰值来源</string>
     <string name="cannot_delete_last_insulin">无法删除最后一个胰岛素</string>
     <string name="cannot_delete_active_insulin">无法删除当前使用的胰岛素</string>
     <string name="reuse_profile_pct_hours">重新使用%1$d%% %2$d小时</string>
-    <string name="timeshift_label">时间偏移</string>
     <string name="percentage_label">百分比</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">暂停闭环一个小时</string>
-    <string name="suspendloopfor2h">暂停闭环2个小时</string>
-    <string name="suspendloopfor3h">暂停闭环3个小时</string>
-    <string name="suspendloopfor10h">暂停闭环10个小时</string>
     <string name="disconnectpump">断开泵连接</string>
-    <string name="disconnectpumpfor15m">与泵断开连接15分钟</string>
-    <string name="disconnectpumpfor30m">与泵断开连接30分钟</string>
-    <string name="disconnectpumpfor1h">与泵断开连接1个小时</string>
-    <string name="disconnectpumpfor2h">与泵断开连接2个小时</string>
-    <string name="disconnectpumpfor3h">与泵断开连接3个小时</string>
     <string name="resume">恢复</string>
     <string name="reconnect">重新连接泵</string>
     <string name="duration15m">15 分钟</string>
@@ -312,8 +293,6 @@
     <string name="quick_launch_no_profiles">在本地配置中创建配置文件以便在此使用</string>
     <string name="quick_launch_edit_profile_preset">编辑配置文件</string>
     <string name="quick_launch_profile_permanent">永久</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d 分</string>
     <string name="select_arrow">选择箭头</string>
     <string name="loop_accept_nav_label">闭环</string>
     <string name="loop_accept_set_basal_question">接受新的临时基础率：</string>
