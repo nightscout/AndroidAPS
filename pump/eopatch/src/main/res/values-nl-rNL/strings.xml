@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Basis basaalstand</string>
     <string name="eopatch_temp_basal_rate">Tijdelijke basaalstand</string>
     <string name="invalid_basal_rate">Basaalstand in het profiel is minder dan 0,05 E/hr. EOPatch heeft een minimale injectie hoeveelheid van 0.5E p/u. Probeer het opnieuw na het instellen van het profiel op meer dan de minimale injectie eenheid.</string>
-    <string name="no_profile_selected">Geen profiel geselecteerd. Selecteer een profiel en probeer het opnieuw.</string>
     <string name="symbol_day">dag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
