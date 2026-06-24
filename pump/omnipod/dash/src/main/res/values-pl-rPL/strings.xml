@@ -24,7 +24,6 @@
     <string name="omnipod_dash_not_enough_insulin">Pozostało za mało insuliny w zbiorniku</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Niepotwierdzone polecenie</string>
     <string name="requested_by_user" comment="26 characters max for translation">Na życzenie użytkownika</string>
-    <string name="profile_set_ok">Profil pomyślnie ustawiony</string>
     <string name="suspend_delivery_is_unconfirmed">Nie można potwierdzić zawieszenia podaży insuliny! W razie potrzeby proszę ręcznie odświeżyć status Poda na karcie Omnipod i wznowić podawanie.</string>
     <string name="insulin_delivery_suspended">Podawanie insuliny zawieszone</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Strefa czasowa na Podzie różni się od strefy czasowej na telefonie. Dawka bazowa jest nieprawidłowa. Zmień profil, aby to naprawić</string>
