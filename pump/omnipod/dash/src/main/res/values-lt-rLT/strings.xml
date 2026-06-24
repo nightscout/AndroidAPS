@@ -24,7 +24,6 @@
     <string name="omnipod_dash_not_enough_insulin">Rezervuare nepakanka insulino</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepatvirtinta komanda</string>
     <string name="requested_by_user" comment="26 characters max for translation">Naudotojo užklausa</string>
-    <string name="profile_set_ok">Profilis nustatytas OK</string>
     <string name="suspend_delivery_is_unconfirmed">Insulino tiekimo sustabdymas nepatvirtintas! Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke ir, jei reikia, atnaujinkite insulino tiekimą.</string>
     <string name="insulin_delivery_suspended">Insulino tiekimas sustabdytas</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Pod laiko zona skiriasi nuo telefono. Bazė neteisinga. Atlikite profilio keitimą</string>
