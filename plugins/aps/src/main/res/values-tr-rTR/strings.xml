@@ -39,7 +39,6 @@
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
     <string name="hardlimit">sert sınır</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Tepe</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Son 3 dakika içerisinde bir bolus gönderildi, SMB (Super Micro Bolus) atlandı</string>
     <string name="pump_not_initialized">Pompa başlatılamadı!</string>
