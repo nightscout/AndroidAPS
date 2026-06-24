@@ -9,14 +9,12 @@
     <string name="blocked_by_connectivity">연결 옵션에 의해 차단됨</string>
     <string name="unsupported_ns_version">지원하지 않는 Nightscout 버전입니다</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSCLIENT이 쓰기 권한이 없습니다. 잘못된 API secret인지 확인해보세요</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">즉시전송</string>
     <string name="queue">대기열:</string>
-    <string name="status">상태:</string>
     <string name="clear_log">기록 지우기</string>
     <string name="full_sync">전체 동기화</string>
     <string name="full_sync_comment">전체 동기화를 진행하시겠습니까? 시간이 오래 걸릴 수 있으며, 완료할 때까지 NS에서 새 데이터를 볼 수 없습니다.</string>
@@ -36,7 +34,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">xDrip+에 데이터 보내기</string>
     <string name="xdrip_status_settings">xDrip+ 상태 라인 고급</string>
-    <string name="disabled_loop">Loop 비활성화</string>
     <string name="xdrip_not_installed">xDrip+가 설치되지 않음</string>
     <string name="calibration_sent">보정이 xDrip+로 전송됨</string>
     <string name="xdrip_local_broadcasts_summary">xDrip+로 글루코스 및 치료 데이터 전송하기. 데이터 소스 \"xDrip+ 동기화 팔로워\"를 선택하야 하며, 설정- 앱 간 설정 - 글루코스/치료제 수락에서 데이터 수락을 활성화해야 합니다</string>
@@ -67,7 +64,6 @@
     <string name="pump_fetching_data">펌프에서 데이터를 가져오려고 합니다.</string>
     <string name="pump_old_data">TDD: 여전히 오래된 데이터입니다! 펌프에서 로드할 수 없습니다.</string>
     <string name="units_short">U</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">활성화된 프로파일 스위치가 없습니다!</string>
     <string name="target_only_aps_mode">목표는 APS 모드에서만 적용 가능합니다!</string>
