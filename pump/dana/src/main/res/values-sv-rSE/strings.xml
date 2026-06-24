@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Hämtar status för temp basal</string>
     <string name="gettingpumpsettings">Hämtar pumpinställningar</string>
     <string name="gettingpumptime">Hämtar tid och datum i pumpen</string>
-    <string name="largetimedifftitle">Stor tidsskillnad</string>
     <string name="largetimediff">Stor tidsskillnad:\nTiden i pumpen skiljer mer än 1,5 timme.\nVänligen justera tiden manuellt på pumpen och se till att det går att läsa historiken från pumpen utan oväntat beteende.\nOm möjligt, töm historiken i pumpen innan tidsomställning alternativt stäng av loopen i minst DIA timmar efter den senaste felaktiga historikloggen, men minst DIA timmar från nu.</string>
     <string name="pairfirst">Vänligen parkoppla pumpen.</string>
     <string name="approachingdailylimit">Maximal daglig dos snart nådd</string>
