@@ -11,7 +11,6 @@
     <string name="patch_not_active">Patch não ativado</string>
     <string name="pump_setting_failed">Falha ao definir as configurações do usuário para a bomba!</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Última conexão</string>
     <string name="pump_state_label">Estado da Bomba</string>
     <string name="active_alarms_label">Alarmes ativos</string>
     <!-- Alarm strings -->
