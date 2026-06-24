@@ -34,7 +34,6 @@
     <string name="equil_change">更换泵</string>
     <string name="equil_change_content">请将泵从底板拆下。</string>
     <string name="equil_unpair_alert">您确定要放弃对 %1$s 的控制吗？</string>
-    <string name="equil_devices_number_hint">设备编号</string>
     <string name="equil_record_basal">基础率 %1$s U/H</string>
     <string name="equil_record_basal_temp">临时基础率 %1$s U/H</string>
     <string name="equil_record_bolus">大剂量 %1$s U</string>
@@ -137,7 +136,6 @@
     <string name="equil_unbind">取消配对设备</string>
     <string name="equil_device_unpaired">设备已取消配对</string>
     <string name="equil_assemble">请组装泵、填充储药器和已充电电池</string>
-    <string name="equil_devices_number">输入新的泵ID</string>
     <string name="equil_pair_password_title">输入 %1$s 的密码</string>
     <string name="equil_insert">请填充储药器，直到针尖有胰岛素滴落</string>
     <string name="equil_insert2">泵不能在泵地底板上。</string>
@@ -145,6 +143,5 @@
     <string name="equil_hint2">填充导管</string>
     <string name="equil_pump_updated">泵已更新</string>
     <string name="equil_replace_reservoir">储药器已空，请更换储药器</string>
-    <string name="error_mustbe6hexadidits">必须是 6 个字符，ABCDEF0123456789</string>
     <string name="equil_removed_anyway">无法解除配对，但仍然会移除泵。配对时设定的密码仍保留在泵中。</string>
 </resources>
