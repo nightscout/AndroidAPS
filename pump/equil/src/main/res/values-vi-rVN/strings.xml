@@ -34,7 +34,6 @@
     <string name="equil_change">Thay Bơm</string>
     <string name="equil_change_content">Vui lòng tháo bơm ra khỏi đế.</string>
     <string name="equil_unpair_alert">Bạn có chắc chắn muốn từ bỏ quyền kiểm soát đối với %1$s không?</string>
-    <string name="equil_devices_number_hint">Số thiết bị</string>
     <string name="equil_record_basal">Tỷ lệ liều nền %1$s U/giờ</string>
     <string name="equil_record_basal_temp">Tỷ lệ liều nền tạm thời %1$s U/giờ</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
@@ -137,7 +136,6 @@
     <string name="equil_unbind">Hủy ghép nối thiết bị</string>
     <string name="equil_device_unpaired">Thiết bị đã hủy ghép nối</string>
     <string name="equil_assemble">Vui lòng lắp ráp bơm, bình chứa đã nạp đầy và pin đã sạc</string>
-    <string name="equil_devices_number">Nhập ID bơm mới</string>
     <string name="equil_pair_password_title">Nhập mật khẩu cho %1$s</string>
     <string name="equil_insert">Vui lòng mồi bìnhg chứa cho đến khi có một giọt insulin xuất hiện ở đầu kim</string>
     <string name="equil_insert2">Bơm không được đặt trên đế bơm.</string>
@@ -145,6 +143,5 @@
     <string name="equil_hint2">Mồi kim luồn</string>
     <string name="equil_pump_updated">Đã đồng bộ Bơm</string>
     <string name="equil_replace_reservoir">Bình chứa trống. Vui lòng thay bình chứa mới</string>
-    <string name="error_mustbe6hexadidits">Phải gồm 6 ký tự, chọn từ ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Lệnh hủy ghép nối không thành công. Bơm vẫn sẽ bị xóa. Mật khẩu được đặt trong quá trình ghép nối sẽ không bị xóa khỏi bơm.</string>
 </resources>
