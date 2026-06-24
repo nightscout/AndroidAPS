@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Đang cập nhật trạng thái liều nền tạm thời</string>
     <string name="gettingpumpsettings">Đang cập nhật cài đặt bơm</string>
     <string name="gettingpumptime">Đang cập nhật thời gian bơm</string>
-    <string name="largetimedifftitle">Chênh lệch múi giờ lớn</string>
     <string name="largetimediff">Chênh lệch thời gian lớn:\nThời gian trên bơm hiện sai lệch hơn 1,5 giờ.\nHãy điều chỉnh thời gian trên bơm thủ công và đảm bảo việc đọc lịch sử bơm không gây lỗi dữ liệu.\nNếu được, hãy xóa lịch sử trên bơm trước khi thay đổi thời gian, hoặc tạm tắt vòng lặp kín trong một DIA sau mục lịch sử sai cuối cùng, nhưng ít nhất là một DIA kể từ bây giờ.</string>
     <string name="pairfirst">Hãy kết nối bơm với điện thoại của bạn!</string>
     <string name="approachingdailylimit">Sắp đạt giới hạn insulin hằng ngày</string>
