@@ -26,7 +26,6 @@
     <string name="equil_change">Vervang pomp</string>
     <string name="equil_change_content">Haal de pomp los van de bodemplaat.</string>
     <string name="equil_unpair_alert">Weet u zeker dat u de controle over %1$s wilt opgeven?</string>
-    <string name="equil_devices_number_hint">Apparaat nummer</string>
     <string name="equil_record_basal">Basaal snelheid %1$s E/u</string>
     <string name="equil_record_basal_temp">Tijdelijke basaal snelheid %1$s E/u</string>
     <string name="equil_record_bolus">Bolus %1$s E</string>
@@ -129,13 +128,11 @@
     <string name="equil_unbind">Apparaat ontkoppelen</string>
     <string name="equil_device_unpaired">Apparaat niet gekoppeld</string>
     <string name="equil_assemble">Monteer de pomp, het gevulde reservoir en de opgeladen batterij</string>
-    <string name="equil_devices_number">Voer nieuw pomp ID in</string>
     <string name="equil_insert">Prime het reservoir totdat er een druppel insuline aan de punt van de naald zichtbaar is</string>
     <string name="equil_insert2">De pomp mag niet op de pompbasis zitten.</string>
     <string name="equil_attach">Bevestig de pomp aan de basis</string>
     <string name="equil_hint2">Canule vullen</string>
     <string name="equil_pump_updated">Pomp bijgewerkt</string>
     <string name="equil_replace_reservoir">Het reservoir is leeg. Vervang het reservoir</string>
-    <string name="error_mustbe6hexadidits">Moet 6 tekens bevatten uit ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Ontkoppel opdracht is mislukt. Pomp wordt toch verwijderd. Wachtwoord ingesteld tijdens het koppelen wordt niet van de pomp verwijderd.</string>
 </resources>
