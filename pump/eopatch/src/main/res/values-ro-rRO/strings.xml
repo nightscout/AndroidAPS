@@ -13,7 +13,6 @@
     <string name="eopatch_base_basal_rate">Rată bazală implicită</string>
     <string name="eopatch_temp_basal_rate">Rată bazală temporară</string>
     <string name="invalid_basal_rate">Bazala profilului este mai mică de 0,05 U/oră. EOPatch are un pas minim de injectare de 0,05U. Vă rugăm să încercați din nou după ce ați setat profilul la mai mult decât pasul minim de injectare.</string>
-    <string name="no_profile_selected">Niciun profil selectat. Vă rugăm să selectați un profil și să încercați din nou.</string>
     <string name="symbol_day">zi</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
