@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Pagrindinė bazė</string>
     <string name="eopatch_temp_basal_rate">Laikina bazė</string>
     <string name="invalid_basal_rate">Profilyje nustatyta bazė, mažesnė, nei 0.05 v/val. EOPatch gali suleisti ne mažiau nei 0.05 v. Pakeiskite bazę profilyje ir bandykite iš naujo.</string>
-    <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
     <string name="symbol_day">d.</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
