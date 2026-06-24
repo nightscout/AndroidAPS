@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">Auto</string>
     <string name="automation">Automatisering</string>
-    <string name="automation_description">Gebruiker gedefinieerde automatisering</string>
     <string name="automation_missing_task_name">Voer een taaknaam in.</string>
     <string name="automation_missing_trigger">Voer minstens één trigger in.</string>
     <string name="automation_missing_action">Voer minstens één actie in.</string>
@@ -19,7 +17,6 @@
     <string name="alreadyset">Al ingesteld</string>
     <string name="profilepercentage">Profiel percentage</string>
     <string name="startprofileforever">Profiel %1$d%% starten</string>
-    <string name="percent_u">Procent [%]:</string>
     <string name="sendsmsactionlabel">Stuur SMS: %1$s</string>
     <string name="sendsmsactiondescription">SMS verzenden naar alle nummers</string>
     <string name="sendsmsactiontext">Stuur SMS met tekst</string>
