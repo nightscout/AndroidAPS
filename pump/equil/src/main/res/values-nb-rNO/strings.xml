@@ -34,7 +34,6 @@
     <string name="equil_change">Bytt pumpe</string>
     <string name="equil_change_content">Vennligst fjern pumpen fra basen.</string>
     <string name="equil_unpair_alert">Er du sikker på at du vil gi fra kontroll over %1$s?</string>
-    <string name="equil_devices_number_hint">Enhetsnummer</string>
     <string name="equil_record_basal">Basaldose %1$s E/t</string>
     <string name="equil_record_basal_temp">Midlertidig basaldose %1$s E/t</string>
     <string name="equil_record_bolus">Bolus %1$s E</string>
@@ -140,7 +139,6 @@
     <string name="equil_unbind">Koble fra enhet</string>
     <string name="equil_device_unpaired">Enhet frakoblet</string>
     <string name="equil_assemble">Du må montere pumpen, det fylte reservoaret og det ladede batteriet</string>
-    <string name="equil_devices_number">Angi ny pumpe-ID</string>
     <string name="equil_pair_password_title">Skriv inn passordet for %1$s</string>
     <string name="equil_insert">Vennligst prime reservoaret helt til det er en dråpe av insulin på tuppen av kanylen</string>
     <string name="equil_insert2">Pumpen må ikke være på pumpebasen.</string>
@@ -148,6 +146,5 @@
     <string name="equil_hint2">Prime kanylen</string>
     <string name="equil_pump_updated">Pumpe oppdatert</string>
     <string name="equil_replace_reservoir">Reservoaret er tomt. Vennligst bytt ut reservoaret</string>
-    <string name="error_mustbe6hexadidits">Må være 6 tegn av ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Kommandoen for å fjerne paring mislyktes. Pumpen vil bli fjernet uansett. Passordet som ble angitt under paring, fjernes ikke fra pumpen.</string>
 </resources>
