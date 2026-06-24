@@ -34,7 +34,6 @@
     <string name="equil_change">Сменете помпата</string>
     <string name="equil_change_content">Моля, отделете помпата от основата.</string>
     <string name="equil_unpair_alert">Сигурни ли сте, че искате да се откажете от контрола над %1$s?</string>
-    <string name="equil_devices_number_hint">Номер на устройство</string>
     <string name="equil_record_basal">Базал %1$s Е/Ч</string>
     <string name="equil_record_basal_temp">Временен базал %1$s Е/Ч</string>
     <string name="equil_record_bolus">Болус %1$s Е</string>
@@ -140,7 +139,6 @@
     <string name="equil_unbind">Разкачане на устройство</string>
     <string name="equil_device_unpaired">Устройството е разкачено</string>
     <string name="equil_assemble">Моля сглобете устройството, пълния резервоар и заредена батерия</string>
-    <string name="equil_devices_number">Ново ID на помпа</string>
     <string name="equil_pair_password_title">Парола за %1$s</string>
     <string name="equil_insert">Пуснете прайм на помпата докато малка капка инсулин не се появи на върха на иглата</string>
     <string name="equil_insert2">The pump must not be on the pump base.</string>
@@ -148,6 +146,5 @@
     <string name="equil_hint2">Prime cannula</string>
     <string name="equil_pump_updated">Pump updated</string>
     <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
-    <string name="error_mustbe6hexadidits">Паролата трябва да е 6 символа между ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Unpair command failed. Pump will be removed anyway. Password set during pairing is not removed from the pump.</string>
 </resources>
