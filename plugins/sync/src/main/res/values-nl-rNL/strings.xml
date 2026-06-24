@@ -10,7 +10,6 @@
     <string name="no_connectivity">Geen verbinding</string>
     <string name="unsupported_ns_version">Niet ondersteunde versie van Nightscout</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSCLIENT heeft geen schrijfrechten. Verkeerde API secret?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
@@ -20,7 +19,6 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Toedienen</string>
     <string name="queue">Wachtend:</string>
-    <string name="status">Status:</string>
     <string name="clear_log">Logboek wissen</string>
     <string name="full_sync">Volledige synchronisatie</string>
     <string name="full_sync_comment">Volledige synchronisatie? Dit kan een aantal uren duren. Je ziet dan geen nieuwe gegevens in Nightscout.</string>
@@ -41,7 +39,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Stuur data naar xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Geavanceerde Statusregel</string>
-    <string name="disabled_loop">Loop is uitgeschakeld</string>
     <string name="xdrip_not_installed">xDrip+ niet geïnstalleerd</string>
     <string name="calibration_sent">Kalibratie naar xDrip+ verzonden</string>
     <string name="xdrip_local_broadcasts_summary">Verzend glucose en behandelingsgegevens naar xDrip+. Gegevensbron \"xDrip+ Sync Follower\" moet worden geselecteerd en het accepteren van gegevens moet worden ingeschakeld in Instellingen - Inter-app instellingen - Accepteer Glucose/Behandelingen</string>
@@ -80,7 +77,6 @@
     <string name="pump_fetching_data">proberen gegevens van de pomp op te halen.</string>
     <string name="pump_old_data">TDD: Nog steeds oude gegevens! Kan niet laden van de pomp.</string>
     <string name="units_short">E</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">u</string>
     <string name="no_active_profile">Geen actieve profielwissel!</string>
     <string name="target_only_aps_mode">Streefdoelen zijn alleen van toepassing in de APS modus!</string>
@@ -106,10 +102,6 @@
     <string name="full_xdrip_sync_comment">Volledige synchronisatie? Het kan enige tijd duren en tot het is voltooid zie je geen nieuwe gegevens in xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Probeer het opnieuw.</string>
     <string name="wear_action_loop_state_invalid">Ongeldige loop status aangevraagd</string>
-    <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuur: %2$d min</string>
-    <string name="wear_action_loop_state_now_pump_suspended">Pomp is onderbroken</string>
-    <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
-    <string name="wear_action_loop_state_now_invalid">Ongeldig</string>
     <string name="garmin_request_key">Sleutel aanvragen</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
