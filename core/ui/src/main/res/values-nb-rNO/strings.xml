@@ -34,7 +34,6 @@
     <string name="failed_update_basal_profile">Klarte ikke å oppdatere basalprofil</string>
     <string name="no_valid_basal_rate">Ingen gyldige basaldoser ble lest fra pumpen</string>
     <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
-    <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
     <string name="loop_disabled_by_user">Loop deaktivert av bruker</string>
     <string name="event_type">Hendelsestype</string>
     <string name="mgdl">mg/dL</string>
@@ -62,11 +61,9 @@
     <string name="configbuilder_pick_one_hint">Velg én. Bare én kan være aktiv om gangen.</string>
     <string name="configbuilder_pick_many_hint">Velg de som gjelder.</string>
     <string name="configbuilder_no_selection_warning">Ingen plugin er valgt i denne kategorien.</string>
-    <string name="simple_mode">Enkelmodus</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
     <string name="no_compose_preferences">Ingen innstillinger tilgjengelig for denne plugin</string>
-    <string name="plugin_no_preferences">Plugin støtter ikke innstillinger</string>
     <string name="confirm_password_hint">Bekreft passord</string>
     <string name="confirm_pin_hint">Bekreft PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -99,7 +96,6 @@
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
     <string name="advanced_settings_title">Avanserte innstillinger</string>
-    <string name="extendedbolusdeliveryerror">Forlenget bolus leveringsfeil</string>
     <string name="extended_bolus">Forlenget bolus</string>
     <string name="paused">Pauset</string>
     <string name="running">Kjører</string>
@@ -265,7 +261,6 @@
     <string name="basalprofilenotaligned">Basalverdier er ikke angitt på hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basalverdi erstattet med minste tillate verdi: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basalverdi erstattet med høyeste tillate verdi: %1$s</string>
-    <string name="profile_per_unit">/E</string>
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
@@ -368,7 +363,6 @@
     <string name="scene_management_desc">Lage, endre og håndtere scener</string>
     <string name="scene_action_count">%1$d handlinger</string>
     <string name="scene_start_from_template">Start fra mal</string>
-    <string name="scene_editor_reason">Årsak</string>
     <string name="scene_editor_target">Mål</string>
     <string name="scene_editor_tt_preset">Forhåndsinnstilt mål</string>
     <string name="scene_editor_no_tt_presets">Finner ingen forhåndsinnstilte mål</string>
@@ -399,10 +393,8 @@
     <string name="clientcontrol_action_cancel_temp_target">Avbryt midlertidig mål</string>
     <string name="clientcontrol_action_activate_scene">Aktiver scene %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Avslutt scene</string>
-    <string name="clientcontrol_action_activate_insulin">Aktiver insulin %1$s</string>
     <string name="clientcontrol_action_update_settings">Oppdater innstillinger</string>
     <string name="clientcontrol_action_deliver_bolus">Lever bolus</string>
-    <string name="clientcontrol_action_record_bolus">Registrer bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Denne enheten er ikke koblet til en hovedenhet.</string>
     <string name="clientcontrol_fail_not_reachable">Hovedenheten er frakoblet.</string>
@@ -485,7 +477,6 @@
     <string name="activation">Aktivering</string>
     <string name="temp_target_management">Midlertidig mål</string>
     <string name="revert_to_defaults">Tilbakestill til standardinnstillinger</string>
-    <string name="confirm_cancel_temp_target">Avbryt aktivt midlertidig mål?</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Registrer</string>
@@ -671,8 +662,6 @@
     <string name="no_profile_selected">Ingen profil valgt</string>
     <string name="missing_profile_name">Mangler profilnavn</string>
     <string name="profile_not_saved_activate">Profilen er ikke lagret. Vennligst lagre profilen før aktivering.</string>
-    <string name="profile_activation_failed">Profilaktivering mislyktes</string>
-    <string name="profile_switch_save_failed">Profilbytte kunne ikke lagres. Prøv igjen.</string>
     <string name="profile_basal_not_compatible_with_pump">Basaldosen er ikke kompatibel med den aktuelle pumpen og kan ikke aktiveres. Reduser prosenten eller juster basaldosen.</string>
     <string name="profile_pump_incompatible_label">Pumpegrense</string>
     <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
@@ -753,12 +742,9 @@
     <string name="wizard_calculation">Beregning</string>
     <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maks fjerning: %1$d g (karbo ombord)</string>
-    <string name="carb_equal_zero_no_action">Karbo = 0. Ingen handling utført!</string>
-    <string name="bolus_equal_zero_no_action">Bolus = 0. Ingen handling utført!</string>
     <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="wizard_no_cob">Ukjent COB! BS-verdier mangler eller nylig oppstart av appen?</string>
     <string name="wizard_carbs_constraint">Brudd på karbo-begrensninger!</string>
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insulinbegrensning nådd!\nKan ikke levere %1$.2fE</string>
@@ -1083,6 +1069,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">DISF</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">SKRITT</string>
-    <string name="remove_items">Fjern elementer</string>
-    <string name="sort_items">Sorter elementer</string>
 </resources>
