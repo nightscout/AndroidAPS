@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Aplikované obmedzenie sacharidov</string>
     <string name="no_temp_basal_running">Nie je spustený žiadny dočasný bazál</string>
-    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Spustiť Dočasný cieľ Aktivita</string>
     <string name="start_eating_soon_tt">Spustiť Dočasný cieľ Blížiace sa jedlo</string>
     <string name="start_hypo_tt">Spustiť doč. cieľ Hypo</string>
@@ -49,7 +47,6 @@
     <string name="user_profile_description">Popis profilu používateľa sa používa na zobrazenie nejčastejších miest aplikácie dostupných pre mužov, ženy, alebo deti</string>
     <string name="site_management">Profil správy miesta aplikácie</string>
     <string name="site_management_description">Tu nastavíte, či chcete spravovať miesta aplikácie pre pumpu, senzor, alebo oboje. Toto nastavenie bude použité na automatické zobrazenie dialógového okna správy miesta aplikácie u každého zisteného nového záznamu.</string>
-    <string name="update_site_change">Aktualizujte miesto aplikácie</string>
     <string name="edit_site">Upraviť</string>
     <string name="record_site_location">Miesto aplikácie: %1$s</string>
     <string name="record_site_arrow">Šípka miesta aplikácie: %1$s</string>
@@ -143,27 +140,13 @@
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="a11y_add_new_insulin">Pridaj nový inzulín</string>
     <string name="a11y_delete_current_insulin">Vymaž aktuálny inzulín</string>
-    <string name="activate_insulin_no_profile">Nebol nájdený žiadny aktívny profil</string>
-    <string name="activate_insulin_new_insulin">Nový inzulín: %1$s</string>
-    <string name="activate_insulin_remaining">Zostáva: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Bude vytvorené prepnutie profilu: \n\n<b>%1$s</b></string>
     <string name="load_peak_from">Nahraj vrchol z</string>
     <string name="cannot_delete_last_insulin">Nemôžem vymazať posledný inzulín</string>
     <string name="cannot_delete_active_insulin">Nemôžem vymazať aktívny inzulín</string>
     <string name="reuse_profile_pct_hours">Znovu použiť %1$d%% %2$dh</string>
-    <string name="timeshift_label">Posun času</string>
     <string name="percentage_label">% zmena</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Pozastaviť uzavretý okruh na 1 h</string>
-    <string name="suspendloopfor2h">Pozastaviť uzavretý okruh na 2 h</string>
-    <string name="suspendloopfor3h">Pozastaviť uzavretý okruh na 3 h</string>
-    <string name="suspendloopfor10h">Pozastaviť uzavretý okruh na 10 h</string>
     <string name="disconnectpump">Odpojenie pumpy</string>
-    <string name="disconnectpumpfor15m">Odpojiť pumpu na 15 min</string>
-    <string name="disconnectpumpfor30m">Odpojiť pumpu na 30 min</string>
-    <string name="disconnectpumpfor1h">Odpojiť pumpu na 1 h</string>
-    <string name="disconnectpumpfor2h">Odpojiť pumpu na 2 h</string>
-    <string name="disconnectpumpfor3h">Odpojiť pumpu na 3 h</string>
     <string name="resume">Pokračovať</string>
     <string name="reconnect">Znovu pripojiť pumpu</string>
     <string name="duration15m">15 minút</string>
@@ -296,8 +279,6 @@
     <string name="quick_launch_no_profiles">Vytvorte profily v Lokálnom profile, aby ste ich tu mohli použiť</string>
     <string name="quick_launch_edit_profile_preset">Upraviť predvoľby profilu</string>
     <string name="quick_launch_profile_permanent">Permanentné</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Zvoľ šípku</string>
     <string name="loop_accept_nav_label">Uzavretý okruh</string>
     <string name="loop_accept_set_basal_question">Povoliť nový dočasný bazál:</string>
