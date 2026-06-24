@@ -39,7 +39,6 @@
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">שיא</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">ניתן בולוס ב-3 הדקות האחרונות, מדלג על SMB</string>
     <string name="pump_not_initialized">משאבה לא מאותחלת!</string>
