@@ -13,7 +13,6 @@
     <string name="eopatch_base_basal_rate">Základná hodnota bazálu</string>
     <string name="eopatch_temp_basal_rate">Dočasná bazálna dávka</string>
     <string name="invalid_basal_rate">Bazál profilu je menší než 0.05 U/h. EOPatch má minimálnu dávku 0.05 U. Prosím skúste to znovu po nastavení v profile na viac ako minimálnu dávku.</string>
-    <string name="no_profile_selected">Žiadny vybraný profil. Prosím vyberte si profil a skúste to znovu.</string>
     <string name="symbol_day">deň</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
