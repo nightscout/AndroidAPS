@@ -54,7 +54,6 @@
     <string name="wrongpassword">Hibás jelszó</string>
     <string name="passwords_dont_match">Jelszavak nem egyeznek</string>
     <!--    Profile-->
-    <string name="profile_per_unit">/Е</string>
     <string name="profile_ins_units_per_hour">E/ó</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
