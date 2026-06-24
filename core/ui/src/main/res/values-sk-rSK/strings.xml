@@ -29,7 +29,6 @@
     <string name="failed_update_basal_profile">Chyba pri aktualizovaní bazálneho profilu</string>
     <string name="no_valid_basal_rate">Nenačítaný žiadny platný bazál z pumpy</string>
     <string name="limiting_iob">IOB obmedzený na %1$.1f U: %2$s</string>
-    <string name="loop_disabled">UZAVRETÝ OKRUH DEAKTIVOVANÝ OBMEDZENÍM</string>
     <string name="loop_disabled_by_user">Uzavretý okruh zakázaný používateľom</string>
     <string name="event_type">Typ udalosti</string>
     <string name="save">Uložiť</string>
@@ -51,11 +50,9 @@
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Iba jeden môže byť aktívny.</string>
     <string name="configbuilder_pick_many_hint">Vyberte, čo sa použije.</string>
     <string name="configbuilder_no_selection_warning">V tejto kategórii nie je vybraný žiadny plugin.</string>
-    <string name="simple_mode">Jednoduchý mód</string>
     <string name="expand">Rozbaliť</string>
     <string name="collapse">Zbaliť</string>
     <string name="no_compose_preferences">Pre tento plugin nie sú k dispozícii žiadne nastavenia písania</string>
-    <string name="plugin_no_preferences">Plugin nepodporuje nastavenia</string>
     <string name="confirm_password_hint">Potvrďte heslo</string>
     <string name="confirm_pin_hint">Potvrďte PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -88,7 +85,6 @@
     <string name="mute">Stíšiť</string>
     <string name="success">Úspešne</string>
     <string name="advanced_settings_title">Rozšírené nastavenia</string>
-    <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
     <string name="extended_bolus">Predĺžený bolus</string>
     <string name="paused">Pozastavené</string>
     <string name="running">Beží</string>
@@ -247,7 +243,6 @@
     <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
     <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>
     <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -346,7 +341,6 @@
     <string name="scene_management_desc">Vytvorenie, úprava a správa scén</string>
     <string name="scene_action_count">%1$d akcií</string>
     <string name="scene_start_from_template">Začnite od šablóny</string>
-    <string name="scene_editor_reason">Dôvod</string>
     <string name="scene_editor_target">Cieľ</string>
     <string name="scene_editor_tt_preset">Predvoľba DC</string>
     <string name="scene_editor_no_tt_presets">Žiadné predvoľby DC nie sú nastavené</string>
@@ -431,7 +425,6 @@
     <string name="activation">Aktivácia</string>
     <string name="temp_target_management">Dočasný cieľ</string>
     <string name="revert_to_defaults">Obnoviť predvolené</string>
-    <string name="confirm_cancel_temp_target">Zrušiť aktívny dočasný cieľ?</string>
     <string name="loop">Uzavretý okruh</string>
     <string name="ns">NS</string>
     <string name="record">Záznam</string>
@@ -616,8 +609,6 @@
     <string name="no_profile_selected">Nebol vybraný žiadny profil</string>
     <string name="missing_profile_name">Chýba názov profilu</string>
     <string name="profile_not_saved_activate">Profil nebol uložený. Pred aktiváciou, prosím, uložte profil.</string>
-    <string name="profile_activation_failed">Aktivácie profilu zlyhala</string>
-    <string name="profile_switch_save_failed">Prepnutie profilu nemohlo byť uložené. Prosím skúste to znovu.</string>
     <string name="profile_basal_not_compatible_with_pump">Bazál nie je kompatibilný s aktuálnou pumpou a nemôže byť aktivovaný. Zníž percento, alebo prispôsob bazál.</string>
     <string name="profile_pump_incompatible_label">Limit pumpy</string>
     <string name="error_in_ic_values">Chyba v hodnotách inz./sach. prevodu</string>
@@ -697,12 +688,9 @@
     <string name="wizard_include_cob">Zahŕňa COB</string>
     <string name="wizard_calculation">Výpočet</string>
     <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
-    <string name="carb_equal_zero_no_action">Sacharidy = 0. Žiadna akcia!</string>
-    <string name="bolus_equal_zero_no_action">Bolus = 0. Žiadna akcia!</string>
     <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
     <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
-    <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>
     <string name="wizard_carbs_constraint">Sacharidy mimo povolený rozsah!</string>
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Inzulín mimo povolený rozsah!\nNie je možné podať %1$.2fU</string>
@@ -1030,6 +1018,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">KROKY</string>
-    <string name="remove_items">Odstrániť položky</string>
-    <string name="sort_items">Zoradiť položky</string>
 </resources>
