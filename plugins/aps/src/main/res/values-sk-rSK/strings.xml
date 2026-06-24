@@ -40,7 +40,6 @@
     <string name="maxvalueinpreferences">maximálna hodnota v nastaveniach</string>
     <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Vrchol</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Podaný bolus v priebehu posledných 3 minút, SMB preskočené</string>
     <string name="pump_not_initialized">Pumpa nie je inicializovaná!</string>
