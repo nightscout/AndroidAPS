@@ -12,7 +12,6 @@
     <string name="patch_not_active">Μη ενεργοποιημένο Patch</string>
     <string name="pump_setting_failed">Η ρύθμιση των ρυθμίσεων χρήστη στην αντλία απέτυχε!</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Τελευταία σύνδεση</string>
     <string name="active_bolus_label">Ενεργό bolus</string>
     <string name="pump_state_label">Κατάσταση Αντλίας</string>
     <string name="active_alarms_label">Ενεργοί συναγερμοί</string>
