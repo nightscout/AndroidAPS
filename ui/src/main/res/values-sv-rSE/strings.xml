@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Kolhydratsspärr aktiverad</string>
-    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Starta \"Träning\"</string>
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
     <string name="start_hypo_tt">Starta \"Hypo\"</string>
@@ -32,19 +30,9 @@
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Återanvänd %1$d%% %2$dtim</string>
-    <string name="timeshift_label">Tidsförskjutning</string>
     <string name="percentage_label">Procent</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Pausa loop i 1 timme</string>
-    <string name="suspendloopfor2h">Pausa loop i 2 timmar</string>
-    <string name="suspendloopfor3h">Pausa loop i 3 timmar</string>
-    <string name="suspendloopfor10h">Pausa loop i 10 timmar</string>
     <string name="disconnectpump">Koppla ifrån pump</string>
-    <string name="disconnectpumpfor15m">Koppla loss pump i 15 min</string>
-    <string name="disconnectpumpfor30m">Koppla loss pump i 30 min</string>
-    <string name="disconnectpumpfor1h">Koppla loss pump i 1 timme</string>
-    <string name="disconnectpumpfor2h">Koppla loss pump i 2 timmar</string>
-    <string name="disconnectpumpfor3h">Koppla loss pump i 3 timmar</string>
     <string name="resume">Återuppta</string>
     <string name="reconnect">Återanslut Pump</string>
     <string name="duration15m">15 min</string>
