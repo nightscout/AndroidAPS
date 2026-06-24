@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">Giới hạn Carbs đã bật</string>
     <string name="no_temp_basal_running">Không có liều nền tạm thời nào đang chạy</string>
-    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Bắt đầu TT Hoạt động thể lực</string>
     <string name="start_eating_soon_tt">TT Chuản bị ăn</string>
     <string name="start_hypo_tt">Bắt đầu TT Hạ đường huyết</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">Mô tả cấu hình người dùng được dùng để hiển thị các vị trí tiêm phổ biến nhất đối với nam, nữ hoặc trẻ em</string>
     <string name="site_management">Cấu hình quản lý vị trí tiêm</string>
     <string name="site_management_description">Tại đây bạn có thể chọn quản lý vị trí tiêm, vị trí cảm biến CGM hoặc cả hai. Thiết lập này sẽ được dùng để tự động hiển thị hộp thoại quản lý vị trí mỗi khi phát hiện mục nhập mới</string>
-    <string name="update_site_change">Cập nhật vị trí</string>
     <string name="edit_site">Chỉnh sửa</string>
     <string name="record_site_location">Vị trí: %1$s</string>
     <string name="record_site_arrow">Hướng vị trí: %1$s</string>
@@ -146,40 +143,24 @@
     <string name="clientcontrol_pending_working_title">Đang áp dụng…</string>
     <string name="clientcontrol_pending_working_text">Đang chờ thiết bị chính xác nhận…</string>
     <string name="clientcontrol_pending_rejected_title">Không áp dụng</string>
-    <string name="clientcontrol_pending_rejected_text">Thiết bị chính không thể áp dụng yêu cầu này.</string>
     <string name="clientcontrol_pending_failed_format">Không thể thực hiện %1$s.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Đã áp dụng một phần</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">%1$s đã được áp dụng, nhưng một số thao tác không thể thực hiện được.\nHãy kiểm tra trạng thái hiện tại.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Không thể xác nhận</string>
-    <string name="clientcontrol_pending_unconfirmed_text">Yêu cầu đã được gửi nhưng thiết bị chính không xác nhận kịp thời. Có thể đã được áp dụng hoặc chưa — màn hình này sẽ tự cập nhật nếu đồng bộ lại.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s đã được gửi, nhưng không nhận được xác nhận.\n%2$s\nNó sẽ xuất hiện ở đây nếu/khi thiết bị chính áp dụng.</string>
     <string name="clientcontrol_pending_stop_waiting">Dừng chờ</string>
     <string name="a11y_add_new_insulin">Thêm insulin mới</string>
     <string name="a11y_delete_current_insulin">Xoa insulin hiện tại</string>
-    <string name="activate_insulin_no_profile">Không tìm thấy cấu hình hoạt động</string>
-    <string name="activate_insulin_new_insulin">Insulin mới: %1$s</string>
-    <string name="activate_insulin_remaining">Còn lại: %1$d phút</string>
-    <string name="activate_insulin_profile_switch">Chuyển cấu hình sẽ được tạo:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Lấy đỉnh từ</string>
     <string name="cannot_delete_last_insulin">Không thể xóa insulin gần nhất</string>
     <string name="cannot_delete_active_insulin">Không thể xóa insulin đang dùng</string>
     <string name="reuse_profile_pct_hours">Tái sử dụng %1$d%% %2$dh</string>
-    <string name="timeshift_label">Dịch chuyển thời gian</string>
     <string name="percentage_label">Phần trăm</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Tạm dừng vòng lặp 1 giờ</string>
-    <string name="suspendloopfor2h">Tạm dừng vòng lặp 2 giờ</string>
-    <string name="suspendloopfor3h">Tạm dừng vòng lặp 3 giờ</string>
-    <string name="suspendloopfor10h">Tạm dừng vòng lặp 10 giờ</string>
     <string name="disconnectpump">Ngắt kết nối bơm</string>
-    <string name="disconnectpumpfor15m">Ngắt kết nối bơm trong 15 phút</string>
-    <string name="disconnectpumpfor30m">Ngắt kết nối bơm trong 30 phút</string>
-    <string name="disconnectpumpfor1h">Ngắt kết nối bơm trong 1 giờ</string>
-    <string name="disconnectpumpfor2h">Ngắt kết nối bơm trong 2 giờ</string>
-    <string name="disconnectpumpfor3h">Ngắt kết nối bơm trong 3 giờ</string>
     <string name="resume">Tiếp tục</string>
     <string name="reconnect">Kết nối lại bơm</string>
     <string name="duration15m">15 phút</string>
@@ -312,8 +293,6 @@
     <string name="quick_launch_no_profiles">Tạo Cấu hình trong Cấu hình Cục bộ để dùng ở đây</string>
     <string name="quick_launch_edit_profile_preset">Sửa Cấu hình Cài đặt sẵn</string>
     <string name="quick_launch_profile_permanent">Vĩnh viễn</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d phút</string>
     <string name="select_arrow">Chọn Mũi tên</string>
     <string name="loop_accept_nav_label">Vòng lặp</string>
     <string name="loop_accept_set_basal_question">Chấp nhận liều nền tạm thời mới:</string>
