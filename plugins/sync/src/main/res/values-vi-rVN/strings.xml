@@ -10,7 +10,6 @@
     <string name="no_connectivity">Không có kết nối</string>
     <string name="unsupported_ns_version">Phiên bản Nightscout này không được hỗ trợ</string>
     <!-- AAPSClient -->
-    <string name="no_write_permission">NSCLIENT không có quyền ghi. Sai API secret?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Thiết bị được ủy quyền</string>
@@ -24,9 +23,6 @@
     <string name="authorized_clients_pending_expires_in">Ghép đôi sẽ hết hạn sau %1$s giây</string>
     <string name="authorized_clients_empty_title">Không có thiết bị phụ nào được ủy quyền</string>
     <string name="authorized_clients_empty_subtitle">Ghép đôi một thiết bị phụ để cho phép thiết bị đó gửi các lệnh đã ký xác thực đến thiết bị chính này.</string>
-    <string name="authorized_clients_disabled_title">Điều khiển từ thiết bị phụ đang tắt</string>
-    <string name="authorized_clients_disabled_subtitle">Bật điều khiển từ thiết bị phụ trong phần Cài đặt để cho phép các thiết bị phụ gửi các lệnh đã ký xác thực đến thiết bị chính này.</string>
-    <string name="authorized_clients_open_settings">Mở cài đặt</string>
     <string name="authorized_clients_name_dialog_title">Thêm máy phụ</string>
     <string name="authorized_clients_name_placeholder">Tên thiết bị</string>
     <string name="authorized_clients_delete_dialog_title">Thu hồi quyền truy cập?</string>
@@ -67,7 +63,6 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Thực hiện ngay</string>
     <string name="queue">Hàng đợi:</string>
-    <string name="status">Trạng thái:</string>
     <string name="clear_log">Xóa nhật ký</string>
     <string name="full_sync">Đồng bộ toàn bộ</string>
     <string name="full_sync_comment">Đồng bộ toàn bộ? Quá trình này có thể mất nhiều giờ và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong NS.</string>
@@ -88,7 +83,6 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Gửi dữ liệu tới xDrip+</string>
     <string name="xdrip_status_settings">Dòng trạng thái xDrip+ (nâng cao)</string>
-    <string name="disabled_loop">Vòng lặp đã tắt</string>
     <string name="xdrip_not_installed">xDrip+ chưa được cài đặt</string>
     <string name="calibration_sent">Gửi hiệu chuẩn đến xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Gửi dữ liệu đường huyết và điều trị tới xDrip+. Nguồn dữ liệu ‘xDrip+ Sync Follower’ phải được chọn và chức năng chấp nhận dữ liệu phải được bật trong Settings - Inter-app settings - Accept Glucose/Treatments</string>
@@ -135,7 +129,6 @@
     <string name="pump_fetching_data">đang cố lấy dữ liệu từ bơm.</string>
     <string name="pump_old_data">TDD: Vẫn là dữ liệu cũ! Không thể tải từ bơm.</string>
     <string name="units_short">U</string>
-    <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Không có chuyển đổi cấu hình nào hoạt động!</string>
     <string name="target_only_aps_mode">Các mục tiêu chỉ áp dụng trong chế độ APS!</string>
@@ -162,18 +155,6 @@
     <string name="wear_action_loop_state_unauthorized">Vui lòng thử lại.</string>
     <string name="wear_action_loop_state_invalid">Trạng thái vòng lặp không hợp lệ</string>
     <string name="wear_action_running_mode_title">Chế độ thể dục</string>
-    <string name="wear_action_loop_state_changed_with_duration">%1$s\nThời gian: %2$d phút</string>
-    <string name="wear_action_loop_state_now_closed">Vòng lặp đóng</string>
-    <string name="wear_action_loop_state_now_lgs">Tạm dừng khi đường huyết thấp</string>
-    <string name="wear_action_loop_state_now_open">Vòng lặp mở</string>
-    <string name="wear_action_loop_state_now_suspended">Tạm dừng vòng lặp</string>
-    <string name="wear_action_loop_state_now_resumed">Khởi động lại vòng lặp</string>
-    <string name="wear_action_loop_state_now_disabled">Vô hiệu hóa vòng lặp</string>
-    <string name="wear_action_loop_state_now_pump_suspended">Bơm đã tạm dừng</string>
-    <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
-    <string name="wear_action_loop_state_now_invalid">Không hợp lệ</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Ngắt kết nối bơm</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Kết nối lại bơm</string>
     <string name="garmin_request_key">Request Key</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Giao tiếp SMS</string>
