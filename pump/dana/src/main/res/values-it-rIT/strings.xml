@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Ricezione stato basale temporanea</string>
     <string name="gettingpumpsettings">Ricezione impostazioni micro</string>
     <string name="gettingpumptime">Ricezione ora micro</string>
-    <string name="largetimedifftitle">Grande differenza oraria</string>
     <string name="largetimediff">Grande differenza oraria:\nL\'ora nel micro differisce per più di 1h e 30m. \nRegola l\'ora manualmente e assicurati che la lettura dello storico dal micro non causi comportamenti imprevisti.\nSe possibile, cancella lo storico del micro prima di cambiare l\'ora oppure disabilita il loop chiuso per un tempo corrispondente al tuo valore DIA.</string>
     <string name="pairfirst">Associa il micro con il tuo telefono!</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
