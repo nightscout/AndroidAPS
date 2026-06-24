@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Status otrzymywania tymczasowej bazy</string>
     <string name="gettingpumpsettings">Otrzymywanie ustawień pompy</string>
     <string name="gettingpumptime">Otrzymywanie czasu pompy</string>
-    <string name="largetimedifftitle">Duża Różnica Czasu</string>
     <string name="largetimediff">Duża różnica czasu:\nCzas w pompie jest wyłączony przez więcej niż 1,5 godziny.\n. Ustaw czas ręcznie na pompie i upewnij się, że odczyt historii pompy nie powoduje błędu.\nJeśli to możliwe, usuń historię z pompy przed zmianą czasu lub wyłącz pętlę zamkniętą do jednego DIA po ostatnim nieprawidłowym wpisie dziennika, ale co najmniej jeden DIA od teraz.</string>
     <string name="pairfirst">Proszę sparować swoją pompę z telefonem!</string>
     <string name="approachingdailylimit">Zbliżam się do dziennego limitu insuliny</string>
