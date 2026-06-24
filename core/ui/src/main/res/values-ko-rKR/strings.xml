@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Basal 프로파일 갱신 실패</string>
     <string name="no_valid_basal_rate">펌프에서 유효한 Basal양을 읽을 수 없습니다.</string>
     <string name="limiting_iob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
-    <string name="loop_disabled">제한으로 인해 LOOP가 사용불가합니다.</string>
     <string name="event_type">이벤트 종류</string>
     <string name="save">저장</string>
     <string name="snooze">스누즈</string>
@@ -39,7 +38,6 @@
     <string name="mute">음소거</string>
     <string name="success">성공</string>
     <string name="advanced_settings_title">고급 설정</string>
-    <string name="extendedbolusdeliveryerror">확장 Bolus 주입 에러</string>
     <string name="extended_bolus">확장 Bolus</string>
     <string name="paused">일시중지</string>
     <string name="tdd_total">TDD Total</string>
@@ -146,7 +144,6 @@
     <string name="basalprofilenotaligned">Basal값이 시간단위로 설정되지 않았습니다: %1$s</string>
     <string name="minimalbasalvaluereplaced">지원되는 최대 값으로 Basal 값이 대체되었습니다: %1$s</string>
     <string name="maximumbasalvaluereplaced">지원되는 최대값으로 Basal값이 대체되었습니다:%1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -365,10 +362,8 @@
     <string name="bolus_recorded_only">Bolus는 이 경우(펌프를 통해 공급되지 않음) 에만 기록됩니다</string>
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
-    <string name="carb_equal_zero_no_action">탄수화물= 0. 아무런 조치도 취하지 않았습니다!</string>
     <string name="wizard_no_actual_bg">기저 계산에는 최근 BG가 없습니다!</string>
     <string name="wizard_no_active_profile">활성화된 프로파일 설정이 없습니다!</string>
-    <string name="wizard_no_cob">알 수 없는 COB입니다! BG 판독이 누락되었거나, 최근 앱을 다시 시작하였습니까?</string>
     <string name="wizard_carbs_constraint">탄수화물 제한 위반!</string>
     <string name="wizard_constraint_bolus_size">인슐린 제약 위반!\n %1$.2fU을 전달할 수 없습니다</string>
     <string name="wizard_pump_not_available">이용가능한 펌프가 없습니다!</string>
