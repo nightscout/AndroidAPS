@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">Resettare le informazioni di associazione?</string>
     <string name="diaconn_pairing">Associazione micro Diaconn</string>
     <string name="diaconn_g8_history_alarm">Allarmi</string>
     <string name="diaconn_g8_history_basalhours">Ore basali</string>
@@ -13,6 +14,7 @@
     <string name="largetimedifftitle">Grande differenza oraria</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
     <string name="startingbolus">Avvio erogazione bolo</string>
+    <string name="waitingforbolusend">In attesa della fine stimata del bolo</string>
     <string name="gettingbolusstatus">Ricezione stato bolo</string>
     <string name="stoppingtempbasal">Stop basale temporanea</string>
     <string name="settingtempbasal">Impostazione basale temporanea</string>
@@ -31,6 +33,7 @@
     <string name="bolus_step">Incremento bolo</string>
     <string name="basal_step">Incremento basale</string>
     <string name="pairfirst">Associa il micro col tuo telefono!</string>
+    <string name="processinghistory">Evento di elaborazione</string>
     <string name="diaconn_g8_history_tempbasal">Basale temporanea</string>
     <string name="diaconng8_pump_settings">Impostazioni micro Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Suono</string>
