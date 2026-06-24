@@ -35,7 +35,6 @@
     <string name="gettingtempbasalstatus">Obtenint estat basal temporal</string>
     <string name="gettingpumpsettings">Obtenint configuració bomba</string>
     <string name="gettingpumptime">Obtenint hora bomba</string>
-    <string name="largetimedifftitle">Gran diferència d\'hora</string>
     <string name="largetimediff">Gran diferència d\'hora:\nLa hora a la bomba és més d\'1.5h diferent.\nSi us plau configureu l\'hora manualment a la bomba i assegureu-vos que la lectura de l\'historial de la bomba no causa efectes inesperats.\nSi és possible, elimineu l\'historial de la bomba abans de canviar-li l\'hora o desactiveu el llaç tancat durant les hores que tingueu configurat el DIA (Durada de l\'Acció de la Insulina) després de la darrera entrada errònia de l\'historial però al menys un període DIA des d\'ara.</string>
     <string name="pairfirst">Sincronitzeu la bomba amb el telèfon!</string>
     <string name="approachingdailylimit">Arribant al límit d\'insulina diari</string>
