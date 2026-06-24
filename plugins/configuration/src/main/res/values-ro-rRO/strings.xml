@@ -20,7 +20,6 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
     <string name="syncinfotext">Sincronizează datele în cloud. Puteți sări peste această parte acum, dar nu veți putea trece de obiective până când nu veți configura un cont Nightscout sau Tidepool.</string>
-    <string name="status">Stare:</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Schimbați profilul</string>
