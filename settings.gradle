@@ -4,6 +4,7 @@ plugins {
 include ':app'
 include ':wear'
 include ':benchmark'
+include ':e2e'
 include ':core:data'
 include ':core:graph'
 include ':core:interfaces'
