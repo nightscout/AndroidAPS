@@ -37,7 +37,6 @@
     <string name="gettingtempbasalstatus">Se citește starea bazalei temporare</string>
     <string name="gettingpumpsettings">Se citesc setările pompei</string>
     <string name="gettingpumptime">Se citește ora pompei</string>
-    <string name="largetimedifftitle">Diferență majoră de timp</string>
     <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nPotriviți manual ora din pompă și asigurați-vă că sincronizarea cu datele istorice din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
     <string name="pairfirst">Vă rog să asociați pompa la telefon!</string>
     <string name="approachingdailylimit">Se apropie limita zilnică de insulină</string>
