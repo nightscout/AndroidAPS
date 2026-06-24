@@ -14,7 +14,6 @@
     <string name="pump_setting_failed">Kullanıcı ayarlarının pompada ayarlanması başarısız oldu!</string>
     <string name="pump_sync_error">Geçmiş senkronize edilirken hata oluştu; bir kayıt atlandı. Bolusun doğru şekilde senkronize edilip edilmediğini kontrol etmek için tedavi sekmesini kontrol edin. Erteleyin ve hata tekrarlanmaya devam ederse patch veya pompa tabanını değiştirin.</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Son bağlantı</string>
     <string name="active_bolus_label">Aktif bolus</string>
     <string name="pump_state_label">Pompa durumu</string>
     <string name="active_alarms_label">Aktif alarmlar</string>
