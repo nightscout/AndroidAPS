@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Fehler beim Aktualisieren des Basalprofils</string>
     <string name="no_valid_basal_rate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
     <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
-    <string name="loop_disabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="event_type">Ereignistyp</string>
     <string name="save">Speichern</string>
     <string name="snooze">Schlummern</string>
@@ -39,7 +38,6 @@
     <string name="mute">Alarm stoppen</string>
     <string name="success">Erfolgreich</string>
     <string name="advanced_settings_title">Erweiterte Einstellungen</string>
-    <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="extended_bolus">Verzögerter Bolus</string>
     <string name="paused">Pausiert</string>
     <string name="tdd_total">TDD Gesamt</string>
@@ -146,7 +144,6 @@
     <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
-    <string name="profile_per_unit">/IE</string>
     <string name="profile_ins_units_per_hour">IE/h</string>
     <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
@@ -365,10 +362,8 @@
     <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
     <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
-    <string name="carb_equal_zero_no_action">Kohlenhydrate = 0. Keine Aktion!</string>
     <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
     <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
-    <string name="wizard_no_cob">Unbekannter COB! BG-Wert fehlt oder wurde App vor kurzem neu gestartet?</string>
     <string name="wizard_carbs_constraint">Die Kohlenhydrateinschränkung wurde überschritten!</string>
     <string name="wizard_constraint_bolus_size">Verletzung der Bolusbeschränkung!\nKann %1$.2fU nicht abgeben</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
