@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">Restricción aplicada en carbohidratos</string>
     <string name="no_temp_basal_running">No hay basal temporal activa</string>
-    <string name="temp_target_short">OT</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">La descripción del perfil del usuario se utiliza para mostrar los sitios más frecuentes disponibles para un hombre, una mujer o un niño</string>
     <string name="site_management">Perfil de gestión del sitio</string>
     <string name="site_management_description">Aquí establecerá si desea gestionar la ubicación del sitio de la bomba, la del sensor (MCG) o ambos. Esta configuración se utilizará para enviar automáticamente el diálogo de administración del sitio en cada nueva entrada detectada</string>
-    <string name="update_site_change">Actualizar zona de inserción</string>
     <string name="edit_site">Editar</string>
     <string name="record_site_location">Ubicación del sitio: %1$s</string>
     <string name="record_site_arrow">Flecha del sitio: %1$s</string>
@@ -146,40 +143,24 @@
     <string name="clientcontrol_pending_working_title">Aplicando…</string>
     <string name="clientcontrol_pending_working_text">Esperando que el maestro confirme…</string>
     <string name="clientcontrol_pending_rejected_title">No aplicado</string>
-    <string name="clientcontrol_pending_rejected_text">El maestro no ha podido aplicar esta solicitud</string>
     <string name="clientcontrol_pending_failed_format">%1$s no se pudo realizar\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Aplicado parcialmente</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">Se aplicó %1$s, pero algunas acciones no se pudieron realizar.\nComprueba el estado activo</string>
     <string name="clientcontrol_pending_unconfirmed_title">No se pudo confirmar</string>
-    <string name="clientcontrol_pending_unconfirmed_text">La solicitud se envió, pero el maestro no confirmó a tiempo. Puede que se haya aplicado o no; esta pantalla se actualizará si se vuelve a sincronizar</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">Se envió %1$s, pero no se recibió ninguna confirmación.\n%2$s\nAparecerá aquí si el maestro lo aplica o cuando lo haga</string>
     <string name="clientcontrol_pending_stop_waiting">Detener espera</string>
     <string name="a11y_add_new_insulin">Añadir nueva insulina</string>
     <string name="a11y_delete_current_insulin">Eliminar insulina actual</string>
-    <string name="activate_insulin_no_profile">No se ha encontrado ningún perfil activo</string>
-    <string name="activate_insulin_new_insulin">Nueva insulina: %1$s</string>
-    <string name="activate_insulin_remaining">Restante: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Se creará un cambio de perfil:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Cargar pico desde</string>
     <string name="cannot_delete_last_insulin">No se puede eliminar la última insulina</string>
     <string name="cannot_delete_active_insulin">No se puede eliminar la insulina activa</string>
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
-    <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
-    <string name="suspendloopfor2h">Suspender lazo durante 2 horas</string>
-    <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
-    <string name="suspendloopfor10h">Suspender lazo durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
-    <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
-    <string name="disconnectpumpfor30m">Desconectar la bomba durante 30 minutos</string>
-    <string name="disconnectpumpfor1h">Desconectar la bomba durante 1 hora</string>
-    <string name="disconnectpumpfor2h">Desconectar la bomba durante 2 horas</string>
-    <string name="disconnectpumpfor3h">Desconectar la bomba durante 3 horas</string>
     <string name="resume">Resumir</string>
     <string name="reconnect">Vuelva a conectar la bomba</string>
     <string name="duration15m">15 min</string>
@@ -312,8 +293,6 @@
     <string name="quick_launch_no_profiles">Cree perfiles en Perfil Local para usarlos aquí</string>
     <string name="quick_launch_edit_profile_preset">Editar ajuste de perfil</string>
     <string name="quick_launch_profile_permanent">Permanente</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Seleccionar flecha</string>
     <string name="loop_accept_nav_label">Lazo</string>
     <string name="loop_accept_set_basal_question">Aceptar nueva basal temporal:</string>
