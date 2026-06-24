@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Profilens basaldos</string>
     <string name="eopatch_temp_basal_rate">Temp basaldos</string>
     <string name="invalid_basal_rate">Profilens basaldos är mindre än 0,05 U/h. EOPatch har en lägsta basaldos på 0.05U. Försök igen efter att profilen har ställts in till mer än så.</string>
-    <string name="no_profile_selected">Ingen profil vald. Välj en profil och försök igen.</string>
     <string name="symbol_day">dag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
