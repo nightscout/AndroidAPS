@@ -11,7 +11,6 @@
     <string name="patch_not_active">Patch nicht aktiviert</string>
     <string name="pump_setting_failed">Einstellung der Benutzereinstellungen auf Pumpe fehlgeschlagen!</string>
     <!-- overview fragment -->
-    <string name="last_connection_label">Zuletzt verbunden</string>
     <string name="pump_state_label">Pumpenstatus</string>
     <string name="active_alarms_label">Aktive Alarme</string>
     <string name="basal_type_label">Basaltyp</string>
