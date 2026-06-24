@@ -12,7 +12,6 @@
     <string name="eopatch_base_basal_rate">Базовая скорость базала</string>
     <string name="eopatch_temp_basal_rate">Временная базальная скорость</string>
     <string name="invalid_basal_rate">Базальная скорость профиля меньше 0,05 ед/ч. EOPatch имеет минимальный шаг подачи 0.05 ед/ч. Повторите еще раз после приведения профиля в соответствие с этим параметром.</string>
-    <string name="no_profile_selected">Профиль не выбран. Выберите профиль и повторите попытку.</string>
     <string name="symbol_day">день</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
