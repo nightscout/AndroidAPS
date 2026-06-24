@@ -36,7 +36,6 @@
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
     <!--    Autotune   -->
-    <string name="insulin_peak">Κορυφή</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Ένα bolus παραδόθηκε μέσα στα τελευταία 3 λεπτά, παράκαμψη SMB</string>
     <string name="pump_not_initialized">Η αντλία δεν αρχικοποιήθηκε!</string>
