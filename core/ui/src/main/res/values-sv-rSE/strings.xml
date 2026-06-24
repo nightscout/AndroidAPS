@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Lyckades inte uppdatera basalprofilen</string>
     <string name="no_valid_basal_rate">Ingen giltig data om temp basaler fanns i pumpen</string>
     <string name="limiting_iob">Begränsar IOB till %1$.1f pga %2$s</string>
-    <string name="loop_disabled">LOOP INAKTIVERAD PGA BEGRÄNSNINGAR</string>
     <string name="event_type">Händelsetyp</string>
     <string name="save">Spara</string>
     <string name="snooze">Snooze</string>
@@ -39,7 +38,6 @@
     <string name="mute">Tysta</string>
     <string name="success">Lyckad</string>
     <string name="advanced_settings_title">Avancerade inställningar</string>
-    <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
     <string name="extended_bolus">Förlängd bolus</string>
     <string name="paused">Pausad</string>
     <string name="tdd_total">TDD totalt</string>
@@ -143,7 +141,6 @@
     <string name="basalprofilenotaligned">Profilens basaler är inte satta på hel timme: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basalvärdet ersatt med det högsta tillåtna: %1$s</string>
-    <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
@@ -364,7 +361,6 @@
     <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
     <string name="wizard_no_actual_bg">Inget nytt BG-värde att basera beräkning på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil vald!</string>
-    <string name="wizard_no_cob">Okänt COB! Saknas BG eller är appen nyss omstartad?</string>
     <string name="wizard_carbs_constraint">Max KH uppnått!</string>
     <string name="wizard_constraint_bolus_size">Max bolus uppnått!\nKan inte leverera %1$.2fU</string>
     <string name="wizard_pump_not_available">Ingen pump tillgänglig!</string>
