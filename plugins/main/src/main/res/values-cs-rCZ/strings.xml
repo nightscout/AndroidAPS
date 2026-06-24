@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disabled_loop">Smyčka zakázána</string>
     <string name="nav_history_browser">Prohlížeč historie</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Inzulín</string>
