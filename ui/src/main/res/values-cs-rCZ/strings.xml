@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
-    <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
     <string name="no_temp_basal_running">Žádný dočasný bazál není spuštěn</string>
-    <string name="temp_target_short">DC</string>
     <string name="start_activity_tt">Spustit dočasný cíl Aktivita</string>
     <string name="start_eating_soon_tt">Spustit dočasný cíl Před jídlem</string>
     <string name="start_hypo_tt">Spustit dočasný cíl Hypoglykémie</string>
@@ -50,7 +48,6 @@
     <string name="user_profile_description">Popis profilu uživatele se používá k zobrazení nejčastějších míst aplikace dostupných pro muže, ženy nebo děti</string>
     <string name="site_management">Profil správy místa aplikace</string>
     <string name="site_management_description">Zde nastavíte, zda chcete spravovat místa aplikace pro pumpu, senzor nebo obojí. Toto nastavení bude použito k automatickému zobrazení dialogového okna správy místa aplikace u každého zjištěného nového záznamu.</string>
-    <string name="update_site_change">Aktualizovat umístění setu</string>
     <string name="edit_site">Upravit</string>
     <string name="record_site_location">Místo aplikace: %1$s</string>
     <string name="record_site_arrow">Šipka místa aplikace: %1$s</string>
@@ -146,40 +143,24 @@
     <string name="clientcontrol_pending_working_title">Aplikuji…</string>
     <string name="clientcontrol_pending_working_text">Čekání na potvrzení od hlavního zařízení…</string>
     <string name="clientcontrol_pending_rejected_title">Neaplikováno</string>
-    <string name="clientcontrol_pending_rejected_text">Hlavní zařízení nemohlo použít tento požadavek.</string>
     <string name="clientcontrol_pending_failed_format">%1$s nelze provést.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Částečně aplikováno</string>
     <!-- %1$s = action label -->
     <string name="clientcontrol_pending_partial_format">%1$s byl použitý, ale některé akce nemohly být.\nZkontrolujte aktivní stav.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Nelze potvrdit</string>
-    <string name="clientcontrol_pending_unconfirmed_text">Žádost byla odeslána, ale hlavní zařízení ji nepotvrdilo včas. Může nebo nemusí být aplikována - tato obrazovka se aktualizuje po synchronizaci.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s bylo odesláno, ale žádné potvrzení se nevrátilo.\n%2$s\n se zde zobrazí, pokud/když jej hlavní zařízení použije.</string>
     <string name="clientcontrol_pending_stop_waiting">Zastavit čekání</string>
     <string name="a11y_add_new_insulin">Přidat nový inzulín</string>
     <string name="a11y_delete_current_insulin">Odstranit aktuální inzulín</string>
-    <string name="activate_insulin_no_profile">Nebyl nalezen žádný aktivní profil</string>
-    <string name="activate_insulin_new_insulin">Nový inzulín: %1$s</string>
-    <string name="activate_insulin_remaining">Zbývá: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Bude vytvořeno přepnutí profilu:\n\n<b>%1$s</b></string>
     <string name="load_peak_from">Načíst vrchol z</string>
     <string name="cannot_delete_last_insulin">Nelze odstranit poslední inzulín</string>
     <string name="cannot_delete_active_insulin">Nelze odstranit aktivní inzulín</string>
     <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
-    <string name="timeshift_label">Posun času</string>
     <string name="percentage_label">% změna</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Pozastavit smyčku na 1 h</string>
-    <string name="suspendloopfor2h">Pozastavit smyčku na 2 h</string>
-    <string name="suspendloopfor3h">Pozastavit smyčku na 3 h</string>
-    <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
     <string name="disconnectpump">Odpojit pumpu</string>
-    <string name="disconnectpumpfor15m">Odpojit pumpu na 15 min</string>
-    <string name="disconnectpumpfor30m">Odpojit pumpu na 30 min</string>
-    <string name="disconnectpumpfor1h">Odpojit pumpu na 1 h</string>
-    <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
-    <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
     <string name="resume">Uvolnit</string>
     <string name="reconnect">Znovu připojit pumpu</string>
     <string name="duration15m">15 minut</string>
@@ -312,8 +293,6 @@
     <string name="quick_launch_no_profiles">Vytvořte profily v místním profilu, abyste je zde mohli použít</string>
     <string name="quick_launch_edit_profile_preset">Upravit přednastavení profilu</string>
     <string name="quick_launch_profile_permanent">Trvalé</string>
-    <string name="quick_launch_profile_confirm_pct">%1$d %%</string>
-    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Vybrat šipku</string>
     <string name="loop_accept_nav_label">Smyčka</string>
     <string name="loop_accept_set_basal_question">Přijmout nový dočasný bazál:</string>
