@@ -13,7 +13,6 @@
     <string name="eopatch_base_basal_rate">基礎胰島素速率</string>
     <string name="eopatch_temp_basal_rate">臨時基礎速率</string>
     <string name="invalid_basal_rate">該設定的基礎速率小於0.05 U/hr。EOPatch的最小注射單位為0.05U。請重新設定為超過最小注射單位後再試。</string>
-    <string name="no_profile_selected">未選擇配置檔。請選擇配置檔後再試。</string>
     <string name="symbol_day">天</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
