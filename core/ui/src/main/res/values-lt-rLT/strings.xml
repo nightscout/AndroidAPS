@@ -14,7 +14,6 @@
     <string name="failed_update_basal_profile">Nepavyko atnaujinti bazės profilio</string>
     <string name="no_valid_basal_rate">Bazė iš pompos nenuskaityta</string>
     <string name="limiting_iob">Ribojamas AIO iki %1$.1f v dėl %2$s</string>
-    <string name="loop_disabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
     <string name="event_type">Įvykio tipas</string>
     <string name="save">Išsaugoti</string>
     <string name="snooze">Nutildyti</string>
@@ -39,7 +38,6 @@
     <string name="mute">Nutildyti</string>
     <string name="success">Atlikta</string>
     <string name="advanced_settings_title">Išplėstiniai nustatymai</string>
-    <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="extended_bolus">Ištęstas bolusas</string>
     <string name="paused">Pristabdyta</string>
     <string name="tdd_total">BPD viso</string>
@@ -156,7 +154,6 @@
     <string name="basalprofilenotaligned">Bazės reikšmės nesuderintos su valandomis: %1$s</string>
     <string name="minimalbasalvaluereplaced">Nustatyta mažiausia galima valandinės bazės vertė: %1$s</string>
     <string name="maximumbasalvaluereplaced">Nustatyta didžiausia galima valandinės bazės vertė: %1$s</string>
-    <string name="profile_per_unit">/v</string>
     <string name="profile_ins_units_per_hour">v/val</string>
     <string name="profile_carbs_per_unit">g/v</string>
     <!--    ProfileFunction-->
@@ -382,10 +379,8 @@
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
-    <string name="carb_equal_zero_no_action">Angliavandenių = 0. Veiksmai neatlikti!</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
-    <string name="wizard_no_cob">Nežinomi AAO! Nėra glikemijos duomenų arba programa paleista iš naujo?</string>
     <string name="wizard_carbs_constraint">AV apribojimų pažeidimas!</string>
     <string name="wizard_constraint_bolus_size">Insulino apribojimų pažeidimas!\nNesuleista %1$.2fv</string>
     <string name="wizard_pump_not_available">Pompa nepasiekiama!</string>
