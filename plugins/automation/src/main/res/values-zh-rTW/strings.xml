@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation_short">自動</string>
     <string name="automation">自動化</string>
-    <string name="automation_description">用戶定義的自動化任務</string>
     <string name="automation_enabled">啟用</string>
     <string name="automation_read_only">唯讀</string>
     <string name="automation_new_rule">新規則</string>
@@ -54,7 +52,6 @@
     <string name="alreadyset">已設置</string>
     <string name="profilepercentage">設定檔百分比</string>
     <string name="startprofileforever">啟動檔案 %1$d%%</string>
-    <string name="percent_u">百分比 [%]：</string>
     <string name="sendsmsactionlabel">發送簡訊：%1$s</string>
     <string name="sendsmsactiondescription">發送簡訊到所有號碼</string>
     <string name="sendsmsactiontext">發送簡訊內容</string>
