@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">Le champ ne doit pas être vide</string>
     <string name="error_mustbe4hexadidits">Doit avoir 4 caractères parmi ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Clients autorisés</string>
+    <string name="authorized_clients_manage_desc">Gérer les périphériques clients associés qui contrôlent ce maître.</string>
+    <string name="pair_with_master_manage_label">Associer au maître</string>
+    <string name="pair_with_master_manage_desc">Entrez le code PIN du maître pour permettre à ce client d\'envoyer des commandes signées.</string>
     <!--    General-->
     <string name="treatments">Traitements</string>
     <string name="treatments_history">Historique Traitements</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Actualiser</string>
     <string name="no_history_records">Aucun enregistrement trouvé</string>
     <string name="error">Erreur</string>
+    <string name="navigation_error_screen_not_found">L\'écran n\'a pas pu être ouvert (non disponible dans cette configuration)</string>
     <string name="profile_set_ok">Profil basal dans la pompe mis à jour</string>
     <string name="invalid_input">Données saisies invalides</string>
     <string name="invalid_number">Numéro non valide</string>
@@ -31,6 +36,12 @@
     <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="loop_disabled_by_user">Boucle désactivée par l\'utilisateur</string>
     <string name="event_type">Type d\'évènement</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="bg_mgdl">%1$d mg/dL</string>
+    <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Enregistrer</string>
     <string name="skip">Ignorer</string>
     <string name="switch_to_edit">Éditer</string>
@@ -94,7 +105,11 @@
     <string name="androidaps_start">AAPS démarré</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Objectifs</string>
     <string name="please_wait">Merci de patienter...</string>
     <string name="stop">Arrêt</string>
@@ -181,6 +196,8 @@
     <string name="reset">Réinitialiser</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
     <string name="profile">Profil</string>
+    <string name="percentage_label">Pourcentage</string>
+    <string name="timeshift_label">Décalage horaire</string>
     <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="copytolocalprofile">Créer un nouveau profil à partir de ce profil ?</string>
@@ -233,6 +250,7 @@
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
     <string name="back">Précédent</string>
     <string name="next">Suivant</string>
+    <string name="pref_syncs_with_main_phone">Synchronise avec le téléphone principal</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
