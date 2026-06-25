@@ -111,7 +111,7 @@ class SetupWizardE2EHiltTest {
     }
 
     @Test
-    fun fresh_install_to_open_loop_with_core_treatments() {
+    fun full_setup_treatments_and_management_screens() {
         val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
         try {
             walkthrough()
@@ -150,6 +150,11 @@ class SetupWizardE2EHiltTest {
             // The chip now reflects open-loop mode ("Open Loop" / "Open loop"); match leniently.
             assertContains("Open Loop")                             // UI: loop-mode chip
             assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
+
+            // ---- additional screens/dialogs: coverage for management surfaces not on the core path ----
+            visitInsulinManagement()      // Manage → Insulin (InsulinManagementScreen/ViewModel/Carousel)
+            visitProfileManagement()      // Manage → Profile (profile management screen)
+            openAndCancelBolusWizard()    // Treatments → Bolus wizard → add carbs → CANCEL (edge: no delivery)
     }
 
     // ---- wizard -------------------------------------------------------------------------------
@@ -302,6 +307,32 @@ class SetupWizardE2EHiltTest {
         openContains("loop", expect = "Open Loop")     // overview loop status → running-mode menu
         openVia("Open Loop", expect = "OK")            // → "Running mode: Open Loop" confirmation
         click("OK")
+    }
+
+    // ---- additional screens / dialogs (exercise management surfaces off the core treatment path) ----
+
+    /** Manage → Insulin: the insulin-management screen (carousel + nickname/peak/DIA editors). */
+    private fun visitInsulinManagement() {
+        openVia("Manage", expect = "Site Rotation")    // open the Manage sheet (distinctive marker)
+        openVia("Insulin", expect = "Add new insulin") // → insulin management screen
+        returnToOverview()
+    }
+
+    /** Manage → Profile: the profile-management screen (clone/activate/edit the active profile). */
+    private fun visitProfileManagement() {
+        openVia("Manage", expect = "Site Rotation")
+        openVia("Profile", expect = "Clone")           // → profile management screen
+        returnToOverview()
+    }
+
+    /** Treatments → Bolus wizard: open the calculator, add a quick-carb preset, then CANCEL (no delivery). */
+    private fun openAndCancelBolusWizard() {
+        openVia("Treatments", expect = "Bolus wizard")
+        openVia("Bolus wizard", expect = "Correction") // → wizard dialog (calculator)
+        click("CAKE")                                  // a quick-carb preset → exercises the calculation
+        device.waitForIdle(IDLE_MS)
+        click("Close")                                 // dismiss WITHOUT delivering — the cancel path
+        returnToOverview()
     }
 
     // ---- assertions ---------------------------------------------------------------------------
@@ -539,6 +570,19 @@ class SetupWizardE2EHiltTest {
             device.pressBack()
             device.waitForIdle(IDLE_MS)
         }
+    }
+
+    /** Returns to the overview from any sub-screen/bottom sheet: close a sheet, press Back, until it shows. */
+    private fun returnToOverview() {
+        repeat(6) {
+            // "Open navigation" is unique to the overview toolbar (sub-screens show "Back"). Don't match
+            // on "LocalProfile1" — the profile/insulin management screens display it too.
+            if (waitForVisible("Open navigation", 1200)) return
+            dismissBlockingSheetIfPresent()
+            device.pressBack()
+            device.waitForIdle(IDLE_MS)
+        }
+        assertVisible("Open navigation")
     }
 
     /** Logs every on-screen text/content-desc under [tag] (chunked; logcat truncates long lines). */
