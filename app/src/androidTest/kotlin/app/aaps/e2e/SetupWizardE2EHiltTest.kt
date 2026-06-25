@@ -155,6 +155,9 @@ class SetupWizardE2EHiltTest {
             visitInsulinManagement()      // Manage → Insulin (InsulinManagementScreen/ViewModel/Carousel)
             visitProfileManagement()      // Manage → Profile (profile management screen)
             openAndCancelBolusWizard()    // Treatments → Bolus wizard → add carbs → CANCEL (edge: no delivery)
+            visitPreferences()            // toolbar Settings → preferences screen + expand a category
+            visitStatistics()             // drawer → Statistics (StatsScreen/ViewModel)
+            visitHistoryBrowser()         // drawer → History browser (treatment history list)
     }
 
     // ---- wizard -------------------------------------------------------------------------------
@@ -332,6 +335,35 @@ class SetupWizardE2EHiltTest {
         click("CAKE")                                  // a quick-carb preset → exercises the calculation
         device.waitForIdle(IDLE_MS)
         click("Close")                                 // dismiss WITHOUT delivering — the cancel path
+        returnToOverview()
+    }
+
+    /**
+     * Toolbar Settings → the preferences screen, then sweep top-to-bottom expanding every category and
+     * scrolling — this renders all the per-plugin preference controls, the single largest UI surface.
+     */
+    private fun visitPreferences() {
+        openVia("Settings", expect = "Protection")     // toolbar Settings (desc) → all-preferences screen
+        repeat(PREF_SWEEPS) {
+            runCatching { device.findObject(byDesc("Expand"))?.click() } // expand the topmost collapsed category
+            device.waitForIdle(IDLE_MS)
+            runCatching { device.findObject(By.scrollable(true))?.scroll(Direction.DOWN, 0.6f) } // reveal the next
+            device.waitForIdle(IDLE_MS)
+        }
+        returnToOverview()
+    }
+
+    /** Nav drawer → Statistics (StatsScreen/ViewModel). */
+    private fun visitStatistics() {
+        click("Open navigation"); device.waitForIdle(IDLE_MS) // open the nav drawer
+        openVia("Statistics", expect = "Back")                // → statistics screen
+        returnToOverview()
+    }
+
+    /** Nav drawer → History browser (treatment-history list). */
+    private fun visitHistoryBrowser() {
+        click("Open navigation"); device.waitForIdle(IDLE_MS)
+        openVia("History browser", expect = "Back")           // → history browser
         returnToOverview()
     }
 
@@ -616,6 +648,7 @@ class SetupWizardE2EHiltTest {
         private const val SET_TEXT_ATTEMPTS = 3
         private const val STALE_RETRIES = 10        // generous: slow CI emulators recompose for longer
         private const val STALE_SETTLE_MS = 700L    // wait for the screen to settle between stale retries
+        private const val PREF_SWEEPS = 14          // expand+scroll passes over the preference categories
         private val EDIT_TEXT: BySelector = By.clazz("android.widget.EditText")
     }
 }
