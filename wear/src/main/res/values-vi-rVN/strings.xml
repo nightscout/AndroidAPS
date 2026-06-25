@@ -282,4 +282,20 @@
     <string name="confirm">Xác nhận</string>
     <string name="request">Yêu cầu</string>
     <string name="constraint_applied">Đã áp dụng giới hạn!</string>
+    <string name="wizard_total_insulin">Tổng Insulin</string>
+    <string name="wizard_calculation">Tính toán</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">BG</string>
+    <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
+    <string name="wizard_result_trend">Xu hướng 15 phút</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">New IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Carbs (%1$d g)</string>
+    <string name="wizard_result_subtotal">Tạm tính</string>
+    <string name="wizard_result_total">Tổng</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time">%1$d g carbs (%2$s phút)</string>
+    <string name="wizard_result_ecarbs">eCarbs: %1$d g / %2$dgiờ (+%3$d phút)</string>
 </resources>
