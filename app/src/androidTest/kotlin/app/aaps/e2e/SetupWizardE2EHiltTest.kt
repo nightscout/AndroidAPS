@@ -146,18 +146,23 @@ class SetupWizardE2EHiltTest {
             assertTextContains("100 (")                             // UI: target chip
             assertDbInsert("TemporaryTarget")                       // DB: the temp target was persisted
 
-            enableOpenLoop()
-            // The chip now reflects open-loop mode ("Open Loop" / "Open loop"); match leniently.
-            assertContains("Open Loop")                             // UI: loop-mode chip
-            assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
-
             // ---- additional screens/dialogs: coverage for management surfaces not on the core path ----
+            // Done BEFORE enabling the loop, on purpose: once the loop runs, the APS recomputes and churns
+            // the overview, and on the slow CI emulator the "Manage"/quick-launch buttons couldn't be caught
+            // in a stable frame within the find timeout. With the loop still off the overview is quiet.
+            returnToOverview()            // settle on a clean overview before navigating away
             visitInsulinManagement()      // Manage → Insulin (InsulinManagementScreen/ViewModel/Carousel)
             visitProfileManagement()      // Manage → Profile (profile management screen)
             openAndCancelBolusWizard()    // Treatments → Bolus wizard → add carbs → CANCEL (edge: no delivery)
             visitPreferences()            // toolbar Settings → preferences screen + expand a category
             visitStatistics()             // drawer → Statistics (StatsScreen/ViewModel)
             visitHistoryBrowser()         // drawer → History browser (treatment history list)
+
+            // Enable Open Loop LAST — after this the loop churns the overview, so do no more navigation.
+            enableOpenLoop()
+            // The chip now reflects open-loop mode ("Open Loop" / "Open loop"); match leniently.
+            assertContains("Open Loop")                             // UI: loop-mode chip
+            assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
     }
 
     // ---- wizard -------------------------------------------------------------------------------
@@ -263,7 +268,7 @@ class SetupWizardE2EHiltTest {
 
     /** Fills the four profile tabs with valid values and saves. */
     private fun createLocalProfile() {
-        click("Add new profile")
+        openVia("Add new profile", expect = "ISF") // open the editor, retrying until its tabs render
 
         setEditText(0, "10")          // IC tab (single value field)
         click("ISF"); setEditText(0, "50")
