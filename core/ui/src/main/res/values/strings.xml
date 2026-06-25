@@ -421,6 +421,7 @@
     <string name="clientcontrol_fail_scene_disabled">The scene is disabled.</string>
     <string name="clientcontrol_fail_partial">Some actions couldn\'t be applied.</string>
     <string name="clientcontrol_fail_execution">The master couldn\'t apply it.</string>
+    <string name="clientcontrol_fail_control_disabled">Remote control is turned off on the master.</string>
     <string name="clientcontrol_fail_no_pending_bolus">The prepared bolus expired or was superseded. Tap the button again.</string>
     <string name="clientcontrol_fail_bolus_compute">The master couldn\'t calculate the bolus (missing glucose / profile, or pump not ready).</string>
     <string name="clientcontrol_fail_internal">Something went wrong.</string>
