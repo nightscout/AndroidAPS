@@ -436,7 +436,7 @@ class EversenseGattCallback(
             return
         } else if (data.size >= 4 && data[0] == Eversense365Packets.NotificationResponseId && data[1] == 0x03.toByte()) {
             // Push alarm notification
-            val alarmCode = data[3].toInt() and 0xFF
+            val alarmCode = data[2].toInt() and 0xFF
             val alarm = app.aaps.plugins.eversense.models.ActiveAlarm(
                 code = app.aaps.plugins.eversense.enums.EversenseAlarm.from(alarmCode),
                 codeRaw = alarmCode,

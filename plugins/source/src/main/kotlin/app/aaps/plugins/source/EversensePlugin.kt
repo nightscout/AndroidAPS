@@ -411,9 +411,9 @@ class EversensePlugin @Inject constructor(
             alarm.code.title
         }
         val level = when {
-            alarm.code.isCritical -> NotificationLevel.URGENT
-            alarm.code.isWarning  -> NotificationLevel.NORMAL
-            else                  -> NotificationLevel.INFO
+            alarm.code.isWarning -> NotificationLevel.NORMAL
+            alarm.code.isInfo -> NotificationLevel.INFO
+            else -> NotificationLevel.URGENT
         }
         mainHandler.post {
             notificationManager.post(
