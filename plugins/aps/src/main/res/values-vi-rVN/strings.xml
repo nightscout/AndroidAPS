@@ -40,6 +40,7 @@
     <string name="maxvalueinpreferences">giá trị tối đa trong phần Tùy chọn</string>
     <string name="hardlimit">giới hạn cứng</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Đỉnh</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Một liều bolus đã được bơm trong vòng 3 phút trước, bỏ qua SMB</string>
     <string name="pump_not_initialized">Bơm chưa được khởi tạo!</string>
