@@ -197,6 +197,7 @@
     <string name="profileswitch_ismissing">Thiếu Chuyển đổi Cấu hình. Vui lòng thực hiện chuyển đổi cấu hình hoặc nhấn “Kích hoạt cấu hình” trong cấu hình cục bộ.</string>
     <string name="profile">Cấu hình</string>
     <string name="percentage_label">Phần trăm</string>
+    <string name="timeshift_label">Dịch chuyển thời gian</string>
     <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không</string>
     <string name="overview_treatment_label">Điều trị</string>
     <string name="copytolocalprofile">Tạo cấu hình mới từ cấu hình này không?</string>
@@ -385,6 +386,7 @@
     <string name="scene_profile_not_found">Không tìm thấy cấu hình “%1$s”</string>
     <string name="scene_lock_banner_master_offline">Không thể kết nối với thiết bị chính. Các điều khiển kịch bản sẽ hoạt động trở lại khi kết nối được khôi phục.</string>
     <string name="master_offline_banner">Không thể kết nối với thiết bị chính. Không thể chỉnh sửa cho đến khi kết nối được khôi phục.</string>
+    <string name="master_control_disabled_banner">Thiết bị chính đã tắt điều khiển từ xa. Việc chỉnh sửa bị vô hiệu hóa cho đến khi tính năng này được bật lại trên thiết bị chính.</string>
     <string name="scene_lock_reason_master_offline">Thiết bị chính đã ngắt kết nối</string>
     <string name="scene_lock_reason_scene_active">Hãy dừng ngữ cảnh đang chạy trước</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
@@ -407,6 +409,7 @@
     <string name="clientcontrol_fail_scene_disabled">Ngữ cảnh đã bị vô hiệu hóa.</string>
     <string name="clientcontrol_fail_partial">Không thể áp dụng một số thao tác.</string>
     <string name="clientcontrol_fail_execution">Thiết bị chính không thể áp dụng thay đổi này.</string>
+    <string name="clientcontrol_fail_control_disabled">Điều khiển từ xa đang bị tắt trên thiết bị chính.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Liều Bolus đã chuẩn bị đã hết hiệu lực hoặc bị thay thế. Hãy nhấn nút lại.</string>
     <string name="clientcontrol_fail_bolus_compute">Thiết bị chính không thể tính toán bolus (thiếu dữ liệu đường huyết, cấu hình hoặc bơm chưa sẵn sàng).</string>
     <string name="clientcontrol_fail_internal">Đã xảy ra lỗi.</string>
