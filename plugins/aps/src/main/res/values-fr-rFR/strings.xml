@@ -40,6 +40,7 @@
     <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
     <string name="hardlimit">limite fixée</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Pic</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Un bolus a été délivré au cours des 3 dernières minutes, SMB ignoré</string>
     <string name="pump_not_initialized">Pompe non initialisée !</string>
