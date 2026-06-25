@@ -336,6 +336,8 @@
     <string name="temporary_target">Cible Temp</string>
     <string name="temporary_targets">Cibles Temporaires</string>
     <string name="running_mode">Mode</string>
+    <string name="running_mode_change_not_allowed">Changement de mode non disponible</string>
+    <string name="pump_reconnect">Reconnecter la pompe</string>
     <string name="scene">Scénario</string>
     <string name="scenes">Scénarii</string>
     <string name="scene_desc">Préréglages de situation — activer plusieurs actions à la fois</string>
@@ -343,6 +345,7 @@
     <string name="scene_deactivate">Terminer le scénario</string>
     <string name="scene_active">Actif</string>
     <string name="scene_ended">Scénario terminé</string>
+    <string name="scene_end_active">Fin du scénario actif</string>
     <string name="scene_confirm_activate">Activer le scénario \"%1$s \" ?</string>
     <string name="scene_confirm_deactivate">Mettre fin au scénario \"%1$s\" et annuler les modifications ?</string>
     <string name="scene_conflict_active_tt">La cible temporaire active sera remplacée</string>
@@ -351,6 +354,7 @@
     <string name="scene_conflict_active_scene">Le scénario actif «%1$s» sera terminée en premier</string>
     <string name="scene_action_tt">Cible Temp : %1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil : %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil : %1$d%%</string>
     <string name="scene_action_smb_on">Activer SMB</string>
     <string name="scene_action_smb_off">Désactiver SMB</string>
     <string name="scene_action_running_mode">Mode actif : %1$s</string>
@@ -380,8 +384,38 @@
     <string name="scene_no_profile_store">Aucun magasin de profil disponible</string>
     <string name="scene_no_actions">Le scénario n\'a pas d\'action</string>
     <string name="scene_profile_not_found">Profil « %1$s » introuvable</string>
+    <string name="scene_lock_banner_master_offline">Appareil maître inaccessible. Les contrôles du scénario reprendront lorsque la connexion sera rétablie.</string>
+    <string name="master_offline_banner">Appareil maître inaccessible. Les modifications sont désactivées jusqu\'à ce que la connexion soit rétablie.</string>
+    <string name="master_control_disabled_banner">Le maître a désactivé le contrôle à distance. L\'édition est désactivée jusqu\'à ce qu\'elle soit réactivée sur le maître.</string>
+    <string name="scene_lock_reason_master_offline">Maître déconnecté</string>
+    <string name="scene_lock_reason_scene_active">Arrêter d\'abord le scénario en cours d\'exécution</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Définir une cible temp</string>
+    <string name="clientcontrol_action_cancel_temp_target">Annuler la cible temporaire</string>
+    <string name="clientcontrol_action_activate_scene">Activer le scénario %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Terminer le scénario</string>
+    <string name="clientcontrol_action_update_settings">Mettre à jour les paramètres</string>
+    <string name="clientcontrol_action_deliver_bolus">Injecter bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Cet appareil n\'est pas associé à un maître.</string>
+    <string name="clientcontrol_fail_not_reachable">Le maître est hors ligne.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">La configuration de la pompe est désynchronisée avec le maître. Veuillez réessayer.</string>
+    <string name="clientcontrol_fail_no_reply">Pas de réponse du maître à temps.</string>
+    <string name="clientcontrol_fail_expired">La commande a expiré avant que le maître ne l\'ait appliquée.</string>
+    <string name="clientcontrol_fail_busy">Une autre action est déjà en cours.</string>
+    <string name="clientcontrol_fail_send_failed">Impossible d\'accéder à Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Le maître n\'a pas de profil actif sur lequel l\'appliquer.</string>
+    <string name="clientcontrol_fail_scene_not_found">Le scénario n\'existe plus.</string>
+    <string name="clientcontrol_fail_scene_disabled">Scénario désactivé.</string>
+    <string name="clientcontrol_fail_partial">Certaines actions n\'ont pas pu être appliquées.</string>
+    <string name="clientcontrol_fail_execution">Le maître n\'a pas pu l\'appliquer.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Le bolus préparé a expiré ou a été remplacé. Appuyez à nouveau sur le bouton.</string>
+    <string name="clientcontrol_fail_bolus_compute">Le maître n\'a pas pu calculer le bolus (glycémie / profil manquant, ou pompe pas prête).</string>
+    <string name="clientcontrol_fail_internal">Un problème est survenu.</string>
+    <string name="clientcontrol_fail_unknown">La commande a échoué.</string>
+    <string name="clientcontrol_unconfirmed_wear">État inconnu — vérifiez le téléphone/Nightscout avant de refaire un bolus.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Connexion perdue - état de l\'injection inconnu</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Ce téléphone a cessé de recevoir des mises à jour du maître. Le bolus peut encore être en cours d\'injection ou être terminé. Fermer le fenêtre ne fait que cacher ici — cela n\'arrête pas la pompe. Vérifiez le téléphone principal pour connaître la quantité réellement injectée.</string>
     <string name="scene_revert_tt">Annuler Cible Temporaire</string>
     <string name="scene_revert_profile">Annuler le changement de profil</string>
     <string name="scene_revert_smb_on">Réactiver SMB</string>
@@ -437,6 +471,7 @@
     <string name="activity">Activité</string>
     <string name="wear">Montre</string>
     <string name="automation">Automatisation</string>
+    <string name="automation_management_desc">Créer des règles qui exécutent des actions automatiquement sur la base de déclencheurs</string>
     <string name="settingsexport">Export des paramètres</string>
     <string name="custom">Manuel</string>
     <string name="preset_settings">Paramètres Prédéfinis</string>
@@ -606,6 +641,7 @@
     <string name="uel_running_mode_updarted">MODE EN COURS MISE À JOUR</string>
     <string name="uel_scene_activated">SCÉNARIO ACTIVÉ</string>
     <string name="uel_scene_deactivated">SCÉNARIO DÉSACTIVÉ</string>
+    <string name="uel_remote_config_changed">CONFIG DISTANTE CHANGÉE</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Cible basse du profil</string>
     <string name="profile_high_target">Cible haute du profil</string>
@@ -713,6 +749,7 @@
     <string name="wizard_trend_detail">Tendance 15 min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Violation de contrainte d\'insuline!\nImpossible de délivrer %1$.2fU</string>
     <string name="wizard_pump_not_available">Aucune pompe disponible!</string>
+    <string name="quick_wizard_not_available">L\'assistant rapide sélectionné n\'est plus disponible, veuillez actualiser l\'écran</string>
     <string name="quickwizard_managemnt">Assistant Rapide</string>
     <!--    Preferences-->
     <string name="child">Enfant</string>
@@ -835,6 +872,8 @@
     <string name="reauthorize">Se réauthentifier</string>
     <string name="cloud_auth_success">Authentification du stockage cloud réussie</string>
     <string name="authorization_status">Statut d\'autorisation</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d h %2$d min</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d h</string>
     <!-- datetime layout -->
     <string name="event_time_label">Heure de l\'événement</string>
     <!-- BluetoothDevicePreference -->
