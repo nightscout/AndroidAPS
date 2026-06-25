@@ -409,6 +409,7 @@
     <string name="clientcontrol_fail_scene_disabled">Scenen er deaktivert.</string>
     <string name="clientcontrol_fail_partial">Noen handlinger kunne ikke utføres.</string>
     <string name="clientcontrol_fail_execution">Hovedenheten kunne ikke utføre handlingen.</string>
+    <string name="clientcontrol_fail_control_disabled">Fjernstyring er slått av på hovedenheten.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Den forberedte bolusen utløp eller ble erstattet. Trykk på knappen igjen.</string>
     <string name="clientcontrol_fail_bolus_compute">Hovedenheten kunne ikke beregne bolusen (mangler glukoseverdi/profil, eller pumpen er ikke klar).</string>
     <string name="clientcontrol_fail_internal">Noe gikk galt.</string>
