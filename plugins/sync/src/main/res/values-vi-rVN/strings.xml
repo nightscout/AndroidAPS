@@ -63,6 +63,7 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Thực hiện ngay</string>
     <string name="queue">Hàng đợi:</string>
+    <string name="status_label">Trạng thái:</string>
     <string name="clear_log">Xóa nhật ký</string>
     <string name="full_sync">Đồng bộ toàn bộ</string>
     <string name="full_sync_comment">Đồng bộ toàn bộ? Quá trình này có thể mất nhiều giờ và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong NS.</string>
