@@ -27,7 +27,7 @@ enum class EversenseE3Memory(private val address: Long) {
     RateRisingAlert(0x0000_1026),
     RateFallingThreshold(0x0000_1011),
     RateRisingThreshold(0x0000_1012),
-    SensorFieldCurrentRaw(0x0000_0874),
+    SensorFieldCurrentRaw(0x0000_049D),
     TransmitterSoftwareVersion(0x0000_000A),
     TransmitterSoftwareVersionExt(0x0000_00A2),
     MmaFeatures(0x0000_040C),

@@ -32,8 +32,19 @@ class GetSignalStrengthRawPacket : EversenseBasePacket() {
         val raw = (receivedData[start].toInt() and 0xFF) or
                   ((receivedData[start + 1].toInt() and 0xFF) shl 8)
 
-        // Scale to 0-100 matching iOS PlacementGuideViewModel: rawValue / 20
-        val signalPercent = (raw / 20).coerceIn(0, 100)
+        // Classify the RAW flash value using iOS EversenseKit SignalStrength.threshold
+        // values (903/705/494/395/350), then map to a 0-100 percentage that the
+        // placement activity bar thresholds (75/48/30/28/25) bucket correctly.
+        // The previous code used raw/20, which systematically under-reported signal
+        // (a good placement at raw>=903 displayed as "Fair" instead of "Excellent").
+        val signalPercent = when {
+            raw >= 903 -> 80   // Excellent -> 5 bars
+            raw >= 705 -> 55   // Good      -> 4 bars
+            raw >= 494 -> 35   // Low       -> 3 bars
+            raw >= 395 -> 28   // Very low  -> 2 bars
+            raw >= 350 -> 25   // Poor      -> 1 bar
+            else       -> 0    // No signal -> 0 bars
+        }
 
         return Response(rawValue = raw, signalStrength = signalPercent)
     }
