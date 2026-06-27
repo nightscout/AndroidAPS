@@ -13,12 +13,7 @@ import androidx.core.content.edit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.constraints.Constraint
-import app.aaps.core.interfaces.constraints.PluginConstraints
-import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.ui.compose.afrezzaDialog.AfrezzaMaxBasalState
 import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
@@ -72,8 +67,7 @@ class EversensePlugin @Inject constructor(
     preferences: Preferences,
     config: Config,
     private val notificationManager: NotificationManager,
-    private val eversense: EversenseCGMPlugin,
-    private val iobCobCalculator: IobCobCalculator
+    private val eversense: EversenseCGMPlugin
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -88,7 +82,7 @@ class EversensePlugin @Inject constructor(
         .description(R.string.description_source_eversense),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
-), BgSource, EversenseWatcher, PluginConstraints {
+), BgSource, EversenseWatcher {
 
     @Inject lateinit var persistenceLayer: PersistenceLayer
 
@@ -212,7 +206,6 @@ class EversensePlugin @Inject constructor(
         items = listOf(
             EversenseIntentKey.EversenseStatus.withActivity(EversenseStatusActivity::class.java),
             BooleanKey.EversenseCloudUploadEnabled,
-            app.aaps.core.keys.DoubleKey.AfrezzaMaxBasalRate,
             PreferenceSubScreenDef(
                 key = "eversense_credentials_screen",
                 titleResId = R.string.eversense_credentials_title,
@@ -621,25 +614,4 @@ class EversensePlugin @Inject constructor(
             .show()
     }
 
-    override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        if (AfrezzaMaxBasalState.isActive) {
-            val currentBg = iobCobCalculator.ads.actualBg()?.recalculated ?: 0.0
-            if (currentBg in 1.0..70.0) {
-                aapsLogger.info(LTag.BGSOURCE, "Afrezza max basal cancelled — BG is $currentBg mg/dL (hypo guard)")
-                AfrezzaMaxBasalState.cancel()
-                return absoluteRate
-            }
-            val lastAutosens = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("Afrezza constraint")
-            val cob = lastAutosens?.cob ?: 0.0
-            if (cob <= 0.0) {
-                aapsLogger.info(LTag.BGSOURCE, "Afrezza max basal skipped — no active carbs (COB: $cob)")
-                return absoluteRate
-            }
-            absoluteRate.setIfGreater(AfrezzaMaxBasalState.rate, "Afrezza max basal active (COB: $cob)", this)
-        }
-        return absoluteRate
-    }
 }
-
-
-
