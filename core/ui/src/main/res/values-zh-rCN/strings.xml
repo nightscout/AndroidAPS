@@ -197,6 +197,7 @@
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
     <string name="percentage_label">百分比</string>
+    <string name="timeshift_label">时间偏移</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
@@ -385,6 +386,7 @@
     <string name="scene_profile_not_found">未找到配置文件 \"%1$s\"</string>
     <string name="scene_lock_banner_master_offline">主机设备无法访问。连接恢复后，场景控制将恢复。</string>
     <string name="master_offline_banner">主机设备无法访问。连接恢复前编辑功能已禁用。</string>
+    <string name="master_control_disabled_banner">主机已禁用远程控制。在主机上重新启用之前，编辑功能将被禁用。</string>
     <string name="scene_lock_reason_master_offline">主机已断开连接</string>
     <string name="scene_lock_reason_scene_active">请先停止正在运行的情景</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
@@ -407,6 +409,7 @@
     <string name="clientcontrol_fail_scene_disabled">该情景模式已禁用。</string>
     <string name="clientcontrol_fail_partial">部分操作无法应用。</string>
     <string name="clientcontrol_fail_execution">主机无法应用该操作。</string>
+    <string name="clientcontrol_fail_control_disabled">主机上的远程控制已关闭。</string>
     <string name="clientcontrol_fail_no_pending_bolus">准备的大剂量已过期或已被取代。请再次点击按钮。</string>
     <string name="clientcontrol_fail_bolus_compute">主机无法计算大剂量（缺少血糖值/配置文件，或泵未就绪）。</string>
     <string name="clientcontrol_fail_internal">发生错误。</string>
