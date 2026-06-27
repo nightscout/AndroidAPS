@@ -13,6 +13,7 @@
     <string name="eopatch_base_basal_rate">基础率</string>
     <string name="eopatch_temp_basal_rate">临时基础率</string>
     <string name="invalid_basal_rate">设定的基础率小于 0.05U/hr。EOPatch的最小注射单位为0.05U。请将配置设置为大于最小注射单位后重试。</string>
+    <string name="no_profile_selected_try_again">未选择配置。请选择一个配置并重试。</string>
     <string name="symbol_day">天</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
