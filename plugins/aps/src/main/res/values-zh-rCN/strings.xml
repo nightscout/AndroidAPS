@@ -40,6 +40,7 @@
     <string name="maxvalueinpreferences">在参数选项里的最大值</string>
     <string name="hardlimit">硬限制</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">峰值</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
     <string name="pump_not_initialized">泵未初始化!</string>
