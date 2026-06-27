@@ -20,6 +20,7 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
     <string name="syncinfotext">Synchronizujte data s cloudem. Tuto část nyní můžete přeskočit, ale nebudete schopni dokončit cíle, dokud nebude nastavena synchronizace do NS nebo Tidepoolu.</string>
+    <string name="status_label">Stav:</string>
     <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Proveďte přepnutí profilu</string>
