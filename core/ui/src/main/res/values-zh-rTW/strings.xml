@@ -409,6 +409,7 @@
     <string name="clientcontrol_fail_scene_disabled">該情境已停用。</string>
     <string name="clientcontrol_fail_partial">部分動作無法套用。</string>
     <string name="clientcontrol_fail_execution">主裝置無法套用。</string>
+    <string name="clientcontrol_fail_control_disabled">主控端已關閉遠端控制</string>
     <string name="clientcontrol_fail_no_pending_bolus">已準備的注射已失效或被取代。請再輕觸按鈕一次。</string>
     <string name="clientcontrol_fail_bolus_compute">主裝置無法計算注射（缺少血糖／設定檔，或幫浦尚未就緒）。</string>
     <string name="clientcontrol_fail_internal">發生錯誤。</string>
