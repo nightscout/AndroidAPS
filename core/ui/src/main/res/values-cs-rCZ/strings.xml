@@ -197,6 +197,7 @@
     <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procenta</string>
+    <string name="timeshift_label">Posun času</string>
     <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
     <string name="overview_treatment_label">Ošetření</string>
     <string name="copytolocalprofile">Vytvořit z tohoto profilu nový profil?</string>
@@ -385,6 +386,7 @@
     <string name="scene_profile_not_found">Profil \"%1$s\" nebyl nalezen</string>
     <string name="scene_lock_banner_master_offline">Hlavní zařízení je nedostupné. Ovládání scény bude pokračovat po obnovení připojení.</string>
     <string name="master_offline_banner">Hlavní zařízení je nedostupné. Úprava je zakázána, dokud není připojení obnoveno.</string>
+    <string name="master_control_disabled_banner">Hlavní zařízení má zakázáno dálkové ovládání. Úprava je zakázána, dokud není znovu povolena na hlavním zařízení.</string>
     <string name="scene_lock_reason_master_offline">Hlavní zařízení odpojeno</string>
     <string name="scene_lock_reason_scene_active">Nejdříve zastavte běh scény</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
@@ -407,6 +409,7 @@
     <string name="clientcontrol_fail_scene_disabled">Scéna je zakázána.</string>
     <string name="clientcontrol_fail_partial">Některé akce nelze použít.</string>
     <string name="clientcontrol_fail_execution">Hlavní zařízení je nemohlo použít.</string>
+    <string name="clientcontrol_fail_control_disabled">Vzdálené ovládání je vypnuto na hlavním zařízení.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Připravený bolus vypršel nebo byl nahrazen. Klepněte znovu na tlačítko.</string>
     <string name="clientcontrol_fail_bolus_compute">Hlavní zařízení nemohlo vypočítat bolus (chybí glykémie / profil nebo pumpa není připravena).</string>
     <string name="clientcontrol_fail_internal">Něco se pokazilo.</string>
