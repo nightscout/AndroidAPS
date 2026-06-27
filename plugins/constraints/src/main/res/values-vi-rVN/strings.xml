@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Giới hạn liều bolus kéo dài ở %1$.1f U bởi vì %2$s</string>
     <string name="limitingcarbs">Hạn chế carbs ở mức %1$d g vì %2$s</string>
+    <string name="safety">Giới hạn an toàn</string>
     <string name="pumpisnottempbasalcapable">Bơm không hỗ trợ liều nền tạm thời</string>
     <string name="closed_loop_disabled_on_dev_branch">Đang chạy phiên bản phát triển. Vòng lặp kín đã bị vô hiệu hóa.</string>
     <string name="closed_loop_disabled_with_eb">Vòng lặp kín bị vô hiệu hóa do đang chạy bolus kéo dài</string>
