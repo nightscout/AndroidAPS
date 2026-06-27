@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sensitivity_plugin_shortname">SENZ</string>
     <string name="sensitivity_oref1">Sensitivita Oref1</string>
     <string name="sensitivity_aaps">Sensitivita AAPS</string>
     <string name="sensitivity_weighted_average">Sensitivita vážený průměr</string>
