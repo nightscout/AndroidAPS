@@ -37,6 +37,7 @@
     <string name="gettingtempbasalstatus">Nahrávám dočasné bazály</string>
     <string name="gettingpumpsettings">Nahrávám nastavení pumpy</string>
     <string name="gettingpumptime">Nahrávám čas v pumpě</string>
+    <string name="largetimedifftitle">Velký časový rozdíl</string>
     <string name="largetimediff">Velký rozdíl v času:\nČas v pumpě se liší minimálně o 1,5 h.\nProsím upravte čas v pumpě ručně a vymažte historii pumpy.\nPokud je to třeba, pozastavte smyčku alespoň na \"DIA\" hodin.</string>
     <string name="pairfirst">Spárujte pumpu s telefonem!</string>
     <string name="approachingdailylimit">Blíží se denní limit inzulínu</string>
