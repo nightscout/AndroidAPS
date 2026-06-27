@@ -20,6 +20,7 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">\n选择您三餐的最大碳水值和最大胰岛素剂量\n</string>
     <string name="syncinfotext">同步数据到云端。 您现在可以跳过这一部分，但在您设置了 Nightscout 或 Tidepore 客户端之前，您将无法通过目标。</string>
+    <string name="status_label">状态:</string>
     <string name="diawarning">请记住：新的胰岛素分布需要DIA至少5小时。 对于新的配置文件，DIA 5-6小时相当于旧胰岛素配置文件中的DIA 3小时</string>
     <string name="profile">配置文件</string>
     <string name="doprofileswitch">配置文件切换</string>
