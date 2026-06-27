@@ -282,4 +282,20 @@
     <string name="confirm">确认</string>
     <string name="request">请求</string>
     <string name="constraint_applied">应用约束！</string>
+    <string name="wizard_total_insulin">总胰岛素</string>
+    <string name="wizard_calculation">计算</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">血糖</string>
+    <string name="wizard_result_bg_tt">血糖（目标时间：%1$s）</string>
+    <string name="wizard_result_trend">15分钟 趋势</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">新IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">碳水 (%1$d g)</string>
+    <string name="wizard_result_subtotal">小计</string>
+    <string name="wizard_result_total">总计</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time">%1$d g 碳水 (%2$s 分钟)</string>
+    <string name="wizard_result_ecarbs">延长碳水: %1$d g / %2$dh (+%3$d min)</string>
 </resources>
