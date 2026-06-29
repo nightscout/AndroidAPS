@@ -406,6 +406,7 @@
     <string name="clientcontrol_fail_send_failed">Impossibile raggiungere Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">Il master non ha un profilo attivo per applicarlo.</string>
     <string name="clientcontrol_fail_scene_not_found">La scena non esiste più.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">La voce del sito non esiste più.</string>
     <string name="clientcontrol_fail_scene_disabled">La scena è disabilitata.</string>
     <string name="clientcontrol_fail_partial">Alcune azioni non possono essere applicate.</string>
     <string name="clientcontrol_fail_execution">Il master non può applicare questa richiesta.</string>
@@ -922,6 +923,7 @@
     <string name="reorder">Riordina</string>
     <string name="status">Stato</string>
     <string name="pump_actions">Azioni micro</string>
+    <string name="tempbasal_button">Basale temporanea</string>
     <string name="extended_bolus_button">Bolo esteso</string>
     <string name="device_maintenance">Manutenzione del dispositivo</string>
     <string name="from_label">Da</string>
