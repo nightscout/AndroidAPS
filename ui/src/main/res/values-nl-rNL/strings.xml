@@ -20,13 +20,6 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Man</string>
-    <string name="site_woman">Vrouw</string>
-    <string name="site_child">Kind</string>
-    <string name="user_profile">Gebruikers profiel</string>
-    <string name="user_profile_description">Het gebruikers profiel wordt gebruikt om meest gebruikte locaties te tonen voor mannen, vrouwen of kinderen</string>
-    <string name="site_management">Management profiel voor infuus locaties</string>
-    <string name="site_management_description">Hier stellen we in of je infuus locaties voor Pomp, CGM of beide wilt beheren. Deze instelling wordt gebruikt om automatisch een nieuwe beheers dialoog te starten</string>
     <string name="edit_site">Bewerk</string>
     <string name="record_site_location">Site locatie: %1$s</string>
     <string name="record_site_arrow">Site pijl %1$s</string>
