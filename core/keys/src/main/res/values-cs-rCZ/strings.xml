@@ -229,6 +229,7 @@
     <string name="pref_title_urgent_alarm_stale_data">Práh naléhavého alarmu zastaralých dat</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Uživatelský profil pro rotaci míst</string>
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Jednotky</string>
     <string name="units_mgdl">mg/dL</string>
