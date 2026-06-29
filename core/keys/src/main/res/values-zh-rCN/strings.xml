@@ -229,6 +229,7 @@
     <string name="pref_title_urgent_alarm_stale_data">紧急失效数据报警阈值</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">部位轮换配置</string>
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">单位</string>
     <string name="units_mgdl">mg/dL</string>
