@@ -227,6 +227,7 @@
     <string name="pref_title_urgent_alarm_stale_data">Seuil d\'urgence sans nouvelle donnée Gly</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Profil utilisateur pour la rotation du site</string>
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Unités</string>
     <string name="units_mgdl">mg/dL</string>
