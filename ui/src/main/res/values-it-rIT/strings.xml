@@ -41,13 +41,6 @@
     <string name="bg_sensor">Sensore</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Uomo</string>
-    <string name="site_woman">Donna</string>
-    <string name="site_child">Bambino</string>
-    <string name="user_profile">Profilo Utente</string>
-    <string name="user_profile_description">La descrizione del profilo utente viene utilizzata per mostrare i siti più frequenti disponibili per un uomo, una donna o un bambino</string>
-    <string name="site_management">Profilo Di Gestione Sito</string>
-    <string name="site_management_description">Imposta qui se vuoi gestire il sito del micro, il sito del CGM o entrambi. Questa impostazione verrà utilizzata per inviare automaticamente la finestra di gestione del sito su ogni nuovo inserimento rilevato</string>
     <string name="edit_site">Modifica</string>
     <string name="record_site_location">Posizione Del Sito: %1$s</string>
     <string name="record_site_arrow">Freccia Del Sito: %1$s</string>
