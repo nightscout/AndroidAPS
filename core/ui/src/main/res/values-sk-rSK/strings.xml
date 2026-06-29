@@ -922,7 +922,6 @@
     <string name="reorder">Usporiadať</string>
     <string name="status">Stav</string>
     <string name="pump_actions">Akcie pumpy</string>
-    <string name="tempbasal_button">Dočasný bazál</string>
     <string name="extended_bolus_button">Predĺžený bolus</string>
     <string name="device_maintenance">Údržba zariadenia</string>
     <string name="from_label">Od</string>
