@@ -41,13 +41,6 @@
     <string name="bg_sensor">Сензор</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Мъж</string>
-    <string name="site_woman">Жена</string>
-    <string name="site_child">Дете</string>
-    <string name="user_profile">Потребителски профил</string>
-    <string name="user_profile_description">Потребителският профил се използва за най-честите места при мъж, жена или дете</string>
-    <string name="site_management">Профил на локаците</string>
-    <string name="site_management_description">Тук ще изберете ако искате да проследявате местата на помпа, сензор или и двете. Това ще ви пита за мястото при всяка смяна</string>
     <string name="edit_site">Редакция</string>
     <string name="record_site_location">Локация: %1$s</string>
     <string name="record_site_arrow">Локация стрелка: %1$s</string>
