@@ -924,7 +924,6 @@
     <string name="reorder">重新排序</string>
     <string name="status">狀態</string>
     <string name="pump_actions">幫浦動作</string>
-    <string name="tempbasal_button">臨時基礎</string>
     <string name="extended_bolus_button">延長注射</string>
     <string name="device_maintenance">裝置維護</string>
     <string name="from_label">從</string>
