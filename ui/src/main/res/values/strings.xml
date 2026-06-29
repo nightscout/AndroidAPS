@@ -48,13 +48,6 @@
     <!-- WizardDialog -->
 
     <!-- SiteRotationDialog -->
-    <string name="site_man">Man</string>
-    <string name="site_woman">Woman</string>
-    <string name="site_child">Child</string>
-    <string name="user_profile">User Profile</string>
-    <string name="user_profile_description">User Profile Description is used to show most frequent sites available for a man, a woman or a child</string>
-    <string name="site_management">Site Management Profile</string>
-    <string name="site_management_description">You will set here if you want to manage Pump site, CGM site or both. This setting will be used to automatically send the site management dialog on each detected new entry</string>
     <string name="edit_site">Edit</string>
     <string name="record_site_location">Site Location: %1$s</string>
     <string name="record_site_arrow">Site Arrow: %1$s</string>
