@@ -41,13 +41,6 @@
     <string name="bg_sensor">传感器</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">男性</string>
-    <string name="site_woman">女性</string>
-    <string name="site_child">儿童</string>
-    <string name="user_profile">用户信息</string>
-    <string name="user_profile_description">用户信息描述用于显示男性、女性或儿童最常用的部位</string>
-    <string name="site_management">部位管理配置</string>
-    <string name="site_management_description">在这里设置是否管理输注部位、CGM 传感器部位，或两者同时管理。该设置将用于在每次检测到新记录时，自动弹出部位更换提醒对话框</string>
     <string name="edit_site">编辑</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">部位箭头: %1$s</string>
