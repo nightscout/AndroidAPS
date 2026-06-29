@@ -230,6 +230,7 @@
     <string name="pref_title_urgent_alarm_stale_data">緊急資料過期警報門檻</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">用於注射部位輪替的使用者設定檔</string>
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">單位</string>
     <string name="units_mgdl">mg/dL</string>
