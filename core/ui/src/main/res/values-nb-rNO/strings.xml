@@ -406,6 +406,7 @@
     <string name="clientcontrol_fail_send_failed">Kunne ikke koble til Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">Hovedenheten har ingen aktiv profil å bruke dette på.</string>
     <string name="clientcontrol_fail_scene_not_found">Scenen finnes ikke lenger.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Infusjonsstedet finnes ikke lenger.</string>
     <string name="clientcontrol_fail_scene_disabled">Scenen er deaktivert.</string>
     <string name="clientcontrol_fail_partial">Noen handlinger kunne ikke utføres.</string>
     <string name="clientcontrol_fail_execution">Hovedenheten kunne ikke utføre handlingen.</string>
@@ -922,6 +923,7 @@
     <string name="reorder">Endre rekkefølge</string>
     <string name="status">Status</string>
     <string name="pump_actions">Pumpehandlinger</string>
+    <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="device_maintenance">Enhetsvedlikehold</string>
     <string name="from_label">Fra</string>
