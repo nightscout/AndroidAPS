@@ -227,6 +227,7 @@
     <string name="pref_title_urgent_alarm_stale_data">Prag alarmă urgentă date învechite</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Profil utilizator pentru rotația locurilor de pe corp</string>
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Unități</string>
     <string name="units_mgdl">mg/dL</string>
