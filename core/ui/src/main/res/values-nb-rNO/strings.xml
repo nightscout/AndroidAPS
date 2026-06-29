@@ -385,9 +385,11 @@
     <string name="scene_no_actions">Scenen har ingen handlinger</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" finnes ikke</string>
     <string name="scene_lock_banner_master_offline">Hovedenheten kan ikke nås. Scenekontroller blir tilgjengelige igjen når forbindelsen er gjenopprettet.</string>
+    <string name="scene_lock_banner_control_disabled">Hovedenheten har deaktivert fjernstyring. Scenekontrollene blir tilgjengelige igjen når fjernstyring aktiveres på hovedenheten.</string>
     <string name="master_offline_banner">Hovedenheten kan ikke nås. Redigering er deaktivert til forbindelsen er gjenopprettet.</string>
     <string name="master_control_disabled_banner">Hovedenheten har deaktivert fjernstyring. Redigering er deaktivert til den aktiveres igjen på hovedenheten.</string>
     <string name="scene_lock_reason_master_offline">Hovedenheten er frakoblet</string>
+    <string name="scene_lock_reason_control_disabled">Fjernstyring deaktivert</string>
     <string name="scene_lock_reason_scene_active">Avslutt den aktive scenen først</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Sett midlertidig mål</string>
