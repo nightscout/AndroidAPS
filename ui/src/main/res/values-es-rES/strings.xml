@@ -41,13 +41,6 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Hombre</string>
-    <string name="site_woman">Mujer</string>
-    <string name="site_child">Niño</string>
-    <string name="user_profile">Perfil de usuario</string>
-    <string name="user_profile_description">La descripción del perfil del usuario se utiliza para mostrar los sitios más frecuentes disponibles para un hombre, una mujer o un niño</string>
-    <string name="site_management">Perfil de gestión del sitio</string>
-    <string name="site_management_description">Aquí establecerá si desea gestionar la ubicación del sitio de la bomba, la del sensor (MCG) o ambos. Esta configuración se utilizará para enviar automáticamente el diálogo de administración del sitio en cada nueva entrada detectada</string>
     <string name="edit_site">Editar</string>
     <string name="record_site_location">Ubicación del sitio: %1$s</string>
     <string name="record_site_arrow">Flecha del sitio: %1$s</string>
