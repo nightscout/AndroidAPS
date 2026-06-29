@@ -919,7 +919,6 @@
     <string name="reorder">Reordenar</string>
     <string name="status">Estado</string>
     <string name="pump_actions">Acciones de la bomba</string>
-    <string name="tempbasal_button">Basal temporal</string>
     <string name="extended_bolus_button">Bolo extendido</string>
     <string name="device_maintenance">Mantenimiento del dispositivo</string>
     <string name="from_label">Desde</string>
