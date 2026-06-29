@@ -922,7 +922,6 @@
     <string name="reorder">重新排序</string>
     <string name="status">状态</string>
     <string name="pump_actions">泵动作</string>
-    <string name="tempbasal_button">临时基础</string>
     <string name="extended_bolus_button">扩展大剂量(方波)</string>
     <string name="device_maintenance">设备维护</string>
     <string name="from_label">从</string>
