@@ -922,7 +922,6 @@
     <string name="reorder">Endre rekkefølge</string>
     <string name="status">Status</string>
     <string name="pump_actions">Pumpehandlinger</string>
-    <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="device_maintenance">Enhetsvedlikehold</string>
     <string name="from_label">Fra</string>
