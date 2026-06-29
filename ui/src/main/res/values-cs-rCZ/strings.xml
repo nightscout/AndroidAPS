@@ -41,13 +41,6 @@
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Muž</string>
-    <string name="site_woman">Žena</string>
-    <string name="site_child">Dítě</string>
-    <string name="user_profile">Profil uživatele</string>
-    <string name="user_profile_description">Popis profilu uživatele se používá k zobrazení nejčastějších míst aplikace dostupných pro muže, ženy nebo děti</string>
-    <string name="site_management">Profil správy místa aplikace</string>
-    <string name="site_management_description">Zde nastavíte, zda chcete spravovat místa aplikace pro pumpu, senzor nebo obojí. Toto nastavení bude použito k automatickému zobrazení dialogového okna správy místa aplikace u každého zjištěného nového záznamu.</string>
     <string name="edit_site">Upravit</string>
     <string name="record_site_location">Místo aplikace: %1$s</string>
     <string name="record_site_arrow">Šipka místa aplikace: %1$s</string>
