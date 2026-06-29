@@ -29,6 +29,7 @@
     <!-- IntKey: BG Source preferences -->
     <!-- IntKey: NS Client preferences -->
     <!-- IntKey: Site rotation preferences -->
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <!-- StringKey: General preferences -->
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
