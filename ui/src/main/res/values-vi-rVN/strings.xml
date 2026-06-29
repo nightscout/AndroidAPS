@@ -41,13 +41,6 @@
     <string name="bg_sensor">Cảm biến</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Nam</string>
-    <string name="site_woman">Nữ</string>
-    <string name="site_child">Trẻ em</string>
-    <string name="user_profile">Cấu hình người dùng</string>
-    <string name="user_profile_description">Mô tả cấu hình người dùng được dùng để hiển thị các vị trí tiêm phổ biến nhất đối với nam, nữ hoặc trẻ em</string>
-    <string name="site_management">Cấu hình quản lý vị trí tiêm</string>
-    <string name="site_management_description">Tại đây bạn có thể chọn quản lý vị trí tiêm, vị trí cảm biến CGM hoặc cả hai. Thiết lập này sẽ được dùng để tự động hiển thị hộp thoại quản lý vị trí mỗi khi phát hiện mục nhập mới</string>
     <string name="edit_site">Chỉnh sửa</string>
     <string name="record_site_location">Vị trí: %1$s</string>
     <string name="record_site_arrow">Hướng vị trí: %1$s</string>
