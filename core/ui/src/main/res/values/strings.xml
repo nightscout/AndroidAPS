@@ -418,6 +418,7 @@
     <string name="clientcontrol_fail_send_failed">Couldn\'t reach Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">The master has no active profile to apply it onto.</string>
     <string name="clientcontrol_fail_scene_not_found">The scene no longer exists.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">The site entry no longer exists.</string>
     <string name="clientcontrol_fail_scene_disabled">The scene is disabled.</string>
     <string name="clientcontrol_fail_partial">Some actions couldn\'t be applied.</string>
     <string name="clientcontrol_fail_execution">The master couldn\'t apply it.</string>
@@ -975,7 +976,7 @@
     <string name="reorder">Reorder</string>
     <string name="status">Status</string>
     <string name="pump_actions">Pump actions</string>
-    <string name="tempbasal_button">TempBasal</string>
+    <string name="tempbasal_button">Temp Basal</string>
     <string name="extended_bolus_button">Extended Bolus</string>
     <string name="device_maintenance">Device Maintenance</string>
     <string name="from_label">From</string>
