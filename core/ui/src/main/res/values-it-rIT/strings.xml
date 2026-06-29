@@ -922,7 +922,6 @@
     <string name="reorder">Riordina</string>
     <string name="status">Stato</string>
     <string name="pump_actions">Azioni micro</string>
-    <string name="tempbasal_button">Basale temporanea</string>
     <string name="extended_bolus_button">Bolo esteso</string>
     <string name="device_maintenance">Manutenzione del dispositivo</string>
     <string name="from_label">Da</string>
