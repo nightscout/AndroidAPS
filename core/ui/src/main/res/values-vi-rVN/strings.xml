@@ -922,7 +922,6 @@
     <string name="reorder">Sắp xếp lại</string>
     <string name="status">Trạng thái</string>
     <string name="pump_actions">Các thao tác với bơm</string>
-    <string name="tempbasal_button">Liều nền tạm thời</string>
     <string name="extended_bolus_button">Liều bolus kéo dài</string>
     <string name="device_maintenance">Bảo trì thiết bị</string>
     <string name="from_label">Từ</string>
