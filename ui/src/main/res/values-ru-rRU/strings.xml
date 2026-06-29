@@ -20,13 +20,6 @@
     <string name="bg_sensor">Сенсор</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Мужчина</string>
-    <string name="site_woman">Женщина</string>
-    <string name="site_child">Ребенок</string>
-    <string name="user_profile">Профиль пользователя</string>
-    <string name="user_profile_description">Описание профиля пользователя включает часто используемые места установки катетера для мужчин, женщин, детей</string>
-    <string name="site_management">Профиль контроля места установки</string>
-    <string name="site_management_description">Отсюда можно контролировать место установки катетера помпы и/или сенсора НМГ. Эта настройка будет автоматически открывать диалоговое окно при каждой новой обнаруженной установке</string>
     <string name="edit_site">Редактировать</string>
     <string name="record_site_location">Место установки: %1$s</string>
     <string name="record_site_arrow">Стрелка места установки: %1$s</string>
