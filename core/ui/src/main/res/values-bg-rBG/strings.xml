@@ -906,7 +906,6 @@
     <string name="reorder">Подреди</string>
     <string name="status">Статус</string>
     <string name="pump_actions">Действия на помпата</string>
-    <string name="tempbasal_button">Временен базал</string>
     <string name="extended_bolus_button">Удължен болус</string>
     <string name="device_maintenance">Поддръжка на устройства</string>
     <string name="from_label">От</string>
