@@ -41,13 +41,6 @@
     <string name="bg_sensor">Capteur</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Homme</string>
-    <string name="site_woman">Femme</string>
-    <string name="site_child">Enfant</string>
-    <string name="user_profile">Profil utilisateur</string>
-    <string name="user_profile_description">La description du profil utilisateur est utilisée pour montrer les sites les plus fréquents disponibles pour un homme, une femme ou un enfant</string>
-    <string name="site_management">Paramètres de gestion du site</string>
-    <string name="site_management_description">Sélectionnez si vous souhaitez gérer le site de la pompe, le site MGC ou les deux. Ce paramètre permettra d\'ouvrir automatiquement la boîte de dialogue de gestion du site à chaque nouvelle entrée détectée</string>
     <string name="edit_site">Éditer</string>
     <string name="record_site_location">Site : %1$s</string>
     <string name="record_site_arrow">Flèche : %1$s</string>
