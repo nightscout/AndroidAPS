@@ -20,13 +20,6 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">Mężczyzna</string>
-    <string name="site_woman">Kobieta</string>
-    <string name="site_child">Dziecko</string>
-    <string name="user_profile">Profil użytkownika</string>
-    <string name="user_profile_description">Profil użytkownika pokazuje najczęstsze miejsca wkłucia sensorów, pomp i kaniul dostępne u mężczyzn, kobiet lub dzieci</string>
-    <string name="site_management">Zarządzanie miejscami</string>
-    <string name="site_management_description">Tutaj ustawisz czy chcesz odnotowywać miejsca wkłucia sensora CGM, pompy bezdrenowej lub kaniuli, czy oba te typy miejsc. To ustawienie decyduje, czy przy wykrytej zmianie sensora CGM lub miejsca wkłucia - pokazać okno dialogowe do wskazania miejsca wkłucia.</string>
     <string name="edit_site">Edytuj</string>
     <string name="record_site_location">Miejsce: %1$s</string>
     <string name="record_site_arrow">Orientacja miejsca: %1$s</string>
