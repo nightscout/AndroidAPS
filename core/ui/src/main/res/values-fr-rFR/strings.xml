@@ -922,7 +922,6 @@
     <string name="reorder">Réordonner</string>
     <string name="status">État</string>
     <string name="pump_actions">Actions pompe</string>
-    <string name="tempbasal_button">Basale Temp</string>
     <string name="extended_bolus_button">Bolus Étendu</string>
     <string name="device_maintenance">Maintenance Appareil</string>
     <string name="from_label">De</string>
