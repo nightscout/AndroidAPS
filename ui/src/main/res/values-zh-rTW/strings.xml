@@ -41,13 +41,6 @@
     <string name="bg_sensor">傳感器</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="site_man">男性</string>
-    <string name="site_woman">女性</string>
-    <string name="site_child">兒童</string>
-    <string name="user_profile">使用者個人檔案</string>
-    <string name="user_profile_description">使用者個人檔案說明用於顯示男性、女性或兒童最常見的可用部位</string>
-    <string name="site_management">部位管理設定檔</string>
-    <string name="site_management_description">在此設定您要管理幫浦部位、CGM 部位，或兩者。此設定會在每次偵測到新的項目時，自動顯示部位管理對話視窗</string>
     <string name="edit_site">編輯</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">位置箭頭：%1$s</string>
