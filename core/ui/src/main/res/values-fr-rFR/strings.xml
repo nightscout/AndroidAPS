@@ -810,7 +810,7 @@
     <string name="message">Message</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
-    <string name="dismiss">Rejeter</string>
+    <string name="dismiss">Fermer</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="close">Fermer</string>
