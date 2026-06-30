@@ -385,9 +385,11 @@
     <string name="scene_no_actions">Le scénario n\'a pas d\'action</string>
     <string name="scene_profile_not_found">Profil « %1$s » introuvable</string>
     <string name="scene_lock_banner_master_offline">Appareil maître inaccessible. Les contrôles du scénario reprendront lorsque la connexion sera rétablie.</string>
+    <string name="scene_lock_banner_control_disabled">Master a désactivé le contrôle à distance. Les contrôles du scénario reprendront lorsqu\'il sera réactivé sur le maître.</string>
     <string name="master_offline_banner">Appareil maître inaccessible. Les modifications sont désactivées jusqu\'à ce que la connexion soit rétablie.</string>
     <string name="master_control_disabled_banner">Le maître a désactivé le contrôle à distance. L\'édition est désactivée jusqu\'à ce qu\'elle soit réactivée sur le maître.</string>
     <string name="scene_lock_reason_master_offline">Maître déconnecté</string>
+    <string name="scene_lock_reason_control_disabled">Contrôle à distance désactivé</string>
     <string name="scene_lock_reason_scene_active">Arrêter d\'abord le scénario en cours d\'exécution</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Définir une cible temp</string>
@@ -406,6 +408,7 @@
     <string name="clientcontrol_fail_send_failed">Impossible d\'accéder à Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">Le maître n\'a pas de profil actif sur lequel l\'appliquer.</string>
     <string name="clientcontrol_fail_scene_not_found">Le scénario n\'existe plus.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">L\'entrée pour le site n\'existe plus.</string>
     <string name="clientcontrol_fail_scene_disabled">Scénario désactivé.</string>
     <string name="clientcontrol_fail_partial">Certaines actions n\'ont pas pu être appliquées.</string>
     <string name="clientcontrol_fail_execution">Le maître n\'a pas pu l\'appliquer.</string>
@@ -922,6 +925,7 @@
     <string name="reorder">Réordonner</string>
     <string name="status">État</string>
     <string name="pump_actions">Actions pompe</string>
+    <string name="tempbasal_button">Basal Temp</string>
     <string name="extended_bolus_button">Bolus Étendu</string>
     <string name="device_maintenance">Maintenance Appareil</string>
     <string name="from_label">De</string>
