@@ -385,9 +385,11 @@
     <string name="scene_no_actions">Scéna nemá žádné akce</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" nebyl nalezen</string>
     <string name="scene_lock_banner_master_offline">Hlavní zařízení je nedostupné. Ovládání scény bude pokračovat po obnovení připojení.</string>
+    <string name="scene_lock_banner_control_disabled">Hlavní zařízení má vypnuté dálkové ovládání. Ovládání scén se obnoví, jakmile je znovu povoleno.</string>
     <string name="master_offline_banner">Hlavní zařízení je nedostupné. Úprava je zakázána, dokud není připojení obnoveno.</string>
     <string name="master_control_disabled_banner">Hlavní zařízení má zakázáno dálkové ovládání. Úprava je zakázána, dokud není znovu povolena na hlavním zařízení.</string>
     <string name="scene_lock_reason_master_offline">Hlavní zařízení odpojeno</string>
+    <string name="scene_lock_reason_control_disabled">Vzdálené ovládání zakázáno</string>
     <string name="scene_lock_reason_scene_active">Nejdříve zastavte běh scény</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Spustit dočasný cíl</string>
@@ -406,6 +408,7 @@
     <string name="clientcontrol_fail_send_failed">Nightscout se nepodařilo kontaktovat.</string>
     <string name="clientcontrol_fail_no_active_profile">Hlavní zařízení nemá žádný aktivní profil, který by mohlo použít.</string>
     <string name="clientcontrol_fail_scene_not_found">Scéna již neexistuje.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Stránka již neexistuje.</string>
     <string name="clientcontrol_fail_scene_disabled">Scéna je zakázána.</string>
     <string name="clientcontrol_fail_partial">Některé akce nelze použít.</string>
     <string name="clientcontrol_fail_execution">Hlavní zařízení je nemohlo použít.</string>
@@ -922,6 +925,7 @@
     <string name="reorder">Přeřadit</string>
     <string name="status">Stav</string>
     <string name="pump_actions">Akce pumpy</string>
+    <string name="tempbasal_button">Dočasný bazál</string>
     <string name="extended_bolus_button">Prodloužený bolus</string>
     <string name="device_maintenance">Údržba zařízení</string>
     <string name="from_label">Od</string>
