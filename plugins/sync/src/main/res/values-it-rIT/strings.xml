@@ -69,6 +69,7 @@
     <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
     <string name="ns_sync_options">Sincronizzazione</string>
     <string name="ns_alarm_options">Opzioni allarme</string>
+    <string name="ns_remote_control_options">Controllo remoto</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Se abilitato, i caricamenti andranno sui server di test invece che su quelli regolari</string>
     <string name="title_tidepool_dev_servers">Usa server integrativi (test)</string>
