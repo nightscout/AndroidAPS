@@ -69,6 +69,7 @@
     <string name="full_sync_comment">Úplná synchronizace? Může to trvat mnoho hodin a dokud neskončíte, nová data v NS neuvidíte.</string>
     <string name="ns_sync_options">Synchronizace</string>
     <string name="ns_alarm_options">Nastavení alarmů</string>
+    <string name="ns_remote_control_options">Vzdálené ovládání</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Pokud je tato možnost povolena, data budou nahrávána na testovací servery, nikoli na běžné</string>
     <string name="title_tidepool_dev_servers">Používat testovací servery</string>
