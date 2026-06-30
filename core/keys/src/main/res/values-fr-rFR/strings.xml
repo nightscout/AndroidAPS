@@ -125,6 +125,8 @@
     <string name="pref_title_ns_slow_sync">Utiliser la synchro lente</string>
     <string name="pref_title_ns_use_ws">Utiliser les websockets</string>
     <string name="pref_summary_ns_use_ws">Utiliser les websockets pour communiquer en temps réel avec Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">Autoriser le contrôle client</string>
+    <string name="pref_summary_ns_allow_client_control">Laisser les appareils clients appariés envoyer des commandes signées (par exemple des scénarii de démarrage/arrêt) sur Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">WiFi uniquement</string>
     <string name="pref_title_openhumans_charging_only">Charge uniquement</string>
@@ -228,6 +230,9 @@
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Profil utilisateur pour la rotation du site</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Homme</string>
+    <string name="site_rotation_profile_woman">Femme</string>
+    <string name="site_rotation_profile_child">Enfant</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Unités</string>
     <string name="units_mgdl">mg/dL</string>
