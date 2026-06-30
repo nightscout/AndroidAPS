@@ -73,6 +73,7 @@
     <string name="full_sync_comment">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
     <string name="ns_sync_options">Synchronization</string>
     <string name="ns_alarm_options">Alarm options</string>
+    <string name="ns_remote_control_options">Remote control</string>
 
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">If enabled, uploads will go to test servers instead of the regular</string>
