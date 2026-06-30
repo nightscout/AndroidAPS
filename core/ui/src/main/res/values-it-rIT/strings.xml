@@ -385,9 +385,11 @@
     <string name="scene_no_actions">La scena non ha azioni</string>
     <string name="scene_profile_not_found">Profilo \"%1$s\" non trovato</string>
     <string name="scene_lock_banner_master_offline">Dispositivo master irraggiungibile. I controlli della scena riprenderanno quando la connessione viene ripristinata.</string>
+    <string name="scene_lock_banner_control_disabled">Il master ha disabilitato il controllo remoto. I controlli delle scene riprenderanno quando saranno riattivati sul master.</string>
     <string name="master_offline_banner">Dispositivo master irraggiungibile. La modifica è disabilitata fino al ripristino della connessione.</string>
     <string name="master_control_disabled_banner">Il Master ha disabilitato il controllo remoto. La modifica è disabilitata fino a quando non viene riattivata sul master.</string>
     <string name="scene_lock_reason_master_offline">Master disconnesso</string>
+    <string name="scene_lock_reason_control_disabled">Controllo remoto disabilitato</string>
     <string name="scene_lock_reason_scene_active">Ferma prima la scena in esecuzione</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Avvia temp-target</string>
