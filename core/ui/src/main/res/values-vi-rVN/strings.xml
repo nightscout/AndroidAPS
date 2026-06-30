@@ -385,9 +385,11 @@
     <string name="scene_no_actions">Ngữ cảnh không có hành động nào</string>
     <string name="scene_profile_not_found">Không tìm thấy cấu hình “%1$s”</string>
     <string name="scene_lock_banner_master_offline">Không thể kết nối với thiết bị chính. Các điều khiển kịch bản sẽ hoạt động trở lại khi kết nối được khôi phục.</string>
+    <string name="scene_lock_banner_control_disabled">Thiết bị chính đã tắt điều khiển từ xa. Chức năng điều khiển ngữ cảnh sẽ hoạt động trở lại khi tính năng này được bật lại trên thiết bị chính.</string>
     <string name="master_offline_banner">Không thể kết nối với thiết bị chính. Không thể chỉnh sửa cho đến khi kết nối được khôi phục.</string>
     <string name="master_control_disabled_banner">Thiết bị chính đã tắt điều khiển từ xa. Việc chỉnh sửa bị vô hiệu hóa cho đến khi tính năng này được bật lại trên thiết bị chính.</string>
     <string name="scene_lock_reason_master_offline">Thiết bị chính đã ngắt kết nối</string>
+    <string name="scene_lock_reason_control_disabled">Điều khiển từ xa đã bị tắt</string>
     <string name="scene_lock_reason_scene_active">Hãy dừng ngữ cảnh đang chạy trước</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Thiết lập mục tiêu tạm thời</string>
@@ -406,6 +408,7 @@
     <string name="clientcontrol_fail_send_failed">Không thể truy cập Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">Thiết bị chính không có cấu hình đang hoạt động để áp dụng thay đổi này.</string>
     <string name="clientcontrol_fail_scene_not_found">Ngữ cảnh này không còn tồn tại.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Vị trí này không còn tồn tại.</string>
     <string name="clientcontrol_fail_scene_disabled">Ngữ cảnh đã bị vô hiệu hóa.</string>
     <string name="clientcontrol_fail_partial">Không thể áp dụng một số thao tác.</string>
     <string name="clientcontrol_fail_execution">Thiết bị chính không thể áp dụng thay đổi này.</string>
@@ -922,6 +925,7 @@
     <string name="reorder">Sắp xếp lại</string>
     <string name="status">Trạng thái</string>
     <string name="pump_actions">Các thao tác với bơm</string>
+    <string name="tempbasal_button">Liều nền tạm thời</string>
     <string name="extended_bolus_button">Liều bolus kéo dài</string>
     <string name="device_maintenance">Bảo trì thiết bị</string>
     <string name="from_label">Từ</string>
