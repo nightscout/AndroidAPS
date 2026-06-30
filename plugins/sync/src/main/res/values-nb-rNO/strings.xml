@@ -69,6 +69,7 @@
     <string name="full_sync_comment">Full synkronisering? Dette kan ta mange timer og du ser ikke nye data i NS før dette er ferdig.</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_alarm_options">Alarmvalg</string>
+    <string name="ns_remote_control_options">Fjernkontroll</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for den vanlige</string>
     <string name="title_tidepool_dev_servers">Bruk integrasjon (test) servere</string>
