@@ -21,6 +21,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
     <string name="syncinfotext">Synchroniser les données sur le cloud. Vous pouvez sauter cette partie maintenant mais vous ne pourrez pas passer les objectifs tant que vous n\'aurez pas configuré le client Nightscout ou Tidepool.</string>
+    <string name="status_label">État :</string>
     <string name="diawarning">Rappel : les nouveaux profils d\'insuline requièrent une DIA d\'au moins 5h. Une DIA 5-6h dans les nouveaux profils d\'insuline équivaut à une DIA 3h dans les anciens profils d\'insuline.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Changer de profil</string>
