@@ -111,8 +111,8 @@ androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref 
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHilt" }
 androidx-wear = { group = "androidx.wear", name = "wear", version = "1.4.0" }
 androidx-wear-tiles = { group = "androidx.wear.tiles", name = "tiles", version = "1.6.0" }
-androidx-wear-protolayout = { group = "androidx.wear.protolayout", name = "protolayout", version = "1.4.0" }
-androidx-wear-protolayout-expression = { group = "androidx.wear.protolayout", name = "protolayout-expression", version = "1.4.0" }
+androidx-wear-protolayout = { group = "androidx.wear.protolayout", name = "protolayout", version = "1.4.1" }
+androidx-wear-protolayout-expression = { group = "androidx.wear.protolayout", name = "protolayout-expression", version = "1.4.1" }
 androidx-wear-watchface = { group = "androidx.wear.watchface", name = "watchface", version = "1.2.1" }
 androidx-wear-watchface-complications-data = { group = "androidx.wear.watchface", name = "watchface-complications-data", version = "1.3.0" }
 androidx-wear-watchface-complications-datasource = { group = "androidx.wear.watchface", name = "watchface-complications-data-source", version = "1.3.0" }
