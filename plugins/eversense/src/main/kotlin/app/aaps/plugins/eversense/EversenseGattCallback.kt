@@ -59,6 +59,16 @@ class EversenseGattCallback(
         // A value of 3 allows transient glitches to recover without internet, while still
         // falling back to full auth after sustained failures.
         private const val SHORTCUT_FAIL_THRESHOLD = 3
+
+        // FIX 13: Stale-connection watchdog. If Android's BLE stack silently hangs a GATT
+        // session (no onConnectionStateChange callback fires - e.g. after RF interference
+        // such as walking through a security/metal detector), 'connected' stays stuck at
+        // true and none of the reactive reconnect logic above ever runs. This watchdog is
+        // NOT triggered by callbacks; it just checks the wall clock periodically and forces
+        // a reconnect if no BLE traffic has been seen for too long while still "connected".
+        // Eversense reads every 5 min, so 7 min gives one missed cycle of buffer.
+        private const val STALE_CONNECTION_THRESHOLD_MS = 7 * 60 * 1000L
+        private const val WATCHDOG_INTERVAL_MS = 60_000L
     }
 
     // FIX 1: Dedicated BLE executor for callbacks; separate network executor for HTTP calls
@@ -97,6 +107,34 @@ class EversenseGattCallback(
     // sustained failures to avoid draining the battery.
     @Volatile
     private var reconnectAttempts: Int = 0
+
+    // FIX 13: Timestamp of the last confirmed BLE activity (successful connect or any
+    // characteristic notification). Used by the stale-connection watchdog below.
+    @Volatile
+    private var lastActivityTimestamp: Long = System.currentTimeMillis()
+
+    // FIX 13: Watchdog loop - reschedules itself every WATCHDOG_INTERVAL_MS regardless of
+    // connection state, so it keeps running even if a disconnect callback never fires.
+    private val staleConnectionWatchdog = object : Runnable {
+        override fun run() {
+            val idleMs = System.currentTimeMillis() - lastActivityTimestamp
+            if (connected && idleMs > STALE_CONNECTION_THRESHOLD_MS) {
+                EversenseLogger.warning(
+                    TAG,
+                    "Watchdog: no BLE activity for " + (idleMs / 1000) + "s while marked connected - " +
+                        "assuming hung GATT session, forcing reconnect"
+                )
+                connected = false
+                transmitterReady = false
+                handler.post {
+                    plugin.watchers.forEach { it.onConnectionChanged(false) }
+                }
+                cleanUp()
+                plugin.connect(null)
+            }
+            handler.postDelayed(this, WATCHDOG_INTERVAL_MS)
+        }
+    }
 
     // Persistent reconnect: retries every 60s indefinitely while disconnected.
     // Android autoConnect gives up silently after ~30 min on Samsung devices.
@@ -176,6 +214,11 @@ class EversenseGattCallback(
             reconnectAttempts = 0
             failedConnectionAttempts = 0
             handler.removeCallbacks(persistentReconnectRunnable)
+
+            // FIX 13: (re)start the stale-connection watchdog and reset its clock.
+            lastActivityTimestamp = System.currentTimeMillis()
+            handler.removeCallbacks(staleConnectionWatchdog)
+            handler.postDelayed(staleConnectionWatchdog, WATCHDOG_INTERVAL_MS)
 
             preferences.edit(commit = true) {
                 putString(StorageKeys.REMOTE_DEVICE_KEY, gatt.device.address)
@@ -377,6 +420,8 @@ class EversenseGattCallback(
     @SuppressLint("MissingPermission")
     @OptIn(ExperimentalStdlibApi::class)
     private fun handleCharacteristicChanged(gatt: BluetoothGatt, rawData: ByteArray) {
+        // FIX 13: any real notification proves the link is alive; feed the watchdog.
+        lastActivityTimestamp = System.currentTimeMillis()
         EversenseLogger.debug(TAG, "Received data: ${rawData.toHexString()}")
 
         var data = rawData
