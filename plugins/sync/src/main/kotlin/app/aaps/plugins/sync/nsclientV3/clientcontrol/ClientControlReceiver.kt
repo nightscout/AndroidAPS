@@ -605,7 +605,7 @@ class ClientControlReceiver @Inject constructor(
             carbTime = message.carbTime, useBg = message.useBg, useCob = message.useCob, useIob = message.useIob,
             useTt = message.useTt, useTrend = message.useTrend, alarm = message.alarm, notes = message.notes,
             eCarbsGrams = message.eCarbsGrams, eCarbsDelayMinutes = message.eCarbsDelayMinutes, eCarbsDurationHours = message.eCarbsDurationHours,
-            profileName = message.profileName
+            profileName = message.profileName, source = Sources.NSClient
         )
         return when (val result = wizardBolusExecutor.prepareWizard(inputs)) {
             is WizardBolusExecutor.PrepareResult.Error   -> {

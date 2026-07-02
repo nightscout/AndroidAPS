@@ -220,6 +220,7 @@ interface WizardBolusExecutor {
         val eCarbsGrams: Int = 0,
         val eCarbsDelayMinutes: Int = 0,
         val eCarbsDurationHours: Int = 0,
-        val profileName: String? = null
+        val profileName: String? = null,
+        val source: Sources = Sources.WizardDialog
     )
 }

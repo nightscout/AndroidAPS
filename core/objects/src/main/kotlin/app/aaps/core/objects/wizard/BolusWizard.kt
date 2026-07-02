@@ -163,9 +163,9 @@ class BolusWizard @Inject constructor(
     private var useAlarm = false
     var notes: String = ""
     private var carbTime: Int = 0
-    private var quickWizard: Boolean = true
     var usePercentage: Boolean = false
     var positiveIOBOnly: Boolean = false
+    private var source: Sources = Sources.WizardDialog
 
     suspend fun doCalc(
         profile: Profile,
@@ -188,8 +188,8 @@ class BolusWizard @Inject constructor(
         carbTime: Int = 0,
         usePercentage: Boolean = false,
         totalPercentage: Double = 100.0,
-        quickWizard: Boolean = false,
-        positiveIOBOnly: Boolean = false
+        positiveIOBOnly: Boolean = false,
+        source: Sources = Sources.WizardDialog
     ): BolusWizard {
 
         this.profile = profile
@@ -210,10 +210,10 @@ class BolusWizard @Inject constructor(
         this.useAlarm = useAlarm
         this.notes = notes
         this.carbTime = carbTime
-        this.quickWizard = quickWizard
         this.usePercentage = usePercentage
         this.totalPercentage = totalPercentage
         this.positiveIOBOnly = positiveIOBOnly
+        this.source = source
 
         // Insulin from BG
         sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdlForCarbs(dateUtil.now(), "BolusWizard", config, processedDeviceStatusData))
@@ -551,7 +551,7 @@ class BolusWizard @Inject constructor(
                         profile = profile,
                         newRM = RM.Mode.SUPER_BOLUS,
                         action = Action.SUPERBOLUS_TBR,
-                        source = Sources.WizardDialog
+                        source = source
                     )
                     rxBus.send(EventRefreshOverview("WizardDialog"))
                 }
@@ -561,7 +561,6 @@ class BolusWizard @Inject constructor(
                 carbs == 0                     -> Action.BOLUS
                 else                           -> Action.TREATMENT
             }
-            val source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog
             val bolusCalculatorResult = createBolusCalculatorResult()
             quickWizardEntry?.markAsUsed()
             // Schedule carb timer before bolus delivery. Scheduling in the bolus completion callback
@@ -648,7 +647,6 @@ class BolusWizard @Inject constructor(
             automation.removeAutomationEventEatReminder()
 
         if (insulinAfterConstraints > 0) {
-            val source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog
             if (forcedRecordOnly) {
                 uel.log(
                     action = Action.BOLUS_ADVISOR,
