@@ -44,6 +44,10 @@ class NfcControlActivityTest : TestBaseWithProfile() {
             configBuilder = mock(),
             rxBus = mock(),
             uel = mock(),
+            bolusWizard = mock(),
+            iobCobCalculator = iobCobCalculator,
+            glucoseStatusProvider = mock(),
+            sceneAutomationApi = mock(),
         )
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.SYNC, true)
         whenever(rh.gs(any<Int>())).thenReturn("Mock String")
