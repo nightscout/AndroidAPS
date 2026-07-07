@@ -69,6 +69,12 @@ class EversenseGattCallback(
         // Eversense reads every 5 min, so 7 min gives one missed cycle of buffer.
         private const val STALE_CONNECTION_THRESHOLD_MS = 7 * 60 * 1000L
         private const val WATCHDOG_INTERVAL_MS = 60_000L
+
+        // Some Android BLE stacks/chipsets deliver duplicate onConnectionStateChange callbacks
+        // for a single physical connect/disconnect event (same newState reported 2-4x within
+        // milliseconds). This debounce collapses repeated reports of the identical state into
+        // a single watcher notification, without affecting genuine state transitions.
+        private const val CONNECTION_STATE_DEBOUNCE_MS = 500L
     }
 
     // FIX 1: Dedicated BLE executor for callbacks; separate network executor for HTTP calls
@@ -113,6 +119,34 @@ class EversenseGattCallback(
     @Volatile
     private var lastActivityTimestamp: Long = System.currentTimeMillis()
 
+    // Debounce state for onConnectionStateChange duplicate-callback collapsing (see
+    // CONNECTION_STATE_DEBOUNCE_MS above). Tracks the last state we actually notified
+    // watchers about, and when, so a repeat of the identical state within the debounce
+    // window is skipped rather than re-dispatched.
+    @Volatile
+    private var lastNotifiedConnectionState: Boolean? = null
+    @Volatile
+    private var lastConnectionNotifyTimestamp: Long = 0L
+
+    // Single choke point for all connected/disconnected watcher notifications. Collapses
+    // duplicate reports of the identical state that arrive within CONNECTION_STATE_DEBOUNCE_MS
+    // (seen on some devices as 2-4 repeated onConnectionStateChange calls for one physical
+    // event) into a single notification, while always letting a genuine state change through.
+    private fun notifyConnectionChanged(isConnected: Boolean) {
+        val now = System.currentTimeMillis()
+        val isDuplicate = lastNotifiedConnectionState == isConnected &&
+            (now - lastConnectionNotifyTimestamp) < CONNECTION_STATE_DEBOUNCE_MS
+        if (isDuplicate) {
+            EversenseLogger.debug(TAG, "Duplicate onConnectionChanged($isConnected) within ${now - lastConnectionNotifyTimestamp}ms - skipping redundant notify")
+            return
+        }
+        lastNotifiedConnectionState = isConnected
+        lastConnectionNotifyTimestamp = now
+        handler.post {
+            plugin.watchers.forEach { it.onConnectionChanged(isConnected) }
+        }
+    }
+
     // FIX 13: Watchdog loop - reschedules itself every WATCHDOG_INTERVAL_MS regardless of
     // connection state, so it keeps running even if a disconnect callback never fires.
     private val staleConnectionWatchdog = object : Runnable {
@@ -126,9 +160,7 @@ class EversenseGattCallback(
                 )
                 connected = false
                 transmitterReady = false
-                handler.post {
-                    plugin.watchers.forEach { it.onConnectionChanged(false) }
-                }
+                notifyConnectionChanged(false)
                 cleanUp()
                 plugin.connect(null)
             }
@@ -224,11 +256,9 @@ class EversenseGattCallback(
                 putString(StorageKeys.REMOTE_DEVICE_KEY, gatt.device.address)
             }
 
-            // FIX 5: Both connect and disconnect watcher notifications are now dispatched via
-            // handler.post() so they always arrive on the main thread, preventing UI thread crashes.
-            handler.post {
-                plugin.watchers.forEach { it.onConnectionChanged(true) }
-            }
+            // FIX 5: Connection watcher notifications go through notifyConnectionChanged(),
+            // which posts to the main thread and debounces duplicate BLE callbacks.
+            notifyConnectionChanged(true)
 
             if (!gatt.requestMtu(512)) {
                 EversenseLogger.warning(TAG, "requestMtu returned false — skipping to discoverServices with default payload size")
@@ -248,9 +278,7 @@ class EversenseGattCallback(
             if (status == 19 && is365()) {
                 connected = false
                 transmitterReady = false
-                handler.post {
-                    plugin.watchers.forEach { it.onConnectionChanged(false) }
-                }
+                notifyConnectionChanged(false)
                 EversenseLogger.debug(TAG, "365 post-sync disconnect (status 19) — reusing GATT for reconnect")
                 gatt.connect()
                 return
@@ -261,9 +289,7 @@ class EversenseGattCallback(
             connected = false
             transmitterReady = false
 
-            handler.post {
-                plugin.watchers.forEach { it.onConnectionChanged(false) }
-            }
+            notifyConnectionChanged(false)
 
             if (status == 19) {
                 // E3 only — E365 status 19 is handled above
