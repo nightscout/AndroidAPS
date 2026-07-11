@@ -7,8 +7,8 @@ Allows AAPS to execute command cascades by scanning a registered NFC tag or by m
 ### My Tags tab
 Lists all registered NFC tags. Each card shows the tag name, command icons for quick identification, and the last scanned timestamp.
 - **▶ Play**: Manual execution of the command chain.
+- **Edit**:  Opens Edit mode in the Build screen.
 - **🗑 Delete**: Remove the tag from the database.
-- **Tapping the card**: Opens Edit mode in the Build screen.
 
 ### Log tab
 Chronological history of interactions:
@@ -21,7 +21,7 @@ Each entry shows the tag name, timestamp, success status (color-coded), and the 
 ### Build screen
 Wizard for assembling command chains. 
 - **Tag Name**: Optional name, defaults to the first command if left blank.
-- **Command Chain**: Commands can be added, reordered, or removed.
+- **Commands**: Commands can be added, edited or removed.
 - **Pump Compatibility**: Basal commands (Absolute vs Percent) are automatically filtered based on the active pump's driver capabilities.
 
 ---
@@ -30,27 +30,30 @@ Wizard for assembling command chains.
 
 | Category | Command | Description |
 | :--- | :--- | :--- |
-| **LOOP** | `LOOP_STOP` | Stops the loop. |
-| | `LOOP_RESUME` | Resumes the loop. |
-| | `LOOP_SUSPEND` | Suspends the loop for a specified duration. |
-| | `LOOP_CLOSED` | Switches to Closed Loop mode. |
-| | `LOOP_LGS` | Switches to Low Glucose Suspend mode. |
-| **PUMP** | `PUMP_CONNECT` | Connects/Resumes the pump. |
-| | `PUMP_DISCONNECT`| Disconnects/Suspends the pump for a duration. |
-| **BASAL** | `BASAL_STOP` | Cancels any active temporary basal. |
-| | `BASAL_ABS` | Sets an absolute temporary basal rate (if supported). |
-| | `BASAL_PCT` | Sets a percentage temporary basal rate (if supported). |
-| **BOLUS** | `BOLUS` | Delivers a standard bolus (optionally marked as Meal). |
-| | `CARBS` | Records a carb entry. |
-| | `EXTENDED_SET` | Starts an extended bolus. |
-| | `EXTENDED_STOP` | Cancels an active extended bolus. |
-| **PROFILE**| `PROFILE_SWITCH`| Switches the active profile (with percentage). |
-| **TARGETS**| `TARGET_MEAL` | Sets "Eating Soon" temporary target. |
-| | `TARGET_ACTIVITY`| Sets "Activity" temporary target. |
-| | `TARGET_HYPO` | Sets "Hypo" temporary target. |
-| | `TARGET_STOP` | Cancels active temporary target. |
-| **SYSTEM** | `AAPSCLIENT_RESTART`| Triggers an immediate synchronization with Nightscout. |
-| | `RESTART` | Restarts the AAPS application. |
+| **LOOP** | `LoopStopAction` | Stops the loop. |
+| | `LoopResumeAction` | Resumes the loop. |
+| | `LoopSuspendAction` | Suspends the loop for a specified duration. |
+| | `LoopCloseAction` | Switches to Closed Loop mode. |
+| | `LoopLgsAction` | Switches to Low Glucose Suspend mode. |
+| **PUMP** | `PumpConnectAction` | Connects/Resumes the pump. |
+| | `PumpDisconnectAction` | Disconnects/Suspends the pump for a duration. |
+| **BASAL** | `BasalCancelAction` | Cancels any active temporary basal. |
+| | `TempBasalAbsoluteAction` | Sets an absolute temporary basal rate (if supported). |
+| | `TempBasalPercentAction` | Sets a percentage temporary basal rate (if supported). |
+| **TREATMENTS** | `BolusAction` | Delivers a standard bolus (optionally marked as Meal). |
+| | `CarbsAction` | Records a carb entry. |
+| | `BolusWizardAction` | Launches BolusWizard on predefined parameters |
+| | `ExtendedSetAction` | Starts an extended bolus. |
+| | `ExtendedCancelAction` | Cancels an active extended bolus. |
+| **PROFILE**| `ProfileSwitchAction` | Switches the active profile (with percentage). |
+| **SCENES** | `RunSceneAction` | Runs a scene |
+| **TARGETS**| `TempTargetMealAction` | Sets "Eating Soon" temporary target. |
+| | `TempTargetActivityAction` | Sets "Activity" temporary target. |
+| | `TempTargetHypoAction` | Sets "Hypo" temporary target. |
+| | `TempTargetManuelAction` | Sets a "Manual" temporary target (with Glucose and duration) |
+| | `TempTargetCancelAction` | Cancels active temporary target. |
+| **SYSTEM** | `AAPSCLIENT_RESTART`| Triggers an immediate synchronization with Nightscout. (command disabled) |
+| | `RESTART` | Restarts the AAPS application. (command disabled) |
 
 ---
 
@@ -78,11 +81,13 @@ The plugin requires a `nfc_tech_filter.xml` (usually in `app/src/main/res/xml/`)
 | `NfcCommandsPlugin` | Main entry point; handles lifecycle, command routing, and feedback (vibration/toast). |
 | `NfcControlActivity`| Translucent activity that intercepts System Intents and displays the confirmation dialog. |
 | `NfcAction` | Abstract base class for all individual command logic. |
-| `NfcCommandCode` | Central Enum defining available commands, icons, and categories. |
+| `NfcCommandCode` | Central Enum defining available commands, and categories. |
 | `NfcTagStore` | Handles JSON serialization and persistence of tags and logs in SharedPreferences. |
 | `NfcForegroundDispatch`| Manages NFC foreground priority to intercept scans while AAPS is open. |
 | `NfcBuildScreen` | UI for the command chain builder. |
 | `NfcCommandsScreen` | Main UI container for the My Tags and Log tabs. |
+| `NfcCommonUI` | Common UI (confirmation Popup, Commmand Icon display) |
+| `NfcJsonKeys` | List of json keys for command parameters |
 
 ---
 
