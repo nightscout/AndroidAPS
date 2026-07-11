@@ -142,6 +142,24 @@ class MaintenanceImpl @Inject constructor(
         Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         val result = listOf(*files)
         val toIndex = if (amount > result.size) result.size else amount
+
+        return result.subList(0, toIndex) + getEversenseLogFiles(amount)
+    }
+
+    /**
+     * Eversense writes its own log under EXT_FILES_DIR/AndroidAPS/eversense (see EversenseLogger.kt) -
+     * capped independently by amount so Eversense files can't get crowded out of the AndroidAPS list.
+     */
+    private fun getEversenseLogFiles(amount: Int): List<File> {
+        val eversenseDir = File(loggerUtils.logDirectory, "AndroidAPS/eversense")
+        val files = eversenseDir.listFiles { _: File?, name: String ->
+            (name.startsWith("Eversense")
+                && (name.endsWith(".log")
+                || name.endsWith(".zip") && !name.endsWith(loggerUtils.suffix)))
+        } ?: emptyArray()
+        Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
+        val result = listOf(*files)
+        val toIndex = if (amount > result.size) result.size else amount
         return result.subList(0, toIndex)
     }
 

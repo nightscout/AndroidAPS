@@ -76,8 +76,9 @@ class EversenseLogger {
         }
 
         private const val LOGBACK_XML: String = "<configuration>\n" +
-            "    <!-- Create a file appender for a log in the application's data directory -->\n" +
-            "    <property name=\"EXT_FILES_DIR\" scope=\"context\" value=\"/data/data/info.nightscout.androidaps/eversense\" />\n" +
+            "    <!-- Create a file appender for a log on external storage, alongside AndroidAPS.log,\n" +
+            "         so it's reachable via adb pull / the app's log export without needing run-as or root. -->\n" +
+            "    <property name=\"EXT_FILES_DIR\" scope=\"context\" value=\"/sdcard/AndroidAPS/eversense\" />\n" +
             "    <appender name=\"file\" class=\"ch.qos.logback.core.rolling.RollingFileAppender\">\n" +
             "        <file>\${EXT_FILES_DIR}/Eversense.log</file>\n" +
             "        <rollingPolicy class=\"ch.qos.logback.core.rolling.TimeBasedRollingPolicy\">\n" +
