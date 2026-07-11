@@ -76,6 +76,16 @@ class EversenseGattCallback(
     private var security: EversenseSecurityType = EversenseSecurityType.None
     private var cryptoUtil = EversenseCrypto365Util(preferences)
 
+    // Multi-notification response reassembly (SecureV2/365 only). Each notification is framed
+    // with a chunk header: chunk 1 = [chunkIndex=1, totalChunks, 0x01] (3 bytes), chunk 2+ =
+    // [chunkIndex, totalChunks] (2 bytes), followed by that chunk's slice of the [prefix+ciphertext]
+    // blob. Most responses fit in one chunk, but bulk historical log reads can span several —
+    // decrypting a lone chunk 1 of N>1 always fails the CCM MAC check since the auth tag covers
+    // the full ciphertext, so chunks must be buffered until the full message has arrived.
+    private var chunkAccumulator: ByteArray = ByteArray(0)
+    private var chunkTotalExpected: Int = 1
+    private var chunkNextIndex: Int = 1
+
     // FIX 2: Use AtomicReference for currentPacket to avoid the race condition where a stale
     // BLE notification could be processed against the wrong packet between assignment and write.
     var currentPacket: AtomicReference<EversenseBasePacket?> = AtomicReference(null)
@@ -374,6 +384,46 @@ class EversenseGattCallback(
         handleCharacteristicChanged(gatt, characteristic.value)
     }
 
+    // Returns the reassembled [prefix+ciphertext] blob once all chunks of a message have
+    // arrived, or null while still waiting on more chunks. A malformed/out-of-sequence chunk
+    // discards whatever was in progress rather than risk splicing mismatched chunks together.
+    private fun accumulateChunk(rawData: ByteArray): ByteArray? {
+        if (rawData.size < 2) {
+            EversenseLogger.warning(TAG, "Chunk too short to contain a header - size: ${rawData.size}")
+            return null
+        }
+
+        val chunkIndex = rawData[0].toInt() and 0xFF
+        val totalChunks = rawData[1].toInt() and 0xFF
+
+        if (chunkIndex == 1) {
+            if (chunkNextIndex != 1) {
+                EversenseLogger.warning(TAG, "New chunk sequence started before previous one (chunk $chunkNextIndex/$chunkTotalExpected) completed - discarding partial data")
+            }
+            chunkAccumulator = rawData.copyOfRange(3, rawData.size)
+            chunkTotalExpected = totalChunks
+            chunkNextIndex = 2
+        } else {
+            if (chunkIndex != chunkNextIndex || totalChunks != chunkTotalExpected) {
+                EversenseLogger.warning(TAG, "Out-of-sequence chunk (got $chunkIndex/$totalChunks, expected $chunkNextIndex/$chunkTotalExpected) - discarding in-progress message")
+                chunkAccumulator = ByteArray(0)
+                chunkTotalExpected = 1
+                chunkNextIndex = 1
+                return null
+            }
+            chunkAccumulator += rawData.copyOfRange(2, rawData.size)
+            chunkNextIndex++
+        }
+
+        if (chunkNextIndex <= chunkTotalExpected) return null
+
+        val complete = chunkAccumulator
+        chunkAccumulator = ByteArray(0)
+        chunkTotalExpected = 1
+        chunkNextIndex = 1
+        return complete
+    }
+
     @SuppressLint("MissingPermission")
     @OptIn(ExperimentalStdlibApi::class)
     private fun handleCharacteristicChanged(gatt: BluetoothGatt, rawData: ByteArray) {
@@ -381,7 +431,7 @@ class EversenseGattCallback(
 
         var data = rawData
         if (security == EversenseSecurityType.SecureV2) {
-            data = data.drop(3).toByteArray()
+            data = accumulateChunk(rawData) ?: return
 
             if (data[0] != Eversense365Packets.AuthenticateResponseId) {
                 data = cryptoUtil.decrypt(data)
