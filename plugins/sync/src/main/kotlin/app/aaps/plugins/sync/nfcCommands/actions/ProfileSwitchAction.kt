@@ -33,6 +33,12 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         return JSONObject().put(NfcJsonKeys.PROFILE_NAME, profileName).put(NfcJsonKeys.PERCENT, 100)
     }
 
+    override suspend fun formatParams(): String? {
+        val profileName = params.optString(NfcJsonKeys.PROFILE_NAME)
+        val percentage = params.optInt(NfcJsonKeys.PERCENT, 100)
+        return if (percentage == 100) profileName else "$profileName $percentage%"
+    }
+
     override suspend fun execute(): NfcExecutionResult {
         val profileName = params.optString(NfcJsonKeys.PROFILE_NAME)
         if (profileName.isNullOrBlank()) return invalidFormat()
@@ -54,6 +60,7 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             iCfg = plugin.insulin.iCfg,
         )
         return if (created != null) {
+            val resultMessage = if (percentage == 100) profileName else "$profileName $percentage%"
             uel.log(
                 action = Action.PROFILE_SWITCH,
                 source = source,
@@ -63,7 +70,7 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
                     ValueWithUnit.Percent(percentage)
                 )
             )
-            NfcExecutionResult(true, plugin.rh.gs(R.string.nfccommands_profile_switch_created))
+            NfcExecutionResult(true, resultMessage)
         } else {
             NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.invalid_profile))
         }

@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
@@ -96,6 +97,7 @@ class NfcCommandsPlugin @Inject constructor(
     val iobCobCalculator: IobCobCalculator,
     val glucoseStatusProvider: GlucoseStatusProvider,
     val sceneAutomationApi: SceneAutomationApi,
+    val sceneIconResolver: SceneIconResolver,
 ) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
