@@ -27,8 +27,15 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import androidx.compose.material3.SnackbarHostState
-import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import androidx.compose.ui.Alignment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
+import app.aaps.core.ui.compose.pump.PumpActivityDialog
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +53,13 @@ open class NfcControlActivity : FragmentActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var bolusProgressData: BolusProgressData
+    @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var clientControlActionDispatcher: ClientControlActionDispatcher
+
+    private val pumpCommunicationStatus by lazy {
+        PumpCommunicationStatus(rxBus, commandQueue, this, lifecycleScope)
+    }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var pendingTag by mutableStateOf<NfcCreatedTag?>(null)
@@ -88,6 +102,29 @@ open class NfcControlActivity : FragmentActivity() {
                                         finish()
                                     }
                                 )
+                            }
+
+                            val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
+                            bolusState?.let { state ->
+                                if (!state.isSMB) {
+                                    val pumpStatus by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
+                                    val queueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
+                                    PumpActivityDialog(
+                                        bolusState = state,
+                                        pumpStatus = pumpStatus?.text ?: "",
+                                        queueStatus = queueStatus ?: "",
+                                        isModal = true,
+                                        onStop = {
+                                            if (config.AAPSCLIENT) {
+                                                clientControlActionDispatcher.stopBolus()
+                                                bolusProgressData.stopPressed()
+                                            } else {
+                                                commandQueue.cancelAllBoluses(null)
+                                            }
+                                        },
+                                        onDismiss = { bolusProgressData.clear() }
+                                    )
+                                }
                             }
                         }
                         GlobalSnackbarHost(
