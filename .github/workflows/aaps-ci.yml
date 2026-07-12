@@ -185,11 +185,18 @@ jobs:
       - name: Retrieving Google Drive access token
         run: |
           echo "🔐 Getting Google OAuth2 access token..."
+           
+          # Decode the secret directly in the curl command
+          DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d)
+          GDRIVE_CLIENT_ID=$(echo "$DECODED" | cut -d'|' -f1)
+          GDRIVE_CLIENT_SECRET=$(echo "$DECODED" | cut -d'|' -f2)
+          GDRIVE_REFRESH_TOKEN=$(echo "$DECODED" | cut -d'|' -f3)
+           
           TOKEN_RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
-            -d client_id="$GDRIVE_CLIENT_ID" \
-            -d client_secret="$GDRIVE_CLIENT_SECRET" \
-            -d refresh_token="$GDRIVE_REFRESH_TOKEN" \
-            -d grant_type=refresh_token)
+            -d "client_id=$GDRIVE_CLIENT_ID" \
+            -d "client_secret=$GDRIVE_CLIENT_SECRET" \
+            -d "refresh_token=$GDRIVE_REFRESH_TOKEN" \
+            -d "grant_type=refresh_token")
           ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .access_token)
           echo "::add-mask::$ACCESS_TOKEN"
           if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
