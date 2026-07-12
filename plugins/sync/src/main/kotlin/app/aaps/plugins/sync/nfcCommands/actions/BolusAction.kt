@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
@@ -77,22 +76,26 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         
         val detailedBolusInfo = DetailedBolusInfo().apply { insulin = bolus }
         val result = plugin.commandQueue.bolus(detailedBolusInfo)
-        if (!result.success) {
+        
+        val userStop = plugin.bolusProgressData.isStopPressed
+        if (!result.success && !userStop) {
             plugin.aapsLogger.error(LTag.NFC, "bolus failed: ${result.comment}")
             return commandNotPossible()
         }
+
+        val delivered = result.bolusDelivered
         uel.log(
             action = if (isMeal) Action.TREATMENT else Action.BOLUS,
             source = source,
             note = params.optString(NfcJsonKeys.TAG_NAME, ""),
             listValues = listOf(
-                ValueWithUnit.Insulin(bolus)
+                ValueWithUnit.Insulin(delivered)
             )
         )
 
         plugin.setLastRemoteBolusTime(plugin.dateUtil.now())
         
-        if (isMeal) {
+        if (isMeal && !userStop) {
             plugin.profileFunction.getProfile()?.let {
                 val eatingSoonTTDuration = plugin.preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
                 val eatingSoonTT = plugin.profileUtil.fromMgdlToUnits(plugin.preferences.ttTargetMgdl(TT.Reason.EATING_SOON), plugin.profileUtil.units)
@@ -116,7 +119,10 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             }
         }
         
-        val resId = if (isMeal) R.string.smscommunicator_meal_bolus_delivered else R.string.smscommunicator_bolus_delivered
-        return NfcExecutionResult(true, plugin.rh.gs(resId, bolus))
+        val resId = if (userStop) CoreUiR.string.stop_pressed
+        else if (isMeal) R.string.smscommunicator_meal_bolus_delivered
+        else R.string.smscommunicator_bolus_delivered
+        
+        return NfcExecutionResult(true, plugin.rh.gs(resId, delivered))
     }
 }

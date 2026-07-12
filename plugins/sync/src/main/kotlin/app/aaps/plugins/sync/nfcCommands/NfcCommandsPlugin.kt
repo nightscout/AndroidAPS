@@ -22,6 +22,8 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -95,6 +97,7 @@ class NfcCommandsPlugin @Inject constructor(
     val uel: UserEntryLogger,
     val bolusWizard: BolusWizard,
     val iobCobCalculator: IobCobCalculator,
+    val bolusProgressData: BolusProgressData,
     val glucoseStatusProvider: GlucoseStatusProvider,
     val sceneAutomationApi: SceneAutomationApi,
     val sceneIconResolver: SceneIconResolver,

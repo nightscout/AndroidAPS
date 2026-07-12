@@ -5,6 +5,10 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
@@ -46,8 +50,10 @@ class NfcControlActivityTest : TestBaseWithProfile() {
             uel = mock(),
             bolusWizard = mock(),
             iobCobCalculator = iobCobCalculator,
+            bolusProgressData = mock(),
             glucoseStatusProvider = mock(),
             sceneAutomationApi = mock(),
+            sceneIconResolver = mock(),
         )
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.SYNC, true)
         whenever(rh.gs(any<Int>())).thenReturn("Mock String")

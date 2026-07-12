@@ -10,9 +10,11 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
+import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.objects.wizard.BolusWizard
@@ -44,6 +46,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var bolusWizard: BolusWizard
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var sceneAutomationApi: SceneAutomationApi
+    @Mock lateinit var bolusProgressData: BolusProgressData
+    @Mock lateinit var sceneIconResolver: SceneIconResolver
 
     private val tagUid = "aabbccdd"
     private lateinit var plugin: NfcCommandsPlugin
@@ -73,8 +77,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 uel = uel,
                 bolusWizard = bolusWizard,
                 iobCobCalculator = iobCobCalculator,
+                bolusProgressData = bolusProgressData,
                 glucoseStatusProvider = glucoseStatusProvider,
                 sceneAutomationApi = sceneAutomationApi,
+                sceneIconResolver = sceneIconResolver,
             )
         plugin.setPluginEnabledBlocking(PluginType.SYNC, true)
 
@@ -375,12 +381,37 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
         )
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
+        whenever(bolusProgressData.isStopPressed).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
         val result = execute(NfcCommandCode.BOLUS, JSONObject().put(NfcJsonKeys.AMOUNT, 1.0))
 
         assertThat(result.success).isTrue()
+        runTest { verify(commandQueue).bolus(any()) }
+    }
+
+    @Test
+    fun `executeCommand BOLUS should handle user stop as success`() {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(
+            app.aaps.core.objects.constraints.ConstraintObject(1.0, aapsLogger),
+        )
+        whenever(commandQueue.bolusInQueue()).thenReturn(false)
+        whenever(bolusProgressData.isStopPressed).thenReturn(true)
+        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
+        
+        // Mock a failure from commandQueue (which happens on stop on some pumps)
+        runTest {
+            whenever(commandQueue.bolus(any())).thenReturn(
+                pumpEnactResultProvider.get().success(false).bolusDelivered(0.5)
+            )
+        }
+        whenever(rh.gs(eq(CoreUiR.string.stop_pressed), any())).thenReturn("Stop pressed")
+
+        val result = execute(NfcCommandCode.BOLUS, JSONObject().put(NfcJsonKeys.AMOUNT, 1.0))
+
+        assertThat(result.success).isTrue()
+        assertThat(result.message).isEqualTo("Stop pressed")
         runTest { verify(commandQueue).bolus(any()) }
     }
 
