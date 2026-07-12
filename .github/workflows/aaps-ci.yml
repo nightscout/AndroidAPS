@@ -102,6 +102,14 @@ jobs:
           echo "DEBUG: CLIENT_ID length: $(echo -n "$GDRIVE_CLIENT_ID" | wc -c)"
           echo "DEBUG: CLIENT_SECRET length: $(echo -n "$GDRIVE_CLIENT_SECRET" | wc -c)"
           echo "DEBUG: REFRESH_TOKEN length: $(echo -n "$GDRIVE_REFRESH_TOKEN" | wc -c)"
+           
+          if [ -z "$GDRIVE_CLIENT_SECRET" ]; then
+            echo "⚠️ WARNING: CLIENT_SECRET is empty!"
+            echo "DEBUG: Full decoded secret: $DECODED"
+            echo "DEBUG: Trying with awk instead of cut..."
+            GDRIVE_CLIENT_SECRET=$(echo "$DECODED" | awk -F'|' '{print $2}')
+            echo "DEBUG: CLIENT_SECRET from awk: $(echo -n "$GDRIVE_CLIENT_SECRET" | wc -c) chars"
+          fi
 
           echo "GDRIVE_CLIENT_ID=$GDRIVE_CLIENT_ID" >> $GITHUB_ENV
           echo "GDRIVE_CLIENT_SECRET=$GDRIVE_CLIENT_SECRET" >> $GITHUB_ENV
