@@ -347,6 +347,11 @@
     <string name="nfccommands_discard_message">You have unsaved changes. Do you want to save them before leaving?</string>
     <string name="nfccommands_tag_id_label">Tag ID:</string>
     <string name="nfccommands_execute_tag">Execute tag</string>
+    <string name="nfccommands_tag_already_registered_title">Tag already registered</string>
+    <string name="nfccommands_tag_already_registered_message">This tag is already registered as \"%1$s\". Do you want to overwrite it with \"%2$s\"?</string>
+    <string name="nfccommands_overwrite">Overwrite</string>
+    <string name="nfccommands_discard_and_exit">Discard and exit</string>
+    <string name="nfccommands_cancel_scan">Scan another tag</string>
     <string name="nfc_foreground_priority_warning_title">NFC Foreground Priority</string>
     <string name="nfc_foreground_priority_warning_message">When enabled, AndroidAPS will intercept all NFC tags while the app is open, including Freestyle Libre sensors.\n\nThis may prevent other apps such as LibreLink from reading your sensor while AndroidAPS is in the foreground.\n\nOnly enable this if you know what you are doing.</string>
 

@@ -138,15 +138,18 @@ fun NfcBuildScreen(
     var showBlankNameDialog by remember { mutableStateOf(false) }
     var showActionPicker by remember { mutableStateOf(false) }
     var showDiscardConfirm by remember { mutableStateOf(false) }
+    var showOverwriteConfirm by remember { mutableStateOf(false) }
+    var overwriteUid by remember { mutableStateOf("") }
+    var overwriteExistingName by remember { mutableStateOf("") }
 
     // Track initial state for "dirty" check
     var initialCommandsSnap by remember { mutableStateOf<List<String>>(emptyList()) }
     var initialTagNameSnap by remember { mutableStateOf("") }
     var isInitialized by remember { mutableStateOf(false) }
 
-    val currentCommands = chain.map { 
-        it.meta.params = it.getParams()
-        it.meta.buildCommand(it.command, tagName)
+    val currentCommands = chain.map { action ->
+        val p = action.getParams()
+        NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, tagName) })
     }
     val isDirty = isInitialized && (tagName != initialTagNameSnap || currentCommands != initialCommandsSnap)
 
@@ -169,9 +172,9 @@ fun NfcBuildScreen(
                 }
             }
             initialTagNameSnap = initialTag.name
-            initialCommandsSnap = chain.map { 
-                it.meta.params = it.getParams()
-                it.meta.buildCommand(it.command, initialTag.name)
+            initialCommandsSnap = chain.map { action ->
+                val p = action.getParams()
+                NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, initialTag.name) })
             }
             isInitialized = true
         } else if (initialTagUid != null) {
@@ -272,8 +275,7 @@ fun NfcBuildScreen(
     }
 
     val coroutineScope = rememberCoroutineScope()
-    DisposableEffect(isWritingMode) {
-        if (!isWritingMode) return@DisposableEffect onDispose {}
+    DisposableEffect(Unit) {
         val activity = context as? Activity ?: return@DisposableEffect onDispose {}
         val nfcAdapter =
             NfcAdapter.getDefaultAdapter(context)
@@ -281,47 +283,60 @@ fun NfcBuildScreen(
 
         val callback =
             NfcAdapter.ReaderCallback { tag ->
+                if (!isWritingMode) {
+                    plugin.aapsLogger.debug(LTag.NFC, "Inhibiting NFC scan in build screen (not in writing mode)")
+                    return@ReaderCallback
+                }
+
                 val uid = NfcTagStore.tagUidHex(tag.id) ?: return@ReaderCallback
                 val name = tagName
-                val commands = chain.map { 
-                    it.meta.params = it.getParams()
-                    it.meta.buildCommand(it.command, name)
-                }
-                val alreadyAssigned = plugin.nfcTagStore.findTagByUid(uid) != null
-                val ndefWritten = !alreadyAssigned && buildAndWriteNdef(tag, plugin)
-                val outcome = resolveWriteOutcome(alreadyAssigned, ndefWritten)
-                val message =
-                    when (outcome) {
-                        WriteOutcome.REASSIGNED -> plugin.rh.gs(R.string.nfccommands_tag_reassigned)
+            val commands = chain.toList().map { action ->
+                val p = action.getParams()
+                NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, name) })
+            }
+
+                val existingTag = plugin.nfcTagStore.findTagByUid(uid)
+                if (existingTag != null) {
+                    coroutineScope.launch(Dispatchers.Main) {
+                        isWritingMode = false
+                        overwriteUid = uid
+                        overwriteExistingName = existingTag.name
+                        showOverwriteConfirm = true
+                    }
+                } else {
+                    val ndefWritten = buildAndWriteNdef(tag, plugin)
+                    val outcome = if (ndefWritten) WriteOutcome.NDEF_WRITTEN else WriteOutcome.GENERIC_ASSIGNED
+                    val message = when (outcome) {
                         WriteOutcome.NDEF_WRITTEN -> plugin.rh.gs(R.string.nfccommands_tag_written)
-                        WriteOutcome.GENERIC_ASSIGNED -> plugin.rh.gs(R.string.nfccommands_tag_assigned_generic)
+                        else -> plugin.rh.gs(R.string.nfccommands_tag_assigned_generic)
                     }
-                plugin.nfcTagStore.appendLogEntry(
-                    NfcLogEntry(
-                        timestamp = System.currentTimeMillis(),
-                        tagName = name,
-                        action = "WRITE",
-                        success = true,
-                        message = message,
-                    ),
-                )
-                // Always assign by UID — NDEF write is best-effort
-                plugin.nfcTagStore.saveCreatedTag(
-                    NfcCreatedTag(
-                        tagUid = uid,
-                        name = name,
-                        commands = commands,
-                        createdAtMillis = System.currentTimeMillis(),
-                    ),
-                )
-                plugin.nfcTagStore.markJustWritten(uid)
-                coroutineScope.launch(Dispatchers.Main) {
-                    isWritingMode = false
-                    if (outcome == WriteOutcome.GENERIC_ASSIGNED) {
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    plugin.nfcTagStore.appendLogEntry(
+                        NfcLogEntry(
+                            timestamp = System.currentTimeMillis(),
+                            tagName = name,
+                            action = "WRITE",
+                            success = true,
+                            message = message,
+                        ),
+                    )
+                    // Always assign by UID — NDEF write is best-effort
+                    plugin.nfcTagStore.saveCreatedTag(
+                        NfcCreatedTag(
+                            tagUid = uid,
+                            name = name,
+                            commands = commands,
+                            createdAtMillis = System.currentTimeMillis(),
+                        ),
+                    )
+                    plugin.nfcTagStore.markJustWritten(uid)
+                    coroutineScope.launch(Dispatchers.Main) {
+                        isWritingMode = false
+                        if (outcome == WriteOutcome.GENERIC_ASSIGNED) {
+                            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                        }
+                        chain.clear()
+                        onTagWritten()
                     }
-                    chain.clear()
-                    onTagWritten()
                 }
             }
         nfcAdapter.enableReaderMode(
@@ -348,6 +363,70 @@ fun NfcBuildScreen(
             dismissButton = {
                 TextButton(onClick = { showBlankNameDialog = false }) {
                     Text(stringResource(R.string.cancel))
+                }
+            },
+        )
+    }
+
+    if (showOverwriteConfirm) {
+        AlertDialog(
+            onDismissRequest = { showOverwriteConfirm = false },
+            title = { Text(stringResource(R.string.nfccommands_tag_already_registered_title)) },
+            text = {
+                val newName = tagName.ifBlank {
+                    chain.firstOrNull()?.meta?.labelResId?.let { stringResource(it) } ?: ""
+                }
+                Text(
+                    stringResource(
+                        R.string.nfccommands_tag_already_registered_message,
+                        overwriteExistingName,
+                        newName
+                    )
+                )
+            },
+            confirmButton = {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = {
+                        showOverwriteConfirm = false
+                        onBack()
+                    }) {
+                        Text(stringResource(R.string.nfccommands_discard_and_exit))
+                    }
+                    TextButton(onClick = {
+                        showOverwriteConfirm = false
+                        val name = tagName
+                        val commands = chain.toList().map { action ->
+                            val p = action.getParams()
+                            NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, name) })
+                        }
+                        plugin.nfcTagStore.saveCreatedTag(
+                            NfcCreatedTag(
+                                tagUid = overwriteUid,
+                                name = name,
+                                commands = commands,
+                                createdAtMillis = System.currentTimeMillis(),
+                            ),
+                        )
+                        plugin.nfcTagStore.markJustWritten(overwriteUid)
+                        plugin.nfcTagStore.appendLogEntry(
+                            NfcLogEntry(
+                                timestamp = System.currentTimeMillis(),
+                                tagName = name,
+                                action = "WRITE",
+                                success = true,
+                                message = plugin.rh.gs(R.string.nfccommands_tag_reassigned),
+                            ),
+                        )
+                        chain.clear()
+                        onTagWritten()
+                    }) {
+                        Text(stringResource(R.string.nfccommands_overwrite))
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showOverwriteConfirm = false }) {
+                    Text(stringResource(R.string.nfccommands_cancel_scan))
                 }
             },
         )
@@ -491,7 +570,6 @@ private fun InlineActionCard(
     onRemove: () -> Unit
 ) {
     val meta = action.meta
-    meta.params = action.getParams()
 
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
@@ -530,7 +608,7 @@ private fun InlineActionCard(
             }
             Column(modifier = Modifier.padding(bottom = 8.dp)) {
                 action.EditContent(profileNames, sceneNames) {
-                    // Implicitly updates meta.params via getParams() inside EditContent
+                    action.meta.params = action.getParams()
                 }
             }
         }
@@ -814,7 +892,6 @@ class GenericNfcUiAction(
                 }
             }
         }
-        meta.params = json
         return json
     }
 
