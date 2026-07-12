@@ -159,21 +159,25 @@ jobs:
           DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d)
 
           GDRIVE_CLIENT_ID=$(echo "$DECODED" | cut -d'|' -f1)
-          GDRIVE_REFRESH_TOKEN=$(echo "$DECODED" | cut -d'|' -f2)
+          GDRIVE_CLIENT_SECRET=$(echo "$DECODED" | cut -d'|' -f2)
+          GDRIVE_REFRESH_TOKEN=$(echo "$DECODED" | cut -d'|' -f3)
 
           echo "::add-mask::$GDRIVE_CLIENT_ID"
+          echo "::add-mask::$GDRIVE_CLIENT_SECRET"
           echo "::add-mask::$GDRIVE_REFRESH_TOKEN"
 
           echo "GDRIVE_CLIENT_ID=$GDRIVE_CLIENT_ID" >> $GITHUB_ENV
+          echo "GDRIVE_CLIENT_SECRET=$GDRIVE_CLIENT_SECRET" >> $GITHUB_ENV
           echo "GDRIVE_REFRESH_TOKEN=$GDRIVE_REFRESH_TOKEN" >> $GITHUB_ENV
 
-          echo "✅ GDRIVE_CLIENT_ID and GDRIVE_REFRESH_TOKEN extracted from GDRIVE_OAUTH2"
+          echo "✅ GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET, and GDRIVE_REFRESH_TOKEN extracted from GDRIVE_OAUTH2"
 
       - name: Retrieving Google Drive access token
         run: |
           echo "🔐 Getting Google OAuth2 access token..."
           TOKEN_RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
             -d client_id="$GDRIVE_CLIENT_ID" \
+            -d client_secret="$GDRIVE_CLIENT_SECRET" \
             -d refresh_token="$GDRIVE_REFRESH_TOKEN" \
             -d grant_type=refresh_token)
           ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .access_token)
