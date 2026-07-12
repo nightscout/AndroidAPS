@@ -159,32 +159,52 @@ jobs:
       - name: Retrieving Google Drive access token
         run: |
           echo "🔐 Getting Google OAuth2 access token..."
-           
-          # Decode the secret directly in the curl command
-          DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d)
-          echo "DEBUG: Decoded length: $(echo -n "$DECODED" | wc -c) chars"
-          echo "DEBUG: Field count: $(echo "$DECODED" | tr -cd '|' | wc -c) pipes"
           
+          # Debug: check what we have
+          echo "Raw secret bytes: $(echo -n "${{ secrets.GDRIVE_OAUTH2 }}" | wc -c)"
+          
+          # Decode the secret
+          DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d 2>&1)
+          DECODE_EXIT=$?
+          if [ $DECODE_EXIT -ne 0 ]; then
+            echo "❌ Failed to decode GDRIVE_OAUTH2 from base64: $DECODED"
+            exit 1
+          fi
+          
+          echo "Decoded secret length: $(echo -n "$DECODED" | wc -c) chars"
+          echo "Pipe count: $(echo "$DECODED" | tr -cd '|' | wc -c)"
+          
+          # Extract fields
           GDRIVE_CLIENT_ID=$(echo "$DECODED" | cut -d'|' -f1)
           GDRIVE_CLIENT_SECRET=$(echo "$DECODED" | cut -d'|' -f2)
           GDRIVE_REFRESH_TOKEN=$(echo "$DECODED" | cut -d'|' -f3)
           
-          echo "DEBUG: CLIENT_ID length: $(echo -n "$GDRIVE_CLIENT_ID" | wc -c)"
-          echo "DEBUG: CLIENT_SECRET length: $(echo -n "$GDRIVE_CLIENT_SECRET" | wc -c)"
-          echo "DEBUG: REFRESH_TOKEN length: $(echo -n "$GDRIVE_REFRESH_TOKEN" | wc -c)"
+          echo "CLIENT_ID chars: $(echo -n "$GDRIVE_CLIENT_ID" | wc -c)"
+          echo "CLIENT_SECRET chars: $(echo -n "$GDRIVE_CLIENT_SECRET" | wc -c)"
+          echo "REFRESH_TOKEN chars: $(echo -n "$GDRIVE_REFRESH_TOKEN" | wc -c)"
+          
+          if [ -z "$GDRIVE_CLIENT_SECRET" ]; then
+            echo "❌ ERROR: CLIENT_SECRET is empty after parsing!"
+            echo "This means the secret format is wrong or has fewer than 2 pipe separators"
+            exit 1
+          fi
            
           TOKEN_RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
             -d "client_id=$GDRIVE_CLIENT_ID" \
             -d "client_secret=$GDRIVE_CLIENT_SECRET" \
             -d "refresh_token=$GDRIVE_REFRESH_TOKEN" \
             -d "grant_type=refresh_token")
-          ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .access_token)
-          echo "::add-mask::$ACCESS_TOKEN"
+          
+          echo "::add-mask::$TOKEN_RESPONSE"
+          ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .access_token 2>/dev/null)
+          
           if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
             echo "❌ Failed to get access token."
             echo "$TOKEN_RESPONSE"
             exit 1
           fi
+          
+          echo "::add-mask::$ACCESS_TOKEN"
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
           echo "✅ Access token obtained."
 
