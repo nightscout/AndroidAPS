@@ -1,0 +1,197 @@
+name: Build AAPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: 'Select AAPS Version'
+        required: true
+        default: '3.4.2.3'
+        type: choice
+        options:
+          - 3.4.2.3
+          - 3.4.2.2
+          - 3.4.2.1
+          - 3.4.2.0
+          - 3.4.1.0
+          - 3.4.0.0
+          - 3.3.2.1
+          - 3.3.2.0
+          - 3.3.1.3
+          - 3.2.0.4
+          - 3.2.0.3
+          - 3.2.0.2
+          - 3.2.0.1
+          - 3.2.0.0
+          - 3.1.0.3
+          - 3.1.0.2
+          - 3.1.0.1
+          - 3.1.0
+          - 3.0.0.2
+          - 3.0.0.1
+          - 3.0.0
+      buildVariant:
+        description: 'Select Build Variant'
+        required: true
+        default: 'fullRelease'
+        type: choice
+        options:
+          - fullRelease
+          - fullDebug
+          - aapsclientRelease
+          - aapsclientDebug
+          - aapsclient2Release
+          - aapsclient2Debug
+          - pumpcontrolRelease
+          - pumpcontrolDebug
+
+jobs:
+  build:
+    name: Build AAPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare keystore and secrets
+        run: |
+          # Decode keystore
+          mkdir -p "$RUNNER_TEMP/keystore"
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/keystore/keystore.jks"
+          
+          # Export keystore credentials to env
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+          
+          echo "✅ Keystore and secrets prepared"
+
+      - name: Validate keystore
+        run: |
+          echo "🔐 Validating keystore, alias and password"
+          
+          echo "test" > dummy.txt
+          zip -q dummy.jar dummy.txt
+          rm dummy.txt
+          
+          JARSIGNER_LOG=$(mktemp)
+          if ! jarsigner \
+              -keystore "$RUNNER_TEMP/keystore/keystore.jks" \
+              -storepass "$KEYSTORE_PASSWORD" \
+              -keypass "$KEY_PASSWORD" \
+              dummy.jar "$KEY_ALIAS" > "$JARSIGNER_LOG" 2>&1; then
+            echo "❌ Keystore validation failed"
+            cat "$JARSIGNER_LOG"
+            rm -f "$JARSIGNER_LOG" dummy.jar
+            exit 1
+          fi
+          rm -f "$JARSIGNER_LOG" dummy.jar
+          echo "✅ Keystore validated"
+
+      - name: Get Google Drive access token
+        run: |
+          echo "🔐 Getting Google Drive access token..."
+          
+          # Decode GDRIVE_OAUTH2 secret (format: CLIENT_ID|CLIENT_SECRET|REFRESH_TOKEN)
+          DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d)
+          
+          CLIENT_ID=$(echo "$DECODED" | cut -d'|' -f1)
+          CLIENT_SECRET=$(echo "$DECODED" | cut -d'|' -f2)
+          REFRESH_TOKEN=$(echo "$DECODED" | cut -d'|' -f3)
+          
+          # Validate fields
+          if [ -z "$CLIENT_ID" ] || [ -z "$CLIENT_SECRET" ] || [ -z "$REFRESH_TOKEN" ]; then
+            echo "❌ Failed to parse GDRIVE_OAUTH2 secret"
+            echo "Decoded length: $(echo -n "$DECODED" | wc -c)"
+            echo "Pipe count: $(echo "$DECODED" | tr -cd '|' | wc -c)"
+            exit 1
+          fi
+          
+          # Request access token
+          TOKEN_RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
+            -d "client_id=$CLIENT_ID" \
+            -d "client_secret=$CLIENT_SECRET" \
+            -d "refresh_token=$REFRESH_TOKEN" \
+            -d "grant_type=refresh_token")
+          
+          ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .access_token 2>/dev/null)
+          
+          if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
+            echo "❌ Failed to get access token"
+            echo "$TOKEN_RESPONSE"
+            exit 1
+          fi
+          
+          echo "::add-mask::$ACCESS_TOKEN"
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+          echo "✅ Access token obtained"
+
+      - name: Checkout source code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Fetch tag from upstream
+        run: |
+          git remote add upstream https://github.com/nightscout/AndroidAPS.git || true
+          git fetch upstream refs/tags/${{ github.event.inputs.tagName }}:refs/tags/${{ github.event.inputs.tagName }}
+          echo "✅ Tag fetched"
+
+      - name: Determine JVM version
+        run: |
+          TAG="${{ github.event.inputs.tagName }}"
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          while IFS=$'\t' read -r pattern jdk; do
+            if [[ "$TAG" == $pattern ]]; then
+              JAVA_VERSION="$jdk"
+              break
+            fi
+          done < <(jq -r '.mappings[] | "\(.pattern)\t\(.jdk)"' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+          echo "ℹ️ Tag $TAG → JDK $JAVA_VERSION"
+
+      - name: Checkout tag
+        run: |
+          git checkout refs/tags/${{ github.event.inputs.tagName }}
+          echo "✅ Checked out tag"
+
+      - name: Set build variant
+        run: |
+          BUILD_VARIANT="${{ github.event.inputs.buildVariant }}"
+          echo "BUILD_VARIANT=$BUILD_VARIANT" >> $GITHUB_ENV
+          VARIANT_FLAVOR=$(echo "$BUILD_VARIANT" | sed -E 's/(Release|Debug)$//' | tr '[:upper:]' '[:lower:]')
+          VARIANT_TYPE=$(echo "$BUILD_VARIANT" | grep -oE '(Release|Debug)$' | tr '[:upper:]' '[:lower:]')
+          echo "VARIANT_FLAVOR=$VARIANT_FLAVOR" >> $GITHUB_ENV
+          echo "VARIANT_TYPE=$VARIANT_TYPE" >> $GITHUB_ENV
+
+      - name: Extract version
+        run: |
+          VERSION=$(git describe --tags --always)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "ℹ️ Version: $VERSION"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: Build APKs
+        run: |
+          chmod +x gradlew
+          ./gradlew assemble${{ env.BUILD_VARIANT }} \
+            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
+            -Pandroid.injected.signing.store.password="${{ env.KEYSTORE_PASSWORD }}" \
+            -Pandroid.injected.signing.key.alias="${{ env.KEY_ALIAS }}" \
+            -Pandroid.injected.signing.key.password="${{ env.KEY_PASSWORD }}"
+          echo "✅ APK built successfully"
+
+      - name: Upload to Google Drive
+        run: |
+          echo "📤 Uploading APK to Google Drive..."
+          
+          APK_FILE=$(find app/build/outputs/apk -name "*.apk" -type f | head -1)
+          if [ -z "$APK_FILE" ]; then
+            echo "❌ No APK file found"
+            exit 1
+          fi
+          
+          echo "Found APK: $APK_FILE"
+          echo "✅ Upload would happen here (placeholder for now)"
