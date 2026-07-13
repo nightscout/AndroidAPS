@@ -2,8 +2,12 @@ package app.aaps.plugins.sync.nfcCommands.actions
 
 import androidx.annotation.StringRes
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -23,14 +27,31 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
     override val icon
         get() = elementType.icon()
 
-    override suspend fun getDefaultParams(): JSONObject = JSONObject().apply {
-        put(NfcJsonKeys.AMOUNT, 0)
-        put(NfcJsonKeys.PERCENT, 100)
-        put(NfcJsonKeys.USE_BG, true)
-        put(NfcJsonKeys.USE_TT, true)
-        put(NfcJsonKeys.USE_TREND, true)
-        put(NfcJsonKeys.USE_IOB, true)
-        put(NfcJsonKeys.USE_COB, true)
+    override suspend fun getDefaultParams(): JSONObject {
+        // Load saved preferences
+        val useTrend = plugin.preferences.get(BooleanNonKey.WizardIncludeTrend)
+        val useCOB = plugin.preferences.get(BooleanNonKey.WizardIncludeCob)
+        val showNotes = plugin.preferences.get(BooleanKey.OverviewShowNotesInDialogs)
+        val useBolusAdvisor = plugin.preferences.get(BooleanKey.OverviewUseBolusAdvisor)
+
+        // Percentage: reset to 100% if last BG is too old
+        var percentage = plugin.preferences.get(IntKey.OverviewBolusPercentage)
+        val time = plugin.preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
+        plugin.persistenceLayer.getLastGlucoseValue().let {
+            if (it != null) {
+                if (it.timestamp < plugin.dateUtil.now() - T.mins(time).msecs())
+                    percentage = 100
+            } else percentage = 100
+        }
+        return JSONObject().apply {
+            put(NfcJsonKeys.AMOUNT, 0)
+            put(NfcJsonKeys.PERCENT, percentage)
+            put(NfcJsonKeys.USE_BG, true)
+            put(NfcJsonKeys.USE_TT, true)
+            put(NfcJsonKeys.USE_TREND, useTrend)
+            put(NfcJsonKeys.USE_IOB, true)
+            put(NfcJsonKeys.USE_COB, useCOB)
+        }
     }
 
     override suspend fun formatParams(): String? {
