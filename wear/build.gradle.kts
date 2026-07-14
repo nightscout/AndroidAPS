@@ -67,6 +67,7 @@ android {
             dimension = "standard"
             resValue("string", "app_name", "AAPS")
             resValue("string", "label_actions_activity", "AAPS")
+            resValue("color", "flavor_header_color", "#B0BEC5")
             versionName = Versions.appVersion
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
         }
@@ -75,6 +76,7 @@ android {
             dimension = "standard"
             resValue("string", "app_name", "Pumpcontrol")
             resValue("string", "label_actions_activity", "Pumpcontrol")
+            resValue("color", "flavor_header_color", "#B0BEC5")
             versionName = Versions.appVersion + "-pumpcontrol"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_pumpcontrol"
         }
@@ -83,6 +85,7 @@ android {
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient")
             resValue("string", "label_actions_activity", "AAPSClient")
+            resValue("color", "flavor_header_color", "#E8C50C")
             versionName = Versions.appVersion + "-aapsclient"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_yellowowl"
         }
@@ -91,6 +94,7 @@ android {
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient2")
             resValue("string", "label_actions_activity", "AAPSClient2")
+            resValue("color", "flavor_header_color", "#0FBBE0")
             versionName = Versions.appVersion + "-aapsclient2"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
         }
@@ -99,6 +103,7 @@ android {
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient3")
             resValue("string", "label_actions_activity", "AAPSClient3")
+            resValue("color", "flavor_header_color", "#64E86A")
             versionName = Versions.appVersion + "-aapsclient3"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_greenowl"
         }

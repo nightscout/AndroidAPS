@@ -2,6 +2,7 @@ package app.aaps.implementation.plugin
 
 import android.Manifest
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
@@ -98,6 +99,20 @@ class PluginStore @Inject constructor(
                     rationaleTitle = R.string.permission_notifications_title,
                     rationaleDescription = R.string.permission_notifications_description,
                     special = needsSettingsWorkaround,
+                )
+            )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // Android 14+ defaults USE_FULL_SCREEN_INTENT to denied for non-calendar/alarm apps.
+            // Without it a backgrounded full-screen alarm (e.g. from Automation) can't auto-launch
+            // the alarm screen on the lock screen — critical for medical alarms. Special access
+            // granted via a dedicated Settings intent (ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).
+            add(
+                PermissionGroup(
+                    permissions = listOf(Manifest.permission.USE_FULL_SCREEN_INTENT),
+                    rationaleTitle = R.string.permission_fsi_title,
+                    rationaleDescription = R.string.permission_fsi_description,
+                    special = true,
                 )
             )
         }
@@ -303,6 +318,12 @@ class PluginStore @Inject constructor(
             Manifest.permission.SCHEDULE_EXACT_ALARM                 -> {
                 val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 am.canScheduleExactAlarms().not()
+            }
+
+            Manifest.permission.USE_FULL_SCREEN_INTENT               -> {
+                // Only gated on Android 14+; auto-granted below, so never "missing" there.
+                val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && nm.canUseFullScreenIntent().not()
             }
 
             PERMISSION_NOTIFICATION_LISTENER                         ->

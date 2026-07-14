@@ -455,8 +455,11 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return false
     }
 
-    // TODO is this correct?
-    override fun isBusy(): Boolean = busy || rileyLinkOmnipodService == null || !podStateManager.isPodRunning
+    override fun isBusy(): Boolean {
+        val progress = podStateManager.getActivationProgress()
+        return busy || rileyLinkOmnipodService == null ||
+            (progress != ActivationProgress.NONE && !progress.isCompleted())
+    }
 
     override fun setBusy(busy: Boolean) {
         this.busy = busy

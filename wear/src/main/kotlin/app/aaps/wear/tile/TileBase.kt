@@ -10,8 +10,11 @@ import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DeviceParametersBuilders.DeviceParameters
 import androidx.wear.protolayout.DeviceParametersBuilders.SCREEN_SHAPE_ROUND
 import androidx.wear.protolayout.DimensionBuilders.SpProp
+import androidx.wear.protolayout.DimensionBuilders.degrees
 import androidx.wear.protolayout.DimensionBuilders.dp
 import androidx.wear.protolayout.DimensionBuilders.sp
+import androidx.wear.protolayout.LayoutElementBuilders.Arc
+import androidx.wear.protolayout.LayoutElementBuilders.ArcText
 import androidx.wear.protolayout.LayoutElementBuilders.Box
 import androidx.wear.protolayout.LayoutElementBuilders.Column
 import androidx.wear.protolayout.LayoutElementBuilders.FONT_WEIGHT_BOLD
@@ -51,6 +54,8 @@ private const val SPACING_ACTIONS = 3f
 private const val ICON_SIZE_FRACTION = 0.4f // Percentage of button diameter
 private val BUTTON_COLOR = R.color.gray_850
 private const val LARGE_SCREEN_WIDTH_DP = 210
+private const val FLAVOR_HEADER_HEIGHT_DP = 16f
+private const val FLAVOR_HEADER_TEXT_SIZE_SP = 10f
 
 /**
  * Data source for Wear OS tiles.
@@ -237,6 +242,48 @@ abstract class TileBase : TileService() {
      * @return Layout element to render
      */
     private fun layout(wearControl: WearControl, actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
+        val content = contentLayout(wearControl, actions, deviceParameters)
+        return if (deviceParameters.screenShape == SCREEN_SHAPE_ROUND) {
+            // Curved header hugs the round bezel's otherwise-unused corner space (circleDiameter()'s
+            // inscribed-square formula already leaves those corners empty) — overlaid, not stacked,
+            // so it costs no extra room from the button grid below.
+            Box.Builder()
+                .addContent(content)
+                .addContent(curvedFlavorHeader())
+                .build()
+        } else {
+            // No bezel curvature to hug on a square screen — fall back to a plain stacked header.
+            Column.Builder()
+                .addContent(flatFlavorHeader())
+                .addContent(content)
+                .build()
+        }
+    }
+
+    private fun curvedFlavorHeader(): LayoutElement =
+        Arc.Builder()
+            .setAnchorAngle(degrees(0f))
+            .addContent(
+                ArcText.Builder()
+                    .setText(resources.getString(R.string.app_name))
+                    .setFontStyle(flavorFontStyle())
+                    .build()
+            )
+            .build()
+
+    private fun flatFlavorHeader(): LayoutElement =
+        Text.Builder()
+            .setText(resources.getString(R.string.app_name))
+            .setFontStyle(flavorFontStyle())
+            .build()
+
+    private fun flavorFontStyle(): FontStyle =
+        FontStyle.Builder()
+            .setColor(argb(ContextCompat.getColor(baseContext, R.color.flavor_header_color)))
+            .setSize(sp(FLAVOR_HEADER_TEXT_SIZE_SP))
+            .build()
+
+    private fun contentLayout(wearControl: WearControl, actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
         if (wearControl == WearControl.DISABLED) {
             return Text.Builder()
                 .setText(resources.getString(R.string.wear_control_not_enabled))
@@ -408,9 +455,11 @@ abstract class TileBase : TileService() {
      * @param deviceParameters Screen dimensions and shape
      * @return Button diameter in DP
      */
-    private fun circleDiameter(deviceParameters: DeviceParameters) = when (deviceParameters.screenShape) {
+    private fun circleDiameter(deviceParameters: DeviceParameters): Float = when (deviceParameters.screenShape) {
+        // Round: curved header overlays the already-unused inscribed-square corners — no reduction needed.
         SCREEN_SHAPE_ROUND -> ((sqrt(2f) - 1) * deviceParameters.screenHeightDp) - (2 * SPACING_ACTIONS)
-        else               -> 0.5f * deviceParameters.screenHeightDp - SPACING_ACTIONS
+        // Square: flat header is stacked above the grid, so it does need reserved space.
+        else               -> 0.5f * (deviceParameters.screenHeightDp - FLAVOR_HEADER_HEIGHT_DP) - SPACING_ACTIONS
     }
 
     private fun buttonTextSize(deviceParameters: DeviceParameters, text: String): SpProp {

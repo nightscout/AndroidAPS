@@ -561,6 +561,13 @@ class ComposeMainActivity : AppCompatActivity() {
                                     }
                                 )
 
+                            effect.group.permissions.contains(Manifest.permission.USE_FULL_SCREEN_INTENT)              ->
+                                startActivity(
+                                    Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).apply {
+                                        data = "package:$packageName".toUri()
+                                    }
+                                )
+
                             effect.group.permissions.contains(PluginStore.PERMISSION_NOTIFICATION_LISTENER)             ->
                                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                         }

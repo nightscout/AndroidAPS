@@ -20,6 +20,8 @@
     <string name="permission_directory_description">Select a directory for application settings and log files</string>
     <string name="permission_notifications_title">Notifications</string>
     <string name="permission_notifications_description">Required to show alerts, alarms, and pump status updates</string>
+    <string name="permission_fsi_title">Full screen alarms</string>
+    <string name="permission_fsi_description">Required so alarms can wake the screen and show full screen while the phone is locked</string>
 
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
