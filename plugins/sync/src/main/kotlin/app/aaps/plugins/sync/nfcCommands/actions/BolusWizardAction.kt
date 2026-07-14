@@ -9,7 +9,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.objects.wizard.BolusWizard
-import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
@@ -103,7 +102,7 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         val profile = plugin.profileFunction.getProfile() ?: return null
         val profileName = plugin.profileFunction.getOriginalProfileName()
         val tempTarget = plugin.persistenceLayer.getTemporaryTargetActiveAt(plugin.dateUtil.now())
-        val bg = plugin.glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
+        val bgMgdl = plugin.glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
         val cob = plugin.iobCobCalculator.getCobInfo("NFC").displayCob ?: 0.0
 
         val wizard = plugin.bolusWizard
@@ -113,7 +112,7 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             tempTarget = tempTarget,
             carbs = carbs,
             cob = cob,
-            bg = bg,
+            bg = plugin.profileUtil.fromMgdlToUnits(bgMgdl),
             correction = 0.0,
             useBg = useBg,
             useCob = useCOB,
