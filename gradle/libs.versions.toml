@@ -1,6 +1,6 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "9.2.1"
+gradlePlugin = "9.3.0"
 googleServices = "4.5.0"
 kotlin = "2.4.0"
 room = "2.8.4"
