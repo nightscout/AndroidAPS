@@ -4,11 +4,13 @@ import android.Manifest
 import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.work.WorkManager
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
 import app.aaps.implementation.plugin.PluginStore
@@ -57,9 +59,12 @@ class DanaRsEmulatorPumpTest {
     @Inject lateinit var bleTransport: BleTransport
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var config: Config
     @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+
+    private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 
     private lateinit var emulator: EmulatorBleTransport
     private var serviceBound = false
@@ -119,6 +124,13 @@ class DanaRsEmulatorPumpTest {
 
     @After
     fun tearDown() {
+        // changePump() fires commandQueue.readStatus when the pump is configured, which runs a real
+        // connection through a QueueWorker. That work is not scoped to this test — left running it
+        // keeps talking to the pump and posting notifications into whichever test comes next, whose
+        // UI then recomposes under uiautomator (SetupWizardE2EHiltTest died with a
+        // StaleObjectException that way, CI build 40253). Drain it before anything else.
+        runCatching { commandQueue.clear() }
+        runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { danaRSPlugin.disconnect("test end") }
         // Unbind before the component dies — see the note in setUp. onStop calls unbindService.
         runCatching { danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, false) }
