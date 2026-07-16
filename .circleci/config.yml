@@ -16,6 +16,17 @@ jobs:
     steps:
       - checkout
 
+      # The runner is self-hosted, so build/ survives between jobs (it is gitignored,
+      # and checkout does not remove it). Both the "Save test results" find below and
+      # jacocoAllDebugReport collect whatever files happen to be on disk, so results
+      # from previous jobs get reported as if they ran this time. Drop them first.
+      - run:
+          name: Remove stale test/coverage outputs from previous runs
+          command: |
+            find . -type d -path "*/build/outputs/androidTest-results" -prune -exec rm -rf {} +
+            find . -type d -path "*/build/outputs/code_coverage" -prune -exec rm -rf {} +
+            find . -type d -path "*/build/outputs/unit_test_code_coverage" -prune -exec rm -rf {} +
+
       - run:
           name: Compile all test sources
           command: |
@@ -41,36 +52,46 @@ jobs:
             emulator -avd citest -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           background: true
 
+      # The instrumented tests are wait-bound (database observers, autosens settles), not
+      # compute-bound, so the box sits mostly idle for the ~5 minutes they take. The unit
+      # tests are the opposite: CPU-bound and ~8 minutes. Running both in ONE Gradle
+      # invocation lets org.gradle.parallel overlap them, so the unit tests fill the cores
+      # the emulator is not using instead of running afterwards on an idle emulator-less box.
+      # Keeping them in one invocation (rather than a background step) means a failure in
+      # either still fails the job -- a background step's exit code would be ignored.
       - run:
-          name: Run connectedFullDebugAndroidTest
+          name: Run connectedFullDebugAndroidTest + testFullDebugUnitTest
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
             export JAVA_TOOL_OPTIONS="-Xmx6g"
-            ./gradlew \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseG1GC -XX:MaxMetaspaceSize=1g -Xss1024m" \
+            # The root connectedFullDebugAndroidTest task builds, dexes, signs and packages
+            # an androidTest APK for every module (46 of them), while only a handful actually
+            # contain androidTest sources. Derive the task list from the modules that really
+            # have tests, so a new test module is picked up automatically without editing this file.
+            TASKS=""
+            for module in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
+              TASKS="$TASKS :$module:connectedFullDebugAndroidTest"
+            done
+            if [ -z "$TASKS" ]; then echo "No modules with androidTest sources found"; exit 1; fi
+            echo "Running:$TASKS testFullDebugUnitTest"
+            # jvmargs deliberately match gradle.properties (and the compile step) verbatim:
+            # a daemon is only reused by a build whose JVM args are identical, so the previous
+            # G1GC value here forked a second 8g daemon that stayed resident alongside the
+            # first. One daemon now serves compile -> tests -> jacoco, which frees ~8g -- the
+            # headroom the unit-test forks and the emulator now need at the same time.
+            ./gradlew --continue \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
-            -Dorg.gradle.workers.max=4 \
+            -Dorg.gradle.workers.max=16 \
             -Dorg.gradle.daemon=true \
-            connectedFullDebugAndroidTest
+            $TASKS testFullDebugUnitTest
 
       - run:
           name: Kill emulators
           command: |
             echo "Killing emulators"
             adb devices | grep emulator | cut -f1 | while read -r line; do adb -s $line emu kill; done
-
-      - run:
-          name: Run testFullDebugUnitTest
-          command: |
-            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-            export ANDROID_HOME=/usr/lib/android-sdk
-            ./gradlew \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx3g" \
-            -Dorg.gradle.workers.max=22 \
-            -Dorg.gradle.daemon=true \
-            testFullDebugUnitTest
+          when: always
 
       - run:
           name: Run jacocoAllDebugReport
@@ -82,6 +103,9 @@ jobs:
       - run:
           name: Save test results
           command: |
+            # ~/test-results also survives between jobs on the self-hosted runner, so wipe
+            # it rather than adding to whatever the previous job left behind.
+            rm -rf ~/test-results
             mkdir -p ~/test-results/junit/
             find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;
           when: always
