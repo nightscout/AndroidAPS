@@ -27,12 +27,25 @@ jobs:
             find . -type d -path "*/build/outputs/code_coverage" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/unit_test_code_coverage" -prune -exec rm -rf {} +
 
+      # GRADLE_PIN is defined here and reused by the later Gradle steps via BASH_ENV. It must be
+      # applied to THIS step above all: taskset only pins the process it launches, and the Gradle
+      # daemon is what actually runs the tests and forks the test workers (which inherit its
+      # affinity). The daemon is started by this step, so pinning a later gradlew launcher alone
+      # would do nothing. Safe because "Kill java processes" kills the daemons at job end, so
+      # every job starts a fresh, pinned one.
       - run:
           name: Compile all test sources
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            ./gradlew \
+            if command -v taskset > /dev/null; then
+              echo 'export GRADLE_PIN="taskset -c 0-17"' >> "$BASH_ENV"
+              export GRADLE_PIN="taskset -c 0-17"
+            else
+              echo "taskset unavailable, running unpinned"
+              echo 'export GRADLE_PIN=""' >> "$BASH_ENV"
+            fi
+            $GRADLE_PIN ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.daemon=true \
@@ -44,22 +57,48 @@ jobs:
           command: |
             echo "no" | /usr/lib/android-sdk/cmdline-tools/13.0/bin/avdmanager --verbose create avd -n citest -k "system-images;android-31;google_apis_playstore;x86_64" --force
 
+      # Sample memory/load every 10s for the whole job. The previous overlap attempt (build
+      # 40246) froze the emulator for 63s and we could not tell whether that was CPU
+      # oversubscription or swap thrash. This makes the next failure diagnosable.
+      - run:
+          name: Sample memory and load
+          background: true
+          command: |
+            while true; do
+              echo "$(date +%T) $(free -m | sed -n '2p') load:$(cut -d' ' -f1-3 /proc/loadavg)"
+              sleep 10
+            done
+
+      # Pin the emulator to its own cores. The instrumented tests are wait-bound and the
+      # emulator only used ~4 cores when healthy, but it must stay *scheduled*: under the
+      # overlap it lost the CPU, froze, and adb dropped it. Gradle gets cores 0-17 (below),
+      # the emulator gets 18-23 to itself. Cheap insurance -- it is idle most of the time.
       - run:
           name: Launch emulator
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            emulator -avd citest -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+            PIN=""
+            if command -v taskset > /dev/null; then PIN="taskset -c 18-23"; else echo "taskset unavailable, running unpinned"; fi
+            $PIN emulator -avd citest -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           background: true
 
-      # NOTE: overlapping testFullDebugUnitTest into this invocation (to use the ~20 cores the
-      # wait-bound instrumented tests leave idle) cut the job from 20m49s to 14m00s, but starved
-      # the emulator: it froze for 63s, adb dropped it, and :database:impl failed with
-      # "No online devices found". maxParallelForks is availableProcessors()/2 = 12 *per Test
-      # task*, so 56 unit-test tasks oversubscribe the box. Retry only with the fork count
-      # capped and memory/swap measured -- see build 40246.
+      # connectedFullDebugAndroidTest (451s) and testFullDebugUnitTest (477s) used to run back
+      # to back -- 928s of doing one thing at a time on a 24-core box. The instrumented tests
+      # are wait-bound (database observers, autosens settles) and leave ~20 cores idle; the unit
+      # tests are CPU-bound. One Gradle invocation lets org.gradle.parallel overlap them, so the
+      # stretch costs max(451, 477) instead of the sum.
+      #
+      # Build 40246 tried this unpinned and starved the emulator: it froze for 63s, adb dropped
+      # it, and :database:impl failed with "No online devices found" (every instrumented test
+      # also ran 1.5x-13x slower). Gradle is now pinned to cores 0-17 with the emulator alone on
+      # 18-23. Pinning also caps the fork count for free: maxParallelForks is
+      # availableProcessors()/2, and availableProcessors() reports 18 under the affinity mask.
+      #
+      # Kept as ONE invocation rather than a background step so a failure in either suite still
+      # fails the job -- a background step's exit code is ignored.
       - run:
-          name: Run connectedFullDebugAndroidTest
+          name: Run connectedFullDebugAndroidTest + testFullDebugUnitTest
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
@@ -73,16 +112,18 @@ jobs:
               TASKS="$TASKS :$module:connectedFullDebugAndroidTest"
             done
             if [ -z "$TASKS" ]; then echo "No modules with androidTest sources found"; exit 1; fi
-            echo "Running:$TASKS"
+            echo "Running:$TASKS testFullDebugUnitTest"
             # jvmargs deliberately omitted so they match gradle.properties (and the compile and
             # jacoco steps) verbatim: a daemon is only reused by a build whose JVM args are
             # identical, so the previous G1GC value here forked a second 8g daemon that stayed
             # resident alongside the first. One daemon now serves compile -> tests -> jacoco.
-            ./gradlew \
+            # --continue so a flaky unit test does not abort the instrumented suite (and vice
+            # versa); the job still fails, but both suites report.
+            $GRADLE_PIN ./gradlew --continue \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
-            -Dorg.gradle.workers.max=4 \
+            -Dorg.gradle.workers.max=16 \
             -Dorg.gradle.daemon=true \
-            $TASKS
+            $TASKS testFullDebugUnitTest
 
       - run:
           name: Kill emulators
@@ -90,17 +131,6 @@ jobs:
             echo "Killing emulators"
             adb devices | grep emulator | cut -f1 | while read -r line; do adb -s $line emu kill; done
           when: always
-
-      - run:
-          name: Run testFullDebugUnitTest
-          command: |
-            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-            export ANDROID_HOME=/usr/lib/android-sdk
-            ./gradlew \
-            -Dkotlin.daemon.jvm.options="-Xmx3g" \
-            -Dorg.gradle.workers.max=22 \
-            -Dorg.gradle.daemon=true \
-            testFullDebugUnitTest
 
       - run:
           name: Run jacocoAllDebugReport
