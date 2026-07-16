@@ -23,10 +23,10 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Base64
 import javax.inject.Inject
 
 /**
@@ -41,13 +41,17 @@ import javax.inject.Inject
  * needing a real Android component + `HasAndroidInjector` — neither of which exists off-device.
  * So this is the first test of the plugin/service layer at all.
  *
- * ## Why BLE5 (Dana-i)
- * Its handshake is the simplest of the three the emulator speaks: a stored pairing key and no
- * passkey round-trip (v1) or key negotiation (v3), so a connect needs only seeded preferences.
- * The values mirror `BLECommBLE5IntegrationTest` so both sides of the protocol are pinned the same.
+ * ## All three RS handshakes
+ * `connect_completes*HandshakeAgainstEmulator` covers each encryption the emulator speaks — BLE5
+ * (Dana-i) with a stored key, v3 with negotiated keys, v1 by pairing from scratch. They differ only
+ * below `BLEComm`, so the rest of the assertions here run on BLE5 alone rather than three times
+ * over. The seeded values mirror the JVM `BLEComm*IntegrationTest`s, which pin both sides the same.
  *
- * The emulator is selected purely by [ExternalOptions.EMULATE_DANA_BLE5] — see [EmulatedOptions]
- * for why a test has to report that rather than drop the production marker file.
+ * The DanaR family (`EMULATE_DANA_R`/`_KOREAN`/`_V2`) is not here: those are different plugins over
+ * `RfcommTransport`, not this one — see `DanaREmulatorPumpTest`.
+ *
+ * The emulator is selected purely by the `EMULATE_*` option — see [EmulatedOptions] for why a test
+ * has to report that rather than drop the production marker file.
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -69,11 +73,16 @@ class DanaRsEmulatorPumpTest {
     private lateinit var emulator: EmulatorBleTransport
     private var serviceBound = false
 
-    @Before
-    fun setUp() {
-        // Before inject(): BleTransport is @Singleton, so DanaModules reads config.isEnabled once,
-        // when the graph first constructs it.
-        EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_DANA_BLE5)
+    /**
+     * Brings the driver up against the emulated [variant] and blocks until its service is bound.
+     *
+     * Called from each test rather than `@Before` because the variant has to be chosen *before*
+     * `hiltRule.inject()` — `BleTransport` is `@Singleton`, so `DanaModules` reads
+     * `config.isEnabled` once, when the graph first constructs it. `HiltAndroidRule` builds a fresh
+     * component per test method, so each test gets its own pump.
+     */
+    private fun bringUpPump(variant: ExternalOptions) {
+        EmulatedOptions.enabled = setOf(variant)
         hiltRule.inject()
 
         // BLEComm.connect gates on BLUETOOTH_CONNECT before it ever reaches the transport, so an
@@ -84,17 +93,15 @@ class DanaRsEmulatorPumpTest {
 
         // The pump the driver believes it is paired to. The emulator answers on whatever address is
         // passed to gatt.connect(), but the plugin refuses to connect with either field blank
-        // (DanaRSPlugin.connect), and BLEComm looks the pairing key up by device *name*.
+        // (DanaRSPlugin.connect), and BLEComm looks its keys up by device *name*.
         preferences.put(DanaStringNonKey.RsName, DEVICE_NAME)
         preferences.put(DanaStringNonKey.MacAddress, DEVICE_ADDRESS)
         preferences.put(DanaStringNonKey.Password, PASSWORD)
-        preferences.put(DanaStringComposedKey.Ble5PairingKey, DEVICE_NAME, value = BLE5_PAIRING_KEY)
 
         emulator = bleTransport as EmulatorBleTransport
-        // Pump side of the same key — a mismatch fails the handshake rather than the assertion.
-        emulator.pumpState.ble5PairingKey = BLE5_PAIRING_KEY
         emulator.pairingDelayMs = 0
         emulator.writeLatencyMs = 0
+        seedPairingFor(variant)
 
         // The plugin/config init MainApp.onCreate does, which the Hilt test app doesn't.
         pluginStore.plugins = pluginList
@@ -122,6 +129,46 @@ class DanaRsEmulatorPumpTest {
         }
     }
 
+    /**
+     * Whatever each handshake needs to complete without a human.
+     *
+     * Mirrors the JVM-side `BLEComm*IntegrationTest`s, which pin the same values on both sides.
+     * V1 is absent deliberately: with no stored pairing key `BLEComm` sends a pairing request, the
+     * emulator confirms it and returns the key — so the pairing path itself gets exercised, which
+     * is the interesting half of that variant.
+     */
+    private fun seedPairingFor(variant: ExternalOptions) {
+        when (variant) {
+            ExternalOptions.EMULATE_DANA_BLE5  -> {
+                preferences.put(DanaStringComposedKey.Ble5PairingKey, DEVICE_NAME, value = BLE5_PAIRING_KEY)
+                // Pump side of the same key — a mismatch fails the handshake rather than the assertion.
+                emulator.pumpState.ble5PairingKey = BLE5_PAIRING_KEY
+            }
+
+            // Encrypted with these, so app and pump must agree or every later packet is garbage.
+            // Seeding them is also what skips the PIN screen (BLEComm.sendV3PairingInformation
+            // launches EnterPinActivity when either key is missing, which no test can answer).
+            ExternalOptions.EMULATE_DANA_RS_V3 -> {
+                val encoder = Base64.getEncoder()
+                val state = emulator.pumpState
+                preferences.put(
+                    DanaStringComposedKey.V3ParingKey, DEVICE_NAME,
+                    value = encoder.encodeToString(state.v3PairingKey)
+                )
+                preferences.put(
+                    DanaStringComposedKey.V3RandomParingKey, DEVICE_NAME,
+                    value = encoder.encodeToString(state.v3RandomPairingKey)
+                )
+                preferences.put(
+                    DanaStringComposedKey.V3RandomSyncKey, DEVICE_NAME,
+                    value = String.format("%02x", state.v3RandomSyncKey)
+                )
+            }
+
+            else                               -> Unit
+        }
+    }
+
     @After
     fun tearDown() {
         // changePump() fires commandQueue.readStatus when the pump is configured, which runs a real
@@ -141,17 +188,25 @@ class DanaRsEmulatorPumpTest {
             preferences.remove(DanaStringNonKey.MacAddress)
             preferences.remove(DanaStringNonKey.Password)
             preferences.remove(DanaStringComposedKey.Ble5PairingKey, DEVICE_NAME)
+            // Cleared unconditionally: v1 stores a key it paired for itself, and a key left over
+            // from one variant would change how the next test's handshake starts.
+            preferences.remove(DanaStringComposedKey.ParingKey, DEVICE_NAME)
+            preferences.remove(DanaStringComposedKey.V3ParingKey, DEVICE_NAME)
+            preferences.remove(DanaStringComposedKey.V3RandomParingKey, DEVICE_NAME)
+            preferences.remove(DanaStringComposedKey.V3RandomSyncKey, DEVICE_NAME)
         }
         EmulatedOptions.enabled = emptySet()
     }
 
     @Test
     fun bleTransport_isTheEmulator() {
+        bringUpPump(ExternalOptions.EMULATE_DANA_BLE5)
         assertThat(bleTransport).isInstanceOf(EmulatorBleTransport::class.java)
     }
 
     @Test
     fun plugin_isConfiguredFromSeededPreferences() {
+        bringUpPump(ExternalOptions.EMULATE_DANA_BLE5)
         assertThat(danaRSPlugin.mDeviceName).isEqualTo(DEVICE_NAME)
         assertThat(danaRSPlugin.isConfigured()).isTrue()
     }
@@ -160,11 +215,31 @@ class DanaRsEmulatorPumpTest {
     fun danaRSService_binds() {
         // Separated from the handshake assertion so a binding failure and a protocol failure are
         // distinguishable: this one failing means the service never came up at all.
+        bringUpPump(ExternalOptions.EMULATE_DANA_BLE5)
         assertThat(serviceBound).isTrue()
     }
 
+    // One per handshake the emulator speaks. They share everything above the transport, so what
+    // each actually proves is that its own encryption and pairing survive the real plugin/service
+    // path: BLE5 with a stored key, v3 with negotiated keys, v1 by pairing from scratch.
+
     @Test
     fun connect_completesBle5HandshakeAgainstEmulator() {
+        assertConnects(ExternalOptions.EMULATE_DANA_BLE5)
+    }
+
+    @Test
+    fun connect_completesV1HandshakeAgainstEmulator() {
+        assertConnects(ExternalOptions.EMULATE_DANA_RS_V1)
+    }
+
+    @Test
+    fun connect_completesV3HandshakeAgainstEmulator() {
+        assertConnects(ExternalOptions.EMULATE_DANA_RS_V3)
+    }
+
+    private fun assertConnects(variant: ExternalOptions) {
+        bringUpPump(variant)
         assertThat(serviceBound).isTrue()
         val connected = awaitTrue(CONNECT_TIMEOUT) {
             danaRSPlugin.connect("e2e")

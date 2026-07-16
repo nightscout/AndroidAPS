@@ -32,6 +32,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
+import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
@@ -238,6 +239,23 @@ class DanaRsEmulatorUiTest {
         // A value no default produces, so finding it on screen can only mean it came from the pump
         // (see refreshStatusFromPump). The emulator's own default here is 25.
         emulator.pumpState.maxDailyTotalUnits = MAX_DAILY_UNITS
+        seedPumpHistory()
+    }
+
+    /**
+     * One alarm record on the emulated pump, for [visitDanaHistory] to load.
+     *
+     * An alarm because the history screen opens on that type (`DanaHistoryViewModel` selects the
+     * first available), so the test never has to pick a chip. Timestamped in the past because the
+     * driver asks for everything *after* a "from" instant and the store compares strictly.
+     */
+    private fun seedPumpHistory() {
+        emulator.pumpState.reviewHistoryStore.addEvent(
+            code = ReviewRecordCodes.ALARM,
+            timestamp = dateUtil.now() - HISTORY_RECORD_AGE_MS,
+            param1 = 0,
+            param2 = ReviewRecordCodes.Alarm.OCCLUSION
+        )
     }
 
     /**
@@ -439,13 +457,18 @@ class DanaRsEmulatorUiTest {
     }
 
     /**
-     * Overview → Pump history (DanaHistoryScreen), then back to the overview.
+     * Overview → Pump history → Refresh, which loads the type's records off the pump and renders
+     * them (`REVIEW__ALARM` here → `DanaRSPacketHistory` → `DanaHistoryRecordDao` → the screen).
      *
-     * Asserts on the "Alarms" history-type chip rather than the screen's "Refresh" button: the Dana
+     * Opening asserts on the "Alarms" chip rather than the screen's "Refresh" button: the Dana
      * overview has a "Refresh" of its own, so a tap that never landed would still satisfy it.
+     * Then the [seedPumpHistory] record has to arrive — the screen starts on "No records found",
+     * so this fails if the load returns nothing, which is what it did before the emulator learned
+     * to serve the review-history commands.
      */
     private fun visitDanaHistory() {
         openVia("Pump history", expect = "Alarms")
+        openVia("Refresh", expect = HISTORY_ALARM_TEXT)
         returnToDanaOverview()
     }
 
@@ -640,6 +663,10 @@ class DanaRsEmulatorUiTest {
         /** Seeded onto the emulator; the app's own defaults never produce it. */
         private const val MAX_DAILY_UNITS = 42.0
         private const val MAX_DAILY_UNITS_TEXT = "42.00 U"
+
+        /** The alarm seeded onto the pump, as DanaRSPacketHistory names it for the screen. */
+        private const val HISTORY_ALARM_TEXT = "Occlusion"
+        private const val HISTORY_RECORD_AGE_MS = 60 * 60 * 1000L
 
         private const val INIT_PUMP_TIMEOUT = 60_000L
         private const val REFRESH_TIMEOUT = 30_000L

@@ -103,6 +103,40 @@ class HistoryEventStore {
         return data
     }
 
+    /**
+     * Build a review-history record payload (10 bytes), as served by the per-type `REVIEW__*`
+     * commands behind the pump history screen — a different wire format and a different consumer
+     * from [buildEventData]'s APS event history, so the two are kept in separate stores.
+     *
+     * Layout: `[recordCode][year-2000][month][day][hour][min][sec][subCode][value_hi][value_lo]`,
+     * where [HistoryEvent.param1] is the raw value (hundredths for insulin: 150 = 1.50 U) and
+     * [HistoryEvent.param2] is the record's sub-code — its meaning depends on `recordCode`, e.g.
+     * the bolus type (`0x80` = standard) for `0x02`, or the alarm letter (`'O'` = occlusion) for
+     * `0x0a`. Local time, matching the parser's `DateTime(2000 + year, ...)`.
+     */
+    fun buildReviewRecordData(event: HistoryEvent): ByteArray {
+        val data = ByteArray(10)
+        val ldt = Instant.fromEpochMilliseconds(event.timestamp)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+        data[0] = event.code.toByte()
+        data[1] = (ldt.year - 2000).toByte()
+        data[2] = ldt.month.number.toByte()
+        data[3] = ldt.day.toByte()
+        data[4] = ldt.hour.toByte()
+        data[5] = ldt.minute.toByte()
+        data[6] = ldt.second.toByte()
+        data[7] = event.param2.toByte()
+        data[8] = ((event.param1 shr 8) and 0xFF).toByte()
+        data[9] = (event.param1 and 0xFF).toByte()
+        return data
+    }
+
+    /**
+     * End-of-history marker for the review commands: a single result byte, 0 = success. It is the
+     * payload's *length* that ends the upload — the driver treats any 1-byte reply as the end.
+     */
+    val reviewDoneMarker: ByteArray get() = byteArrayOf(0x00)
+
     /** Done marker byte */
     val doneMarker: ByteArray get() = byteArrayOf(0xFF.toByte())
 }

@@ -2,6 +2,7 @@ package app.aaps.pump.danars.emulator
 
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.emulator.HistoryEvent
+import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.danars.encryption.BleEncryption
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -85,6 +86,16 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_CHECK             -> processGetPumpCheck()
             BleEncryption.DANAR_PACKET__OPCODE_REVIEW__INITIAL_SCREEN_INFORMATION -> processInitialScreenInformation()
             BleEncryption.DANAR_PACKET__OPCODE_REVIEW__SET_HISTORY_UPLOAD_MODE    -> processSetHistoryUploadMode(params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__BOLUS                      -> processReviewHistory(opCode, ReviewRecordCodes.BOLUS, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__DAILY                      -> processReviewHistory(opCode, ReviewRecordCodes.DAILY, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__PRIME                      -> processReviewHistory(opCode, ReviewRecordCodes.PRIME, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__REFILL                     -> processReviewHistory(opCode, ReviewRecordCodes.REFILL, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__BLOOD_GLUCOSE              -> processReviewHistory(opCode, ReviewRecordCodes.GLUCOSE, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__CARBOHYDRATE               -> processReviewHistory(opCode, ReviewRecordCodes.CARBO, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__TEMPORARY                  -> processReviewHistory(opCode, ReviewRecordCodes.TEMP_BASAL, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__SUSPEND                    -> processReviewHistory(opCode, ReviewRecordCodes.SUSPEND, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__ALARM                      -> processReviewHistory(opCode, ReviewRecordCodes.ALARM, params)
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__BASAL                      -> processReviewHistory(opCode, ReviewRecordCodes.BASAL_HOUR, params)
 
             // Basal
             BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_NUMBER          -> processGetProfileNumber()
@@ -538,6 +549,52 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     }
 
     private fun processApsSetEventHistory(@Suppress("unused") params: ByteArray): ByteArray = byteArrayOf(0x00) // OK
+
+    // --- Review history (the per-type pump history screen) ---
+
+    /**
+     * Serve one type of review history: every record of [recordCode] newer than the request's
+     * "from" timestamp, followed by the end marker.
+     *
+     * Same shape as [processApsHistoryEvents] — first record inline, the rest plus the terminator
+     * as spontaneous messages under the same [opCode] — because the driver's wait loop is the same:
+     * `DanaRSService.loadHistory` blocks until a reply's payload is short enough to read as the
+     * end, so the marker must always be sent, including for an empty history.
+     *
+     * Filtered by [recordCode] rather than served wholesale: each `REVIEW__*` command asks for one
+     * type, and a real pump answers with that type only. The driver would not notice — it
+     * classifies on the record's own code, not the opcode it asked under — but a test asserting
+     * "the bolus screen shows no alarms" should be able to trust this.
+     */
+    private fun processReviewHistory(opCode: Int, recordCode: Int, params: ByteArray): ByteArray {
+        val store = state.reviewHistoryStore
+        val fromMillis = store.parseFromTimestamp(params)
+        val records = store.getEventsAfter(fromMillis).filter { it.code == recordCode }
+
+        if (records.isEmpty()) return store.reviewDoneMarker
+
+        launchTracked {
+            @Suppress("SleepInsteadOfDelay")
+            for (i in 1 until records.size) {
+                if (historyEventDelayMs > 0) Thread.sleep(historyEventDelayMs)
+                if (Thread.currentThread().isInterrupted) return@launchTracked
+                onSpontaneousMessage?.invoke(
+                    BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
+                    opCode,
+                    store.buildReviewRecordData(records[i])
+                )
+            }
+            Thread.sleep(10)
+            if (Thread.currentThread().isInterrupted) return@launchTracked
+            onSpontaneousMessage?.invoke(
+                BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
+                opCode,
+                store.reviewDoneMarker
+            )
+        }
+
+        return store.buildReviewRecordData(records[0])
+    }
 
     // --- Helpers ---
 
