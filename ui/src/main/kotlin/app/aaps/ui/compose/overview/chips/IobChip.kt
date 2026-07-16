@@ -20,9 +20,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 

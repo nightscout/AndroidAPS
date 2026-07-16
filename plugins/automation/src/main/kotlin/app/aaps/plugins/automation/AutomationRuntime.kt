@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
@@ -110,6 +109,9 @@ import java.text.DecimalFormat
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Standalone automation runtime — no longer a [PluginBase].
@@ -200,7 +202,7 @@ class AutomationRuntime @Inject constructor(
     override val events: StateFlow<List<AutomationEvent>> = _events.asStateFlow()
 
     // Persistence is driven by EDITS only ([requestPersist]), never by [loadFromSP] — so applying a
-    // master push is a pure verbatim re-parse with no store, hence no echo. Deliberately decoupled from
+    // master push is a pure verbatim reparse with no store, hence no echo. Deliberately decoupled from
     // [_events] (the UI snapshot stream) so a load can refresh the UI/wear without persisting.
     private val _persist = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
@@ -217,7 +219,7 @@ class AutomationRuntime @Inject constructor(
 
     /**
      * Definition edit from an in-place external editor (e.g. toggleEnabled): refresh the UI and request
-     * a persist. The client→master sync version is stamped automatically by PreferencesImpl when
+     * persist. The client→master sync version is stamped automatically by PreferencesImpl when
      * storeToSP writes the bidirectionally-synced AutomationEvents key.
      */
     @Synchronized
@@ -234,8 +236,10 @@ class AutomationRuntime @Inject constructor(
      * see no difference. Private — leaks only via `events` which exposes the `List<AutomationEvent>`
      * interface.
      */
-    private class IdentityList<T>(private val delegate: List<T>) : List<T> by delegate {
+    private class IdentityList<T>(private val delegate: List<T>) : AbstractList<T>() {
 
+        override val size: Int get() = delegate.size
+        override fun get(index: Int): T = delegate[index]
         override fun equals(other: Any?): Boolean = this === other
         override fun hashCode(): Int = System.identityHashCode(this)
     }
@@ -295,12 +299,12 @@ class AutomationRuntime @Inject constructor(
         // Persist on EDITS only (never on a load — that's the whole point of the verbatim model).
         // debounce coalesces rapid edit-flow mutations (toggle/move/save back-to-back) into a single write.
         @Suppress("OPT_IN_USAGE")
-        _persist.debounce(300).onEach { storeToSP() }.launchIn(newScope)
+        _persist.debounce(300.milliseconds).onEach { storeToSP() }.launchIn(newScope)
         // Refresh the wear UserAction tile on any cache change — fires for NS-synced edits too,
         // not only when the in-app Automation screen is open. debounce(300) prevents per-drag-tick
         // tile storms during reorder.
         @Suppress("OPT_IN_USAGE")
-        _events.drop(1).debounce(300).onEach { rxBus.send(EventWearUpdateTiles()) }.launchIn(newScope)
+        _events.drop(1).debounce(300.milliseconds).onEach { rxBus.send(EventWearUpdateTiles()) }.launchIn(newScope)
 
         // Adopt definitions written behind our back via putRemote — BOTH directions:
         //  • master→client cold-sync push (on the client),
@@ -308,7 +312,7 @@ class AutomationRuntime @Inject constructor(
         //    master reload the old bespoke `onVerifiedAutomationUpdate`/`reloadInternalState()` did,
         //    which the move to the generic pref channel dropped.
         // Skip OUR OWN writes (storeToSP, incl. master last-run persists) via the value echo-check so
-        // the master doesn't re-parse on its own edits; loadFromSP preserves lastRun by id, so a real
+        // the master doesn't reparse on its own edits; loadFromSP preserves lastRun by id, so a real
         // remote change doesn't reset run-timers for unchanged events.
         preferences.observe(StringNonKey.AutomationEvents).drop(1).onEach { json ->
             if (json != lastSelfWritten) loadFromSP()
@@ -319,10 +323,10 @@ class AutomationRuntime @Inject constructor(
         if (!config.APS) return
 
         newScope.launch {
-            delay(T.mins(1).msecs())
+            delay(1.minutes)
             while (isActive) {
                 processActions()
-                delay(T.secs(150).msecs())
+                delay(150.seconds)
             }
         }
 
@@ -396,13 +400,13 @@ class AutomationRuntime @Inject constructor(
 
     /**
      * The exact JSON this runtime last wrote itself (edit or last-run persist). The self-observe below
-     * compares against it to skip OUR OWN writes — so the master doesn't re-parse (and clobber the
+     * compares against it to skip OUR OWN writes — so the master doesn't reparse (and clobber the
      * runtime list) on its own edits / per-tick last-run persists, only on a genuine remote push.
      */
     @Volatile private var lastSelfWritten: String? = null
 
     // Pure compose — only ever reached from the EDIT-driven [_persist] trigger (never from a load), so
-    // no band-aid is needed: a verbatim load doesn't persist, and an edit always changes content.
+    // no Band-Aid is needed: a verbatim load doesn't persist, and an edit always changes content.
     private fun storeToSP() {
         val json = eventsToJson()
         lastSelfWritten = json
@@ -424,12 +428,12 @@ class AutomationRuntime @Inject constructor(
 
     // Verbatim mirror of the persisted definitions — parse only, NO store, NO seed, NO id-backfill-store.
     // Id-backfill + the EMPTY_EVENT starter happen once in [bootstrap] (master); a master push is already
-    // canonical, so applying it is a pure re-parse → no store → no echo. @VisibleForTesting + internal:
+    // canonical, so applying it is a pure reparse → no store → no echo. @VisibleForTesting + internal:
     // production reaches this only via start()/self-observe; tests drive it to assert the load behavior.
     @VisibleForTesting
     @Synchronized
     internal fun loadFromSP() {
-        // Carry run-timers across the re-parse: lastRun isn't serialized, so a naive reload would reset
+        // Carry run-timers across the reparse: lastRun isn't serialized, so a naive reload would reset
         // every event's timer and (on a master that executes) risk re-firing automations right after a
         // remote push. Preserve it by id for events that still exist; new/changed ids start fresh.
         val previousLastRun = automationEvents.associate { it.id to it.lastRun }

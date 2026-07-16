@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -136,6 +137,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val pumpStatusProvider: PumpStatusProvider,
     private val notificationManager: NotificationManager,
     private val runningModeGuard: RunningModeGuard,
+    private val bolusProgressData: BolusProgressData,
     @ApplicationScope private val appScope: CoroutineScope,
     val repository: SmsCommunicatorRepository
 ) : PluginBaseWithPreferences(
@@ -886,6 +888,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     dateUtil = dateUtil,
                     decimalFormatter = decimalFormatter,
                     smsCommunicator = this,
+                    bolusProgressData = bolusProgressData,
                     sendSMSToAllNumbers = ::sendSMSToAllNumbers,
                     shortStatusBlocking = ::shortStatusBlocking,
                     updateLastRemoteBolusTime = { lastRemoteBolusTime = it }

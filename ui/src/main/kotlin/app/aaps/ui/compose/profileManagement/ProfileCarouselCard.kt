@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.time.T
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.ui.R
 import kotlinx.coroutines.delay

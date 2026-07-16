@@ -4,10 +4,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputTimeRange
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -66,7 +66,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.timerange_value, dateUtil.timeString(toMills(range.start)), dateUtil.timeString(toMills(range.end)))
 
     override fun composeIcon() = Icons.Filled.Timer
-    override fun composeIconTint() = IconTint.Time
+    override fun elementType() = ElementType.AUTOMATION
 
     override fun duplicate(): Trigger = TriggerTimeRange(injector, range.start, range.end)
 

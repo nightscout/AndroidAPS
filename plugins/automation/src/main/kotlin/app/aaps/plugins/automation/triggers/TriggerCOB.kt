@@ -3,10 +3,10 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
@@ -72,7 +72,7 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.cobcompared, rh.gs(comparator.value.stringRes), cob.value)
 
     override fun composeIcon() = IcCarbs
-    override fun composeIconTint() = IconTint.Carbs
+    override fun elementType() = ElementType.COB
 
     override fun duplicate(): Trigger = TriggerCOB(injector, this)
 

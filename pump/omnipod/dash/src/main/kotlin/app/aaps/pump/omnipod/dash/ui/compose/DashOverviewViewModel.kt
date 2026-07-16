@@ -96,6 +96,12 @@ class DashOverviewViewModel @Inject constructor(
 
         private const val PLACEHOLDER = "-"
         private const val MAX_TIME_DEVIATION_MINUTES = 10L
+
+        /**
+         * The pod keeps delivering for this long after [OmnipodDashPodStateManager.expiry],
+         * which already reports the nominal expiry with the grace period deducted.
+         */
+        private const val POD_GRACE_PERIOD_HOURS = 8L
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -183,6 +189,7 @@ class DashOverviewViewModel @Inject constructor(
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_firmware_version), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_time_on_pod), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = PLACEHOLDER))
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_connection), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = PLACEHOLDER))
@@ -235,6 +242,16 @@ class DashOverviewViewModel @Inject constructor(
                 else                                                                      -> StatusLevel.NORMAL
             }
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
+
+            // Pod hard end (end of the grace period following expiry)
+            val hardEndAt = expiresAt?.plusHours(POD_GRACE_PERIOD_HOURS)
+            val hardEndValue = hardEndAt?.let { dateUtil.dateAndTimeString(it.toEpochSecond() * 1000) } ?: PLACEHOLDER
+            val hardEndLevel = when {
+                hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt)               -> StatusLevel.CRITICAL
+                hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt.minusHours(4)) -> StatusLevel.WARNING
+                else                                                                      -> StatusLevel.NORMAL
+            }
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
 
             // Pod status
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))

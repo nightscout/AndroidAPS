@@ -3,9 +3,9 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.compose.icons.IcPluginSms
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputString
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -20,7 +20,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = R.string.sendsmsactiondescription
     override fun shortDescription(): String = rh.gs(R.string.sendsmsactionlabel, text.value)
     override fun composeIcon() = IcPluginSms
-    override fun composeIconTint() = IconTint.Sms
+    override fun elementType() = ElementType.AUTOMATION
 
     override suspend fun doAction(): PumpEnactResult {
         val result = smsCommunicator.sendNotificationToAllNumbers(text.value)

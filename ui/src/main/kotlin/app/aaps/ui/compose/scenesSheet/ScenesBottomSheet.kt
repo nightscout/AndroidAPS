@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcAutomation
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.core.ui.R as CoreUiR
@@ -93,11 +93,12 @@ fun ScenesBottomSheet(
                                     modifier = Modifier.padding(top = 4.dp)
                                 ) {
                                     item.triggerIcons.forEach { data ->
+                                        val tint = data.elementType?.color() ?: MaterialTheme.colorScheme.onSurfaceVariant
                                         Icon(
                                             imageVector = data.icon,
                                             contentDescription = null,
                                             modifier = Modifier.size(20.dp),
-                                            tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
+                                            tint = tint
                                         )
                                     }
                                     if (item.triggerIcons.isNotEmpty() && item.actionIcons.isNotEmpty()) {
@@ -111,11 +112,12 @@ fun ScenesBottomSheet(
                                         )
                                     }
                                     item.actionIcons.forEach { data ->
+                                        val tint = data.elementType?.color() ?: MaterialTheme.colorScheme.onSurfaceVariant
                                         Icon(
                                             imageVector = data.icon,
                                             contentDescription = null,
                                             modifier = Modifier.size(20.dp),
-                                            tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
+                                            tint = tint
                                         )
                                     }
                                 }
@@ -127,9 +129,10 @@ fun ScenesBottomSheet(
                     leadingContent = {
                         val firstIcon = item.firstActionIcon
                         if (firstIcon != null) {
+                            val tint = firstIcon.elementType?.color() ?: automationColor
                             TonalIcon(
                                 icon = firstIcon.icon,
-                                color = (firstIcon.tint ?: automationColor).copy(alpha = itemAlpha)
+                                color = tint.copy(alpha = itemAlpha)
                             )
                         } else {
                             TonalIcon(

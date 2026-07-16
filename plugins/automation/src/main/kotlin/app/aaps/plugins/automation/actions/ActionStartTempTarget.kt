@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.friendlyDescription
 import app.aaps.core.ui.compose.icons.IcTtHigh
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
@@ -42,6 +43,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = R.string.starttemptarget
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
     override fun composeIcon() = IcTtHigh
+    override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT
 
     override suspend fun doAction(): PumpEnactResult =
         try {

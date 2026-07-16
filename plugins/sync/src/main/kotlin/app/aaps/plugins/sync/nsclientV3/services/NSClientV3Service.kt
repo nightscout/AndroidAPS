@@ -159,33 +159,41 @@ class NSClientV3Service : DaggerService() {
         val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
         val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
         try {
-            // java io.client doesn't support multiplexing. create 2 sockets
-            storageSocket = IO.socket(urlStorage).also { socket ->
-                socket.on(Socket.EVENT_CONNECT, onConnectStorage)
-                socket.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
-                nsClientRepository.addLog("► WS", "do connect storage $reason")
-                socket.connect()
-                socket.on("create", onDataCreateUpdate)
-                socket.on("update", onDataCreateUpdate)
-                socket.on("delete", onDataDelete)
-            }
+            // java io.client doesn't support multiplexing. create 2 sockets.
+            // Assign the field BEFORE attaching listeners / connecting: IO.socket() has already inserted the
+            // socket into socket.io's process-static, never-pruned Manager.nsps cache, so if anything below
+            // throws it must still be reachable by shutdownWebsockets(). Otherwise the socket is orphaned in
+            // nsps with our listeners attached and leaks this service for the process lifetime
+            // (LeakCanary: reconnect Timer → Manager.nsps → Socket.callbacks["disconnect"] → this service).
+            val storage = IO.socket(urlStorage)
+            storageSocket = storage
+            storage.on(Socket.EVENT_CONNECT, onConnectStorage)
+            storage.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
+            storage.on("create", onDataCreateUpdate)
+            storage.on("update", onDataCreateUpdate)
+            storage.on("delete", onDataDelete)
+            nsClientRepository.addLog("► WS", "do connect storage $reason")
+            storage.connect()
             if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
                 preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
-            )
-                alarmSocket = IO.socket(urlAlarm).also { socket ->
-                    socket.on(Socket.EVENT_CONNECT, onConnectAlarms)
-                    socket.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
-                    nsClientRepository.addLog("► WS", "do connect alarm $reason")
-                    socket.connect()
-                    socket.on("announcement", onAnnouncement)
-                    socket.on("alarm", onAlarm)
-                    socket.on("urgent_alarm", onUrgentAlarm)
-                    socket.on("clear_alarm", onClearAlarm)
-                }
+            ) {
+                val alarm = IO.socket(urlAlarm)
+                alarmSocket = alarm
+                alarm.on(Socket.EVENT_CONNECT, onConnectAlarms)
+                alarm.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
+                alarm.on("announcement", onAnnouncement)
+                alarm.on("alarm", onAlarm)
+                alarm.on("urgent_alarm", onUrgentAlarm)
+                alarm.on("clear_alarm", onClearAlarm)
+                nsClientRepository.addLog("► WS", "do connect alarm $reason")
+                alarm.connect()
+            }
         } catch (_: URISyntaxException) {
+            shutdownWebsockets()
             nsClientRepository.addLog("● WS", "Wrong URL syntax")
-        } catch (_: RuntimeException) {
-            nsClientRepository.addLog("● WS", "RuntimeException")
+        } catch (e: RuntimeException) {
+            shutdownWebsockets()
+            nsClientRepository.addLog("● WS", "RuntimeException: ${e.message}")
         }
     }
 

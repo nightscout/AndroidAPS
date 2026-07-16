@@ -46,7 +46,7 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.compose.components.DialogStatusBar
 import app.aaps.ui.compose.overview.chips.CobUiState

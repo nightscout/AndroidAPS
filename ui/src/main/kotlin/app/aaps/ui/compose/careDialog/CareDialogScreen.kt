@@ -56,7 +56,7 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker

@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.actions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Stop
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.R
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
@@ -13,6 +14,7 @@ class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = R.string.stop_processing
     override fun shortDescription(): String = rh.gs(R.string.stop_processing)
     override fun composeIcon() = Icons.Filled.Stop
+    override fun elementType() = ElementType.BG_CHECK
 
     override fun isValid(): Boolean = true
 

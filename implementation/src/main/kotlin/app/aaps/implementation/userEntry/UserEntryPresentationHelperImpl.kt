@@ -16,6 +16,7 @@ import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
@@ -83,7 +84,6 @@ import app.aaps.core.ui.compose.icons.IcStats
 import app.aaps.core.ui.compose.icons.IcTbrHigh
 import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.compose.icons.IcXDrip
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import dagger.Reusable
 import javax.inject.Inject

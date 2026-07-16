@@ -7,9 +7,9 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.TimerUtil
 import dagger.android.HasAndroidInjector
@@ -33,7 +33,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.alarm
     override fun shortDescription(): String = rh.gs(R.string.alarm_message, text.value)
     override fun composeIcon() = Icons.Filled.Alarm
-    override fun composeIconTint() = IconTint.Alarm
+    override fun elementType() = ElementType.BG_CHECK
 
     override fun isValid(): Boolean = true // empty alarm will show app name
 

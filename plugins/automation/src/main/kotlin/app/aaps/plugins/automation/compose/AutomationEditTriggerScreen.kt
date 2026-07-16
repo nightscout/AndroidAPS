@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.iconColor
 import app.aaps.plugins.automation.compose.triggers.TriggerEditor
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
@@ -264,15 +265,13 @@ private fun LeafCard(
         Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 val icon = trigger.composeIcon()
-                if (icon != null) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = trigger.composeIconTint() ?: MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Box(modifier = Modifier.width(6.dp))
-                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = trigger.iconColor(),
+                    modifier = Modifier.size(20.dp)
+                )
+                Box(modifier = Modifier.width(6.dp))
                 Text(
                     text = stringResource(trigger.friendlyName()),
                     style = MaterialTheme.typography.labelLarge,

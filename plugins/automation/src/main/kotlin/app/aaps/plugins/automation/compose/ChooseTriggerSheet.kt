@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.iconColor
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
@@ -97,7 +98,7 @@ data class TriggerOption(
     val className: String,
     val labelResId: Int,
     val icon: androidx.compose.ui.graphics.vector.ImageVector?,
-    val iconTint: androidx.compose.ui.graphics.Color?,
+    val prototype: Trigger,
     val category: TriggerCategory
 ) {
 
@@ -107,7 +108,7 @@ data class TriggerOption(
             className = trigger.javaClass.name,
             labelResId = trigger.friendlyName(),
             icon = trigger.composeIcon(),
-            iconTint = trigger.composeIconTint(),
+            prototype = trigger,
             category = triggerCategoryOf(trigger.javaClass)
         )
     }
@@ -167,7 +168,7 @@ fun ChooseTriggerSheet(
                                     Icon(
                                         imageVector = it,
                                         contentDescription = null,
-                                        tint = opt.iconTint ?: MaterialTheme.colorScheme.onSurface,
+                                        tint = opt.prototype.iconColor(),
                                         modifier = Modifier.size(18.dp)
                                     )
                                 }

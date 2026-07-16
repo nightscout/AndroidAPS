@@ -56,6 +56,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.plugins.constraints.R
@@ -365,7 +366,10 @@ private fun AccomplishedObjectiveContent(
                         modifier = Modifier.padding(top = 4.dp)
                     )
                     TextButton(onClick = onUnfinish) {
-                        Text(stringResource(R.string.objectives_button_unfinish))
+                        Text(
+                            text = stringResource(R.string.objectives_button_unfinish),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
@@ -492,7 +496,10 @@ private fun ActiveObjectiveContent(
                             .weight(1f)
                             .fillMaxHeight()
                     ) {
-                        Text(stringResource(R.string.objectives_button_unstart))
+                        Text(
+                            text = stringResource(R.string.objectives_button_unstart),
+                            textAlign = TextAlign.Center
+                        )
                     }
                     Button(
                         onClick = onVerify,
@@ -501,7 +508,10 @@ private fun ActiveObjectiveContent(
                             .weight(1f)
                             .fillMaxHeight()
                     ) {
-                        Text(stringResource(R.string.objectives_button_verify))
+                        Text(
+                            text = stringResource(R.string.objectives_button_verify),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
@@ -660,7 +670,10 @@ private fun NotStartedObjectiveContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = onStart) {
-            Text(stringResource(R.string.objectives_button_start))
+            Text(
+                text = stringResource(R.string.objectives_button_start),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

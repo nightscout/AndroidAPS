@@ -1,4 +1,4 @@
-package app.aaps.core.ui.compose.navigation
+package app.aaps.core.interfaces.navigation
 
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.keys.BooleanKey

@@ -64,7 +64,7 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef

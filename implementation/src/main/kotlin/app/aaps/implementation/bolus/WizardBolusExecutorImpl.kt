@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
@@ -88,6 +89,7 @@ class WizardBolusExecutorImpl @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val automation: Automation,
     private val notificationManager: NotificationManager,
+    private val bolusProgressData: BolusProgressData,
     @ApplicationScope private val appScope: CoroutineScope
 ) : WizardBolusExecutor {
 
@@ -1204,7 +1206,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         uel.log(action = action, source = source, note = note, listValues = uelValues)
         appScope.launch {
             val result = commandQueue.bolus(detailedBolusInfo)
-            if (!result.success) {
+            if (!result.success && !bolusProgressData.isStopPressed) {
                 val errorText = rh.gs(R.string.treatmentdeliveryerror) + "\n" + result.comment
                 // Async delivery failure: the entry dialog is long gone, so surface it as an URGENT notification —
                 // the single, reliable master-side alarm for EVERY bolus path, regardless of which UI started it.

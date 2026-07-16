@@ -81,6 +81,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -121,7 +122,6 @@ import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkDialog
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalClearExportPasswordStore

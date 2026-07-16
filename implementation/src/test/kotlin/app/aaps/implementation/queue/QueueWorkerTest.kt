@@ -14,8 +14,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +39,6 @@ class QueueWorkerTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var localAlertUtils: LocalAlertUtils
@@ -51,6 +50,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private val bolusProgressData by lazy { BolusProgressData(ch, rh, testScope) }
+    private val profileSwitchSilentGate = ProfileSwitchSilentGate()
 
     private lateinit var commandQueue: CommandQueueImplementation
     private lateinit var sut: QueueWorker
@@ -61,7 +61,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             aapsLogger, rxBus, rh, constraintChecker,
             profileFunction, activePlugin, config, dateUtil, fabricPrivacy,
-            uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, localAlertUtilsProvider, smsCommunicatorProvider, jobName, workManager, testScope, bolusProgressData
+            notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider, jobName, workManager, testScope, bolusProgressData
         )
 
         val pumpDescription = PumpDescription()

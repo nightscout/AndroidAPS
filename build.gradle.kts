@@ -43,6 +43,7 @@ allprojects {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
             freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
+            freeCompilerArgs.add("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
             // -Xannotation-default-target=param-property removed: it's the default since Kotlin 2.4, so the
             // flag is now redundant and the compiler warns about it on every module.
             jvmTarget.set(Versions.jvmTarget)

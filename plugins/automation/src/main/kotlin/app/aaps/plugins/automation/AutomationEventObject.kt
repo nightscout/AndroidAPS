@@ -3,6 +3,7 @@ package app.aaps.plugins.automation
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.automation.AutomationIconData
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcUserOptions
@@ -43,7 +44,7 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
     override suspend fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
     override fun firstActionIcon(): AutomationIconData? =
         actions.firstOrNull()?.let { action ->
-            action.composeIcon()?.let { AutomationIconData(it, action.composeIconTint()) }
+            AutomationIconData(action.composeIcon(), action.elementType())
         }
 
     override fun actionsDescription(): List<String> = actions.map { it.shortDescription() }
@@ -56,8 +57,8 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
     }
 
     override fun actionIcons(): Set<AutomationIconData> =
-        actions.mapNotNullTo(mutableSetOf()) { action ->
-            action.composeIcon()?.let { AutomationIconData(it, action.composeIconTint()) }
+        actions.mapTo(mutableSetOf()) { action ->
+            AutomationIconData(action.composeIcon(), action.elementType())
         }
 
     private fun fillTriggerIconSet(connector: TriggerConnector, set: MutableSet<AutomationIconData>) {
@@ -65,7 +66,7 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
             if (t is TriggerConnector) {
                 fillTriggerIconSet(t, set)
             } else {
-                t.composeIcon()?.let { set.add(AutomationIconData(it, t.composeIconTint())) }
+                set.add(AutomationIconData(t.composeIcon(), t.elementType()))
             }
         }
     }

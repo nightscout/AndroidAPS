@@ -1,11 +1,11 @@
 package app.aaps.core.interfaces.automation
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.navigation.ElementType
 
 data class AutomationIconData(
     val icon: ImageVector,
-    val tint: Color? = null
+    val elementType: ElementType? = null
 )
 
 interface AutomationEvent {

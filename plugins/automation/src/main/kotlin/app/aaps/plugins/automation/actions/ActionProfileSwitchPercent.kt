@@ -6,9 +6,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputPercent
@@ -33,7 +33,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         else rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
 
     override fun composeIcon() = IcProfile
-    override fun composeIconTint() = IconTint.Profile
+    override fun elementType() = ElementType.PROFILE_MANAGEMENT
 
     override suspend fun doAction(): PumpEnactResult {
         val switched = profileFunction.createProfileSwitch(

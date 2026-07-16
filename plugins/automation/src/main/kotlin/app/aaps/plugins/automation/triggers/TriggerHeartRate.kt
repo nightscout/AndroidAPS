@@ -4,9 +4,9 @@ import androidx.annotation.VisibleForTesting
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MonitorHeart
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
@@ -59,7 +59,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.triggerHeartRateDesc, rh.gs(comparator.value.stringRes), heartRate.value)
 
     override fun composeIcon() = Icons.Filled.MonitorHeart
-    override fun composeIconTint() = IconTint.Heart
+    override fun elementType() = ElementType.BG_CHECK
 
     override fun duplicate(): Trigger {
         return TriggerHeartRate(injector).also { o ->

@@ -2,9 +2,9 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputInsulin
 import dagger.android.HasAndroidInjector
@@ -59,7 +59,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.iobcompared, rh.gs(comparator.value.stringRes), insulin.value)
 
     override fun composeIcon() = IcBolus
-    override fun composeIconTint() = IconTint.Insulin
+    override fun elementType() = ElementType.INSULIN
 
     override fun duplicate(): Trigger = TriggerIob(injector, this)
 

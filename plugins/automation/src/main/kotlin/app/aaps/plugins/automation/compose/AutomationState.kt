@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.compose
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.navigation.ElementType
 
 sealed interface AutomationRoute {
     data object List : AutomationRoute
@@ -12,14 +12,15 @@ sealed interface AutomationRoute {
 
 data class AutomationIcon(
     val icon: ImageVector,
-    val tint: Color? = null
+    val elementType: ElementType = ElementType.AAPS
 )
 
 data class AutomationActionUi(
     val index: Int,
     val title: String,
     val icon: ImageVector?,
-    val valid: Boolean
+    val valid: Boolean,
+    val elementType: ElementType = ElementType.AAPS
 )
 
 data class AutomationEditUiState(

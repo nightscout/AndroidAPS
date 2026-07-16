@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -70,10 +71,11 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var loop: Loop
     @Mock lateinit var automation: Automation
+    @Mock lateinit var bolusProgressData: BolusProgressData
 
     private fun create() = WizardBolusExecutorImpl(
         aapsLogger, rh, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, insulin, iobCobCalculator, constraintsChecker, activePlugin,
-        runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager,
+        runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
         CoroutineScope(Dispatchers.Unconfined)
     )
 
@@ -834,6 +836,25 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         // The async delivery failure raises the single URGENT alarm from the executor (not the now-gone dialog).
         verify(notificationManager).post(
+            eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
+            anyOrNull<Int>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
+        )
+    }
+
+    @Test
+    fun bolus_onCommandFailure_whenStopPressed_doesNotPostAlarm() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(false))
+        whenever(bolusProgressData.isStopPressed).thenReturn(true)
+        val executor = create()
+
+        executor.deliverWizardBolus(
+            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
+            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { }
+        )
+
+        // A user-initiated cancel is not a failure: no URGENT alarm even though the command result is unsuccessful.
+        verify(notificationManager, never()).post(
             eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
             anyOrNull<Int>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
         )

@@ -49,7 +49,7 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.icons.Pump
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer

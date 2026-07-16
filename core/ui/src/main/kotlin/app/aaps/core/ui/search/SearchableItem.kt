@@ -1,9 +1,9 @@
 package app.aaps.core.ui.search
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.PreferenceKey
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId

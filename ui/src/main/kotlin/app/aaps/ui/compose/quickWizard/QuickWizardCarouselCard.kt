@@ -28,7 +28,7 @@ import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.R as CoreR

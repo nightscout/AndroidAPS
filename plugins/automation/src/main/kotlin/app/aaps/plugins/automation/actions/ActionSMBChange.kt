@@ -5,9 +5,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcSmb
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -23,7 +23,7 @@ class ActionSMBChange(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = R.string.changeSmbState
     override fun shortDescription(): String = rh.gs(R.string.changeSmbTo, smbState.toTextValue())
     override fun composeIcon() = IcSmb
-    override fun composeIconTint() = IconTint.Smb
+    override fun elementType() = ElementType.INSULIN
 
     override suspend fun doAction(): PumpEnactResult {
         preferences.put(BooleanKey.ApsUseSmb, smbState.value)

@@ -57,7 +57,7 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.siteRotation.ArrowSelectionDialog

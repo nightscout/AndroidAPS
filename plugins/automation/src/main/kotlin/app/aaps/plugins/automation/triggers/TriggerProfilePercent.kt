@@ -3,9 +3,9 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputPercent
 import dagger.android.HasAndroidInjector
@@ -79,7 +79,7 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.percentagecompared, rh.gs(comparator.value.stringRes), pct.value.toInt())
 
     override fun composeIcon() = IcProfile
-    override fun composeIconTint() = IconTint.Profile
+    override fun elementType() = ElementType.PROFILE_MANAGEMENT
 
     override fun duplicate(): Trigger = TriggerProfilePercent(injector, this)
 

@@ -288,7 +288,11 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
         danaPump.lastSettingsRead = 0 // force read full settings
         getPumpStatus()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        // Report the actual write outcome. sendMessage is blocking, so msgSet/msgActivate.failed are populated by
+        // now. Previously this returned true unconditionally, masking a genuine pump rejection as success (the
+        // caller then reported "profile updated" while the wrong basal ran). Notifications are handled centrally
+        // from this Boolean via AbstractDanaRPlugin + CommandQueueImplementation.onProfileChanged.
+        return !msgSet.failed && !msgActivate.failed
     }
 
     override fun setUserOptions(): PumpEnactResult {

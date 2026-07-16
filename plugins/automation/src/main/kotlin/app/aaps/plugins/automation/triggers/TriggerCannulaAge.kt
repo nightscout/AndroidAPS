@@ -3,10 +3,10 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcCannulaChange
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
@@ -72,7 +72,7 @@ class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.triggerCannulaAgeDesc, rh.gs(comparator.value.stringRes), cannulaAgeHours.value)
 
     override fun composeIcon() = IcCannulaChange
-    override fun composeIconTint() = IconTint.Device
+    override fun elementType() = ElementType.CANNULA_CHANGE
 
     override fun duplicate(): Trigger = TriggerCannulaAge(injector, this)
 

@@ -3,10 +3,10 @@ package app.aaps.plugins.automation.triggers
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SyncProblem
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
 import dagger.android.HasAndroidInjector
@@ -72,7 +72,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
         rh.gs(R.string.automation_trigger_pump_last_connection_compared, rh.gs(comparator.value.stringRes), minutesAgo.value)
 
     override fun composeIcon() = Icons.Filled.SyncProblem
-    override fun composeIconTint() = IconTint.Device
+    override fun elementType() = ElementType.PUMP
 
     override fun duplicate(): Trigger = TriggerPumpLastConnection(injector, this)
 

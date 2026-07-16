@@ -4,9 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Wifi
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputString
 import dagger.android.HasAndroidInjector
@@ -73,7 +73,7 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.wifissidcompared, rh.gs(comparator.value.stringRes), ssid.value)
 
     override fun composeIcon() = Icons.Filled.Wifi
-    override fun composeIconTint() = IconTint.Network
+    override fun elementType() = ElementType.AAPS
 
     override fun duplicate(): Trigger = TriggerWifiSsid(injector, this)
 

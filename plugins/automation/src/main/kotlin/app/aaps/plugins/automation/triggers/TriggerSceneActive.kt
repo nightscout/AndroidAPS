@@ -4,9 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.ComparatorExists
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -56,7 +56,7 @@ class TriggerSceneActive(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.trigger_scene_active_compared, rh.gs(comparator.value.stringRes))
 
     override fun composeIcon() = Icons.Filled.PlayArrow
-    override fun composeIconTint() = IconTint.Scene
+    override fun elementType() = ElementType.SCENE
 
     override fun duplicate(): Trigger = TriggerSceneActive(injector, this)
 }

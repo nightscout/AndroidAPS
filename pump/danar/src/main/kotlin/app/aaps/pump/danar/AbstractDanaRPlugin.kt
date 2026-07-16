@@ -134,24 +134,25 @@ abstract class AbstractDanaRPlugin protected constructor(
         val result = pumpEnactResultProvider.get()
         if (executionService == null) {
             aapsLogger.error("setNewBasalProfile sExecutionService is null")
-            result.comment("setNewBasalProfile sExecutionService is null")
+            // Service not bound yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps
+            // it out of the central failure alarm; enacted stays false so no PROFILE_SET_OK is posted.
+            result.success(true).comment("setNewBasalProfile sExecutionService is null")
             return result
         }
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
-            notificationManager.post(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED, app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
-            result.comment(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
+            // Not initialized yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps it
+            // out of the central failure alarm; enacted stays false so nothing is shown. Profile-set notifications
+            // (OK / clear-failed) are owned centrally by CommandQueueImplementation.onProfileChanged.
+            result.success(true).comment(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
             return result
-        } else {
-            notificationManager.dismiss(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED)
         }
+        // updateBasalsInPump now returns false on a genuine pump rejection (see the DanaR*ExecutionService
+        // return !msgSet.failed change), so success reflects the actual write outcome.
         if (executionService?.updateBasalsInPump(profile) != true) {
-            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
+            // FAILED_UPDATE_PROFILE posted centrally (onProfileChanged) from success=false; comment carries the reason.
             result.comment(app.aaps.core.ui.R.string.failed_update_basal_profile)
         } else {
-            notificationManager.dismiss(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED)
-            notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
             result.success(true).enacted(true).comment("OK")
         }
         return result

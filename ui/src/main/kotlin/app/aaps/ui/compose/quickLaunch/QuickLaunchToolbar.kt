@@ -35,13 +35,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 
 @Immutable

@@ -10,10 +10,10 @@ import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.ComparatorConnect
 import app.aaps.plugins.automation.elements.InputDropdownMenu
 import dagger.android.HasAndroidInjector
@@ -59,7 +59,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.btdevicecompared, btDevice.value, rh.gs(comparator.value.stringRes))
 
     override fun composeIcon() = Icons.Filled.Bluetooth
-    override fun composeIconTint() = IconTint.Network
+    override fun elementType() = ElementType.AAPS
 
     override fun duplicate(): Trigger = TriggerBTDevice(injector, this)
 

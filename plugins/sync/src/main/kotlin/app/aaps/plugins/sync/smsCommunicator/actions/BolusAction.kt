@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -38,6 +39,7 @@ class BolusAction(
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
     private val smsCommunicator: SmsCommunicator,
+    private val bolusProgressData: BolusProgressData,
     private val sendSMSToAllNumbers: (Sms) -> Unit,
     private val shortStatusBlocking: () -> String,
     private val updateLastRemoteBolusTime: (Long) -> Unit
@@ -47,7 +49,7 @@ class BolusAction(
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = insulin
         val bolusResult = commandQueue.bolus(detailedBolusInfo)
-        val resultSuccess = bolusResult.success
+        val resultSuccess = bolusResult.success || bolusProgressData.isStopPressed
         val resultBolusDelivered = bolusResult.bolusDelivered
         commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.sms))
         if (resultSuccess) {
@@ -55,6 +57,9 @@ class BolusAction(
                 rh.gs(R.string.smscommunicator_meal_bolus_delivered, resultBolusDelivered)
             else
                 rh.gs(R.string.smscommunicator_bolus_delivered, resultBolusDelivered)
+            if (bolusProgressData.isStopPressed) {
+                replyText = rh.gs(app.aaps.core.ui.R.string.stop_pressed) + " " + replyText
+            }
             replyText += "\n" + shortStatusBlocking()
             updateLastRemoteBolusTime(dateUtil.now())
             if (isMeal) {

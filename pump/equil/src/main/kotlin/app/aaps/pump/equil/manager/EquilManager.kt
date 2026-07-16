@@ -734,7 +734,7 @@ class EquilManager @Inject constructor(
         val parm = data[27].toInt() and 0xff
         val errorTips = getEquilError(port, level, parm)
         if (!TextUtils.isEmpty(errorTips) && currentIndex != historyIndex) {
-            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, errorTips, soundRes = app.aaps.core.ui.R.raw.alarm)
+            notificationManager.post(NotificationId.PUMP_ERROR, errorTips, soundRes = app.aaps.core.ui.R.raw.alarm)
             if (saveData) {
                 val time = System.currentTimeMillis()
                 val equilHistoryRecord = EquilHistoryRecord(EquilHistoryRecord.EventType.EQUIL_ALARM, time, getSerialNumber())

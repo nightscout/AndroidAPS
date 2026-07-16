@@ -45,6 +45,8 @@ import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.icons.IcAutomation
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.plugins.automation.R
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -259,13 +261,14 @@ private fun IconRow(event: AutomationEventUi) {
             .padding(top = AapsSpacing.extraSmall)
     ) {
         event.triggerIcons.forEach { ai ->
+            val tint = ai.elementType.color()
             Icon(
                 imageVector = ai.icon,
                 contentDescription = null,
                 modifier = Modifier
                     .size(22.dp)
                     .padding(end = AapsSpacing.small),
-                tint = ai.tint ?: MaterialTheme.colorScheme.onSurface
+                tint = tint
             )
         }
         Icon(
@@ -277,13 +280,14 @@ private fun IconRow(event: AutomationEventUi) {
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
         event.actionIcons.forEach { ai ->
+            val tint = ai.elementType.color()
             Icon(
                 imageVector = ai.icon,
                 contentDescription = null,
                 modifier = Modifier
                     .size(22.dp)
                     .padding(end = AapsSpacing.small),
-                tint = ai.tint ?: MaterialTheme.colorScheme.onSurface
+                tint = tint
             )
         }
     }

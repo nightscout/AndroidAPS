@@ -113,6 +113,12 @@ class ErosOverviewViewModel @Inject constructor(
     companion object {
 
         private const val PLACEHOLDER = "-"
+
+        /**
+         * The pod keeps delivering for this long after [OmnipodConstants.NOMINAL_POD_LIFE],
+         * up to a total lifetime of [OmnipodConstants.SERVICE_DURATION].
+         */
+        private val POD_GRACE_PERIOD: Duration = OmnipodConstants.SERVICE_DURATION.minus(OmnipodConstants.NOMINAL_POD_LIFE)
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -177,6 +183,7 @@ class ErosOverviewViewModel @Inject constructor(
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_firmware_version), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_time_on_pod), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = PLACEHOLDER))
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_connection), value = buildLastConnection().first, level = buildLastConnection().second))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = PLACEHOLDER))
@@ -206,6 +213,12 @@ class ErosOverviewViewModel @Inject constructor(
             val expiryValue = expiresAt?.let { readableZonedTime(it) } ?: PLACEHOLDER
             val expiryLevel = if (expiresAt != null && DateTime.now().isAfter(expiresAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
+
+            // Pod hard end (end of the grace period following expiry)
+            val hardEndAt = expiresAt?.plus(POD_GRACE_PERIOD)
+            val hardEndValue = hardEndAt?.let { readableZonedTime(it) } ?: PLACEHOLDER
+            val hardEndLevel = if (hardEndAt != null && DateTime.now().isAfter(hardEndAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
 
             // Pod status
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))

@@ -10,6 +10,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
@@ -39,6 +40,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = R.string.autotune_run
     override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
     override fun composeIcon() = IcPluginAutotune
+    override fun elementType() = ElementType.PROFILE_MANAGEMENT
 
     override suspend fun doAction(): PumpEnactResult {
         val autoSwitch = preferences.get(BooleanKey.AutotuneAutoSwitchProfile)

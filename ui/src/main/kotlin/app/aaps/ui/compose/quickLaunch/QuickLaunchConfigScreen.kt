@@ -47,8 +47,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
-import app.aaps.core.ui.compose.navigation.ElementCategory
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementCategory
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import kotlinx.coroutines.launch

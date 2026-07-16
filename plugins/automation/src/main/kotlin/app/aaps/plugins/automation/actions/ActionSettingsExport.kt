@@ -21,9 +21,9 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.asSettingsExport
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputString
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -46,7 +46,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.exportsettings
     override fun shortDescription(): String = rh.gs(R.string.exportsettings_message, text.value)
     override fun composeIcon() = Icons.Filled.FileDownload
-    override fun composeIconTint() = IconTint.System
+    override fun elementType() = ElementType.SETTINGS
 
     override fun isValid(): Boolean = true
 

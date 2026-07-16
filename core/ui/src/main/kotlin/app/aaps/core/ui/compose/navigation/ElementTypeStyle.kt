@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.navigation.ElementCategory
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcActivity
@@ -183,6 +185,18 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.LOOP                    -> IcLoopClosed
     ElementType.AAPS                    -> IcSmb
     ElementType.EXIT                    -> Icons.AutoMirrored.Filled.ExitToApp
+}
+
+fun ElementCategory.labelResId(): Int = when (this) {
+    ElementCategory.TREATMENT -> R.string.overview_treatment_label
+    ElementCategory.CGM -> R.string.cgm
+    ElementCategory.MANAGEMENT -> R.string.manage
+    ElementCategory.CAREPORTAL -> R.string.careportal
+    ElementCategory.DEVICE -> R.string.device_maintenance
+    ElementCategory.BASAL -> R.string.basal
+    ElementCategory.SYSTEM,
+    ElementCategory.NAVIGATION,
+    ElementCategory.INTERNAL -> 0
 }
 
 fun ElementType.labelResId(): Int = when (this) {

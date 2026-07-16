@@ -60,7 +60,6 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 temporaryBasalStorage,
                 fabricPrivacy,
                 dateUtil,
-                notificationManager,
                 danaHistoryDatabase,
                 decimalFormatter,
                 pumpEnactResultProvider,

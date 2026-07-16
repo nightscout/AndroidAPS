@@ -3,10 +3,10 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.ui.compose.icons.IcAs
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
@@ -63,7 +63,7 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.autosenscompared, rh.gs(comparator.value.stringRes), autosens.value)
 
     override fun composeIcon() = IcAs
-    override fun composeIconTint() = IconTint.AutoSens
+    override fun elementType() = ElementType.SENSITIVITY
 
     override fun duplicate(): Trigger = TriggerAutosensValue(injector, this)
 

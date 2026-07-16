@@ -4,9 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Schedule
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputDateTime
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -55,7 +55,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
 
     override fun composeIcon() = Icons.Filled.Schedule
-    override fun composeIconTint() = IconTint.Time
+    override fun elementType() = ElementType.AUTOMATION
 
     override fun duplicate(): Trigger = TriggerTime(injector, time.value)
 

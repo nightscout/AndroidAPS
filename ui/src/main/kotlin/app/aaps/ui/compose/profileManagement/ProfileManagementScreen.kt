@@ -53,7 +53,7 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer

@@ -446,7 +446,6 @@ class InsightPlugin @Inject constructor(
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
-        notificationManager.dismiss(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED)
         val profileBlocks: MutableList<BasalProfileBlock> = ArrayList()
         for (i in profile.getBasalValues().indices) {
             val basalValue = profile.getBasalValues()[i]
@@ -466,8 +465,7 @@ class InsightPlugin @Inject constructor(
                 val profileBlock: BRProfileBlock = BRProfile1Block()
                 profileBlock.profileBlocks = profileBlocks
                 ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
-                notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-                notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+                // PROFILE_SET_OK posted (and FAILED cleared) centrally on the return value.
                 result.success(true)
                     .enacted(true)
                     .comment(app.aaps.core.ui.R.string.virtualpump_resultok)
@@ -478,17 +476,21 @@ class InsightPlugin @Inject constructor(
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
+                // FAILED_UPDATE_PROFILE posted centrally (onProfileChanged) from success=false; comment carries the reason.
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: InsightException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName)
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
+                // FAILED_UPDATE_PROFILE posted centrally (onProfileChanged) from success=false; comment carries the reason.
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: Exception) {
                 aapsLogger.error("Exception while setting profile", e)
-                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
+                // FAILED_UPDATE_PROFILE posted centrally (onProfileChanged) from success=false; comment carries the reason.
                 result.comment(ExceptionTranslator.getString(context, e))
             }
+        } ?: run {
+            // Not connected yet — deferred, not a genuine error; the profile is re-pushed on reconnect.
+            // success=true keeps it out of the central failure alarm; enacted=false => no PROFILE_SET_OK.
+            result.success(true).enacted(false)
         }
         return result
     }

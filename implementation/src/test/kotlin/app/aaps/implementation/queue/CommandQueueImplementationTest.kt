@@ -16,6 +16,9 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -29,12 +32,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import com.google.common.util.concurrent.ListenableFuture
@@ -47,13 +50,14 @@ import kotlinx.coroutines.yield
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -64,7 +68,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var localAlertUtils: LocalAlertUtils
@@ -77,6 +80,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private val bolusProgressData by lazy { BolusProgressData(ch, rh, testScope) }
+    private val profileSwitchSilentGate = ProfileSwitchSilentGate()
 
     class CommandQueueMocked(
         aapsLogger: AAPSLogger,
@@ -88,13 +92,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         config: Config,
         dateUtil: DateUtil,
         fabricPrivacy: FabricPrivacy,
-        uiInteraction: UiInteraction,
         notificationManager: NotificationManager,
         persistenceLayer: PersistenceLayer,
         decimalFormatter: DecimalFormatter,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         pumpSync: PumpSync,
         preferences: Preferences,
+        profileSwitchSilentGate: ProfileSwitchSilentGate,
         localAlertUtils: Provider<LocalAlertUtils>,
         smsCommunicator: Provider<SmsCommunicator>,
         jobName: CommandQueueName,
@@ -104,7 +108,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     ) : CommandQueueImplementation(
         aapsLogger, rxBus, rh, constraintChecker, profileFunction,
         activePlugin, config, dateUtil, fabricPrivacy,
-        uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, localAlertUtils, smsCommunicator, jobName, workManager, appScope, bolusProgressData
+        notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtils, smsCommunicator, jobName, workManager, appScope, bolusProgressData
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -127,13 +131,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 config,
                 dateUtil,
                 fabricPrivacy,
-                uiInteraction,
                 notificationManager,
                 persistenceLayer,
                 decimalFormatter,
                 pumpEnactResultProvider,
                 pumpSync,
                 preferences,
+                profileSwitchSilentGate,
                 localAlertUtilsProvider,
                 smsCommunicatorProvider,
                 jobName,
@@ -203,13 +207,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             config,
             dateUtil,
             fabricPrivacy,
-            uiInteraction,
             notificationManager,
             persistenceLayer,
             decimalFormatter,
             pumpEnactResultProvider,
             pumpSync,
             preferences,
+            profileSwitchSilentGate,
             localAlertUtilsProvider,
             smsCommunicatorProvider,
             jobName,
@@ -257,6 +261,99 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // have cancelled the flow and the second event would never reach getRequestedProfile() (== 1).
         verify(profileFunction, times(2)).getRequestedProfile()
     }
+
+    // region postProfileWriteResult — the central, driver-agnostic profile-set notification contract.
+    // Drivers now only return (success, enacted, comment); every notification decision lives here.
+
+    private fun enactResult(isSuccess: Boolean, isEnacted: Boolean, commentText: String = ""): PumpEnactResult {
+        val result = mock<PumpEnactResult>()
+        whenever(result.success).thenReturn(isSuccess)
+        whenever(result.enacted).thenReturn(isEnacted)
+        whenever(result.comment).thenReturn(commentText)
+        return result
+    }
+
+    // Both helpers match the String post() overload (id, text, level, validMinutes, soundRes, actions, validityCheck).
+    private fun verifyOkPosted(text: String) =
+        verify(notificationManager).post(
+            eq(NotificationId.PROFILE_SET_OK), eq(text), any<NotificationLevel>(), any<Int>(),
+            anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
+        )
+
+    private fun verifyFailurePosted(text: String) =
+        verify(notificationManager).post(
+            eq(NotificationId.FAILED_UPDATE_PROFILE), eq(text), any<NotificationLevel>(), any<Int>(),
+            eq(app.aaps.core.ui.R.raw.boluserror), any<List<NotificationAction>>(), anyOrNull()
+        )
+
+    private fun verifyNothingPosted() =
+        verify(notificationManager, never()).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
+
+    @Test
+    fun postProfileWriteResult_updated_postsOkAndClearsFailure() {
+        // profile updated: success=true, enacted=true, not silent → confirmation shown, stale failure cleared.
+        whenever(rh.gs(app.aaps.core.ui.R.string.profile_set_ok)).thenReturn("Basal profile in pump updated")
+
+        val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = true, isEnacted = true), silent = false)
+
+        assertThat(persisted).isTrue()
+        verify(notificationManager).dismiss(NotificationId.FAILED_UPDATE_PROFILE)
+        verifyOkPosted("Basal profile in pump updated")
+    }
+
+    @Test
+    fun postProfileWriteResult_alreadySet_isSilentButPersists() {
+        // already set (basal unchanged): success=true, enacted=false → no confirmation, but still persist EPS.
+        val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = true, isEnacted = false), silent = false)
+
+        assertThat(persisted).isTrue()
+        verify(notificationManager).dismiss(NotificationId.FAILED_UPDATE_PROFILE)
+        verifyNothingPosted()
+    }
+
+    @Test
+    fun postProfileWriteResult_notInitialized_isSilentButPersists() {
+        // not initialized maps to success=true, enacted=false at the driver — same handling as already-set:
+        // no alarm, no confirmation, but the EPS is created so the loop has a profile.
+        val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = true, isEnacted = false), silent = false)
+
+        assertThat(persisted).isTrue()
+        verifyNothingPosted()
+    }
+
+    @Test
+    fun postProfileWriteResult_error_ringsFailureAlarmAndDoesNotPersist() {
+        // any error: success=false → persistent FAILED_UPDATE_PROFILE card rung with boluserror; driver comment surfaces.
+        val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = false, isEnacted = false, commentText = "pump rejected"), silent = false)
+
+        assertThat(persisted).isFalse()
+        verifyFailurePosted("pump rejected")
+        verify(notificationManager, never()).dismiss(any<NotificationId>())
+    }
+
+    @Test
+    fun postProfileWriteResult_timeout_ringsFailureAlarmWithFallbackText() {
+        // timeout: result == null (deferred pump callback never arrived) → treated as failure, generic fallback text.
+        whenever(rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)).thenReturn("Failed to update basal profile")
+
+        val persisted = commandQueue.postProfileWriteResult(null, silent = false)
+
+        assertThat(persisted).isFalse()
+        verifyFailurePosted("Failed to update basal profile")
+        verify(notificationManager, never()).dismiss(any<NotificationId>())
+    }
+
+    @Test
+    fun postProfileWriteResult_silentEnacted_suppressesConfirmation() {
+        // issue #4959: a Scene reverting its own ProfileSwitch enacts a real write but must stay silent —
+        // no "Basal profile in pump updated" card. Still persists and clears any stale failure.
+        val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = true, isEnacted = true), silent = true)
+
+        assertThat(persisted).isTrue()
+        verify(notificationManager).dismiss(NotificationId.FAILED_UPDATE_PROFILE)
+        verifyNothingPosted()
+    }
+    // endregion
 
     @Test
     fun doTests() = runTest {

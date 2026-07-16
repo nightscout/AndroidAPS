@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.navigation
 
+import app.aaps.core.interfaces.navigation.ElementType
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

@@ -6,9 +6,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputTime
 import app.aaps.plugins.automation.elements.InputWeekDay
 import dagger.android.HasAndroidInjector
@@ -86,7 +86,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun composeIcon() = Icons.Filled.Repeat
-    override fun composeIconTint() = IconTint.Time
+    override fun elementType() = ElementType.AUTOMATION
 
     override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
 

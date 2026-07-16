@@ -16,8 +16,6 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -71,7 +69,6 @@ open class VirtualPumpPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
-    private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
     private val insulin: Insulin,
     private val bolusProgressData: BolusProgressData,
@@ -191,7 +188,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         _lastDataTime.value = System.currentTimeMillis()
-        notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+        // PROFILE_SET_OK is now posted centrally by CommandSetProfile on success && enacted (unified across pumps).
         // Do nothing here. we are using database profile
         return pumpEnactResultProvider.get().success(true).enacted(true)
     }
@@ -214,31 +211,39 @@ open class VirtualPumpPlugin @Inject constructor(
 
         val result = pumpEnactResultProvider.get()
             .success(true)
-            .bolusDelivered(detailedBolusInfo.insulin)
-            .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
+            .enacted(true)
             .comment(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok))
+
         var delivering = 0.0
+        var stopped = false
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
-            val pumpInsulin = PumpInsulin(delivering)
-            bolusProgressData.updateProgress(delivered = pumpInsulin)
-            delivering += 0.1
-            if (bolusProgressData.isStopPressed)
-                return pumpEnactResultProvider.get()
-                    .success(false)
-                    .enacted(false)
-                    .comment(rh.gs(app.aaps.core.ui.R.string.stop))
+            delivering = (delivering + 0.1).coerceAtMost(detailedBolusInfo.insulin)
+            bolusProgressData.updateProgress(delivered = PumpInsulin(delivering))
+            if (bolusProgressData.isStopPressed) {
+                stopped = true
+                break
+            }
         }
-        SystemClock.sleep(200)
-        bolusProgressData.updateProgress(100)
-        SystemClock.sleep(1000)
-        aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
+
+        if (!stopped) {
+            SystemClock.sleep(200)
+            bolusProgressData.updateProgress(100)
+            SystemClock.sleep(1000)
+        } else {
+            result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
+        }
+
+        result.bolusDelivered(delivering)
+
+        aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + delivering + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
         _lastDataTime.value = System.currentTimeMillis()
-        if (detailedBolusInfo.insulin > 0) {
+        if (delivering > 0) {
             if (config.AAPSCLIENT) // do not store pump serial (record will not be marked PH)
                 appScope.launch {
+                    val partialBolus = detailedBolusInfo.copy().apply { insulin = delivering }
                     persistenceLayer.insertOrUpdateBolus(
-                        bolus = detailedBolusInfo.createBolus(insulin.iCfg),
+                        bolus = partialBolus.createBolus(insulin.iCfg),
                         action = Action.BOLUS,
                         source = Sources.Pump
                     )
@@ -246,16 +251,16 @@ open class VirtualPumpPlugin @Inject constructor(
             else
                 pumpSync.syncBolusWithPumpId(
                     timestamp = detailedBolusInfo.timestamp,
-                    amount = PumpInsulin(detailedBolusInfo.insulin),
+                    amount = PumpInsulin(delivering),
                     type = detailedBolusInfo.bolusType,
                     pumpId = dateUtil.now(),
                     pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
                     pumpSerial = serialNumber()
                 )
         }
-        if (detailedBolusInfo.insulin > 0) {
+        if (delivering > 0) {
             _lastBolusTime.value = detailedBolusInfo.timestamp
-            _lastBolusAmount.value = PumpInsulin(detailedBolusInfo.insulin)
+            _lastBolusAmount.value = PumpInsulin(delivering)
         }
         return result
     }

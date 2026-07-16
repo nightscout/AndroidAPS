@@ -1,7 +1,7 @@
 package app.aaps.ui.search
 
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
 import javax.inject.Inject

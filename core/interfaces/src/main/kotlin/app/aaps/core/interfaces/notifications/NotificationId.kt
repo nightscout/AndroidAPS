@@ -36,7 +36,6 @@ enum class NotificationId(
 
     // Profile
     PROFILE_SET_OK(INFO, PROFILE),
-    PROFILE_NOT_SET_NOT_INITIALIZED(NORMAL, PROFILE),
 
     // Basal profile failed to write to the pump (wrong basal until fixed). Also covers the old
     // DanaR-only PROFILE_SET_FAILED, which was merged here.
@@ -46,6 +45,10 @@ enum class NotificationId(
     // Pump — general
     EXTENDED_BOLUS_DISABLED(IMPORTANT, PUMP),
     PUMP_ERROR(URGENT, PUMP),
+    // Equil low-battery alarm. MUST stay on its own id (historically it mis-used FAILED_UPDATE_PROFILE): the
+    // unified profile-set logic may dismiss FAILED_UPDATE_PROFILE on a successful write, which would otherwise
+    // silently clear a live Equil battery alarm.
+    EQUIL_LOW_BATTERY(URGENT, PUMP),
     // A user/remote (non-SMB) bolus failed to deliver — surfaced once, here, from the executor (the entry
     // dialog is gone by the time the async result arrives). SMB failures stay silent (the loop self-corrects).
     BOLUS_DELIVERY_FAILED(URGENT, PUMP),
@@ -65,6 +68,9 @@ enum class NotificationId(
     BLUETOOTH_NOT_ENABLED(INFO, PUMP),
     PATCH_NOT_ACTIVE(NORMAL, PUMP),
     PUMP_SETTINGS_FAILED(NORMAL, PUMP),
+    // Pump clock / time-zone update failed (Medtrum, Omnipod Eros). MUST stay on its own id (Eros historically
+    // mis-used FAILED_UPDATE_PROFILE): the unified profile-set logic dismisses FAILED_UPDATE_PROFILE on a successful
+    // write, which would otherwise silently clear a live time-update-failed card (and vice-versa).
     PUMP_TIMEZONE_UPDATE_FAILED(NORMAL, PUMP),
     BLUETOOTH_NOT_SUPPORTED(IMPORTANT, PUMP),
     PUMP_WARNING(NORMAL, PUMP),

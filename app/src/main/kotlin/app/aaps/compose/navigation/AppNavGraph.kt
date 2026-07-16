@@ -36,6 +36,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -53,7 +54,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen

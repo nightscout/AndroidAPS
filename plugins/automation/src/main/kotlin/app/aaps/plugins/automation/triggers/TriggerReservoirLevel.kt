@@ -3,10 +3,10 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
@@ -66,7 +66,7 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.triggerReservoirLevelDesc, rh.gs(comparator.value.stringRes), reservoirLevel.value)
 
     override fun composeIcon() = IcPumpCartridge
-    override fun composeIconTint() = IconTint.Device
+    override fun elementType() = ElementType.FILL
 
     override fun duplicate(): Trigger = TriggerReservoirLevel(injector, this)
 

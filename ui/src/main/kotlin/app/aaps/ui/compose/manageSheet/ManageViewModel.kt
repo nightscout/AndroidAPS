@@ -39,7 +39,7 @@ import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.extensions.toStringMedium
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.ui.R as UiR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope

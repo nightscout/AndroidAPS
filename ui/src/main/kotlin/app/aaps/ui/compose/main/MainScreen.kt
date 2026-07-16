@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.BolusProgressState
@@ -48,7 +49,6 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.aboutDialog.AboutAlertDialog

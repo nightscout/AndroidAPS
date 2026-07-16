@@ -407,7 +407,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
-            return pumpEnactResultProvider.get().success(true).enacted(true)
+            // Pod not activated yet — deferred, not an actual write. enacted=false => no PROFILE_SET_OK.
+            return pumpEnactResultProvider.get().success(true).enacted(false)
         }
         aapsLogger.debug(LTag.PUMP, "setNewBasalProfile profile=$profile")
         return setNewBasalProfile(profile, OmnipodCommandType.SET_BASAL_PROFILE)
@@ -438,25 +439,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun failWhenUnconfirmed(deliverySuspended: Boolean): Completable = Completable.defer {
         if (podStateManager.activeCommand != null) {
-            if (deliverySuspended) {
-                showNotification(
-                    NotificationId.FAILED_UPDATE_PROFILE,
-                    rh.gs(R.string.failed_to_set_the_new_basal_profile),
-                    app.aaps.core.ui.R.raw.boluserror,
-                    level = NotificationLevel.IMPORTANT
+            // FAILED_UPDATE_PROFILE is posted centrally (onProfileChanged) from success=false; carry the specific
+            // reason in the exception so result.comment surfaces it there.
+            Completable.error(
+                java.lang.IllegalStateException(
+                    if (deliverySuspended) rh.gs(R.string.failed_to_set_the_new_basal_profile)
+                    else rh.gs(R.string.setting_basal_profile_might_have_failed)
                 )
-            } else {
-                showNotification(
-                    NotificationId.FAILED_UPDATE_PROFILE,
-                    rh.gs(R.string.setting_basal_profile_might_have_failed),
-                    app.aaps.core.ui.R.raw.boluserror,
-                    level = NotificationLevel.IMPORTANT
-                )
-            }
-            Completable.error(java.lang.IllegalStateException("Command not confirmed"))
+            )
         } else {
-            notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok)
-
+            // PROFILE_SET_OK posted centrally (onProfileChanged) on success && enacted.
             Completable.complete()
         }
     }
@@ -1035,7 +1027,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .doOnError { throwable ->
                 aapsLogger.error(LTag.PUMP, "toPumpEnactResult, error executing command: $throwable")
             }
-            .onErrorReturnItem(pumpEnactResultProvider.get().success(false).enacted(false))
+            // Carry the failure reason (e.g. failWhenUnconfirmed's specific string) into comment so the central
+            // FAILED_UPDATE_PROFILE handler surfaces it instead of the generic fallback.
+            .onErrorReturn { throwable -> pumpEnactResultProvider.get().success(false).enacted(false).comment(throwable.message ?: "") }
             .blockingGet()
     }
 

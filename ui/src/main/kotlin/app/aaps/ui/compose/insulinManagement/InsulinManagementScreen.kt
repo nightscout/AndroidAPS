@@ -75,7 +75,7 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
 import app.aaps.core.ui.compose.masterEditingEnabled
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.ui.R
 import kotlin.math.absoluteValue
 import app.aaps.core.keys.R as KeysR

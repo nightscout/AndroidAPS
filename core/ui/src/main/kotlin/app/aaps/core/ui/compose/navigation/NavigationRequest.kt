@@ -1,6 +1,7 @@
 package app.aaps.core.ui.compose.navigation
 
 import androidx.compose.runtime.compositionLocalOf
+import app.aaps.core.interfaces.navigation.ElementType
 
 sealed class NavigationRequest {
     data class Element(val type: ElementType) : NavigationRequest()

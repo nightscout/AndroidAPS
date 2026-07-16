@@ -1,10 +1,10 @@
 package app.aaps.ui.compose.navigation
 
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.core.ui.compose.navigation.ElementType
 import javax.inject.Inject
 import javax.inject.Singleton
 

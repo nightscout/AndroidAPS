@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
+import app.aaps.plugins.automation.compose.iconColor
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
 import app.aaps.plugins.automation.actions.ActionDisableScene
@@ -80,7 +81,7 @@ data class ActionOption(
     val className: String,
     val label: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector?,
-    val iconTint: androidx.compose.ui.graphics.Color?,
+    val prototype: Action,
     val category: ActionCategory
 ) {
 
@@ -90,7 +91,7 @@ data class ActionOption(
             className = action.javaClass.name,
             label = action.shortDescription().substringBefore(':').trim().ifEmpty { action.javaClass.simpleName },
             icon = action.composeIcon(),
-            iconTint = action.composeIconTint(),
+            prototype = action,
             category = actionCategoryOf(action.javaClass)
         )
     }
@@ -150,7 +151,7 @@ fun ChooseActionSheet(
                                     Icon(
                                         imageVector = it,
                                         contentDescription = null,
-                                        tint = opt.iconTint ?: MaterialTheme.colorScheme.onSurface,
+                                        tint = opt.prototype.iconColor(),
                                         modifier = Modifier.size(18.dp)
                                     )
                                 }

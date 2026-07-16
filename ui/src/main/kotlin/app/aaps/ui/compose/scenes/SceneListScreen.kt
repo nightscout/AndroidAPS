@@ -45,6 +45,7 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.data.model.TT
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
@@ -53,7 +54,6 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -13,9 +13,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -81,7 +78,6 @@ class DanaRSPlugin @Inject constructor(
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val notificationManager: NotificationManager,
     private val danaHistoryDatabase: DanaHistoryDatabase,
     private val decimalFormatter: DecimalFormatter,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
@@ -230,20 +226,18 @@ class DanaRSPlugin @Inject constructor(
         val result = pumpEnactResultProvider.get()
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
-            notificationManager.post(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED, app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set, level = NotificationLevel.IMPORTANT)
+            // Not initialized yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps it
+            // out of the central failure alarm; enacted stays false so nothing is shown. Profile-set notifications
+            // (OK / clear-failed) are owned centrally by CommandQueueImplementation.onProfileChanged.
+            result.success = true
             result.comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
             return result
-        } else {
-            notificationManager.dismiss(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED)
         }
         return if (danaRSService?.updateBasalsInPump(profile) != true) {
-            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
+            // FAILED_UPDATE_PROFILE posted centrally (onProfileChanged) from success=false; comment carries the reason.
             result.comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
             result
         } else {
-            notificationManager.dismiss(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED)
-            notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
             result.success = true
             result.enacted = true
             result.comment = "OK"

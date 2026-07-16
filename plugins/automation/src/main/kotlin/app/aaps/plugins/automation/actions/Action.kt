@@ -1,10 +1,11 @@
 package app.aaps.plugins.automation.actions
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.automation.triggers.Trigger
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -28,10 +29,10 @@ abstract class Action(val injector: HasAndroidInjector) {
      * Compose-native icon. Override in leaf actions to return a Material-Icons
      * [ImageVector] or a project `Ic*`.
      */
-    open fun composeIcon(): ImageVector? = null
+    open fun composeIcon(): ImageVector = elementType().icon()
 
-    /** Semantic tint for [composeIcon]. Null means caller uses a theme default. */
-    open fun composeIconTint(): Color? = null
+    /** Semantic UI type for this action. Used to resolve theme-aware colors and icons. */
+    open fun elementType(): ElementType = ElementType.AAPS
 
     var title = ""
 

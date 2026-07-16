@@ -1,6 +1,6 @@
 package app.aaps.ui.compose.quickLaunch
 
-import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.interfaces.navigation.ElementType
 
 /**
  * Represents an action that can be placed on the quick-action toolbar.

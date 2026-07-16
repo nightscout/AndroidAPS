@@ -3,8 +3,8 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcPatchPump
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -40,7 +40,7 @@ class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.triggerPodChangeDesc)
 
     override fun composeIcon() = IcPatchPump
-    override fun composeIconTint() = IconTint.Device
+    override fun elementType() = ElementType.CANNULA_CHANGE
 
     override fun duplicate(): Trigger = TriggerPodChange(injector)
 

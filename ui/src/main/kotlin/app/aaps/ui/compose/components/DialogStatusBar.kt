@@ -14,9 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState

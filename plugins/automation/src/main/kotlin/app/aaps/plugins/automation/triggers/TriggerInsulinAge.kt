@@ -4,10 +4,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HourglassBottom
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
@@ -78,7 +78,7 @@ class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.triggerInsulinAgeDesc, rh.gs(comparator.value.stringRes), insulinAgeHours.value)
 
     override fun composeIcon() = Icons.Filled.HourglassBottom
-    override fun composeIconTint() = IconTint.Device
+    override fun elementType() = ElementType.FILL
 
     override fun duplicate(): Trigger = TriggerInsulinAge(injector, this)
 

@@ -13,8 +13,6 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -81,7 +79,6 @@ class MedtrumPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val medtrumPump: MedtrumPump,
-    private val notificationManager: NotificationManager,
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val protectionCheck: ProtectionCheck,
@@ -225,25 +222,24 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        // New profile will be set when patch is activated
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(true).enacted(true)
+        // New profile will be set when patch is activated — a deferred write, not an actual change yet,
+        // so enacted=false (no PROFILE_SET_OK); success=true keeps the not-ready case out of the failure alarm.
+        if (!isInitialized()) return pumpEnactResultProvider.get().success(true).enacted(false)
 
         // Pump only stores basal bytes; iCfg/ISF/IC differences don't require a packet.
         // Avoids a spurious failure right after activation when an insulin-only profile switch
         // races with post-activation pump traffic.
         if (isThisProfileSet(profile)) {
-            notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+            // Already set (no basal change) → enacted=false; central logic posts no PROFILE_SET_OK.
             return pumpEnactResultProvider.get().success(true).enacted(false)
         }
 
         return if (medtrumService?.updateBasalsInPump(profile) == true) {
-            notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+            // PROFILE_SET_OK posted (and FAILED cleared) centrally on the return value.
             pumpEnactResultProvider.get().success(true).enacted(true)
         } else {
-            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile)
-            pumpEnactResultProvider.get()
+            // FAILED_UPDATE_PROFILE posted centrally (onProfileChanged) from success=false; comment carries the reason.
+            pumpEnactResultProvider.get().success(false).enacted(false).comment(app.aaps.core.ui.R.string.failed_update_basal_profile)
         }
     }
 

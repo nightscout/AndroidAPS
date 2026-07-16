@@ -2,13 +2,13 @@ package app.aaps.plugins.automation.actions
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputSceneName
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -26,7 +26,7 @@ class ActionEnableScene(injector: HasAndroidInjector) : Action(injector) {
         rh.gs(R.string.action_enable_scene_short, sceneApi.getScene(scene.value)?.name ?: "")
 
     override fun composeIcon() = sceneIconResolver.iconForScene(scene.value) ?: Icons.Filled.Visibility
-    override fun composeIconTint() = IconTint.Scene
+    override fun elementType() = ElementType.SCENE
 
     override suspend fun doAction(): PumpEnactResult =
         when (val result = sceneApi.setEnabled(scene.value, true)) {

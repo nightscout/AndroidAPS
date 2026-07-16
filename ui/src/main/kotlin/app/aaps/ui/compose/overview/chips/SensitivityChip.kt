@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.icons.IcArrowFlat
@@ -29,7 +30,6 @@ import app.aaps.core.ui.compose.icons.IcAsAboveX
 import app.aaps.core.ui.compose.icons.IcAsBelow
 import app.aaps.core.ui.compose.icons.IcAsBelowX
 import app.aaps.core.ui.compose.icons.IcAsX
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 
 @Composable

@@ -12,9 +12,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.asAnnouncement
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputString
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -32,7 +32,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.notification
     override fun shortDescription(): String = rh.gs(R.string.notification_message, text.value)
     override fun composeIcon() = Icons.Filled.Notifications
-    override fun composeIconTint() = IconTint.Announce
+    override fun elementType() = ElementType.ANNOUNCEMENT
 
     override suspend fun doAction(): PumpEnactResult {
         notificationManager.post(NotificationId.AUTOMATION_MESSAGE, text.value)

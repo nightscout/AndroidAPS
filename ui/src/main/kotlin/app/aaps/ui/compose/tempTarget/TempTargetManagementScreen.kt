@@ -52,6 +52,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -62,7 +63,6 @@ import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.masterEditingEnabled
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer

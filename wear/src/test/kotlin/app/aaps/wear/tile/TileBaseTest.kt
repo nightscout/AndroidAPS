@@ -2,7 +2,9 @@ package app.aaps.wear.tile
 
 import androidx.wear.protolayout.DeviceParametersBuilders.DeviceParameters
 import androidx.wear.protolayout.DeviceParametersBuilders.SCREEN_SHAPE_ROUND
+import androidx.wear.protolayout.LayoutElementBuilders.Box
 import androidx.wear.protolayout.LayoutElementBuilders.Column
+import androidx.wear.protolayout.LayoutElementBuilders.LayoutElement
 import androidx.wear.protolayout.LayoutElementBuilders.Text
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.ResourceBuilders
@@ -86,8 +88,15 @@ internal class TileBaseTest {
         return (m.invoke(this, req) as ListenableFuture<ResourceBuilders.Resources>).get()
     }
 
-    private fun rootOf(svc: ActionsTileService, req: RequestBuilders.TileRequest = request()) =
-        svc.tileRequest(req).tileTimeline?.timelineEntries?.first()?.layout?.root
+    // The layout wraps the real content with a flavor header: a round screen overlays a curved Arc header
+    // (Box[content, header]); a square screen stacks a flat Text header above it (Column[header, content]).
+    // Unwrap so assertions target the content element itself, not the header wrapper.
+    private fun contentOf(svc: ActionsTileService, req: RequestBuilders.TileRequest = request()): LayoutElement? =
+        when (val root = svc.tileRequest(req).tileTimeline?.timelineEntries?.first()?.layout?.root) {
+            is Box    -> root.contents.firstOrNull()
+            is Column -> root.contents.getOrNull(1)
+            else      -> root
+        }
 
     // ---- WearControl states: each renders an explanatory Text, never buttons ----
 
@@ -95,21 +104,21 @@ internal class TileBaseTest {
         noData()
         whenever(source.getSelectedActions()).thenReturn(listOf(action()))
         whenever(source.getValidFor()).thenReturn(null)
-        assertThat(rootOf(service())).isInstanceOf(Text::class.java)
+        assertThat(contentOf(service())).isInstanceOf(Text::class.java)
     }
 
     @Test fun `disabled shows a text message`() {
         disabled()
         whenever(source.getSelectedActions()).thenReturn(listOf(action()))
         whenever(source.getValidFor()).thenReturn(null)
-        assertThat(rootOf(service())).isInstanceOf(Text::class.java)
+        assertThat(contentOf(service())).isInstanceOf(Text::class.java)
     }
 
     @Test fun `enabled with no actions shows the no-config text`() {
         enabled()
         whenever(source.getSelectedActions()).thenReturn(emptyList())
         whenever(source.getValidFor()).thenReturn(null)
-        assertThat(rootOf(service())).isInstanceOf(Text::class.java)
+        assertThat(contentOf(service())).isInstanceOf(Text::class.java)
     }
 
     // ---- grid arrangements: 1..4 actions all build a Column of buttons ----
@@ -119,7 +128,7 @@ internal class TileBaseTest {
         whenever(source.getValidFor()).thenReturn(null)
         for (n in 1..4) {
             whenever(source.getSelectedActions()).thenReturn((1..n).map { action() })
-            assertThat(rootOf(service())).isInstanceOf(Column::class.java)
+            assertThat(contentOf(service())).isInstanceOf(Column::class.java)
         }
     }
 
@@ -128,7 +137,7 @@ internal class TileBaseTest {
         whenever(source.getValidFor()).thenReturn(null)
         // icon-only (no text branch) + a >6 char label on a small square screen exercises the geometry/text-size branches
         whenever(source.getSelectedActions()).thenReturn(listOf(action(text = null, sub = null), action(text = "VeryLongLabel", sub = "sub")))
-        assertThat(rootOf(service(), request(round = false, widthDp = 160, heightDp = 160))).isInstanceOf(Column::class.java)
+        assertThat(contentOf(service(), request(round = false, widthDp = 160, heightDp = 160))).isInstanceOf(Column::class.java)
     }
 
     // ---- freshness + resource-version wiring ----

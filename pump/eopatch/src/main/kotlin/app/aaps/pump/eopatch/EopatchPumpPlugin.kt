@@ -10,8 +10,6 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -86,7 +84,6 @@ class EopatchPumpPlugin @Inject constructor(
     private val patchManagerExecutor: PatchManagerExecutor,
     private val alarmManager: IAlarmManager,
     private val preferenceManager: PreferenceManager,
-    private val notificationManager: NotificationManager,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val patchConfig: PatchConfig,
     private val normalBasalManager: NormalBasalManager,
@@ -272,16 +269,17 @@ class EopatchPumpPlugin @Inject constructor(
             disposable.dispose()
             aapsLogger.info(LTag.PUMP, "Basal Profile was set: $isSuccess")
             return if (isSuccess) {
-                notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+                // PROFILE_SET_OK posted centrally (onProfileChanged) on success && enacted.
                 pumpEnactResultProvider.get().success(true).enacted(true)
             } else {
-                pumpEnactResultProvider.get()
+                pumpEnactResultProvider.get().success(false).enacted(false).comment(app.aaps.core.ui.R.string.failed_update_basal_profile)
             }
         } else {
+            // Patch not activated — the basal is stored now and written when the patch is activated. Deferred,
+            // not an actual change: enacted=false => no PROFILE_SET_OK.
             normalBasalManager.setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
-            notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
-            return pumpEnactResultProvider.get().success(true).enacted(true)
+            return pumpEnactResultProvider.get().success(true).enacted(false)
         }
     }
 

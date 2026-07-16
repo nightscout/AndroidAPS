@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.compose.icons.IcUserOptions
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.AutomationEventObject
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.actions.Action
@@ -260,7 +261,8 @@ class AutomationStateHolder(
                     index = i,
                     title = a.shortDescription(),
                     icon = a.composeIcon(),
-                    valid = a.isValid()
+                    valid = a.isValid(),
+                    elementType = a.elementType()
                 )
             },
             titleError = false
@@ -271,10 +273,10 @@ class AutomationStateHolder(
         val events = (0 until plugin.size()).map { i ->
             val a = plugin.at(i)
             val triggerIcons = mutableListOf<AutomationIcon>()
-            if (a.userAction) triggerIcons.add(AutomationIcon(IcUserOptions))
+            if (a.userAction) triggerIcons.add(AutomationIcon(IcUserOptions, ElementType.AUTOMATION))
             collectTriggerIcons(a.trigger, triggerIcons)
             val actionIcons = mutableListOf<AutomationIcon>()
-            for (act in a.actions) act.composeIcon()?.let { actionIcons.add(AutomationIcon(it, act.composeIconTint())) }
+            for (act in a.actions) act.composeIcon().let { actionIcons.add(AutomationIcon(it, act.elementType())) }
             AutomationEventUi(
                 // Identity of the persistent event object — stable across in-place swaps so the
                 // reorder key doesn't change mid-drag (position does).
@@ -301,7 +303,7 @@ class AutomationStateHolder(
     private fun collectTriggerIcons(connector: TriggerConnector, list: MutableList<AutomationIcon>) {
         for (t in connector.list) {
             if (t is TriggerConnector) collectTriggerIcons(t, list)
-            else t.composeIcon()?.let { list.add(AutomationIcon(it, t.composeIconTint())) }
+            else t.composeIcon().let { list.add(AutomationIcon(it, t.elementType())) }
         }
     }
 }
