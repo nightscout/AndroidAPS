@@ -1,12 +1,11 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
 import androidx.annotation.StringRes
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin

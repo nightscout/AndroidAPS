@@ -8,14 +8,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.icons.IcAaps
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
-import app.aaps.plugins.sync.nfcCommands.NfcCategory
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.nfcCommands.NfcTagStore
 import org.json.JSONObject

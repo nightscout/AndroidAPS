@@ -3,8 +3,8 @@ package app.aaps.plugins.sync.nfcCommands.actions
 import androidx.annotation.StringRes
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.icons.IcAaps
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult

@@ -3,8 +3,8 @@ package app.aaps.plugins.sync.nfcCommands.actions
 import androidx.annotation.StringRes
 import app.aaps.core.data.ue.Action
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.icons.IcTbrCancel
-import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
