@@ -167,6 +167,8 @@ data class UserEntry(
         NSProfile,          //From NSProfile plugin
         Objectives,         //From Objectives plugin
         Pump,               //To update with one Source per pump
+        AaruyFull,
+        AaruyBase,
         Dana,               //Only one UserEntry in Common module Dana
         DanaR,
         DanaRC,

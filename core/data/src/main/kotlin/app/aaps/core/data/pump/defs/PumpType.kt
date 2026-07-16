@@ -474,6 +474,40 @@ enum class PumpType(
         pumpCapability = PumpCapability.DiaconnCapabilities,
         source = Source.EQuil,
         useHardwareLink = true,
+    ),
+    AARUY_FULL(
+        description = "Aaruy Full",
+        manufacturer = ManufacturerType.Aaruy,
+        model = "Full",
+        bolusSize = 0.025,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.025, 30, 8 * 60, 0.025),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.025, 30, 12 * 60, 0.0, 35.0),
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
+        baseBasalMinValue = 0.1,
+        baseBasalMaxValue = 35.0,
+        baseBasalStep = 0.025,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.AaruyCapabilities,
+        source = Source.AaruyFull,
+    ),
+    AARUY_BASE(
+        description = "Aaruy Base",
+        manufacturer = ManufacturerType.Aaruy,
+        model = "Base",
+        bolusSize = 0.025,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.025, 30, 8 * 60, 0.025),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.025, 30, 12 * 60, 0.0, 35.0),
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
+        baseBasalMinValue = 0.1,
+        baseBasalMaxValue = 35.0,
+        baseBasalStep = 0.025,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.AaruyBaseCapabilities,
+        source = Source.AaruyBase,
     );
 
     fun manufacturer() = parent?.manufacturer ?: manufacturer ?: throw IllegalStateException()
@@ -511,7 +545,9 @@ enum class PumpType(
         MDI,
         VirtualPump,
         Unknown,
-        EQuil
+        EQuil,
+        AaruyFull,
+        AaruyBase,
     }
 
     companion object {

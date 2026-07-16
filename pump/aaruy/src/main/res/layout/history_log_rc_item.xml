@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_303030"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/history_divider_line"
+        style="@style/divider_horizontal_1px"
+        android:background="@color/gray"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_history_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/history_time_tv"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:gravity="center"
+            android:text="11:37:54" />
+
+        <TextView
+            android:id="@+id/history_type_tv"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/bolus_title"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/history_bolus_prolong_ll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/history_prolong_type_tv"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/history_insulin_name4" />
+
+            <TextView
+                android:id="@+id/history_prolong_time_tv"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="0:30:00" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/history_value_tv"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="2.0U" />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application>
+        <activity
+            android:name=".ui.AaruyActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.AaruyBLEScanActivity"
+            android:exported="false"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name=".activities.AaruyBLEScanActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.AaruyHistoryLogActivity"
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".services.AaruyService"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>

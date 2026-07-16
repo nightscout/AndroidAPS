@@ -89,6 +89,8 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.NSProfile           -> R.drawable.ic_nightscout_profile
         Sources.Objectives          -> app.aaps.core.ui.R.drawable.ic_graduation
         Sources.Pump                -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.AaruyBase           -> app.aaps.core.ui.R.drawable.ic_aaruy_128
+        Sources.AaruyFull           -> app.aaps.core.ui.R.drawable.ic_aaruy_128
         Sources.Dana                -> app.aaps.core.ui.R.drawable.ic_danars_128
         Sources.DanaR               -> app.aaps.core.ui.R.drawable.ic_danars_128
         Sources.DanaRC              -> app.aaps.core.ui.R.drawable.ic_danars_128

@@ -55,6 +55,7 @@ import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.tizen.TizenPlugin
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
+import app.aaps.pump.aaruy.AaruyPlugin
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danars.DanaRSPlugin
@@ -216,6 +217,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(160)
     abstract fun bindMedtrumPlugin(plugin: MedtrumPlugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(165)
+    abstract fun bindAaruyPlugin(plugin: AaruyPlugin): PluginBase
 
     @Binds
     @PumpDriver

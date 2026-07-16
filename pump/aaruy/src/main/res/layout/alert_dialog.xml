@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginHorizontal="40dp"
+    android:layout_height="250dp"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/tvAlertDialogTitle"
+        android:textSize="28sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_303030"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="15dp"
+        android:text="Title" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="185dp"
+        android:background="@color/color_424242">
+
+        <TextView
+            android:id="@+id/tvAlertDialogMessage"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="30dp" />
+
+        <Button
+            android:id="@+id/btnAlertDialogPositive"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@null"
+            android:text="@string/ok"
+            android:textColor="@color/color_38D0C3"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="140dp"/>
+
+        <Button
+            android:id="@+id/btnAlertDialogNegative"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@null"
+
+            android:text="@string/cancel"
+            android:textColor="@color/color_38D0C3"
+            android:layout_toRightOf="@+id/btnAlertDialogPositive"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="140dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

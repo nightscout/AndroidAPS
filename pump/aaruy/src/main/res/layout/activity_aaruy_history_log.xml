@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="app.aaps.pump.aaruy.ui.viewmodel.AaruyHistoryViewModel" />
+    </data>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <Button
+            android:id="@+id/btn_daily_total"
+            android:background="@drawable/selector_555_3030_radius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textAllCaps="false"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:contentDescription="@string/daily_total"
+            android:text="@string/daily_total"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/rl_date"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:layout_below="@id/btn_daily_total"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/selector_555_3030_radius">
+
+            <ImageView
+                android:id="@+id/iv_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/tv_date"
+                android:background="@drawable/iv_to_grey"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="20dp"
+                android:src="@drawable/left_icon"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:drawablePadding="10dp"
+                android:focusable="true"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:text="2024年12月24日 星期一"/>
+
+            <ImageView
+                android:id="@+id/iv_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/tv_date"
+                android:background="@drawable/iv_to_grey"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="20dp"
+                android:src="@drawable/right_icon"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <RelativeLayout
+        android:id="@+id/rl_data_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_date"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle_circle_4_424242"
+        android:gravity="center"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/history_carbohydrate_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="7dp"
+            android:text="@string/history_total_carbs" />
+
+        <TextView
+            android:id="@+id/history_carbs_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_alignBaseline="@id/history_carbohydrate_tv"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="12dp"
+            android:text="@string/history_carbs_unit"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/history_insulin_total_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_below="@id/history_carbohydrate_tv"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/history_total_insulin" />
+
+        <TextView
+            android:id="@+id/history_insulin_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_below="@id/history_carbs_value_tv"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:text="0.0U" />
+
+        <TextView
+            android:id="@+id/history_bolus_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_below="@id/history_insulin_value_tv"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:text="0%" />
+
+
+        <TextView
+            android:id="@+id/history_bolus_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_below="@id/history_insulin_total_tv"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/history_bolus_percent" />
+
+        <LinearLayout
+            android:id="@+id/rl_cb_container"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@id/history_bolus_tv"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="9dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cb_portrait_carbs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:button="@null"
+                android:checked="true"
+                android:drawableStart="@drawable/ic_insulin_selector"
+                android:drawablePadding="5dp"
+                android:gravity="start"
+                android:text="@string/history_carbs_name" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:id="@+id/cb_portrait_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:button="@null"
+                android:checked="true"
+                android:drawableStart="@drawable/ic_bg_selector"
+                android:drawablePadding="5dp"
+                android:gravity="start"
+                android:text="@string/history_bg" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:id="@+id/cb_portrait_insulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="8dp"
+                android:button="@null"
+                android:checked="true"
+                android:drawableStart="@drawable/ic_carbs_selector"
+                android:drawablePadding="5dp"
+                android:gravity="start"
+                android:text="@string/history_insulin" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:id="@+id/cb_portrait_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:button="@null"
+                android:checked="true"
+                android:drawableStart="@drawable/ic_alarm_selector"
+                android:drawablePadding="5dp"
+                android:gravity="start"
+                android:text="@string/history_alarm" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_log_rc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_data_show"
+        android:layout_marginTop="10dp"
+        android:scrollbarSize="4dp"
+        android:scrollbarThumbVertical="@color/white"
+        android:scrollbars="vertical" />
+
+    <include
+        android:id="@+id/daily_total_view"
+        layout="@layout/daily_total_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:animateLayoutChanges="true"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    </RelativeLayout>
+
+</layout>

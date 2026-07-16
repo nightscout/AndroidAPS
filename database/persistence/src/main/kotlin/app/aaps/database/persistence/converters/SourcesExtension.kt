@@ -52,6 +52,8 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.NSProfile           -> Sources.NSProfile
         UserEntry.Sources.Objectives          -> Sources.Objectives
         UserEntry.Sources.Pump                -> Sources.Pump
+        UserEntry.Sources.AaruyFull           -> Sources.AaruyFull
+        UserEntry.Sources.AaruyBase           -> Sources.AaruyBase
         UserEntry.Sources.Dana                -> Sources.Dana
         UserEntry.Sources.DanaR               -> Sources.DanaR
         UserEntry.Sources.DanaRC              -> Sources.DanaRC
@@ -134,6 +136,8 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.NSProfile           -> UserEntry.Sources.NSProfile
         Sources.Objectives          -> UserEntry.Sources.Objectives
         Sources.Pump                -> UserEntry.Sources.Pump
+        Sources.AaruyFull           -> UserEntry.Sources.AaruyFull
+        Sources.AaruyBase           -> UserEntry.Sources.AaruyBase
         Sources.Dana                -> UserEntry.Sources.Dana
         Sources.DanaR               -> UserEntry.Sources.DanaR
         Sources.DanaRC              -> UserEntry.Sources.DanaRC

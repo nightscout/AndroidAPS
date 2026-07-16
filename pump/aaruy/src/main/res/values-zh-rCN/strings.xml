@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AaruyPump -->
+    <string name="aaruy_pump">Aaruy</string>
+    <string name="aaruy_pump_shortname">Aaruy</string>
+    <string name="aaruy_pump_description">Pump for aaruy</string>
+    <string name="aaruy_pump_setting">阿瑞泵设置</string>
+    <string name="selectedpump">选择胰岛素泵</string>
+    <string name="aaruy_no_device_available">无可用设备</string>
+    <string name="aaruy_unbind_device">解绑</string>
+    <string name="is_connecting">正在连接…</string>
+    <string name="aaruy_pump_error">Aaruy Pump 报警: %1$s !! </string>
+    <string name="aaruy_pump_warning">Aaruy Pump 提示: %1$s </string>
+    <string name="aaruy_pairing" >胰岛素泵连接</string>
+    <string name="setting_insulin_max_basal">最大基础率</string>
+    <string name="setting_insulin_max_bolus">最大大剂量</string>
+    <string name="setting_insulin_low_reservoir">低药量报警阈值</string>
+    <string name="setting_insulin_bolus_rate">大剂量单次注射量</string>
+    <string name="setting_inject_sound_remind">声音提示</string>
+    <string name="setting_inject_sound_alarm">声音报警</string>
+    <string name="setting_aaruy_on">开启</string>
+    <string name="setting_aaruy_off">关闭</string>
+    <string name="actions_pump_disconnect">单方面取消对泵%s的控制权?</string>
+    <string name="actions_pump_disconnect_again">解除配对后，泵%s将不能使用或再连接！</string>
+    <string name="actions_pump_disconnect_prompt">取消对泵%s的控制权?</string>
+
+    <!-- overview fragment -->
+    <string name="aaruy_bluetooth_status">蓝牙连接状态</string>
+    <string name="pump_state_label">泵状态</string>
+    <string name="requested_by_user" comment="26 characters max for translation">用户请求</string>
+    <string name="basal_rate_label">基础率速率</string>
+    <string name="active_bolus_label">当前大剂量</string>
+    <string name="active_alarms_label">当前报警</string>
+    <string name="fw_version_label">泵软件版本</string>
+    <string name="param_refresh">参数刷新</string>
+    <string name="pump_type">胰岛素泵型号</string>
+    <string name="pump_serial">胰岛素泵序列号</string>
+    <string name="replace_label">更换</string>
+    <string name="confirm_alarms_label">报警确认</string>
+    <string name="replace_bat_rescv_label">更换储药器/电池</string>
+    <string name="reconnect_pump">重连胰岛素泵</string>
+
+    <!-- Alarm strings -->
+    <string name="alarm_none">无</string>
+    <string name="alarm_zero_dose">胰岛素泵药量为0</string>
+    <string name="alarm_low_power">胰岛素泵低电量</string>
+    <string name="alarm_no_power">胰岛素泵电量耗尽</string>
+    <string name="alarm_low_dose">胰岛素泵低药量</string>
+    <string name="alarm_no_dose">胰岛素泵电量耗尽</string>
+    <string name="alarm_block">胰岛素泵阻塞</string>
+    <string name="alarm_block2">胰岛素泵阻塞2</string>
+    <string name="alarm_auto_poweroff">胰岛素泵自动关机</string>
+    <string name="alarm_error3">胰岛素泵故障 3</string>
+    <string name="alarm_error2">胰岛素泵故障 2</string>
+    <string name="alarm_error1">胰岛素泵故障 1</string>
+    <string name="alarm_error4">胰岛素泵故障 4</string>
+    <string name="alarm_error3_plus">胰岛素泵故障 3+</string>
+    <string name="alarm_motor_busy">胰岛素泵电机忙碌</string>
+    <string name="alarm_motor_repeat">胰岛素泵电机重复</string>
+    <string name="alarm_bolus_error">大剂量错误</string>
+    <string name="alarm_basal_run_fail">基础率运行失败!</string>
+    <string name="alarm_total_run_fail">整机运行失败!</string>
+    <string name="alarm_please_run_basal_first">请先运行基础率!</string>
+    <string name="alarm_rewinding_fail">推杆回退失败！</string>
+    <string name="alarm_temp_basal_run_fail">临时基础率运行失败!</string>
+    <string name="alarm_bolus_run_fail">大剂量运行失败!</string>
+    <string name="alarm_stop_too_long">已停止输注超过15分钟!</string>
+    <string name="alarm_discharge_liquid_fail">排液操作失败</string>
+    <string name="alarm_stop_15m_later">15分钟后胰岛素泵将自动关机!</string>
+    <string name="low_battery_not_allow_back">泵电量低，不能回退!</string>
+    <string name="low_battery_not_allow_remove_air">泵电量低，不能排液!</string>
+
+    <!-- wizard-->
+    <string name="no_profile_selected">没有选择配置文件，请选择配置文件再重试</string>
+    <string name="no_sn_in_settings">没有绑定胰岛素泵，请在配置生成器的设置里绑定连接相应泵再重试</string>
+    <string name="actions_reservoir_rewind_prompt">断开输注管路与身体的连接，\n\n点击“确定”，推杆将回退复位。</string>
+    <string name="actions_reservoir_prime_before">请将充满电的电池及装满药液的储药器与泵组装好。</string>
+    <string name="actions_reservoir_prime_comment">点击“推杆定位”至连接器针头形成液滴。</string>
+    <string name="actions_reservoir_prime_comment_note">注意：推杆定位完成前，请保持输注管路与身体断开连接!</string>
+    <string name="actions_reservoir_prime_cannula_before">请将输注管路与身体连接！</string>
+    <string name="actions_reservoir_prime_cannula">请点击“充盈”使药液充盈输液软针。</string>
+    <string name="actions_reservoir_prime_cannula_note">注意：未更换输液软针时，才可点击“跳过”！</string>
+    <string name="soft_needle_6">6mm输液软针</string>
+    <string name="soft_needle_9">9mm输液软针</string>
+    <string name="setting_next">下一步</string>
+    <string name="actions_reservoir_cannula_skip">跳过</string>
+    <string name="actions_reservoir_prime">推杆定位</string>
+    <string name="actions_reservoir_prime_cannula_action">充盈</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_ok">确定</string>
+    <string name="bluetooth_disconnect">未连接胰岛素泵，等待重连！</string>
+    <string name="is_backing">推杆回退中\n请等待…</string>
+    <string name="locate_check_liquid">推杆定位中,请注意连接器针头是否出现液滴！</string>
+    <string name="notifyTitle">提示</string>
+    <string name="actions_reservoir_prime_confirm">请确认连接器针头有液滴形成后，再点击“确定”。</string>
+    <string name="is_exhaust">正在排气…</string>
+    <string name="if_exit_replace_view">更换未完成，中止更换？</string>
+
+    <!-- history-->
+    <string name="daily_total">每日总量</string>
+    <string name="daily_total_unit">每日总量(U)</string>
+    <string name="date">日期</string>
+    <string name="history_log_title">历史日志</string>
+    <string name="history_total_carbs">碳水化合物总量</string>
+    <string name="history_total_insulin">胰岛素总量</string>
+    <string name="history_bolus_percent">大剂量%</string>
+    <string name="history_carbs_name">碳水</string>
+    <string name="history_bg">血糖</string>
+    <string name="history_insulin">胰岛素</string>
+    <string name="history_alarm">报警</string>
+    <string name="history_carbs_unit">克</string>
+    <string name="time_two_num_format">%02d</string>
+    <string name="year_month_day">yyyy/MM/dd</string>
+    <string name="yeaqr_month_day_hour_minute">yyyy/MM/dd HH:mm</string>
+    <string name="history_insulin_name4">大剂量(延长)</string>
+    <string name="bolus_title">大剂量</string>
+    <string name="unit_l">mmol/L</string>
+    <string name="change_pump">换泵</string>
+    <string name="notification_text_rewinding">推杆回退</string>
+    <string name="unknow_error">未知错误</string>
+    <string name="error_motor_failed_plus_dialog">泵故障 3+!</string>
+    <string name="error_motor_destructive_anomaly">泵故障 4(高)</string>
+    <string name="pump_fault1">泵故障 1(高)</string>
+    <string name="pump_fault2">泵故障 2(高)</string>
+    <string name="motor_block_two">泵阻塞2(高)</string>
+    <string name="motor_block">泵阻塞(高)</string>
+    <string name="setting_insulin_auto_off">泵自动关机</string>
+    <string name="pump_fault">泵故障 3(高)</string>
+    <string name="min_remainAmount">低药量(低)</string>
+    <string name="zero_doze">药量耗尽(高)</string>
+    <string name="min_battery">泵电量耗尽(高)</string>
+    <string name="low_battery">泵低电量(低)</string>
+    <string name="unit_min">分钟</string>
+    <string name="unit_u">U</string>
+    <string name="unit_u_day">U/天</string>
+    <string name="unit_u_hr">U/h</string>
+    <string name="temp_basal_title">临时基础率</string>
+    <string name="basal_rate_title">基础率</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="date_format">%04d-%02d-%02d</string>
+    <string name="date_format_string">%04d年%02d月%02d日</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期日</string>
+    <string name="is_loading_data">加载数据…</string>
+    <string name="suspend">暂停</string>
+
+    <!-- settings-->
+    <string name="settingextendedbolus" >设置延长大剂量</string>
+    <string name="stoppingtempbasal">停止临时基础率</string>
+
+    <!-- treatment state-->
+    <string name="getting_pump_status">获取泵状态</string>
+    <string name="getting_bolus_status">获取大剂量状态</string>
+    <string name="getting_temp_basal_status">获取临时基础率状态</string>
+    <string name="insulin_max_bolussummary">单次输注大剂量的最大值</string>
+    <string name="no_history_in_day">该日期没有历史记录</string>
+    <string name="aaruy_wait_bolus_time_tip">正在等待大剂量输注结束。剩余时间 %1$d 秒。</string>
+</resources>

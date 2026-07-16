@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="app.aaps.pump.aaruy.ui.viewmodel.AaruyViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.AaruyActivity">
+
+
+            <TextView
+                android:id="@+id/tv_reservoir_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/actions_reservoir_prime_before"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_reservoir_note"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:gravity="start"
+                android:text=""
+                android:textColor="@color/red"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/tv_reservoir_tip" />
+
+
+            <RadioGroup
+                android:id="@+id/rg_reservoir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/tv_reservoir_note">
+
+                <RadioButton
+                    android:id="@+id/rb_reservoir_one"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="@color/color_5D5D5D"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawableStart="@drawable/radio_button_selector"
+                    android:drawablePadding="10dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="@string/soft_needle_6"
+                    android:textStyle="bold"
+                    tools:ignore="RtlSymmetry" />
+
+                <RadioButton
+                    android:id="@+id/rb_reservoir_two"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/color_5D5D5D"
+                    android:button="@null"
+                    android:drawableStart="@drawable/radio_button_selector"
+                    android:drawablePadding="10dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="@string/soft_needle_9"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    tools:ignore="RtlSymmetry" />
+            </RadioGroup>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ll_prime_skip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="45dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/btn_push_air"
+                    android:background="@drawable/selector_555_3030_radius"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/actions_reservoir_prime_cannula_action"
+                    android:text="@string/actions_reservoir_prime_cannula_action"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toStartOf="@id/btn_start_base"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_start_base"
+                    android:background="@drawable/selector_555_3030_radius"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:contentDescription="@string/actions_reservoir_cannula_skip"
+                    android:text="@string/actions_reservoir_cannula_skip"
+                    android:textAllCaps="false"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btn_push_air"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ll_push_position"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="45dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/btn_push_position"
+                    android:background="@drawable/selector_555_3030_radius"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/actions_reservoir_prime"
+                    android:text="@string/actions_reservoir_prime"
+                    android:textAllCaps="false"
+                    android:textIsSelectable="false"
+                    app:layout_constraintEnd_toStartOf="@id/btn_push_next"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_push_next"
+                    android:background="@drawable/selector_555_3030_radius"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:contentDescription="@string/setting_next"
+                    android:text="@string/setting_next"
+                    android:textAllCaps="false"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btn_push_position"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_button_next"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="45dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+
+                <Button
+                    android:id="@+id/btn_next"
+                    android:background="@drawable/selector_555_3030_radius"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/setting_next"
+                    android:text="@string/setting_next"
+                    android:textAllCaps="false"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+</layout>

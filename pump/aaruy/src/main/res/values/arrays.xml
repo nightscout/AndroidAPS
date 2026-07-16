@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="aaruyBolusRate">
+        <item>0.025</item>
+        <item>0.05</item>
+    </string-array>
+
+    <string-array name="aaruySwitch">
+        <item>@string/setting_aaruy_on</item>
+        <item>@string/setting_aaruy_off</item>
+    </string-array>
+</resources>

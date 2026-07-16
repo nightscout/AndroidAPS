@@ -42,6 +42,8 @@ fun InterfaceIDs.PumpType.fromDb(): PumpType =
         InterfaceIDs.PumpType.MEDTRUM_UNTESTED            -> PumpType.MEDTRUM_UNTESTED
         InterfaceIDs.PumpType.CACHE                       -> PumpType.CACHE
         InterfaceIDs.PumpType.EQUIL                       -> PumpType.EQUIL
+        InterfaceIDs.PumpType.AARUY_FULL                  -> PumpType.AARUY_FULL
+        InterfaceIDs.PumpType.AARUY_BASE                  -> PumpType.AARUY_BASE
     }
 
 fun PumpType.toDb(): InterfaceIDs.PumpType =
@@ -83,5 +85,7 @@ fun PumpType.toDb(): InterfaceIDs.PumpType =
         PumpType.MEDTRUM_UNTESTED          -> InterfaceIDs.PumpType.MEDTRUM_UNTESTED
         PumpType.CACHE                     -> InterfaceIDs.PumpType.CACHE
         PumpType.EQUIL                     -> InterfaceIDs.PumpType.EQUIL
+        PumpType.AARUY_FULL                -> InterfaceIDs.PumpType.AARUY_FULL
+        PumpType.AARUY_BASE                -> InterfaceIDs.PumpType.AARUY_BASE
 
     }

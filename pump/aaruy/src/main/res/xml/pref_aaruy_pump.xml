@@ -1,0 +1,80 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_aaruy_pump_settings"
+        android:title="@string/aaruy_pump_setting"
+        app:initialExpandedChildrenCount="0">
+
+        <Preference
+            android:key="@string/key_aaruy_name"
+            android:summary=""
+            android:title="@string/selectedpump">
+            <intent
+                android:action=".activities.AaruyBLEScanActivity" />
+        </Preference>
+
+        <app.aaps.core.validators.ValidatingEditTextPreference
+            android:defaultValue="2"
+            android:digits="0123456789."
+            android:inputType="number"
+            android:key="@string/key_pref_aaruy_max_basal"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/setting_insulin_max_basal"
+            validate:maxNumber="35"
+            validate:minNumber="1"
+            validate:testType="numericRange" />
+
+        <app.aaps.core.validators.ValidatingEditTextPreference
+            android:defaultValue="10"
+            android:digits="0123456789."
+            android:inputType="number"
+            android:key="@string/key_pref_aaruy_max_bolus"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/setting_insulin_max_bolus"
+            validate:maxNumber="25"
+            validate:minNumber="1"
+            validate:testType="numericRange" />
+
+        <app.aaps.core.validators.ValidatingEditTextPreference
+            android:defaultValue="20"
+            android:digits="0123456789."
+            android:inputType="number"
+            android:key="@string/key_pref_aaruy_low_alert"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/setting_insulin_low_reservoir"
+            validate:maxNumber="50"
+            validate:minNumber="10"
+            validate:testType="numericRange" />
+
+        <ListPreference
+            android:defaultValue="0.05"
+            android:entries="@array/aaruyBolusRate"
+            android:entryValues="@array/aaruyBolusRate"
+            android:key="@string/key_pref_aaruy_bolus_step"
+            android:selectable="true"
+            android:title="@string/setting_insulin_bolus_rate" />
+
+        <ListPreference
+            android:defaultValue="@string/setting_aaruy_on"
+            android:entries="@array/aaruySwitch"
+            android:entryValues="@array/aaruySwitch"
+            android:key="@string/key_pref_aaruy_sound_remind"
+            android:selectable="true"
+            android:title="@string/setting_inject_sound_remind" />
+
+        <ListPreference
+            android:defaultValue="@string/setting_aaruy_on"
+            android:entries="@array/aaruySwitch"
+            android:entryValues="@array/aaruySwitch"
+            android:key="@string/key_pref_aaruy_sound_alarm"
+            android:selectable="true"
+            android:title="@string/setting_inject_sound_alarm" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
