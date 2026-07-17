@@ -179,6 +179,11 @@ class DanaRsEmulatorPumpTest {
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { danaRSPlugin.disconnect("test end") }
+        // Disconnect first, then drain: the emulator defers some responses onto their own threads
+        // (v1's pairing key most of all), and one still in flight when the next test starts throws
+        // from a thread that has nothing to do with it. sendResponse drops them once disconnected;
+        // this makes sure they are actually done before the component goes.
+        runCatching { if (::emulator.isInitialized) emulator.awaitPendingCallbacks() }
         // Unbind before the component dies — see the note in setUp. onStop calls unbindService.
         runCatching { danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, false) }
         // SharedPreferences outlive the Hilt component, so don't leave sibling instrumented tests
