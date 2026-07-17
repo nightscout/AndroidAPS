@@ -36,8 +36,19 @@ class HistoryEventStore {
 
     /**
      * Parse a "from" timestamp from request params (6 bytes: Y-2000, M, D, H, Min, Sec).
+     *
+     * [usingUtc] says how the *requesting driver* wrote those fields, and callers must pass what
+     * their own command does — there is no single right answer:
+     *  - `DanaRSPacketAPSHistoryEvents` writes UTC only when the pump is `usingUTC` (Dana-i), local
+     *    otherwise, so its caller mirrors that flag.
+     *  - `DanaRSPacketHistory` (the per-type review history) and `MsgHistoryEventsV2` build theirs
+     *    from a plain `GregorianCalendar`, i.e. always local.
+     *
+     * This used to assume UTC unconditionally while [buildEventData] and [buildReviewRecordData]
+     * write local time, so on any non-UTC machine a windowed request was misread by the zone offset
+     * and silently returned the wrong slice of history.
      */
-    fun parseFromTimestamp(params: ByteArray): Long {
+    fun parseFromTimestamp(params: ByteArray, usingUtc: Boolean): Long {
         if (params.size < 5) return 0L
         val year = (params[0].toInt() and 0xFF) + 2000
         val month = params[1].toInt() and 0xFF
@@ -46,10 +57,13 @@ class HistoryEventStore {
         val minute = params[4].toInt() and 0xFF
         val second = if (params.size >= 6) params[5].toInt() and 0xFF else 0
         if (year == 2000 && month == 1 && day == 1 && hour == 0 && minute == 0 && second == 0) return 0L
+        val zone = if (usingUtc) TimeZone.UTC else TimeZone.currentSystemDefault()
         return try {
             kotlinx.datetime.LocalDateTime(year, month, day, hour, minute, second)
-                .toInstant(TimeZone.UTC).toEpochMilliseconds()
+                .toInstant(zone).toEpochMilliseconds()
         } catch (_: Exception) {
+            // Also the "load everything" path for review history: DanaRSService.loadHistory never
+            // calls with(from), so every field arrives as 0 and LocalDateTime rejects month 0.
             0L
         }
     }

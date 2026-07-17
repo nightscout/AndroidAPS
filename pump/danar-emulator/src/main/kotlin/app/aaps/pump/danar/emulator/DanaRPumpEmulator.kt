@@ -596,7 +596,9 @@ class DanaRPumpEmulator(
     var onAdditionalResponse: ((Int, ByteArray) -> Unit)? = null
 
     private fun handleApsHistoryEvents(params: ByteArray): ByteArray {
-        val fromMillis = state.historyStore.parseFromTimestamp(params)
+        // Local: MsgHistoryEventsV2 builds the request from a plain GregorianCalendar, and a DanaR
+        // has no UTC mode — buildEventData answers in local time to match.
+        val fromMillis = state.historyStore.parseFromTimestamp(params, usingUtc = false)
         val events = state.historyStore.getEventsAfter(fromMillis)
 
         if (events.isEmpty()) return state.historyStore.doneMarker

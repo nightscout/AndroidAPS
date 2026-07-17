@@ -503,7 +503,9 @@ class PumpEmulator(val state: PumpState = PumpState()) {
 
     private fun processApsHistoryEvents(params: ByteArray): ByteArray {
         val store = state.historyStore
-        val fromMillis = store.parseFromTimestamp(params)
+        // DanaRSPacketAPSHistoryEvents writes the request in UTC only when the pump is usingUTC,
+        // and buildHistoryEventData answers in the matching format — so read it back the same way.
+        val fromMillis = store.parseFromTimestamp(params, usingUtc = state.usingUTC)
         val events = store.getEventsAfter(fromMillis)
 
         if (events.isEmpty()) return store.doneMarker
@@ -568,7 +570,9 @@ class PumpEmulator(val state: PumpState = PumpState()) {
      */
     private fun processReviewHistory(opCode: Int, recordCode: Int, params: ByteArray): ByteArray {
         val store = state.reviewHistoryStore
-        val fromMillis = store.parseFromTimestamp(params)
+        // Always local, unlike the APS event history: DanaRSPacketHistory builds its request from a
+        // plain GregorianCalendar whatever the pump, and buildReviewRecordData answers in kind.
+        val fromMillis = store.parseFromTimestamp(params, usingUtc = false)
         val records = store.getEventsAfter(fromMillis).filter { it.code == recordCode }
 
         if (records.isEmpty()) return store.reviewDoneMarker

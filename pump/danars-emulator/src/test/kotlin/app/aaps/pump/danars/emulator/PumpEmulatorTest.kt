@@ -333,14 +333,12 @@ class PumpEmulatorTest {
     private fun loadEverything() = ByteArray(6)
 
     /**
-     * A "from" request for [millis], encoded the way [HistoryEventStore.parseFromTimestamp] reads
-     * it — as **UTC**. Note the driver only sends UTC fields when the pump is `usingUTC` (Dana-i);
-     * for the others it sends local time, which the store would then misread by the zone offset.
-     * That mismatch is dormant today (no review-history load sends a non-zero "from") and is not
-     * what this test is about, so this stays on the store's own terms.
+     * A "from" request for [millis] in **local** time, as `DanaRSPacketHistory` builds it — from a
+     * plain `GregorianCalendar`, whatever the pump. `HistoryEventStore` reads it back the same way
+     * (see `HistoryEventStoreTest`, which owns the zone semantics).
      */
     private fun fromParams(millis: Long): ByteArray {
-        val d = Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.UTC)
+        val d = Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.currentSystemDefault())
         return byteArrayOf(
             (d.year - 2000).toByte(), d.month.number.toByte(), d.day.toByte(),
             d.hour.toByte(), d.minute.toByte(), d.second.toByte()
