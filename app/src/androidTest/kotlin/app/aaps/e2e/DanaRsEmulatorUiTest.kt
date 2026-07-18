@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanNonKey
@@ -79,8 +80,8 @@ import javax.inject.Inject
  * content-desc** and match whole strings (so "Save" will not find "Save options to pump"), opens are
  * **verified-with-retry**, and it is English-only. Two traps cost real time here and are documented
  * where they bite: the pump screens are reached via Manage → Pump, *not* the bottom bar's setup
- * button ([openDanaPlugin]), and the Dana overview's actions move under the cursor while a
- * connection is in flight ([clickWhenStable]).
+ * button ([openDanaPlugin]), and the Dana overview's action list vanishes and returns while a status
+ * read is in flight, so every interaction with it waits for [waitForQueueIdle] first.
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -92,6 +93,7 @@ class DanaRsEmulatorUiTest {
     @Inject lateinit var bleTransport: BleTransport
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var profileFunction: ProfileFunction
@@ -348,10 +350,32 @@ class DanaRsEmulatorUiTest {
      */
     private fun initializePumpFromUi() {
         if (!awaitTrue(INIT_PUMP_TIMEOUT) {
-                danaRSPlugin.changePump()
+                // Only queue a read when the last one has finished. changePump() -> readStatus, and
+                // readStatus resets DanaPump first (onRefreshClick -> danaPump.reset), so a fresh one
+                // each poll would stack a backlog of reads that keep resetting the pump and churning
+                // the action list long after this returns — which is what made the later steps flaky.
+                if (queueIdle()) danaRSPlugin.changePump()
                 waitForVisible("Pump history", 2_000)
             }
         ) error("Pump never reported initialized — 'Pump history' never appeared")
+        waitForQueueIdle()
+    }
+
+    /**
+     * True when no command is queued or running.
+     *
+     * The one deterministic "the overview has settled" signal: `isInitialized` is stable-true and
+     * every action present exactly while nothing is in flight. A read in flight has just called
+     * `danaPump.reset()`, so `isInitialized` is false and the whole action list is gone until it
+     * completes — tapping into that window is what mis-fired onto Unpair and timed out on absent
+     * buttons.
+     */
+    private fun queueIdle() = commandQueue.size() == 0 && commandQueue.performing() == null
+
+    /** Blocks until [queueIdle], then lets the resulting recomposition land. */
+    private fun waitForQueueIdle() {
+        if (!awaitTrue(QUEUE_IDLE_TIMEOUT) { queueIdle() }) error("Command queue never went idle")
+        device.waitForIdle(IDLE_MS)
     }
 
     // ---- navigation ---------------------------------------------------------------------------
@@ -433,21 +457,25 @@ class DanaRsEmulatorUiTest {
      */
     private fun refreshStatusFromPump() {
         repeat(REFRESH_ATTEMPTS) {
-            clickWhenStable("Refresh")
-            if (waitForVisible(MAX_DAILY_UNITS_TEXT, REFRESH_TIMEOUT)) return
+            waitForQueueIdle()   // tap into a settled list, not one mid-reset
+            click("Refresh")     // this itself resets the pump and queues the read
+            if (waitForVisible(MAX_DAILY_UNITS_TEXT, REFRESH_TIMEOUT)) {
+                waitForQueueIdle()   // let the read finish before the next step navigates
+                return
+            }
             cancelStrayUnpairDialog()
         }
         error("Refresh never brought '$MAX_DAILY_UNITS_TEXT' back from the pump")
     }
 
     /**
-     * Undoes a Refresh tap that landed on Unpair.
+     * Undoes a Refresh tap that landed on Unpair — a belt-and-braces guard now that [waitForQueueIdle]
+     * settles the list first.
      *
-     * The overview's actions are `visible = isInitialized`, so while a connection is in flight the
-     * list collapses and re-expands under us: a node located as "Refresh" can be clicked at
-     * coordinates that now belong to "Unpair", which opens this dialog. [clickWhenStable] makes that
-     * rare rather than impossible, so cancel it and let the caller retry — going through with an
-     * unpair would strip the seeded pairing and fail everything after it for an unrelated reason.
+     * The overview's actions are `visible = isInitialized`, so a tap that lands mid-read (the list
+     * collapsing as the pump resets) can hit Unpair's coordinates instead and open this dialog.
+     * Cancel it and let the caller retry — going through with an unpair would strip the seeded
+     * pairing and fail everything after it for an unrelated reason.
      */
     private fun cancelStrayUnpairDialog() {
         if (device.findObject(byText("Reset pairing information?")) != null) {
@@ -467,6 +495,7 @@ class DanaRsEmulatorUiTest {
      * to serve the review-history commands.
      */
     private fun visitDanaHistory() {
+        waitForQueueIdle()   // overview settled before leaving it
         openVia("Pump history", expect = "Alarms")
         openVia("Refresh", expect = HISTORY_ALARM_TEXT)
         returnToDanaOverview()
@@ -482,6 +511,7 @@ class DanaRsEmulatorUiTest {
      * `DanaRSPlugin` → `DanaRSService` → `BLEComm` → emulator, end to end.
      */
     private fun changeUserOptionsAndSaveToPump() {
+        waitForQueueIdle()   // overview settled before leaving it
         openVia("User options", expect = SAVE_USER_OPTIONS)
 
         val before = emulator.pumpState.lcdOnTimeSec
@@ -534,37 +564,6 @@ class DanaRsEmulatorUiTest {
     }
 
     private fun click(label: String) = withStaleRetry { find(label).click() }
-
-    /**
-     * Clicks [label] only once it has been present continuously for [STABLE_MS].
-     *
-     * A plain [click] locates a node and then taps its bounds; on the Dana overview those bounds can
-     * belong to a different action by the time the tap lands (see [cancelStrayUnpairDialog]). The
-     * churn is the actions appearing and disappearing, so requiring the label to simply stay put for
-     * a moment is enough to tap into a settled list.
-     */
-    private fun clickWhenStable(label: String) {
-        if (!awaitStable(label, STABLE_MS)) error("'$label' never held still long enough to tap")
-        click(label)
-    }
-
-    /** True once [label] has been visible on every poll across a [quietMs] window. */
-    private fun awaitStable(label: String, quietMs: Long, timeout: Long = STEP_TIMEOUT): Boolean {
-        val end = SystemClock.uptimeMillis() + timeout
-        while (SystemClock.uptimeMillis() < end) {
-            val until = SystemClock.uptimeMillis() + quietMs
-            var held = true
-            while (SystemClock.uptimeMillis() < until) {
-                if (device.findObject(byText(label)) == null && device.findObject(byDesc(label)) == null) {
-                    held = false
-                    break
-                }
-                device.waitForIdle(IDLE_MS)
-            }
-            if (held) return true
-        }
-        return false
-    }
 
     private fun openVia(open: String, expect: String, attempts: Int = 4) {
         repeat(attempts) {
@@ -671,7 +670,7 @@ class DanaRsEmulatorUiTest {
         private const val INIT_PUMP_TIMEOUT = 60_000L
         private const val REFRESH_TIMEOUT = 30_000L
         private const val REFRESH_ATTEMPTS = 3
-        private const val STABLE_MS = 1_500L
+        private const val QUEUE_IDLE_TIMEOUT = 60_000L
         private const val SAVE_TIMEOUT = 30_000L
         private const val PROFILE_STORE_TIMEOUT = 20_000L
         private const val BOLUS_TIMEOUT = 60_000L
