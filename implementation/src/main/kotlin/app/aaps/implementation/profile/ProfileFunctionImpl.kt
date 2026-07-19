@@ -80,7 +80,12 @@ class ProfileFunctionImpl @Inject constructor(
         if (profileSwitch != null) {
             profileName = if (customized) profileSwitch.originalCustomizedName else profileSwitch.originalProfileName
             if (showRemainingTime && profileSwitch.originalDuration != 0L) {
-                profileName += dateUtil.untilString(profileSwitch.originalEnd, rh)
+                // originalEnd is not reliable (see its declaration in EPS.kt: "not used (calculated from duration)")
+                // and other consumers of EPS (ProfileSwitchExpiryScheduler, SceneExecutor) already ignore it in
+                // favor of timestamp + duration. A stale/mismatched originalEnd on a record synced in verbatim
+                // from Nightscout (AAPSCLIENT, or NsClientAcceptProfileSwitch / full resync on master) otherwise
+                // renders a nonsensical duration here.
+                profileName += dateUtil.untilString(profileSwitch.timestamp + profileSwitch.originalDuration, rh)
             }
         }
         return profileName
