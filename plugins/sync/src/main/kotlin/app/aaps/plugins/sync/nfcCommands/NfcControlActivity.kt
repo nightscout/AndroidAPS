@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,11 +42,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import javax.inject.Inject
 
 open class NfcControlActivity : FragmentActivity() {
+
     @Inject lateinit var nfcPlugin: NfcCommandsPlugin
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
@@ -63,11 +67,17 @@ open class NfcControlActivity : FragmentActivity() {
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var pendingTag by mutableStateOf<NfcCreatedTag?>(null)
+    private var awaitingBolusFinish by mutableStateOf(false)
+
+    companion object {
+        private const val BOLUS_START_GRACE_MS = 500L
+        private const val BOLUS_START_POLL_MS = 20L
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             val snackbarHostState = remember { SnackbarHostState() }
             CompositionLocalProvider(
@@ -93,7 +103,20 @@ open class NfcControlActivity : FragmentActivity() {
                                             nfcPlugin.updateLastScanned(currentTag.tagUid)
                                             nfcPlugin.executeWithFeedback(currentTag.commands, currentTag.name)
                                             withContext(Dispatchers.Main) {
-                                                finishWithTransition()
+                                                if (hasBolusCommand(currentTag.commands)) {
+                                                    var waited = 0L
+                                                    while (bolusProgressData.state.value == null && waited < BOLUS_START_GRACE_MS) {
+                                                        delay(BOLUS_START_POLL_MS)
+                                                        waited += BOLUS_START_POLL_MS
+                                                    }
+                                                    if (bolusProgressData.state.value != null) {
+                                                        awaitingBolusFinish = true
+                                                    } else {
+                                                        finishWithTransition()
+                                                    }
+                                                } else {
+                                                    finishWithTransition()
+                                                }
                                             }
                                         }
                                     },
@@ -105,6 +128,11 @@ open class NfcControlActivity : FragmentActivity() {
                             }
 
                             val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
+
+                            LaunchedEffect(bolusState, awaitingBolusFinish) {
+                                if (awaitingBolusFinish && bolusState == null) finishWithTransition()
+                            }
+
                             bolusState?.let { state ->
                                 if (!state.isSMB) {
                                     val pumpStatus by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
@@ -182,4 +210,12 @@ open class NfcControlActivity : FragmentActivity() {
         }?.let { startActivity(it) }
         finish()
     }
+
+    private fun hasBolusCommand(commands: List<String>): Boolean =
+        commands.any { cmd ->
+            val code = runCatching {
+                NfcCommandCode.valueOf(JSONObject(cmd).optString(NfcJsonKeys.CODE))
+            }.getOrNull()
+            code == NfcCommandCode.BOLUS || code == NfcCommandCode.BOLUS_WIZARD
+        }
 }

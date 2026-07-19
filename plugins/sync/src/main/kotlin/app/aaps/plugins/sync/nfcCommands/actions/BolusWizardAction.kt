@@ -3,13 +3,12 @@ package app.aaps.plugins.sync.nfcCommands.actions
 import androidx.annotation.StringRes
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
@@ -27,13 +26,8 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         get() = elementType.icon()
 
     override suspend fun getDefaultParams(): JSONObject {
-        // Load saved preferences
         val useTrend = plugin.preferences.get(BooleanNonKey.WizardIncludeTrend)
         val useCOB = plugin.preferences.get(BooleanNonKey.WizardIncludeCob)
-        val showNotes = plugin.preferences.get(BooleanKey.OverviewShowNotesInDialogs)
-        val useBolusAdvisor = plugin.preferences.get(BooleanKey.OverviewUseBolusAdvisor)
-
-        // Percentage: reset to 100% if last BG is too old
         var percentage = plugin.preferences.get(IntKey.OverviewBolusPercentage)
         val time = plugin.preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
         plugin.persistenceLayer.getLastGlucoseValue().let {
@@ -55,12 +49,19 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
 
     override suspend fun formatParams(): String? {
         val amount = params.optInt(NfcJsonKeys.AMOUNT, 0)
-        val wizard = performCalculation() ?: return null
-        plugin.setActionState(params.toString(), wizard)
-
-        val base = plugin.rh.gs(CoreUiR.string.goingtodeliver, wizard.insulinAfterConstraints)
-        val carbs = plugin.rh.gs(CoreUiR.string.format_carbs, amount)
-        return "$base ($carbs)"
+        return when (val prepared = prepareWizard()) {
+            is WizardBolusExecutor.PrepareResult.Preview -> {
+                // Park the SAME preview (bolusId + computed insulin) the confirm dialog just displayed —
+                // execute() commits it by id through the shared WizardBolusExecutor (identical to wear /
+                // client-control), instead of re-driving a shared/leftover BolusWizard instance.
+                plugin.setActionState(params.toString(), prepared)
+                val base = plugin.rh.gs(CoreUiR.string.goingtodeliver, prepared.insulin)
+                val carbs = plugin.rh.gs(CoreUiR.string.format_carbs, amount)
+                "$base ($carbs)"
+            }
+            is WizardBolusExecutor.PrepareResult.Error   -> prepared.message
+            WizardBolusExecutor.PrepareResult.NoAction   -> null
+        }
     }
 
     override suspend fun execute(): NfcExecutionResult {
@@ -74,23 +75,36 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             return NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.pumpsuspended))
         }
 
-        val wizard = (plugin.getActionState(params.toString()) as? BolusWizard)
-        if (wizard == null) {
+        val prepared = plugin.getActionState(params.toString()) as? WizardBolusExecutor.PrepareResult.Preview
+        if (prepared == null) {
             plugin.aapsLogger.debug(LTag.NFC, "BolusWizard state not found. Key: ${params}")
             return commandNotPossible()
         }
 
-        // Execute the bolus
-        wizard.executeNormal(
+        // Commit the parked dose by id — the SAME consume-once relay wear/client-control use
+        // (WizardBolusExecutor.confirm). A stale/already-consumed id returns NoPending instead of
+        // silently re-delivering or no-op'ing without telling the caller.
+        val result = plugin.wizardBolusExecutor.confirm(
+            bolusId = prepared.bolusId,
+            source = source,
             onError = { plugin.aapsLogger.error(LTag.NFC, "Calculator bolus failed: $it") }
         )
+        if (result is WizardBolusExecutor.ConfirmResult.NoPending) {
+            plugin.aapsLogger.debug(LTag.NFC, "BolusWizard confirm: no pending dose for id ${prepared.bolusId}")
+            return commandNotPossible()
+        }
 
         plugin.setLastRemoteBolusTime(plugin.dateUtil.now())
-
-        return NfcExecutionResult(true, plugin.rh.gs(R.string.smscommunicator_bolus_delivered, wizard.insulinAfterConstraints))
+        return NfcExecutionResult(true, plugin.rh.gs(R.string.smscommunicator_bolus_delivered, prepared.insulin))
     }
 
-    private suspend fun performCalculation(): BolusWizard? {
+    /**
+     * Recompute + cap + park the dose through the shared [WizardBolusExecutor] — the SAME "prepare" entry
+     * point wear uses (DataHandlerMobile.handleWizardPreCheck) and client-control. This always builds a
+     * FRESH BolusWizard internally (via Provider), so the wizard's one-shot `accepted` delivery guard can
+     * never leak across NFC scans, unlike the previous design which reused one shared instance forever.
+     */
+    private suspend fun prepareWizard(): WizardBolusExecutor.PrepareResult {
         val carbs = params.optInt(NfcJsonKeys.AMOUNT, 0)
         val percentage = params.optInt(NfcJsonKeys.PERCENT, 100)
         val useBg = params.optBoolean(NfcJsonKeys.USE_BG, true)
@@ -98,35 +112,24 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         val useTrend = params.optBoolean(NfcJsonKeys.USE_TREND, true)
         val useIOB = params.optBoolean(NfcJsonKeys.USE_IOB, true)
         val useCOB = params.optBoolean(NfcJsonKeys.USE_COB, true)
-
-        val profile = plugin.profileFunction.getProfile() ?: return null
-        val profileName = plugin.profileFunction.getOriginalProfileName()
-        val tempTarget = plugin.persistenceLayer.getTemporaryTargetActiveAt(plugin.dateUtil.now())
         val bgMgdl = plugin.glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
-        val cob = plugin.iobCobCalculator.getCobInfo("NFC").displayCob ?: 0.0
 
-        val wizard = plugin.bolusWizard
-        wizard.doCalc(
-            profile = profile,
-            profileName = profileName,
-            tempTarget = tempTarget,
-            carbs = carbs,
-            cob = cob,
-            bg = plugin.profileUtil.fromMgdlToUnits(bgMgdl),
-            correction = 0.0,
-            useBg = useBg,
-            useCob = useCOB,
-            includeBolusIOB = useIOB,
-            includeBasalIOB = useIOB,
-            useSuperBolus = false,
-            useTT = useTT,
-            useTrend = useTrend,
-            useAlarm = false,
-            totalPercentage = percentage.toDouble(),
-            usePercentage = true,
-            notes = params.optString(NfcJsonKeys.TAG_NAME, ""),
-            source = Sources.NfcCommands
+        return plugin.wizardBolusExecutor.prepareWizard(
+            WizardBolusExecutor.WizardInputs(
+                bg = plugin.profileUtil.fromMgdlToUnits(bgMgdl),
+                carbs = carbs,
+                percentage = percentage,
+                directCorrection = 0.0,
+                carbTime = 0,
+                useBg = useBg,
+                useCob = useCOB,
+                useIob = useIOB,
+                useTt = useTT,
+                useTrend = useTrend,
+                alarm = false,
+                notes = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                source = source
+            )
         )
-        return wizard
     }
 }

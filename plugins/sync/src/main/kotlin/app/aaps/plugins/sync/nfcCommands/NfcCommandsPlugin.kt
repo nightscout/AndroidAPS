@@ -13,6 +13,7 @@ import android.os.VibratorManager
 import android.widget.Toast
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -39,7 +40,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.preference.PreferenceActionItem
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -95,7 +95,7 @@ class NfcCommandsPlugin @Inject constructor(
     val configBuilder: ConfigBuilder,
     val rxBus: RxBus,
     val uel: UserEntryLogger,
-    val bolusWizard: BolusWizard,
+    val wizardBolusExecutor: WizardBolusExecutor,
     val iobCobCalculator: IobCobCalculator,
     val bolusProgressData: BolusProgressData,
     val glucoseStatusProvider: GlucoseStatusProvider,
