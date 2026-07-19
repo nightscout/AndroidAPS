@@ -9,6 +9,8 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.interfaces.Preferences
@@ -22,6 +24,7 @@ import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
@@ -246,11 +249,54 @@ class DanaRsEmulatorPumpTest {
     private fun assertConnects(variant: ExternalOptions) {
         bringUpPump(variant)
         assertThat(serviceBound).isTrue()
-        val connected = awaitTrue(CONNECT_TIMEOUT) {
-            danaRSPlugin.connect("e2e")
-            danaRSPlugin.isConnected()
+        assertThat(connect()).isTrue()
+    }
+
+    /**
+     * Drives the pump commands the connection tests never reach — a temp basal, an extended bolus,
+     * and a bolus — each through the real plugin/service/BLE path, asserting on the emulator's own
+     * [PumpState]. Connecting alone left [DanaRSPlugin] and every command handler at a few percent;
+     * this is what exercises them.
+     *
+     * Sets, not cancels: a plugin `setX` sends the command and the emulator reflects it at once — a
+     * clean full-stack assertion. The plugin `cancelX` methods first gate on
+     * `danaPump.isTempBasalInProgress` / `isExtendedInProgress`, which are *not* read back from the
+     * pump after a set (`DanaRSService.tempBasal` derives them from `pumpSync.expectedPumpState()` —
+     * the app's own history-event record, on a ~4.5s async settle this test does not drive), so a
+     * cancel here would just no-op. The emulator's cancel handlers are covered directly by
+     * `PumpEmulatorTest` instead.
+     *
+     * All on BLE5: commands sit above the encryption layer and do not vary by handshake, so the
+     * three handshakes are covered by the connect tests and the commands once here.
+     *
+     * `suspend` ops call the service synchronously (the emulator has zero latency), so `runBlocking`
+     * on the test thread suffices — no queue or WorkManager. Assertions read the emulator, the true
+     * far side, not the driver's cache of it.
+     */
+    @Test
+    fun pumpCommands_reachTheEmulator() {
+        bringUpPump(ExternalOptions.EMULATE_DANA_BLE5)
+        assertThat(connect()).isTrue()
+        val pump = emulator.pumpState
+
+        runBlocking {
+            danaRSPlugin.setTempBasalPercent(TBR_PERCENT, TBR_DURATION_MIN, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
         }
-        assertThat(connected).isTrue()
+        assertThat(pump.isTempBasalRunning).isTrue()
+        assertThat(pump.tempBasalPercent).isEqualTo(TBR_PERCENT)
+
+        runBlocking { danaRSPlugin.setExtendedBolus(EXTENDED_UNITS, EXTENDED_DURATION_MIN) }
+        assertThat(pump.isExtendedBolusRunning).isTrue()
+        assertThat(pump.extendedBolusAmount).isWithin(0.001).of(EXTENDED_UNITS)
+
+        runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
+        assertThat(pump.lastBolusAmount).isWithin(0.001).of(BOLUS_UNITS)
+    }
+
+    /** Drive connect() until the async service bind takes effect; a no-op while the service is null. */
+    private fun connect(): Boolean = awaitTrue(CONNECT_TIMEOUT) {
+        danaRSPlugin.connect("e2e")
+        danaRSPlugin.isConnected()
     }
 
     /** Polls [condition] until it returns true or [timeoutMs] elapses. */
@@ -276,5 +322,13 @@ class DanaRsEmulatorPumpTest {
         private const val BIND_TIMEOUT = 20_000L
         private const val CONNECT_TIMEOUT = 30_000L
         private const val POLL_MS = 250L
+
+        // Command values for pumpCommands_reachTheEmulator. Durations are multiples of an hour so the
+        // driver takes the plain temp-basal / extended paths rather than the short-duration variants.
+        private const val TBR_PERCENT = 150
+        private const val TBR_DURATION_MIN = 60
+        private const val EXTENDED_UNITS = 1.0
+        private const val EXTENDED_DURATION_MIN = 60
+        private const val BOLUS_UNITS = 1.0
     }
 }
