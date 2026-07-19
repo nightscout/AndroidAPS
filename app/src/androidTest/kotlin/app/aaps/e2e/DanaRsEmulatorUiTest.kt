@@ -396,7 +396,10 @@ class DanaRsEmulatorUiTest {
     }
 
     private fun dismissBlockingSheetIfPresent() {
-        device.findObject(byDesc("Close sheet"))?.click()
+        // The sheet animates in/out, so the node can invalidate between find and click — swallow the
+        // stale hit and let waitForOverview's loop retry rather than fail the whole test on it. (Seen
+        // only under package-run load; harmless in isolation.)
+        runCatching { device.findObject(byDesc("Close sheet"))?.click() }
     }
 
     /**
