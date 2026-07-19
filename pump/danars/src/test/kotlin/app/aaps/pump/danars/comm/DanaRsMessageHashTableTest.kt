@@ -2,8 +2,8 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.danars.DanaRSTestBase
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -32,11 +32,12 @@ class DanaRsMessageHashTableTest : DanaRSTestBase() {
     }
 
     @Test
-    fun throwErrorForUnknownMessage() {
+    fun returnsNullForUnknownMessage() {
+        // Was assertThrows: findMessage now returns null instead of throwing, so an unexpected packet
+        // arriving on the BLE callback thread is logged as "Unknown message" by BLEComm.processMessage
+        // rather than crashing the app. See DanaRSMessageHashTable.findMessage.
         val danaRSMessageHashTable = DanaRSMessageHashTable(packetList)
         val command = DanaRSPacket().command
-        assertThrows(Exception::class.java) {
-            danaRSMessageHashTable.findMessage(command)
-        }
+        assertThat(danaRSMessageHashTable.findMessage(command)).isNull()
     }
 }
