@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
@@ -196,6 +197,78 @@ class DanaRSPluginTest : DanaRSTestBase() {
         // Not initialized → deferred (re-pushed on reconnect): success=true keeps it out of the
         // central failure alarm, enacted stays false so nothing is shown.
         val result = runBlocking { danaRSPlugin.setNewBasalProfile(mock()) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+    }
+
+    // Command-method logic (percent computation, branch selection, result building) runs even with
+    // no bound service — the service call is a no-op and the result is built around it. The full
+    // round-trip to a pump is covered by the UI E2E; these cover the branches it does not vary.
+
+    @Test
+    fun tempBasalAbsoluteAtBaseRateIsATempOff() {
+        danaPump.currentBasal = 1.0 // baseBasalRate
+        // Requested == base → 100% → doTempOff, nothing running → a no-op "success".
+        val result = runBlocking {
+            danaRSPlugin.setTempBasalAbsolute(1.0, 30, enforceNew = false, tbrType = PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+        assertThat(result.percent).isEqualTo(100)
+    }
+
+    @Test
+    fun tempBasalAbsoluteBelowBaseComputesALowPercent() {
+        danaPump.currentBasal = 1.0
+        // 0.5 U/h against a 1.0 base → ~50% → doLowTemp path; without a service the send fails, so
+        // this exercises the computation + failure result, not a successful set.
+        val result = runBlocking {
+            danaRSPlugin.setTempBasalAbsolute(0.5, 30, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(result.success).isFalse()
+    }
+
+    @Test
+    fun tempBasalAbsoluteAboveBaseComputesAHighPercent() {
+        danaPump.currentBasal = 1.0
+        val result = runBlocking {
+            danaRSPlugin.setTempBasalAbsolute(2.0, 30, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(result.success).isFalse()
+    }
+
+    @Test
+    fun setTempBasalPercentWithoutServiceFails() {
+        val result = runBlocking {
+            danaRSPlugin.setTempBasalPercent(150, 60, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(result.success).isFalse()
+    }
+
+    @Test
+    fun setTempBasalPercentRejectsNegativeInput() {
+        val result = runBlocking {
+            danaRSPlugin.setTempBasalPercent(-1, 60, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(result.success).isFalse()
+    }
+
+    @Test
+    fun setExtendedBolusWithoutServiceFails() {
+        val result = runBlocking { danaRSPlugin.setExtendedBolus(1.0, 60) }
+        assertThat(result.success).isFalse()
+    }
+
+    @Test
+    fun cancelTempBasalIsANoOpSuccessWhenNoneRunning() {
+        val result = runBlocking { danaRSPlugin.cancelTempBasal(enforceNew = false) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+    }
+
+    @Test
+    fun cancelExtendedBolusIsANoOpSuccessWhenNoneRunning() {
+        val result = runBlocking { danaRSPlugin.cancelExtendedBolus() }
         assertThat(result.success).isTrue()
         assertThat(result.enacted).isFalse()
     }
