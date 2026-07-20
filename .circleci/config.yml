@@ -113,67 +113,72 @@ jobs:
             $GRADLE_PIN ./gradlew -Dorg.gradle.daemon=true \
               :app:assembleFullDebug :app:assembleFullDebugAndroidTest compileFullDebugUnitTestSources
 
-      # OPTION 2 — annotation-balanced sharding of the APP module across the two emulators, everything
-      # in ONE task so the emulators live only for the test window:
-      #   - app shard A = @ShardA (Dana suite) on emu-5554, shard B = notAnnotation (the rest) on
-      #     emu-5556, via `am instrument` (two Gradle connectedAndroidTest of one module collide);
-      #   - unit tests + the tiny non-app connectedAndroidTest run as ONE Gradle invocation (pinned
-      #     0-17, on emu-5556) overlapping the shards — folded here rather than a separate serial step;
-      #   - each shard KILLS its emulator the instant it finishes and CONFIRMS it dropped off; once both
-      #     are gone the unit-test tail is WIDENED onto the freed cores 18-23 (never onto a live emu).
-      #
-      # NEEDS CI ITERATION — app-shard results are pass/fail only (am instrument emits text, not JUnit
-      # XML), and the affinity-widen is best-effort (already-forked workers may keep the old mask).
+      # OPTION 2 — annotation-balanced app sharding across two emulators, split into VISIBLE steps so
+      # each shows its own status/timing in the CircleCI UI. Shard A (@ShardA = Dana suite) and shard B
+      # (notAnnotation = the rest) run as `background: true` steps (still visible) via `am instrument`
+      # (two Gradle connectedAndroidTest of one module collide), so they overlap the foreground unit
+      # tests; a final "Collect" step gates on their results. The tiny non-app modules keep the Gradle
+      # path in their own step. Coverage is best-effort (non-fatal) so a coverage hiccup can't mask a
+      # green test run; app-shard results are pass/fail only (am instrument emits text, not JUnit XML).
       - run:
-          name: App shards (am instrument) + unit/non-app (Gradle), kill-early + widen
+          name: Non-app module androidTests (Gradle, emu-5554)
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            PKG=info.nightscout.androidaps
+            export ANDROID_SERIAL=emulator-5554
+            TASKS=""
+            for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
+              [ "$m" = "app" ] && continue; TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
+            done
+            [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
+
+      - run:
+          name: Install app test APKs on both emulators
+          command: |
             APK=app/build/outputs/apk/full/debug/app-full-debug.apk
             TST=app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk
-            RUNNER=$PKG.test/app.aaps.runners.HiltTestRunner
-            SHARD_ANNOT=app.aaps.testcategories.ShardA
-            COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected
-            mkdir -p "$COVDIR"
             for s in emulator-5554 emulator-5556; do adb -s $s install -r -d "$APK"; adb -s $s install -r -d "$TST"; done
 
-            run_shard() {  # $1=serial  $2=filter-args  $3=label
-              # coverage into the app's OWN data dir: /data/local/tmp is not app-writable, which is why
-              # last run's -e coverageFile there produced no .ec. Pull it back with run-as (debuggable app).
-              adb -s "$1" shell am instrument -w -r $2 \
-                -e coverage true -e coverageFile /data/data/$PKG/cov-$3.ec \
-                $RUNNER | tee shard-$3.txt
-              adb -s "$1" exec-out run-as $PKG cat cov-$3.ec > "$COVDIR/cov-$3.ec" 2>/dev/null || echo "WARN: no coverage pulled for shard $3"
-              adb -s "$1" emu kill || true                                   # kill THIS emulator immediately
-              for i in $(seq 1 20); do adb devices | grep -q "$1" || break; sleep 1; done   # confirm it is gone
-              adb devices | grep -q "$1" && echo "WARNING: $1 still present after kill" || echo "$1 killed"
-            }
+      - run:
+          name: App shard A — Dana suite (emu-5554, am instrument)
+          background: true
+          command: |
+            PKG=info.nightscout.androidaps
+            COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            adb -s emulator-5554 shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
+              -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
+              $PKG.test/app.aaps.runners.HiltTestRunner | tee shard-A.txt
+            adb -s emulator-5554 exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || echo "WARN: no coverage for shard A"
+            if grep -qE "FAILURES!!!|shortMsg=Process crashed" shard-A.txt; then echo 1 > /tmp/rc-A; else echo 0 > /tmp/rc-A; fi
+            echo "shard A done"
 
-            # unit tests + non-app connectedAndroidTest, one Gradle invocation (0-17), on emu-5556.
-            NONAPP=""
-            for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
-              [ "$m" = "app" ] && continue; NONAPP="$NONAPP :$m:connectedFullDebugAndroidTest"
-            done
-            ANDROID_SERIAL=emulator-5556 $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 \
-              testFullDebugUnitTest $NONAPP & UNIT_PID=$!
+      - run:
+          name: App shard B — the rest (emu-5556, am instrument)
+          background: true
+          command: |
+            PKG=info.nightscout.androidaps
+            COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            adb -s emulator-5556 shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA \
+              -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
+              $PKG.test/app.aaps.runners.HiltTestRunner | tee shard-B.txt
+            adb -s emulator-5556 exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || echo "WARN: no coverage for shard B"
+            if grep -qE "FAILURES!!!|shortMsg=Process crashed" shard-B.txt; then echo 1 > /tmp/rc-B; else echo 0 > /tmp/rc-B; fi
+            echo "shard B done"
 
-            run_shard emulator-5554 "-e annotation $SHARD_ANNOT"    A & SHA=$!
-            run_shard emulator-5556 "-e notAnnotation $SHARD_ANNOT" B & SHB=$!
-            wait $SHA $SHB               # both shards done AND both emulators confirmed killed
-            # Widen the unit-test tail onto 18-23 ONLY if both emulators are gone (else we'd oversubscribe).
-            if adb devices | grep -qE "emulator-5554|emulator-5556"; then
-              echo "an emulator still present -- NOT widening"
-            elif command -v taskset > /dev/null; then
-              for p in $(pgrep java); do taskset -a -c -p 0-23 "$p" >/dev/null 2>&1 || true; done
-              echo "widened remaining java to 0-23"
-            fi
-            wait $UNIT_PID; UNIT_RC=$?
-            RC=0
-            grep -qE "FAILURES!!!|INSTRUMENTATION_RESULT: shortMsg=Process crashed" shard-A.txt shard-B.txt && { echo "app shard failed"; RC=1; }
-            [ "$UNIT_RC" -ne 0 ] && { echo "unit/non-app tests failed"; RC=1; }
-            [ "$RC" -eq 0 ] && echo "all green"
-            exit $RC
+      - run:
+          name: Unit tests (Gradle, pinned 0-17, overlaps the shards)
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 testFullDebugUnitTest
+
+      - run:
+          name: Collect app shard results
+          command: |
+            for i in $(seq 1 600); do [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && break; sleep 2; done
+            RCA=$(cat /tmp/rc-A 2>/dev/null || echo 1); RCB=$(cat /tmp/rc-B 2>/dev/null || echo 1)
+            echo "shard A rc=$RCA  shard B rc=$RCB"
+            [ "$RCA" = 0 ] && [ "$RCB" = 0 ] && echo "both shards OK" || { echo "a shard failed or timed out"; exit 1; }
 
       - run:
           name: Kill emulators
