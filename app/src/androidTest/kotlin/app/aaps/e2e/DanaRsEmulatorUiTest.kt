@@ -11,6 +11,7 @@ import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
+import androidx.work.WorkManager
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
@@ -50,6 +51,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
+import java.util.Base64
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -63,10 +65,13 @@ import javax.inject.Inject
  * - **pump → UI**: a value seeded onto the emulator has to appear after Refresh
  * - **UI → pump**: a user option edited here, and a bolus, have to land on the emulator's `PumpState`
  *
- * The emulator is selected purely by [ExternalOptions.EMULATE_DANA_BLE5] — see [EmulatedOptions] for
- * why a test has to report that rather than drop the production marker file. BLE5 (Dana-i) because
- * its handshake is the simplest the emulator speaks: a stored pairing key, no passkey round-trip.
- * `DanaRsEmulatorPumpTest` covers the same stack headlessly; this one adds the screens on top.
+ * The variant (which `EMULATE_DANA_*` handshake) is chosen per test in [bringUp], not `@Before`,
+ * because `BleTransport` is a `@Singleton` the graph binds once — so the option has to be set before
+ * `hiltRule.inject()`. The BLE5 test walks every screen; [danaInsulinDelivery_overV1Handshake] and
+ * [danaInsulinDelivery_overV3Handshake] run only the insulin-delivery flow, which is pump-agnostic
+ * (Manage → `CommandQueue` → active pump), so the *same* body proves each handshake — the reuse that
+ * makes an E2E worth more than a per-plugin unit test. `DanaRsEmulatorPumpTest` covers the same
+ * stack headlessly; this one adds the screens on top.
  *
  * ## Why this is seeded rather than wizard-driven
  * `SetupWizardE2EHiltTest` walks the whole setup wizard because that is what it tests; it costs
@@ -112,10 +117,21 @@ class DanaRsEmulatorUiTest {
 
     @Before
     fun setUp() {
-        // Clear before the graph reads any prefs, exactly as SetupWizardE2EHiltTest does: singletons
-        // then seed their defaults against empty prefs like a fresh app would.
+        // Clear before the graph reads any prefs — the variant is chosen per test in bringUp().
         clearAllSharedPrefs()
-        EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_DANA_BLE5)
+    }
+
+    /**
+     * Brings the app up with [variant] as the paired, active Dana pump.
+     *
+     * Per test rather than `@Before` because the variant has to be set *before* `hiltRule.inject()`:
+     * `BleTransport` is `@Singleton`, so `DanaModules` reads which `EMULATE_*` option is on once,
+     * when the graph first constructs it. The whole insulin-delivery flow below is pump-agnostic
+     * (Manage → command queue → active pump), so the same flow runs against every RS handshake — only
+     * this seeding differs (see [seedPairingFor]).
+     */
+    private fun bringUp(variant: ExternalOptions) {
+        EmulatedOptions.enabled = setOf(variant)
         hiltRule.inject()
 
         // BLEComm.connect gates on this before it ever reaches the transport.
@@ -127,27 +143,17 @@ class DanaRsEmulatorUiTest {
         }
 
         seedConfiguredApp()
-        seedPairedDanaPump()
+        seedPairedDanaPump(variant)
         seedDanaAsActivePump()
 
         pluginStore.plugins = pluginList
         // Reads the ConfigBuilderEnabled preferences seeded above, then verifySelectionInCategories()
-        // makes Dana the active pump — which is what puts its setup button in the bottom bar. Must
-        // come after seeding: initialize() resolves the active pump once.
+        // makes Dana the active pump. Must come after seeding: initialize() resolves the active pump once.
         configBuilder.initialize()
         config.initCompleted()
         // Both after initialize(), which elects the active profile source these go through.
         seedLocalProfile()
         activateSeededProfile()
-
-        // Deliberately NO changePump()/connect() here. Both would read pump status and mark the pump
-        // initialized — and ComposeMainActivity only offers the bottom-bar button onto the pump's
-        // screen while it is *not* initialized (showPumpSetup = !isInitialized || isSuspended). The
-        // status read has to happen after the screen is open; see initializePumpFromUi.
-        //
-        // configBuilder.initialize() already enabled the plugin, whose onStart binds DanaRSService
-        // on pluginScope. That bind is async but lands well inside this test's Hilt component, which
-        // is what matters (see DanaRsEmulatorPumpTest); tearDown unbinds it before the component dies.
 
         device.executeShellCommand("settings put global heads_up_notifications_enabled 0")
         device.executeShellCommand("logcat -c")
@@ -155,7 +161,17 @@ class DanaRsEmulatorUiTest {
 
     @After
     fun tearDown() {
+        // This class now runs three tests (BLE5/v1/v3). Any command-queue work, WorkManager job or
+        // deferred emulator callback left in flight keeps talking to the pump into whichever test
+        // starts next, whose UI then recomposes under uiautomator and dies with a StaleObjectException
+        // (see the same note in DanaRsEmulatorPumpTest). Drain everything before the component dies.
+        runCatching { commandQueue.clear() }
+        runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { danaRSPlugin.disconnect("test end") }
+        // Disconnect first, then await: the emulator defers some responses onto their own threads
+        // (v1's pairing key most of all); sendResponse drops them once disconnected, and this makes
+        // sure they are actually done before the next test seeds a fresh pump.
+        runCatching { if (::emulator.isInitialized) emulator.awaitPendingCallbacks() }
         // Unbind before the Hilt component dies, or the service crashes the process.
         runCatching { danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, false) }
         EmulatedOptions.enabled = emptySet()
@@ -231,21 +247,48 @@ class DanaRsEmulatorUiTest {
         }
     }
 
-    /** The preferences a completed Dana-i pairing leaves behind. */
-    private fun seedPairedDanaPump() {
+    /**
+     * The preferences a completed pairing leaves behind, for [variant]'s handshake.
+     *
+     * The device name/address/password are shared; only the encryption keys differ per handshake
+     * (see [seedPairingFor]). Seeding the matching keys is also what lets the driver reconnect
+     * without a PIN/password screen no test could answer.
+     */
+    private fun seedPairedDanaPump(variant: ExternalOptions) {
         preferences.put(DanaStringNonKey.RsName, DEVICE_NAME)
         preferences.put(DanaStringNonKey.MacAddress, DEVICE_ADDRESS)
         preferences.put(DanaStringNonKey.Password, PASSWORD)
-        preferences.put(DanaStringComposedKey.Ble5PairingKey, DEVICE_NAME, value = BLE5_PAIRING_KEY)
 
         emulator = bleTransport as EmulatorBleTransport
-        emulator.pumpState.ble5PairingKey = BLE5_PAIRING_KEY
+        seedPairingFor(variant)
         emulator.pairingDelayMs = 0
         emulator.writeLatencyMs = 0
         // A value no default produces, so finding it on screen can only mean it came from the pump
         // (see refreshStatusFromPump). The emulator's own default here is 25.
         emulator.pumpState.maxDailyTotalUnits = MAX_DAILY_UNITS
         seedPumpHistory()
+    }
+
+    /** Seeds the app-side encryption keys for [variant], matching the emulator's own defaults. */
+    private fun seedPairingFor(variant: ExternalOptions) {
+        when (variant) {
+            ExternalOptions.EMULATE_DANA_BLE5  -> {
+                preferences.put(DanaStringComposedKey.Ble5PairingKey, DEVICE_NAME, value = BLE5_PAIRING_KEY)
+                // Pump side of the same key — a mismatch fails the handshake rather than the assertion.
+                emulator.pumpState.ble5PairingKey = BLE5_PAIRING_KEY
+            }
+
+            ExternalOptions.EMULATE_DANA_RS_V3 -> {
+                val encoder = Base64.getEncoder()
+                val state = emulator.pumpState
+                preferences.put(DanaStringComposedKey.V3ParingKey, DEVICE_NAME, value = encoder.encodeToString(state.v3PairingKey))
+                preferences.put(DanaStringComposedKey.V3RandomParingKey, DEVICE_NAME, value = encoder.encodeToString(state.v3RandomPairingKey))
+                preferences.put(DanaStringComposedKey.V3RandomSyncKey, DEVICE_NAME, value = String.format("%02x", state.v3RandomSyncKey))
+            }
+
+            // v1 (ENCRYPTION_DEFAULT) pairs on the password alone — no stored keys.
+            else                               -> Unit
+        }
     }
 
     /**
@@ -306,6 +349,7 @@ class DanaRsEmulatorUiTest {
      */
     @Test
     fun danaPumpUi_readsAndWritesTheEmulatedPump() {
+        bringUp(ExternalOptions.EMULATE_DANA_BLE5)
         assertActivePumpIsDana()
         val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
         try {
@@ -320,9 +364,7 @@ class DanaRsEmulatorUiTest {
             changeUserOptionsAndSaveToPump()   // User options → edit → write back to the emulator
 
             device.pressBack()                 // Dana screens → the main overview
-            bolusFromUi()                      // Treatments → Insulin → bolus → the emulator
-            applyTempBasalFromUi()             // Manage → Temp basal → the emulator
-            applyExtendedBolusFromUi()         // Manage → Extended bolus → the emulator
+            deliverInsulinFromUi()             // bolus + temp basal + extended bolus → the emulator
         } catch (t: Throwable) {
             logScreen("E2E_DANA_SCREEN")
             logPumpState("E2E_DANA_STATE")
@@ -330,6 +372,51 @@ class DanaRsEmulatorUiTest {
         } finally {
             scenario.close()
         }
+    }
+
+    /**
+     * The same insulin-delivery flow over the RSv1 (ENCRYPTION_DEFAULT) handshake.
+     *
+     * The flow is pump-agnostic — Manage → command queue → active pump — so only the handshake and
+     * pairing seed differ from the BLE5 test above. That is exactly what makes these E2E flows worth
+     * more than a unit test: the driver code they exercise is shared across every Dana variant, so
+     * the *same* body proves each one for free (see [deliverInsulinFromUi]).
+     */
+    @Test
+    fun danaInsulinDelivery_overV1Handshake() = runInsulinDeliveryOnly(ExternalOptions.EMULATE_DANA_RS_V1)
+
+    /** The same insulin-delivery flow over the RSv3 (stateful randomSyncKey) handshake. */
+    @Test
+    fun danaInsulinDelivery_overV3Handshake() = runInsulinDeliveryOnly(ExternalOptions.EMULATE_DANA_RS_V3)
+
+    /**
+     * Brings [variant] up, initializes it through the UI, then runs the pump-agnostic
+     * insulin-delivery flow — no RS-specific screens (those are covered once, on BLE5, above).
+     */
+    private fun runInsulinDeliveryOnly(variant: ExternalOptions) {
+        bringUp(variant)
+        assertActivePumpIsDana()
+        val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
+        try {
+            waitForOverview()
+            openDanaPlugin()          // Manage → Pump → DanaRSOverviewScreen
+            initializePumpFromUi()    // status read against the emulator → the rest of the actions
+            device.pressBack()        // Dana screen → the main overview
+            deliverInsulinFromUi()
+        } catch (t: Throwable) {
+            logScreen("E2E_DANA_SCREEN")
+            logPumpState("E2E_DANA_STATE")
+            throw t
+        } finally {
+            scenario.close()
+        }
+    }
+
+    /** Bolus, temp basal, extended bolus through the UI, each asserted against the emulator. */
+    private fun deliverInsulinFromUi() {
+        bolusFromUi()                      // Treatments → Insulin → bolus → the emulator
+        applyTempBasalFromUi()             // Manage → Temp basal → the emulator
+        applyExtendedBolusFromUi()         // Manage → Extended bolus → the emulator
     }
 
     /**
@@ -442,6 +529,11 @@ class DanaRsEmulatorUiTest {
      * or delivers the wrong dose.
      */
     private fun bolusFromUi() {
+        // The lean insulin-delivery flow reaches here right after initialization, while its status
+        // reads may still be draining; the full flow settled during the RS-screen legs. Bolusing into
+        // that window enqueues nothing (the command is dropped mid-reconnect) and the assertion below
+        // times out. Wait for the queue to drain first, exactly as the temp-basal/extended legs do.
+        waitForQueueIdle()
         assertThat(emulator.pumpState.lastBolusAmount).isEqualTo(0.0)
 
         openVia("Treatments", expect = "Insulin")
