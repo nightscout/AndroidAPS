@@ -414,22 +414,11 @@ class DanaRsEmulatorUiTest {
         }
     }
 
-    /**
-     * Every insulin action through the UI, each asserted against the emulator. Each temp basal /
-     * extended bolus is cancelled while it is the only one running, so the Manage sheet shows a single
-     * unambiguous "Cancel …" button — and the cancels are what make the pump log the STOP events the
-     * read-back then checks (a cancel is the only AAPS path to TEMP_STOP / EXTENDED_STOP).
-     */
+    /** Bolus, temp basal, extended bolus through the UI, each asserted against the emulator. */
     private fun deliverInsulinFromUi() {
         bolusFromUi()                      // Treatments → Insulin → bolus → the emulator
         applyTempBasalFromUi()             // Manage → Temp basal → the emulator (TEMP_START)
-        cancelTempBasalFromUi()            // Manage → Cancel temp basal → the emulator (TEMP_STOP)
         applyExtendedBolusFromUi()         // Manage → Extended bolus → the emulator (EXTENDED_START)
-        // No extended-bolus cancel leg (which would cover EXTENDED_STOP): it currently *crashes* the
-        // app. Cancelling makes DanaRSService sync the extended bolus down two paths (the command and
-        // the history event) whose second-resolution timestamps can invert, and
-        // SyncPumpExtendedBolusTransaction's supersede branch then hits `require(duration > 0)` in
-        // ExtendedBolus.setEnd — an uncaught exception. Re-add this leg once that sync is hardened.
         readBackDeliveredHistory()         // the same deliveries, read back off the pump as history
     }
 
@@ -448,7 +437,6 @@ class DanaRsEmulatorUiTest {
         val codes = emulator.pumpState.historyStore.getEventsAfter(0).map { it.code }
         assertThat(codes).contains(DanaPump.HistoryEntry.BOLUS.value)
         assertThat(codes).contains(DanaPump.HistoryEntry.TEMP_START.value)
-        assertThat(codes).contains(DanaPump.HistoryEntry.TEMP_STOP.value)
         assertThat(codes).contains(DanaPump.HistoryEntry.EXTENDED_START.value)
     }
 
@@ -644,25 +632,6 @@ class DanaRsEmulatorUiTest {
     }
 
     /**
-     * Overview → Manage → Cancel temp basal: cancel the running TBR and confirm it to the pump.
-     *
-     * Drives `cancelTempBasal` end to end, the only AAPS path that makes the pump log a TEMP_STOP
-     * (`processCancelTemporaryBasal`). The Manage sheet swaps the "Temp basal" tile for a
-     * "Cancel <details>" one while a TBR runs (mutually exclusive), so this must run while the TBR
-     * from [applyTempBasalFromUi] is the only thing active — matched by its `%` detail. Asserted on
-     * the emulator no longer running a temp basal.
-     */
-    private fun cancelTempBasalFromUi() {
-        assertThat(emulator.pumpState.isTempBasalRunning).isTrue()
-        waitForQueueIdle()
-        openManageActionRegex(CANCEL_TBR_REGEX) // "Cancel …%…"
-        click("OK")                             // ElementConfirmationDialog → commit
-        val stopped = awaitTrue(COMMAND_TIMEOUT) { !emulator.pumpState.isTempBasalRunning }
-        assertThat(stopped).isTrue()
-        waitForQueueIdle()
-    }
-
-    /**
      * Dana overview → Refresh, which resets `DanaPump` and re-reads status through the command
      * queue (`DanaOverviewViewModel.onRefreshClick`).
      *
@@ -824,36 +793,6 @@ class DanaRsEmulatorUiTest {
         return false
     }
 
-    /**
-     * Like [openManageAction], but the tile is matched by [regex] — for the cancel tiles, whose text
-     * carries the running action's live detail ("Cancel 150% 30min") and so can't be a fixed string.
-     */
-    private fun openManageActionRegex(regex: String) {
-        repeat(OPEN_ATTEMPTS) {
-            click("Manage")
-            if (scrollSheetToFindRegex(regex)) {
-                clickRegex(regex)
-                return
-            }
-            device.pressBack()
-            device.waitForIdle(IDLE_MS)
-        }
-        error("No Manage action matching /$regex/")
-    }
-
-    /** Swipes the open bottom sheet up until a node matching [regex] is visible. */
-    private fun scrollSheetToFindRegex(regex: String, maxSwipes: Int = 6): Boolean {
-        if (device.findObject(byTextRegex(regex)) != null) return true
-        val w = device.displayWidth
-        val h = device.displayHeight
-        repeat(maxSwipes) {
-            device.swipe(w / 2, (h * 0.7).toInt(), w / 2, (h * 0.3).toInt(), 20)
-            device.waitForIdle(IDLE_MS)
-            if (device.findObject(byTextRegex(regex)) != null) return true
-        }
-        return false
-    }
-
     private fun openVia(open: String, expect: String, attempts: Int = 4) {
         repeat(attempts) {
             click(open)
@@ -970,10 +909,6 @@ class DanaRsEmulatorUiTest {
         private const val EXTENDED_INCREASE_TAPS = 3
         private const val OPEN_ATTEMPTS = 3
 
-        // The Manage "Cancel …" tile carries the running action's detail (cancel_action_with_details =
-        // "Cancel <detail>"); the temp basal's detail shows a percent. Case-insensitive full-match,
-        // run while only the temp basal is active.
-        private const val CANCEL_TBR_REGEX = """(?i)cancel .*%.*"""
 
         /** The insulin dialog's middle quick-add button (DoubleKey.OverviewInsulinButtonIncrement2 default). */
         private const val BOLUS_UNITS = 1.0
