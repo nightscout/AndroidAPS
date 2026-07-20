@@ -54,45 +54,56 @@ jobs:
               sleep 10
             done
 
-      # Both emulators SHARE cores 18-23 (not 3+3): they are wait-bound, so letting the scheduler hand
-      # whichever one momentarily needs CPU a full slice avoids starving either, while Gradle stays
-      # protected on 0-17 (the build-40246 freeze was starvation from oversubscription — we do NOT
-      # overload here). After each shard finishes its emulator is killed and the unit-test tail is
-      # widened onto the freed cores (see the shard step).
+      # Core split is MEASURED, not guessed: with unit + both shards live, cores 0-17 sat at 100% (unit,
+      # CPU-bound) while 18-23 idled at 50-60% — the two emulators are wait-bound (UI automation) and
+      # together need only ~3.5 cores. So the emulators get 20-23 (4 cores, covers their need) and the
+      # two reclaimed cores go to Gradle/unit (now 0-19, see the compile step). Clean partition, no
+      # overlap → no oversubscription (the build-40246 freeze was overlap starvation; we do NOT overload).
       - run:
           name: Launch two emulators
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
             PIN=""
-            if command -v taskset > /dev/null; then PIN="taskset -c 18-23"; else echo "taskset unavailable, running unpinned"; fi
+            if command -v taskset > /dev/null; then PIN="taskset -c 20-23"; else echo "taskset unavailable, running unpinned"; fi
             $PIN emulator -avd citest0 -port 5554 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
             $PIN emulator -avd citest1 -port 5556 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
             wait
           background: true
 
-      # GRADLE_PIN is defined here and reused by later Gradle steps via BASH_ENV — it must be applied
-      # to THIS step above all: taskset pins only the process it launches, and the Gradle daemon (which
-      # runs the tests and forks the workers that inherit its affinity) is started here. The two
-      # emulators launched above boot IN PARALLEL while this compiles, hiding their ~33s boot.
+      # This step is pure compile + APK packaging (NO device tests), and the two emulators are only
+      # BOOTING for ~60s of its ~200s runtime, so it takes the WHOLE machine via COMPILE_PIN (0-23).
+      # GRADLE_PIN (0-19) is exported here for the LATER Gradle steps (unit / non-app) that run while the
+      # emulators + shards are live on 20-23 — those must stay off the emulator cores (taskset pins only
+      # the process it launches, and the Gradle daemon that forks the test workers is started here).
+      # Assembling the app APKs here (folded in from the old separate "Assemble" step) means the shards
+      # can install and start the instant compile ends — nothing Gradle sits between compile and unit.
       - run:
-          name: Compile all test sources (emulators booting in parallel)
+          name: Compile + assemble test APKs (emulators booting in parallel)
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
+            # Widen the comboctl PumpIOTest coroutine watchdogs 3x for the whole job: these long-press
+            # tests are timing-sensitive and get starved past their 20s hang-guard when unit tests run
+            # alongside the two emulators. Exported HERE so the Gradle daemon started by this step (and
+            # the unit-test JVMs it forks) inherit it; also pushed to BASH_ENV for any later shell.
+            export COMBOCTL_WATCHDOG_SCALE=3
+            echo 'export COMBOCTL_WATCHDOG_SCALE=3' >> "$BASH_ENV"
             if command -v taskset > /dev/null; then
-              echo 'export GRADLE_PIN="taskset -c 0-17"' >> "$BASH_ENV"
-              export GRADLE_PIN="taskset -c 0-17"
+              echo 'export GRADLE_PIN="taskset -c 0-19"' >> "$BASH_ENV"
+              export GRADLE_PIN="taskset -c 0-19"
+              COMPILE_PIN="taskset -c 0-23"
             else
               echo "taskset unavailable, running unpinned"
               echo 'export GRADLE_PIN=""' >> "$BASH_ENV"
+              COMPILE_PIN=""
             fi
-            $GRADLE_PIN ./gradlew \
+            $COMPILE_PIN ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.daemon=true \
-            compileFullDebugAndroidTestSources \
-            compileFullDebugUnitTestSources
+            compileFullDebugUnitTestSources \
+            :app:assembleFullDebug :app:assembleFullDebugAndroidTest
 
       - run:
           name: Wait for both emulators to boot
@@ -103,35 +114,16 @@ jobs:
               echo "$s booted"
             done
 
-      # Build all androidTest + unit-test outputs once (shared by both shards). The app APKs are
-      # what the am-instrument shards install; the non-app test APKs are for their Gradle run below.
-      - run:
-          name: Assemble test APKs
-          command: |
-            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-            export ANDROID_HOME=/usr/lib/android-sdk
-            $GRADLE_PIN ./gradlew -Dorg.gradle.daemon=true \
-              :app:assembleFullDebug :app:assembleFullDebugAndroidTest compileFullDebugUnitTestSources
-
       # OPTION 2 — annotation-balanced app sharding across two emulators, split into VISIBLE steps so
-      # each shows its own status/timing in the CircleCI UI. Shard A (@ShardA = Dana suite) and shard B
-      # (notAnnotation = the rest) run as `background: true` steps (still visible) via `am instrument`
-      # (two Gradle connectedAndroidTest of one module collide), so they overlap the foreground unit
-      # tests; a final "Collect" step gates on their results. The tiny non-app modules keep the Gradle
-      # path in their own step. Coverage is best-effort (non-fatal) so a coverage hiccup can't mask a
-      # green test run; app-shard results are pass/fail only (am instrument emits text, not JUnit XML).
-      - run:
-          name: Non-app module androidTests (Gradle, emu-5554)
-          command: |
-            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-            export ANDROID_HOME=/usr/lib/android-sdk
-            export ANDROID_SERIAL=emulator-5554
-            TASKS=""
-            for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
-              [ "$m" = "app" ] && continue; TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
-            done
-            [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
-
+      # each shows its own status/timing in the CircleCI UI. The order is tuned so the long pole (unit
+      # tests) starts the INSTANT compile ends: install app APKs → launch both shards in the background
+      # (am instrument, so no Gradle-daemon contention with unit) → run unit foreground overlapping them.
+      # Non-app modules run AFTER unit — they are Gradle too and would otherwise serialize on the one
+      # daemon and delay the unit start. Shard A (@ShardA = Dana suite) and shard B (notAnnotation = the
+      # rest) finish well before the ~480s unit step, so they are hidden underneath it; a "Collect" step
+      # (when: always) gates the job on their pass/fail. Coverage pull is best-effort (non-fatal) so a
+      # coverage hiccup can't mask a green run; app-shard results are pass/fail only (am instrument emits
+      # text, not JUnit XML).
       - run:
           name: Install app test APKs on both emulators
           command: |
@@ -166,11 +158,23 @@ jobs:
             echo "shard B done"
 
       - run:
-          name: Unit tests (Gradle, pinned 0-17, overlaps the shards)
+          name: Unit tests (Gradle, pinned 0-19, starts right after compile, overlaps the shards)
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
             $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 testFullDebugUnitTest
+
+      - run:
+          name: Non-app module androidTests (Gradle, emu-5554)
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            export ANDROID_SERIAL=emulator-5554
+            TASKS=""
+            for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
+              [ "$m" = "app" ] && continue; TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
+            done
+            [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
 
       - run:
           name: Collect app shard results
