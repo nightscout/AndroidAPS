@@ -83,6 +83,9 @@
         <activity
             android:name="app.aaps.plugins.sync.nfcCommands.NfcControlActivity"
             android:exported="true"
+            android:launchMode="singleTask"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
