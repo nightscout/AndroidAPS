@@ -38,6 +38,7 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
+import app.aaps.testcategories.ShardA
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -71,6 +72,7 @@ import javax.inject.Inject
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@ShardA
 class DanaRSPairWizardUiTest {
 
     @get:Rule val hiltRule = HiltAndroidRule(this)
