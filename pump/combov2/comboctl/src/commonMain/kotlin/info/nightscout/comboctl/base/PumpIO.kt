@@ -1573,7 +1573,8 @@ class PumpIO(
                     // function as confirmations.) Transmit "true"
                     // to let the receivers know that everything
                     // is OK and that they don't need to abort.
-                    rtButtonConfirmationBarrier.trySend(true)
+                    val sent = rtButtonConfirmationBarrier.trySend(true)
+                    logger(LogLevel.DEBUG) { "[RTBARRIER] trySend(true) from RT_DISPLAY: success=${sent.isSuccess}" }
                     TransportLayer.IO.ReceiverBehavior.DROP_PACKET
                 }
 
@@ -1584,7 +1585,8 @@ class PumpIO(
                     // function as confirmations.) Transmit "true"
                     // to let the receivers know that everything
                     // is OK and that they don't need to abort.
-                    rtButtonConfirmationBarrier.trySend(true)
+                    val sent = rtButtonConfirmationBarrier.trySend(true)
+                    logger(LogLevel.DEBUG) { "[RTBARRIER] trySend(true) from RT_BUTTON_CONFIRMATION: success=${sent.isSuccess}" }
                     TransportLayer.IO.ReceiverBehavior.DROP_PACKET
                 }
 
@@ -1902,7 +1904,11 @@ class PumpIO(
                     }
 
                     // Dummy tryReceive() call to clear out the barrier in case it isn't empty.
-                    rtButtonConfirmationBarrier.tryReceive()
+                    // [RTBARRIER] diagnostic: log whether this pre-clear actually consumed a pending
+                    // confirmation. If it consumes the confirmation meant for the button status we are
+                    // about to send, the receive() below waits forever — the suspected flake cause.
+                    val preCleared = rtButtonConfirmationBarrier.tryReceive()
+                    logger(LogLevel.DEBUG) { "[RTBARRIER] pre-send tryReceive cleared=${preCleared.isSuccess} value=${preCleared.getOrNull()}" }
 
                     logger(LogLevel.DEBUG) {
                         "Sending long RT button press; button(s) = ${toString(buttons)} status changed = $buttonStatusChanged"
