@@ -148,6 +148,26 @@ class EversenseGattCallback(
         transmitterReady = false
         EversenseLogger.info(TAG, "GATT disconnected and closed")
     }
+
+    // disconnect() alone does NOT reliably re-trigger onConnectionStateChange(): calling
+    // bluetoothGatt.close() while its own async disconnect() is still in flight can suppress
+    // that callback from ever arriving, and all reconnect scheduling (backoff, persistent
+    // retry loop) lives inside that callback's disconnect branch. Left unrecovered, this
+    // silently strands the connection until the user notices and manually reconnects -
+    // observed in the wild via fullSync()'s own failure handler (see Eversense365Communicator).
+    // Use this instead of plain disconnect() whenever OUR code (not the Android BLE stack) is
+    // the one initiating the disconnect, so a reconnect is scheduled regardless of whether the
+    // callback fires. Treated as a clean, self-initiated disconnect (GATT_SUCCESS) for a fast
+    // 5s retry rather than backoff, since it isn't a real BLE-level failure.
+    @SuppressLint("MissingPermission")
+    fun disconnectAndScheduleReconnect() {
+        disconnect()
+        handler.post {
+            plugin.watchers.forEach { it.onConnectionChanged(false) }
+        }
+        scheduleReconnect(BluetoothGatt.GATT_SUCCESS)
+    }
+
     @SuppressLint("MissingPermission")
     fun cleanUp() {
         bluetoothGatt?.disconnect()
@@ -243,39 +263,46 @@ class EversenseGattCallback(
                 failedConnectionAttempts = 0
             }
 
-            val storedAddress = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null)
-            if (storedAddress != null) {
-                // Exponential backoff so AAPS reclaims the transmitter quickly after boot
-                // (when the official Eversense app temporarily holds the BLE connection)
-                // and avoids battery drain during sustained unavailability.
-                //
-                // Status 19 = transmitter actively rejected us (placement issue, not competition) —
-                // use a fixed 30 s interval so we don't spam it.
-                // Status GATT_SUCCESS = clean disconnect (we or the transmitter closed cleanly) —
-                // reconnect quickly in 5 s.
-                // All other status codes (e.g. 133 = GATT_ERROR, device busy) = backoff:
-                //   attempt 0 → 5 s, attempt 1 → 10 s, attempt 2 → 20 s, attempt 3 → 40 s,
-                //   attempt 4+ → 60 s cap.
-                val delayMs: Long = when {
-                    status == 19 -> 30_000L
-                    status == BluetoothGatt.GATT_SUCCESS -> 5_000L
-                    else -> {
-                        val attempt = reconnectAttempts++
-                        minOf(5_000L * (1L shl minOf(attempt, 4)), 60_000L)
-                    }
-                }
-                EversenseLogger.info(TAG, "Scheduling auto-reconnect in ${delayMs / 1000}s (status: $status, attempt: $reconnectAttempts)")
-                handler.postDelayed({
-                    EversenseLogger.info(TAG, "Attempting auto-reconnect (attempt $reconnectAttempts)...")
-                    plugin.connect(null)
-                }, delayMs)
-                // Also start persistent 60s retry loop in case autoConnect gives up
-                handler.removeCallbacks(persistentReconnectRunnable)
-                handler.postDelayed(persistentReconnectRunnable, 60_000L)
-            } else {
-                EversenseLogger.warning(TAG, "No stored device address — skipping auto-reconnect")
+            scheduleReconnect(status)
+        }
+    }
+
+    // Extracted from onConnectionStateChange's disconnect branch so disconnectAndScheduleReconnect()
+    // can trigger the identical reconnect scheduling without depending on onConnectionStateChange()
+    // firing - see that method's doc comment for why that firing isn't reliable after our own close().
+    private fun scheduleReconnect(status: Int) {
+        val storedAddress = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null)
+        if (storedAddress == null) {
+            EversenseLogger.warning(TAG, "No stored device address — skipping auto-reconnect")
+            return
+        }
+        // Exponential backoff so AAPS reclaims the transmitter quickly after boot
+        // (when the official Eversense app temporarily holds the BLE connection)
+        // and avoids battery drain during sustained unavailability.
+        //
+        // Status 19 = transmitter actively rejected us (placement issue, not competition) —
+        // use a fixed 30 s interval so we don't spam it.
+        // Status GATT_SUCCESS = clean disconnect (we or the transmitter closed cleanly) —
+        // reconnect quickly in 5 s.
+        // All other status codes (e.g. 133 = GATT_ERROR, device busy) = backoff:
+        //   attempt 0 → 5 s, attempt 1 → 10 s, attempt 2 → 20 s, attempt 3 → 40 s,
+        //   attempt 4+ → 60 s cap.
+        val delayMs: Long = when {
+            status == 19 -> 30_000L
+            status == BluetoothGatt.GATT_SUCCESS -> 5_000L
+            else -> {
+                val attempt = reconnectAttempts++
+                minOf(5_000L * (1L shl minOf(attempt, 4)), 60_000L)
             }
         }
+        EversenseLogger.info(TAG, "Scheduling auto-reconnect in ${delayMs / 1000}s (status: $status, attempt: $reconnectAttempts)")
+        handler.postDelayed({
+            EversenseLogger.info(TAG, "Attempting auto-reconnect (attempt $reconnectAttempts)...")
+            plugin.connect(null)
+        }, delayMs)
+        // Also start persistent 60s retry loop in case autoConnect gives up
+        handler.removeCallbacks(persistentReconnectRunnable)
+        handler.postDelayed(persistentReconnectRunnable, 60_000L)
     }
 
     @SuppressLint("MissingPermission")

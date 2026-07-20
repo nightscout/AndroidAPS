@@ -491,13 +491,9 @@ class EversensePlugin @Inject constructor(
                     else
                         "Eversense cloud upload: ❌ failed — check credentials and internet"
                     aapsLogger.info(LTag.BGSOURCE, msg365)
-
-                    // Only notify user on failure — success is silent
-                    if (!uploadOk) {
-                        mainHandler.post {
-                            android.widget.Toast.makeText(context, rh.gs(R.string.eversense_cloud_upload_failed), android.widget.Toast.LENGTH_LONG).show()
-                        }
-                    }
+                    // Cloud-upload failures are logged only, not toasted - a routine BLE hiccup
+                    // (e.g. a disconnect mid-sync) retries within seconds, and toasting every
+                    // failed attempt was spamming the user during sustained connection trouble.
 
                     val latest = readings.firstOrNull { it.rawResponseHex.isNotEmpty() } ?: readings.firstOrNull()
                     if (latest != null) {
@@ -549,13 +545,7 @@ class EversensePlugin @Inject constructor(
                     else
                         "E3 cloud upload: ❌ failed — check credentials and internet"
                     aapsLogger.info(LTag.BGSOURCE, msgE3)
-
-                    // Only notify user on failure — success is silent
-                    if (!eventsOk) {
-                        mainHandler.post {
-                            android.widget.Toast.makeText(context, rh.gs(R.string.eversense_cloud_upload_failed), android.widget.Toast.LENGTH_LONG).show()
-                        }
-                    }
+                    // Cloud-upload failures are logged only, not toasted - see the 365 path above.
                 }
             }
         }

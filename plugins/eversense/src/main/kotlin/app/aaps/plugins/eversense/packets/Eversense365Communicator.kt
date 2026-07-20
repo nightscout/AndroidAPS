@@ -218,10 +218,13 @@ class Eversense365Communicator {
             } catch (exception: Exception) {
                 EversenseLogger.error(TAG, "Failed to do full sync: $exception")
                 exception.printStackTrace()
-                // Disconnect on fullSync failure so BLE session resets cleanly
-                // rather than looping with broken GATT state
+                // Disconnect on fullSync failure so BLE session resets cleanly rather than looping
+                // with broken GATT state. Must use disconnectAndScheduleReconnect() here, not plain
+                // disconnect() - see that method's doc comment for why a self-initiated disconnect
+                // doesn't reliably re-trigger onConnectionStateChange() (and therefore its reconnect
+                // scheduling) on its own.
                 EversenseLogger.warning(TAG, "Disconnecting after fullSync failure to reset BLE session")
-                gatt.disconnect()
+                gatt.disconnectAndScheduleReconnect()
             }
         }
 
