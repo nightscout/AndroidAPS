@@ -9,14 +9,18 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
@@ -100,6 +104,84 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun serialNumberComesFromDanaPump() {
         danaPump.serialNumber = "ABC12345XY"
         assertThat(danaRSPlugin.serialNumber()).isEqualTo("ABC12345XY")
+    }
+
+    @Test
+    fun connectionStateDelegatesToTheServiceAndIsSafeWithoutOne() {
+        // No bound service in a unit test → the guarded delegations are no-ops, not crashes.
+        assertThat(danaRSPlugin.isConnected()).isFalse()
+        assertThat(danaRSPlugin.isConnecting()).isFalse()
+        danaRSPlugin.connect("test")          // guard false (empty device) → no-op
+        danaRSPlugin.disconnect("test")       // service null → no-op
+        danaRSPlugin.stopConnecting()         // service null → no-op
+        danaRSPlugin.stopBolusDelivering()    // service null → no-op
+    }
+
+    @Test
+    fun changePumpLoadsDeviceDetailsFromPreferences() {
+        whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("UHH00002TI")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("00:11:22:33:44:55")
+
+        danaRSPlugin.changePump()
+
+        // mDeviceAddress is private; isConfigured() (name + address both set) proves both loaded.
+        // (danaPump.serialNumber is set then cleared by the reset() at the end of changePump.)
+        assertThat(danaRSPlugin.mDeviceName).isEqualTo("UHH00002TI")
+        assertThat(danaRSPlugin.isConfigured()).isTrue()
+    }
+
+    @Test
+    fun getPumpStatusSyncsBasalAndBolusStepIntoTheDescription() {
+        danaPump.basalStep = 0.01
+        danaPump.bolusStep = 0.05
+
+        runBlocking { danaRSPlugin.getPumpStatus("test") } // service null → just syncs the steps
+
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
+        assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.05)
+    }
+
+    @Test
+    fun historyLoadsReturnUnsuccessfulWithoutAService() {
+        assertThat(danaRSPlugin.loadHistory(RecordTypes.RECORD_TYPE_ALARM).success).isFalse()
+        assertThat(danaRSPlugin.loadEvents().success).isFalse()
+        assertThat(danaRSPlugin.setUserOptions().success).isFalse()
+        assertThat(runBlocking { danaRSPlugin.loadTDDs() }.success).isFalse()
+    }
+
+    @Test
+    fun pumpSpecificShortStatusFormatsTheDailyTotal() {
+        danaPump.dailyTotalUnits = 12.3
+        danaPump.maxDailyTotalUnits = 80
+
+        assertThat(danaRSPlugin.pumpSpecificShortStatus(veryShort = false)).contains("TDD")
+        assertThat(danaRSPlugin.pumpSpecificShortStatus(veryShort = true)).isEmpty()
+    }
+
+    @Test
+    fun canHandleDstFollowsTheUtcFlag() {
+        danaPump.hwModel = 5 // usingUTC = hwModel >= 7
+        assertThat(danaRSPlugin.canHandleDST()).isFalse()
+        danaPump.hwModel = 9
+        assertThat(danaRSPlugin.canHandleDST()).isTrue()
+    }
+
+    @Test
+    fun clearPairingRemovesEveryStoredKey() {
+        danaRSPlugin.mDeviceName = "UHH00002TI"
+
+        danaRSPlugin.clearPairing()
+
+        verify(preferences).remove(DanaStringComposedKey.ParingKey, "UHH00002TI")
+        verify(preferences).remove(DanaStringComposedKey.V3ParingKey, "UHH00002TI")
+        verify(preferences).remove(DanaStringComposedKey.V3RandomParingKey, "UHH00002TI")
+        verify(preferences).remove(DanaStringComposedKey.V3RandomSyncKey, "UHH00002TI")
+        verify(preferences).remove(DanaStringComposedKey.Ble5PairingKey, "UHH00002TI")
+    }
+
+    @Test
+    fun preferenceScreenContentIsTheDanaRsSubScreen() {
+        assertThat(danaRSPlugin.getPreferenceScreenContent().key).isEqualTo("danars_settings")
     }
 
     @BeforeEach
