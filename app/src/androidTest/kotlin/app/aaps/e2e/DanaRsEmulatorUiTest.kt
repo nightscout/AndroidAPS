@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -165,6 +166,9 @@ class DanaRsEmulatorUiTest {
     private fun seedConfiguredApp() {
         preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
         preferences.put(StringKey.GeneralUnits, "mg/dl")
+        // Simple mode (the default) hides the Temp basal / Extended bolus actions in the Manage
+        // sheet (ManageBottomSheet gates them on !isSimpleMode). Turn it off so those are reachable.
+        preferences.put(BooleanKey.GeneralSimpleMode, false)
     }
 
     /**
@@ -317,6 +321,8 @@ class DanaRsEmulatorUiTest {
 
             device.pressBack()                 // Dana screens → the main overview
             bolusFromUi()                      // Treatments → Insulin → bolus → the emulator
+            applyTempBasalFromUi()             // Manage → Temp basal → the emulator
+            applyExtendedBolusFromUi()         // Manage → Extended bolus → the emulator
         } catch (t: Throwable) {
             logScreen("E2E_DANA_SCREEN")
             logPumpState("E2E_DANA_STATE")
@@ -451,6 +457,52 @@ class DanaRsEmulatorUiTest {
     }
 
     /**
+     * Overview → Manage → Temp basal: raise the rate above 100% and commit it to the pump.
+     *
+     * Drives `setTempBasalPercent` end to end — the Manage sheet's TBR dialog → command queue →
+     * `DanaRSPlugin` → `DanaRSService` → emulator — and asserts the temp basal on the emulator's own
+     * state, not the driver's. Only reachable once the pump is initialized (Manage gates the action
+     * on it), which the earlier legs establish.
+     */
+    private fun applyTempBasalFromUi() {
+        assertThat(emulator.pumpState.isTempBasalRunning).isFalse()
+        waitForQueueIdle()
+        openManageAction("Temp basal")
+        openVia("Temp basal", expect = "Decrease")   // the TBR dialog (its steppers)
+        // Raise the percent above 100 so the confirm button enables; the duration is pre-set to the
+        // pump's step. The first "Increase" stepper is the percent (duration is the second).
+        repeat(TBR_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDesc("Increase")).first().click() } }
+        clickRegex("""\d+\s*%""")   // confirm button, labelled with the chosen percent
+        click("OK")                 // ElementConfirmationDialog → commit
+        val applied = awaitTrue(COMMAND_TIMEOUT) {
+            emulator.pumpState.isTempBasalRunning && emulator.pumpState.tempBasalPercent > 100
+        }
+        assertThat(applied).isTrue()
+        waitForQueueIdle()
+    }
+
+    /**
+     * Overview → Manage → Extended bolus: set an amount and commit it to the pump.
+     *
+     * Drives `setExtendedBolus` end to end, asserted on the emulator's `extendedBolusAmount`.
+     */
+    private fun applyExtendedBolusFromUi() {
+        assertThat(emulator.pumpState.isExtendedBolusRunning).isFalse()
+        waitForQueueIdle()
+        openManageAction("Extended bolus")
+        openVia("Extended bolus", expect = "Decrease")
+        // First "Increase" stepper is the insulin amount; raise it above 0 to enable the confirm.
+        repeat(EXTENDED_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDesc("Increase")).first().click() } }
+        clickRegex("""\d+\.\d+\s*U""")   // confirm button, labelled with the chosen amount
+        click("OK")
+        val applied = awaitTrue(COMMAND_TIMEOUT) {
+            emulator.pumpState.isExtendedBolusRunning && emulator.pumpState.extendedBolusAmount > 0.0
+        }
+        assertThat(applied).isTrue()
+        waitForQueueIdle()
+    }
+
+    /**
      * Dana overview → Refresh, which resets `DanaPump` and re-reads status through the command
      * queue (`DanaOverviewViewModel.onRefreshClick`).
      *
@@ -553,6 +605,18 @@ class DanaRsEmulatorUiTest {
     private fun byText(s: String): BySelector =
         By.text(Pattern.compile(Pattern.quote(s), Pattern.CASE_INSENSITIVE))
 
+    /** Whole-node text match against a raw regex (e.g. the TBR/extended confirm button, labelled with its value). */
+    private fun byTextRegex(regex: String): BySelector = By.text(Pattern.compile(regex))
+
+    private fun clickRegex(regex: String, timeout: Long = STEP_TIMEOUT) = withStaleRetry {
+        val end = SystemClock.uptimeMillis() + timeout
+        while (SystemClock.uptimeMillis() < end) {
+            device.findObject(byTextRegex(regex))?.let { it.click(); return@withStaleRetry }
+            device.waitForIdle(IDLE_MS)
+        }
+        error("Timed out looking for a node matching /$regex/")
+    }
+
     private fun byDesc(s: String): BySelector =
         By.desc(Pattern.compile(Pattern.quote(s), Pattern.CASE_INSENSITIVE))
 
@@ -567,6 +631,38 @@ class DanaRsEmulatorUiTest {
     }
 
     private fun click(label: String) = withStaleRetry { find(label).click() }
+
+    /**
+     * Opens the Manage sheet and taps [action], scrolling the sheet to reach it.
+     *
+     * Temp basal / Extended bolus sit near the bottom of `ManageBottomSheet`, below the fold, so a
+     * plain find never sees them — the sheet has to be scrolled first.
+     */
+    private fun openManageAction(action: String) {
+        repeat(OPEN_ATTEMPTS) {
+            click("Manage")
+            if (scrollSheetToFind(action)) {
+                click(action)
+                return
+            }
+            device.pressBack() // close the sheet and retry from the overview
+            device.waitForIdle(IDLE_MS)
+        }
+        error("'$action' not found in the Manage sheet")
+    }
+
+    /** Swipes the open bottom sheet up until [label] is visible. */
+    private fun scrollSheetToFind(label: String, maxSwipes: Int = 6): Boolean {
+        if (waitForVisible(label, IDLE_MS)) return true
+        val w = device.displayWidth
+        val h = device.displayHeight
+        repeat(maxSwipes) {
+            device.swipe(w / 2, (h * 0.7).toInt(), w / 2, (h * 0.3).toInt(), 20)
+            device.waitForIdle(IDLE_MS)
+            if (device.findObject(byText(label)) != null) return true
+        }
+        return false
+    }
 
     private fun openVia(open: String, expect: String, attempts: Int = 4) {
         repeat(attempts) {
@@ -677,6 +773,10 @@ class DanaRsEmulatorUiTest {
         private const val SAVE_TIMEOUT = 30_000L
         private const val PROFILE_STORE_TIMEOUT = 20_000L
         private const val BOLUS_TIMEOUT = 60_000L
+        private const val COMMAND_TIMEOUT = 60_000L
+        private const val TBR_INCREASE_TAPS = 3
+        private const val EXTENDED_INCREASE_TAPS = 3
+        private const val OPEN_ATTEMPTS = 3
 
         /** The insulin dialog's middle quick-add button (DoubleKey.OverviewInsulinButtonIncrement2 default). */
         private const val BOLUS_UNITS = 1.0
