@@ -35,6 +35,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -417,6 +418,25 @@ class DanaRsEmulatorUiTest {
         bolusFromUi()                      // Treatments → Insulin → bolus → the emulator
         applyTempBasalFromUi()             // Manage → Temp basal → the emulator
         applyExtendedBolusFromUi()         // Manage → Extended bolus → the emulator
+        readBackDeliveredHistory()         // the same deliveries, read back off the pump as history
+    }
+
+    /**
+     * The reverse direction: every treatment the UI just delivered is recorded on the emulated pump's
+     * APS event history, so it can be read back as history — and the driver already does, on the
+     * status read each following command runs (`DanaRSService.loadEvents` → `DanaRSPacketAPSHistoryEvents`),
+     * parsing and syncing these very events (the `**NEW** EVENT …` log lines). Asserted here on the
+     * pump's own store, the true far side, so it holds for every handshake the flow runs over.
+     *
+     * These are events the test *generated*, not seeded ones — which is the whole point. A hand-planted
+     * past bolus would carry an encoded time in the current minute that the live UI bolus then reads as
+     * a duplicate and drops; real deliveries carry their real times and nothing live follows to collide.
+     */
+    private fun readBackDeliveredHistory() {
+        val codes = emulator.pumpState.historyStore.getEventsAfter(0).map { it.code }
+        assertThat(codes).contains(DanaPump.HistoryEntry.BOLUS.value)
+        assertThat(codes).contains(DanaPump.HistoryEntry.TEMP_START.value)
+        assertThat(codes).contains(DanaPump.HistoryEntry.EXTENDED_START.value)
     }
 
     /**
