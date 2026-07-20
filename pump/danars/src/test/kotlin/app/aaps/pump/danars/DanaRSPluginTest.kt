@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -182,6 +183,21 @@ class DanaRSPluginTest : DanaRSTestBase() {
     @Test
     fun preferenceScreenContentIsTheDanaRsSubScreen() {
         assertThat(danaRSPlugin.getPreferenceScreenContent().key).isEqualTo("danars_settings")
+    }
+
+    @Test
+    fun profileIsTriviallySetWhileUninitialized() {
+        // Unconfigured pump → isInitialized() false → nothing to compare against, so "already set".
+        assertThat(danaRSPlugin.isThisProfileSet(mock())).isTrue()
+    }
+
+    @Test
+    fun setNewBasalProfileIsDeferredWhileUninitialized() {
+        // Not initialized → deferred (re-pushed on reconnect): success=true keeps it out of the
+        // central failure alarm, enacted stays false so nothing is shown.
+        val result = runBlocking { danaRSPlugin.setNewBasalProfile(mock()) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
     }
 
     @BeforeEach
