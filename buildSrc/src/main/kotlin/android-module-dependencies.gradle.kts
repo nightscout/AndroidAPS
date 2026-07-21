@@ -56,20 +56,4 @@ android {
         buildConfig = false
         viewBinding = true
     }
-
-    // Gradle Managed Device shared by every library module's androidTest, matching the app module's
-    // `emu` device (android-31, google_apis_playstore, x86_64). CI runs <module>:emuFullDebugAndroidTest
-    // so AGP owns the emulator lifecycle and merges each run's JaCoCo .ec + JUnit XML through the normal
-    // pipeline - see app/build.gradle.kts and .circleci/config.yml.
-    testOptions {
-        managedDevices {
-            localDevices {
-                create("emu") {
-                    device = "Pixel 6"
-                    apiLevel = 31
-                    systemImageSource = "google_apis_playstore"
-                }
-            }
-        }
-    }
 }

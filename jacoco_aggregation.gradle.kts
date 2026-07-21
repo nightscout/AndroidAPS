@@ -75,20 +75,10 @@ project.afterEvaluate {
                     println("Collecting execution data from: ${file.absolutePath}")
                     executions.add(file)
                 }
-                // androidTest coverage lands in different roots depending on the runner: `connected/`
-                // for connectedAndroidTest, and `managed_device_code_coverage/` for Gradle Managed
-                // Devices (the CI path). Scan both roots recursively so every shard's .ec is picked up
-                // regardless of the exact per-device/per-shard subdirectory AGP chooses.
-                val androidCoverageRoots = listOf(
-                    "outputs/code_coverage/${variant}AndroidTest",
-                    "outputs/managed_device_code_coverage"
-                )
-                androidCoverageRoots.forEach { rel ->
-                    val root = proj.layout.buildDirectory.dir(rel).get()
-                    fileTree(root) { include("**/*.ec") }.forEach { file ->
-                        println("Collecting android execution data from: ${file.absolutePath}")
-                        executions.add(file)
-                    }
+                val androidPath = proj.layout.buildDirectory.dir("outputs/code_coverage/${variant}AndroidTest/connected/").get()
+                fileTree(androidPath).forEach { file ->
+                    println("Collecting android execution data from: ${file.absolutePath}")
+                    executions.add(file)
                 }
             }
         }
