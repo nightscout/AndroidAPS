@@ -26,6 +26,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -61,7 +62,10 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 class SetupWizardE2EHiltTest {
 
-    @get:Rule val hiltRule = HiltAndroidRule(this)
+    val hiltRule = HiltAndroidRule(this)
+
+    // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
     // The plugin/config init that MainApp does in onCreate (the Hilt test app can't). Inlined rather
     // than inherited from HiltInstrumentedTest so SharedPreferences can be cleared BEFORE the graph

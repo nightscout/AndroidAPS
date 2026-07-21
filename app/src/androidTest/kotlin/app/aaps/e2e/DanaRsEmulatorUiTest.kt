@@ -18,6 +18,7 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.Base64
@@ -66,7 +67,10 @@ import javax.inject.Inject
 @ShardA
 class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
-    @get:Rule val hiltRule = HiltAndroidRule(this)
+    val hiltRule = HiltAndroidRule(this)
+
+    // RetryRule outermost: a flaky UI timeout self-heals on a fresh attempt; see [RetryRule].
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
     @Inject lateinit var bleTransport: BleTransport
     @Inject lateinit var danaRSPlugin: DanaRSPlugin

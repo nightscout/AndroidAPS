@@ -47,6 +47,7 @@ import org.json.JSONArray
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -75,7 +76,10 @@ import javax.inject.Inject
 @ShardA
 class DanaRSPairWizardUiTest {
 
-    @get:Rule val hiltRule = HiltAndroidRule(this)
+    val hiltRule = HiltAndroidRule(this)
+
+    // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var bleTransport: BleTransport

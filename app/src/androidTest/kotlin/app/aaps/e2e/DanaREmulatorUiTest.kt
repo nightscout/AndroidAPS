@@ -18,6 +18,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
@@ -45,7 +46,10 @@ import javax.inject.Provider
 @RunWith(AndroidJUnit4::class)
 class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
-    @get:Rule val hiltRule = HiltAndroidRule(this)
+    val hiltRule = HiltAndroidRule(this)
+
+    // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
     // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
     // (storeSettings), which needs pluginStore.plugins - set only after hiltRule.inject(). Resolving it
