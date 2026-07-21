@@ -160,12 +160,17 @@ jobs:
             if grep -qE "FAILURES!!!|shortMsg=Process crashed" shard-B.txt; then echo 1 > /tmp/rc-B; else echo 0 > /tmp/rc-B; fi
             echo "shard B done"
 
+      # workers.max is capped at 10 (below the 18 pinned cores) on purpose: the unit suite saturating
+      # all 18 while the two emulators + shards run pushed the box to a load average of ~99 on 24 cores
+      # (~4x oversubscription), which starved the heaviest E2E test's emulator until its instrumentation
+      # died mid-test. Fewer unit workers lower that peak so the emulators stay responsive. Costs some
+      # unit wall-time (it is the long pole), but the shards are hidden under it either way.
       - run:
           name: Unit tests (Gradle, pinned off the emulator cores, starts right after compile, overlaps the shards)
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 testFullDebugUnitTest
+            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=10 testFullDebugUnitTest
 
       - run:
           name: Non-app module androidTests (Gradle, emu-5554)
