@@ -98,6 +98,19 @@ class EversenseCGMPlugin(
         } ?: EversenseLogger.info(TAG, "stopScan called but no active scan found")
     }
 
+    // Android doesn't always deliver onConnectionStateChange when the Bluetooth radio itself
+    // is powered off (observed in the wild: no disconnect callback at all across a BT toggle),
+    // so gattCallback's internal "connected" flag can be left stale true. A live BLE connection
+    // cannot survive the whole adapter going off, so plain connect() would wrongly short-circuit
+    // on isConnected() and do nothing. Call this instead of connect() when reacting to
+    // BluetoothAdapter.ACTION_STATE_CHANGED -> STATE_ON, since that's exactly the situation where
+    // "connected" may be lying.
+    @SuppressLint("MissingPermission")
+    fun forceReconnect(): Boolean {
+        gattCallback.cleanUp()
+        return connect(null)
+    }
+
     @SuppressLint("MissingPermission")
     fun connect(device: BluetoothDevice? = null): Boolean {
         stopScan()

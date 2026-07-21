@@ -96,15 +96,17 @@ class EversensePlugin @Inject constructor(
 
     // connectGatt() calls made while the Bluetooth radio is off never fire any callback, so the
     // timer-based reconnect backoff in EversenseGattCallback can silently retry into a dead radio
-    // and never recover. This receiver re-triggers connect() the moment the adapter is confirmed
+    // and never recover. This receiver re-triggers a reconnect the moment the adapter is confirmed
     // back on, regardless of what those timers happened to do in the meantime. Same pattern as
-    // RileyLinkBluetoothStateReceiver.
+    // RileyLinkBluetoothStateReceiver. Uses forceReconnect() rather than connect() because Android
+    // also doesn't reliably deliver a disconnect callback when the radio powers off in the first
+    // place, so EversenseGattCallback's "connected" flag may be stale true here.
     private val bluetoothStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, intent: Intent) {
             if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR) == BluetoothAdapter.STATE_ON) {
-                aapsLogger.info(LTag.BGSOURCE, "Bluetooth turned back on — triggering Eversense reconnect")
+                aapsLogger.info(LTag.BGSOURCE, "Bluetooth turned back on — forcing Eversense reconnect")
                 ioScope.launch {
-                    eversense.connect(null)
+                    eversense.forceReconnect()
                 }
             }
         }
