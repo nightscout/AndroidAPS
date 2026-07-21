@@ -164,6 +164,7 @@ jobs:
               sz=$(wc -c < "$COVDIR/$ec" 2>/dev/null || echo 0)
               echo "leg $legid coverage: ${sz:-0} bytes"
               [ "${sz:-0}" -lt 200 ] && { echo "leg $legid: MISSING/short coverage"; RC=1; }
+              return 0   # never let a leg's exit status trip `set -e` on the run_leg call; RC carries pass/fail
             }
             run_leg main    -e annotation app.aaps.testcategories.ShardA -e notClass app.aaps.e2e.DanaRsEmulatorUiTest,app.aaps.e2e.DanaRSPairWizardUiTest
             run_leg danaui  -e class app.aaps.e2e.DanaRsEmulatorUiTest
@@ -192,6 +193,7 @@ jobs:
               sz=$(wc -c < "$COVDIR/$ec" 2>/dev/null || echo 0)
               echo "leg $legid coverage: ${sz:-0} bytes"
               [ "${sz:-0}" -lt 200 ] && { echo "leg $legid: MISSING/short coverage"; RC=1; }
+              return 0   # never let a leg's exit status trip `set -e` on the run_leg call; RC carries pass/fail
             }
             run_leg main    -e notAnnotation app.aaps.testcategories.ShardA -e notClass app.aaps.e2e.SetupWizardE2EHiltTest,app.aaps.e2e.DanaREmulatorUiTest
             run_leg setupwiz -e class app.aaps.e2e.SetupWizardE2EHiltTest
