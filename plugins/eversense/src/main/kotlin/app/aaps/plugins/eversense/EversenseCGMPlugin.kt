@@ -108,6 +108,16 @@ class EversenseCGMPlugin(
                 return true
             }
 
+            if (bluetoothManager.adapter?.isEnabled != true) {
+                // connectGatt() made while the Bluetooth radio is off (or still mid-toggle)
+                // never fires any callback - not even a failure one - so it must not be
+                // attempted here. Retrying blindly on a timer against a dead radio just wastes
+                // GATT client slots. EversensePlugin's BluetoothAdapter.ACTION_STATE_CHANGED
+                // receiver calls connect() again the moment the adapter is confirmed back on.
+                EversenseLogger.warning(TAG, "Bluetooth is disabled — skipping connect attempt, will retry once it's back on")
+                return false
+            }
+
             gattCallback.cleanUp()
 
             return if (device != null) {

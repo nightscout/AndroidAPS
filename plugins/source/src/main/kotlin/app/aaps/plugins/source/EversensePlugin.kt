@@ -1,7 +1,10 @@
 package app.aaps.plugins.source
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.content.BroadcastReceiver
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -90,6 +93,22 @@ class EversensePlugin @Inject constructor(
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    // connectGatt() calls made while the Bluetooth radio is off never fire any callback, so the
+    // timer-based reconnect backoff in EversenseGattCallback can silently retry into a dead radio
+    // and never recover. This receiver re-triggers connect() the moment the adapter is confirmed
+    // back on, regardless of what those timers happened to do in the meantime. Same pattern as
+    // RileyLinkBluetoothStateReceiver.
+    private val bluetoothStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(ctx: Context, intent: Intent) {
+            if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR) == BluetoothAdapter.STATE_ON) {
+                aapsLogger.info(LTag.BGSOURCE, "Bluetooth turned back on — triggering Eversense reconnect")
+                ioScope.launch {
+                    eversense.connect(null)
+                }
+            }
+        }
+    }
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -120,6 +139,7 @@ class EversensePlugin @Inject constructor(
         super.onStart()
         ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         eversense.addWatcher(this)
+        context.registerReceiver(bluetoothStateReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
         if (hasBluetoothPermissions()) {
             aapsLogger.debug(LTag.BGSOURCE, "onStart — permissions granted, attempting auto-reconnect")
             ioScope.launch {
@@ -139,6 +159,11 @@ class EversensePlugin @Inject constructor(
         ioScope.cancel()
         mainHandler.removeCallbacksAndMessages(null)
         eversense.removeWatcher(this)
+        try {
+            context.unregisterReceiver(bluetoothStateReceiver)
+        } catch (e: IllegalArgumentException) {
+            // Not registered (e.g. onStart never completed registration) — safe to ignore
+        }
     }
 
     private fun requestBluetoothPermissions() {
