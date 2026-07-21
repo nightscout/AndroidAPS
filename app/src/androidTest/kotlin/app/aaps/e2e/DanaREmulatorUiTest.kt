@@ -13,7 +13,6 @@ import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.pump.danarv2.DanaRv2Plugin
-import app.aaps.testcategories.ShardA
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -40,9 +39,10 @@ import javax.inject.Provider
  * be resolved through a `Provider` (its provider eagerly enables the plugin, which needs plugins set),
  * and DanaR's non-idempotent `connect()` must not be re-called once connected.
  */
+// Deliberately NOT @ShardA: this heavy UI test goes to shard B so the two heavy Dana UI tests
+// (DanaRsEmulatorUiTest on A, this on B) are split one per emulator - see ShardA for the balance.
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@ShardA
 class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
     @get:Rule val hiltRule = HiltAndroidRule(this)
