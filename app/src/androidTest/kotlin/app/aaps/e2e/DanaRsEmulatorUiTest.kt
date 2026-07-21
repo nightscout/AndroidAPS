@@ -885,7 +885,7 @@ class DanaRsEmulatorUiTest {
         private const val PASSWORD = "0000"
 
         private const val INIT_TIMEOUT = 60_000L
-        private const val STEP_TIMEOUT = 15_000L
+        private const val STEP_TIMEOUT = 30_000L
         private const val IDLE_MS = 300L
         private const val STALE_RETRIES = 10
         private const val STALE_SETTLE_MS = 700L

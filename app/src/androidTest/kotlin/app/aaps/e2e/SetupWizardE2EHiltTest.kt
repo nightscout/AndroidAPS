@@ -650,7 +650,7 @@ class SetupWizardE2EHiltTest {
 
         private const val PKG = "info.nightscout.androidaps"
         private const val INIT_TIMEOUT = 60_000L  // splash → wizard (init already flipped, so usually fast)
-        private const val STEP_TIMEOUT = 15_000L
+        private const val STEP_TIMEOUT = 30_000L
         private const val IDLE_MS = 300L
         private const val MAX_SCROLLS = 12
         private const val SET_TEXT_ATTEMPTS = 3

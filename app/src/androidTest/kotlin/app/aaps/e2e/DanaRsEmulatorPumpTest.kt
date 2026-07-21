@@ -292,6 +292,10 @@ class DanaRsEmulatorPumpTest {
         assertThat(pump.extendedBolusAmount).isWithin(0.001).of(EXTENDED_UNITS)
 
         runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
+        // Unlike the TBR/extended commands above, bolus delivery reports progress asynchronously, so
+        // the emulator's recorded amount can lag deliverTreatment()'s return under CI load. Wait for it
+        // to settle before asserting rather than reading it immediately.
+        awaitTrue(BOLUS_TIMEOUT) { pump.lastBolusAmount in (BOLUS_UNITS - 0.001)..(BOLUS_UNITS + 0.001) }
         assertThat(pump.lastBolusAmount).isWithin(0.001).of(BOLUS_UNITS)
     }
 
@@ -323,6 +327,7 @@ class DanaRsEmulatorPumpTest {
         private const val PASSWORD = "0000"
         private const val BIND_TIMEOUT = 20_000L
         private const val CONNECT_TIMEOUT = 30_000L
+        private const val BOLUS_TIMEOUT = 20_000L
         private const val POLL_MS = 250L
 
         // Command values for pumpCommands_reachTheEmulator. Durations are multiples of an hour so the
