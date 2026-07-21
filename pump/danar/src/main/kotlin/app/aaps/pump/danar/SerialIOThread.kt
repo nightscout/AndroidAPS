@@ -27,9 +27,11 @@ class SerialIOThread(
 
     private var mInputStream: InputStream = rfCommSocket.inputStream
     private var mOutputStream: OutputStream = rfCommSocket.outputStream
-    private var mKeepRunning = true
-    private var mReadBuff = ByteArray(0)
-    private var processedMessage: MessageBase? = null
+    // Written by disconnect()/the run() catch on other threads, read by the reader loop.
+    @Volatile private var mKeepRunning = true
+    private var mReadBuff = ByteArray(0)  // reader thread only - no cross-thread access
+    // Written by the sending thread (sendMessage), read by the reader thread (run) to match a reply.
+    @Volatile private var processedMessage: MessageBase? = null
 
     init {
         start()
