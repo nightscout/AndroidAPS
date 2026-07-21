@@ -63,7 +63,10 @@ open class MessageBase(injector: HasAndroidInjector) {
     var injector: HasAndroidInjector
     var buffer = ByteArray(512)
     private var position = 6
-    var isReceived = false
+    // Written by the reader thread (SerialIOThread.run) once the reply is processed, read by the
+    // sending thread (SerialIOThread.sendMessage). @Volatile so the sender reliably sees it - the
+    // post-wait check reads it outside the message monitor.
+    @Volatile var isReceived = false
     var failed = false
 
     fun setCommand(cmd: Int) {
