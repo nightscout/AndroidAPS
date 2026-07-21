@@ -9,7 +9,10 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
@@ -18,11 +21,14 @@ import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danar.DanaRPlugin
+import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.testcategories.ShardA
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
+import javax.inject.Provider
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
@@ -57,6 +63,10 @@ class DanaREmulatorPumpTest {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var config: Config
+    // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
+    // (storeSettings), which needs pluginStore.plugins - set only after hiltRule.inject(). Resolving it
+    // lazily (after connect) returns the @Singleton the execution service already built by then.
+    @Inject lateinit var rfcommTransportProvider: Provider<RfcommTransport>
     @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
@@ -65,17 +75,46 @@ class DanaREmulatorPumpTest {
 
     @Test
     fun danaR_connectsAgainstEmulator() {
-        assertConnects(ExternalOptions.EMULATE_DANA_R) { danaRPlugin }
+        bringUpConnected(ExternalOptions.EMULATE_DANA_R) { danaRPlugin }
     }
 
     @Test
     fun danaRKorean_connectsAgainstEmulator() {
-        assertConnects(ExternalOptions.EMULATE_DANA_R_KOREAN) { danaRKoreanPlugin }
+        bringUpConnected(ExternalOptions.EMULATE_DANA_R_KOREAN) { danaRKoreanPlugin }
     }
 
     @Test
     fun danaRv2_connectsAgainstEmulator() {
-        assertConnects(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
+        bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
+    }
+
+    /**
+     * DanaRv2 (the most command-capable variant) drives a temp basal, an extended bolus and a bolus to
+     * the emulator; each must land on the emulated pump's state. DanaRv2 is used because it supports all
+     * three - the connect tests above already cover the other variants' handshakes.
+     *
+     * Commands run through the execution service on its own thread, so assertions poll the emulator
+     * state rather than reading it immediately after the call returns.
+     */
+    @Test
+    fun pumpCommands_reachTheEmulator() {
+        val pump = bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
+        val state = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state
+
+        runBlocking {
+            pump.setTempBasalPercent(TBR_PERCENT, TBR_DURATION_MIN, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(awaitTrue(COMMAND_TIMEOUT) { state.isTempBasalRunning && state.tempBasalPercent == TBR_PERCENT }).isTrue()
+
+        runBlocking { pump.setExtendedBolus(EXTENDED_UNITS, EXTENDED_DURATION_MIN) }
+        assertThat(awaitTrue(COMMAND_TIMEOUT) {
+            state.isExtendedBolusRunning && state.extendedBolusAmount in (EXTENDED_UNITS - 0.001)..(EXTENDED_UNITS + 0.001)
+        }).isTrue()
+
+        runBlocking { pump.deliverTreatment(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
+        assertThat(awaitTrue(COMMAND_TIMEOUT) {
+            state.lastBolusAmount in (BOLUS_UNITS - 0.001)..(BOLUS_UNITS + 0.001)
+        }).isTrue()
     }
 
     /**
@@ -85,7 +124,7 @@ class DanaREmulatorPumpTest {
      * `config.isEnabled` once, when the graph first constructs it, so the variant has to be chosen
      * before `hiltRule.inject()`. Each test method gets a fresh Hilt component, and so a fresh pump.
      */
-    private fun assertConnects(variant: ExternalOptions, plugin: () -> PluginBase) {
+    private fun bringUpConnected(variant: ExternalOptions, plugin: () -> PluginBase): Pump {
         EmulatedOptions.enabled = setOf(variant)
         hiltRule.inject()
 
@@ -116,11 +155,16 @@ class DanaREmulatorPumpTest {
         // bindService is async, so connect() is a no-op until the service lands — drive it until it
         // takes. Keeping the whole service lifetime inside this component's is also what stops it
         // outliving the test and crashing on a torn-down component (see DanaRsEmulatorPumpTest).
+        // Only (re)initiate a connect while neither connected nor connecting. DanaR's connect() spawns a
+        // fresh RFCOMM connection thread on every call, so re-calling it once already connected would
+        // tear the socket down and re-establish it right as commands start (unlike RS's idempotent BLE
+        // connect). Polling isConnected() still lets the async service bind land.
         val connected = awaitTrue(CONNECT_TIMEOUT) {
-            asPump.connect("e2e")
+            if (!asPump.isConnected() && !asPump.isConnecting()) asPump.connect("e2e")
             asPump.isConnected()
         }
         assertThat(connected).isTrue()
+        return asPump
     }
 
     @After
@@ -160,6 +204,13 @@ class DanaREmulatorPumpTest {
         /** Shaped like the name DanaModules generates for an emulated DanaR ("DAN#####EM"). */
         private const val DEVICE_NAME = "DAN00001EM"
         private const val CONNECT_TIMEOUT = 40_000L
+        private const val COMMAND_TIMEOUT = 30_000L
         private const val POLL_MS = 250L
+
+        private const val TBR_PERCENT = 150
+        private const val TBR_DURATION_MIN = 60
+        private const val EXTENDED_UNITS = 1.0
+        private const val EXTENDED_DURATION_MIN = 60
+        private const val BOLUS_UNITS = 1.0
     }
 }
