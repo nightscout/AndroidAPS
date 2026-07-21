@@ -26,6 +26,11 @@ jobs:
             find . -type d -path "*/build/outputs/androidTest-results" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/code_coverage" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/unit_test_code_coverage" -prune -exec rm -rf {} +
+            # /tmp survives between jobs on the self-hosted runner. If left behind, the Collect step's
+            # `[ -f /tmp/rc-B ]` wait breaks on the PREVIOUS run's file and reads a stale pass/fail,
+            # defeating the coverage guard (build 40306 went green on a stale rc-B=0 while this run's
+            # danarui leg had actually set rc=1). Drop them so Collect waits for THIS run's results.
+            rm -f /tmp/rc-A /tmp/rc-B
 
       # DRAFT: option-2 (annotation-balanced) sharding across TWO emulators. See the @ShardA
       # annotation (app.aaps.testcategories.ShardA) — shard A is the Dana suite (~278s), shard B is
@@ -124,10 +129,9 @@ jobs:
       # Non-app modules run AFTER unit — they are Gradle too and would otherwise serialize on the one
       # daemon and delay the unit start. Shard A (@ShardA = Dana suite) and shard B (notAnnotation = the
       # rest) finish well before the ~480s unit step, so they are hidden underneath it; a "Collect" step
-      # (when: always) gates the job on their pass/fail. Each shard runs as several `am instrument` legs
-      # (heavy UI tests isolated) and coverage presence is now ENFORCED: a missing/short leg .ec fails the
-      # build (rc=1) rather than silently dropping coverage. App-shard results are pass/fail only (am
-      # instrument emits text, not JUnit XML).
+      # (when: always) gates the job on their pass/fail. Coverage presence is now ENFORCED: a missing/short
+      # shard .ec fails the build (rc=1) rather than silently dropping coverage. App-shard results are
+      # pass/fail only (am instrument emits text, not JUnit XML).
       - run:
           name: Install app test APKs on both emulators
           command: |
@@ -135,69 +139,52 @@ jobs:
             TST=app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk
             for s in emulator-5554 emulator-5556; do adb -s $s install -r -d "$APK"; adb -s $s install -r -d "$TST"; done
 
-      # Each shard runs as several `am instrument` LEGS instead of one. The heavy Compose UI tests
-      # (which have crashed the shared instrumentation process before) are split into their own leg so a
-      # crash loses ONLY that leg's coverage, never the whole shard - and each leg starts a fresh app
-      # process, so one UI test cannot pollute the next. Every leg writes its own cov-<shard>-<leg>.ec;
-      # run_leg pulls it and treats a missing/short (< 200 bytes) file as a HARD failure (rc=1), so a
-      # silently-dropped shard .ec can no longer leak a big coverage regression into Codecov unnoticed
-      # (build 40303: shard B's SetupWizard leg died before flushing and quietly wiped ~4.5%). Legs are
-      # sequential within a shard; jacocoAllDebugReport unions all cov-*.ec from the connected/ dir.
+      # One `am instrument` per shard (fast: the two shards overlap under the unit step). Coverage is
+      # ENFORCED, not best-effort: each shard's single .ec is pulled and a missing/short file (< 50 KB;
+      # a healthy shard is hundreds of KB) is a HARD failure (rc=1), so if the run crashes before JaCoCo
+      # flushes (build 40303: SetupWizard died and silently wiped ~4.5%) the build goes RED instead of
+      # leaking a coverage regression to Codecov - you re-run rather than trust a bad number. `if`-guards
+      # (not `&&`) keep the trailing exit status 0 so `set -eo pipefail` can't abort the step early, and
+      # the am instrument output is redirected (no `| tee`, which used to mask its exit code) with
+      # `|| true` so a non-zero exit is caught by the grep + size checks. run_shard writes rc to
+      # /tmp/rc-<X>; the Collect step gates the job on it.
       - run:
-          name: App shard A — Dana suite (emu-5554, am instrument, heavy UI isolated)
+          name: App shard A — Dana suite (emu-5554, am instrument)
           background: true
           command: |
             PKG=info.nightscout.androidaps
             DEV=emulator-5554
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=0
-            run_leg() {
-              legid="$1"; shift
-              ec="cov-A-$legid.ec"
-              echo "===== shard A leg: $legid ====="
-              adb -s $DEV shell am instrument -w -r "$@" \
-                -e coverage true -e coverageFile "/data/data/$PKG/$ec" \
-                $PKG.test/app.aaps.runners.HiltTestRunner > "shardA-$legid.txt" 2>&1 || true
-              tail -n 15 "shardA-$legid.txt"
-              grep -qE "FAILURES!!!|shortMsg=Process crashed|Process crashed|INSTRUMENTATION_FAILED" "shardA-$legid.txt" && { echo "leg $legid: TEST FAILURE"; RC=1; }
-              adb -s $DEV exec-out run-as $PKG cat "$ec" > "$COVDIR/$ec" 2>/dev/null || true
-              sz=$(wc -c < "$COVDIR/$ec" 2>/dev/null || echo 0)
-              echo "leg $legid coverage: ${sz:-0} bytes"
-              [ "${sz:-0}" -lt 200 ] && { echo "leg $legid: MISSING/short coverage"; RC=1; }
-              return 0   # never let a leg's exit status trip `set -e` on the run_leg call; RC carries pass/fail
-            }
-            run_leg main    -e annotation app.aaps.testcategories.ShardA -e notClass app.aaps.e2e.DanaRsEmulatorUiTest,app.aaps.e2e.DanaRSPairWizardUiTest
-            run_leg danaui  -e class app.aaps.e2e.DanaRsEmulatorUiTest
-            run_leg pairwiz -e class app.aaps.e2e.DanaRSPairWizardUiTest
+            adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
+              -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
+              $PKG.test/app.aaps.runners.HiltTestRunner > shard-A.txt 2>&1 || true
+            tail -n 20 shard-A.txt
+            if grep -qE "FAILURES!!!|shortMsg=Process crashed|Process crashed|INSTRUMENTATION_FAILED" shard-A.txt; then echo "shard A: TEST FAILURE"; RC=1; fi
+            adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
+            sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
+            echo "shard A coverage: ${sz:-0} bytes"
+            if [ "${sz:-0}" -lt 50000 ]; then echo "shard A: MISSING/short coverage"; RC=1; fi
             echo $RC > /tmp/rc-A
             echo "shard A done rc=$RC"
 
       - run:
-          name: App shard B — the rest (emu-5556, am instrument, heavy UI isolated)
+          name: App shard B — the rest (emu-5556, am instrument)
           background: true
           command: |
             PKG=info.nightscout.androidaps
             DEV=emulator-5556
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=0
-            run_leg() {
-              legid="$1"; shift
-              ec="cov-B-$legid.ec"
-              echo "===== shard B leg: $legid ====="
-              adb -s $DEV shell am instrument -w -r "$@" \
-                -e coverage true -e coverageFile "/data/data/$PKG/$ec" \
-                $PKG.test/app.aaps.runners.HiltTestRunner > "shardB-$legid.txt" 2>&1 || true
-              tail -n 15 "shardB-$legid.txt"
-              grep -qE "FAILURES!!!|shortMsg=Process crashed|Process crashed|INSTRUMENTATION_FAILED" "shardB-$legid.txt" && { echo "leg $legid: TEST FAILURE"; RC=1; }
-              adb -s $DEV exec-out run-as $PKG cat "$ec" > "$COVDIR/$ec" 2>/dev/null || true
-              sz=$(wc -c < "$COVDIR/$ec" 2>/dev/null || echo 0)
-              echo "leg $legid coverage: ${sz:-0} bytes"
-              [ "${sz:-0}" -lt 200 ] && { echo "leg $legid: MISSING/short coverage"; RC=1; }
-              return 0   # never let a leg's exit status trip `set -e` on the run_leg call; RC carries pass/fail
-            }
-            run_leg main    -e notAnnotation app.aaps.testcategories.ShardA -e notClass app.aaps.e2e.SetupWizardE2EHiltTest,app.aaps.e2e.DanaREmulatorUiTest
-            run_leg setupwiz -e class app.aaps.e2e.SetupWizardE2EHiltTest
-            run_leg danarui  -e class app.aaps.e2e.DanaREmulatorUiTest
+            adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA \
+              -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
+              $PKG.test/app.aaps.runners.HiltTestRunner > shard-B.txt 2>&1 || true
+            tail -n 20 shard-B.txt
+            if grep -qE "FAILURES!!!|shortMsg=Process crashed|Process crashed|INSTRUMENTATION_FAILED" shard-B.txt; then echo "shard B: TEST FAILURE"; RC=1; fi
+            adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
+            sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
+            echo "shard B coverage: ${sz:-0} bytes"
+            if [ "${sz:-0}" -lt 50000 ]; then echo "shard B: MISSING/short coverage"; RC=1; fi
             echo $RC > /tmp/rc-B
             echo "shard B done rc=$RC"
 
