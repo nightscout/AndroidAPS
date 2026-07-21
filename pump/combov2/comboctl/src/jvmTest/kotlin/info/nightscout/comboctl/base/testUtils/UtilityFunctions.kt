@@ -14,14 +14,6 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.fail
 
-// The watchdog is a hang-guard, not a performance assertion, so its timeout can be widened uniformly
-// on a slow/loaded machine without weakening what the tests check. On CI these tests run concurrently
-// with two device emulators, and the long-press coroutine tests get starved far past the developer-box
-// budget — so allow the environment to scale every watchdog via COMBOCTL_WATCHDOG_SCALE (default 1 =
-// unchanged locally; CI sets it higher). See .circleci/config.yml.
-private val watchdogScale: Long =
-    System.getenv("COMBOCTL_WATCHDOG_SCALE")?.toLongOrNull()?.coerceAtLeast(1L) ?: 1L
-
 // Utility function to combine runBlocking() with a watchdog.
 // A coroutine is started with runBlocking(), and inside that
 // coroutine, sub-coroutines are spawned. One of them runs
@@ -38,16 +30,13 @@ fun runBlockingWithWatchdog(
     block: suspend CoroutineScope.() -> Unit
 ) {
     runBlocking(context) {
-        val effectiveTimeout = timeout * watchdogScale
         lateinit var blockJob: Job
         val watchdogJob = launch {
-            delay(effectiveTimeout)
-            // On timeout, dump what is still alive under the block so a flaky hang points at the
-            // stuck coroutine instead of only saying "timeout reached". The long-press flake hangs
-            // on rtButtonConfirmationBarrier.receive(); pairing this with the [RTBARRIER] logs shows
-            // whether a confirmation was sent-but-missed or never sent at all.
+            delay(timeout)
+            // On timeout, dump what is still alive under the block so a hang points at the stuck
+            // coroutine instead of only reporting "timeout reached".
             val active = blockJob.children.toList()
-            println("[WATCHDOG] timeout after ${effectiveTimeout}ms; blockJob active=${blockJob.isActive} children=${active.size}")
+            println("[WATCHDOG] timeout after ${timeout}ms; blockJob active=${blockJob.isActive} children=${active.size}")
             active.forEachIndexed { i, child -> println("[WATCHDOG]   child[$i] active=${child.isActive} completed=${child.isCompleted} cancelled=${child.isCancelled}") }
             fail("Test run timeout reached")
         }
@@ -78,7 +67,7 @@ suspend fun coroutineScopeWithWatchdog(
 ) {
     coroutineScope {
         val watchdogJob = launch {
-            delay(timeout * watchdogScale)
+            delay(timeout)
             throw WatchdogTimeoutException("Test run timeout reached")
         }
 

@@ -83,12 +83,6 @@ jobs:
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            # Widen the comboctl PumpIOTest coroutine watchdogs 3x for the whole job: these long-press
-            # tests are timing-sensitive and get starved past their 20s hang-guard when unit tests run
-            # alongside the two emulators. Exported HERE so the Gradle daemon started by this step (and
-            # the unit-test JVMs it forks) inherit it; also pushed to BASH_ENV for any later shell.
-            export COMBOCTL_WATCHDOG_SCALE=3
-            echo 'export COMBOCTL_WATCHDOG_SCALE=3' >> "$BASH_ENV"
             if command -v taskset > /dev/null; then
               echo 'export GRADLE_PIN="taskset -c 0-19"' >> "$BASH_ENV"
               export GRADLE_PIN="taskset -c 0-19"
