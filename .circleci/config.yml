@@ -54,28 +54,36 @@ jobs:
               sleep 10
             done
 
-      # Core split is MEASURED, not guessed: with unit + both shards live, cores 0-17 sat at 100% (unit,
-      # CPU-bound) while 18-23 idled at 50-60% — the two emulators are wait-bound (UI automation) and
-      # together need only ~3.5 cores. So the emulators get 20-23 (4 cores, covers their need) and the
-      # two reclaimed cores go to Gradle/unit (now 0-19, see the compile step). Clean partition, no
-      # overlap → no oversubscription (the build-40246 freeze was overlap starvation; we do NOT overload).
+      # Cores are split so the emulators stay scheduled while Gradle runs. The two emulators are
+      # wait-bound (UI automation) but must not lose the CPU under load, so they get the TOP 6 cores to
+      # themselves and Gradle gets everything below that. Ranges are derived from nproc rather than
+      # hard-wired to this 24-core runner (on it: emulators 18-23, Gradle 0-17). Giving the emulators
+      # only 4 cores (a previous experiment) starved the E2E UI automation and flaked the shards on the
+      # 15s element lookups, so they keep the full 6. The build-40246 freeze was overlap starvation from
+      # oversubscription; this clean, non-overlapping partition avoids it.
       - run:
           name: Launch two emulators
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
+            NCORES=$(nproc 2>/dev/null || echo 0)
             PIN=""
-            if command -v taskset > /dev/null; then PIN="taskset -c 20-23"; else echo "taskset unavailable, running unpinned"; fi
+            if command -v taskset > /dev/null && [ "$NCORES" -gt 8 ]; then
+              PIN="taskset -c $((NCORES - 6))-$((NCORES - 1))"
+            else
+              echo "taskset unavailable or too few cores, running unpinned"
+            fi
             $PIN emulator -avd citest0 -port 5554 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
             $PIN emulator -avd citest1 -port 5556 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
             wait
           background: true
 
       # This step is pure compile + APK packaging (NO device tests), and the two emulators are only
-      # BOOTING for ~60s of its ~200s runtime, so it takes the WHOLE machine via COMPILE_PIN (0-23).
-      # GRADLE_PIN (0-19) is exported here for the LATER Gradle steps (unit / non-app) that run while the
-      # emulators + shards are live on 20-23 — those must stay off the emulator cores (taskset pins only
-      # the process it launches, and the Gradle daemon that forks the test workers is started here).
+      # BOOTING for ~60s of its ~200s runtime, so it takes the WHOLE machine via COMPILE_PIN (all cores).
+      # GRADLE_PIN (all cores EXCEPT the top 6 the emulators own) is exported here for the LATER Gradle
+      # steps (unit / non-app) that run while the emulators + shards are live — those must stay off the
+      # emulator cores (taskset pins only the process it launches, and the Gradle daemon that forks the
+      # test workers is started here). Ranges come from nproc (on the 24-core runner: 0-17 and 0-23).
       # Assembling the app APKs here (folded in from the old separate "Assemble" step) means the shards
       # can install and start the instant compile ends — nothing Gradle sits between compile and unit.
       - run:
@@ -83,15 +91,16 @@ jobs:
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            if command -v taskset > /dev/null; then
-              echo 'export GRADLE_PIN="taskset -c 0-19"' >> "$BASH_ENV"
-              export GRADLE_PIN="taskset -c 0-19"
-              COMPILE_PIN="taskset -c 0-23"
+            NCORES=$(nproc 2>/dev/null || echo 0)
+            if command -v taskset > /dev/null && [ "$NCORES" -gt 8 ]; then
+              GRADLE_PIN="taskset -c 0-$((NCORES - 7))"
+              COMPILE_PIN="taskset -c 0-$((NCORES - 1))"
             else
-              echo "taskset unavailable, running unpinned"
-              echo 'export GRADLE_PIN=""' >> "$BASH_ENV"
+              echo "taskset unavailable or too few cores, running unpinned"
+              GRADLE_PIN=""
               COMPILE_PIN=""
             fi
+            echo "export GRADLE_PIN=\"$GRADLE_PIN\"" >> "$BASH_ENV"
             $COMPILE_PIN ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
@@ -152,7 +161,7 @@ jobs:
             echo "shard B done"
 
       - run:
-          name: Unit tests (Gradle, pinned 0-19, starts right after compile, overlaps the shards)
+          name: Unit tests (Gradle, pinned off the emulator cores, starts right after compile, overlaps the shards)
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
