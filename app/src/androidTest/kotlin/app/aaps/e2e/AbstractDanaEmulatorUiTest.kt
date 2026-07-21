@@ -322,7 +322,7 @@ abstract class AbstractDanaEmulatorUiTest {
      * completes — tapping into that window is what mis-fired onto Unpair and timed out on absent
      * buttons.
      */
-    private fun queueIdle() = commandQueue.size() == 0 && commandQueue.performing() == null && !queueWorkerRunning()
+    protected fun queueIdle() = commandQueue.size() == 0 && commandQueue.performing() == null && !queueWorkerRunning()
 
     /**
      * Whether WorkManager still has the command-queue worker alive.
@@ -403,6 +403,15 @@ abstract class AbstractDanaEmulatorUiTest {
      * Asserted on the emulator's own `lastBolusAmount`, so it fails if the driver delivers nothing,
      * or delivers the wrong dose.
      */
+    /**
+     * The insulin quick-add chip label, formatted to the active pump's bolus step (RS 0.05/0.01 → two
+     * decimals "+1.00"; DanaR 0.1 → one decimal "+1.0"), so overridden per pump. The dose-confirm
+     * button uses `format_insulin_units` (always two decimals, "1.00 U") regardless of pump, so it is
+     * open only for symmetry and defaults correctly for both.
+     */
+    protected open val bolusChipLabel: String get() = "+1.00"
+    protected open val bolusConfirmLabel: String get() = "1.00 U"
+
     private fun bolusFromUi() {
         // The lean insulin-delivery flow reaches here right after initialization, while its status
         // reads may still be draining; the full flow settled during the RS-screen legs. Bolusing into
@@ -412,11 +421,11 @@ abstract class AbstractDanaEmulatorUiTest {
         assertThat(lastBolusAmount()).isEqualTo(0.0)
 
         openVia("Treatments", expect = "Insulin")
-        openVia("Insulin", expect = BOLUS_CHIP)
-        click(BOLUS_CHIP)
+        openVia("Insulin", expect = bolusChipLabel)
+        click(bolusChipLabel)
         // The confirm button is labelled "OK" only while no dose is set; picking one relabels it to
         // the dose itself (InsulinDialogScreen), which doubles as proof the chip registered.
-        click(BOLUS_CONFIRM)
+        click(bolusConfirmLabel)
         click("OK")               // confirmation dialog → deliver
 
         val delivered = awaitTrue(BOLUS_TIMEOUT) { lastBolusAmount() == BOLUS_UNITS }
@@ -616,12 +625,9 @@ abstract class AbstractDanaEmulatorUiTest {
         private const val OPEN_ATTEMPTS = 3
 
 
-        /** The insulin dialog's middle quick-add button (DoubleKey.OverviewInsulinButtonIncrement2 default). */
+        /** The insulin dialog's middle quick-add button (DoubleKey.OverviewInsulinButtonIncrement2 default).
+         *  Its on-screen label ("+1.00"/"+1.0") is pump-step-dependent — see [bolusChipLabel]. */
         private const val BOLUS_UNITS = 1.0
-        private const val BOLUS_CHIP = "+1.00"
-
-        /** `core.ui.R.string.format_insulin_units` for [BOLUS_UNITS] — the confirm button once a dose is set. */
-        private const val BOLUS_CONFIRM = "1.00 U"
         private const val POLL_MS = 250L
     }
 }
