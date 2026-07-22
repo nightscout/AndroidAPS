@@ -7,6 +7,7 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -89,7 +90,8 @@ class EquilPumpPlugin @Inject constructor(
     private val ch: ConcentrationHelper,
     private val notificationManager: NotificationManager,
     private val protectionCheck: ProtectionCheck,
-    private val blePreCheck: BlePreCheck
+    private val blePreCheck: BlePreCheck,
+    private val config: Config
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -97,7 +99,8 @@ class EquilPumpPlugin @Inject constructor(
             EquilComposeContent(
                 pluginName = rh.gs(R.string.equil_name),
                 protectionCheck = protectionCheck,
-                blePreCheck = blePreCheck
+                blePreCheck = blePreCheck,
+                config = config
             )
         }
         .icon(IcPluginEquil)

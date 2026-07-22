@@ -16,7 +16,9 @@ data class InsulinManagementUiState(
     val insulins: List<ICfg> = emptyList(),
     val currentCardIndex: Int = 0,
     val activeInsulinLabel: String? = null,
-    val activeConcentration: Double = 1.0,
+    // Concentration of the currently-running insulin. null = no/unknown active profile (not yet resolved,
+    // or none) — deliberately NOT defaulted to 1.0, so it can never be mistaken for a real U100 active insulin.
+    val activeConcentration: Double? = null,
 
     // Editor fields
     val editorNickname: String = "",

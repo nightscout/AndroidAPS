@@ -26,6 +26,14 @@ interface InsulinManager {
     /** Persist current insulin list */
     fun storeSettings()
 
+    /**
+     * The exact serialized configuration string of the most recent LOCAL [storeSettings] write.
+     * Lets a UI observing `InsulinConfiguration` recognize its own echoes (which equal this) and
+     * tell them apart from a genuine external (client→master) push — which arrives via putRemote and
+     * never updates this — independent of write-ordering / coroutine-dispatch timing.
+     */
+    val lastStoredConfiguration: String
+
     /** Add a new insulin to the list. Returns the stored copy. */
     fun addNewInsulin(newICfg: ICfg, ue: Boolean = true, keepName: Boolean = false): ICfg
 

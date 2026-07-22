@@ -1,6 +1,7 @@
 package info.nightscout.comboctl.base
 
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -9,7 +10,6 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -142,9 +142,9 @@ class PumpIO(
     private var transportLayerIO = TransportLayer.IO(
         pumpStateStore, bluetoothDevice.address, framedComboIO
     ) { packetReceiverException ->
-        // If the packet receiver fails, close the barrier to wake
-        // up any caller that is waiting on it.
-        rtButtonConfirmationBarrier.close(packetReceiverException)
+        // If the packet receiver fails, fail any pending button-confirmation wait with the
+        // exception, so a caller suspended on it rethrows instead of hanging.
+        pendingRTButtonConfirmation?.completeExceptionally(packetReceiverException)
         // Also forward the exception to the associated callback.
         onPacketReceiverException(packetReceiverException)
     }
@@ -167,24 +167,33 @@ class PumpIO(
     // and store exceptions & rethrow them later.
     private var currentLongRTPressJob: Deferred<Unit>? = null
     private var currentLongRTPressedButtons = listOf<ApplicationLayer.RTButton>()
+
+    @Volatile
     private var longRTPressLoopRunning = true
 
-    // A Channel that is used as a "barrier" of sorts to block button
-    // pressing functions from continuing until the Combo sends
-    // a confirmation for the key press. Up until that confirmation
-    // is received, the client must not send any other button press
-    // commands to the Combo. To ensure that, this barrier exists.
-    // Its payload is a Boolean to let waiting coroutines know whether
-    // to finish or to continue any internal loops. The former happens
-    // during disconnect. It is set up as a conflated channel. That
-    // way, if a confirmation is received before button press commands
-    // call receive(), information about the confirmation is not lost
-    // (which would happen with a rendezvous channel). And, in case
-    // disconnect() is called, it is important to overwrite any other
-    // existing value with "false" to stop button pressing commands
-    // (hence a conflated channel instead of DROP_OLDEST buffer
-    // overflow behavior).
-    private var rtButtonConfirmationBarrier = newRtButtonConfirmationBarrier()
+    // Serializes the long-press session lifecycle (currentLongRTPressJob). A long press is "active"
+    // from startLongRTButtonPress() until it is explicitly released via stopLongRTButtonPress() or
+    // waitForLongRTButtonPressToFinish() - NOT merely until the internal loop coroutine happens to
+    // finish. Without this, a redundant startLongRTButtonPress() could observe the job cleared the
+    // instant the loop ended (e.g. a keepGoing predicate returned false) and spawn a second, competing
+    // long-press loop, whose confirmation wait would then never be satisfied.
+    private val longRTPressMutex = Mutex()
+
+    // Handoff that blocks a button-press function until the Combo confirms the key press. Until that
+    // confirmation arrives, the client must not send any other button-press command. A button sender
+    // arms a fresh CompletableDeferred here immediately before sending the button status packet, then
+    // await()s it; the packet receiver completes it (with true) as soon as the Combo's next
+    // confirmation packet (RT_DISPLAY or RT_BUTTON_CONFIRMATION) arrives. disconnect() completes it
+    // with false to make a pending wait abort its loop, and a packet-receiver failure completes it
+    // exceptionally so the wait rethrows.
+    //
+    // A per-send Deferred correlates exactly one confirmation to one send. The previous conflated
+    // Channel<Boolean> "barrier" collapsed the Combo's asynchronous, multi-packet confirmation stream
+    // into a single slot and, combined with a manual pre-clear tryReceive(), could desync under load
+    // and strand a receive() forever. @Volatile so the non-suspending packet receiver reliably sees
+    // the most recently armed instance.
+    @Volatile
+    private var pendingRTButtonConfirmation: CompletableDeferred<Boolean>? = null
 
     private val displayFrameAssembler = DisplayFrameAssembler()
 
@@ -648,10 +657,14 @@ class PumpIO(
         // Tell the callback that there's currently no frame available.
         onNewDisplayFrame(null)
 
-        // Reinitialize the barrier, since it may have been closed
-        // earlier due to an exception in the packet receiver.
-        // (See the transportLayerIO initialization code.)
-        rtButtonConfirmationBarrier = newRtButtonConfirmationBarrier()
+        // Start each connection with a clean long-press state. The previous connection's loop
+        // coroutine was cancelled when its internal scope was cancelled on disconnect, but the
+        // session handle is only cleared by an explicit release - so reset it here in case the
+        // previous connection was torn down (e.g. via disconnect or a packet receiver exception)
+        // without one. Also drop any button confirmation left pending from that connection.
+        currentLongRTPressJob = null
+        longRTPressLoopRunning = true
+        pendingRTButtonConfirmation = null
 
         // Start the internal coroutine scope that will run the heartbeat,
         // packet receiver, and other internal coroutines. Enforce the
@@ -776,11 +789,10 @@ class PumpIO(
      * omitted when shutting down an application.
      */
     suspend fun disconnect() {
-        // Make sure that any function that is suspended by this
-        // barrier is woken up. Pass "false" to these functions
-        // to let them know that they need to abort any loop
-        // they might be running.
-        rtButtonConfirmationBarrier.trySend(false)
+        // Wake any button-press function currently waiting for a confirmation, completing its
+        // wait with "false" so it aborts any loop it might be running instead of waiting for a
+        // confirmation that will never arrive now that we are disconnecting.
+        pendingRTButtonConfirmation?.complete(false)
 
         stopCMDPingHeartbeat()
         stopRTKeepAliveHeartbeat()
@@ -1104,11 +1116,14 @@ class PumpIO(
 
             try {
                 withContext(sequencedDispatcher) {
+                    // Arm the confirmation handoff before sending, so a confirmation that arrives
+                    // immediately after the send cannot be missed.
+                    val confirmation = CompletableDeferred<Boolean>()
+                    pendingRTButtonConfirmation = confirmation
                     sendPacketWithoutResponse(ApplicationLayer.createRTButtonStatusPacket(buttonCodes, true))
-                    // Wait by "receiving" a value. We aren't actually interested
-                    // in that value, just in receive() suspending this coroutine
-                    // until the RT button was confirmed by the Combo.
-                    rtButtonConfirmationBarrier.receive()
+                    // Suspend this coroutine until the RT button was confirmed by the Combo. We
+                    // aren't interested in the value itself, just in waiting for the confirmation.
+                    confirmation.await()
                 }
             } catch (e: CancellationException) {
                 delayBeforeNoButton = true
@@ -1227,17 +1242,22 @@ class PumpIO(
     suspend fun startLongRTButtonPress(buttons: List<ApplicationLayer.RTButton>, keepGoing: (suspend () -> Boolean)? = null) {
         require(buttons.isNotEmpty()) { "Cannot start long RT button press since the specified buttons list is empty" }
 
-        if (currentLongRTPressJob != null) {
-            logger(LogLevel.DEBUG) { "Long RT button press job already running; ignoring redundant call" }
-            return
-        }
+        // Reserve the long-press session atomically: the check for an existing session and the launch
+        // of the loop happen under longRTPressMutex, and the loop no longer clears currentLongRTPressJob
+        // when it ends (only an explicit release does). Together this makes a redundant call a reliable
+        // no-op - it can neither race the setup nor observe a session that a just-finished loop appears
+        // to have released, which would otherwise spawn a second, competing loop.
+        longRTPressMutex.withLock {
+            if (currentLongRTPressJob != null) {
+                logger(LogLevel.DEBUG) { "Long RT button press job already running; ignoring redundant call" }
+                return
+            }
 
-        runPumpIOCall("start long RT button press", Mode.REMOTE_TERMINAL) {
-            try {
+            // issueLongRTButtonPressUpdate(pressing = true) only launches the loop coroutine and records
+            // it in currentLongRTPressJob; it does not await it, so holding the mutex here does not block
+            // for the duration of the press.
+            runPumpIOCall("start long RT button press", Mode.REMOTE_TERMINAL) {
                 issueLongRTButtonPressUpdate(buttons, keepGoing, pressing = true)
-            } catch (t: Throwable) {
-                stopLongRTButtonPress()
-                throw t
             }
         }
     }
@@ -1252,15 +1272,26 @@ class PumpIO(
         startLongRTButtonPress(listOf(button), keepGoing)
 
     suspend fun stopLongRTButtonPress() {
-        if (currentLongRTPressJob == null) {
-            logger(LogLevel.DEBUG) {
-                "No long RT button press job running, and button press state is RELEASED; ignoring redundant call"
+        val job = longRTPressMutex.withLock {
+            currentLongRTPressJob ?: run {
+                logger(LogLevel.DEBUG) {
+                    "No long RT button press job running, and button press state is RELEASED; ignoring redundant call"
+                }
+                return
             }
-            return
         }
 
-        runPumpIOCall("stop long RT button press", Mode.REMOTE_TERMINAL) {
-            issueLongRTButtonPressUpdate(listOf(ApplicationLayer.RTButton.NO_BUTTON), keepGoing = null, pressing = false)
+        try {
+            // issueLongRTButtonPressUpdate(pressing = false) stops the loop and awaits it. Done outside
+            // the mutex so the loop can run to completion (it does not take the mutex).
+            runPumpIOCall("stop long RT button press", Mode.REMOTE_TERMINAL) {
+                issueLongRTButtonPressUpdate(listOf(ApplicationLayer.RTButton.NO_BUTTON), keepGoing = null, pressing = false)
+            }
+        } finally {
+            // Release the session now that the loop has stopped, so a subsequent start begins a new one.
+            longRTPressMutex.withLock {
+                if (currentLongRTPressJob === job) currentLongRTPressJob = null
+            }
         }
     }
 
@@ -1278,8 +1309,18 @@ class PumpIO(
      *   that was passed to [startLongRTButtonPress].
      */
     suspend fun waitForLongRTButtonPressToFinish() {
-        // currentLongRTPressJob is set to null automatically when the job finishes
-        currentLongRTPressJob?.await()
+        val job = longRTPressMutex.withLock { currentLongRTPressJob } ?: return
+        try {
+            // Await outside the mutex so the loop can run to completion (it does not take the mutex).
+            job.await()
+        } finally {
+            // The loop coroutine no longer clears currentLongRTPressJob itself; the session is
+            // considered released once it has been awaited here. Clear it so a subsequent start begins
+            // a new session (and a redundant wait after this one becomes a no-op).
+            longRTPressMutex.withLock {
+                if (currentLongRTPressJob === job) currentLongRTPressJob = null
+            }
+        }
     }
 
     /**
@@ -1429,9 +1470,6 @@ class PumpIO(
 
     private fun isIORunning() = transportLayerIO.isIORunning()
 
-    private fun newRtButtonConfirmationBarrier() =
-        Channel<Boolean>(capacity = Channel.CONFLATED)
-
     private fun getCombinedButtonCodes(buttons: List<ApplicationLayer.RTButton>) =
         buttons.fold(0) { codes, button -> codes or button.id }
 
@@ -1568,23 +1606,21 @@ class PumpIO(
                     processRTDisplayPayload(
                         ApplicationLayer.parseRTDisplayPacket(tpLayerPacket.toAppLayerPacket())
                     )
-                    // Signal the arrival of the button confirmation.
-                    // (Either RT_BUTTON_CONFIRMATION or RT_DISPLAY
-                    // function as confirmations.) Transmit "true"
-                    // to let the receivers know that everything
-                    // is OK and that they don't need to abort.
-                    rtButtonConfirmationBarrier.trySend(true)
+                    // Signal the arrival of the button confirmation. (Either RT_BUTTON_CONFIRMATION or
+                    // RT_DISPLAY function as confirmations.) complete() with "true" tells the waiting
+                    // button-press function that everything is OK and it does not need to abort. It is
+                    // a no-op if there is no pending confirmation or it was already completed.
+                    pendingRTButtonConfirmation?.complete(true)
                     TransportLayer.IO.ReceiverBehavior.DROP_PACKET
                 }
 
                 ApplicationLayer.Command.RT_BUTTON_CONFIRMATION         -> {
                     logger(LogLevel.VERBOSE) { "Got RT_BUTTON_CONFIRMATION packet from the Combo" }
-                    // Signal the arrival of the button confirmation.
-                    // (Either RT_BUTTON_CONFIRMATION or RT_DISPLAY
-                    // function as confirmations.) Transmit "true"
-                    // to let the receivers know that everything
-                    // is OK and that they don't need to abort.
-                    rtButtonConfirmationBarrier.trySend(true)
+                    // Signal the arrival of the button confirmation. (Either RT_BUTTON_CONFIRMATION or
+                    // RT_DISPLAY function as confirmations.) complete() with "true" tells the waiting
+                    // button-press function that everything is OK and it does not need to abort. It is
+                    // a no-op if there is no pending confirmation or it was already completed.
+                    pendingRTButtonConfirmation?.complete(true)
                     TransportLayer.IO.ReceiverBehavior.DROP_PACKET
                 }
 
@@ -1901,8 +1937,12 @@ class PumpIO(
                         }
                     }
 
-                    // Dummy tryReceive() call to clear out the barrier in case it isn't empty.
-                    rtButtonConfirmationBarrier.tryReceive()
+                    // Arm the confirmation handoff for the button status packet we are about to send.
+                    // A fresh CompletableDeferred correlates exactly one confirmation to this send, so
+                    // the Combo's asynchronous display/confirmation stream cannot desync and strand
+                    // this wait the way the former conflated-channel barrier + pre-clear could.
+                    val confirmation = CompletableDeferred<Boolean>()
+                    pendingRTButtonConfirmation = confirmation
 
                     logger(LogLevel.DEBUG) {
                         "Sending long RT button press; button(s) = ${toString(buttons)} status changed = $buttonStatusChanged"
@@ -1920,7 +1960,7 @@ class PumpIO(
                     // confirmation. We cannot send more button
                     // status commands until then.
                     logger(LogLevel.DEBUG) { "Waiting for button confirmation" }
-                    val canContinue = rtButtonConfirmationBarrier.receive()
+                    val canContinue = confirmation.await()
                     logger(LogLevel.DEBUG) { "Got button confirmation; canContinue = $canContinue" }
 
                     if (!canContinue)
@@ -1976,8 +2016,10 @@ class PumpIO(
                         throw t
                     }
                 }
-
-                currentLongRTPressJob = null
+                // NOTE: currentLongRTPressJob is deliberately NOT cleared here. The long-press session
+                // stays active until it is explicitly released via stopLongRTButtonPress() or
+                // waitForLongRTButtonPressToFinish(); clearing it the moment the loop ended is what let
+                // a redundant startLongRTButtonPress() spawn a second, competing loop.
             }
         }
     }

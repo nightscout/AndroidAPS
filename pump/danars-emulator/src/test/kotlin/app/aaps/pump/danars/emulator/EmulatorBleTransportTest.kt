@@ -111,6 +111,61 @@ class EmulatorBleTransportTest {
         assertThat(timeResponse!!.size).isAtLeast(8)
     }
 
+    /**
+     * The v1 pairing key is sent from its own thread after a delay, so a disconnect can happen while
+     * it is in flight. It must then be dropped: `BLEComm` has torn its connection down and parsing a
+     * packet against it throws "Null decryptedInputBuffer" — from a thread nobody owns, so it takes
+     * down whatever is running at the time. That is what happened in CI build 40261, where the key
+     * from one test surfaced as a failure in the *next* one.
+     *
+     * The delay is deliberate, and long enough that the disconnect always wins: it makes the race
+     * the bug needed happen every run, rather than once in a while on a loaded CI box.
+     */
+    @Test
+    fun deferredPairingKeyIsDroppedWhenTheConnectionEndedFirst() {
+        transport.pairingDelayMs = 300
+        requestPairing()
+        // The immediate acknowledgement; the key itself is still pending on its thread.
+        assertThat(responses).hasSize(1)
+        responses.clear()
+
+        transport.gatt.disconnect()
+        transport.awaitPendingCallbacks()
+
+        assertThat(responses).isEmpty()
+    }
+
+    /** The same key must still arrive on a connection that is alive — the guard is not a mute. */
+    @Test
+    fun deferredPairingKeyIsDeliveredWhileConnected() {
+        transport.pairingDelayMs = 0
+        requestPairing()
+        transport.awaitPendingCallbacks()
+
+        // The acknowledgement, then the key.
+        assertThat(responses).hasSize(2)
+        val key = appEncryption.getDecryptedPacket(responses[1])
+        assertThat(key).isNotNull()
+        assertThat(key!![1]).isEqualTo(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte())
+    }
+
+    /**
+     * Connect and ask to pair, leaving only the deferred key outstanding. PUMP_CHECK first, or the
+     * request is never decrypted — the app-side encryption has no session to send it under.
+     */
+    private fun requestPairing() {
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.writeCharacteristic(
+            appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
+        )
+        appEncryption.getDecryptedPacket(responses.last())
+        responses.clear()
+
+        transport.gatt.writeCharacteristic(
+            appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST, null, null)
+        )
+    }
+
     @Test
     fun testCommandRoundTrip() {
         // First complete handshake (simplified - just set encryption state)

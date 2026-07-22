@@ -7,6 +7,7 @@ import info.nightscout.comboctl.base.TransportLayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
@@ -29,12 +30,18 @@ fun runBlockingWithWatchdog(
     block: suspend CoroutineScope.() -> Unit
 ) {
     runBlocking(context) {
+        lateinit var blockJob: Job
         val watchdogJob = launch {
             delay(timeout)
+            // On timeout, dump what is still alive under the block so a hang points at the stuck
+            // coroutine instead of only reporting "timeout reached".
+            val active = blockJob.children.toList()
+            println("[WATCHDOG] timeout after ${timeout}ms; blockJob active=${blockJob.isActive} children=${active.size}")
+            active.forEachIndexed { i, child -> println("[WATCHDOG]   child[$i] active=${child.isActive} completed=${child.isCompleted} cancelled=${child.isCancelled}") }
             fail("Test run timeout reached")
         }
 
-        launch {
+        blockJob = launch {
             try {
                 // Call the block with the current CoroutineScope
                 // as the receiver to allow code inside that block

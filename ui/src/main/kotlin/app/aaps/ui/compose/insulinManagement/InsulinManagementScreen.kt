@@ -476,10 +476,15 @@ fun InsulinManagementScreen(
                         }
                     }
                     val currentIcfgConcentration = uiState.insulins.getOrNull(uiState.currentCardIndex)?.concentration ?: 0.0
+                    val activeConcentration = uiState.activeConcentration
                     // Activate is a client→master command (prepareActivation relays via BatchExecutor) — hide it
                     // when the master is unreachable, since it couldn't be delivered (editingEnabled == "can
                     // reach the master"). On a master, editingEnabled is always true.
-                    if (editingEnabled && currentIcfgConcentration == uiState.activeConcentration)
+                    // Show only when: a running insulin is known (activeConcentration != null — a null means
+                    // "unresolved/no active profile" and must never light the FAB), the selected insulin is not
+                    // already the active one (re-activating it is a no-op), and its concentration matches the
+                    // running concentration (changing concentration is a physical change, not settable here).
+                    if (editingEnabled && !isCurrentActive && activeConcentration != null && currentIcfgConcentration == activeConcentration)
                     // Activate FAB
                         AapsFab(
                             onClick = {

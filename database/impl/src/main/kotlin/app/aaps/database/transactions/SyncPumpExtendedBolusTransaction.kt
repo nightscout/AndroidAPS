@@ -28,7 +28,14 @@ class SyncPumpExtendedBolusTransaction(private val extendedBolus: ExtendedBolus)
             }
         } else {
             val running = database.extendedBolusDao.getExtendedBolusActiveAtLegacy(extendedBolus.timestamp)
-            if (running != null) {
+            // Only shorten a previous extended bolus when the new one genuinely starts after it and it
+            // has a real duration. Without this guard, a new record whose (second-resolution) timestamp
+            // equals or precedes the running one's makes `end = timestamp` non-positive and
+            // ExtendedBolus.setEnd throws `require(duration > 0)`, crashing the whole app. That happens
+            // when the same extended bolus is synced twice with slightly different timestamps — the
+            // command path and the pump's history event (DanaRSPacketAPSHistoryEvents) — which is not a
+            // real supersession, so skipping it is also the correct behaviour, not just crash-avoidance.
+            if (running != null && running.duration > 0 && extendedBolus.timestamp > running.timestamp) {
                 val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
                 running.amount *= pctRun
                 running.end = extendedBolus.timestamp

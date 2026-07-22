@@ -42,7 +42,10 @@ fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUt
         profileName = originalProfileName ?: profile,
         timeshift = timeShift ?: 0,
         percentage = percentage ?: 100,
-        duration = duration ?: 0L,
+        // originalDuration is always written in milliseconds by AAPS and is the trustworthy source.
+        // Documents uploaded before 9b90eea774 carry a duration inflated by 60000 and no
+        // durationInMilliseconds, which TreatmentMapper then inflates by 60000 once more.
+        duration = originalDuration ?: duration ?: 0L,
         iCfg = iCfg,
         ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )

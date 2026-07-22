@@ -44,7 +44,7 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
         equilPumpPlugin =
             EquilPumpPlugin(
                 aapsLogger, rh, preferences, commandQueue, rxBus, context,
-                pumpSync, equilManager, pumpEnactResultProvider, constraintsChecker, ch, notificationManager, protectionCheck, blePreCheck
+                pumpSync, equilManager, pumpEnactResultProvider, constraintsChecker, ch, notificationManager, protectionCheck, blePreCheck, config
             )
     }
 

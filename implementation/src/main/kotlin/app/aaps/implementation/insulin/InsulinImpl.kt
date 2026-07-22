@@ -73,6 +73,12 @@ class InsulinImpl @Inject constructor(
     override var insulins: ArrayList<ICfg> = ArrayList()
     override var currentInsulinIndex = 0
 
+    // Serialized config of the most recent LOCAL store. Stamped BEFORE preferences.put() at the single
+    // store choke point so a UI observing InsulinConfiguration can recognize its own echo regardless of
+    // dispatch timing (Main.immediate can deliver the change re-entrantly inside put()). @Volatile: written
+    // under the @Synchronized store lock, read from the UI (main) thread without it.
+    @Volatile override var lastStoredConfiguration: String = ""
+
     init {
         bootstrap()
         // Populate the iCfg cache off the main thread so the synchronous getter never has to block.
@@ -234,18 +240,26 @@ class InsulinImpl @Inject constructor(
     }
 
     /** Persist the bootstrapped config via putRemote — no echo, stamp floored to the current value. */
-    private fun persistBootstrap() =
+    private fun persistBootstrap() {
+        val cfg = configuration().toString()
+        lastStoredConfiguration = cfg
         preferences.putRemote(
-            StringNonKey.InsulinConfiguration, configuration().toString(),
+            StringNonKey.InsulinConfiguration, cfg,
             preferences.get(LongComposedKey.SyncedPrefModified, StringNonKey.InsulinConfiguration.key)
         )
+    }
 
     @Synchronized
     override fun storeSettings() {
         if (applying) return // the one-time init normalize persists once at the end via putRemote
         // Genuine edit → local put. The generic sync layer stamps SyncedPrefModified and signals the
         // client→master publisher on this write; no manual version bump needed.
-        preferences.put(StringNonKey.InsulinConfiguration, configuration().toString())
+        // Stamp lastStoredConfiguration BEFORE the put so an observer that receives the change
+        // synchronously (Main.immediate re-entrancy inside put()) already sees the new value and can
+        // suppress this self-echo.
+        val cfg = configuration().toString()
+        lastStoredConfiguration = cfg
+        preferences.put(StringNonKey.InsulinConfiguration, cfg)
     }
 
     @Synchronized
