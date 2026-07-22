@@ -23,7 +23,7 @@ import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.pump.danarv2.DanaRv2Plugin
-import app.aaps.testcategories.ShardA
+import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -51,7 +51,7 @@ import javax.inject.Inject
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@ShardA
+@ShardB
 class DanaREmulatorPumpTest {
 
     val hiltRule = HiltAndroidRule(this)
