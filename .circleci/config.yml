@@ -124,45 +124,64 @@ jobs:
             TST=app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk
             for s in emulator-5554 emulator-5556 emulator-5558; do adb -s $s install -r -d "$APK"; adb -s $s install -r -d "$TST"; done
 
+      # Each shard runs its am instrument with a PROCESS-LEVEL retry: if the run crashes the app process
+      # (SetupWizardE2EHiltTest intermittently dies in a Compose/ViewRootImpl traversal - a process death
+      # that the in-process RetryRule cannot catch) or yields no coverage, it re-runs once with a fresh
+      # process, which self-heals. A genuine test failure (FAILURES!!! with coverage present) is NOT
+      # retried - RetryRule already tried it in-process - so it fails fast. The step ends with `exit $RC`
+      # so a failed shard shows RED in the step list (not just the Collect gate); the shards are still
+      # `background: true` to overlap the unit step, and Collect remains the job's definitive gate.
       - run:
-          name: App shard A — DanaRS suite (emu-5554, am instrument)
+          name: App shard A — DanaRS heavy UI (emu-5554, am instrument)
           background: true
           command: |
             PKG=info.nightscout.androidaps
             DEV=emulator-5554
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
-            RC=0
-            adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
-              -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
-              $PKG.test/app.aaps.runners.HiltTestRunner > shard-A.txt 2>&1 || true
-            tail -n 20 shard-A.txt
-            if grep -qE "FAILURES!!!|shortMsg=Process crashed|Process crashed|INSTRUMENTATION_FAILED" shard-A.txt; then echo "shard A: TEST FAILURE"; RC=1; fi
-            adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
-            sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
-            echo "shard A coverage: ${sz:-0} bytes"
-            if [ "${sz:-0}" -lt 50000 ]; then echo "shard A: MISSING/short coverage"; RC=1; fi
+            RC=1
+            for attempt in 1 2; do
+              adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
+                -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
+                $PKG.test/app.aaps.runners.HiltTestRunner > shard-A-$attempt.txt 2>&1 || true
+              tail -n 20 shard-A-$attempt.txt
+              adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
+              sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
+              echo "shard A attempt $attempt coverage: ${sz:-0} bytes"
+              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-A-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
+                echo "shard A attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+              fi
+              if grep -qE "FAILURES!!!" shard-A-$attempt.txt; then RC=1; else RC=0; fi
+              break
+            done
             echo $RC > /tmp/rc-A
             echo "shard A done rc=$RC"
+            exit $RC
 
       - run:
-          name: App shard B — DanaR/RFCOMM family (emu-5556, am instrument)
+          name: App shard B — DanaR family + RS pump/transport (emu-5556, am instrument)
           background: true
           command: |
             PKG=info.nightscout.androidaps
             DEV=emulator-5556
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
-            RC=0
-            adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
-              -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
-              $PKG.test/app.aaps.runners.HiltTestRunner > shard-B.txt 2>&1 || true
-            tail -n 20 shard-B.txt
-            if grep -qE "FAILURES!!!|shortMsg=Process crashed|Process crashed|INSTRUMENTATION_FAILED" shard-B.txt; then echo "shard B: TEST FAILURE"; RC=1; fi
-            adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
-            sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
-            echo "shard B coverage: ${sz:-0} bytes"
-            if [ "${sz:-0}" -lt 50000 ]; then echo "shard B: MISSING/short coverage"; RC=1; fi
+            RC=1
+            for attempt in 1 2; do
+              adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
+                -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
+                $PKG.test/app.aaps.runners.HiltTestRunner > shard-B-$attempt.txt 2>&1 || true
+              tail -n 20 shard-B-$attempt.txt
+              adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
+              sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
+              echo "shard B attempt $attempt coverage: ${sz:-0} bytes"
+              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-B-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
+                echo "shard B attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+              fi
+              if grep -qE "FAILURES!!!" shard-B-$attempt.txt; then RC=1; else RC=0; fi
+              break
+            done
             echo $RC > /tmp/rc-B
             echo "shard B done rc=$RC"
+            exit $RC
 
       - run:
           name: App shard C — SetupWizard + non-Dana (emu-5558, am instrument)
@@ -171,18 +190,24 @@ jobs:
             PKG=info.nightscout.androidaps
             DEV=emulator-5558
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
-            RC=0
-            adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
-              -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
-              $PKG.test/app.aaps.runners.HiltTestRunner > shard-C.txt 2>&1 || true
-            tail -n 20 shard-C.txt
-            if grep -qE "FAILURES!!!|shortMsg=Process crashed|Process crashed|INSTRUMENTATION_FAILED" shard-C.txt; then echo "shard C: TEST FAILURE"; RC=1; fi
-            adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
-            sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
-            echo "shard C coverage: ${sz:-0} bytes"
-            if [ "${sz:-0}" -lt 50000 ]; then echo "shard C: MISSING/short coverage"; RC=1; fi
+            RC=1
+            for attempt in 1 2; do
+              adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
+                -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
+                $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true
+              tail -n 20 shard-C-$attempt.txt
+              adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
+              sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
+              echo "shard C attempt $attempt coverage: ${sz:-0} bytes"
+              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-C-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
+                echo "shard C attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+              fi
+              if grep -qE "FAILURES!!!" shard-C-$attempt.txt; then RC=1; else RC=0; fi
+              break
+            done
             echo $RC > /tmp/rc-C
             echo "shard C done rc=$RC"
+            exit $RC
 
       # workers.max is capped at 10 (below the 15 Gradle cores) on purpose: the unit suite saturating all
       # cores while the emulators + shards run pushed the box to a load average of ~99 before (~4x

@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.di.EmulatedOptions
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
-import app.aaps.testcategories.ShardA
+import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -29,7 +29,7 @@ import javax.inject.Inject
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@ShardA
+@ShardB
 class DanaRsEmulatorTransportTest {
 
     val hiltRule = HiltAndroidRule(this)

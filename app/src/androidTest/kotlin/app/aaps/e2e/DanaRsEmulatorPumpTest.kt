@@ -21,7 +21,7 @@ import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
-import app.aaps.testcategories.ShardA
+import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -60,7 +60,7 @@ import javax.inject.Inject
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@ShardA
+@ShardB
 class DanaRsEmulatorPumpTest {
 
     val hiltRule = HiltAndroidRule(this)
