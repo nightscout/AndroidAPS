@@ -193,6 +193,53 @@ class DanaREmulatorPumpTest {
     }
 
     /**
+     * Reads back the other DanaRv2 **review** record types (alarm, glucose, carbs, suspend, refill), each
+     * a distinct `MsgHistoryAll` decode branch (alarm string, raw vs hundredths values, on/off state) that
+     * bolus alone doesn't reach. Increment 2 - the emulator now serves every per-type review opcode.
+     */
+    @Test
+    fun danaRv2_readsReviewHistoryTypes() {
+        bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
+        val store = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state.reviewHistoryStore
+        // Distinct minutes, 3h back so they don't collide with the bolus test's record.
+        val base = System.currentTimeMillis() / 60_000L * 60_000L - 3 * 60 * 60 * 1000L
+        val alarmTs = base + 60_000; val glucoseTs = base + 120_000; val carboTs = base + 180_000
+        val suspendTs = base + 240_000; val refillTs = base + 300_000
+        store.addEvent(RecordTypes.RECORD_TYPE_ALARM.toInt(), alarmTs, 0, 79)     // param2 79 = Occlusion
+        store.addEvent(RecordTypes.RECORD_TYPE_GLUCOSE.toInt(), glucoseTs, 120, 0) // raw value 120
+        store.addEvent(RecordTypes.RECORD_TYPE_CARBO.toInt(), carboTs, 30, 0)      // raw value 30
+        store.addEvent(RecordTypes.RECORD_TYPE_SUSPEND.toInt(), suspendTs, 0, 79)  // param2 79 = On
+        store.addEvent(RecordTypes.RECORD_TYPE_REFILL.toInt(), refillTs, 300, 0)   // 3.00 U (hundredths)
+
+        readReviewType(RecordTypes.RECORD_TYPE_ALARM, alarmTs)
+        readReviewType(RecordTypes.RECORD_TYPE_GLUCOSE, glucoseTs)
+        readReviewType(RecordTypes.RECORD_TYPE_CARBO, carboTs)
+        readReviewType(RecordTypes.RECORD_TYPE_SUSPEND, suspendTs)
+        readReviewType(RecordTypes.RECORD_TYPE_REFILL, refillTs)
+
+        assertThat(recordAt(RecordTypes.RECORD_TYPE_ALARM, alarmTs).alarm).isEqualTo("Occlusion")
+        assertThat(recordAt(RecordTypes.RECORD_TYPE_GLUCOSE, glucoseTs).value).isWithin(0.001).of(120.0)
+        assertThat(recordAt(RecordTypes.RECORD_TYPE_CARBO, carboTs).value).isWithin(0.001).of(30.0)
+        assertThat(recordAt(RecordTypes.RECORD_TYPE_SUSPEND, suspendTs).stringValue).isEqualTo("On")
+        assertThat(recordAt(RecordTypes.RECORD_TYPE_REFILL, refillTs).value).isWithin(0.001).of(3.0)
+    }
+
+    /** Reads one review [type] and waits (bounded) for the driver to parse the seeded record at [timestamp]. */
+    private fun readReviewType(type: Byte, timestamp: Long) {
+        val t = Thread { runCatching { danaRv2Plugin.loadHistory(type) } }
+        t.start()
+        t.join(HISTORY_TIMEOUT_MS) // loadHistory returns when the 0x31F1 done arrives; bound it per type
+        assertThat(
+            awaitTrue(HISTORY_TIMEOUT_MS) {
+                danaHistoryRecordDao.allFromByType(timestamp, type).blockingGet().any { it.timestamp == timestamp }
+            }
+        ).isTrue()
+    }
+
+    private fun recordAt(type: Byte, timestamp: Long) =
+        danaHistoryRecordDao.allFromByType(timestamp, type).blockingGet().first { it.timestamp == timestamp }
+
+    /**
      * Brings [plugin] up against the emulated [variant] and requires it to connect.
      *
      * Per test rather than in `@Before`: `RfcommTransport` is `@Singleton` and reads

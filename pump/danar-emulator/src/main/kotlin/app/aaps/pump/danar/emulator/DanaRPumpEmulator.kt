@@ -585,13 +585,14 @@ class DanaRPumpEmulator(
      * on [command], then a 0x31F1 done. Records are seeded on [DanaRPumpState.reviewHistoryStore] with
      * `RecordTypes` codes and seconds=0 (the bolus branch reads byte 6 as its duration-low).
      *
-     * Increment 1 serves only BOLUS (0x3101); the other opcodes keep the old empty-done stub until their
-     * record types are wired.
+     * Serves every per-type review opcode (0x3101-0x310A); the uniform 10-byte `buildReviewRecordData`
+     * layout matches `MsgHistoryAll`'s branches for each type (bolus reads byte 6 as duration, so seed
+     * bolus records minute-aligned; the rest read a 6-byte datetime-with-seconds).
      */
     private fun handleHistoryRequest(command: Int): ByteArray {
-        if (command != 0x3101) return byteArrayOf(0xFF.toByte()) // other review types: not yet served
-        state.bolusHistoryRequestCount++
-        val records = state.reviewHistoryStore.getEventsAfter(0).filter { it.code == RecordTypes.RECORD_TYPE_BOLUS.toInt() }
+        val recordType = reviewRecordTypeForCommand(command) ?: return byteArrayOf(0xFF.toByte())
+        if (command == 0x3101) state.bolusHistoryRequestCount++
+        val records = state.reviewHistoryStore.getEventsAfter(0).filter { it.code == recordType }
         // Mirror handleApsHistoryEvents: the FIRST record is the direct reply, the rest stream via the
         // callback, then a MsgHistoryDone (0x31F1, 1-byte payload) the driver's loadHistory spins on.
         // Empty/empty-frame replies were rejected by the reader and hung the read - so both the reply and
@@ -607,6 +608,20 @@ class DanaRPumpEmulator(
         }.start()
         return if (records.isEmpty()) byteArrayOf(0xFF.toByte())
         else state.reviewHistoryStore.buildReviewRecordData(records[0])
+    }
+
+    /** Maps a per-type review opcode (0x3101-0x310A) to its RecordTypes code, or null for unserved history. */
+    private fun reviewRecordTypeForCommand(command: Int): Int? = when (command) {
+        0x3101 -> RecordTypes.RECORD_TYPE_BOLUS.toInt()
+        0x3102 -> RecordTypes.RECORD_TYPE_DAILY.toInt()
+        0x3104 -> RecordTypes.RECORD_TYPE_GLUCOSE.toInt()
+        0x3105 -> RecordTypes.RECORD_TYPE_ALARM.toInt()
+        0x3106 -> RecordTypes.RECORD_TYPE_ERROR.toInt()
+        0x3107 -> RecordTypes.RECORD_TYPE_CARBO.toInt()
+        0x3108 -> RecordTypes.RECORD_TYPE_REFILL.toInt()
+        0x3109 -> RecordTypes.RECORD_TYPE_SUSPEND.toInt()
+        0x310A -> RecordTypes.RECORD_TYPE_BASALHOUR.toInt()
+        else   -> null
     }
 
     private fun handleHistoryDone(): ByteArray = byteArrayOf(0x00)
