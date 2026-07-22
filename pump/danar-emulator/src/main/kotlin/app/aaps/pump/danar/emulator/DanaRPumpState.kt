@@ -21,6 +21,10 @@ class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) {
     // event historyStore because they use a different wire format and consumer - see HistoryEventStore.
     val reviewHistoryStore = HistoryEventStore()
 
+    // Diagnostic: how many bolus (0x3101) review-history requests the emulator has served. Lets a test
+    // tell "the read never reached the emulator" (0) from "it did but the record didn't parse" (>0).
+    var bolusHistoryRequestCount = 0
+
     // Device info
     var serialNumber: String = "DAN12345AB"
     var shippingCountry: String = "INT"

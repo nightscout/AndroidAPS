@@ -590,6 +590,7 @@ class DanaRPumpEmulator(
      */
     private fun handleHistoryRequest(command: Int): ByteArray {
         if (command != 0x3101) return byteArrayOf(0xFF.toByte()) // other review types: not yet served
+        state.bolusHistoryRequestCount++
         val records = state.reviewHistoryStore.getEventsAfter(0).filter { it.code == RecordTypes.RECORD_TYPE_BOLUS.toInt() }
         // Mirror handleApsHistoryEvents: the FIRST record is the direct reply, the rest stream via the
         // callback, then a MsgHistoryDone (0x31F1, 1-byte payload) the driver's loadHistory spins on.

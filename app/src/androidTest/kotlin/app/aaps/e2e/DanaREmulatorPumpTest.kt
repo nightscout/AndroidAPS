@@ -166,18 +166,19 @@ class DanaREmulatorPumpTest {
     @Test
     fun danaRv2_readsReviewBolusHistory() {
         bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
-        val reviewStore = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state.reviewHistoryStore
+        val emulatorState = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state
         // Minute-aligned (seconds=0) so MsgHistoryAll's bolus branch reads byte 6 as duration 0; param2
         // 0x80 is the standard-bolus sub-code, param1 the amount in hundredths (150 = 1.50 U).
         val timestamp = System.currentTimeMillis() / 60_000L * 60_000L - 2 * 60 * 60 * 1000L
-        reviewStore.addEvent(RecordTypes.RECORD_TYPE_BOLUS.toInt(), timestamp, 150, 0x80)
+        emulatorState.reviewHistoryStore.addEvent(RecordTypes.RECORD_TYPE_BOLUS.toInt(), timestamp, 150, 0x80)
 
-        // Fire the review read off-thread (loadHistory blocks on an uncancellable sleep-loop until the done
-        // arrives). Assert on the PARSED record - the coverage goal - by polling the DB, so a broken done
-        // can't wedge the shard; historyDoneReceived is checked last so the failure pinpoints whether it is
-        // the record format (record never appears) or the done handshake (record OK, flag stays false).
-        Thread { runCatching { runBlocking { commandQueue.loadHistory(RecordTypes.RECORD_TYPE_BOLUS) } } }.start()
+        // Drive the read directly through the plugin, off-thread (loadHistory blocks on an uncancellable
+        // sleep-loop until the done arrives). The emulator counter proves the read reached the pump; the DB
+        // poll proves the driver parsed the record back; historyDoneReceived is checked last. A broken step
+        // fails on its own assertion instead of wedging the shard.
+        Thread { runCatching { danaRv2Plugin.loadHistory(RecordTypes.RECORD_TYPE_BOLUS) } }.start()
 
+        assertThat(awaitTrue(HISTORY_TIMEOUT_MS) { emulatorState.bolusHistoryRequestCount > 0 }).isTrue()
         assertThat(
             awaitTrue(HISTORY_TIMEOUT_MS) {
                 danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS).blockingGet()
