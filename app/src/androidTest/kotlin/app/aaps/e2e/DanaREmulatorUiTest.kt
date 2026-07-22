@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
@@ -135,6 +136,40 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
         }
     }
 
+    /**
+     * Reads the pump's **review history** through the UI, the way a user does: Manage → Pump → Pump
+     * history → Refresh, which loads the type off the pump and renders it (`loadHistory` →
+     * `MsgHistoryAlarm` → `MsgHistoryAll` → `DanaHistoryRecordDao` → `DanaHistoryScreen`). The screen
+     * opens on Alarms (the first type), so a single seeded alarm auto-loads after Refresh. Mirrors
+     * [DanaRsEmulatorUiTest]'s `visitDanaHistory` - the DanaR emulator now serves the per-type review
+     * commands.
+     */
+    @Test
+    fun danaR_readsHistoryFromUi() {
+        bringUp(ExternalOptions.EMULATE_DANA_R_V2)
+        assertActivePumpIsThisDana()
+        val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
+        try {
+            waitForOverview()
+            initializeDanaPump()                            // Pump history appears only once initialized
+            // Seed AFTER connect: resolving emulatorState (the transport) before the pump is up eagerly
+            // re-enables the plugin and can stall app startup (a first-launch ANR seen locally). One alarm
+            // in the past - the driver asks for everything after a "from" instant and the store is strict.
+            emulatorState.reviewHistoryStore.addEvent(
+                RecordTypes.RECORD_TYPE_ALARM.toInt(), System.currentTimeMillis() - HISTORY_RECORD_AGE_MS, 0, ALARM_OCCLUSION
+            )
+            openDanaPlugin()                                // Manage → Pump → the DanaR overview
+            waitForQueueIdle()
+            openVia("Pump history", expect = "Alarms")      // DanaHistoryScreen, opens on Alarms
+            openVia("Refresh", expect = HISTORY_ALARM_TEXT) // loads the seeded alarm off the pump
+        } catch (t: Throwable) {
+            logScreen("E2E_DANAR_HISTORY")
+            throw t
+        } finally {
+            scenario.close()
+        }
+    }
+
     private fun initializeDanaPump() {
         if (!awaitTrue(INIT_PUMP_TIMEOUT) {
                 if (queueIdle()) requestStatusRead()
@@ -148,6 +183,9 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
         /** Shaped like the name DanaModules generates for an emulated DanaR ("DAN#####EM"). */
         private const val DEVICE_NAME = "DAN00001EM"
+        private const val HISTORY_RECORD_AGE_MS = 60 * 60 * 1000L
+        private const val ALARM_OCCLUSION = 79 // MsgHistoryAll decodes 79 → "Occlusion"
+        private const val HISTORY_ALARM_TEXT = "Occlusion"
         /** Matches DanaRPumpState.password on the emulator. */
         private const val EMULATOR_PASSWORD = 1234
         private const val INIT_PUMP_TIMEOUT = 60_000L
