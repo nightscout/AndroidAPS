@@ -31,8 +31,6 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 import javax.inject.Provider
 import org.junit.After
 import org.junit.Rule
@@ -174,22 +172,23 @@ class DanaREmulatorPumpTest {
         val timestamp = System.currentTimeMillis() / 60_000L * 60_000L - 2 * 60 * 60 * 1000L
         reviewStore.addEvent(RecordTypes.RECORD_TYPE_BOLUS.toInt(), timestamp, 150, 0x80)
 
-        // loadHistory blocks (uncancellable SystemClock.sleep) until the done arrives, so run it off-thread
-        // with a bounded wait: a missing/malformed done then fails cleanly here instead of wedging the shard.
-        val completed = CountDownLatch(1)
-        Thread {
-            runCatching { runBlocking { commandQueue.loadHistory(RecordTypes.RECORD_TYPE_BOLUS) } }
-            completed.countDown()
-        }.start()
-        if (!completed.await(HISTORY_TIMEOUT_S, TimeUnit.SECONDS))
-            error("loadHistory(BOLUS) did not complete within ${HISTORY_TIMEOUT_S}s - review-history done not received")
+        // Fire the review read off-thread (loadHistory blocks on an uncancellable sleep-loop until the done
+        // arrives). Assert on the PARSED record - the coverage goal - by polling the DB, so a broken done
+        // can't wedge the shard; historyDoneReceived is checked last so the failure pinpoints whether it is
+        // the record format (record never appears) or the done handshake (record OK, flag stays false).
+        Thread { runCatching { runBlocking { commandQueue.loadHistory(RecordTypes.RECORD_TYPE_BOLUS) } } }.start()
 
-        assertThat(danaPump.historyDoneReceived).isTrue() // the 0x31F1 MsgHistoryDone ended the stream
+        assertThat(
+            awaitTrue(HISTORY_TIMEOUT_MS) {
+                danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS).blockingGet()
+                    .any { it.timestamp == timestamp }
+            }
+        ).isTrue()
         val record = danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS)
-            .blockingGet().firstOrNull { it.timestamp == timestamp }
-        assertThat(record).isNotNull()
-        assertThat(record!!.value).isWithin(0.001).of(1.5)
+            .blockingGet().first { it.timestamp == timestamp }
+        assertThat(record.value).isWithin(0.001).of(1.5)
         assertThat(record.bolusType).isEqualTo("S")
+        assertThat(danaPump.historyDoneReceived).isTrue() // the 0x31F1 MsgHistoryDone should end the stream
     }
 
     /**
@@ -280,7 +279,7 @@ class DanaREmulatorPumpTest {
         private const val DEVICE_NAME = "DAN00001EM"
         private const val CONNECT_TIMEOUT = 40_000L
         private const val COMMAND_TIMEOUT = 30_000L
-        private const val HISTORY_TIMEOUT_S = 30L
+        private const val HISTORY_TIMEOUT_MS = 30_000L
         private const val POLL_MS = 250L
 
         private const val TBR_PERCENT = 150
