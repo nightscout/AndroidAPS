@@ -209,15 +209,17 @@ jobs:
             echo "shard C done rc=$RC"
             exit $RC
 
-      # workers.max is capped at 10 (below the 15 Gradle cores) on purpose: the unit suite saturating all
-      # cores while the emulators + shards run pushed the box to a load average of ~99 before (~4x
-      # oversubscription), which starved the heaviest E2E test until its instrumentation died mid-test.
+      # workers.max is capped at 8 (below the 15 Gradle cores) on purpose: the unit suite saturating all
+      # cores while the three emulators + shards run pushed the box hard enough that a heavy E2E test's app
+      # startup timed out into a "failed to complete startup" ANR (a process crash the in-process RetryRule
+      # can't catch; build 40333's shard A). Dropped 10 -> 8 to give the emulators more startup headroom, at
+      # a small unit wall-time cost (unit hides under the shards either way).
       - run:
           name: Unit tests (Gradle, pinned off the emulator cores, starts right after compile, overlaps the shards)
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=10 testFullDebugUnitTest
+            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest
 
       - run:
           name: Non-app module androidTests (Gradle, emu-5554)
