@@ -122,6 +122,36 @@ class DanaREmulatorPumpTest {
     }
 
     /**
+     * The plain **DanaR** and **DanaRKorean** variants run their own execution services
+     * (`DanaRExecutionService` / `DanaRKoreanExecutionService`), which a bare connect leaves at ~7-11%.
+     * These drive the two commands both variants support - a temp basal and a bolus (neither has
+     * DanaRv2's extended bolus) - through those services and read them back off the emulated pump.
+     */
+    @Test
+    fun danaR_deliversTempBasalAndBolus() {
+        deliverTempBasalAndBolus(bringUpConnected(ExternalOptions.EMULATE_DANA_R) { danaRPlugin })
+    }
+
+    @Test
+    fun danaRKorean_deliversTempBasalAndBolus() {
+        deliverTempBasalAndBolus(bringUpConnected(ExternalOptions.EMULATE_DANA_R_KOREAN) { danaRKoreanPlugin })
+    }
+
+    private fun deliverTempBasalAndBolus(pump: Pump) {
+        val state = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state
+
+        runBlocking {
+            pump.setTempBasalPercent(TBR_PERCENT, TBR_DURATION_MIN, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(awaitTrue(COMMAND_TIMEOUT) { state.isTempBasalRunning && state.tempBasalPercent == TBR_PERCENT }).isTrue()
+
+        runBlocking { pump.deliverTreatment(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
+        assertThat(awaitTrue(COMMAND_TIMEOUT) {
+            state.lastBolusAmount in (BOLUS_UNITS - 0.001)..(BOLUS_UNITS + 0.001)
+        }).isTrue()
+    }
+
+    /**
      * Brings [plugin] up against the emulated [variant] and requires it to connect.
      *
      * Per test rather than in `@Before`: `RfcommTransport` is `@Singleton` and reads
