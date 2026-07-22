@@ -591,16 +591,21 @@ class DanaRPumpEmulator(
     private fun handleHistoryRequest(command: Int): ByteArray {
         if (command != 0x3101) return byteArrayOf(0xFF.toByte()) // other review types: not yet served
         val records = state.reviewHistoryStore.getEventsAfter(0).filter { it.code == RecordTypes.RECORD_TYPE_BOLUS.toInt() }
+        // Mirror handleApsHistoryEvents: the FIRST record is the direct reply, the rest stream via the
+        // callback, then a MsgHistoryDone (0x31F1, 1-byte payload) the driver's loadHistory spins on.
+        // Empty/empty-frame replies were rejected by the reader and hung the read - so both the reply and
+        // the done carry a valid non-empty payload.
         Thread {
             @Suppress("SleepInsteadOfDelay")
-            for (record in records) {
+            for (i in 1 until records.size) {
                 Thread.sleep(10)
-                onAdditionalResponse?.invoke(command, state.reviewHistoryStore.buildReviewRecordData(record))
+                onAdditionalResponse?.invoke(command, state.reviewHistoryStore.buildReviewRecordData(records[i]))
             }
             Thread.sleep(10)
-            onAdditionalResponse?.invoke(0x31F1, ByteArray(0)) // MsgHistoryDone → historyDoneReceived = true
+            onAdditionalResponse?.invoke(0x31F1, byteArrayOf(0x00)) // MsgHistoryDone → historyDoneReceived = true
         }.start()
-        return ByteArray(0) // the request's own reply; the short frame is ignored by MsgHistoryAll's parser
+        return if (records.isEmpty()) byteArrayOf(0xFF.toByte())
+        else state.reviewHistoryStore.buildReviewRecordData(records[0])
     }
 
     private fun handleHistoryDone(): ByteArray = byteArrayOf(0x00)

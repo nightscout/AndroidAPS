@@ -31,6 +31,8 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import javax.inject.Provider
 import org.junit.After
 import org.junit.Rule
@@ -172,7 +174,15 @@ class DanaREmulatorPumpTest {
         val timestamp = System.currentTimeMillis() / 60_000L * 60_000L - 2 * 60 * 60 * 1000L
         reviewStore.addEvent(RecordTypes.RECORD_TYPE_BOLUS.toInt(), timestamp, 150, 0x80)
 
-        runBlocking { commandQueue.loadHistory(RecordTypes.RECORD_TYPE_BOLUS) }
+        // loadHistory blocks (uncancellable SystemClock.sleep) until the done arrives, so run it off-thread
+        // with a bounded wait: a missing/malformed done then fails cleanly here instead of wedging the shard.
+        val completed = CountDownLatch(1)
+        Thread {
+            runCatching { runBlocking { commandQueue.loadHistory(RecordTypes.RECORD_TYPE_BOLUS) } }
+            completed.countDown()
+        }.start()
+        if (!completed.await(HISTORY_TIMEOUT_S, TimeUnit.SECONDS))
+            error("loadHistory(BOLUS) did not complete within ${HISTORY_TIMEOUT_S}s - review-history done not received")
 
         assertThat(danaPump.historyDoneReceived).isTrue() // the 0x31F1 MsgHistoryDone ended the stream
         val record = danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS)
@@ -270,6 +280,7 @@ class DanaREmulatorPumpTest {
         private const val DEVICE_NAME = "DAN00001EM"
         private const val CONNECT_TIMEOUT = 40_000L
         private const val COMMAND_TIMEOUT = 30_000L
+        private const val HISTORY_TIMEOUT_S = 30L
         private const val POLL_MS = 250L
 
         private const val TBR_PERCENT = 150
