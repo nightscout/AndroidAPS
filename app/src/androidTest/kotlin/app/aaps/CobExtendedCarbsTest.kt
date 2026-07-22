@@ -37,6 +37,7 @@ import org.json.JSONObject
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
+import app.aaps.testcategories.ShardB
 import javax.inject.Inject
 
 /**
@@ -55,6 +56,7 @@ import javax.inject.Inject
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@ShardB
 class CobExtendedCarbsTest : HiltInstrumentedTest() {
 
     @Inject lateinit var persistenceLayer: PersistenceLayer
