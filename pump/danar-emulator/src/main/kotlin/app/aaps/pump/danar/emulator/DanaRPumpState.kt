@@ -17,6 +17,10 @@ class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) {
     // History
     val historyStore = HistoryEventStore()
 
+    // Review history (the per-type records behind the Pump-history screen), kept separate from the APS
+    // event historyStore because they use a different wire format and consumer - see HistoryEventStore.
+    val reviewHistoryStore = HistoryEventStore()
+
     // Device info
     var serialNumber: String = "DAN12345AB"
     var shippingCountry: String = "INT"

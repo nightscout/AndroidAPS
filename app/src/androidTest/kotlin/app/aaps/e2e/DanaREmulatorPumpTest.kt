@@ -18,6 +18,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danar.DanaRPlugin
@@ -65,6 +68,8 @@ class DanaREmulatorPumpTest {
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var danaPump: DanaPump
+    @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var config: Config
     // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
@@ -149,6 +154,32 @@ class DanaREmulatorPumpTest {
         assertThat(awaitTrue(COMMAND_TIMEOUT) {
             state.lastBolusAmount in (BOLUS_UNITS - 0.001)..(BOLUS_UNITS + 0.001)
         }).isTrue()
+    }
+
+    /**
+     * Reads the DanaRv2 **review** history behind the Pump-history screen (`loadHistory` →
+     * `MsgHistoryBolus` → `MsgHistoryAll`), which the delivery tests never touch. Seeds one bolus on the
+     * emulator's review store and reads it back, so `MsgHistoryAll`'s bolus branch parses a real record
+     * and the streaming/done handshake (records on 0x3101, then a 0x31F1 `MsgHistoryDone`) is exercised.
+     * Increment 1 of the review-history coverage - bolus first; the other record types follow.
+     */
+    @Test
+    fun danaRv2_readsReviewBolusHistory() {
+        bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
+        val reviewStore = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state.reviewHistoryStore
+        // Minute-aligned (seconds=0) so MsgHistoryAll's bolus branch reads byte 6 as duration 0; param2
+        // 0x80 is the standard-bolus sub-code, param1 the amount in hundredths (150 = 1.50 U).
+        val timestamp = System.currentTimeMillis() / 60_000L * 60_000L - 2 * 60 * 60 * 1000L
+        reviewStore.addEvent(RecordTypes.RECORD_TYPE_BOLUS.toInt(), timestamp, 150, 0x80)
+
+        runBlocking { commandQueue.loadHistory(RecordTypes.RECORD_TYPE_BOLUS) }
+
+        assertThat(danaPump.historyDoneReceived).isTrue() // the 0x31F1 MsgHistoryDone ended the stream
+        val record = danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS)
+            .blockingGet().firstOrNull { it.timestamp == timestamp }
+        assertThat(record).isNotNull()
+        assertThat(record!!.value).isWithin(0.001).of(1.5)
+        assertThat(record.bolusType).isEqualTo("S")
     }
 
     /**

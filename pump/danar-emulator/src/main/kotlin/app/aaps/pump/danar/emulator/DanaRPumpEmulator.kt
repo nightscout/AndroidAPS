@@ -3,6 +3,7 @@ package app.aaps.pump.danar.emulator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.comm.RecordTypes
 import org.joda.time.DateTime
 
 /**
@@ -80,11 +81,11 @@ class DanaRPumpEmulator(
             0x3001                         -> handlePCCommStart()
             0x3002                         -> handlePCCommStop()
             0x3101, 0x3102, 0x3104, 0x3105, 0x3106,
-            0x3107, 0x3108, 0x3109, 0x310A -> handleHistoryRequest()
+            0x3107, 0x3108, 0x3109, 0x310A -> handleHistoryRequest(command)
 
             0x31F1                         -> handleHistoryDone()
             0x41F1                         -> handleHistoryDone()
-            0x41F2, 0x42F1, 0x42F2         -> handleHistoryRequest()
+            0x41F2, 0x42F1, 0x42F2         -> handleHistoryRequest(command)
 
             // Rv2 APS commands
             0xE001                         -> handleApsStatus()
@@ -576,9 +577,30 @@ class DanaRPumpEmulator(
     private fun handlePCCommStart(): ByteArray = byteArrayOf(0x00)
     private fun handlePCCommStop(): ByteArray = byteArrayOf(0x00)
 
-    private fun handleHistoryRequest(): ByteArray {
-        // Return empty history with "done" flag — byte[0]=0xFF signals done
-        return byteArrayOf(0xFF.toByte())
+    /**
+     * Serves the per-type review history behind the Pump-history screen (`DanaRExecutionService.loadHistory`
+     * → `MsgHistoryBolus`/`MsgHistoryAlarm`/… on opcodes 0x3101-0x310A). The driver streams records for the
+     * requested opcode and spins until a `MsgHistoryDone` (0x31F1) sets `historyDoneReceived`, so we push the
+     * seeded records (via `buildReviewRecordData`, the shared review wire format the DanaRS emulator also uses)
+     * on [command], then a 0x31F1 done. Records are seeded on [DanaRPumpState.reviewHistoryStore] with
+     * `RecordTypes` codes and seconds=0 (the bolus branch reads byte 6 as its duration-low).
+     *
+     * Increment 1 serves only BOLUS (0x3101); the other opcodes keep the old empty-done stub until their
+     * record types are wired.
+     */
+    private fun handleHistoryRequest(command: Int): ByteArray {
+        if (command != 0x3101) return byteArrayOf(0xFF.toByte()) // other review types: not yet served
+        val records = state.reviewHistoryStore.getEventsAfter(0).filter { it.code == RecordTypes.RECORD_TYPE_BOLUS.toInt() }
+        Thread {
+            @Suppress("SleepInsteadOfDelay")
+            for (record in records) {
+                Thread.sleep(10)
+                onAdditionalResponse?.invoke(command, state.reviewHistoryStore.buildReviewRecordData(record))
+            }
+            Thread.sleep(10)
+            onAdditionalResponse?.invoke(0x31F1, ByteArray(0)) // MsgHistoryDone → historyDoneReceived = true
+        }.start()
+        return ByteArray(0) // the request's own reply; the short frame is ignored by MsgHistoryAll's parser
     }
 
     private fun handleHistoryDone(): ByteArray = byteArrayOf(0x00)
