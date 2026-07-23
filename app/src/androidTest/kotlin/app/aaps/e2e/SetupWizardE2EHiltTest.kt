@@ -166,6 +166,8 @@ class SetupWizardE2EHiltTest {
             visitQuickWizard()            // Manage → QuickWizard: empty mgmt screen + Add → editor
             runCatching { visitCarePortal() } // Manage → Pump Battery Change → CareDialogScreen (entry varies by mode)
             returnToOverview()            // guarantee a clean overview even if the care-portal visit bailed
+            visitFillDialog()             // Manage → Prime/Fill → FillDialogScreen
+            visitQuickLaunch()            // quick-launch pill gear → QuickLaunchConfigScreen
 
             // Enable Open Loop LAST — after this the loop churns the overview, so do no more navigation.
             enableOpenLoop()
@@ -464,6 +466,27 @@ class SetupWizardE2EHiltTest {
         device.waitForIdle(IDLE_MS)
         openVia("Pump Battery Change", expect = "Close")           // CareDialogScreen — nav Close (X, content-desc)
         click("Close")                                             // leave without saving
+        returnToOverview()
+    }
+
+    /** Manage → Prime/Fill: opens [FillDialogScreen] (cartridge-change preselected), toggles a switch, then Close. */
+    private fun visitFillDialog() {
+        openVia("Manage", expect = "Site Rotation")
+        openVia("Prime/Fill", expect = "Prime amount")             // FillDialogScreen (VirtualPump is refill-capable)
+        runCatching { click("Record pump site change"); device.waitForIdle(IDLE_MS) } // toggle switch → ViewModel
+        click("Close")                                             // X → leave without persisting
+        returnToOverview()
+    }
+
+    /** Overview quick-launch pill → Configure QuickLaunch: add then remove an action to exercise the config VM. */
+    private fun visitQuickLaunch() {
+        returnToOverview()                                         // settle overview so the quick-launch pill renders
+        openVia("Configure QuickLaunch", expect = "Selected actions") // QuickLaunchConfigScreen (gear on the pill)
+        runCatching {                                              // Add→Remove nets to no change (persists live)
+            click("Add"); device.waitForIdle(IDLE_MS)
+            click("Remove"); device.waitForIdle(IDLE_MS)
+        }
+        device.pressBack()                                         // nav icon has null content-desc → use Back
         returnToOverview()
     }
 
