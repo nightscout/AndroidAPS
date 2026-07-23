@@ -183,8 +183,8 @@
     <string name="profileswitch2_isfhigher">El ISF será un 20% más alto.</string>
     <string name="profileswitchtime_label">Cambio de perfil</string>
     <string name="profileswitchtime_iwant">Si te levantas 2 horas antes de lo habitual, ¿cómo debes notificar a AAPS sobre el cambio de horario?</string>
-    <string name="profileswitchtime_2">Iniciar un cambio de perfil con un intervalo de tiempo de 2</string>
-    <string name="profileswitchtime__2">Iniciar un cambio de perfil con un intervalo de tiempo de -2</string>
+    <string name="profileswitchtime_2">Iniciar un cambio de perfil con un desplazamiento de 2 horas</string>
+    <string name="profileswitchtime__2">Iniciar un cambio de perfil con un desplazamiento de -2</string>
     <string name="profileswitchtime_tt">Establecer el objetivo temporal ComiendoPronto</string>
     <string name="profileswitchtime_100">Haz un cambio de perfil a más del 100%</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
