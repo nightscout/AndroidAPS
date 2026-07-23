@@ -385,9 +385,11 @@
     <string name="scene_no_actions">该情景未配置任何操作</string>
     <string name="scene_profile_not_found">未找到配置文件 \"%1$s\"</string>
     <string name="scene_lock_banner_master_offline">主机设备无法访问。连接恢复后，场景控制将恢复。</string>
+    <string name="scene_lock_banner_control_disabled">主机已禁用远程控制。在主机重启时，场景控制将会恢复。</string>
     <string name="master_offline_banner">主机设备无法访问。连接恢复前编辑功能已禁用。</string>
     <string name="master_control_disabled_banner">主机已禁用远程控制。在主机上重新启用之前，编辑功能将被禁用。</string>
     <string name="scene_lock_reason_master_offline">主机已断开连接</string>
+    <string name="scene_lock_reason_control_disabled">远程控制已禁用</string>
     <string name="scene_lock_reason_scene_active">请先停止正在运行的情景</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">设定临时目标</string>
@@ -406,6 +408,7 @@
     <string name="clientcontrol_fail_send_failed">无法访问 Nightscout。</string>
     <string name="clientcontrol_fail_no_active_profile">主机没有可应用该操作的活跃配置文件。</string>
     <string name="clientcontrol_fail_scene_not_found">该情景模式已不存在。</string>
+    <string name="clientcontrol_fail_site_entry_not_found">该记录已不存在</string>
     <string name="clientcontrol_fail_scene_disabled">该情景模式已禁用。</string>
     <string name="clientcontrol_fail_partial">部分操作无法应用。</string>
     <string name="clientcontrol_fail_execution">主机无法应用该操作。</string>
@@ -922,6 +925,7 @@
     <string name="reorder">重新排序</string>
     <string name="status">状态</string>
     <string name="pump_actions">泵动作</string>
+    <string name="tempbasal_button">临时基础率</string>
     <string name="extended_bolus_button">扩展大剂量(方波)</string>
     <string name="device_maintenance">设备维护</string>
     <string name="from_label">从</string>
