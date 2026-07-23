@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -40,12 +41,16 @@ import app.aaps.di.EmulatedOptions
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.compose.EquilHistoryViewModel
+import app.aaps.pump.equil.compose.EquilOverviewViewModel
 import app.aaps.pump.equil.compose.EquilWizardStep
 import app.aaps.pump.equil.compose.EquilWizardViewModel
 import app.aaps.pump.equil.compose.EquilWorkflow
 import app.aaps.pump.equil.data.RunMode
+import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
+import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup
 import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
 import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.manager.EquilManager
@@ -53,6 +58,9 @@ import app.aaps.pump.equil.manager.command.CmdModelSet
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.junit.After
@@ -110,6 +118,8 @@ class EquilEmulatorActivationTest {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
+    @Inject lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintsChecker: ConstraintsChecker
     @Inject lateinit var ch: ConcentrationHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -293,6 +303,57 @@ class EquilEmulatorActivationTest {
         onMain { viewModel.confirmUnpair() }         // CmdUnPair → clears serial/address
         assertThat(awaitTrue(PAIR_TIMEOUT) { viewModel.serialNumberDisplay.value.isEmpty() }).isTrue()
         assertThat(equilManager.equilState?.serialNumber ?: "").isEmpty()
+    }
+
+    /**
+     * After activation, builds the real [EquilOverviewViewModel] and reads its paired-state UI (info
+     * rows, management actions, status banner) and toggles the run mode — covering the overview
+     * ViewModel's state-building and toggle paths.
+     */
+    @Test
+    fun activatedPod_overviewRendersPairedStateAndTogglesMode() {
+        bringUp()
+        activatePod()
+        seedRunningMode()
+
+        val overview = EquilOverviewViewModel(
+            rh = rh, aapsLogger = aapsLogger, dateUtil = dateUtil, ch = ch, equilPumpPlugin = equilPumpPlugin,
+            equilManager = equilManager, commandQueue = commandQueue, preferences = preferences, rxBus = rxBus,
+            context = appContext
+        )
+        // Paired: buildPairedInfoRows + buildManagementActions(paired) + buildStatusBanner.
+        val state = overview.uiState.value
+        assertThat(state.managementActions).isNotEmpty()   // Change reservoir / History / Unpair
+        assertThat(state.infoRows).isNotEmpty()            // serial / mode / reservoir …
+
+        // The overview's primary action toggles delivery (suspend/resume) → CmdModelSet.
+        state.primaryActions.firstOrNull()?.let { action -> onMain { action.onClick() } }
+        runBlocking { commandQueue.readStatus("overview") }
+    }
+
+    /**
+     * After activation + a delivery, builds the real [EquilHistoryViewModel] and reads back the
+     * command history (and applies a filter) — covering the history ViewModel's load/transform paths.
+     */
+    @Test
+    fun activatedPod_historyViewModelLoadsRecords() {
+        bringUp()
+        activatePod()
+        seedRunningMode()
+        // Generate at least one command-history record on the paired pod.
+        runBlocking { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
+
+        val history = EquilHistoryViewModel(
+            equilHistoryRecordDao = equilHistoryRecordDao, equilHistoryPumpDao = equilHistoryPumpDao,
+            equilPumpPlugin = equilPumpPlugin, dateUtil = dateUtil, aapsLogger = aapsLogger,
+            rxBus = rxBus, profileUtil = profileUtil
+        )
+        // Subscribe so the WhileSubscribed flow runs loadData().
+        val job = CoroutineScope(Dispatchers.Main).launch { history.filteredCommandHistory.collect {} }
+        val loaded = awaitTrue(STEP_TIMEOUT) { history.filteredCommandHistory.value.isNotEmpty() }
+        onMain { history.setFilter(EquilHistoryEntryGroup.All) }
+        job.cancel()
+        assertThat(loaded).isTrue()
     }
 
     // ---- helpers --------------------------------------------------------------------------------
