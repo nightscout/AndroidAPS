@@ -183,6 +183,12 @@ class EquilActivationWizardUiTest {
             // CONFIRM: "Finish" runs insulin → model → final settings → saveActivation → COMPLETED,
             // then the wizard closes back to the (now paired) overview.
             openVia("Finish", expect = "Unpair device", attempts = 4)  // paired-state overview
+
+            // History screen: the paired overview → "History" renders EquilHistoryScreen with its two
+            // tabs (command history + pump events). Visiting both covers the history Compose files.
+            openVia("History", expect = "History action")   // command-history tab
+            click("Equil history")                          // switch to the pump-events tab
+            assertVisibleContains("Equil history")
         } catch (t: Throwable) {
             logScreen("E2E_EQUIL_WIZARD")
             throw t
