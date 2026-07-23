@@ -257,8 +257,8 @@
     <string name="permission_nav_label">Oprávnění</string>
     <!--    TDD Cycle Pattern -->
     <string name="cycle_offset">Posun cyklu</string>
-    <string name="raw_tdd">Surové TDD</string>
-    <string name="cleaned_tdd">Očištěné TDD</string>
+    <string name="raw_tdd">Surová CDD</string>
+    <string name="cleaned_tdd">Očištěná CDD</string>
     <string name="cleaned_tdd_explanation">TDD minus inzulín na sacharidy.</string>
     <string name="cycle_lines_legend">Jednotlivé cykly</string>
     <string name="cycles_found">%1$d cyklů (%2$d dní)</string>
