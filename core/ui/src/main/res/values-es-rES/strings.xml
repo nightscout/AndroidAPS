@@ -3,9 +3,9 @@
     <string name="error_field_must_not_be_empty">El campo no debe estar vacío</string>
     <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Clientes autorizados</string>
-    <string name="authorized_clients_manage_desc">Gestiona los dispositivos clientes emparejados que controlan este maestro</string>
-    <string name="pair_with_master_manage_label">Emparejar con el maestro</string>
-    <string name="pair_with_master_manage_desc">Introduce el PIN de emparejamiento del maestro para permitir que este cliente envíe comandos firmados</string>
+    <string name="authorized_clients_manage_desc">Gestiona los dispositivos clientes emparejados que controlan este máster</string>
+    <string name="pair_with_master_manage_label">Emparejar con el máster</string>
+    <string name="pair_with_master_manage_desc">Introduce el PIN de emparejamiento del máster para permitir que este cliente envíe comandos firmados</string>
     <!--    General-->
     <string name="treatments">Tratamientos</string>
     <string name="treatments_history">Historial de tratamientos</string>
@@ -197,6 +197,7 @@
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
     <string name="percentage_label">Porcentaje</string>
+    <string name="timeshift_label">Desplazamiento de hora</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
@@ -383,9 +384,12 @@
     <string name="scene_no_profile_store">No hay un almacén de perfiles disponible</string>
     <string name="scene_no_actions">La escena no tiene acciones</string>
     <string name="scene_profile_not_found">No se encontró el perfil \"%1$s\"</string>
-    <string name="scene_lock_banner_master_offline">Dispositivo maestro inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
-    <string name="master_offline_banner">Dispositivo maestro inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
-    <string name="scene_lock_reason_master_offline">Maestro desconectado</string>
+    <string name="scene_lock_banner_master_offline">Dispositivo máster inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
+    <string name="scene_lock_banner_control_disabled">El máster ha desactivado el control remoto. Los controles de escena se reanudarán cuando se vuelva a activar en el máster</string>
+    <string name="master_offline_banner">Dispositivo máster inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
+    <string name="master_control_disabled_banner">El máster ha desactivado el control remoto. La edición estará deshabilitada hasta que se vuelva a activar en el máster</string>
+    <string name="scene_lock_reason_master_offline">Máster desconectado</string>
+    <string name="scene_lock_reason_control_disabled">Control remoto desactivado</string>
     <string name="scene_lock_reason_scene_active">Detén primero la escena en ejecución</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Establecer objetivo temporal</string>
@@ -395,25 +399,27 @@
     <string name="clientcontrol_action_update_settings">Actualizar ajustes</string>
     <string name="clientcontrol_action_deliver_bolus">Administrar bolo</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
-    <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un maestro</string>
-    <string name="clientcontrol_fail_not_reachable">El maestro está fuera de línea</string>
-    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">La configuración de la bomba no está sincronizada con el maestro. Por favor, inténtalo de nuevo</string>
-    <string name="clientcontrol_fail_no_reply">No hay respuesta del maestro a tiempo</string>
-    <string name="clientcontrol_fail_expired">El comando caducó antes de que el maestro lo aplicara</string>
+    <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un máster</string>
+    <string name="clientcontrol_fail_not_reachable">El máster está fuera de línea</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">La configuración de la bomba no está sincronizada con el máster. Por favor, inténtalo de nuevo</string>
+    <string name="clientcontrol_fail_no_reply">No hay respuesta del máster a tiempo</string>
+    <string name="clientcontrol_fail_expired">El comando caducó antes de que el máster lo aplicara</string>
     <string name="clientcontrol_fail_busy">Ya hay otra acción en progreso</string>
     <string name="clientcontrol_fail_send_failed">No se pudo conectar con Nightscout</string>
-    <string name="clientcontrol_fail_no_active_profile">El maestro no tiene ningún perfil activo sobre el que aplicarlo</string>
+    <string name="clientcontrol_fail_no_active_profile">El máster no tiene ningún perfil activo sobre el que aplicarlo</string>
     <string name="clientcontrol_fail_scene_not_found">La escena ya no existe</string>
+    <string name="clientcontrol_fail_site_entry_not_found">No se ha encontrado la entrada del sitio</string>
     <string name="clientcontrol_fail_scene_disabled">La escena está desactivada</string>
     <string name="clientcontrol_fail_partial">No se han podido aplicar algunas acciones</string>
-    <string name="clientcontrol_fail_execution">El maestro no ha podido aplicarlo</string>
+    <string name="clientcontrol_fail_execution">El máster no ha podido aplicarlo</string>
+    <string name="clientcontrol_fail_control_disabled">El control remoto está desactivado en el máster</string>
     <string name="clientcontrol_fail_no_pending_bolus">El bolo preparado ha caducado o ha sido reemplazado. Toca el botón de nuevo</string>
-    <string name="clientcontrol_fail_bolus_compute">El maestro no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
+    <string name="clientcontrol_fail_bolus_compute">El máster no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
     <string name="clientcontrol_fail_internal">Algo ha salido mal</string>
     <string name="clientcontrol_fail_unknown">El comando ha fallado</string>
     <string name="clientcontrol_unconfirmed_wear">Estado desconocido — comprueba el teléfono/Nightscout antes de volver a administrar un bolo</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Conexión perdida — estado de entrega desconocido</string>
-    <string name="clientcontrol_bolus_progress_stalled_body">Este teléfono ha dejado de recibir actualizaciones del maestro. Es posible que el bolo se siga administrando o que ya haya terminado. Cerrar este aviso solo lo oculta aquí, no detiene la bomba. Comprueba en el teléfono maestro la cantidad que realmente se ha administrado</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Este teléfono ha dejado de recibir actualizaciones del máster. Es posible que el bolo se siga administrando o que ya haya terminado. Cerrar este aviso solo lo oculta aquí, no detiene la bomba. Comprueba en el teléfono máster la cantidad que realmente se ha administrado</string>
     <string name="scene_revert_tt">Cancelar objetivo temporal</string>
     <string name="scene_revert_profile">Revertir cambio de perfil</string>
     <string name="scene_revert_smb_on">Volver a habilitar SMB</string>
@@ -919,6 +925,7 @@
     <string name="reorder">Reordenar</string>
     <string name="status">Estado</string>
     <string name="pump_actions">Acciones de la bomba</string>
+    <string name="tempbasal_button">Basal temporal</string>
     <string name="extended_bolus_button">Bolo extendido</string>
     <string name="device_maintenance">Mantenimiento del dispositivo</string>
     <string name="from_label">Desde</string>
