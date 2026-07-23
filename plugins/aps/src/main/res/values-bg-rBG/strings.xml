@@ -40,6 +40,7 @@
     <string name="maxvalueinpreferences">макс. стойност в настройките</string>
     <string name="hardlimit">твърд лимит</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Върхово</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Има болус през последните 3 мин, пропускам SMB</string>
     <string name="pump_not_initialized">Помпата не е инициализирана!</string>
