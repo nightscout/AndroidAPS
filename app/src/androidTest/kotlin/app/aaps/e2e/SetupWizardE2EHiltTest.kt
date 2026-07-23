@@ -162,6 +162,10 @@ class SetupWizardE2EHiltTest {
             visitStatistics()             // drawer → Statistics (StatsScreen/ViewModel)
             visitHistoryBrowser()         // drawer → History browser (treatment history list)
             visitScenes()                 // Manage → Scenes: create via wizard, run, then end it
+            visitTreatments()             // drawer → Treatments history: switch tabs (each = a child screen/VM)
+            visitQuickWizard()            // Manage → QuickWizard: empty mgmt screen + Add → editor
+            runCatching { visitCarePortal() } // Manage → Pump Battery Change → CareDialogScreen (entry varies by mode)
+            returnToOverview()            // guarantee a clean overview even if the care-portal visit bailed
 
             // Enable Open Loop LAST — after this the loop churns the overview, so do no more navigation.
             enableOpenLoop()
@@ -424,6 +428,42 @@ class SetupWizardE2EHiltTest {
     private fun visitHistoryBrowser() {
         click("Open navigation"); device.waitForIdle(IDLE_MS)
         openVia("History browser", expect = "Back")           // → history browser
+        returnToOverview()
+    }
+
+    /** Nav drawer → Treatments history; switch through the tabs to exercise each child screen/ViewModel. */
+    private fun visitTreatments() {
+        click("Open navigation"); device.waitForIdle(IDLE_MS)
+        openVia("Treatments history", expect = "Carbs and bolus")   // TreatmentsScreen: scrollable tab row + pager
+        // Each tab switch instantiates that child screen + its ViewModel. Best-effort: a tab scrolled off the
+        // scrollable tab row may not be tappable, so tolerate a miss rather than fail the browse.
+        for (tab in listOf("Temp basal", "Temporary target", "Profile switch", "Running mode", "User entry")) {
+            runCatching { click(tab); device.waitForIdle(IDLE_MS) }
+        }
+        returnToOverview()
+    }
+
+    /** Manage → QuickWizard: open the (empty) management screen and Add an entry to render the editor. */
+    private fun visitQuickWizard() {
+        openVia("Manage", expect = "Site Rotation")
+        openVia("QuickWizard", expect = "No records available")     // QuickWizardManagementScreen (empty state)
+        click("Add"); device.waitForIdle(IDLE_MS)                   // creates an entry → renders QuickWizardEditor
+        device.pressBack(); device.waitForIdle(IDLE_MS)            // Back on an unsaved new entry → confirm dialog
+        runCatching { click("OK") }                                // "Unsaved changes" → save (if the dialog shows)
+        returnToOverview()
+    }
+
+    /**
+     * Manage → Device maintenance → Pump Battery Change: opens [CareDialogScreen] (BATTERY_CHANGE, no
+     * site picker), then leaves. The richer "Careportal" section (BG Check/Note/…) is gated on non-simple
+     * mode and may be absent, so this uses the always-visible Device-maintenance entry.
+     */
+    private fun visitCarePortal() {
+        openVia("Manage", expect = "Site Rotation")
+        runCatching { device.findObject(By.scrollable(true))?.scroll(Direction.DOWN, 0.8f) } // reveal lower actions
+        device.waitForIdle(IDLE_MS)
+        openVia("Pump Battery Change", expect = "Close")           // CareDialogScreen — nav Close (X, content-desc)
+        click("Close")                                             // leave without saving
         returnToOverview()
     }
 
