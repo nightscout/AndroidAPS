@@ -61,8 +61,6 @@
     <string name="configbuilder_pick_one_hint">Choose one. Only one can be active at a time.</string>
     <string name="configbuilder_pick_many_hint">Choose any that apply.</string>
     <string name="configbuilder_no_selection_warning">No plugin is selected in this category.</string>
-    <string name="configbuilder_switch_confirmation_title">Switch plugin?</string>
-    <string name="configbuilder_switch_confirmation">This will disable %1$s and enable %2$s.</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
     <string name="no_compose_preferences">No preferences available for this plugin</string>
