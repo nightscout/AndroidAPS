@@ -85,6 +85,8 @@
     <string name="action_tempt_confirmation">Заявен Временен базал</string>
     <string name="action_quick_wizard_confirmation">Заявен Съветник</string>
     <string name="action_user_action_confirmation">Изисква потвърждение</string>
+    <string name="action_scene_confirmation">Желан сценарии</string>
+    <string name="scene_end">Край</string>
     <string name="action_treatment_confirmation">Заявена Терапия</string>
     <string name="action_bolus_confirmation">Заявен Болус</string>
     <string name="action_wizard_confirmation">Заявено Изчисление</string>
@@ -235,8 +237,9 @@
     <string name="action_running_mode_selected">Желан режим</string>
     <string name="title_activity_disconnect_pump">Изключи помпа</string>
     <string name="title_activity_suspend_loop">Изключи цикъла</string>
-    <string name="wizard_carbs_format">%1$d гр въгл</string>
     <string name="insulin_unit_short">Е</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d гр</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f Е</string>
     <string name="wizard_confirmation_sent">Изпратено</string>
     <string name="contacting_master">Свързване с главния</string>
     <string name="contacting_master_unknown">Непознат статус - вижте телефона</string>
@@ -278,4 +281,18 @@
     <string name="confirm">Потвърждаване</string>
     <string name="request">Искане</string>
     <string name="constraint_applied">Приложено ограничение!</string>
+    <string name="wizard_total_insulin">Общо инсулин</string>
+    <string name="wizard_calculation">Калкулация</string>
+    <string name="wizard_settings_format">ВъглЧув: %1$s | ИнсЧув: %2$s</string>
+    <string name="wizard_result_bg">КЗ</string>
+    <string name="wizard_result_bg_tt">КЗ (Врем цел: %1$s)</string>
+    <string name="wizard_result_trend">15мин пром</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Нов IOB: %1$s Е</string>
+    <string name="wizard_result_cob">Въгл: (%1$.1f гр)</string>
+    <string name="wizard_result_carbs">Въгл (%1$d гр)</string>
+    <string name="wizard_result_subtotal">Междинна сума</string>
+    <string name="wizard_result_total">Общо</string>
+    <string name="wizard_insulin_format">%1$s Е</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
 </resources>
