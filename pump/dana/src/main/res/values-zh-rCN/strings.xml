@@ -15,6 +15,7 @@
     <string name="dana_model">%1$s\n型号: %2$02X\n协议: %3$02X\n代码: %4$02X</string>
     <string name="processinghistory">正在处理事件</string>
     <string name="danar_enableextendedbolus">在泵上启用扩展大剂量</string>
+    <string name="danar_disablebolusblock">Il blocco bolo è abilitato sul micro. AAPS non può erogare insulina mentre è attivo. Disabilita il blocco bolo nelle impostazioni del microinfusore.</string>
     <string name="overview_bolusprogress_stoped">已停止</string>
     <string name="unsupportedfirmware">不支持的泵固件</string>
     <string name="pumperror">泵错误</string>
