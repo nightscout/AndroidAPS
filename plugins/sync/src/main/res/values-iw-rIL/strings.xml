@@ -22,6 +22,7 @@
     <string name="full_sync_comment">סנכרון מלא? זה ייקח שעות מרובות ולא תוכלו לראות נתונים חדשים בנייטסקאוט.</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_alarm_options">אפשרויות התראה</string>
+    <string name="ns_remote_control_options">שליטה מרחוק</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">אם האפשרות מופעלת, נתונים יישלחו לשרתי ניסוי במקום לשרתים הרגילים</string>
     <string name="title_tidepool_dev_servers">שימוש בשרתי אינטגרציה (בדיקה)</string>
