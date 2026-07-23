@@ -168,6 +168,13 @@ class SetupWizardE2EHiltTest {
             returnToOverview()            // guarantee a clean overview even if the care-portal visit bailed
             visitFillDialog()             // Manage → Prime/Fill → FillDialogScreen
             visitQuickLaunch()            // quick-launch pill gear → QuickLaunchConfigScreen
+            visitFoodManagement()         // Manage → Food → FoodManagementScreen + Add editor
+            visitProfileHelper()          // drawer → Profile helper: tabs
+            runCatching { visitMaintenance() } // drawer → Maintenance sheet (safe in-app sub-actions only)
+            returnToOverview()            // guarantee a clean overview after the maintenance sheet churn
+            visitSiteRotation()           // Manage → Site Rotation → SiteRotationManagementScreen
+            visitConfiguration()          // drawer → Configuration → category + plugin-category screens
+            visitAbout()                  // drawer → About dialog
 
             // Enable Open Loop LAST — after this the loop churns the overview, so do no more navigation.
             enableOpenLoop()
@@ -487,6 +494,65 @@ class SetupWizardE2EHiltTest {
             click("Remove"); device.waitForIdle(IDLE_MS)
         }
         device.pressBack()                                         // nav icon has null content-desc → use Back
+        returnToOverview()
+    }
+
+    /** Manage → Food: open the (empty) food management screen and its Add-Food editor sheet, then leave. */
+    private fun visitFoodManagement() {
+        openVia("Manage", expect = "Site Rotation")
+        openVia("Food", expect = "No data")                        // FoodManagementScreen (empty state)
+        runCatching { openVia("Add", expect = "Add Food"); click("Cancel") } // Add-Food editor sheet → Cancel
+        click("Back")                                              // top-bar Back
+        returnToOverview()
+    }
+
+    /** Nav drawer → Profile helper: switch a tab (local state), then Close (never Clone — it persists). */
+    private fun visitProfileHelper() {
+        click("Open navigation"); device.waitForIdle(IDLE_MS)
+        openVia("Profile helper", expect = "Comparation")          // ProfileHelperScreen (3 tabs)
+        runCatching { click("Profile 2"); device.waitForIdle(IDLE_MS) } // switch tab → recompute
+        click("Close")                                             // nav Close (X)
+        returnToOverview()
+    }
+
+    /**
+     * Nav drawer → Maintenance (ModalBottomSheet): exercise the safe in-app sub-actions only — Log settings
+     * sheet, the in-app Import-settings screen, and a Cancel-only confirm dialog. Deliberately avoids every
+     * row that launches an OS file picker / share intent or mutates the DB (AAPS directory, Send logs, Reset).
+     */
+    private fun visitMaintenance() {
+        fun openSheet() { click("Open navigation"); device.waitForIdle(IDLE_MS); openVia("Maintenance", expect = "File management") }
+        openSheet()                                                // MaintenanceBottomSheet + MaintenanceViewModel
+        runCatching { click("Log settings"); assertVisible("Reset to defaults"); device.pressBack() } // LogSettingBottomSheet
+        runCatching { openSheet(); openVia("Import settings", expect = "Close"); click("Close") }      // ImportSettingsScreen
+        runCatching { openSheet(); click("Database cleanup"); click("Cancel") }                        // MaintenanceDialogs (Cancel)
+        device.pressBack()                                         // dismiss any lingering sheet
+        returnToOverview()
+    }
+
+    /** Manage → Site Rotation: toggle the pump/CGM filters and open the settings sheet, then leave. */
+    private fun visitSiteRotation() {
+        openVia("Manage", expect = "Site Rotation")
+        openVia("Site Rotation", expect = "Pump Sites")            // SiteRotationManagementScreen (segmented filters)
+        runCatching { click("CGM Sites"); device.waitForIdle(IDLE_MS); click("Pump Sites"); device.waitForIdle(IDLE_MS) }
+        runCatching { click("Settings"); device.waitForIdle(IDLE_MS); device.pressBack() } // prefs ModalBottomSheet
+        returnToOverview()                                         // "Back" nav icon
+    }
+
+    /** Nav drawer → Configuration: view categories, drill into the Pump category (read-only), then leave. */
+    private fun visitConfiguration() {
+        click("Open navigation"); device.waitForIdle(IDLE_MS)
+        runCatching { scrollTo("Configuration") }
+        openVia("Configuration", expect = "BG Source")            // ConfigurationScreen (category list)
+        runCatching { openVia("Pump", expect = "Virtual Pump"); device.pressBack() } // PluginCategoryScreen
+        returnToOverview()
+    }
+
+    /** Nav drawer → About dialog: assert it rendered, then dismiss with OK (never the external "don't kill" link). */
+    private fun visitAbout() {
+        click("Open navigation"); device.waitForIdle(IDLE_MS)
+        openVia("About", expect = "Don't kill my app?")           // AboutAlertDialog
+        click("OK")                                               // confirmButton → onDismiss
         returnToOverview()
     }
 
