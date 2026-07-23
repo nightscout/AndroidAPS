@@ -237,7 +237,6 @@
     <string name="action_running_mode_selected">已請求執行模式</string>
     <string name="title_activity_disconnect_pump">中斷幫浦連線</string>
     <string name="title_activity_suspend_loop">暫停循環</string>
-    <string name="wizard_carbs_format">%1$d 克碳水化合物</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -296,6 +295,4 @@
     <string name="wizard_result_total">總計</string>
     <string name="wizard_insulin_format">%1$s 單位</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="wizard_carbs_with_time">%1$d 克碳水 (%2$s 分 )</string>
-    <string name="wizard_result_ecarbs">延長碳水：%1$d 克 / %2$d 小時(+%3$d 分鐘)</string>
 </resources>
