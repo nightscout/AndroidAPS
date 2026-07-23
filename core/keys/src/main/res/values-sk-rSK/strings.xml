@@ -230,6 +230,9 @@
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Uživateľský profil pre rotáciu miest</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Muž</string>
+    <string name="site_rotation_profile_woman">Žena</string>
+    <string name="site_rotation_profile_child">Dieťa</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Jednotky</string>
     <string name="units_mgdl">mg/dL</string>
