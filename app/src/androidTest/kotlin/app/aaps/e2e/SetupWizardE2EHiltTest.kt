@@ -161,6 +161,7 @@ class SetupWizardE2EHiltTest {
             visitPreferences()            // toolbar Settings → preferences screen + expand a category
             visitStatistics()             // drawer → Statistics (StatsScreen/ViewModel)
             visitHistoryBrowser()         // drawer → History browser (treatment history list)
+            visitScenes()                 // Manage → Scenes: create via wizard, run, then end it
 
             // Enable Open Loop LAST — after this the loop churns the overview, so do no more navigation.
             enableOpenLoop()
@@ -337,6 +338,44 @@ class SetupWizardE2EHiltTest {
     private fun visitProfileManagement() {
         openVia("Manage", expect = "Site Rotation")
         openVia("Profile", expect = "Clone")           // → profile management screen
+        returnToOverview()
+    }
+
+    /**
+     * Manage → Scenes: creates a scene through the wizard (from the "Hot Weather" template — a single
+     * profile-switch action, no picker input, auto-named), runs it, then ends it. Covers the whole
+     * `ui/compose/scenes/` surface: SceneListScreen, the wizard steps, and the activate/deactivate dialogs.
+     *
+     * The template gives a valid, activatable scene with no per-step input, so the wizard's action steps
+     * (profile/TT/SMB/loop/careportal/duration/chain) advance on a plain "Next"; the final NAME_ICON step
+     * has the pre-filled name so "Finish" is enabled.
+     */
+    private fun visitScenes() {
+        openVia("Manage", expect = "Site Rotation")
+        openVia("Scenes", expect = "Scene")                 // Manage → Scenes → SceneList (its "+" FAB, desc "Scene")
+        click("Scene")                                       // Add FAB (content-desc) → wizard
+        assertVisible("Start from template")
+        click("Sick Day")                                    // template (profile 150% only — no temp-target
+                                                             // step to dead-end); prefills the scene, INFO step
+
+        // Each action step advances on "Next"; walk to the final NAME_ICON step (which shows "Finish").
+        var guard = 0
+        while (!waitForVisible("Finish", 1_500) && guard++ < 12) {
+            click("Next"); device.waitForIdle(IDLE_MS)
+        }
+        click("Finish")                                      // save() → back on SceneList
+        assertVisible("Sick Day")                            // the created scene row
+
+        // Run it: the card's Activate (Play) icon → confirmation dialog → Activate.
+        click("Activate")                                    // Play IconButton (content-desc)
+        assertTextContains("Activate scene")                 // SceneActivationDialog title
+        click("Activate")                                    // dialog confirm button (text)
+        assertVisible("End Scene")                           // card now active → Stop icon shown
+
+        // End it: the card's End-Scene (Stop) icon → confirmation dialog → End Scene (reverts changes).
+        click("End Scene")                                   // Stop IconButton (content-desc)
+        assertTextContains("End scene")                      // SceneDeactivationDialog title
+        click("End Scene")                                   // dialog confirm button (text)
         returnToOverview()
     }
 
