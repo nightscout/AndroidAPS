@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Settings
@@ -46,11 +45,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
-import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
@@ -59,6 +55,10 @@ import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.ui.compose.overview.statusLights.StatusItem
 import app.aaps.ui.compose.overview.statusLights.StatusSectionContent
 
+/**
+ * @see OverviewStatusSectionCollapsedPreview
+ * @see OverviewStatusSectionExpandedPreview
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverviewStatusSection(
@@ -289,90 +289,6 @@ private fun CompactStatusItem(item: StatusItem) {
                 }
             },
             style = MaterialTheme.typography.bodyMedium
-        )
-    }
-}
-
-private val previewStatusItems = Triple(
-    StatusItem(
-        label = "Cannula",
-        age = "16h",
-        ageStatus = StatusLevel.NORMAL,
-        level = null,
-        icon = Icons.Default.Circle
-    ),
-    StatusItem(
-        label = "Insulin",
-        age = "16h",
-        ageStatus = StatusLevel.NORMAL,
-        level = "10 U",
-        levelStatus = StatusLevel.NORMAL,
-        icon = Icons.Default.Circle
-    ),
-    StatusItem(
-        label = "Sensor",
-        age = "3d",
-        ageStatus = StatusLevel.WARNING,
-        level = "82%",
-        levelStatus = StatusLevel.NORMAL,
-        icon = Icons.Default.Circle
-    )
-)
-
-private val previewBatteryItem = StatusItem(
-    label = "Battery",
-    age = "2d",
-    ageStatus = StatusLevel.NORMAL,
-    level = "68%",
-    levelStatus = StatusLevel.NORMAL,
-    icon = Icons.Default.Circle
-)
-
-private val previewStatusLightsDef = PreferenceSubScreenDef(
-    key = "preview",
-    titleResId = 0
-)
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 400)
-@Composable
-private fun OverviewStatusSectionCollapsedPreview() {
-    MaterialTheme {
-        val (cannula, insulin, sensor) = previewStatusItems
-        OverviewStatusSection(
-            sensorStatus = sensor,
-            insulinStatus = insulin,
-            cannulaStatus = cannula,
-            batteryStatus = previewBatteryItem,
-            showFill = true,
-            showPumpBatteryChange = true,
-            onNavigate = {},
-            statusLightsDef = previewStatusLightsDef,
-            onCopyFromNightscout = {},
-            expanded = false,
-            onExpandedChange = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 400)
-@Composable
-private fun OverviewStatusSectionExpandedPreview() {
-    MaterialTheme {
-        val (cannula, insulin, sensor) = previewStatusItems
-        OverviewStatusSection(
-            sensorStatus = sensor,
-            insulinStatus = insulin,
-            cannulaStatus = cannula,
-            batteryStatus = previewBatteryItem,
-            showFill = true,
-            showPumpBatteryChange = true,
-            onNavigate = {},
-            statusLightsDef = previewStatusLightsDef,
-            onCopyFromNightscout = {},
-            expanded = true,
-            onExpandedChange = {}
         )
     }
 }

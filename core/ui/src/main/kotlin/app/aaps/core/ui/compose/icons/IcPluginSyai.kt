@@ -1,24 +1,19 @@
 package app.aaps.core.ui.compose.icons
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Icon for Syai CGM Plugin.
  *
  * Bounding box: x: 1.2-22.8, y: 1.2-22.8 (viewport: 24x24, ~90% height)
+ *
+ * @see IcPluginSyaiIconPreview
  */
 val IcPluginSyai: ImageVector by lazy {
     ImageVector.Builder(
@@ -119,47 +114,3 @@ val IcPluginSyai: ImageVector by lazy {
         }
     }.build()
 }
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IcPluginSyaiIconPreview() {
-    Icon(
-        imageVector = IcPluginSyai,
-        contentDescription = null,
-        modifier = Modifier
-            .padding(0.dp)
-            .size(48.dp),
-        tint = Color.Unspecified
-    )
-}
-
-/*
-
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
-	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
-<g id="Plugin_syai">
-	<path fill="#FFFFFF" d="M12,1.2C6.035,1.2,1.2,6.035,1.2,12S6.035,22.8,12,22.8c5.965,0,10.8-4.835,10.8-10.8S17.965,1.2,12,1.2z
-		 M16.408,12.511c-0.068,0.229-0.179,0.441-0.329,0.621c-0.15,0.181-0.333,0.326-0.54,0.426c-0.207,0.1-0.432,0.152-0.659,0.152
-		h-0.011c-0.26-0.004-0.518,0.047-0.76,0.152c-0.242,0.104-0.463,0.26-0.65,0.457l-0.476,0.513c-0.185,0.194-0.331,0.428-0.43,0.687
-		c-0.099,0.259-0.147,0.537-0.143,0.817c0.001,0.06,0,0.121-0.004,0.182c-0.023,0.324-0.132,0.637-0.316,0.898
-		c-0.183,0.262-0.434,0.463-0.723,0.578c-0.289,0.115-0.603,0.139-0.905,0.068c-0.302-0.071-0.576-0.234-0.792-0.466
-		c-0.216-0.233-0.364-0.525-0.429-0.843c-0.064-0.318-0.043-0.649,0.062-0.955c0.105-0.306,0.29-0.575,0.534-0.774
-		c0.244-0.199,0.538-0.319,0.846-0.345l0.005-0.001c0.055-0.003,0.11-0.004,0.164-0.004h0.003c0.255,0.005,0.509-0.047,0.747-0.152
-		c0.237-0.105,0.453-0.262,0.633-0.461l0.001-0.002l0.318-0.343c0.197-0.213,0.231-0.505,0.14-0.75
-		c-0.091-0.244-0.296-0.417-0.561-0.42h-0.25c-0.619,0.001-1.217,0.253-1.676,0.709c-0.185,0.183-0.409,0.317-0.653,0.39
-		c-0.244,0.073-0.501,0.084-0.75,0.03c-0.249-0.053-0.481-0.169-0.679-0.336c-0.198-0.167-0.355-0.382-0.46-0.625
-		c-0.105-0.243-0.155-0.509-0.147-0.776c0.008-0.267,0.075-0.529,0.195-0.764c0.12-0.236,0.291-0.438,0.498-0.591
-		c0.208-0.153,0.447-0.252,0.699-0.287l0.003,0l0.015-0.002c0.035-0.005,0.081-0.01,0.127-0.011c0.623-0.03,1.214-0.311,1.658-0.791
-		l0.14-0.151c0.447-0.478,0.713-1.122,0.742-1.804V7.477c0.024-0.324,0.134-0.635,0.318-0.896c0.184-0.261,0.434-0.462,0.723-0.576
-		c0.289-0.114,0.603-0.138,0.905-0.066c0.301,0.072,0.575,0.235,0.791,0.467c0.215,0.233,0.363,0.525,0.428,0.843
-		c0.064,0.318,0.043,0.649-0.062,0.955c-0.105,0.306-0.29,0.574-0.534,0.773c-0.244,0.198-0.538,0.319-0.846,0.344l-0.014,0.001
-		l-0.045-0.001c-0.623,0.03-1.214,0.311-1.658,0.791l-0.154,0.165c-0.197,0.213-0.231,0.506-0.14,0.75
-		c0.091,0.244,0.296,0.418,0.561,0.42h0.249c0.625-0.008,1.227-0.264,1.691-0.723l0.001-0.001c0.219-0.21,0.488-0.352,0.779-0.41
-		c0.291-0.058,0.591-0.028,0.867,0.085c0.276,0.113,0.515,0.305,0.694,0.553c0.179,0.248,0.291,0.543,0.324,0.853h-0.002
-		C16.497,12.042,16.475,12.283,16.408,12.511z"/>
-</g>
-</svg>
- */

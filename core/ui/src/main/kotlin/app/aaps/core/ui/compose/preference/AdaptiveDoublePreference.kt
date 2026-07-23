@@ -13,9 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.decimalPlaces
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
@@ -24,7 +22,6 @@ import app.aaps.core.keys.step
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.LocalPreferences
 import java.text.DecimalFormat
 
@@ -33,6 +30,8 @@ import java.text.DecimalFormat
  *
  * @param titleResId Optional title resource ID. If 0 or not provided, uses doubleKey.titleResId
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
+ *
+ * @see AdaptiveDoublePreferencePreview
  */
 @Composable
 fun AdaptiveDoublePreferenceItem(
@@ -135,17 +134,6 @@ fun AdaptiveDoublePreferenceItem(
             },
             enabled = visibility.enabled,
             summary = { Text(summaryText) }
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AdaptiveDoublePreferencePreview() {
-    PreviewTheme {
-        AdaptiveDoublePreferenceItem(
-            doubleKey = DoubleKey.OverviewInsulinButtonIncrement1
         )
     }
 }

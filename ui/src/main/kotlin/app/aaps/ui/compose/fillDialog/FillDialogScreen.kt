@@ -47,7 +47,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,7 +56,6 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -74,6 +72,13 @@ import app.aaps.ui.compose.EventTimePicker
 import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
+/**
+ * @see PreviewSiteChange
+ * @see PreviewCartridgeChangeMultipleInsulins
+ * @see PreviewPumpUnitsWarning
+ * @see PreviewAapsClient
+ * @see PreviewInsulinSelectionExpanded
+ */
 @Composable
 fun FillDialogScreen(
     viewModel: FillDialogViewModel = hiltViewModel(),
@@ -213,7 +218,7 @@ fun FillDialogScreen(
 }
 
 @Composable
-private fun FillDialogContent(
+internal fun FillDialogContent(
     uiState: FillDialogUiState,
     dateString: String,
     timeString: String,
@@ -441,128 +446,6 @@ private fun FillDialogContent(
     }
 }
 
-// region Previews
-
-private val previewInsulins = listOf(
-    ICfg("Fiasp U100", peak = 55, dia = 5.0, concentration = 1.0),
-    ICfg("Lyumjev U200", peak = 45, dia = 5.0, concentration = 2.0),
-    ICfg("NovoRapid U100", peak = 75, dia = 5.0, concentration = 1.0)
-)
-
-@Composable
-private fun PreviewFillDialog(uiState: FillDialogUiState, dateString: String = "06/03/2026", timeString: String = "10:15") {
-    MaterialTheme {
-        FillDialogContent(
-            uiState = uiState,
-            dateString = dateString,
-            timeString = timeString,
-            bolusFormat = DecimalFormat("0.0"),
-            onSiteChangeClick = {},
-            onCartridgeChangeClick = {},
-            onInsulinChange = {},
-            onInsulinSelect = {},
-            onNotesChange = {},
-            onDateClick = {},
-            onTimeClick = {},
-            onSettingsClick = {},
-            onNavigateBack = {},
-            onConfirmClick = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Site Change")
-@Composable
-private fun PreviewSiteChange() {
-    PreviewFillDialog(
-        uiState = FillDialogUiState(
-            siteChange = true,
-            maxInsulin = 10.0,
-            presetButton1 = 0.3,
-            presetButton2 = 0.5,
-            presetButton3 = 1.0,
-            showNotesFromPreferences = true
-        )
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Cartridge Change + Multiple Insulins")
-@Composable
-private fun PreviewCartridgeChangeMultipleInsulins() {
-    PreviewFillDialog(
-        uiState = FillDialogUiState(
-            insulin = 0.3,
-            siteChange = true,
-            insulinCartridgeChange = true,
-            maxInsulin = 10.0,
-            presetButton1 = 0.3,
-            presetButton2 = 0.5,
-            presetButton3 = 1.0,
-            insulinAfterConstraints = 0.3,
-            availableInsulins = previewInsulins,
-            selectedInsulin = previewInsulins[0],
-            activeInsulinLabel = "Fiasp U100"
-        )
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Pump Units Warning (non-U100)")
-@Composable
-private fun PreviewPumpUnitsWarning() {
-    PreviewFillDialog(
-        uiState = FillDialogUiState(
-            insulin = 0.5,
-            insulinCartridgeChange = true,
-            maxInsulin = 10.0,
-            presetButton1 = 0.3,
-            presetButton2 = 0.5,
-            presetButton3 = 1.0,
-            insulinAfterConstraints = 0.5,
-            availableInsulins = previewInsulins,
-            selectedInsulin = previewInsulins[1],
-            activeInsulinLabel = "Lyumjev U200",
-            pumpUnitsWarning = "Prime amount is in pump units (Insulin U200)"
-        )
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "AAPS Client (No Bolus)")
-@Composable
-private fun PreviewAapsClient() {
-    PreviewFillDialog(
-        uiState = FillDialogUiState(
-            siteChange = true,
-            insulinCartridgeChange = true,
-            showBolus = false,
-            availableInsulins = previewInsulins,
-            selectedInsulin = previewInsulins[0],
-            activeInsulinLabel = "Fiasp U100"
-        )
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Insulin Selection Expanded")
-@Composable
-private fun PreviewInsulinSelectionExpanded() {
-    MaterialTheme {
-        SelectInsulin(
-            availableInsulins = previewInsulins,
-            selectedInsulin = previewInsulins[0],
-            activeInsulinLabel = "Fiasp U100",
-            onInsulinSelect = {},
-            initialExpanded = true,
-            concentrationDropDownEnabled = true
-        )
-    }
-}
-
-// endregion
-
 @Composable
 private fun PresetButtonsRow(
     presetButton1: Double,
@@ -608,4 +491,3 @@ private fun FillButtonSettingsSheet(
         )
     }
 }
-

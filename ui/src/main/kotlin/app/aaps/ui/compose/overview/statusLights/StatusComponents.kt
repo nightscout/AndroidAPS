@@ -21,20 +21,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
-import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.icons.IcCannulaChange
-import app.aaps.core.ui.compose.icons.IcCgmInsert
-import app.aaps.core.ui.compose.icons.IcPumpBattery
-import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.statusLevelToColor
 
 /**
  * Status rows content — sensor/insulin/cannula/battery with optional action buttons.
  * Does not include a card wrapper — caller provides the container.
+ *
+ * @see StatusSectionContentPreview
  */
 @Composable
 internal fun StatusSectionContent(
@@ -160,59 +155,6 @@ private fun StatusValueWithProgress(
                 color = progressColor,
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 strokeCap = StrokeCap.Round
-            )
-        }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun StatusSectionContentPreview() {
-    MaterialTheme {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            StatusSectionContent(
-                sensorStatus = StatusItem(
-                    label = "Sensor",
-                    age = "5d 12h",
-                    ageStatus = StatusLevel.NORMAL,
-                    agePercent = 0.55f,
-                    level = "Signal OK",
-                    levelStatus = StatusLevel.NORMAL,
-                    levelPercent = 0.2f,
-                    icon = IcCgmInsert
-                ),
-                insulinStatus = StatusItem(
-                    label = "Insulin",
-                    age = "2d 3h",
-                    ageStatus = StatusLevel.WARNING,
-                    agePercent = 0.75f,
-                    level = "86 U",
-                    levelStatus = StatusLevel.NORMAL,
-                    levelPercent = -1f,
-                    icon = IcPumpCartridge
-                ),
-                cannulaStatus = StatusItem(
-                    label = "Cannula",
-                    age = "1d 18h",
-                    ageStatus = StatusLevel.NORMAL,
-                    agePercent = 0.6f,
-                    icon = IcCannulaChange
-                ),
-                batteryStatus = StatusItem(
-                    label = "Battery",
-                    age = "14d",
-                    ageStatus = StatusLevel.CRITICAL,
-                    agePercent = 0.95f,
-                    level = "12%",
-                    levelStatus = StatusLevel.CRITICAL,
-                    levelPercent = 0.88f,
-                    icon = IcPumpBattery
-                ),
-                onSensorInsertClick = {},
-                onFillClick = {},
-                onInsulinChangeClick = {},
-                onBatteryChangeClick = {}
             )
         }
     }

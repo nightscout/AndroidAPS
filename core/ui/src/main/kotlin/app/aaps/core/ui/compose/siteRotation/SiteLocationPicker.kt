@@ -32,12 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
@@ -53,6 +51,8 @@ import kotlinx.coroutines.launch
  * Pure composable: state-in, events-out, no ViewModel dependency.
  * Used in Fill/Care dialogs (as a screen), patch pump wizards (as a step),
  * and Site Rotation Management (for inline editing).
+ *
+ * @see SiteLocationPickerPreview
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -241,6 +241,8 @@ fun SiteLocationPicker(
 /**
  * Extended version of [SiteLocationPicker] with filter toggles for both pump and CGM sites.
  * Used in Management screen where both types can be shown simultaneously.
+ *
+ * @see SiteLocationPickerWithFiltersPreview
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -338,41 +340,6 @@ fun SiteLocationPickerWithFilters(
                 .fillMaxWidth()
                 .padding(horizontal = AapsSpacing.extraLarge),
             editedType = editedType
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SiteLocationPickerPreview() {
-    MaterialTheme {
-        SiteLocationPicker(
-            siteType = TE.Type.CANNULA_CHANGE,
-            bodyType = BodyType.MAN,
-            entries = emptyList(),
-            selectedLocation = TE.Location.FRONT_RIGHT_UPPER_ABDOMEN,
-            selectedArrow = TE.Arrow.UP,
-            onLocationSelected = {},
-            onArrowSelected = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SiteLocationPickerWithFiltersPreview() {
-    MaterialTheme {
-        SiteLocationPickerWithFilters(
-            bodyType = BodyType.MAN,
-            entries = emptyList(),
-            showPumpSites = true,
-            showCgmSites = true,
-            selectedLocation = TE.Location.NONE,
-            onLocationSelected = {},
-            onShowPumpSites = {},
-            onShowCgmSites = {}
         )
     }
 }

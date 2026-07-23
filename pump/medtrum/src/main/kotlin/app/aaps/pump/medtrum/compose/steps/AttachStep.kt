@@ -12,10 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -54,6 +52,9 @@ fun AttachStep(
     }
 }
 
+/**
+ * @see PreviewAttachStep
+ */
 @Composable
 internal fun AttachStepContent(
     onNext: () -> Unit,
@@ -79,14 +80,5 @@ internal fun AttachStepContent(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Attach Step")
-@Composable
-private fun PreviewAttachStep() {
-    MaterialTheme {
-        AttachStepContent(onNext = {}, onCancel = {})
     }
 }

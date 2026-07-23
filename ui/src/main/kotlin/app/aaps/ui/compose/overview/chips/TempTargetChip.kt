@@ -20,11 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.TT
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
@@ -32,6 +30,10 @@ import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.ttReasonColor
 import app.aaps.ui.compose.main.TempTargetChipState
 
+/**
+ * @see TempTargetChipActivePreview
+ * @see TempTargetChipNonePreview
+ */
 @Composable
 fun TempTargetChip(
     targetText: String,
@@ -111,34 +113,4 @@ private fun TT.Reason?.toIcon(): ImageVector = when (this) {
     TT.Reason.ACTIVITY     -> IcTtActivity
     TT.Reason.HYPOGLYCEMIA -> IcTtHypo
     else                   -> IcTtManual // Custom, Automation, Wear, null
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun TempTargetChipActivePreview() {
-    MaterialTheme {
-        TempTargetChip(
-            targetText = "5.5 - 5.5 (30 min)",
-            state = TempTargetChipState.Active,
-            progress = 0.5f,
-            reason = TT.Reason.EATING_SOON,
-            onClick = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun TempTargetChipNonePreview() {
-    MaterialTheme {
-        TempTargetChip(
-            targetText = "5.0 - 7.0",
-            state = TempTargetChipState.None,
-            progress = 0f,
-            reason = null,
-            onClick = {}
-        )
-    }
 }

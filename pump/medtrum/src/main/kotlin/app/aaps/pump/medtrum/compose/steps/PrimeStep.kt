@@ -17,10 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -110,6 +108,11 @@ fun PrimeStep(
 
 internal enum class PrimeState { READY, PRIMING, COMPLETE }
 
+/**
+ * @see PreviewReady
+ * @see PreviewPriming
+ * @see PrimeStepPreviewComplete
+ */
 @Composable
 internal fun PrimeStepContent(
     state: PrimeState,
@@ -180,32 +183,5 @@ internal fun PrimeStepContent(
                 )
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Prime - Ready")
-@Composable
-private fun PreviewReady() {
-    MaterialTheme {
-        PrimeStepContent(state = PrimeState.READY, onStartPrime = {}, onNext = {}, onCancel = {})
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Prime - Priming")
-@Composable
-private fun PreviewPriming() {
-    MaterialTheme {
-        PrimeStepContent(state = PrimeState.PRIMING, primeProgress = 75, onStartPrime = {}, onNext = {}, onCancel = {})
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Prime - Complete")
-@Composable
-private fun PreviewComplete() {
-    MaterialTheme {
-        PrimeStepContent(state = PrimeState.COMPLETE, onStartPrime = {}, onNext = {}, onCancel = {})
     }
 }

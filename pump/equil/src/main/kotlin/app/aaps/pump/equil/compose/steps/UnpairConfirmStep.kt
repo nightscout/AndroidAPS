@@ -8,10 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -39,8 +37,14 @@ internal fun UnpairConfirmStep(
     )
 }
 
+/**
+ * @see UnpairConfirmStepPreview
+ * @see UnpairConfirmStepLoadingPreview
+ * @see UnpairConfirmStepResultPreview
+ * @see UnpairConfirmStepErrorPreview
+ */
 @Composable
-private fun UnpairConfirmStepContent(
+internal fun UnpairConfirmStepContent(
     isLoading: Boolean,
     errorMessage: String?,
     unpairResult: String?,
@@ -89,64 +93,4 @@ private fun UnpairConfirmStepContent(
             }
         }
     }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun UnpairConfirmStepPreview() {
-    UnpairConfirmStepContent(
-        isLoading = false,
-        errorMessage = null,
-        unpairResult = null,
-        serialNumber = "AB1234",
-        onConfirm = {},
-        onDismissResult = {},
-        onCancel = {}
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun UnpairConfirmStepLoadingPreview() {
-    UnpairConfirmStepContent(
-        isLoading = true,
-        errorMessage = null,
-        unpairResult = null,
-        serialNumber = "AB1234",
-        onConfirm = {},
-        onDismissResult = {},
-        onCancel = {}
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun UnpairConfirmStepResultPreview() {
-    UnpairConfirmStepContent(
-        isLoading = false,
-        errorMessage = null,
-        unpairResult = "Device successfully unpaired",
-        serialNumber = "",
-        onConfirm = {},
-        onDismissResult = {},
-        onCancel = {}
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun UnpairConfirmStepErrorPreview() {
-    UnpairConfirmStepContent(
-        isLoading = false,
-        errorMessage = "Communication error",
-        unpairResult = null,
-        serialNumber = "AB1234",
-        onConfirm = {},
-        onDismissResult = {},
-        onCancel = {}
-    )
 }

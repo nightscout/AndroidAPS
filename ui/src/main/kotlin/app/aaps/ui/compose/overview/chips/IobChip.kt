@@ -17,15 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 
+/**
+ * @see IobChipPreview
+ * @see IobChipZeroPreview
+ */
 @Composable
 internal fun IobChip(
     state: IobUiState,
@@ -64,23 +66,5 @@ internal fun IobChip(
                 )
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IobChipPreview() {
-    MaterialTheme {
-        IobChip(state = IobUiState(text = "1.25 U", iobTotal = 1.25), onClick = {})
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IobChipZeroPreview() {
-    MaterialTheme {
-        IobChip(state = IobUiState(text = "0.00 U", iobTotal = 0.0), onClick = {})
     }
 }

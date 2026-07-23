@@ -16,7 +16,6 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,17 +26,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.ActiveSceneState
-import app.aaps.core.data.model.Scene
 import app.aaps.core.objects.extensions.tickerFlow
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Banner showing the currently active scene with name, time remaining, progress, and End button.
+ *
+ * @see ActiveSceneBannerTimedPreview
+ * @see ActiveSceneBannerExpiredPreview
+ * @see ActiveSceneBannerIndefinitePreview
  */
 @Composable
 fun ActiveSceneBanner(
@@ -155,76 +155,6 @@ internal fun ActiveSceneBannerContent(
                         .padding(top = AapsSpacing.medium)
                 )
             }
-        }
-    }
-}
-
-// --- Previews ---
-
-private fun sampleScene(name: String = "Exercise") = Scene(
-    id = "preview",
-    name = name,
-    defaultDurationMinutes = 60
-)
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun ActiveSceneBannerTimedPreview() {
-    val now = System.currentTimeMillis()
-    MaterialTheme {
-        Surface {
-            ActiveSceneBannerContent(
-                state = ActiveSceneState(
-                    scene = sampleScene(),
-                    activatedAt = now - 30 * 60_000L, // started 30 min ago
-                    durationMs = 60 * 60_000L,        // 60 min total
-                    scopedRecords = ActiveSceneState.ScopedRecords()
-                ),
-                onEndClick = {}
-            )
-        }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun ActiveSceneBannerExpiredPreview() {
-    val now = System.currentTimeMillis()
-    MaterialTheme {
-        Surface {
-            ActiveSceneBannerContent(
-                state = ActiveSceneState(
-                    scene = sampleScene(),
-                    activatedAt = now - 60 * 60_000L,
-                    durationMs = 60 * 60_000L,
-                    scopedRecords = ActiveSceneState.ScopedRecords()
-                ),
-                expired = true,
-                onEndClick = {},
-                onDismiss = {}
-            )
-        }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun ActiveSceneBannerIndefinitePreview() {
-    val now = System.currentTimeMillis()
-    MaterialTheme {
-        Surface {
-            ActiveSceneBannerContent(
-                state = ActiveSceneState(
-                    scene = sampleScene("Sick Day"),
-                    activatedAt = now - 120 * 60_000L,
-                    durationMs = 0, // indefinite
-                    scopedRecords = ActiveSceneState.ScopedRecords()
-                ),
-                onEndClick = {}
-            )
         }
     }
 }

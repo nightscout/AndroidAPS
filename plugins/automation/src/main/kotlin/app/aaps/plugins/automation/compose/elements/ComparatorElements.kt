@@ -18,9 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.ComparatorConnect
 import app.aaps.plugins.automation.elements.ComparatorExists
@@ -36,6 +34,8 @@ private fun Comparator.Compare.glyph(): String = when (this) {
 
 /**
  * Compact chip-with-dropdown comparator picker. Fits on one row next to a value.
+ *
+ * @see PreviewComparator
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -135,15 +135,5 @@ fun CompareRow(
         if (suffix != null) {
             Text(suffix, style = MaterialTheme.typography.bodyMedium)
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 420)
-@Composable
-private fun PreviewComparator() {
-    MaterialTheme {
-        var v by remember { mutableStateOf(Comparator.Compare.IS_EQUAL) }
-        ComparatorEditor(value = v, onValueChange = { v = it })
     }
 }

@@ -26,9 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Modal-style screen rendered over a scrim by [ErrorActivity] when an urgent alarm fires.
@@ -37,6 +35,9 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * Audio (MediaPlayer + volume ramp) is owned by [ErrorActivity] itself — the [onStart]
  * callback fires once on first composition so the activity can begin playback when the
  * screen is shown.
+ *
+ * @see ErrorScreenPreview
+ * @see ErrorScreenShortPreview
  */
 @Composable
 fun ErrorScreen(
@@ -155,39 +156,5 @@ fun ErrorScreen(
                 }
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 360, heightDp = 720)
-@Composable
-private fun ErrorScreenPreview() {
-    MaterialTheme {
-        ErrorScreen(
-            title = "Pump unreachable",
-            status = "Last successful communication 25 minutes ago. Check Bluetooth and pump status.",
-            appIcon = app.aaps.core.ui.R.drawable.ic_error_red_48dp,
-            onOk = {},
-            onMute = {},
-            onMute5Min = {},
-            onStart = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 360, heightDp = 720)
-@Composable
-private fun ErrorScreenShortPreview() {
-    MaterialTheme {
-        ErrorScreen(
-            title = "Bolus error",
-            status = "Delivery failed.",
-            appIcon = app.aaps.core.ui.R.drawable.ic_error_red_48dp,
-            onOk = {},
-            onMute = {},
-            onMute5Min = {},
-            onStart = {}
-        )
     }
 }

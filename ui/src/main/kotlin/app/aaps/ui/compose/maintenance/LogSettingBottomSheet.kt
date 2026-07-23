@@ -25,10 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.logging.LogElement
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.R as CoreUiR
 
@@ -55,6 +53,9 @@ fun LogSettingBottomSheet(
     }
 }
 
+/**
+ * @see LogSettingBottomSheetContentPreview
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun LogSettingBottomSheetContent(
@@ -121,44 +122,5 @@ internal fun LogSettingBottomSheetContent(
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun LogSettingBottomSheetContentPreview() {
-    MaterialTheme {
-        LogSettingBottomSheetContent(
-            logElements = listOf(
-                PreviewLogElement("APS"),
-                PreviewLogElement("Pump", enabled = false),
-                PreviewLogElement("Core"),
-                PreviewLogElement("UI", enabled = false),
-                PreviewLogElement("Notification"),
-                PreviewLogElement("Database"),
-                PreviewLogElement("Worker")
-            ),
-            onToggle = { _, _ -> },
-            onResetToDefaults = {}
-        )
-    }
-}
-
-private class PreviewLogElement(
-    override var name: String,
-    override var defaultValue: Boolean = true,
-    override var enabled: Boolean = true
-) : LogElement {
-
-    constructor(name: String, enabled: Boolean) : this(name, true, enabled)
-
-    override fun enable(enabled: Boolean) {
-        this.enabled = enabled
-    }
-
-    override fun resetToDefault() {
-        enabled = defaultValue
     }
 }

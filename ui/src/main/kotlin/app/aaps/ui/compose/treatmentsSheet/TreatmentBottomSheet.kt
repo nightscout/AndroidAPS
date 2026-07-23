@@ -29,17 +29,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.ElementVisibility
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.descriptionResId
@@ -102,8 +100,11 @@ fun TreatmentBottomSheet(
     }
 }
 
+/**
+ * @see TreatmentBottomSheetPreview
+ */
 @Composable
-private fun TreatmentSelectionContent(
+internal fun TreatmentSelectionContent(
     onDismiss: () -> Unit,
     onNavigate: (NavigationRequest) -> Unit,
     quickWizardItems: List<QuickWizardItem>,
@@ -356,29 +357,4 @@ private fun TreatmentItem(
             onClick()
         } else Modifier
     )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun TreatmentBottomSheetPreview() {
-    MaterialTheme {
-        TreatmentSelectionContent(
-            onDismiss = {},
-            onNavigate = {},
-            quickWizardItems = listOf(
-                QuickWizardItem(guid = "1", buttonText = "Meal", detail = "36g / 2.5U", isEnabled = true),
-                QuickWizardItem(guid = "2", buttonText = "Snack", detail = "12g / 0.8U", disabledReason = "No insulin required")
-            ),
-            showCgm = true,
-            showCalibration = true,
-            showTreatment = true,
-            showInsulin = true,
-            showCarbs = true,
-            showCalculator = true,
-            isDexcomSource = false,
-            showSettingsIcon = true,
-            onSettingsClick = {}
-        )
-    }
 }
