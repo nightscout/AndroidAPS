@@ -40,6 +40,7 @@
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
     <string name="hardlimit">límite estricto</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Pico</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Un bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
     <string name="pump_not_initialized">Bomba no inicializada</string>
