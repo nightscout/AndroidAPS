@@ -21,11 +21,11 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -43,11 +43,13 @@ import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.compose.EquilWizardStep
 import app.aaps.pump.equil.compose.EquilWizardViewModel
 import app.aaps.pump.equil.compose.EquilWorkflow
+import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
 import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.equil.manager.command.CmdModelSet
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -215,86 +217,21 @@ class EquilEmulatorActivationTest {
     @Test
     fun pairWorkflow_activatesAndDelivers() {
         bringUp()
-        val start = SystemClock.uptimeMillis()
-
-        assertThat(bleTransport).isInstanceOf(EquilEmulatorBleTransport::class.java)
-        assertThat(equilManager.isActivationCompleted()).isFalse()
-
-        // initializeWorkflow resolves the (profile-gated) page list asynchronously, then moves to the
-        // first step. With an active profile that is ASSEMBLE.
-        onMain { viewModel.initializeWorkflow(EquilWorkflow.PAIR) }
-        awaitStep(EquilWizardStep.ASSEMBLE)
-
-        // ASSEMBLE and ATTACH are instruction-only screens with no command.
-        onMain { viewModel.moveToNextStep(EquilWizardStep.ASSEMBLE) }
-        awaitStep(EquilWizardStep.BLE_SCAN)
-
-        // Scan: the emulator emits its (randomly-serialled) device immediately; select the first one.
-        onMain { viewModel.prepareBLEScan() }
-        onMain { viewModel.startDeviceScan() }
-        assertThat(awaitTrue(STEP_TIMEOUT) { viewModel.scannedDevices.value.isNotEmpty() }).isTrue()
-        val device: ScannedDevice = viewModel.scannedDevices.value.first()
-        onMain { viewModel.onDeviceSelected(device) }
-        awaitStep(EquilWizardStep.PASSWORD)
-
-        // Pairing: CmdDevicesOldGet (version) → CmdPair (key exchange) → CmdSettingSet (post-pair
-        // limits) → FILL. First pass through the real EquilManager/EquilBLE handshake.
-        onMain { viewModel.startPairing(PAIR_PASSWORD) }
-        awaitStep(EquilWizardStep.FILL, PAIR_TIMEOUT)
-
-        // Fill: CmdStepSet + CmdResistanceGet; the emulator's default resistance (>=500) reports the
-        // piston reached on the first pass, so fillComplete flips after one iteration.
-        onMain { viewModel.startFill() }
-        assertThat(awaitTrue(PAIR_TIMEOUT) { viewModel.fillComplete.value }).isTrue()
-        onMain { viewModel.finishFill() }
-        awaitStep(EquilWizardStep.ATTACH)
-
-        onMain { viewModel.moveToNextStep(EquilWizardStep.ATTACH) }
-        awaitStep(EquilWizardStep.AIR)
-
-        // Air removal: CmdStepSet(AIR), then finishAirStep() runs the PAIR tail —
-        // CmdAlarmSet → CmdBasalSet → CmdTimeSet → CmdDevicesGet → CONFIRM.
-        onMain { viewModel.startAirRemoval() }
-        assertThat(awaitTrue(PAIR_TIMEOUT) { viewModel.airRemovalDone.value }).isTrue()
-        onMain { viewModel.finishAirStep() }
-        awaitStep(EquilWizardStep.CONFIRM, PAIR_TIMEOUT)
-
-        // Confirm: CmdInsulinGet → CmdModelSet(RUN) → final CmdSettingSet → saveActivation → COMPLETED.
-        onMain { viewModel.startConfirm() }
-        val activated = awaitTrue(ACTIVATION_TIMEOUT) { equilManager.isActivationCompleted() }
-
-        val elapsed = SystemClock.uptimeMillis() - start
-        android.util.Log.i(TAG, "activation finished=$activated in ${elapsed}ms, progress=${equilManager.getActivationProgress()}")
-        assertThat(activated).isTrue()
-        assertThat(equilManager.getActivationProgress()).isEqualTo(ActivationProgress.COMPLETED)
+        activatePod()
 
         // ---- Deliver through the now-activated pod: bolus, temp basal, extended bolus ----------------
         // Driven through the command queue — the app's real path, which connects and establishes each
         // command's session. Asserted on the round-trip result (the driver only reports success once the
         // emulator has validly answered the command) plus the pod state the driver records from it.
         assertThat(equilManager.equilState?.bolusRecord).isNull()
-
-        // The command queue gates delivery on the persisted running mode; activation alone records none,
-        // so mark the pump running (OPEN_LOOP) as the reconciler would — else delivery is rejected with
-        // PUMP_REPORTED_SUSPENDED. Mirrors RunningModeReconcilerIntegrationTest.insertActiveMode.
-        runBlocking {
-            persistenceLayer.insertOrUpdateRunningMode(
-                runningMode = RM(timestamp = dateUtil.now(), mode = RM.Mode.OPEN_LOOP, autoForced = false, duration = T.hours(2).msecs()),
-                action = Action.CLOSED_LOOP_MODE, source = Sources.Aaps, listValues = emptyList()
-            )
-        }
+        seedRunningMode()
 
         val bolusResult = runBlocking { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
         assertThat(bolusResult.success).isTrue()
         assertThat(equilManager.equilState?.bolusRecord?.amount).isEqualTo(BOLUS_UNITS)
 
-        // Temp basal needs an active Profile. Activation runs its own insulin profile switch, so
-        // re-assert the local one and wait for getProfile() to resolve. Duration must be a multiple of
-        // the pump's 30-min step (BASAL_STEP_DURATION).
-        activateSeededProfile()
-        val profile = requireNotNull(
-            awaitNotNull(PROFILE_STORE_TIMEOUT) { runBlocking { profileFunction.getProfile() } }
-        ) { "no active profile for temp basal" }
+        // Temp basal duration must be a multiple of the pump's 30-min step (BASAL_STEP_DURATION).
+        val profile = activeProfile()
         val tbrResult = runBlocking {
             commandQueue.tempBasalAbsolute(TBR_RATE, TBR_DURATION_MIN, true, profile, PumpSync.TemporaryBasalType.NORMAL)
         }
@@ -305,7 +242,125 @@ class EquilEmulatorActivationTest {
         assertThat(extResult.success).isTrue()
     }
 
+    /**
+     * After activation, exercises the pod's read / cancel / mode surface through the command queue —
+     * status read, temp-basal and extended-bolus cancel, a suspend→resume mode toggle and TDD/time
+     * reads — covering the plugin and manager paths the delivery test doesn't reach.
+     */
+    @Test
+    fun activatedPod_readsCancelsAndTogglesMode() {
+        bringUp()
+        activatePod()
+        seedRunningMode()
+        val profile = activeProfile()
+
+        // RUN-gated ops first (a status read would refresh runMode off the emulator). Temp basal, cancel.
+        assertThat(runBlocking {
+            commandQueue.tempBasalAbsolute(TBR_RATE, TBR_DURATION_MIN, true, profile, PumpSync.TemporaryBasalType.NORMAL)
+        }.success).isTrue()
+        assertThat(runBlocking { commandQueue.cancelTempBasal(true) }.success).isTrue()
+
+        // Extended bolus, then cancel it.
+        assertThat(runBlocking { commandQueue.extendedBolus(EXTENDED_UNITS, EXTENDED_DURATION_MIN) }.success).isTrue()
+        runBlocking { commandQueue.cancelExtended() }
+
+        // Status read: getPumpStatus → CmdModeAndHistoryGet + CmdDevicesGet.
+        runBlocking { commandQueue.readStatus("test") }
+
+        // Suspend then resume — the run-mode command the overview's toggle sends.
+        runBlocking { commandQueue.customCommand(CmdModelSet(RunMode.SUSPEND.command, aapsLogger, preferences, equilManager)) }
+        runBlocking { commandQueue.customCommand(CmdModelSet(RunMode.RUN.command, aapsLogger, preferences, equilManager)) }
+
+        // TDD read and a time update (timezoneOrDSTChanged → CmdTimeSet).
+        runBlocking { commandQueue.loadTDDs() }
+        runBlocking { commandQueue.updateTime() }
+    }
+
+    /**
+     * Activates a pod, then runs the UNPAIR workflow (detach → confirm) — covering `CmdInsulinChange`,
+     * `CmdUnPair` and the ViewModel's unpair region, ending with the pod cleared.
+     */
+    @Test
+    fun activatedPod_unpairs() {
+        bringUp()
+        activatePod()
+        assertThat(equilManager.equilState?.serialNumber ?: "").isNotEmpty()
+
+        onMain { viewModel.initializeWorkflow(EquilWorkflow.UNPAIR) }
+        awaitStep(EquilWizardStep.UNPAIR_DETACH)
+        onMain { viewModel.startUnpairDetach() }    // CmdInsulinChange → UNPAIR_CONFIRM
+        awaitStep(EquilWizardStep.UNPAIR_CONFIRM, PAIR_TIMEOUT)
+        onMain { viewModel.confirmUnpair() }         // CmdUnPair → clears serial/address
+        assertThat(awaitTrue(PAIR_TIMEOUT) { viewModel.serialNumberDisplay.value.isEmpty() }).isTrue()
+        assertThat(equilManager.equilState?.serialNumber ?: "").isEmpty()
+    }
+
     // ---- helpers --------------------------------------------------------------------------------
+
+    /** Drives the whole PAIR wizard through [viewModel] to a COMPLETED, paired pod. */
+    private fun activatePod() {
+        val start = SystemClock.uptimeMillis()
+        assertThat(bleTransport).isInstanceOf(EquilEmulatorBleTransport::class.java)
+        assertThat(equilManager.isActivationCompleted()).isFalse()
+
+        onMain { viewModel.initializeWorkflow(EquilWorkflow.PAIR) }
+        awaitStep(EquilWizardStep.ASSEMBLE)
+        onMain { viewModel.moveToNextStep(EquilWizardStep.ASSEMBLE) }   // ASSEMBLE/ATTACH: no command
+        awaitStep(EquilWizardStep.BLE_SCAN)
+
+        onMain { viewModel.prepareBLEScan() }
+        onMain { viewModel.startDeviceScan() }                          // emulator emits one device
+        assertThat(awaitTrue(STEP_TIMEOUT) { viewModel.scannedDevices.value.isNotEmpty() }).isTrue()
+        onMain { viewModel.onDeviceSelected(viewModel.scannedDevices.value.first()) }
+        awaitStep(EquilWizardStep.PASSWORD)
+
+        onMain { viewModel.startPairing(PAIR_PASSWORD) }                // CmdDevicesOldGet→CmdPair→CmdSettingSet
+        awaitStep(EquilWizardStep.FILL, PAIR_TIMEOUT)
+
+        onMain { viewModel.startFill() }                               // CmdStepSet + CmdResistanceGet
+        assertThat(awaitTrue(PAIR_TIMEOUT) { viewModel.fillComplete.value }).isTrue()
+        onMain { viewModel.finishFill() }
+        awaitStep(EquilWizardStep.ATTACH)
+
+        onMain { viewModel.moveToNextStep(EquilWizardStep.ATTACH) }
+        awaitStep(EquilWizardStep.AIR)
+
+        onMain { viewModel.startAirRemoval() }                         // CmdStepSet(AIR)
+        assertThat(awaitTrue(PAIR_TIMEOUT) { viewModel.airRemovalDone.value }).isTrue()
+        onMain { viewModel.finishAirStep() }                           // alarm→basal→time→firmware→CONFIRM
+        awaitStep(EquilWizardStep.CONFIRM, PAIR_TIMEOUT)
+
+        onMain { viewModel.startConfirm() }                            // insulin→model→settings→saveActivation
+        val activated = awaitTrue(ACTIVATION_TIMEOUT) { equilManager.isActivationCompleted() }
+        android.util.Log.i(TAG, "activation finished=$activated in ${SystemClock.uptimeMillis() - start}ms")
+        assertThat(activated).isTrue()
+        assertThat(equilManager.getActivationProgress()).isEqualTo(ActivationProgress.COMPLETED)
+    }
+
+    /**
+     * The command queue gates delivery on the persisted running mode; activation records none, so mark
+     * the pump running (OPEN_LOOP) as the reconciler would — else delivery is rejected with
+     * PUMP_REPORTED_SUSPENDED. Mirrors RunningModeReconcilerIntegrationTest.insertActiveMode.
+     */
+    private fun seedRunningMode() {
+        runBlocking {
+            persistenceLayer.insertOrUpdateRunningMode(
+                runningMode = RM(timestamp = dateUtil.now(), mode = RM.Mode.OPEN_LOOP, autoForced = false, duration = T.hours(2).msecs()),
+                action = Action.CLOSED_LOOP_MODE, source = Sources.Aaps, listValues = emptyList()
+            )
+        }
+    }
+
+    /**
+     * Re-asserts the local profile (activation runs its own insulin profile switch, briefly leaving
+     * getProfile() null) and returns it — temp basal needs an active Profile.
+     */
+    private fun activeProfile(): Profile {
+        activateSeededProfile()
+        return requireNotNull(
+            awaitNotNull(PROFILE_STORE_TIMEOUT) { runBlocking { profileFunction.getProfile() } }
+        ) { "no active profile" }
+    }
 
     private fun onMain(block: () -> Unit) = instrumentation.runOnMainSync(block)
 
