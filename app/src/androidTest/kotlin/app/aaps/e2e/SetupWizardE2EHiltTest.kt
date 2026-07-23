@@ -366,16 +366,25 @@ class SetupWizardE2EHiltTest {
         click("Finish")                                      // save() → back on SceneList
         assertVisible("Sick Day")                            // the created scene row
 
-        // Run it: the card's Activate (Play) icon → confirmation dialog → Activate.
+        // Activate: the card's Activate (Play) icon → confirmation dialog → Activate.
         click("Activate")                                    // Play IconButton (content-desc)
         assertTextContains("Activate scene")                 // SceneActivationDialog title
         click("Activate")                                    // dialog confirm button (text)
-        assertVisible("End Scene")                           // card now active → Stop icon shown
+        assertVisible("End Scene")                           // card now active
 
-        // End it: the card's End-Scene (Stop) icon → confirmation dialog → End Scene (reverts changes).
-        click("End Scene")                                   // Stop IconButton (content-desc)
-        assertTextContains("End scene")                      // SceneDeactivationDialog title
-        click("End Scene")                                   // dialog confirm button (text)
+        // The overview renders ActiveSceneBanner while a scene is active — return there so the banner
+        // (scene name, remaining time, progress, End button) is exercised, then end it from the banner.
+        returnToOverview()
+        device.waitForIdle(IDLE_MS)                          // let the banner's expand/fade-in settle
+        assertVisible("End Scene")                           // ActiveSceneBanner's End button on the overview
+        click("End Scene")                                   // banner End button → requestSceneDeactivation
+        assertTextContains("End scene")                      // OkCancelDialog message (SICK_DAY has no chain)
+        click("OK")                                          // confirm deactivation (R.string.ok)
+
+        // Automation bottom sheet: the scene still exists, so the nav-bar "Scenes" button opens
+        // ScenesBottomSheet listing it. Render it, then dismiss (ModalBottomSheet consumes Back).
+        openVia("Scenes", expect = "Sick Day")               // nav-bar Automation button → the sheet
+        device.pressBack()                                   // dismiss the sheet → back to overview
         returnToOverview()
     }
 
