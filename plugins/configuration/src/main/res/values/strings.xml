@@ -21,17 +21,6 @@
     <string name="common_values">Use values of your largest food you usually eat\n</string>
     <string name="syncinfotext">Synchronize data to the cloud. You can skip this part now but you will not be able to pass objectives until you set up Nightscout or Tidepool client.</string>
     <string name="status_label">Status:</string>
-    <!-- Setup wizard: master/client integration step -->
-    <string name="setupwizard_client_control_title">Client control</string>
-    <string name="setupwizard_client_control_info">Pair client devices so they can send signed commands to this master over Nightscout. This is the new recommended way to control AAPS remotely.</string>
-    <string name="setupwizard_ns_receive_info">Accepting treatments and data directly from Nightscout (less secure way) is now turned off by default. Open the settings below only if you still need it. Necessary if you need to enter data through NS or 3rd party apps.</string>
-    <string name="setupwizard_open_ns_receive_settings">Nightscout data acceptance</string>
-    <string name="setupwizard_pair_with_master_info">Pair this client with your master AAPS so it can send commands over a secure channel.</string>
-    <string name="setupwizard_pairing_ws_warning">The Nightscout WebSocket connection is required for pairing. Go back to the previous step and enable it first.</string>
-    <string name="setupwizard_pairing_status_master">Paired clients: %1$d</string>
-    <string name="setupwizard_pairing_status_master_none">No clients paired yet</string>
-    <string name="setupwizard_pairing_status_client_paired">Paired with a master</string>
-    <string name="setupwizard_pairing_status_client_not_paired">Not paired yet</string>
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="profile">Profile</string>
     <string name="doprofileswitch">Do Profile Switch</string>
