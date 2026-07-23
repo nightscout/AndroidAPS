@@ -6,7 +6,9 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
@@ -21,6 +23,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -195,7 +198,8 @@ class EquilEmulatorActivationTest {
     }
 
     /**
-     * Runs the whole PAIR activation and asserts the pod ends `COMPLETED`.
+     * Activates the pod through the whole PAIR wizard, then delivers through it — bolus, temp basal
+     * and extended bolus — asserting each on the emulator's own `PumpState`, the true far side.
      *
      * Each `startXxx` launches a `viewModelScope` coroutine that submits its command(s) through the
      * command queue and advances the wizard state on success; the test awaits the resulting state
@@ -203,12 +207,13 @@ class EquilEmulatorActivationTest {
      * pair-step — the command whose `executeCmd` wait can lose its wakeup against the fast emulator —
      * so the completion timeout is generous; increment work will tighten it once the race is fixed.
      *
-     * One `@Test` on purpose: each activation drives ~13 separate queued commands and is not cheap, so
-     * a second method would double the setup (and the pump plugin's foreground-service churn) for no
-     * extra coverage. The transport-selection check folds in as the first assertion.
+     * The delivery leg reuses the pod this activation just paired: only a real pairing establishes the
+     * shared keys `EquilManager.executeCmd` encrypts with, so a seeded-activated pod could not deliver.
+     * Driven directly on the plugin (as a queue worker would), asserted on the emulator, not the
+     * driver's cache. One `@Test` on purpose: a second method would pay the ~13-command activation again.
      */
     @Test
-    fun pairWorkflow_activatesThePod() {
+    fun pairWorkflow_activatesAndDelivers() {
         bringUp()
         val start = SystemClock.uptimeMillis()
 
@@ -262,6 +267,42 @@ class EquilEmulatorActivationTest {
         android.util.Log.i(TAG, "activation finished=$activated in ${elapsed}ms, progress=${equilManager.getActivationProgress()}")
         assertThat(activated).isTrue()
         assertThat(equilManager.getActivationProgress()).isEqualTo(ActivationProgress.COMPLETED)
+
+        // ---- Deliver through the now-activated pod: bolus, temp basal, extended bolus ----------------
+        // Driven through the command queue — the app's real path, which connects and establishes each
+        // command's session. Asserted on the round-trip result (the driver only reports success once the
+        // emulator has validly answered the command) plus the pod state the driver records from it.
+        assertThat(equilManager.equilState?.bolusRecord).isNull()
+
+        // The command queue gates delivery on the persisted running mode; activation alone records none,
+        // so mark the pump running (OPEN_LOOP) as the reconciler would — else delivery is rejected with
+        // PUMP_REPORTED_SUSPENDED. Mirrors RunningModeReconcilerIntegrationTest.insertActiveMode.
+        runBlocking {
+            persistenceLayer.insertOrUpdateRunningMode(
+                runningMode = RM(timestamp = dateUtil.now(), mode = RM.Mode.OPEN_LOOP, autoForced = false, duration = T.hours(2).msecs()),
+                action = Action.CLOSED_LOOP_MODE, source = Sources.Aaps, listValues = emptyList()
+            )
+        }
+
+        val bolusResult = runBlocking { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
+        assertThat(bolusResult.success).isTrue()
+        assertThat(equilManager.equilState?.bolusRecord?.amount).isEqualTo(BOLUS_UNITS)
+
+        // Temp basal needs an active Profile. Activation runs its own insulin profile switch, so
+        // re-assert the local one and wait for getProfile() to resolve. Duration must be a multiple of
+        // the pump's 30-min step (BASAL_STEP_DURATION).
+        activateSeededProfile()
+        val profile = requireNotNull(
+            awaitNotNull(PROFILE_STORE_TIMEOUT) { runBlocking { profileFunction.getProfile() } }
+        ) { "no active profile for temp basal" }
+        val tbrResult = runBlocking {
+            commandQueue.tempBasalAbsolute(TBR_RATE, TBR_DURATION_MIN, true, profile, PumpSync.TemporaryBasalType.NORMAL)
+        }
+        assertThat(tbrResult.success).isTrue()
+        assertThat(equilManager.equilState?.tempBasal).isNotNull()
+
+        val extResult = runBlocking { commandQueue.extendedBolus(EXTENDED_UNITS, EXTENDED_DURATION_MIN) }
+        assertThat(extResult.success).isTrue()
     }
 
     // ---- helpers --------------------------------------------------------------------------------
@@ -364,5 +405,12 @@ class EquilEmulatorActivationTest {
         // Generous on purpose: the final pair-step CmdSettingSet can stall on a lost wakeup today.
         private const val ACTIVATION_TIMEOUT = 90_000L
         private const val PROFILE_STORE_TIMEOUT = 20_000L
+
+        // Delivery values. TBR duration must be a multiple of the pump's 30-min basal step.
+        private const val BOLUS_UNITS = 1.0
+        private const val TBR_RATE = 1.0
+        private const val TBR_DURATION_MIN = 30
+        private const val EXTENDED_UNITS = 1.0
+        private const val EXTENDED_DURATION_MIN = 30
     }
 }
