@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">Resetați informațiile de asociere?</string>
     <string name="diaconn_pairing">Asocierea pompei Diaconn</string>
     <string name="diaconn_g8_history_alarm">Alarme</string>
     <string name="diaconn_g8_history_basalhours">Ore rate bazale</string>
@@ -13,6 +14,7 @@
     <string name="largetimedifftitle">Diferență majoră de timp</string>
     <string name="approachingdailylimit">Se apropie limita zilnică de insulină</string>
     <string name="startingbolus">Se pornește administrarea bolusului</string>
+    <string name="waitingforbolusend">Se așteaptă sfârșitul estimat al bolusului</string>
     <string name="gettingbolusstatus">Se citește starea bolusului</string>
     <string name="stoppingtempbasal">Se oprește bazala temporară</string>
     <string name="settingtempbasal">Se setează bazala temporară</string>
@@ -31,6 +33,7 @@
     <string name="bolus_step">Pas bolus</string>
     <string name="basal_step">Pas bazală</string>
     <string name="pairfirst">Vă rog să asociați pompa cu telefonul!</string>
+    <string name="processinghistory">Procesare eveniment</string>
     <string name="diaconn_g8_history_tempbasal">Bazală temporară</string>
     <string name="diaconng8_pump_settings">Setări pompă Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Sunet</string>
