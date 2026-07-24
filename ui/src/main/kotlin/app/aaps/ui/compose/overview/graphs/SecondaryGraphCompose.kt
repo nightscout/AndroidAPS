@@ -5,8 +5,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -43,6 +46,19 @@ import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.data.ExtraStore
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.debounce
+
+/**
+ * CartesianChartModelProducer.update() skips notifying receivers (and thus skips recomputing axis
+ * ranges) when a transaction's partials AND extraStore are both unchanged from the last one. Since
+ * scrolling/zooming re-submits identical series data (only the visible window changed), stashing
+ * the visible window here forces the extraStore to differ, so Vico actually reprocesses the
+ * transaction instead of silently dropping it.
+ */
+private val VISIBLE_RANGE_KEY = ExtraStore.Key<Pair<Double?, Double?>>()
 
 /**
  * General-purpose secondary graph composable.
@@ -54,6 +70,7 @@ import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
  * - Simple line series (AbsIOB, BGI, Sensitivity, VarSens, DevSlope, HR, Steps): Colored line with gradient fill
  * - Deviations: Per-type colored step lines with gradient fill (POSITIVE/NEGATIVE/EQUAL/UAM/CSF)
  */
+@OptIn(FlowPreview::class)
 @Composable
 fun SecondaryGraphCompose(
     viewModel: GraphViewModel,
@@ -300,6 +317,38 @@ fun SecondaryGraphCompose(
         processPoints(secondaryLineData, minTimestamp, minX, maxX)
     }
 
+    // Visible-window bounds (same x-unit as processed* points — minutes from minTimestamp) for
+    // windowing the Y-axis scale to only the currently scrolled/zoomed portion of this graph's
+    // own chart, instead of the full loaded time range.
+    // The reporter writes into a plain (non-Compose-state) holder on every draw pass — see
+    // VisibleRangeHolder — so we poll it here rather than observing it directly, keeping Compose
+    // state writes off the draw path.
+    // Computed here (before the model-rebuild LaunchedEffect below) so visibleMinX/visibleMaxX can
+    // be included in that effect's keys — Vico only reliably re-applies axis ranges via a real
+    // modelProducer.runTransaction, not merely by swapping the CartesianLayerRangeProvider instance.
+    val visibleRangeHolder = remember { VisibleRangeHolder() }
+    val visibleRangeReporter = rememberVisibleRangeReporter(visibleRangeHolder)
+
+    var rawVisibleRange by remember { mutableStateOf<Pair<Double, Double>?>(null) }
+    var visibleRange by remember { mutableStateOf<Pair<Double, Double>?>(null) }
+
+    LaunchedEffect(visibleRangeHolder) {
+        while (true) {
+            delay(50)
+            val current = visibleRangeHolder.value
+            if (current != rawVisibleRange) rawVisibleRange = current
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { rawVisibleRange }
+            .debounce(30)
+            .collect { visibleRange = it }
+    }
+
+    val visibleMinX = visibleRange?.first
+    val visibleMaxX = visibleRange?.second
+
     // Single source of truth for the primary layer: build the (x, y, slot) specs synchronously,
     // in the exact order they are emitted to the model below. Deriving the line styles,
     // hasPrimaryData and the Y-range from this list (instead of from slot state set asynchronously
@@ -368,7 +417,9 @@ fun SecondaryGraphCompose(
         processedBasalActual,
         processedSecondary,
         processedActivityOverlay,
-        maxX
+        maxX,
+        visibleMinX,
+        visibleMaxX
     ) {
         // Always populate the model — even with no data / no real time range — so the chart frame
         // (axes, grid, now-line) renders the empty-state normalizer series instead of staying blank.
@@ -409,6 +460,11 @@ fun SecondaryGraphCompose(
                 }
             }
 
+            // Forces Vico to reprocess this transaction even when the series data above is
+            // identical to last time (see VISIBLE_RANGE_KEY doc) — otherwise scrolling/zooming
+            // would re-submit the same partials and get silently skipped, never picking up the
+            // updated primaryRangeProvider.
+            extras { it[VISIBLE_RANGE_KEY] = visibleMinX to visibleMaxX }
         }
     }
 
@@ -481,14 +537,25 @@ fun SecondaryGraphCompose(
     val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
-    val decorations = remember(nowLine) { listOf(nowLine) }
+    val decorations = remember(nowLine, visibleRangeReporter) { listOf(nowLine, visibleRangeReporter) }
+
     // When basal overlay is active, reserve the top BASAL_HEIGHT_FRACTION of the height for basal by extending primary Y range
-    val primaryYMax = remember(hasBasalLayer, processedIob, processedSimpleSeries, processedCob) {
+    val primaryYMax = remember(hasBasalLayer, processedIob, processedSimpleSeries, processedCob, visibleMinX, visibleMaxX) {
         if (!hasBasalLayer) return@remember null // auto-range when no basal
-        val allY = buildList {
-            addAll(processedIob.map { it.second })
-            for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
-            addAll(processedCob.first.map { it.second })
+        fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
+        val windowedY = buildList {
+            addAll(processedIob.filter { inWindow(it.first) }.map { it.second })
+            for ((_, pts) in processedSimpleSeries) addAll(pts.filter { inWindow(it.first) }.map { it.second })
+            addAll(processedCob.first.filter { inWindow(it.first) }.map { it.second })
+        }
+        // Fall back to the full range if the visible window currently has no points
+        // (e.g. scrolled into a future gap with no data)
+        val allY = windowedY.ifEmpty {
+            buildList {
+                addAll(processedIob.map { it.second })
+                for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
+                addAll(processedCob.first.map { it.second })
+            }
         }
         if (allY.isEmpty()) null
         else {

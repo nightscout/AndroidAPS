@@ -325,3 +325,56 @@ fun rememberNowLine(minTimestamp: Long, nowTimestamp: Long, color: Color): NowLi
         NowLine(nowX = timestampToX(nowTimestamp, minTimestamp), color = color)
     }
 }
+
+/**
+ * Plain (non-Compose-state) holder for the latest visible x-range, written from
+ * [VisibleRangeReporter.drawOverLayers] on every draw pass.
+ *
+ * Deliberately NOT a Compose `State`: writing Compose state synchronously from the draw phase
+ * fights with Vico's own gesture-driven scroll/zoom mutations — the resulting invalidate-during-draw
+ * starves pinch-zoom gesture recognition (observed: zoom became unresponsive). Callers must poll
+ * [value] from a coroutine (e.g. a `LaunchedEffect` with a periodic `delay`) and only then write it
+ * into real Compose state.
+ */
+class VisibleRangeHolder {
+    @Volatile
+    var value: Pair<Double, Double>? = null
+}
+
+/**
+ * Reports the currently visible x-range (same "minutes from minTimestamp" unit as [timestampToX])
+ * into [holder] on every draw pass. Purely observational — draws nothing, and never touches
+ * Compose state directly (see [VisibleRangeHolder]).
+ *
+ * Inverse of [NowLine]'s x-value-to-canvas transform: canvasX = layerBounds.left + startPadding +
+ * xSpacing * ((x - minX) / xStep) - scroll. Solving for x at the left/right edges of layerBounds
+ * gives the visible x-range.
+ */
+class VisibleRangeReporter(
+    private val holder: VisibleRangeHolder
+) : Decoration {
+
+    override fun drawOverLayers(context: CartesianDrawingContext) {
+        with(context) {
+            val xStep = ranges.xStep
+            val xSpacing = layerDimensions.xSpacing
+            if (xStep == 0.0 || xSpacing <= 0f) return
+
+            val visibleMinX = ranges.minX + xStep * (scroll - layerDimensions.startPadding) / xSpacing
+            val visibleWidth = xStep * layerBounds.width / xSpacing
+            holder.value = visibleMinX to (visibleMinX + visibleWidth)
+        }
+    }
+
+    override fun equals(other: Any?): Boolean = this === other
+    override fun hashCode(): Int = System.identityHashCode(this)
+}
+
+/**
+ * Remember a [VisibleRangeReporter] decoration that writes the visible x-range into [holder]
+ * on every draw pass.
+ */
+@Composable
+fun rememberVisibleRangeReporter(holder: VisibleRangeHolder): VisibleRangeReporter {
+    return remember(holder) { VisibleRangeReporter(holder) }
+}
