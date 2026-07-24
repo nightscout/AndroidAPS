@@ -11,11 +11,14 @@ import app.aaps.pump.carelevo.ble.commands.AlertAlarmSetCommand
 import app.aaps.pump.carelevo.ble.commands.SafetyCheckResponse
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -66,9 +69,11 @@ internal class CarelevoBleSessionPairingTest {
         session = CarelevoBleSession(transport, writeUuid, notifyUuid, aapsLogger)
     }
 
-    /** Route the session's internal scope onto this test's scheduler (see class KDoc). */
+    /** Route the session's internal scopes (per-session + queue connect/disconnect) onto this test's scheduler. */
     private fun TestScope.useTestDispatcher() {
-        session.sessionDispatcher = StandardTestDispatcher(testScheduler)
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        session.sessionDispatcher = dispatcher
+        session.linkDispatcher = dispatcher
     }
 
     @Test
@@ -298,6 +303,139 @@ internal class CarelevoBleSessionPairingTest {
         assertThat(afterSecond - afterFirst).isAtMost(INTER_SESSION_SETTLE_MS)
     }
 
+    // ===== Queue-owned-link lifecycle: PR #5003 surface (see _docs/CARELEVO_QUEUE_OWNED_LINK.md) =====
+    //
+    // Suspend-with-active-temp (CarelevoOverviewViewModel.startPumpStopProcess) runs cancelTempBasal as one
+    // queue command then CmdPumpStop as a second. Under the per-op/transient model each is its own session,
+    // so the 2nd re-dials while the 1st tears down — PR #5003's handshake-drop race. The queue-owned held
+    // link collapses both ops onto ONE connection, removing the second handshake entirely.
+
+    @Test
+    fun `off-queue back-to-back ops each open their own transient session`() = runTest {
+        useTestDispatcher()
+
+        // No held link (pre-activation / off-queue): two ops = two transient sessions = two connects.
+        session.readInfusionInfo(ADDRESS)
+        session.readInfusionInfo(ADDRESS)
+
+        assertThat(transport.connectAddresses).hasSize(2)
+    }
+
+    @Test
+    fun `a handshake drop on a transient second session fails the second op`() = runTest {
+        useTestDispatcher()
+        // The 2nd connect succeeds at the BLE layer but the patch never reaches STATE_CONNECTED — a
+        // handshake drop on the re-dial (what PR #5003 observed and retries).
+        transport.dropConnectAtIndex = 2
+
+        session.readInfusionInfo(ADDRESS) // op 1: clean session
+
+        assertFailsWith<TimeoutCancellationException> {
+            session.readInfusionInfo(ADDRESS) // op 2: fresh handshake drops → the op fails
+        }
+        assertThat(transport.connectAddresses).hasSize(2)
+    }
+
+    @Test
+    fun `the queue-owned held link is reused across ops - one connect, not one per op`() = runTest {
+        useTestDispatcher()
+
+        // Queue opens the link once (connect-before-execute), then runs ops on it.
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+        assertThat(session.connected.value).isTrue()
+
+        session.readInfusionInfo(ADDRESS) // op 1 on the held link
+        session.readInfusionInfo(ADDRESS) // op 2 on the held link — no re-dial
+
+        // ONE connect total (the held link), not one per op — this removes #5003's second handshake.
+        assertThat(transport.connectAddresses).hasSize(1)
+
+        session.requestDisconnect("queue empty")
+        advanceUntilIdle()
+        assertThat(session.connected.value).isFalse()
+    }
+
+    @Test
+    fun `a would-be second-session handshake drop cannot happen on the held link`() = runTest {
+        useTestDispatcher()
+        // A drop scripted for a 2nd connect that never occurs: the held link makes exactly one connect, so
+        // both ops run on it and the second op succeeds where the transient path would have failed.
+        transport.dropConnectAtIndex = 2
+
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+
+        session.readInfusionInfo(ADDRESS)
+        session.readInfusionInfo(ADDRESS)
+
+        assertThat(transport.connectAddresses).hasSize(1)
+    }
+
+    // ===== Held-link hardening (code-review fixes) =====
+
+    @Test
+    fun `a transient session never reports the held-link connected state`() = runTest {
+        useTestDispatcher()
+        val seen = mutableListOf<Boolean>()
+        val collector = launch { session.connected.collect { seen.add(it) } }
+        runCurrent() // collector subscribes and records the initial false
+
+        session.readInfusionInfo(ADDRESS) // transient (no held link)
+        advanceUntilIdle()
+        collector.cancel()
+
+        // `connected` tracks ONLY the queue-owned held link; a transient op must never flip it true, else
+        // isConnected() would let the queue skip connect() and re-dial per op (#5003 regression).
+        assertThat(seen).doesNotContain(true)
+    }
+
+    @Test
+    fun `an unexpected drop on the held link tears it down so the queue re-dials`() = runTest {
+        useTestDispatcher()
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+        assertThat(session.connected.value).isTrue()
+
+        // Patch drops out of range: the transport reports DISCONNECTED on the held link.
+        transport.capturedListener?.onConnectionStateChanged(false)
+        advanceUntilIdle()
+
+        // watchForDrop tore the held link down → connected=false → the queue connect()s on its next command.
+        assertThat(session.connected.value).isFalse()
+    }
+
+    @Test
+    fun `a failed op on the held link tears it down so the next command re-dials`() = runTest {
+        useTestDispatcher()
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+        assertThat(session.connected.value).isTrue()
+
+        // The patch stops answering → the op times out on the (now suspect) held link.
+        transport.silentOpcodes.add(INFUSION_INFO_OPCODE)
+        assertFailsWith<TimeoutCancellationException> { session.readInfusionInfo(ADDRESS) }
+
+        // Held link dropped rather than left up on a dead GATT → the next command re-dials.
+        assertThat(session.connected.value).isFalse()
+    }
+
+    @Test
+    fun `pairing while a held link is up tears the held link down first`() = runTest {
+        useTestDispatcher()
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+        assertThat(session.connected.value).isTrue()
+
+        // An ensureBond (pairing) op must not open a 2nd GATT alongside the held link on the single-slot
+        // transport — it closes the held link first, so pairing runs as the sole (transient) session. Pre-fix
+        // the held link would be orphaned (still up), leaving connected=true.
+        session.runPairing(ADDRESS, spec)
+        advanceUntilIdle()
+
+        assertThat(session.connected.value).isFalse()
+    }
+
     // ===== Fixtures =====
 
     /**
@@ -323,6 +461,13 @@ internal class CarelevoBleSessionPairingTest {
 
         /** `connect()` succeeds but the patch never reports STATE_CONNECTED. */
         var reportConnected = true
+
+        /**
+         * 1-based index of a connect that succeeds at the BLE layer but never reaches STATE_CONNECTED —
+         * models a handshake drop on that specific session (e.g. the 2nd of two back-to-back sessions,
+         * PR #5003's re-dial race). null → every connect reports CONNECTED normally.
+         */
+        var dropConnectAtIndex: Int? = null
 
         /** `createBond()` completes the SMP (flips [bonded]); false → the bond poll never resolves. */
         var bondOnCreate = true
@@ -364,6 +509,8 @@ internal class CarelevoBleSessionPairingTest {
             override fun connect(address: String): Boolean {
                 connectAddresses += address
                 if (connectRefused) return false
+                // Succeed at the BLE layer but never report CONNECTED on the flagged connect → open() times out.
+                if (connectAddresses.size == dropConnectAtIndex) return true
                 if (reportConnected) capturedListener?.onConnectionStateChanged(true)
                 return true
             }

@@ -1,17 +1,20 @@
 package app.aaps.pump.carelevo.coordinator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
+import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
@@ -23,6 +26,7 @@ internal class CarelevoConnectionCoordinatorTest {
 
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var carelevoPatch: CarelevoPatch
+    @Mock lateinit var bleSession: CarelevoBleSession
 
     private lateinit var sut: CarelevoConnectionCoordinator
 
@@ -44,7 +48,7 @@ internal class CarelevoConnectionCoordinatorTest {
 
     @BeforeEach
     fun setUp() {
-        sut = CarelevoConnectionCoordinator(aapsLogger, carelevoPatch)
+        sut = CarelevoConnectionCoordinator(aapsLogger, carelevoPatch, bleSession)
     }
 
     // ---- isInitialized ----
@@ -86,30 +90,61 @@ internal class CarelevoConnectionCoordinatorTest {
         assertThat(sut.isInitialized()).isTrue()
     }
 
-    // ---- isConnected ----
+    // ---- isConnected / isConnecting ----
 
     @Test
-    fun `isConnected is always true (per-op sessions)`() {
+    fun `isConnected is true pre-activation even when the link is down`() {
+        // Not initialized (empty patch info) → forced true so the queue never dials a missing device.
+        stubPatchInfo(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
+        whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
         assertThat(sut.isConnected()).isTrue()
     }
 
-    // ---- connect / disconnect / stopConnecting no-ops ----
+    @Test
+    fun `isConnected reflects a down held link once activated`() {
+        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo(mode = 1))))
+        whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
+        assertThat(sut.isConnected()).isFalse()
+    }
 
     @Test
-    fun `connect is a no-op that only logs`() {
+    fun `isConnected reflects an up held link once activated`() {
+        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo(mode = 1))))
+        whenever(bleSession.connected).thenReturn(MutableStateFlow(true))
+        assertThat(sut.isConnected()).isTrue()
+    }
+
+    @Test
+    fun `isConnecting delegates to the session`() {
+        whenever(bleSession.isConnecting).thenReturn(MutableStateFlow(true))
+        assertThat(sut.isConnecting()).isTrue()
+    }
+
+    // ---- connect / disconnect / stopConnecting drive the held link ----
+
+    @Test
+    fun `connect fires one attempt against the stored patch MAC`() {
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn("AA:BB:CC:DD:EE:FF")
         sut.connect("bootstrap")
-        verify(aapsLogger).debug(LTag.PUMPCOMM, "connect.noop reason=bootstrap (per-op sessions)")
+        verify(bleSession).requestConnect("AA:BB:CC:DD:EE:FF", "bootstrap")
     }
 
     @Test
-    fun `disconnect is a no-op that only logs`() {
+    fun `connect no-ops when no patch address is known`() {
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(null)
+        sut.connect("bootstrap")
+        verify(bleSession, never()).requestConnect(any(), any())
+    }
+
+    @Test
+    fun `disconnect closes the held link`() {
         sut.disconnect("shutdown")
-        verify(aapsLogger).debug(LTag.PUMPCOMM, "disconnect.noop reason=shutdown (per-op sessions)")
+        verify(bleSession).requestDisconnect("shutdown")
     }
 
     @Test
-    fun `stopConnecting is a no-op that only logs`() {
+    fun `stopConnecting closes the held link`() {
         sut.stopConnecting()
-        verify(aapsLogger).debug(LTag.PUMPCOMM, "stopConnecting.called")
+        verify(bleSession).requestDisconnect("stopConnecting")
     }
 }

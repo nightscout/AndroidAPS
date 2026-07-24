@@ -218,7 +218,8 @@ abstract class CarelevoPumpPluginTestBase {
         )
         val connectionCoordinator = CarelevoConnectionCoordinator(
             aapsLogger = aapsLogger,
-            carelevoPatch = carelevoPatch
+            carelevoPatch = carelevoPatch,
+            bleSession = bleSession
         )
         val settingsCoordinator = CarelevoSettingsCoordinator(
             aapsLogger = aapsLogger,

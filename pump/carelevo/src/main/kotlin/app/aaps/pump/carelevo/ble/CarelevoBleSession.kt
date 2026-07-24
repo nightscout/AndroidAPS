@@ -18,6 +18,7 @@ import app.aaps.pump.carelevo.ble.gatt.GattConnState
 import app.aaps.pump.carelevo.ble.gatt.GattEvent
 import app.aaps.pump.carelevo.ext.checkSumV2
 import app.aaps.pump.carelevo.ext.convertHexToByteArray
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -32,9 +33,11 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import org.joda.time.DateTime
@@ -45,13 +48,20 @@ import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * Owns one full BLE session: connect → discover services → enable notifications → run one
- * [BleClient] exchange → close.
+ * Owns BLE sessions: connect → discover services → enable notifications → run [BleClient] exchanges → close.
  *
- * Each call builds a **fresh** [BleTransportGattConnection] + [BleClientImpl] + [CoroutineScope] and
- * tears them down when done. That is required: [BleTransportGattConnection.close] is one-shot (it
- * latches `closed` and releases the transport's single listener slot), so a long-lived shared
- * instance would brick after its first session. Per-session-fresh keeps each session independent.
+ * Two modes share one code path ([withSession]):
+ * - **Queue-owned held link** ([openLink]/[requestConnect] … [requestDisconnect]): the AAPS CommandQueue
+ *   holds ONE session open across a whole connect→run-ops→disconnect burst; every op reuses it, so a
+ *   multi-op sequence (e.g. cancel-temp then pump-stop) does NOT re-dial between ops. This is the resting
+ *   therapy path once a patch is activated. See `_docs/CARELEVO_QUEUE_OWNED_LINK.md`.
+ * - **Transient per-op session** ([transientSession]): open→run→close for pre-activation / pairing / any op
+ *   with no held link.
+ *
+ * Either way each session builds a **fresh** [BleTransportGattConnection] + [BleClientImpl] + [CoroutineScope]
+ * and closes them once: [BleTransportGattConnection.close] is one-shot (it latches `closed` and releases the
+ * transport's single listener slot), so a closed instance is never reused — [openLink] builds a new one on
+ * every connect, and [tearDownHeld]/[transientSession] close it exactly once.
  *
  * A session opens its own GATT; two GATT clients to one patch cause the status-133 collision, so a
  * session must not run concurrently with any other link to the patch. The caller (a customCommand)
@@ -89,12 +99,45 @@ class CarelevoBleSession @Inject constructor(
     @Volatile var unsolicitedHandler: ((UnsolicitedMessage) -> Unit)? = null
 
     private val _connected = MutableStateFlow(false)
-    /** Live GATT link state: true only while a per-op session is open (connected → command → close). */
+    /**
+     * Queue-owned held-link state: true only while [openLink]'s held link is up — NOT for transient per-op
+     * sessions ([transientSession]). The coordinator reports this as `Pump.isConnected` post-activation, so
+     * a transient op must never flip it (else the queue would skip connect() and re-dial per op).
+     */
     val connected: StateFlow<Boolean> = _connected.asStateFlow()
 
     private val _lastConnectedAt = MutableStateFlow(0L)
     /** Wall-clock (ms) of the last time a session reached CONNECTED — the "last connection" reachability signal. */
     val lastConnectedAt: StateFlow<Long> = _lastConnectedAt.asStateFlow()
+
+    // ===== Queue-owned held link (CommandQueue lifecycle) =====
+    // The AAPS CommandQueue (QueueWorker) drives connect() → run ops → disconnect(). openLink holds ONE
+    // session open across a whole queue-busy burst; ops reuse it via withSession (no per-op re-dial), and the
+    // queue's disconnect() closes it. The new stack dials autoConnect=false with no self-reconnect, so a close
+    // stays closed and the queue is the sole reconnect driver. See _docs/CARELEVO_QUEUE_OWNED_LINK.md.
+
+    // Test seam (mirrors sessionDispatcher): the dispatcher for queue-driven connect/disconnect kicks.
+    // Production uses IO; tests inject the shared test dispatcher so requestConnect's async openLink is drivable.
+    internal var linkDispatcher: CoroutineDispatcher = Dispatchers.IO
+    /** App-lifetime scope for queue-driven connect/disconnect kicks (never a per-session scope). */
+    private val linkScope: CoroutineScope by lazy { CoroutineScope(linkDispatcher + SupervisorJob()) }
+
+    // True while a queue-driven connect attempt is in flight; its compareAndSet also guards against piling
+    // up overlapping connect launches (feeds `Pump.isConnecting` via the coordinator).
+    private val _connecting = MutableStateFlow(false)
+    val isConnecting: StateFlow<Boolean> = _connecting.asStateFlow()
+
+    /** The in-flight connect job, so [requestDisconnect]/stopConnecting can cancel a slow/hung openLink. */
+    @Volatile private var connectJob: Job? = null
+
+    private class HeldLink(
+        val gatt: BleTransportGattConnection,
+        val client: BleClient,
+        val scope: CoroutineScope
+    )
+
+    /** The currently held queue-owned link, or null when no session is up. */
+    @Volatile private var heldLink: HeldLink? = null
 
     /** Read Infusion Info (0x31 → 0x91) — the periodic status read (reservoir, totals, pump state). */
     suspend fun readInfusionInfo(address: String): InfusionInfoResponse =
@@ -215,10 +258,99 @@ class CarelevoBleSession @Inject constructor(
     )
 
     /**
-     * Open a fresh connection, run [block] against the [BleClient], and close. Each call gets its own
-     * adapter+client+scope — see the class KDoc for why (one-shot [BleTransportGattConnection.close]).
-     * [ensureBond] (pairing only) creates the Android bond after CONNECTED, before discovery — the order
-     * the patch requires.
+     * Fire ONE connect attempt and return — the queue re-polls [connected] until true (matching the
+     * Dash/Medtrum `connect()` contract). Idempotent: no-ops while a link is already up or a connect is
+     * in flight. Called from the QueueWorker thread via the coordinator's `connect()`.
+     */
+    fun requestConnect(address: String, reason: String) {
+        if (_connected.value || !_connecting.compareAndSet(false, true)) return
+        connectJob = linkScope.launch {
+            try {
+                openLink(address, reason)
+            } catch (c: CancellationException) {
+                throw c // aborted by requestDisconnect/stopConnecting — not an error
+            } catch (t: Throwable) {
+                aapsLogger.error(LTag.PUMPCOMM, "bleSession: openLink failed reason=$reason", t)
+            } finally {
+                _connecting.value = false
+            }
+        }
+    }
+
+    /**
+     * Close the held link (queue `disconnect()` / `stopConnecting()`). Also cancels any in-flight
+     * [openLink] so a slow/hung connect is aborted promptly rather than briefly opening the link first.
+     */
+    fun requestDisconnect(reason: String) {
+        connectJob?.cancel()
+        connectJob = null
+        linkScope.launch { sessionMutex.withLock { tearDownHeld(reason) } }
+    }
+
+    /**
+     * Open the queue-owned held link — one attempt, then leave it up for [withSession] to reuse until the
+     * queue's `disconnect()` (or an unexpected drop) closes it. Holds [sessionMutex] for the handshake so no
+     * transient session can race it onto the transport's single GATT.
+     */
+    private suspend fun openLink(address: String, reason: String) = sessionMutex.withLock {
+        if (heldLink != null) return@withLock
+        awaitInterSessionSettle()
+        val mac = address.uppercase()
+        val scope = CoroutineScope(sessionDispatcher + SupervisorJob())
+        val gatt = BleTransportGattConnection(transport, writeUuid, notifyUuid, scope)
+        val client: BleClient = BleClientImpl(gatt, writeUuid, notifyUuid, scope)
+        subscribeUnsolicited(scope, client)
+        try {
+            withTimeout(CONNECT_TIMEOUT_MS.milliseconds) { open(gatt, mac) }
+        } catch (t: Throwable) {
+            // Half-open handshake: release the fresh gatt + scope (one-shot close) so the next queue
+            // connect() starts clean.
+            gatt.close()
+            scope.cancel()
+            lastCloseAtMs = System.currentTimeMillis()
+            throw t
+        }
+        heldLink = HeldLink(gatt, client, scope)
+        // Subscribe the drop watcher (UNDISPATCHED → live synchronously) BEFORE marking the link up, so a
+        // DISCONNECTED racing the handshake can't slip through the replay-0 events flow with no subscriber.
+        watchForDrop(scope, gatt)
+        _lastConnectedAt.value = System.currentTimeMillis()
+        _connected.value = true
+        aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link up reason=$reason")
+    }
+
+    /**
+     * Flip [connected] false and release the link on an unexpected drop (out-of-range / patch sleep), so
+     * the queue re-dials on its next command. Runs on the held session scope; the tear-down hops onto
+     * [linkScope] so it survives that scope's own cancellation.
+     */
+    private fun watchForDrop(scope: CoroutineScope, gatt: BleTransportGattConnection) {
+        // UNDISPATCHED so the flow subscription registers synchronously on the calling thread (like open()'s
+        // CONNECTED wait) — the collector is live before this returns, closing the replay-0 lost-event window.
+        scope.launch(start = CoroutineStart.UNDISPATCHED) {
+            gatt.events
+                .filterIsInstance<GattEvent.ConnectionStateChanged>()
+                .first { it.state == GattConnState.DISCONNECTED }
+            aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link dropped")
+            linkScope.launch { sessionMutex.withLock { tearDownHeld("dropped") } }
+        }
+    }
+
+    /** Idempotent teardown of the held link. Caller holds [sessionMutex]. */
+    private fun tearDownHeld(reason: String) {
+        val link = heldLink ?: return
+        _connected.value = false
+        link.gatt.close()
+        link.scope.cancel()
+        lastCloseAtMs = System.currentTimeMillis()
+        heldLink = null
+        aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link closed reason=$reason")
+    }
+
+    /**
+     * Run [block] against a [BleClient]. Reuses the queue-owned held link when one is up (no open/close —
+     * the queue owns teardown); otherwise falls back to a [transientSession] (open→run→close). [ensureBond]
+     * (pairing) always forces a fresh transient session.
      */
     private suspend fun <R> withSession(
         address: String,
@@ -228,47 +360,96 @@ class CarelevoBleSession @Inject constructor(
         block: suspend (BleClient) -> R
     ): R =
         sessionMutex.withLock {
-            // Inter-session settle: give the patch time to fully release the previous link before the
-            // next dial. Back-to-back queue ops need this ~1 s spacing before the next connect.
-            val sinceCloseMs = System.currentTimeMillis() - lastCloseAtMs
-            if (sinceCloseMs in 0 until INTER_SESSION_SETTLE_MS) delay((INTER_SESSION_SETTLE_MS - sinceCloseMs).milliseconds)
-            // BluetoothAdapter.getRemoteDevice requires an UPPERCASE MAC (lowercase throws
-            // IllegalArgumentException); the stored address is lowercase, so normalize here.
-            val mac = address.uppercase()
-            val scope = CoroutineScope(sessionDispatcher + SupervisorJob())
-            val gatt = BleTransportGattConnection(transport, writeUuid, notifyUuid, scope)
-            val client: BleClient = BleClientImpl(gatt, writeUuid, notifyUuid, scope)
-            // Bridge patch-pushed frames (alarms, stop/basal-restart reports) to the handler for the life
-            // of this session. Subscribed before open() so a frame during the handshake isn't missed; the
-            // finally's scope.cancel() tears this collector down with the session.
-            scope.launch {
-                client.unsolicitedEvents.collect { msg ->
-                    try {
-                        unsolicitedHandler?.invoke(msg)
-                    } catch (t: Throwable) {
-                        aapsLogger.error(LTag.PUMPCOMM, "unsolicited handler error", t)
-                    }
+            val link = heldLink
+            if (link != null && !ensureBond) {
+                aapsLogger.debug(LTag.PUMPCOMM, "bleSession: $label on held link")
+                try {
+                    withTimeout(timeoutMs.milliseconds) { block(link.client) }
+                } catch (t: TimeoutCancellationException) {
+                    // Op timed out on the held link → the link is suspect. Drop it so the next queue command
+                    // re-dials a fresh GATT (restores the per-op self-heal the held link removed).
+                    tearDownHeld("op timed out on held link: $label")
+                    throw t
+                } catch (c: CancellationException) {
+                    throw c // caller cancelled the op (e.g. StopBolus) — the link is fine, leave it up
+                } catch (t: Throwable) {
+                    // GATT write/disconnect failure → the link is dead. Drop it so the next command re-dials.
+                    tearDownHeld("op failed on held link: $label")
+                    throw t
                 }
-            }
-            try {
-                // Bound the ENTIRE connect→discover→enable handshake, not just the CONNECTED wait: a lost
-                // CCCD-write callback (which the transport documents as "surfaced by the caller's withTimeout")
-                // would otherwise suspend forever HERE while holding sessionMutex, wedging every later
-                // session op — including a delivery-critical out-of-band bolus cancel. On timeout the finally closes the
-                // gatt (aborting the pending ack) and releases the mutex.
-                val openTimeoutMs = if (ensureBond) CONNECT_TIMEOUT_MS + BOND_TIMEOUT_MS else CONNECT_TIMEOUT_MS
-                withTimeout(openTimeoutMs.milliseconds) { open(gatt, mac, ensureBond) }
-                _lastConnectedAt.value = System.currentTimeMillis()
-                _connected.value = true
-                aapsLogger.debug(LTag.PUMPCOMM, "bleSession: reading $label")
-                withTimeout(timeoutMs.milliseconds) { block(client) }
-            } finally {
-                _connected.value = false
-                gatt.close()
-                scope.cancel()
-                lastCloseAtMs = System.currentTimeMillis()
+            } else {
+                // A transient session must be the ONLY link on the single-GATT/single-listener transport. If
+                // a held link is somehow up (e.g. an ensureBond pairing while a prior link is still held),
+                // close it first to avoid a second concurrent GATT (status-133) and a stolen listener slot.
+                if (link != null) tearDownHeld("transient session needs the transport: $label")
+                transientSession(address, label, timeoutMs, ensureBond, block)
             }
         }
+
+    /**
+     * Per-op session: open a fresh connection, run [block] against the [BleClient], and close. Used for
+     * pre-activation / pairing / any op with no held link. Each call gets its own adapter+client+scope —
+     * see the class KDoc for why (one-shot [BleTransportGattConnection.close]). [ensureBond] (pairing only)
+     * creates the Android bond after CONNECTED, before discovery — the order the patch requires. Caller
+     * holds [sessionMutex].
+     */
+    private suspend fun <R> transientSession(
+        address: String,
+        label: String,
+        timeoutMs: Long,
+        ensureBond: Boolean,
+        block: suspend (BleClient) -> R
+    ): R {
+        awaitInterSessionSettle()
+        // BluetoothAdapter.getRemoteDevice requires an UPPERCASE MAC (lowercase throws
+        // IllegalArgumentException); the stored address is lowercase, so normalize here.
+        val mac = address.uppercase()
+        val scope = CoroutineScope(sessionDispatcher + SupervisorJob())
+        val gatt = BleTransportGattConnection(transport, writeUuid, notifyUuid, scope)
+        val client: BleClient = BleClientImpl(gatt, writeUuid, notifyUuid, scope)
+        subscribeUnsolicited(scope, client)
+        return try {
+            // Bound the ENTIRE connect→discover→enable handshake, not just the CONNECTED wait: a lost
+            // CCCD-write callback (which the transport documents as "surfaced by the caller's withTimeout")
+            // would otherwise suspend forever HERE while holding sessionMutex, wedging every later
+            // session op — including a delivery-critical out-of-band bolus cancel. On timeout the finally closes the
+            // gatt (aborting the pending ack) and releases the mutex.
+            val openTimeoutMs = if (ensureBond) CONNECT_TIMEOUT_MS + BOND_TIMEOUT_MS else CONNECT_TIMEOUT_MS
+            withTimeout(openTimeoutMs.milliseconds) { open(gatt, mac, ensureBond) }
+            // NB: a transient session does NOT touch _connected — that flag is the queue-owned held-link
+            // signal (see [connected]). It updates lastConnectedAt only, since it is a real connection.
+            _lastConnectedAt.value = System.currentTimeMillis()
+            aapsLogger.debug(LTag.PUMPCOMM, "bleSession: reading $label")
+            withTimeout(timeoutMs.milliseconds) { block(client) }
+        } finally {
+            gatt.close()
+            scope.cancel()
+            lastCloseAtMs = System.currentTimeMillis()
+        }
+    }
+
+    /** Inter-session settle: let the patch fully release the previous link before the next dial (~1 s). */
+    private suspend fun awaitInterSessionSettle() {
+        val sinceCloseMs = System.currentTimeMillis() - lastCloseAtMs
+        if (sinceCloseMs in 0 until INTER_SESSION_SETTLE_MS) delay((INTER_SESSION_SETTLE_MS - sinceCloseMs).milliseconds)
+    }
+
+    /**
+     * Bridge patch-pushed frames (alarms, stop/basal-restart reports) to [unsolicitedHandler] for the life
+     * of [scope]. Subscribed before open() so a frame during the handshake isn't missed; the scope's
+     * cancellation tears this collector down with the session/link.
+     */
+    private fun subscribeUnsolicited(scope: CoroutineScope, client: BleClient) {
+        scope.launch {
+            client.unsolicitedEvents.collect { msg ->
+                try {
+                    unsolicitedHandler?.invoke(msg)
+                } catch (t: Throwable) {
+                    aapsLogger.error(LTag.PUMPCOMM, "unsolicited handler error", t)
+                }
+            }
+        }
+    }
 
     private suspend fun open(gatt: BleTransportGattConnection, address: String, ensureBond: Boolean = false) = coroutineScope {
         // Subscribe to the CONNECTED event BEFORE calling connect() so the state change cannot race

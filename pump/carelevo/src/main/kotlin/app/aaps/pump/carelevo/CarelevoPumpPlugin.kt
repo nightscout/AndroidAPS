@@ -530,7 +530,7 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     override fun isConnecting(): Boolean {
-        return false
+        return connectionCoordinator.isConnecting()
     }
 
     override fun isHandshakeInProgress(): Boolean {

@@ -4,8 +4,10 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpType
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.whenever
 import java.util.Optional
 
 class CarelevoPumpPluginTest : CarelevoPumpPluginTestBase() {
@@ -64,12 +66,15 @@ class CarelevoPumpPluginTest : CarelevoPumpPluginTestBase() {
     }
 
     @Test
-    fun `isConnected should always be true - each op opens its own session`() {
+    fun `isConnected reflects the held link once the patch is activated`() {
         patchInfoSubject.onNext(Optional.of(samplePatchInfo(address = "11:22:33:44:55:66")))
 
-        // No resting link to report on: the queue must execute immediately and let the per-op
-        // session do (and fail) its own connect.
-        btStateSubject.onNext(Optional.empty())
+        // Post-activation the queue owns a real link, so isConnected mirrors the held-link state (no
+        // longer hardcoded true): down → false so connect-before-execute dials first, up → true.
+        whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
+        assertThat(plugin.isConnected()).isFalse()
+
+        whenever(bleSession.connected).thenReturn(MutableStateFlow(true))
         assertThat(plugin.isConnected()).isTrue()
     }
 
@@ -90,8 +95,9 @@ class CarelevoPumpPluginTest : CarelevoPumpPluginTestBase() {
     }
 
     @Test
-    fun `isConnecting should always return false`() {
-        assertThat(plugin.isConnecting()).isFalse()
+    fun `isConnecting delegates to the session`() {
+        whenever(bleSession.isConnecting).thenReturn(MutableStateFlow(true))
+        assertThat(plugin.isConnecting()).isTrue()
     }
 
     @Test

@@ -336,7 +336,8 @@ class CarelevoPumpPluginLifecycleTest {
             ),
             connectionCoordinator = CarelevoConnectionCoordinator(
                 aapsLogger = aapsLogger,
-                carelevoPatch = carelevoPatch
+                carelevoPatch = carelevoPatch,
+                bleSession = bleSession
             ),
             settingsCoordinator = CarelevoSettingsCoordinator(
                 aapsLogger = aapsLogger,
