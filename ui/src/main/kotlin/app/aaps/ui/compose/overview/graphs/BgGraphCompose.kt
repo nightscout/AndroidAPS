@@ -45,6 +45,7 @@ import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 
 /** Series identifiers */
 /** Basal on BG graph — deprecated, now shown as flipped overlay on IOB graph. Set to true to restore. */
@@ -61,6 +62,36 @@ private const val SERIES_PRED_ZT = "pred_zt"
 
 /** All prediction series identifiers */
 private val PREDICTION_SERIES = listOf(SERIES_PRED_IOB, SERIES_PRED_COB, SERIES_PRED_ACOB, SERIES_PRED_UAM, SERIES_PRED_ZT)
+
+/**
+ * CartesianChartModelProducer.update() skips notifying receivers (and thus skips recomputing axis
+ * ranges) when a transaction's partials AND extraStore are both unchanged from the last one. Since
+ * scrolling/zooming re-submits identical series data (only the visible window changed), stashing
+ * the visible window here forces the extraStore to differ, so Vico actually reprocesses the
+ * transaction instead of silently dropping it. Same mechanism as SecondaryGraphCompose.kt.
+ */
+private val BG_VISIBLE_RANGE_KEY = ExtraStore.Key<Pair<Long?, Long?>>()
+
+/**
+ * A [CartesianLayerRangeProvider] backed by plain mutable fields instead of an immutable value
+ * object. [CartesianLayerRangeProvider.fixed] returns a NEW instance whenever bounds change,
+ * which forces Vico to rebuild the [com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer]
+ * and mint a new CartesianChart id — that in turn triggers Vico's internal chart re-registration,
+ * which was found to destabilize BG's live pinch-zoom/scroll gesture handling (BG is the only
+ * graph with an interactive chart). This object's IDENTITY never changes across scroll/zoom; only
+ * its field values do, read fresh whenever Vico next processes a modelProducer transaction — so
+ * the chart itself is never rebuilt mid-gesture. Private to this file: BG is the only graph that
+ * needs this (secondary graphs are non-interactive, so `.fixed(...)` churn never affected them).
+ */
+private class MutableYRangeProvider(
+    @Volatile var maxX: Double,
+    @Volatile var maxY: Double
+) : CartesianLayerRangeProvider {
+    override fun getMinX(minX: Double, maxX: Double, extraStore: ExtraStore) = 0.0
+    override fun getMaxX(minX: Double, maxX: Double, extraStore: ExtraStore) = this.maxX
+    override fun getMinY(minY: Double, maxY: Double, extraStore: ExtraStore) = 0.0
+    override fun getMaxY(minY: Double, maxY: Double, extraStore: ExtraStore) = this.maxY
+}
 
 /**
  * BG Graph using Vico — dual-layer chart.
@@ -82,6 +113,7 @@ fun BgGraphCompose(
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
     nowTimestamp: Long,
+    visibleTimeRange: Pair<Long, Long>? = null,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently - each triggers recomposition only when it changes
@@ -136,6 +168,10 @@ fun BgGraphCompose(
         timestampToX(maxTimestamp, minTimestamp)
     }
 
+    // Stable range-provider instance for the start (BG) axis — created once, mutated in place by
+    // the LaunchedEffect below rather than recreated (see MutableYRangeProvider).
+    val startAxisRangeProvider = remember { MutableYRangeProvider(maxX = maxX, maxY = chartConfig.highMark) }
+
     // Track which series are currently included (for matching LineProvider)
     val activeSeriesState = remember { mutableStateOf(listOf<String>()) }
 
@@ -150,7 +186,8 @@ fun BgGraphCompose(
         currentTargetData: TargetLineData,
         currentEpsPoints: List<EpsGraphPoint>,
         currentActivityData: ActivityGraphData,
-        currentMaxBgY: Double
+        currentMaxBgY: Double,
+        currentVisibleTimeRange: Pair<Long, Long>?
     ) {
         val regularPoints = seriesRegistry[SERIES_REGULAR] ?: emptyList()
         val bucketedPoints = seriesRegistry[SERIES_BUCKETED] ?: emptyList()
@@ -275,6 +312,12 @@ fun BgGraphCompose(
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                 }
             }
+
+            // Forces Vico to reprocess this transaction even when the series data above is
+            // identical to last time (see BG_VISIBLE_RANGE_KEY doc) — otherwise scrolling/zooming
+            // would re-submit the same partials and get silently skipped, never picking up the
+            // updated startAxisRangeProvider.
+            extras { it[BG_VISIBLE_RANGE_KEY] = currentVisibleTimeRange?.first to currentVisibleTimeRange?.second }
         }
     }
 
@@ -290,16 +333,29 @@ fun BgGraphCompose(
     }
 
     // Single LaunchedEffect for all data - ensures atomic updates
-    LaunchedEffect(bgReadings, bucketedData, predictionsByType, basalData, targetData, epsPoints, activityData, showActivity, chartConfig, stableTimeRange) {
+    LaunchedEffect(bgReadings, bucketedData, predictionsByType, basalData, targetData, epsPoints, activityData, showActivity, chartConfig, stableTimeRange, visibleTimeRange) {
         seriesRegistry[SERIES_REGULAR] = bgReadings
         seriesRegistry[SERIES_BUCKETED] = bucketedData
         for ((key, points) in predictionsByType) {
             seriesRegistry[key] = points
         }
-        // maxBgY clamped against highMark (same as legacy GraphData.maxY logic)
+        // maxBgY clamped against highMark (same as legacy GraphData.maxY logic) — used only for
+        // EPS baseline / Activity overlay proportional scaling, NOT the axis range itself
+        // (see below for that — windowed, unlike this full-range value).
         val allBgValues = (bgReadings + bucketedData).map { it.value }
         val maxBgY = if (allBgValues.isNotEmpty()) maxOf(allBgValues.max(), chartConfig.highMark) else chartConfig.highMark
-        rebuildChart(basalData, targetData, epsPoints, activityData, maxBgY)
+
+        // Windowed axis max: BG values within the visible scroll/zoom window (not the full loaded
+        // range), floored at chartConfig.highMark (the "High mark" target-range preference) so the
+        // axis never shrinks below the configured target range. Mutate the stable provider in
+        // place (see MutableYRangeProvider) — Vico picks up the new value when it processes the
+        // transaction submitted below, without ever recreating BG's chart object.
+        fun inWindow(timestamp: Long) = visibleTimeRange == null || timestamp in visibleTimeRange.first..visibleTimeRange.second
+        val windowedValues = (bgReadings + bucketedData).filter { inWindow(it.timestamp) }.map { it.value }
+        startAxisRangeProvider.maxX = maxX
+        startAxisRangeProvider.maxY = maxOf(windowedValues.ifEmpty { allBgValues }.maxOrNull() ?: 0.0, chartConfig.highMark)
+
+        rebuildChart(basalData, targetData, epsPoints, activityData, maxBgY, visibleTimeRange)
     }
 
     // Build lookup map for BUCKETED points: x-value -> BgDataPoint (for PointProvider)
@@ -496,9 +552,8 @@ fun BgGraphCompose(
     // Range providers — hoisted out of rememberCartesianChart so keys are re-evaluated on recomposition
     // =========================================================================
 
-    val startAxisRangeProvider = remember(maxX) {
-        CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
-    }
+    // startAxisRangeProvider (BG axis) is created once, further up, and mutated in place — see
+    // MutableYRangeProvider and the LaunchedEffect above.
     val endAxisRangeProvider = remember(maxX, basalMaxY) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = basalMaxY)
     }

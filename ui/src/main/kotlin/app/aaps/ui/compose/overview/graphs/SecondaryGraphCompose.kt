@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -80,6 +81,7 @@ fun SecondaryGraphCompose(
     derivedTimeRange: Pair<Long, Long>?,
     nowTimestamp: Long,
     activityOverlay: Boolean = false,
+    onVisibleRangeChanged: ((Pair<Double, Double>?) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     if (seriesTypes.isEmpty()) return
@@ -341,6 +343,14 @@ fun SecondaryGraphCompose(
         snapshotFlow { rawVisibleRange }
             .debounce(30)
             .collect { visibleRange = it }
+    }
+
+    // Expose this graph's own (already debounced) visible window upward — used by BgGraphCompose
+    // to window its own axis from this graph's synced scroll/zoom instead of attaching its own
+    // decoration (that was tried and found to break BG's own pinch-zoom gesture handling).
+    val currentOnVisibleRangeChanged by rememberUpdatedState(onVisibleRangeChanged)
+    LaunchedEffect(visibleRange) {
+        currentOnVisibleRangeChanged?.invoke(visibleRange)
     }
 
     val visibleMinX = visibleRange?.first
