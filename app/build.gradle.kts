@@ -152,6 +152,48 @@ android {
         resValues = true
     }
 
+    // ---- Gradle Managed Devices (DRAFT — not yet wired into .circleci/config.yml) -----------------
+    // Splits the app module's androidTest suite across emulators WITHOUT hand-rolling coverage or
+    // result collection: AGP owns the emulator lifecycle and merges each shard's JaCoCo .ec files and
+    // JUnit XMLs through the normal pipeline, so jacocoAllDebugReport / Codecov keep working. The
+    // system image mirrors the hand-launched CI emulator (android-31, google_apis_playstore, x86_64);
+    // adopting this replaces the `emulator -avd citest` + taskset launch in the CI config, so it is a
+    // real change to that file — kept here as a reviewable draft.
+    //
+    // Two ways to drive it (choose in the CI config):
+    //   1. AUTO-shard by test COUNT across N instances of `emu` — annotations unused, a new test
+    //      distributes itself, zero maintenance, but balance is approximate (count, not time):
+    //        ./gradlew :app:emuFullDebugAndroidTest \
+    //          -Pandroid.experimental.androidTest.numManagedDeviceShards=2
+    //   2. EXPLICIT time-balance via the @ShardA annotation (the ~278s/277s split we measured) —
+    //      run each shard as its own task, filtered, on its own device:
+    //        :app:emuAFullDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.annotation=app.aaps.testcategories.ShardA
+    //        :app:emuBFullDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notAnnotation=app.aaps.testcategories.ShardA
+    //      Caveat: two Gradle invocations of the same module collide on build outputs, so option 2
+    //      needs them serialised or in separate checkouts. Option 1 is the simpler parallel path;
+    //      option 2 buys guaranteed balance for this lopsided suite at the cost of that orchestration.
+    testOptions {
+        managedDevices {
+            localDevices {
+                create("emu") {   // for option 1 (auto-shard: numManagedDeviceShards=2 spins up 2 instances)
+                    device = "Pixel 6"
+                    apiLevel = 31
+                    systemImageSource = "google_apis_playstore"
+                }
+                create("emuA") {  // for option 2 (explicit @ShardA balance across two devices)
+                    device = "Pixel 6"
+                    apiLevel = 31
+                    systemImageSource = "google_apis_playstore"
+                }
+                create("emuB") {
+                    device = "Pixel 6"
+                    apiLevel = 31
+                    systemImageSource = "google_apis_playstore"
+                }
+            }
+        }
+    }
+
     sourceSets {
         getByName("full") { kotlin.directories.add("src/withPumps/kotlin") }
         getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }

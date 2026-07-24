@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Velg én. Bare én kan være aktiv om gangen.</string>
     <string name="configbuilder_pick_many_hint">Velg de som gjelder.</string>
     <string name="configbuilder_no_selection_warning">Ingen plugin er valgt i denne kategorien.</string>
+    <string name="configbuilder_switch_confirmation_title">Bytt plugin?</string>
+    <string name="configbuilder_switch_confirmation">Dette vil deaktivere %1$s og aktivere %2$s.</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
     <string name="no_compose_preferences">Ingen innstillinger tilgjengelig for denne plugin</string>

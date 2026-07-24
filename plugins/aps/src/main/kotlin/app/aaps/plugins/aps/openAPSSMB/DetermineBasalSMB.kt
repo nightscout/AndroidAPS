@@ -45,7 +45,14 @@ class DetermineBasalSMB @Inject constructor(
     }
 
     fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
-    fun round(value: Double): Int = value.roundToInt()
+    fun round(value: Double): Int =
+        // Crash backstop: roundToInt() throws on NaN. Substitute 0, but record a token that the
+        // reportNonFiniteRtFields tripwire (PersistenceLayerImpl) surfaces to Crashlytics, so laundering
+        // NaN→0 here does not silently hide the underlying bug.
+        if (value.isNaN()) {
+            consoleError.add("round(): non-finite value substituted with 0 (roundNaN=NaN)")
+            0
+        } else value.roundToInt()
 
     // kotlin.math.max and Double.coerceAtLeast both propagate NaN. This variant pins
     // NaN/±Infinity to `minimum` and otherwise behaves like coerceAtLeast.

@@ -11,6 +11,15 @@ class PumpState {
     // History (shared with DanaR emulator)
     val historyStore = HistoryEventStore()
 
+    /**
+     * Records served by the per-type `REVIEW__*` commands behind the pump history screen.
+     *
+     * Separate from [historyStore], which serves the APS event history: different wire format
+     * (see `HistoryEventStore.buildReviewRecordData`) and a different consumer, so a record added
+     * for one must not surface in the other.
+     */
+    val reviewHistoryStore = HistoryEventStore()
+
     // Device info
     var serialNumber: String = "AAA00000AA"
     var shippingCountry: String = "INT"

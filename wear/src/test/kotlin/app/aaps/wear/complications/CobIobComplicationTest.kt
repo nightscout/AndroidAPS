@@ -37,8 +37,8 @@ internal class CobIobComplicationTest {
     }
 
     @Test
-    fun `tapping the COB IOB complication opens the default menu`() {
-        assertThat(sut().getComplicationAction()).isEqualTo(ComplicationAction.MENU)
+    fun `tapping the COB IOB complication opens the wizard`() {
+        assertThat(sut().getComplicationAction()).isEqualTo(ComplicationAction.WIZARD)
     }
 
     @Test

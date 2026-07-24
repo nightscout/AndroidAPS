@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Velg en mappe for appinnstillinger og loggfiler</string>
     <string name="permission_notifications_title">Varsler</string>
     <string name="permission_notifications_description">Kreves for å vise varsler, alarmer og oppdateringer om pumpestatus</string>
+    <string name="permission_fsi_title">Fullskjermsalarmer</string>
+    <string name="permission_fsi_description">Nødvendig for at alarmer skal kunne vekke skjermen og vises i fullskjerm når telefonen er låst</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">E%1$d</string>

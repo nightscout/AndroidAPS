@@ -42,7 +42,14 @@ class DetermineBasalAutoISF @Inject constructor(
     }
 
     fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
-    fun round(value: Double): Int = value.roundToInt()
+    fun round(value: Double): Int =
+        // Crash backstop: roundToInt() throws on NaN. Substitute 0, but record a token that the
+        // reportNonFiniteRtFields tripwire (PersistenceLayerImpl) surfaces to Crashlytics, so laundering
+        // NaN→0 here does not silently hide the underlying bug.
+        if (value.isNaN()) {
+            consoleError.add("round(): non-finite value substituted with 0 (roundNaN=NaN)")
+            0
+        } else value.roundToInt()
 
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /

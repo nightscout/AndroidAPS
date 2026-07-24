@@ -302,6 +302,8 @@ jobs:
     name: Cleanup Old Workflow Runs
     needs: build
     if: always()
+    permissions:
+      actions: write
     uses: ./.github/workflows/cleanup-workflow-runs.yml
     with:
       workflow_name: 'Branch CI'

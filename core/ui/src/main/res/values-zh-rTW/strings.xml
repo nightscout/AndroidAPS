@@ -408,6 +408,7 @@
     <string name="clientcontrol_fail_send_failed">無法連線到 Nightscout。</string>
     <string name="clientcontrol_fail_no_active_profile">主裝置沒有啟用中的設定檔可供套用。</string>
     <string name="clientcontrol_fail_scene_not_found">該情境已不存在。</string>
+    <string name="clientcontrol_fail_site_entry_not_found">此記錄已不存在。</string>
     <string name="clientcontrol_fail_scene_disabled">該情境已停用。</string>
     <string name="clientcontrol_fail_partial">部分動作無法套用。</string>
     <string name="clientcontrol_fail_execution">主裝置無法套用。</string>
@@ -926,6 +927,7 @@
     <string name="reorder">重新排序</string>
     <string name="status">狀態</string>
     <string name="pump_actions">幫浦動作</string>
+    <string name="tempbasal_button">臨時基礎率</string>
     <string name="extended_bolus_button">延長注射</string>
     <string name="device_maintenance">裝置維護</string>
     <string name="from_label">從</string>

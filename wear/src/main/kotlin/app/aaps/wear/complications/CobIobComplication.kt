@@ -48,4 +48,5 @@ class CobIobComplication : ModernBaseComplicationProviderService() {
     }
 
     override fun getProviderCanonicalName(): String = CobIobComplication::class.java.canonicalName!!
+    override fun getComplicationAction(): ComplicationAction = ComplicationAction.WIZARD
 }

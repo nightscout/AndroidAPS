@@ -69,6 +69,7 @@
     <string name="full_sync_comment">完全同步？這可能需要很多小時，直到完成前您都不會看到新的資料在 NS 上。</string>
     <string name="ns_sync_options">同步選項</string>
     <string name="ns_alarm_options">警報選項</string>
+    <string name="ns_remote_control_options">遠端控制</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">若啟用，資料上傳將會發送至測試伺服器，而非一般的伺服器。</string>
     <string name="title_tidepool_dev_servers">使用集成（測試）伺服器</string>

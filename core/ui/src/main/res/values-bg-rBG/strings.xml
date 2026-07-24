@@ -36,6 +36,12 @@
     <string name="limiting_iob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
     <string name="loop_disabled_by_user">Кръгът изключен от потребителя</string>
     <string name="event_type">Тип събитие</string>
+    <string name="mgdl">мг/дл</string>
+    <string name="mmol">ммол/л</string>
+    <string name="profile_isf_units_mgdl">мг/дл/E</string>
+    <string name="profile_isf_units_mmol">ммол/л/E</string>
+    <string name="bg_mgdl">%1$d мг/дл</string>
+    <string name="bg_mmol">%1$.1f ммол/л</string>
     <string name="save">Съхрани</string>
     <string name="skip">Прескочи</string>
     <string name="switch_to_edit">Редактирай</string>
@@ -99,7 +105,9 @@
     <string name="androidaps_start">AAPS стартирана</string>
     <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
     <string name="format_carbs">%1$d гр</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d гр</string>
     <string name="format_hours">%1$.2f ч</string>
+    <string name="format_mins">%1$d мин</string>
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Цели</string>
@@ -189,6 +197,7 @@
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
     <string name="percentage_label">Процент</string>
+    <string name="timeshift_label">Време на отместване</string>
     <string name="confirm_remove_multiple_items">Сигурен ли сте, че искате да премахнете %1$d елементи?</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
@@ -336,6 +345,7 @@
     <string name="scene_deactivate">Край на сценарий</string>
     <string name="scene_active">Активиране</string>
     <string name="scene_ended">Сценарият приключи</string>
+    <string name="scene_end_active">Край на активен сценарий</string>
     <string name="scene_confirm_activate">Стартиране на сценарий \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Спри сценарий \"%1$s\" и върни промененото?</string>
     <string name="scene_conflict_active_tt">Текущата временна цел ще бъде промена</string>
@@ -344,6 +354,7 @@
     <string name="scene_conflict_active_scene">Активният сценарий \"%1$s\" ще бъде спрян</string>
     <string name="scene_action_tt">Временна цел: %1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Профил: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Профил: %1$d%%</string>
     <string name="scene_action_smb_on">Включи SMB</string>
     <string name="scene_action_smb_off">Изключи SMB</string>
     <string name="scene_action_running_mode">Режим: %1$s</string>
@@ -374,8 +385,11 @@
     <string name="scene_no_actions">Сценарият няма действия</string>
     <string name="scene_profile_not_found">Профил \"%1$s\" не е намерен</string>
     <string name="scene_lock_banner_master_offline">Главния телефон е недостъпен. Контолът на сценарии ще се поднови при възстановяване на връзката.</string>
+    <string name="scene_lock_banner_control_disabled">Главния телефон е с изключен отдалечен достъп. Контолът на сценарии ще се поднови при възстановяване на тази функция.</string>
     <string name="master_offline_banner">Главният телефон недостъпен. Редакцията е изключена до възстановяване на връзката.</string>
+    <string name="master_control_disabled_banner">Главния телефон е с изключен отдалечен достъп. Редакцията е изключена до активирането на тази функция.</string>
     <string name="scene_lock_reason_master_offline">Главният телефон е разкачен</string>
+    <string name="scene_lock_reason_control_disabled">Отдалеченият контрол е изключен</string>
     <string name="scene_lock_reason_scene_active">Първо спри вървящия сценарий</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Приложи временна цел</string>
@@ -394,9 +408,11 @@
     <string name="clientcontrol_fail_send_failed">Не мога да се свържа с Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">Главният телефон няма активен профил.</string>
     <string name="clientcontrol_fail_scene_not_found">Сценярият вече не съшествува.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Въвеждане на място не съшествува вече.</string>
     <string name="clientcontrol_fail_scene_disabled">Сценарият е изключен.</string>
     <string name="clientcontrol_fail_partial">Някой действия не може да бъдат приложени.</string>
     <string name="clientcontrol_fail_execution">Главният телефон не може да го приложи.</string>
+    <string name="clientcontrol_fail_control_disabled">Отдалечен контрол е изключен на главния телефон.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Болусът изтече или е бил отказан. Натиснете бутона да опитате отново.</string>
     <string name="clientcontrol_fail_bolus_compute">Главният телефон не можа да изчисли болуса (липсват КЗ / профил или помпата не е готова).</string>
     <string name="clientcontrol_fail_internal">Нещо се обърка.</string>
@@ -730,6 +746,7 @@
     <string name="wizard_include_cob">Включи въглехидрати</string>
     <string name="wizard_calculation">Калкулация</string>
     <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Макс премахване: %1$d гр (CoB)</string>
     <string name="wizard_no_insulin_required">Няма нужда от инсулин</string>
     <string name="wizard_no_actual_bg">Не е налична кръвна захар, върху която да се изчисли!</string>
     <string name="wizard_no_active_profile">Не е настроен активен профил!</string>
@@ -860,6 +877,8 @@
     <string name="reauthorize">Нова оторизация</string>
     <string name="cloud_auth_success">Успешно свързване с клауда</string>
     <string name="authorization_status">Статус</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d ч %2$d мин</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d ч</string>
     <!-- datetime layout -->
     <string name="event_time_label">Време на събитие</string>
     <!-- BluetoothDevicePreference -->
@@ -906,6 +925,7 @@
     <string name="reorder">Подреди</string>
     <string name="status">Статус</string>
     <string name="pump_actions">Действия на помпата</string>
+    <string name="tempbasal_button">Временен базал</string>
     <string name="extended_bolus_button">Удължен болус</string>
     <string name="device_maintenance">Поддръжка на устройства</string>
     <string name="from_label">От</string>

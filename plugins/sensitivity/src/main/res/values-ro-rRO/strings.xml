@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sensitivity_plugin_shortname">SENS</string>
     <string name="sensitivity_oref1">Sensibilitate Oref1</string>
     <string name="sensitivity_aaps">Sensibilitate AAPS</string>
     <string name="sensitivity_weighted_average">Sensibilitate estimată prin mediere</string>

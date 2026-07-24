@@ -19,11 +19,13 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Administrați acum</string>
     <string name="queue">Coadă:</string>
+    <string name="status_label">Stare:</string>
     <string name="clear_log">Ștergeți istoricul</string>
     <string name="full_sync">Sincronizare completă</string>
     <string name="full_sync_comment">Sincronizare completă? Poate dura multe ore şi până la final nu veți vedea date noi în NS.</string>
     <string name="ns_sync_options">Sincronizare</string>
     <string name="ns_alarm_options">Opțiuni alarmare</string>
+    <string name="ns_remote_control_options">Telecomandă</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Dacă este activată, încărcările vor merge către serverele de testare în loc de cele obișnuite</string>
     <string name="title_tidepool_dev_servers">Folosiți serverele Integration (test)</string>

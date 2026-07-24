@@ -85,6 +85,8 @@
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
+    <string name="action_scene_confirmation">Scena solicitată</string>
+    <string name="scene_end">Sfârșit</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
     <string name="action_bolus_confirmation">Bolus solicitat</string>
     <string name="action_wizard_confirmation">Calcul solicitat</string>
@@ -235,8 +237,9 @@
     <string name="action_running_mode_selected">Mod de rulare solicitat</string>
     <string name="title_activity_disconnect_pump">Deconectați pompa</string>
     <string name="title_activity_suspend_loop">Suspendați bucla</string>
-    <string name="wizard_carbs_format">%1$d g carbohidrați</string>
     <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Trimis</string>
     <string name="tile_settings">Setări panouri</string>
     <string name="loop_status_error">Eroare la actualizarea stării</string>
@@ -276,4 +279,18 @@
     <string name="confirm">Confirmați</string>
     <string name="request">Cerință</string>
     <string name="constraint_applied">Constrângere aplicată!</string>
+    <string name="wizard_total_insulin">Insulină totală</string>
+    <string name="wizard_calculation">Calcul</string>
+    <string name="wizard_settings_format">IC: %1$s | FSI: %2$s</string>
+    <string name="wizard_result_bg">Glicemie</string>
+    <string name="wizard_result_bg_tt">Glicemie (Țintă temporară: %1$s)</string>
+    <string name="wizard_result_trend">Tendință 15\'</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Noul IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Carbohidrați (%1$d g)</string>
+    <string name="wizard_result_subtotal">Subtotal</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
 </resources>

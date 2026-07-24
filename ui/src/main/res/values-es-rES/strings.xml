@@ -134,7 +134,7 @@
     <string name="insulin_activation_applied">Activación de insulina aplicada</string>
     <!-- Client→master round-trip pending dialog -->
     <string name="clientcontrol_pending_working_title">Aplicando…</string>
-    <string name="clientcontrol_pending_working_text">Esperando que el maestro confirme…</string>
+    <string name="clientcontrol_pending_working_text">Esperando que el máster confirme…</string>
     <string name="clientcontrol_pending_rejected_title">No aplicado</string>
     <string name="clientcontrol_pending_failed_format">%1$s no se pudo realizar\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
@@ -143,7 +143,7 @@
     <string name="clientcontrol_pending_partial_format">Se aplicó %1$s, pero algunas acciones no se pudieron realizar.\nComprueba el estado activo</string>
     <string name="clientcontrol_pending_unconfirmed_title">No se pudo confirmar</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
-    <string name="clientcontrol_pending_unconfirmed_format">Se envió %1$s, pero no se recibió ninguna confirmación.\n%2$s\nAparecerá aquí si el maestro lo aplica o cuando lo haga</string>
+    <string name="clientcontrol_pending_unconfirmed_format">Se envió %1$s, pero no se recibió ninguna confirmación.\n%2$s\nAparecerá aquí si el máster lo aplica o cuando lo haga</string>
     <string name="clientcontrol_pending_stop_waiting">Detener espera</string>
     <string name="a11y_add_new_insulin">Añadir nueva insulina</string>
     <string name="a11y_delete_current_insulin">Eliminar insulina actual</string>

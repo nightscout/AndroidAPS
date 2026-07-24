@@ -380,6 +380,23 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             iob_threshold_percent = iobThresholdPercent,
             profile_percentage = profile_percentage
         )
+
+        // Refuse to run the algorithm with degenerate ISF inputs — division by these would produce NaN/Infinity in
+        // the result. carb_ratio feeds csf (sens/carb_ratio) and autosensResult.ratio becomes the non-autoISF
+        // sensitivityRatio (sens = profile.sens/sensitivityRatio); a non-finite/≤0 value of any cascades to a NaN
+        // carbsReq (round() crash). Mirrors the OpenAPSSMBPlugin guard.
+        val invalidInputs = !oapsProfile.sens.isFinite() || oapsProfile.sens <= 0.0 ||
+            !oapsProfile.carb_ratio.isFinite() || oapsProfile.carb_ratio <= 0.0 ||
+            !autosensResult.ratio.isFinite() || autosensResult.ratio <= 0.0 ||
+            (autoIsfMode && (!oapsProfile.variable_sens.isFinite() || oapsProfile.variable_sens <= 0.0))
+        if (invalidInputs) {
+            val msg = "OpenAPS AutoISF aborting: invalid ISF inputs " +
+                "autoIsfMode=$autoIsfMode sens=${oapsProfile.sens} carb_ratio=${oapsProfile.carb_ratio} " +
+                "autosensRatio=${autosensResult.ratio} variable_sens=${oapsProfile.variable_sens}"
+            aapsLogger.error(LTag.APS, msg)
+            rxBus.send(EventResetOpenAPSGui(msg))
+            return@withContext
+        }
         //done calculate exercise ratio
         var exerciseRatio = 1.0
         // TODO eliminate

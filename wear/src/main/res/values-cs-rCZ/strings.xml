@@ -121,7 +121,7 @@
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Smyčka</string>
     <string name="status_profile_switch">Přepnutí profilu</string>
-    <string name="status_tdd">TDD</string>
+    <string name="status_tdd">CDD</string>
     <string name="activity_carb">Sacharidy</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">žádný stav</string>
@@ -204,6 +204,12 @@
     <string name="tile_action_2">Akce 2</string>
     <string name="tile_action_3">Akce 3</string>
     <string name="tile_action_4">Akce 4</string>
+    <string name="tile_scene_1">Scéna 1</string>
+    <string name="tile_scene_2">Scéna 2</string>
+    <string name="tile_scene_3">Scéna 3</string>
+    <string name="tile_scene_4">Scéna 4</string>
+    <string name="tile_scene_auto">Automaticky</string>
+    <string name="tile_scene_unavailable">Nedostupný</string>
     <string name="datalayer_notification_title">Služba datové vrstvy</string>
     <string name="datalayer_notification_text">AAPS běží v popředí. Chcete-li skrýt oznámení, přejděte do možností Vývojář, oznámení aplikací, Povolené hodinky, vyberte AAPS, vypněte oznámení o datové vrstvě.</string>
     <string name="on">ZAP</string>
@@ -214,6 +220,7 @@
     <string name="complication_blood_glucose_large">Glykémie (velká)</string>
     <string name="complication_blood_glucose_ext1">Glykémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glykémie Ext2</string>
+    <string name="complication_bg_graph">Graf glykémie</string>
     <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Bazál, COB a IOB Ext1</string>
     <string name="complication_br_cob_iob_ext2">Bazál, COB a IOB Ext2</string>
@@ -237,7 +244,7 @@
     <string name="action_running_mode_selected">Vyžádán provozní režim</string>
     <string name="title_activity_disconnect_pump">Odpojit pumpu</string>
     <string name="title_activity_suspend_loop">Pozastavit smyčku</string>
-    <string name="wizard_carbs_format">%1$d g sacharidů</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -293,9 +300,10 @@
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Sacharidy (%1$d g)</string>
     <string name="wizard_result_subtotal">Mezisoučet</string>
+    <string name="wizard_result_correction">Korekce</string>
     <string name="wizard_result_total">Celkem</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="wizard_carbs_with_time">%1$d g sacharidů (%2$s min)</string>
-    <string name="wizard_result_ecarbs">eSacharidy: %1$d g / %2$d h (+%3$d min)</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

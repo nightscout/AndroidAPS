@@ -448,7 +448,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
         val effectiveDynIsfMode = dynIsfMode && dynIsfResult.tddPartsCalculated()
 
         // Refuse to run the algorithm with degenerate ISF inputs — division by these would produce NaN/Infinity in the result.
+        // carb_ratio feeds csf (sens/carb_ratio) and autosensResult.ratio becomes the non-dynISF sensitivityRatio
+        // (sens = profile.sens/sensitivityRatio); a non-finite/≤0 value of either cascades to a NaN carbsReq (round() crash).
         val invalidInputs = !oapsProfile.sens.isFinite() || oapsProfile.sens <= 0.0 ||
+            !oapsProfile.carb_ratio.isFinite() || oapsProfile.carb_ratio <= 0.0 ||
+            !autosensResult.ratio.isFinite() || autosensResult.ratio <= 0.0 ||
             (effectiveDynIsfMode && (
                 !oapsProfile.variable_sens.isFinite() || oapsProfile.variable_sens <= 0.0 ||
                     !oapsProfile.TDD.isFinite() || oapsProfile.TDD <= 0.0 ||
@@ -457,6 +461,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (invalidInputs) {
             val msg = "OpenAPS SMB aborting: invalid ISF inputs " +
                 "dynIsfMode=$effectiveDynIsfMode sens=${oapsProfile.sens} " +
+                "carb_ratio=${oapsProfile.carb_ratio} autosensRatio=${autosensResult.ratio} " +
                 "variable_sens=${oapsProfile.variable_sens} TDD=${oapsProfile.TDD} " +
                 "insulinDivisor=${oapsProfile.insulinDivisor}"
             aapsLogger.error(LTag.APS, msg)

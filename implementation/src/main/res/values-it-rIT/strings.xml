@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Selezionare una directory per le impostazioni delle applicazioni e i file di registro</string>
     <string name="permission_notifications_title">Notifiche</string>
     <string name="permission_notifications_description">Richiesto per mostrare gli aggiornamenti, avvisi, allarmi e stato del micro</string>
+    <string name="permission_fsi_title">Allarme a schermo intero</string>
+    <string name="permission_fsi_description">Richiesto in modo che gli allarmi possano riattivare lo schermo e mostrare lo schermo intero mentre il telefono è bloccato</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

@@ -150,8 +150,8 @@
     <string name="pref_title_wear_broadcast_data">Odesílat data na hodinky</string>
     <string name="pref_summary_wear_broadcast_data">Vysílat data AAPS do aplikací hodinek třetích stran přes intent.</string>
     <!-- Site rotation preferences -->
-    <string name="pref_title_site_rotation_manage_pump">Spravovat rotaci míst pumpy</string>
-    <string name="pref_title_site_rotation_manage_cgm">Spravovat rotaci míst CGM</string>
+    <string name="pref_title_site_rotation_manage_pump">Spravovat střídání míst pumpy</string>
+    <string name="pref_title_site_rotation_manage_cgm">Spravovat střídání míst CGM</string>
     <!-- IntKey: Overview preferences -->
     <string name="pref_title_carbs_button_increment_1">Přírůstek tlačítka sacharidů 1</string>
     <string name="pref_title_carbs_button_increment_2">Přírůstek tlačítka sacharidů 2</string>
@@ -228,7 +228,7 @@
     <string name="pref_title_alarm_stale_data">Práh alarmu zastaralých dat</string>
     <string name="pref_title_urgent_alarm_stale_data">Práh naléhavého alarmu zastaralých dat</string>
     <!-- IntKey: Site rotation preferences -->
-    <string name="pref_title_site_rotation_profile">Uživatelský profil pro rotaci míst</string>
+    <string name="pref_title_site_rotation_profile">Uživatelský profil pro střídání míst</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <string name="site_rotation_profile_man">Muž</string>
     <string name="site_rotation_profile_woman">Žena</string>

@@ -25,6 +25,8 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -68,7 +70,8 @@ class SceneExecutor @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileUtil: ProfileUtil,
     private val translator: Translator,
-    private val profileSwitchSilentGate: ProfileSwitchSilentGate
+    private val profileSwitchSilentGate: ProfileSwitchSilentGate,
+    private val notificationManager: NotificationManager
 ) {
 
     /** A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. */
@@ -350,9 +353,21 @@ class SceneExecutor @Inject constructor(
 
     /**
      * Dismiss the expired scene banner. No revert — everything already handled by onExpiry.
+     *
+     * Also clears the notifications this scene-end produced so confirming the banner tidies them
+     * away in one action: always the "Scene … ended" card ([NotificationId.SCENE_ENDED]), and — only
+     * when the scene actually performed a ProfileSwitch — the single-instance "Basal profile in pump
+     * updated" card ([NotificationId.PROFILE_SET_OK]) that its revert can raise. The profile card is
+     * meant to be silenced (#4959); the scoped dismiss here is a no-op when suppression works and a
+     * cleanup when it leaks. Reading the active state before [ActiveSceneManager.clearActive] is
+     * required — it is gone afterwards.
      */
     fun dismiss() {
+        val hadProfileSwitch = activeSceneManager.getActiveState()
+            ?.scene?.actions?.any { it is SceneAction.ProfileSwitch } == true
         activeSceneManager.clearActive()
+        notificationManager.dismiss(NotificationId.SCENE_ENDED)
+        if (hadProfileSwitch) notificationManager.dismiss(NotificationId.PROFILE_SET_OK)
     }
 
     private fun capturePriorSmb(scene: Scene): Boolean? {

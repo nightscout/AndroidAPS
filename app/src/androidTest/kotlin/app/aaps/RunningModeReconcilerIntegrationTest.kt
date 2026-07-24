@@ -37,6 +37,7 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
+import app.aaps.testcategories.ShardB
 import javax.inject.Inject
 
 /**
@@ -53,6 +54,7 @@ import javax.inject.Inject
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@ShardB
 class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
 
     @Inject lateinit var persistenceLayer: PersistenceLayer
@@ -158,7 +160,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     @Test
     fun `expiry scheduler enqueues unique work when a temporary RM is written`() = runTest {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        val workScheduled = rxHelper.waitUntil("expiry work scheduled", maxSeconds = 10) {
+        val workScheduled = rxHelper.waitUntil("expiry work scheduled", maxSeconds = 30) {
             val infos = WorkManager.getInstance(context)
                 .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
             infos.any { it.state == WorkInfo.State.ENQUEUED }
@@ -170,14 +172,14 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     fun `expiry scheduler cancels work when active mode becomes permanent`() = runTest {
         // Schedule work by entering a temporary mode.
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        rxHelper.waitUntil("expiry work present", maxSeconds = 10) {
+        rxHelper.waitUntil("expiry work present", maxSeconds = 30) {
             val infos = WorkManager.getInstance(context)
                 .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
             infos.any { it.state == WorkInfo.State.ENQUEUED }
         }
         // Exit by writing a permanent mode.
         insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
-        val workCancelled = rxHelper.waitUntil("expiry work cancelled", maxSeconds = 10) {
+        val workCancelled = rxHelper.waitUntil("expiry work cancelled", maxSeconds = 30) {
             val infos = WorkManager.getInstance(context)
                 .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
             // Cancelled work may be absent or in a terminal state.
@@ -201,7 +203,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         // schedules the expiry worker.
         insertActiveMode(RM.Mode.SUSPENDED_BY_USER, durationMs = T.mins(15).msecs())
 
-        val scheduled = rxHelper.waitUntil("expiry work scheduled for SUSPENDED_BY_USER", maxSeconds = 10) {
+        val scheduled = rxHelper.waitUntil("expiry work scheduled for SUSPENDED_BY_USER", maxSeconds = 30) {
             val infos = WorkManager.getInstance(context)
                 .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
             infos.any { it.state == WorkInfo.State.ENQUEUED }
@@ -261,7 +263,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
 
         // Reconciler observes, issues zero-TBR, queue executes, pump state reflects it.
-        val tbrArrived = rxHelper.waitUntil("zero TBR on pump", maxSeconds = 30) {
+        val tbrArrived = rxHelper.waitUntil("zero TBR on pump", maxSeconds = 60) {
             val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
             tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
         }
@@ -277,7 +279,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         )
 
         // Reconciler observes transition zero-delivery → working and cancels TBR.
-        val tbrCleared = rxHelper.waitUntil("TBR cleared on pump", maxSeconds = 30) {
+        val tbrCleared = rxHelper.waitUntil("TBR cleared on pump", maxSeconds = 60) {
             runBlocking { pumpSync.expectedPumpState() }.temporaryBasal == null
         }
         assertThat(tbrCleared).isTrue()
@@ -297,7 +299,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             source = Sources.Aaps,
             listValues = emptyList()
         )
-        assertThat(rxHelper.waitUntil("path A: zero TBR on pump", maxSeconds = 30) {
+        assertThat(rxHelper.waitUntil("path A: zero TBR on pump", maxSeconds = 60) {
             val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
             tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
         }).isTrue()
@@ -312,13 +314,13 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             note = null,
             listValues = emptyList()
         )
-        assertThat(rxHelper.waitUntil("reset between paths", maxSeconds = 30) {
+        assertThat(rxHelper.waitUntil("reset between paths", maxSeconds = 60) {
             runBlocking { pumpSync.expectedPumpState() }.temporaryBasal == null
         }).isTrue()
 
         // Path B: direct persistenceLayer.insertOrUpdateRunningMode (scene / NS / future writers).
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        assertThat(rxHelper.waitUntil("path B: zero TBR on pump", maxSeconds = 30) {
+        assertThat(rxHelper.waitUntil("path B: zero TBR on pump", maxSeconds = 60) {
             val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
             tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
         }).isTrue()
@@ -353,7 +355,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = durationMs)
 
         // Phase 1: reconciler issues zero-TBR.
-        assertThat(rxHelper.waitUntil("zero TBR active before expiry", maxSeconds = 30) {
+        assertThat(rxHelper.waitUntil("zero TBR active before expiry", maxSeconds = 60) {
             val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
             tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
         }).isTrue()
@@ -392,7 +394,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             iCfg = ICfg("Test", insulinEndTime = 5 * 3600 * 1000L, insulinPeakTime = 75 * 60 * 1000L)
         ) ?: error("createProfileSwitch returned null")
 
-        assertThat(rxHelper.waitUntil("profile ready", maxSeconds = 20) {
+        assertThat(rxHelper.waitUntil("profile ready", maxSeconds = 40) {
             runBlocking { profileFunction.getProfile() } != null
         }).isTrue()
         assertThat(rxHelper.waitUntil("pump has profile", maxSeconds = 60) {

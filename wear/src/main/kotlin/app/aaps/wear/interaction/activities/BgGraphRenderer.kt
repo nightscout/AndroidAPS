@@ -52,7 +52,7 @@ internal fun ageColor(ageMs: Long): Color {
     }
 }
 
-internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
+internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, showNowLabel: Boolean = true) {
     val now = System.currentTimeMillis()
     val historyMs = historyHours * 60 * 60 * 1000L
     val predictionMs = 90 * 60 * 1000L
@@ -116,17 +116,10 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) 
         strokeWidth = 1.dp.toPx()
     )
 
-    val nowLabel = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(now))
     val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
     drawIntoCanvas { canvas ->
         val hourPaint = Paint().apply {
             color = android.graphics.Color.argb(140, 170, 170, 170)
-            textSize = 8.dp.toPx()
-            textAlign = Paint.Align.CENTER
-            isAntiAlias = true
-        }
-        val nowPaint = Paint().apply {
-            color = android.graphics.Color.argb(178, 255, 255, 255)
             textSize = 8.dp.toPx()
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
@@ -139,7 +132,16 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) 
                 hourPaint
             )
         }
-        canvas.nativeCanvas.drawText(nowLabel, nowX, pad + nowPaint.textSize + 2f, nowPaint)
+        if (showNowLabel) {
+            val nowPaint = Paint().apply {
+                color = android.graphics.Color.argb(178, 255, 255, 255)
+                textSize = 8.dp.toPx()
+                textAlign = Paint.Align.CENTER
+                isAntiAlias = true
+            }
+            val nowLabel = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(now))
+            canvas.nativeCanvas.drawText(nowLabel, nowX, pad + nowPaint.textSize + 2f, nowPaint)
+        }
     }
 
     val high = bgData.high.toFloat()

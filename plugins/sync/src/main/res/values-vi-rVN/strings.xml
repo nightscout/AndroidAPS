@@ -69,6 +69,7 @@
     <string name="full_sync_comment">Đồng bộ toàn bộ? Quá trình này có thể mất nhiều giờ và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong NS.</string>
     <string name="ns_sync_options">Đồng bộ hóa</string>
     <string name="ns_alarm_options">Tùy chọn cảnh báo</string>
+    <string name="ns_remote_control_options">Điều khiển từ xa</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Bật tính năng này để tải dữ liệu lên máy chủ thử nghiệm thay vì máy chủ chính</string>
     <string name="title_tidepool_dev_servers">Dùng máy chủ thử nghiệm (Integration)</string>

@@ -26,7 +26,6 @@
     <string name="a11y_bg_quality_recalculated">recalculated</string>
     <string name="a11y_bg_quality_doubles">double entries</string>
     <string name="a11y_bg_quality_flat">Flat data. Considered to be wrong</string>
-    <string name="bg_doubled_lgs">LGS mode due to doubled values in BG source</string>
 
     <!-- Safety -->
     <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
@@ -55,6 +54,7 @@
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
     <string name="objectives_button_unfinish">Reset finished state</string>
     <string name="objectives_button_unstart">Reset started state</string>
+    <string name="bg_doubled_lgs">LGS mode due to doubled values in BG source</string>
 
 
 </resources>

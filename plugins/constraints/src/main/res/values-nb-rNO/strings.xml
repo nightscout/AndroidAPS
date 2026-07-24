@@ -42,4 +42,5 @@
     <string name="doyouwantresetstart">Ønsker du å starte læringsmålet på nytt? Du vil miste fullførte trinn.</string>
     <string name="objectives_button_unfinish">Nullstille ferdig-status</string>
     <string name="objectives_button_unstart">Nullstille start-status</string>
+    <string name="bg_doubled_lgs">Stopp ved lavt BS-modus på grunn av doble verdier fra BS-kilden</string>
 </resources>

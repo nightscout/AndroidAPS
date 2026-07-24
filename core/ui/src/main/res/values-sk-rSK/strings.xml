@@ -385,9 +385,11 @@
     <string name="scene_no_actions">Scéna nemá žiadne akcie</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" nebol nájdený</string>
     <string name="scene_lock_banner_master_offline">Hlavné zariadenie je nedostupné. Ovládanie scény sa obnoví po obnovení pripojenia.</string>
+    <string name="scene_lock_banner_control_disabled">Hlavné zariadenie (Master) má zakázané vzdialené ovládanie. Ovládanie scén sa obnoví, keď bude znovu povolené na hlavnom zariadení.</string>
     <string name="master_offline_banner">Hlavné zariadenie je nedostupné. Úpravy sú zakázané, kým sa pripojenie neobnoví.</string>
     <string name="master_control_disabled_banner">Hlavné zariadenie (Master) má zakázané diaľkové ovládanie. Úprava je zakázaná, dokiaľ nie je diaľkové ovládanie znovu povolené na hlavnom zariadení.</string>
     <string name="scene_lock_reason_master_offline">Hlavné zariadenie je odpojené</string>
+    <string name="scene_lock_reason_control_disabled">Vzdialené ovládanie je zakázané</string>
     <string name="scene_lock_reason_scene_active">Najprv zastavte prebiehajúcu scénu</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Nastaviť dočasný cieľ</string>
@@ -406,6 +408,7 @@
     <string name="clientcontrol_fail_send_failed">Nepodarilo sa spojiť s Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">Hlavné zariadenie nemá aktívny profil, na ktorý by sa to dalo aplikovať.</string>
     <string name="clientcontrol_fail_scene_not_found">Scéna už neexistuje.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Záznam o striedaní miest už neexistuje.</string>
     <string name="clientcontrol_fail_scene_disabled">Scéna je zakázaná.</string>
     <string name="clientcontrol_fail_partial">Niektoré akcie sa nepodarilo aplikovať.</string>
     <string name="clientcontrol_fail_execution">Hlavné zariadenie to nevedelo aplikovať.</string>
@@ -922,6 +925,7 @@
     <string name="reorder">Usporiadať</string>
     <string name="status">Stav</string>
     <string name="pump_actions">Akcie pumpy</string>
+    <string name="tempbasal_button">Dočasný bazál</string>
     <string name="extended_bolus_button">Predĺžený bolus</string>
     <string name="device_maintenance">Údržba zariadenia</string>
     <string name="from_label">Od</string>

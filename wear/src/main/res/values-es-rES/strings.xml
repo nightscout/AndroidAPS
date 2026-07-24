@@ -106,7 +106,7 @@
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
     <string name="action_minutes_format">%1$d min</string>
     <string name="ecarbs_start_format">%1$d min</string>
-    <string name="action_confirm_timeshift">Desplazamiento temporal: %1$s</string>
+    <string name="action_confirm_timeshift">Desplazamiento de hora: %1$s</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_insulin_units">Insulina [U]</string>
     <string name="action_preset_1">Botón 1</string>
@@ -114,7 +114,7 @@
     <string name="action_preset_3">Botón 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift_hours">Intervalo de tiempo\n[horas]</string>
+    <string name="action_timeshift_hours">Desplazamiento de hora\n[horas]</string>
     <string name="bolus_progress">Progreso del bolo</string>
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
@@ -237,12 +237,11 @@
     <string name="action_running_mode_selected">Modo de funcionamiento solicitado</string>
     <string name="title_activity_disconnect_pump">Desconectar bomba</string>
     <string name="title_activity_suspend_loop">Suspender lazo</string>
-    <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Enviado</string>
-    <string name="contacting_master">Contactando con el maestro…</string>
+    <string name="contacting_master">Contactando con el máster…</string>
     <string name="contacting_master_unknown">Estado desconocido — comprueba el teléfono</string>
     <string name="tile_settings">Ajustes de tarjetas</string>
     <string name="loop_status_error">Error al cargar el estado del lazo</string>
@@ -282,4 +281,18 @@
     <string name="confirm">Confirmar</string>
     <string name="request">Petición</string>
     <string name="constraint_applied">¡Restricción aplicada!</string>
+    <string name="wizard_total_insulin">Insulina total</string>
+    <string name="wizard_calculation">Cálculo</string>
+    <string name="wizard_settings_format">Ratio: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">Glucosa</string>
+    <string name="wizard_result_bg_tt">Glucosa (OT: %1$s)</string>
+    <string name="wizard_result_trend">Tendencia 15 min</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Nueva IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Carbos (%1$d g)</string>
+    <string name="wizard_result_subtotal">Subtotal</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
 </resources>

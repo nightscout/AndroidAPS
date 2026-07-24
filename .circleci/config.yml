@@ -1,4 +1,4 @@
- # Use the latest 2.1 version of CircleCI pipeline process engine. 
+ # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
@@ -16,50 +16,31 @@ jobs:
     steps:
       - checkout
 
-      # The runner is self-hosted, so build/ survives between jobs (it is gitignored,
-      # and checkout does not remove it). Both the "Save test results" find below and
-      # jacocoAllDebugReport collect whatever files happen to be on disk, so results
-      # from previous jobs get reported as if they ran this time. Drop them first.
+      # The runner is self-hosted, so build/ survives between jobs (it is gitignored, and checkout does
+      # not remove it). Both the "Save test results" find below and jacocoAllDebugReport collect whatever
+      # files happen to be on disk, so results from previous jobs would be reported as if they ran this
+      # time. Drop them first. /tmp survives too, so drop the shard rc files or the Collect step reads a
+      # stale pass/fail and the coverage guard is defeated.
       - run:
           name: Remove stale test/coverage outputs from previous runs
           command: |
             find . -type d -path "*/build/outputs/androidTest-results" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/code_coverage" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/unit_test_code_coverage" -prune -exec rm -rf {} +
+            rm -f /tmp/rc-A /tmp/rc-B /tmp/rc-C
 
-      # GRADLE_PIN is defined here and reused by the later Gradle steps via BASH_ENV. It must be
-      # applied to THIS step above all: taskset only pins the process it launches, and the Gradle
-      # daemon is what actually runs the tests and forks the test workers (which inherit its
-      # affinity). The daemon is started by this step, so pinning a later gradlew launcher alone
-      # would do nothing. Safe because "Kill java processes" kills the daemons at job end, so
-      # every job starts a fresh, pinned one.
+      # THREE emulators, so the app suite splits three ways (@ShardA / @ShardB / the rest) and each shard
+      # stays under the unit-test step, hiding beneath it. See app/src/androidTest/.../testcategories/ShardA.kt.
       - run:
-          name: Compile all test sources
+          name: Create three AVDs
           command: |
-            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-            export ANDROID_HOME=/usr/lib/android-sdk
-            if command -v taskset > /dev/null; then
-              echo 'export GRADLE_PIN="taskset -c 0-17"' >> "$BASH_ENV"
-              export GRADLE_PIN="taskset -c 0-17"
-            else
-              echo "taskset unavailable, running unpinned"
-              echo 'export GRADLE_PIN=""' >> "$BASH_ENV"
-            fi
-            $GRADLE_PIN ./gradlew \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx3g" \
-            -Dorg.gradle.daemon=true \
-            compileFullDebugAndroidTestSources \
-            compileFullDebugUnitTestSources
+            for i in 0 1 2; do
+              echo "no" | /usr/lib/android-sdk/cmdline-tools/13.0/bin/avdmanager --verbose \
+                create avd -n citest$i -k "system-images;android-31;google_apis_playstore;x86_64" --force
+            done
 
-      - run:
-          name: Create avd
-          command: |
-            echo "no" | /usr/lib/android-sdk/cmdline-tools/13.0/bin/avdmanager --verbose create avd -n citest -k "system-images;android-31;google_apis_playstore;x86_64" --force
-
-      # Sample memory/load every 10s for the whole job. The previous overlap attempt (build
-      # 40246) froze the emulator for 63s and we could not tell whether that was CPU
-      # oversubscription or swap thrash. This makes the next failure diagnosable.
+      # Sample memory/load every 10s for the whole job so an oversubscription stall is diagnosable. With a
+      # third emulator this is the guard-rail for the "is it stable?" question - watch the load average.
       - run:
           name: Sample memory and load
           background: true
@@ -69,61 +50,198 @@ jobs:
               sleep 10
             done
 
-      # Pin the emulator to its own cores. The instrumented tests are wait-bound and the
-      # emulator only used ~4 cores when healthy, but it must stay *scheduled*: under the
-      # overlap it lost the CPU, froze, and adb dropped it. Gradle gets cores 0-17 (below),
-      # the emulator gets 18-23 to itself. Cheap insurance -- it is idle most of the time.
+      # Each emulator gets its OWN 3 cores (the proven-stable allocation - 2 cores/emulator starved the UI
+      # automation before), taken from the TOP of the range; Gradle/unit gets everything below. On the
+      # 24-core runner: emu0 15-17, emu1 18-20, emu2 21-23, Gradle 0-14. Derived from nproc, guarded by
+      # NCORES > 12 (three 3-core emulators need headroom for Gradle).
       - run:
-          name: Launch emulator
+          name: Launch three emulators
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            PIN=""
-            if command -v taskset > /dev/null; then PIN="taskset -c 18-23"; else echo "taskset unavailable, running unpinned"; fi
-            $PIN emulator -avd citest -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+            NCORES=$(nproc 2>/dev/null || echo 0)
+            E0=""; E1=""; E2=""
+            if command -v taskset > /dev/null && [ "$NCORES" -gt 12 ]; then
+              E0="taskset -c $((NCORES-9))-$((NCORES-7))"
+              E1="taskset -c $((NCORES-6))-$((NCORES-4))"
+              E2="taskset -c $((NCORES-3))-$((NCORES-1))"
+            else
+              echo "taskset unavailable or too few cores, running unpinned"
+            fi
+            $E0 emulator -avd citest0 -port 5554 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+            $E1 emulator -avd citest1 -port 5556 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+            $E2 emulator -avd citest2 -port 5558 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+            wait
           background: true
 
-      # connectedFullDebugAndroidTest (451s) and testFullDebugUnitTest (477s) used to run back
-      # to back -- 928s of doing one thing at a time on a 24-core box. The instrumented tests
-      # are wait-bound (database observers, autosens settles) and leave ~20 cores idle; the unit
-      # tests are CPU-bound. One Gradle invocation lets org.gradle.parallel overlap them, so the
-      # stretch costs max(451, 477) instead of the sum.
-      #
-      # Build 40246 tried this unpinned and starved the emulator: it froze for 63s, adb dropped
-      # it, and :database:impl failed with "No online devices found" (every instrumented test
-      # also ran 1.5x-13x slower). Gradle is now pinned to cores 0-17 with the emulator alone on
-      # 18-23. Pinning also caps the fork count for free: maxParallelForks is
-      # availableProcessors()/2, and availableProcessors() reports 18 under the affinity mask.
-      #
-      # Kept as ONE invocation rather than a background step so a failure in either suite still
-      # fails the job -- a background step's exit code is ignored.
+      # Pure compile + APK packaging (no device tests), and the emulators are only booting for part of it,
+      # so it takes the WHOLE machine via COMPILE_PIN (all cores). GRADLE_PIN (all cores EXCEPT the top 9 the
+      # emulators own = 0-14 on this runner) is exported for the LATER Gradle steps (unit / non-app) that run
+      # while the emulators + shards are live, so they stay off the emulator cores. Assembling the app APKs
+      # here means the shards can install and start the instant compile ends.
       - run:
-          name: Run connectedFullDebugAndroidTest + testFullDebugUnitTest
+          name: Compile + assemble test APKs (emulators booting in parallel)
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            export JAVA_TOOL_OPTIONS="-Xmx6g"
-            # The root connectedFullDebugAndroidTest task builds, dexes, signs and packages
-            # an androidTest APK for every module (46 of them), while only a handful actually
-            # contain androidTest sources. Derive the task list from the modules that really
-            # have tests, so a new test module is picked up automatically without editing this file.
-            TASKS=""
-            for module in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
-              TASKS="$TASKS :$module:connectedFullDebugAndroidTest"
-            done
-            if [ -z "$TASKS" ]; then echo "No modules with androidTest sources found"; exit 1; fi
-            echo "Running:$TASKS testFullDebugUnitTest"
-            # jvmargs deliberately omitted so they match gradle.properties (and the compile and
-            # jacoco steps) verbatim: a daemon is only reused by a build whose JVM args are
-            # identical, so the previous G1GC value here forked a second 8g daemon that stayed
-            # resident alongside the first. One daemon now serves compile -> tests -> jacoco.
-            # --continue so a flaky unit test does not abort the instrumented suite (and vice
-            # versa); the job still fails, but both suites report.
-            $GRADLE_PIN ./gradlew --continue \
+            NCORES=$(nproc 2>/dev/null || echo 0)
+            if command -v taskset > /dev/null && [ "$NCORES" -gt 12 ]; then
+              GRADLE_PIN="taskset -c 0-$((NCORES - 10))"
+              COMPILE_PIN="taskset -c 0-$((NCORES - 1))"
+            else
+              echo "taskset unavailable or too few cores, running unpinned"
+              GRADLE_PIN=""
+              COMPILE_PIN=""
+            fi
+            echo "export GRADLE_PIN=\"$GRADLE_PIN\"" >> "$BASH_ENV"
+            $COMPILE_PIN ./gradlew \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
-            -Dorg.gradle.workers.max=16 \
             -Dorg.gradle.daemon=true \
-            $TASKS testFullDebugUnitTest
+            compileFullDebugUnitTestSources \
+            :app:assembleFullDebug :app:assembleFullDebugAndroidTest
+
+      - run:
+          name: Wait for all three emulators to boot
+          command: |
+            for s in emulator-5554 emulator-5556 emulator-5558; do
+              adb -s $s wait-for-device
+              until [ "$(adb -s $s shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 1 ]; do sleep 2; done
+              echo "$s booted"
+            done
+
+      # Annotation-balanced app sharding across three emulators, each a VISIBLE step. Order is tuned so unit
+      # (the long pole) starts the INSTANT compile ends: install APKs -> launch all three shards in the
+      # background (am instrument, no Gradle-daemon contention) -> run unit foreground overlapping them.
+      # Non-app modules run AFTER unit. Coverage presence is ENFORCED: a missing/short (<50KB) shard .ec sets
+      # rc=1 and the Collect step fails the build red rather than silently dropping coverage. if-guards (not
+      # &&) keep the trailing exit 0 so set -eo pipefail can't abort early; am instrument is redirected (no
+      # | tee, which masked its exit code) with || true so crashes are caught by the grep + size checks.
+      - run:
+          name: Install app test APKs on all three emulators
+          command: |
+            APK=app/build/outputs/apk/full/debug/app-full-debug.apk
+            TST=app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk
+            for s in emulator-5554 emulator-5556 emulator-5558; do adb -s $s install -r -d "$APK"; adb -s $s install -r -d "$TST"; done
+
+      # Each shard runs its am instrument with a PROCESS-LEVEL retry: if the run crashes the app process
+      # (SetupWizardE2EHiltTest intermittently dies in a Compose/ViewRootImpl traversal - a process death
+      # that the in-process RetryRule cannot catch) or yields no coverage, it re-runs once with a fresh
+      # process, which self-heals. A genuine test failure (FAILURES!!! with coverage present) is NOT
+      # retried - RetryRule already tried it in-process - so it fails fast. The step ends with `exit $RC`
+      # so a failed shard shows RED in the step list (not just the Collect gate); the shards are still
+      # `background: true` to overlap the unit step, and Collect remains the job's definitive gate.
+      - run:
+          name: App shard A — DanaRS heavy UI (emu-5554, am instrument)
+          background: true
+          command: |
+            PKG=info.nightscout.androidaps
+            DEV=emulator-5554
+            COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            RC=1
+            for attempt in 1 2; do
+              adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
+                -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
+                $PKG.test/app.aaps.runners.HiltTestRunner > shard-A-$attempt.txt 2>&1 || true
+              tail -n 20 shard-A-$attempt.txt
+              adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
+              sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
+              echo "shard A attempt $attempt coverage: ${sz:-0} bytes"
+              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-A-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
+                echo "shard A attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+              fi
+              if grep -qE "FAILURES!!!" shard-A-$attempt.txt; then RC=1; else RC=0; fi
+              break
+            done
+            echo $RC > /tmp/rc-A
+            echo "shard A done rc=$RC"
+            exit $RC
+
+      - run:
+          name: App shard B — DanaR family + RS pump/transport (emu-5556, am instrument)
+          background: true
+          command: |
+            PKG=info.nightscout.androidaps
+            DEV=emulator-5556
+            COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            RC=1
+            for attempt in 1 2; do
+              adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
+                -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
+                $PKG.test/app.aaps.runners.HiltTestRunner > shard-B-$attempt.txt 2>&1 || true
+              tail -n 20 shard-B-$attempt.txt
+              adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
+              sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
+              echo "shard B attempt $attempt coverage: ${sz:-0} bytes"
+              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-B-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
+                echo "shard B attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+              fi
+              if grep -qE "FAILURES!!!" shard-B-$attempt.txt; then RC=1; else RC=0; fi
+              break
+            done
+            echo $RC > /tmp/rc-B
+            echo "shard B done rc=$RC"
+            exit $RC
+
+      - run:
+          name: App shard C — SetupWizard + non-Dana (emu-5558, am instrument)
+          background: true
+          command: |
+            PKG=info.nightscout.androidaps
+            DEV=emulator-5558
+            COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            RC=1
+            for attempt in 1 2; do
+              adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
+                -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
+                $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true
+              tail -n 20 shard-C-$attempt.txt
+              adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
+              sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
+              echo "shard C attempt $attempt coverage: ${sz:-0} bytes"
+              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-C-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
+                echo "shard C attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+              fi
+              if grep -qE "FAILURES!!!" shard-C-$attempt.txt; then RC=1; else RC=0; fi
+              break
+            done
+            echo $RC > /tmp/rc-C
+            echo "shard C done rc=$RC"
+            exit $RC
+
+      # workers.max is capped at 8 (below the 15 Gradle cores) on purpose: the unit suite saturating all
+      # cores while the three emulators + shards run pushed the box hard enough that a heavy E2E test's app
+      # startup timed out into a "failed to complete startup" ANR (a process crash the in-process RetryRule
+      # can't catch; build 40333's shard A). Dropped 10 -> 8 to give the emulators more startup headroom, at
+      # a small unit wall-time cost (unit hides under the shards either way).
+      - run:
+          name: Unit tests (Gradle, pinned off the emulator cores, starts right after compile, overlaps the shards)
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest
+
+      - run:
+          name: Non-app module androidTests (Gradle, emu-5554)
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            export ANDROID_SERIAL=emulator-5554
+            TASKS=""
+            for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
+              [ "$m" = "app" ] && continue; TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
+            done
+            [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
+
+      - run:
+          name: Collect app shard results
+          command: |
+            for i in $(seq 1 600); do [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && break; sleep 2; done
+            RCA=$(cat /tmp/rc-A 2>/dev/null || echo 1); RCB=$(cat /tmp/rc-B 2>/dev/null || echo 1); RCC=$(cat /tmp/rc-C 2>/dev/null || echo 1)
+            echo "shard A rc=$RCA  shard B rc=$RCB  shard C rc=$RCC"
+            # rc is 1 if any leg failed a test OR produced missing/short coverage - so a silently dropped
+            # shard .ec fails the build instead of leaking a coverage regression to Codecov.
+            [ "$RCA" = 0 ] && [ "$RCB" = 0 ] && [ "$RCC" = 0 ] && echo "all shards OK (tests passed + coverage present)" || { echo "a shard failed, timed out, or lost coverage"; exit 1; }
 
       - run:
           name: Kill emulators
@@ -142,8 +260,8 @@ jobs:
       - run:
           name: Save test results
           command: |
-            # ~/test-results also survives between jobs on the self-hosted runner, so wipe
-            # it rather than adding to whatever the previous job left behind.
+            # ~/test-results also survives between jobs on the self-hosted runner, so wipe it rather
+            # than adding to whatever the previous job left behind.
             rm -rf ~/test-results
             mkdir -p ~/test-results/junit/
             find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;

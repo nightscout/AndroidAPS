@@ -76,7 +76,7 @@
     <string name="menu_ecarb">eKarbo</string>
     <string name="menu_settings">Innstillinger</string>
     <string name="menu_status">Status</string>
-    <string name="menu_bg_graph">Glukosegraf</string>
+    <string name="menu_bg_graph">BS-graf</string>
     <string name="menu_resync">Re-synk</string>
     <string name="menu_prime_fill">Prime/fylling</string>
     <string name="menu_none">Ingen</string>
@@ -204,6 +204,12 @@
     <string name="tile_action_2">Handling 2</string>
     <string name="tile_action_3">Handling 3</string>
     <string name="tile_action_4">Handling 4</string>
+    <string name="tile_scene_1">Scene 1</string>
+    <string name="tile_scene_2">Scene 2</string>
+    <string name="tile_scene_3">Scene 3</string>
+    <string name="tile_scene_4">Scene 4</string>
+    <string name="tile_scene_auto">Automatisk</string>
+    <string name="tile_scene_unavailable">Utilgjengelig</string>
     <string name="datalayer_notification_title">Datalag forgrunnstjeneste</string>
     <string name="datalayer_notification_text">AAPS kjører i forgrunnen. For å skjule dette varslet gå til Utvikleralternativer, Appvarsler, Tillatte klokkeapper, velg AAPS, slå av \"Data Layer Foreground Service Channel\"-varslet.</string>
     <string name="on">PÅ</string>
@@ -214,6 +220,7 @@
     <string name="complication_blood_glucose_large">Blodsukker (stor)</string>
     <string name="complication_blood_glucose_ext1">BS Ekstern1</string>
     <string name="complication_blood_glucose_ext2">BS Ekstern2</string>
+    <string name="complication_bg_graph">BS-graf</string>
     <string name="complication_br_cob_iob">Basaldose, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Basal, COB &amp; IOB Eks1</string>
     <string name="complication_br_cob_iob_ext2">Basal, COB &amp; IOB Eks2</string>
@@ -228,16 +235,16 @@
     <string name="complication_iob_detailed">IOB-detaljert</string>
     <string name="complication_uploader_phone_battery">Opplaster/mobilbatteri</string>
     <string name="label_running_mode_title">Kjøremodus</string>
-    <string name="label_bg_graph_tile">Glukosegraf</string>
+    <string name="label_bg_graph_tile">BS-graf</string>
     <string name="tile_tap_action">Handling ved trykk</string>
     <string name="tile_graph_time_range">Tidsrom</string>
-    <string name="tile_tap_bg_graph">Glukosegraf</string>
+    <string name="tile_tap_bg_graph">BS-graf</string>
     <string name="tile_tap_main_menu">Hovedmeny</string>
     <string name="tile_tap_loop_status">Loopstatus</string>
     <string name="action_running_mode_selected">Kjøremodus forespurt</string>
     <string name="title_activity_disconnect_pump">Koble fra pumpen</string>
     <string name="title_activity_suspend_loop">Pause loop</string>
-    <string name="wizard_carbs_format">%1$d g karbo</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">E</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f E</string>
@@ -293,9 +300,10 @@
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Karbo (%1$d g)</string>
     <string name="wizard_result_subtotal">Delsum</string>
+    <string name="wizard_result_correction">Korreksjon</string>
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s E</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="wizard_carbs_with_time">%1$d g karbo (%2$s min)</string>
-    <string name="wizard_result_ecarbs">eKarbo: %1$d g / %2$dt (+%3$d min)</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d t (+%3$d min)</string>
 </resources>

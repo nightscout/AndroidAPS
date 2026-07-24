@@ -69,6 +69,7 @@
     <string name="full_sync_comment">Úplná synchronizácia? Môže to trvať niekoľko hodín a kým skončí, neuvidíte nové dáta v NS.</string>
     <string name="ns_sync_options">Synchronizácia</string>
     <string name="ns_alarm_options">Nastavenie alarmov</string>
+    <string name="ns_remote_control_options">Vzdialené ovládanie</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Ak je táto možnosť povolená, odosielané dáta pôjdu na testovacie servery namiesto bežných</string>
     <string name="title_tidepool_dev_servers">Používať testovacie servery</string>
@@ -160,7 +161,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_shortname">SMS</string>
-    <string name="description_sms_communicator">Ovládanie AAPS na diaľku použitím SMS príkazov.</string>
+    <string name="description_sms_communicator">Vzdialené ovládanie AAPS použitím SMS príkazov.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikácie Authenticator pre: %1$s nasledované kódom PIN</string>
     <string name="smscommunicator_tab_otp_label">Nastavenie autentifikátora</string>
     <string name="smscommunicator_code_verify_label">Kód pre kontrolu:</string>
@@ -253,5 +254,5 @@
     <string name="sms_wrong_tbr_duration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
     <string name="permission_sms_title">SMS</string>
-    <string name="permission_sms_description">Aplikácia potrebuje povolenie SMS pre ovládanie na diaľku pomocou textových správ.</string>
+    <string name="permission_sms_description">Aplikácia potrebuje povolenie SMS pre vzdialené ovládanie pomocou textových správ.</string>
 </resources>

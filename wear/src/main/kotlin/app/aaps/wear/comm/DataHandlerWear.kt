@@ -27,6 +27,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
+import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
@@ -410,6 +411,8 @@ class DataHandlerWear @Inject constructor(
             SgvComplicationExt1::class.java,
             SgvComplicationExt2::class.java,
             SgvLargeComplication::class.java,
+            // BG graph image complication (for WFF watchfaces on watches without CWF support)
+            BgGraphComplication::class.java,
             // Long status complications (show detailed glucose + status info)
             LongStatusComplication::class.java,
             LongStatusFlippedComplication::class.java,

@@ -15,6 +15,7 @@
     <string name="dana_model">%1$s\nModelo: %2$02X\nProtocol: %3$02X\nCódigo: %4$02X</string>
     <string name="processinghistory">Procesando evento</string>
     <string name="danar_enableextendedbolus">Habilitar bolos extendidos en bomba</string>
+    <string name="danar_disablebolusblock">El bloqueo de bolo está activado en la bomba. AAPS no puede administrar insulina mientras esté activo. Desactiva el bloqueo de bolo en los ajustes de la bomba</string>
     <string name="overview_bolusprogress_stoped">Detenido</string>
     <string name="unsupportedfirmware">Firmware de la bomba no soportado</string>
     <string name="pumperror">Error de bomba</string>
@@ -37,6 +38,7 @@
     <string name="gettingtempbasalstatus">Recibiendo estado basal temporal</string>
     <string name="gettingpumpsettings">Obteniendo los ajustes de la bomba</string>
     <string name="gettingpumptime">Obteniendo la hora de la bomba</string>
+    <string name="largetimedifftitle">Gran diferencia horaria</string>
     <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \npor favor ajusta la hora manualmente en la bomba y asegúrate de que la lectura del histórico de la bomba no pueda causar un comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el bucle cerrado durante el periodo DIA (duracion insulina activa) después del último registro erróneo pero mínimo durante el DIA a partir de ahora</string>
     <string name="pairfirst">Por favor, empareje su bomba con su teléfono!</string>
     <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>

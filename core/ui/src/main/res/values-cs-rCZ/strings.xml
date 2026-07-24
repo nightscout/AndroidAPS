@@ -215,8 +215,8 @@
     <string name="selected_location">Vybráno: %1$s</string>
     <string name="last_site_location">Poslední místo: %1$s</string>
     <string name="pick_site">Vybrat místo</string>
-    <string name="select_site_location">Vyberte umístění setu</string>
-    <string name="site_location">Umístění setu</string>
+    <string name="select_site_location">Vyberte umístění</string>
+    <string name="site_location">Umístění</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="stoptemptarget">Stop dočasného cíle</string>
     <string name="closedloop">Uzavřená smyčka</string>
@@ -385,9 +385,9 @@
     <string name="scene_no_actions">Scéna nemá žádné akce</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" nebyl nalezen</string>
     <string name="scene_lock_banner_master_offline">Hlavní zařízení je nedostupné. Ovládání scény bude pokračovat po obnovení připojení.</string>
-    <string name="scene_lock_banner_control_disabled">Hlavní zařízení má vypnuté dálkové ovládání. Ovládání scén se obnoví, jakmile je znovu povoleno.</string>
+    <string name="scene_lock_banner_control_disabled">Hlavní zařízení má vypnuté vzdálené ovládání. Ovládání scén se obnoví, jakmile bude znovu povoleno.</string>
     <string name="master_offline_banner">Hlavní zařízení je nedostupné. Úprava je zakázána, dokud není připojení obnoveno.</string>
-    <string name="master_control_disabled_banner">Hlavní zařízení má zakázáno dálkové ovládání. Úprava je zakázána, dokud není znovu povolena na hlavním zařízení.</string>
+    <string name="master_control_disabled_banner">Hlavní zařízení má zakázáno vzdálené ovládání. Úprava je zakázána, dokud nebude znovu povoleno na hlavním zařízení.</string>
     <string name="scene_lock_reason_master_offline">Hlavní zařízení odpojeno</string>
     <string name="scene_lock_reason_control_disabled">Vzdálené ovládání zakázáno</string>
     <string name="scene_lock_reason_scene_active">Nejdříve zastavte běh scény</string>
@@ -408,7 +408,7 @@
     <string name="clientcontrol_fail_send_failed">Nightscout se nepodařilo kontaktovat.</string>
     <string name="clientcontrol_fail_no_active_profile">Hlavní zařízení nemá žádný aktivní profil, který by mohlo použít.</string>
     <string name="clientcontrol_fail_scene_not_found">Scéna již neexistuje.</string>
-    <string name="clientcontrol_fail_site_entry_not_found">Stránka již neexistuje.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Záznam o střídání míst již neexistuje.</string>
     <string name="clientcontrol_fail_scene_disabled">Scéna je zakázána.</string>
     <string name="clientcontrol_fail_partial">Některé akce nelze použít.</string>
     <string name="clientcontrol_fail_execution">Hlavní zařízení je nemohlo použít.</string>
@@ -920,7 +920,7 @@
     <!-- Alerts -->
     <string name="localalertsettings_title">Místní výstrahy</string>
     <!-- Actions Screen -->
-    <string name="add">Přidat</string>
+    <string name="add">Výměna</string>
     <string name="remove">Odstranit</string>
     <string name="reorder">Přeřadit</string>
     <string name="status">Stav</string>

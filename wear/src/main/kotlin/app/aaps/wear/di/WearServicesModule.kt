@@ -1,6 +1,7 @@
 package app.aaps.wear.di
 
 import app.aaps.wear.comm.DataLayerListenerServiceWear
+import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
@@ -47,6 +48,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesDataLayerListenerService(): DataLayerListenerServiceWear
     @ContributesAndroidInjector abstract fun contributesHeartRateListenerService(): HeartRateListener
     @ContributesAndroidInjector abstract fun contributesStepsCountListenerService(): StepCountListener
+    @ContributesAndroidInjector abstract fun contributesBgGraphComplication(): BgGraphComplication
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplication(): BrCobIobComplication
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplicationExt1(): BrCobIobComplicationExt1
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplicationExt2(): BrCobIobComplicationExt2

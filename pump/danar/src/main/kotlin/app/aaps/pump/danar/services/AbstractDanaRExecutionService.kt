@@ -82,11 +82,13 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     private val disposable = CompositeDisposable()
-    protected var mRfcommSocket: RfcommSocket? = null
-    var isConnecting = false
+    // These are read/written across the connect() worker thread, the reader thread, the BT/app-exit
+    // observers (io scheduler), disconnect(), and the command methods - @Volatile for visibility.
+    @Volatile protected var mRfcommSocket: RfcommSocket? = null
+    @Volatile var isConnecting = false
         protected set
-    protected var mHandshakeInProgress = false
-    protected var mSerialIOThread: SerialIOThread? = null
+    @Volatile protected var mHandshakeInProgress = false
+    @Volatile protected var mSerialIOThread: SerialIOThread? = null
     protected var mBinder: IBinder? = null
     abstract fun messageHashTable(): MessageHashTableBase
 

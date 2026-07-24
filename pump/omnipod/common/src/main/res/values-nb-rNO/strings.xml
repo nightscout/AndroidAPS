@@ -165,4 +165,5 @@
         <item quantity="one">Pod varsel: %1$s</item>
         <item quantity="other">Pod varsler: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod hard slutt</string>
 </resources>

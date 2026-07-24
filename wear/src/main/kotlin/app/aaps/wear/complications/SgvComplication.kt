@@ -78,7 +78,7 @@ class SgvComplication : ModernBaseComplicationProviderService() {
             .setText("^1 ${bgData.delta}")
             .build()
 
-    override fun getComplicationAction(): ComplicationAction = ComplicationAction.BG_GRAPH
+    override fun getComplicationAction(): ComplicationAction = ComplicationAction.LOOP_STATUS
 
     override fun getProviderCanonicalName(): String = SgvComplication::class.java.canonicalName!!
 }
