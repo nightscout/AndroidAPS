@@ -85,7 +85,8 @@ private val BG_VISIBLE_RANGE_KEY = ExtraStore.Key<Pair<Long?, Long?>>()
  */
 private class MutableYRangeProvider(
     @Volatile var maxX: Double,
-    @Volatile var maxY: Double
+    @Volatile var maxY: Double,
+    @Volatile var yStep: Double = 0.0
 ) : CartesianLayerRangeProvider {
     override fun getMinX(minX: Double, maxX: Double, extraStore: ExtraStore) = 0.0
     override fun getMaxX(minX: Double, maxX: Double, extraStore: ExtraStore) = this.maxX
@@ -170,7 +171,10 @@ fun BgGraphCompose(
 
     // Stable range-provider instance for the start (BG) axis — created once, mutated in place by
     // the LaunchedEffect below rather than recreated (see MutableYRangeProvider).
-    val startAxisRangeProvider = remember { MutableYRangeProvider(maxX = maxX, maxY = chartConfig.highMark) }
+    val startAxisRangeProvider = remember {
+        val initialScale = niceScale(0.0, chartConfig.highMark)
+        MutableYRangeProvider(maxX = maxX, maxY = initialScale.max, yStep = initialScale.step)
+    }
 
     // Track which series are currently included (for matching LineProvider)
     val activeSeriesState = remember { mutableStateOf(listOf<String>()) }
@@ -347,13 +351,22 @@ fun BgGraphCompose(
 
         // Windowed axis max: BG values within the visible scroll/zoom window (not the full loaded
         // range), floored at chartConfig.highMark (the "High mark" target-range preference) so the
-        // axis never shrinks below the configured target range. Mutate the stable provider in
-        // place (see MutableYRangeProvider) — Vico picks up the new value when it processes the
-        // transaction submitted below, without ever recreating BG's chart object.
+        // axis never shrinks below the configured target range. Y-axis min stays pinned at 0;
+        // niceScale(0.0, ...) rounds the max and tick step to clean numbers (e.g. 180, 200) instead
+        // of the raw data value. Mutate the stable provider in place (see MutableYRangeProvider) —
+        // Vico picks up the new values when it processes the transaction submitted below, without
+        // ever recreating BG's chart object.
+        // Includes predictions (when shown) — otherwise scrolling into a region with only future
+        // prediction data (no real BG readings) makes the windowed set empty, falling back to the
+        // full unwindowed history's max instead of the actually-visible prediction values.
         fun inWindow(timestamp: Long) = visibleTimeRange == null || timestamp in visibleTimeRange.first..visibleTimeRange.second
-        val windowedValues = (bgReadings + bucketedData).filter { inWindow(it.timestamp) }.map { it.value }
+        val allBgAndPredictionValues = (bgReadings + bucketedData + predictions).map { it.value }
+        val windowedValues = (bgReadings + bucketedData + predictions).filter { inWindow(it.timestamp) }.map { it.value }
+        val dataMax = maxOf(windowedValues.ifEmpty { allBgAndPredictionValues }.maxOrNull() ?: 0.0, chartConfig.highMark)
+        val niceBgScale = niceScale(0.0, dataMax)
         startAxisRangeProvider.maxX = maxX
-        startAxisRangeProvider.maxY = maxOf(windowedValues.ifEmpty { allBgValues }.maxOrNull() ?: 0.0, chartConfig.highMark)
+        startAxisRangeProvider.maxY = niceBgScale.max
+        startAxisRangeProvider.yStep = niceBgScale.step
 
         rebuildChart(basalData, targetData, epsPoints, activityData, maxBgY, visibleTimeRange)
     }
@@ -595,7 +608,7 @@ fun BgGraphCompose(
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
             startAxis = VerticalAxis.rememberStart(
-                itemPlacer = VerticalAxis.ItemPlacer.step({ 1.0 }),
+                itemPlacer = VerticalAxis.ItemPlacer.step({ startAxisRangeProvider.yStep }),
                 label = rememberTextComponent(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)

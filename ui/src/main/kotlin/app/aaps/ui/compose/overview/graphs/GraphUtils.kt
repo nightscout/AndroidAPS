@@ -22,6 +22,11 @@ import kotlinx.datetime.toLocalDateTime
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -377,4 +382,112 @@ class VisibleRangeReporter(
 @Composable
 fun rememberVisibleRangeReporter(holder: VisibleRangeHolder): VisibleRangeReporter {
     return remember(holder) { VisibleRangeReporter(holder) }
+}
+
+// =========================================================================
+// Nice-numbers axis scaling ("Nice Numbers for Graph Labels", Paul Heckbert)
+// =========================================================================
+//
+// Vico's default Y-axis item placer divides a fixed [minY, maxY] range into evenly-spaced
+// ticks with no rounding, so an arbitrary data-driven range (e.g. 12.39..57.39) produces ugly
+// tick labels (12.39, 27.39, 42.39...). These helpers snap axis bounds and tick spacing to
+// round numbers (1, 2, 5, 10, 20, 50... times a power of ten) instead.
+
+/** A "nice" axis range: bounds and tick spacing all rounded to 1/2/5/10 x 10^n. */
+data class NiceScale(val min: Double, val max: Double, val step: Double)
+
+/**
+ * Rounds [range] to a value of the form 1/2/2.5/5/10 x 10^n. [round] chooses the nearest such
+ * value (used for tick spacing) vs. always rounding up (used for axis bounds, so the bound never
+ * clips inside the data). [range] must be > 0.
+ *
+ * The round-up variant includes a 2.5 tier (a known variant of Heckbert's original {1,2,5,10}
+ * set) to avoid an overly coarse jump between the 2 and 5 tiers — e.g. without it, a BG max of
+ * 210 would round all the way up to 300 (skipping straight from a 50-step scale to a 100-step
+ * one); with it, 210 rounds to 250 first, only reaching 300 once the value exceeds 250.
+ */
+private fun niceNum(range: Double, round: Boolean): Double {
+    val exponent = floor(log10(range))
+    val fraction = range / 10.0.pow(exponent)
+    val niceFraction = if (round) {
+        when {
+            fraction < 1.5 -> 1.0
+            fraction < 3.0 -> 2.0
+            fraction < 7.0 -> 5.0
+            else           -> 10.0
+        }
+    } else {
+        when {
+            fraction <= 1.0 -> 1.0
+            fraction <= 2.0 -> 2.0
+            fraction <= 2.5 -> 2.5
+            fraction <= 5.0 -> 5.0
+            else            -> 10.0
+        }
+    }
+    return niceFraction * 10.0.pow(exponent)
+}
+
+/**
+ * Standard nice-ify: snaps [min, max] and the tick spacing to round numbers. Free-range, no
+ * zero or pivot anchoring — used for series like VAR_SENSITIVITY and HEART_RATE.
+ */
+fun niceScale(min: Double, max: Double, maxTickCount: Int = 5): NiceScale {
+    val safeMax = if (max > min) max else min + 1.0
+    val range = niceNum(safeMax - min, round = false)
+    val step = niceNum(range / (maxTickCount - 1), round = true)
+    return NiceScale(floor(min / step) * step, ceil(safeMax / step) * step, step)
+}
+
+/** Rounds [value] up to the nearest nice number (1/2/5/10 x 10^n). Used for a lone axis bound. */
+fun niceUp(value: Double): Double {
+    if (value <= 0.0) return 0.0
+    return niceNum(value, round = false)
+}
+
+/**
+ * Rounds [value] (expected negative) further negative to the nearest nice magnitude — e.g.
+ * -0.3 -> -0.5, -0.05 -> -0.1. Used to give a small negative excursion its own clean bound,
+ * decoupled from a much larger positive-side scale (see [zeroFloorNiceRange]).
+ */
+fun niceNegativeSliver(value: Double): Double {
+    if (value >= 0.0) return 0.0
+    return -niceNum(-value, round = false)
+}
+
+/**
+ * Nice-ify a symmetric deviation around [pivot] (e.g. SENSITIVITY around 100%, DEV_SLOPE
+ * around 0), so [pivot] always lands exactly in the middle of the axis. Nice-ifying [min, max]
+ * directly (via [niceScale]) would not preserve that centering.
+ */
+fun niceScaleAroundPivot(min: Double, max: Double, pivot: Double, maxTickCount: Int = 5): NiceScale {
+    val rawDeviation = maxOf(abs(pivot - min), abs(max - pivot))
+    val deviation = if (rawDeviation > 0.0) rawDeviation else 1.0
+    val niceDeviation = niceNum(deviation, round = false)
+    val step = niceNum(2 * niceDeviation / (maxTickCount - 1), round = true)
+    val steppedDeviation = ceil(niceDeviation / step) * step
+    return NiceScale(pivot - steppedDeviation, pivot + steppedDeviation, step)
+}
+
+/**
+ * Zero-floor axis range, disparity-aware: when the negative excursion is tiny relative to the
+ * positive side (ratio >= [disparityRatio]), one shared nice tick spacing across the whole
+ * range would make the small negative part look arbitrary — so the two sides are nice-ified
+ * independently instead (a small negative sliver just large enough to show the excursion, plus
+ * a normal positive-side scale). When the two sides are comparable in magnitude, a single
+ * unified nice scale spans the whole range, negative and positive sharing the same tick step.
+ * Used for IOB, DEVIATIONS, BGI, ACTIVITY, STEPS.
+ */
+fun zeroFloorNiceRange(dataMin: Double, dataMax: Double, maxTickCount: Int = 5, disparityRatio: Double = 10.0): NiceScale {
+    if (dataMin >= 0.0) return niceScale(0.0, dataMax, maxTickCount)
+    val absMin = -dataMin
+    val ratio = if (absMin > 0.0) dataMax / absMin else Double.MAX_VALUE
+    return if (ratio >= disparityRatio) {
+        val niceMax = niceUp(dataMax)
+        val niceMin = niceNegativeSliver(dataMin)
+        val step = niceNum(niceMax / (maxTickCount - 1), round = true)
+        NiceScale(niceMin, niceMax, step)
+    } else {
+        niceScale(dataMin, dataMax, maxTickCount)
+    }
 }
