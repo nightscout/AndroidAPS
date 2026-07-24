@@ -15,6 +15,7 @@ import app.aaps.pump.carelevo.ble.commands.SetTimeForPatchInfoCommand
 import app.aaps.pump.carelevo.ble.commands.ThresholdSetupCommand
 import app.aaps.pump.carelevo.ble.gatt.BleTransportGattConnection
 import app.aaps.pump.carelevo.ble.gatt.GattConnState
+import app.aaps.pump.carelevo.ble.gatt.GattDiscoveryException
 import app.aaps.pump.carelevo.ble.gatt.GattEvent
 import app.aaps.pump.carelevo.ext.checkSumV2
 import app.aaps.pump.carelevo.ext.convertHexToByteArray
@@ -228,46 +229,54 @@ class CarelevoBleSession @Inject constructor(
         block: suspend (BleClient) -> R
     ): R =
         sessionMutex.withLock {
-            // Inter-session settle: give the patch time to fully release the previous link before the
-            // next dial. Back-to-back queue ops need this ~1 s spacing before the next connect.
-            val sinceCloseMs = System.currentTimeMillis() - lastCloseAtMs
-            if (sinceCloseMs in 0 until INTER_SESSION_SETTLE_MS) delay((INTER_SESSION_SETTLE_MS - sinceCloseMs).milliseconds)
-            // BluetoothAdapter.getRemoteDevice requires an UPPERCASE MAC (lowercase throws
-            // IllegalArgumentException); the stored address is lowercase, so normalize here.
-            val mac = address.uppercase()
-            val scope = CoroutineScope(sessionDispatcher + SupervisorJob())
-            val gatt = BleTransportGattConnection(transport, writeUuid, notifyUuid, scope)
-            val client: BleClient = BleClientImpl(gatt, writeUuid, notifyUuid, scope)
-            // Bridge patch-pushed frames (alarms, stop/basal-restart reports) to the handler for the life
-            // of this session. Subscribed before open() so a frame during the handshake isn't missed; the
-            // finally's scope.cancel() tears this collector down with the session.
-            scope.launch {
-                client.unsolicitedEvents.collect { msg ->
-                    try {
-                        unsolicitedHandler?.invoke(msg)
-                    } catch (t: Throwable) {
-                        aapsLogger.error(LTag.PUMPCOMM, "unsolicited handler error", t)
+            repeat(SESSION_MAX_ATTEMPTS) { attempt ->
+                // Inter-session settle: give the patch time to fully release the previous link before the
+                // next dial. Back-to-back queue ops need this ~1 s spacing before the next connect.
+                val sinceCloseMs = System.currentTimeMillis() - lastCloseAtMs
+                if (sinceCloseMs in 0 until INTER_SESSION_SETTLE_MS) delay((INTER_SESSION_SETTLE_MS - sinceCloseMs).milliseconds)
+                // BluetoothAdapter.getRemoteDevice requires an UPPERCASE MAC (lowercase throws
+                // IllegalArgumentException); the stored address is lowercase, so normalize here.
+                val mac = address.uppercase()
+                val scope = CoroutineScope(sessionDispatcher + SupervisorJob())
+                val gatt = BleTransportGattConnection(transport, writeUuid, notifyUuid, scope)
+                val client: BleClient = BleClientImpl(gatt, writeUuid, notifyUuid, scope)
+                var commandStarted = false
+                // Bridge patch-pushed frames (alarms, stop/basal-restart reports) to the handler for the life
+                // of this session. Subscribed before open() so a frame during the handshake isn't missed; the
+                // finally's scope.cancel() tears this collector down with the session.
+                scope.launch {
+                    client.unsolicitedEvents.collect { msg ->
+                        try {
+                            unsolicitedHandler?.invoke(msg)
+                        } catch (t: Throwable) {
+                            aapsLogger.error(LTag.PUMPCOMM, "unsolicited handler error", t)
+                        }
                     }
                 }
+                try {
+                    // Bound the ENTIRE connect→discover→enable handshake, not just the CONNECTED wait: a lost
+                    // CCCD-write callback (which the transport documents as "surfaced by the caller's withTimeout")
+                    // would otherwise suspend forever HERE while holding sessionMutex, wedging every later
+                    // session op — including a delivery-critical out-of-band bolus cancel. On timeout the finally closes the
+                    // gatt (aborting the pending ack) and releases the mutex.
+                    val openTimeoutMs = if (ensureBond) CONNECT_TIMEOUT_MS + BOND_TIMEOUT_MS else CONNECT_TIMEOUT_MS
+                    withTimeout(openTimeoutMs.milliseconds) { open(gatt, mac, ensureBond) }
+                    _lastConnectedAt.value = System.currentTimeMillis()
+                    _connected.value = true
+                    commandStarted = true
+                    aapsLogger.debug(LTag.PUMPCOMM, "bleSession: reading $label")
+                    return@withLock withTimeout(timeoutMs.milliseconds) { block(client) }
+                } catch (e: GattDiscoveryException) {
+                    val canRetry = !commandStarted && attempt + 1 < SESSION_MAX_ATTEMPTS
+                    if (!canRetry) throw e
+                } finally {
+                    _connected.value = false
+                    gatt.close()
+                    scope.cancel()
+                    lastCloseAtMs = System.currentTimeMillis()
+                }
             }
-            try {
-                // Bound the ENTIRE connect→discover→enable handshake, not just the CONNECTED wait: a lost
-                // CCCD-write callback (which the transport documents as "surfaced by the caller's withTimeout")
-                // would otherwise suspend forever HERE while holding sessionMutex, wedging every later
-                // session op — including a delivery-critical out-of-band bolus cancel. On timeout the finally closes the
-                // gatt (aborting the pending ack) and releases the mutex.
-                val openTimeoutMs = if (ensureBond) CONNECT_TIMEOUT_MS + BOND_TIMEOUT_MS else CONNECT_TIMEOUT_MS
-                withTimeout(openTimeoutMs.milliseconds) { open(gatt, mac, ensureBond) }
-                _lastConnectedAt.value = System.currentTimeMillis()
-                _connected.value = true
-                aapsLogger.debug(LTag.PUMPCOMM, "bleSession: reading $label")
-                withTimeout(timeoutMs.milliseconds) { block(client) }
-            } finally {
-                _connected.value = false
-                gatt.close()
-                scope.cancel()
-                lastCloseAtMs = System.currentTimeMillis()
-            }
+            error("bleSession: exhausted attempts for $label")
         }
 
     private suspend fun open(gatt: BleTransportGattConnection, address: String, ensureBond: Boolean = false) = coroutineScope {
@@ -325,5 +334,6 @@ class CarelevoBleSession @Inject constructor(
 
         // Minimum gap between one session's close and the next session's connect (patch-side settle).
         private const val INTER_SESSION_SETTLE_MS = 1000L
+        private const val SESSION_MAX_ATTEMPTS = 2
     }
 }
