@@ -83,7 +83,7 @@ class BgGraphComplication : ModernBaseComplicationProviderService() {
         val widthPx = resources.displayMetrics.widthPixels
         val heightPx = widthPx / 2
         val bitmap = createBitmap(widthPx, heightPx)
-        val historyHours = sp.getString("complication_bg_graph_hours", "3").toIntOrNull() ?: 3
+        val historyHours = sp.getString(R.string.key_complication_bg_graph_hours, "3").toIntOrNull() ?: 3
         CanvasDrawScope().draw(
             density = Density(resources.displayMetrics.density),
             layoutDirection = LayoutDirection.Ltr,

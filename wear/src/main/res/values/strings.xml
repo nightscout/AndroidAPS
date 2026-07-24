@@ -61,6 +61,10 @@
     <string name="pref_single_target">Single Target</string>
     <string name="pref_wizard_percentage">Calculator Percentage</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
+    <string name="pref_complication_bg_graph_hours">BG graph time range</string>
+    <string name="duration_1_hour">1 hour</string>
+    <string name="duration_3_hours">3 hours</string>
+    <string name="duration_6_hours">6 hours</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">More Watchface settings</string>
@@ -227,6 +231,7 @@
     <string name="key_simplify_ui" translatable="false">simplify_ui</string>
     <string name="key_dark" translatable="false">dark</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
+    <string name="key_complication_bg_graph_hours" translatable="false">complication_bg_graph_hours</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
