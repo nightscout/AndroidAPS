@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Iba jeden môže byť aktívny.</string>
     <string name="configbuilder_pick_many_hint">Vyberte, čo sa použije.</string>
     <string name="configbuilder_no_selection_warning">V tejto kategórii nie je vybraný žiadny plugin.</string>
+    <string name="configbuilder_switch_confirmation_title">Prepnúť plugin?</string>
+    <string name="configbuilder_switch_confirmation">Týmto vypnete %1$s a zapnete %2$s.</string>
     <string name="expand">Rozbaliť</string>
     <string name="collapse">Zbaliť</string>
     <string name="no_compose_preferences">Pre tento plugin nie sú k dispozícii žiadne nastavenia písania</string>
