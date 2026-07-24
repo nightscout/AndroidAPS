@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Elija uno. Solo puede haber uno activo a la vez</string>
     <string name="configbuilder_pick_many_hint">Seleccione todas las opciones que correspondan</string>
     <string name="configbuilder_no_selection_warning">No se ha seleccionado ningún complemento en esta categoría</string>
+    <string name="configbuilder_switch_confirmation_title">¿Cambiar de plugin?</string>
+    <string name="configbuilder_switch_confirmation">Esto deshabilitará %1$s y habilitará \%2$s</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
     <string name="no_compose_preferences">No hay preferencias disponibles para este complemento</string>
