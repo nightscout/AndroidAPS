@@ -36,6 +36,16 @@
     <string name="setupwizard_profile_info">Vytvorte si profil s Vašimi bazálnymi dávkami (BR), sacharidovo-inzulínovými prevodmi (IC), cistlivosťami (ISF) a cieľovými hodnotami (TT). Neskôr môžete pridať viacero profilov.</string>
     <string name="setupwizard_permissions_info">AAPS potrebuje prístup k úložisku a povolenia na to, aby pracovalo správne. Prosím udeľte potrebné povolenia nižšie.</string>
     <string name="setupwizard_pump_riley_link_status">Stav RileyLinku:</string>
+    <string name="setupwizard_client_control_title">Ovládanie z klienta</string>
+    <string name="setupwizard_client_control_info">Spárujte klientské zariadenie, aby mohlo tomuto hlavnému zariadeniu posielať podpísané príkazy cez Nightscout. Toto je nový doporučený spôsob, ako diaľkovo ovládať AAPS.</string>
+    <string name="setupwizard_ns_receive_info">Príjem ošetrení a dát priamo z Nightscoutu (menej bezpečný spôsob) je teraz vo východzom nastavení vypnutý. Otvorte nastavenie nižšie iba v prípade, že to stále potrebujete. Nevyhnutné, pokiaľ potrebujete zadávať dáta prostredníctvom NS alebo aplikácií tretích stran.</string>
+    <string name="setupwizard_open_ns_receive_settings">Prijímanie dát z Nightscoutu</string>
+    <string name="setupwizard_pair_with_master_info">Spárujte tohto klienta s hlavnou AAPS aplikáciou, aby mohla posielať príkazy cez zabezpečený kanál.</string>
+    <string name="setupwizard_pairing_ws_warning">Pre párovanie je nutné pripojenie k Nightscoutu cez WebSocket. Vráťte sa späť k predchádzajúcemu kroku a najskôr ho povoľte.</string>
+    <string name="setupwizard_pairing_status_master">Spárovaný klienti: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Zatiaľ nemáte žiadnych spárovaných klientov</string>
+    <string name="setupwizard_pairing_status_client_paired">Spárované s hlavným zariadením</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Zatiaľ nespárované</string>
     <string name="readstatus">Načítať stav</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
