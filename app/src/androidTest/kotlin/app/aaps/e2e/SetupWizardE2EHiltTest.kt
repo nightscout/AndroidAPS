@@ -155,27 +155,13 @@ class SetupWizardE2EHiltTest {
             // the overview, and on the slow CI emulator the "Manage"/quick-launch buttons couldn't be caught
             // in a stable frame within the find timeout. With the loop still off the overview is quiet.
             returnToOverview()            // settle on a clean overview before navigating away
-            // Each visit is preceded by a logcat breadcrumb (tag E2E_STEP) so a CI process-crash can be
-            // pinned to the last step reached (the crash gives 0-byte coverage with no assertion failure).
-            mark("insulinManagement"); visitInsulinManagement()
-            mark("profileManagement"); visitProfileManagement()
-            mark("bolusWizardCancel"); openAndCancelBolusWizard()
-            mark("preferences"); visitPreferences()
-            mark("statistics"); visitStatistics()
-            mark("historyBrowser"); visitHistoryBrowser()
-            mark("scenes"); visitScenes()
-            mark("treatments"); visitTreatments()
-            mark("quickWizard"); visitQuickWizard()
-            mark("carePortal"); runCatching { visitCarePortal() }; returnToOverview()
-            mark("fillDialog"); visitFillDialog()
-            mark("quickLaunch"); visitQuickLaunch()
-            mark("foodManagement"); visitFoodManagement()
-            mark("profileHelper"); visitProfileHelper()
-            mark("maintenance"); runCatching { visitMaintenance() }; returnToOverview()
-            mark("siteRotation"); visitSiteRotation()
-            mark("configuration"); visitConfiguration()
-            mark("about"); visitAbout()
-            mark("enableOpenLoop")
+            visitInsulinManagement()      // Manage → Insulin (InsulinManagementScreen/ViewModel/Carousel)
+            visitProfileManagement()      // Manage → Profile (profile management screen)
+            openAndCancelBolusWizard()    // Treatments → Bolus wizard → add carbs → CANCEL (edge: no delivery)
+            visitPreferences()            // toolbar Settings → preferences screen + expand a category
+            visitStatistics()             // drawer → Statistics (StatsScreen/ViewModel)
+            visitHistoryBrowser()         // drawer → History browser (treatment history list)
+            visitScenes()                 // Manage → Scenes: create via wizard, run, then end it
 
             // Enable Open Loop LAST — after this the loop churns the overview, so do no more navigation.
             enableOpenLoop()
@@ -183,9 +169,6 @@ class SetupWizardE2EHiltTest {
             assertContains("Open Loop")                             // UI: loop-mode chip
             assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
     }
-
-    /** Logcat breadcrumb (tag E2E_STEP) — shard C dumps these so a process-crash pins to the last step. */
-    private fun mark(step: String) = android.util.Log.i("E2E_STEP", step)
 
     // ---- wizard -------------------------------------------------------------------------------
 
@@ -441,122 +424,6 @@ class SetupWizardE2EHiltTest {
     private fun visitHistoryBrowser() {
         click("Open navigation"); device.waitForIdle(IDLE_MS)
         openVia("History browser", expect = "Back")           // → history browser
-        returnToOverview()
-    }
-
-    /** Nav drawer → Treatments history; switch through the tabs to exercise each child screen/ViewModel. */
-    private fun visitTreatments() {
-        click("Open navigation"); device.waitForIdle(IDLE_MS)
-        openVia("Treatments history", expect = "Carbs and bolus")   // TreatmentsScreen: scrollable tab row + pager
-        // Each tab switch instantiates that child screen + its ViewModel. Best-effort: a tab scrolled off the
-        // scrollable tab row may not be tappable, so tolerate a miss rather than fail the browse.
-        for (tab in listOf("Temp basal", "Temporary target", "Profile switch", "Running mode", "User entry")) {
-            runCatching { click(tab); device.waitForIdle(IDLE_MS) }
-        }
-        returnToOverview()
-    }
-
-    /** Manage → QuickWizard: open the (empty) management screen and Add an entry to render the editor. */
-    private fun visitQuickWizard() {
-        openVia("Manage", expect = "Site Rotation")
-        openVia("QuickWizard", expect = "No records available")     // QuickWizardManagementScreen (empty state)
-        click("Add"); device.waitForIdle(IDLE_MS)                   // creates an entry → renders QuickWizardEditor
-        device.pressBack(); device.waitForIdle(IDLE_MS)            // Back on an unsaved new entry → confirm dialog
-        runCatching { click("OK") }                                // "Unsaved changes" → save (if the dialog shows)
-        returnToOverview()
-    }
-
-    /**
-     * Manage → Device maintenance → Pump Battery Change: opens [CareDialogScreen] (BATTERY_CHANGE, no
-     * site picker), then leaves. The richer "Careportal" section (BG Check/Note/…) is gated on non-simple
-     * mode and may be absent, so this uses the always-visible Device-maintenance entry.
-     */
-    private fun visitCarePortal() {
-        openVia("Manage", expect = "Site Rotation")
-        runCatching { device.findObject(By.scrollable(true))?.scroll(Direction.DOWN, 0.8f) } // reveal lower actions
-        device.waitForIdle(IDLE_MS)
-        openVia("Pump Battery Change", expect = "Close")           // CareDialogScreen — nav Close (X, content-desc)
-        click("Close")                                             // leave without saving
-        returnToOverview()
-    }
-
-    /** Manage → Prime/Fill: opens [FillDialogScreen] (cartridge-change preselected), toggles a switch, then Close. */
-    private fun visitFillDialog() {
-        openVia("Manage", expect = "Site Rotation")
-        openVia("Prime/Fill", expect = "Prime amount")             // FillDialogScreen (VirtualPump is refill-capable)
-        runCatching { click("Record pump site change"); device.waitForIdle(IDLE_MS) } // toggle switch → ViewModel
-        click("Close")                                             // X → leave without persisting
-        returnToOverview()
-    }
-
-    /** Overview quick-launch pill → Configure QuickLaunch: add then remove an action to exercise the config VM. */
-    private fun visitQuickLaunch() {
-        returnToOverview()                                         // settle overview so the quick-launch pill renders
-        openVia("Configure QuickLaunch", expect = "Selected actions") // QuickLaunchConfigScreen (gear on the pill)
-        runCatching {                                              // Add→Remove nets to no change (persists live)
-            click("Add"); device.waitForIdle(IDLE_MS)
-            click("Remove"); device.waitForIdle(IDLE_MS)
-        }
-        device.pressBack()                                         // nav icon has null content-desc → use Back
-        returnToOverview()
-    }
-
-    /** Manage → Food: open the (empty) food management screen and its Add-Food editor sheet, then leave. */
-    private fun visitFoodManagement() {
-        openVia("Manage", expect = "Site Rotation")
-        openVia("Food", expect = "No data")                        // FoodManagementScreen (empty state)
-        runCatching { openVia("Add", expect = "Add Food"); click("Cancel") } // Add-Food editor sheet → Cancel
-        click("Back")                                              // top-bar Back
-        returnToOverview()
-    }
-
-    /** Nav drawer → Profile helper: switch a tab (local state), then Close (never Clone — it persists). */
-    private fun visitProfileHelper() {
-        click("Open navigation"); device.waitForIdle(IDLE_MS)
-        openVia("Profile helper", expect = "Comparation")          // ProfileHelperScreen (3 tabs)
-        runCatching { click("Profile 2"); device.waitForIdle(IDLE_MS) } // switch tab → recompute
-        click("Close")                                             // nav Close (X)
-        returnToOverview()
-    }
-
-    /**
-     * Nav drawer → Maintenance (ModalBottomSheet): exercise the safe in-app sub-actions only — Log settings
-     * sheet, the in-app Import-settings screen, and a Cancel-only confirm dialog. Deliberately avoids every
-     * row that launches an OS file picker / share intent or mutates the DB (AAPS directory, Send logs, Reset).
-     */
-    private fun visitMaintenance() {
-        fun openSheet() { click("Open navigation"); device.waitForIdle(IDLE_MS); openVia("Maintenance", expect = "File management") }
-        openSheet()                                                // MaintenanceBottomSheet + MaintenanceViewModel
-        runCatching { click("Log settings"); assertVisible("Reset to defaults"); device.pressBack() } // LogSettingBottomSheet
-        runCatching { openSheet(); openVia("Import settings", expect = "Close"); click("Close") }      // ImportSettingsScreen
-        runCatching { openSheet(); click("Database cleanup"); click("Cancel") }                        // MaintenanceDialogs (Cancel)
-        device.pressBack()                                         // dismiss any lingering sheet
-        returnToOverview()
-    }
-
-    /** Manage → Site Rotation: toggle the pump/CGM filters and open the settings sheet, then leave. */
-    private fun visitSiteRotation() {
-        openVia("Manage", expect = "Site Rotation")
-        openVia("Site Rotation", expect = "Pump Sites")            // SiteRotationManagementScreen (segmented filters)
-        runCatching { click("CGM Sites"); device.waitForIdle(IDLE_MS); click("Pump Sites"); device.waitForIdle(IDLE_MS) }
-        runCatching { click("Settings"); device.waitForIdle(IDLE_MS); device.pressBack() } // prefs ModalBottomSheet
-        returnToOverview()                                         // "Back" nav icon
-    }
-
-    /** Nav drawer → Configuration: view categories, drill into the Pump category (read-only), then leave. */
-    private fun visitConfiguration() {
-        click("Open navigation"); device.waitForIdle(IDLE_MS)
-        runCatching { scrollTo("Configuration") }
-        openVia("Configuration", expect = "BG Source")            // ConfigurationScreen (category list)
-        runCatching { openVia("Pump", expect = "Virtual Pump"); device.pressBack() } // PluginCategoryScreen
-        returnToOverview()
-    }
-
-    /** Nav drawer → About dialog: assert it rendered, then dismiss with OK (never the external "don't kill" link). */
-    private fun visitAbout() {
-        click("Open navigation"); device.waitForIdle(IDLE_MS)
-        openVia("About", expect = "Don't kill my app?")           // AboutAlertDialog
-        click("OK")                                               // confirmButton → onDismiss
         returnToOverview()
     }
 

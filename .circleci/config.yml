@@ -190,39 +190,23 @@ jobs:
             PKG=info.nightscout.androidaps
             DEV=emulator-5558
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
-            # Run a test group in its OWN am-instrument process (fresh memory), with a 2-attempt process-crash
-            # retry. The heavy SetupWizard walkthrough OOM'd shard C's single process once it grew (build 40381:
-            # the 9 Equil tests loaded the process, then full_setup crashed mid-run -> 0-byte coverage). Running
-            # each class in its own fresh process gives it the headroom it has locally. Each writes its own
-            # cov-<suffix>.ec (the jacoco report globs every *.ec in COVDIR). $1=label $2=suffix rest=am filter.
-            run_group() {
-              label="$1"; suf="$2"; shift 2; rc=1
-              for attempt in 1 2; do
-                adb -s $DEV logcat -c 2>/dev/null || true
-                adb -s $DEV shell am instrument -w -r "$@" \
-                  -e coverage true -e coverageFile /data/data/$PKG/cov-$suf.ec \
-                  $PKG.test/app.aaps.runners.HiltTestRunner > shard-$suf-$attempt.txt 2>&1 || true
-                tail -n 20 shard-$suf-$attempt.txt
-                echo "--- E2E_STEP breadcrumbs ($label attempt $attempt) ---"; adb -s $DEV shell logcat -d -s E2E_STEP:I 2>/dev/null | tail -30
-                adb -s $DEV exec-out run-as $PKG cat cov-$suf.ec > "$COVDIR/cov-$suf.ec" 2>/dev/null || true
-                sz=$(wc -c < "$COVDIR/cov-$suf.ec" 2>/dev/null || echo 0)
-                echo "$label attempt $attempt coverage: ${sz:-0} bytes"
-                if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-$suf-$attempt.txt || [ "${sz:-0}" -lt 20000 ]; then
-                  echo "$label attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
-                fi
-                if grep -qE "FAILURES!!!" shard-$suf-$attempt.txt; then rc=1; else rc=0; fi
-                break
-              done
-              return $rc
-            }
-            # C1: every non-Dana untagged test EXCEPT the heavy SetupWizard walkthrough. `notClass` only carves
-            # SetupWizard out, so any NEW untagged E2E test still lands here automatically (keeps the notAnnotation
-            # auto-include). C2: the SetupWizard walkthrough alone in a fresh process.
-            run_group "shard C1 (Equil + non-Dana)" C1 -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB -e notClass app.aaps.e2e.SetupWizardE2EHiltTest; RC1=$?
-            run_group "shard C2 (SetupWizard)" C2 -e class app.aaps.e2e.SetupWizardE2EHiltTest; RC2=$?
-            RC=1; [ "$RC1" = 0 ] && [ "$RC2" = 0 ] && RC=0
+            RC=1
+            for attempt in 1 2; do
+              adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
+                -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
+                $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true
+              tail -n 20 shard-C-$attempt.txt
+              adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
+              sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
+              echo "shard C attempt $attempt coverage: ${sz:-0} bytes"
+              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-C-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
+                echo "shard C attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+              fi
+              if grep -qE "FAILURES!!!" shard-C-$attempt.txt; then RC=1; else RC=0; fi
+              break
+            done
             echo $RC > /tmp/rc-C
-            echo "shard C done rc=$RC (C1=$RC1 C2=$RC2)"
+            echo "shard C done rc=$RC"
             exit $RC
 
       # workers.max is capped at 8 (below the 15 Gradle cores) on purpose: the unit suite saturating all
