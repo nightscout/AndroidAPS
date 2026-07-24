@@ -289,9 +289,6 @@ fun SecondaryGraphCompose(
         val pts = processPoints(basalData.actualBasal, minTimestamp, minX, maxX)
         pts.map { (x, y) -> x to -y }
     }
-    val basalMaxY = remember(basalData) {
-        if (basalData != null && basalData.maxBasal > 0.0) basalData.maxBasal / BASAL_HEIGHT_FRACTION else 1.0
-    }
 
     val hasBasalLayer = hasIob && basalData != null && !isDualAxis
 
@@ -540,23 +537,9 @@ fun SecondaryGraphCompose(
     val decorations = remember(nowLine, visibleRangeReporter) { listOf(nowLine, visibleRangeReporter) }
 
     // When basal overlay is active, reserve the top BASAL_HEIGHT_FRACTION of the height for basal by extending primary Y range
-    val primaryYMax = remember(hasBasalLayer, processedIob, processedSimpleSeries, processedCob, visibleMinX, visibleMaxX) {
+    val primaryYMax = remember(hasBasalLayer, processedIob, processedSimpleSeries, processedCob, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX) {
         if (!hasBasalLayer) return@remember null // auto-range when no basal
-        fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
-        val windowedY = buildList {
-            addAll(processedIob.filter { inWindow(it.first) }.map { it.second })
-            for ((_, pts) in processedSimpleSeries) addAll(pts.filter { inWindow(it.first) }.map { it.second })
-            addAll(processedCob.first.filter { inWindow(it.first) }.map { it.second })
-        }
-        // Fall back to the full range if the visible window currently has no points
-        // (e.g. scrolled into a future gap with no data)
-        val allY = windowedY.ifEmpty {
-            buildList {
-                addAll(processedIob.map { it.second })
-                for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
-                addAll(processedCob.first.map { it.second })
-            }
-        }
+        val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
         if (allY.isEmpty()) null
         else {
             val dataMax = allY.max().coerceAtLeast(0.1)
@@ -574,17 +557,11 @@ fun SecondaryGraphCompose(
     // Only applied to true dual-axis case (no basal overlay, secondary present).
     val dualAxisRanges = remember(
         isDualAxis, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
-        processedDevSlopeMin, processedDeviationLines, processedSecondary
+        processedDevSlopeMin, processedDeviationLines, processedSecondary, visibleMinX, visibleMaxX
     ) {
         if (!isDualAxis || hasBasalLayer) return@remember null
-        val primaryY = buildList {
-            addAll(processedIob.map { it.second })
-            addAll(processedCob.first.map { it.second })
-            for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
-            addAll(processedDevSlopeMin.map { it.second })
-            processedDeviationLines?.series?.values?.forEach { addAll(it) }
-        }
-        val secondaryY = processedSecondary.map { it.second }
+        val primaryY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
+        val secondaryY = windowedY(processedSecondary, visibleMinX, visibleMaxX)
         if (primaryY.isEmpty() || secondaryY.isEmpty()) return@remember null
         alignZeros(primaryY.min(), primaryY.max(), secondaryY.min(), secondaryY.max())
     }
@@ -603,7 +580,26 @@ fun SecondaryGraphCompose(
         val low = minOf(0.0, dataMax)
         low to maxOf(dataMax, low + 1.0)
     }
-    val primaryRangeProvider = remember(maxX, primaryYMax, dualAxisRanges, hasPrimaryData, primaryConstantRange) {
+    // Single-axis, non-basal, non-degenerate case (e.g. standalone COB/BGI/DevSlope/VarSens graphs):
+    // Vico's own auto-range would compute from the full loaded model, not the visible window —
+    // same flattening/clipping problem the basal and dual-axis cases solve above — so window it
+    // here too, using the same union-of-primary-series helper.
+    val primaryAutoRange = remember(
+        hasBasalLayer, isDualAxis, processedIob, processedCob, processedSimpleSeries,
+        processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
+    ) {
+        if (hasBasalLayer || isDualAxis) return@remember null
+        val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
+        if (allY.isEmpty()) return@remember null
+        val dataMin = allY.min()
+        val dataMax = allY.max()
+        if (dataMax - dataMin >= 1e-6) dataMin to dataMax
+        else { // degenerate (near-flat) windowed subset — pad so Vico doesn't collapse the axis
+            val low = minOf(0.0, dataMax)
+            low to maxOf(dataMax, low + 1.0)
+        }
+    }
+    val primaryRangeProvider = remember(maxX, primaryYMax, dualAxisRanges, hasPrimaryData, primaryConstantRange, primaryAutoRange) {
         when {
             // Basal overlay case takes precedence (reserves the top BASAL_HEIGHT_FRACTION of axis for basal)
             primaryYMax != null          -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryYMax.first, maxY = primaryYMax.second)
@@ -611,12 +607,23 @@ fun SecondaryGraphCompose(
             dualAxisRanges != null       -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = dualAxisRanges.aMin, maxY = dualAxisRanges.aMax)
             // No data: anchor a default range so the empty frame is visible
             !hasPrimaryData              -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
-            // Constant series: explicit range so a flat line isn't collapsed to 0..1 and clipped
+            // Constant series (whole loaded range is flat): explicit range so it isn't collapsed to 0..1 and clipped
             primaryConstantRange != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryConstantRange.first, maxY = primaryConstantRange.second)
+            // Single-axis: window the range to the visible portion instead of Vico's full-model auto-range
+            primaryAutoRange != null     -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryAutoRange.first, maxY = primaryAutoRange.second)
             else                         -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
         }
     }
-    // Basal range: 0 at top, -basalMaxY at bottom → basal occupies the top BASAL_HEIGHT_FRACTION of the height
+    // Basal range: 0 at top, -basalMaxY at bottom → basal occupies the top BASAL_HEIGHT_FRACTION of the height.
+    // Windowed to the visible scroll/zoom range, like the primary IOB scale above, so basal doesn't
+    // stay flattened/clipped when scrolled away from the loaded range's peak.
+    val basalMaxY = remember(basalData, processedBasalProfile, processedBasalActual, visibleMinX, visibleMaxX) {
+        if (basalData == null || basalData.maxBasal <= 0.0) return@remember 1.0
+        val windowedAbsMax = (windowedY(processedBasalProfile, visibleMinX, visibleMaxX) + windowedY(processedBasalActual, visibleMinX, visibleMaxX))
+            .map { -it }
+            .maxOrNull()
+        (windowedAbsMax?.takeIf { it > 0.0 } ?: basalData.maxBasal) / BASAL_HEIGHT_FRACTION
+    }
     val basalRangeProvider = remember(maxX, basalMaxY) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = -basalMaxY, maxY = 0.0)
     }
@@ -736,6 +743,64 @@ private sealed class SeriesSlot {
 // =========================================================================
 // Data processing helpers
 // =========================================================================
+
+/**
+ * Y-values of [points] restricted to [visibleMinX]..[visibleMaxX], falling back to the full
+ * (unwindowed) values when the visible window currently has no points (e.g. scrolled into a
+ * future gap with no data).
+ */
+private fun windowedY(points: List<Pair<Double, Double>>, visibleMinX: Double?, visibleMaxX: Double?): List<Double> {
+    fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
+    return points.filter { inWindow(it.first) }.map { it.second }.ifEmpty { points.map { it.second } }
+}
+
+/**
+ * Union of y-values across all primary-layer series (IOB, COB, simple series, DevSlope-min,
+ * deviation lines), restricted to [visibleMinX]..[visibleMaxX]. Falls back to the full
+ * (unwindowed) union when the visible window currently has no points across ANY of these series
+ * (e.g. scrolled into a future gap with no data) — the union is computed first, then the fallback
+ * applies to the whole set, so windowed points from one series are never mixed with unwindowed
+ * points from another.
+ *
+ * [processedDeviationLines] stores y-values per type without paired x, so pairs are reconstituted
+ * by zipping each type's y-array against the shared allX before filtering.
+ */
+private fun windowedPrimaryY(
+    visibleMinX: Double?,
+    visibleMaxX: Double?,
+    processedIob: List<Pair<Double, Double>>,
+    processedCobY: List<Pair<Double, Double>>,
+    processedSimpleSeries: List<Pair<SeriesType, List<Pair<Double, Double>>>>,
+    processedDevSlopeMin: List<Pair<Double, Double>>,
+    processedDeviationLines: ProcessedDeviationLines?
+): List<Double> {
+    fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
+    fun deviationY(filterToWindow: Boolean): List<Double> =
+        processedDeviationLines?.let { lines ->
+            lines.series.values.flatMap { ys ->
+                lines.allX.zip(ys)
+                    .filter { (x, _) -> !filterToWindow || inWindow(x) }
+                    .map { it.second }
+            }
+        } ?: emptyList()
+
+    val windowed = buildList {
+        addAll(processedIob.filter { inWindow(it.first) }.map { it.second })
+        addAll(processedCobY.filter { inWindow(it.first) }.map { it.second })
+        for ((_, pts) in processedSimpleSeries) addAll(pts.filter { inWindow(it.first) }.map { it.second })
+        addAll(processedDevSlopeMin.filter { inWindow(it.first) }.map { it.second })
+        addAll(deviationY(filterToWindow = true))
+    }
+    return windowed.ifEmpty {
+        buildList {
+            addAll(processedIob.map { it.second })
+            addAll(processedCobY.map { it.second })
+            for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
+            addAll(processedDevSlopeMin.map { it.second })
+            addAll(deviationY(filterToWindow = false))
+        }
+    }
+}
 
 @Suppress("SameParameterValue")
 private fun processPoints(points: List<GraphDataPoint>, minTimestamp: Long, minX: Double, maxX: Double): List<Pair<Double, Double>> {
