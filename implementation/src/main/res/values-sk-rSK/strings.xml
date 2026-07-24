@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Vyber priečinok pre nastavenia aplikácie a log súbory</string>
     <string name="permission_notifications_title">Notifikácie</string>
     <string name="permission_notifications_description">Požadované pre zobrazovanie upozornení, alarmov a zmien stavov pumpy</string>
+    <string name="permission_fsi_title">Upozornenie na celú obrazovku</string>
+    <string name="permission_fsi_description">Požadované preto, aby upozornenia mohli prebudiť obrazovku a zobraziť sa na celú obrazovku, keď je telefón uzamknutý</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
