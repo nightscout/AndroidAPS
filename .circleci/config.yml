@@ -198,10 +198,12 @@ jobs:
             run_group() {
               label="$1"; suf="$2"; shift 2; rc=1
               for attempt in 1 2; do
+                adb -s $DEV logcat -c 2>/dev/null || true
                 adb -s $DEV shell am instrument -w -r "$@" \
                   -e coverage true -e coverageFile /data/data/$PKG/cov-$suf.ec \
                   $PKG.test/app.aaps.runners.HiltTestRunner > shard-$suf-$attempt.txt 2>&1 || true
                 tail -n 20 shard-$suf-$attempt.txt
+                echo "--- E2E_STEP breadcrumbs ($label attempt $attempt) ---"; adb -s $DEV shell logcat -d -s E2E_STEP:I 2>/dev/null | tail -30
                 adb -s $DEV exec-out run-as $PKG cat cov-$suf.ec > "$COVDIR/cov-$suf.ec" 2>/dev/null || true
                 sz=$(wc -c < "$COVDIR/cov-$suf.ec" 2>/dev/null || echo 0)
                 echo "$label attempt $attempt coverage: ${sz:-0} bytes"

@@ -155,26 +155,27 @@ class SetupWizardE2EHiltTest {
             // the overview, and on the slow CI emulator the "Manage"/quick-launch buttons couldn't be caught
             // in a stable frame within the find timeout. With the loop still off the overview is quiet.
             returnToOverview()            // settle on a clean overview before navigating away
-            visitInsulinManagement()      // Manage → Insulin (InsulinManagementScreen/ViewModel/Carousel)
-            visitProfileManagement()      // Manage → Profile (profile management screen)
-            openAndCancelBolusWizard()    // Treatments → Bolus wizard → add carbs → CANCEL (edge: no delivery)
-            visitPreferences()            // toolbar Settings → preferences screen + expand a category
-            visitStatistics()             // drawer → Statistics (StatsScreen/ViewModel)
-            visitHistoryBrowser()         // drawer → History browser (treatment history list)
-            visitScenes()                 // Manage → Scenes: create via wizard, run, then end it
-            visitTreatments()             // drawer → Treatments history: switch tabs (each = a child screen/VM)
-            visitQuickWizard()            // Manage → QuickWizard: empty mgmt screen + Add → editor
-            runCatching { visitCarePortal() } // Manage → Pump Battery Change → CareDialogScreen (entry varies by mode)
-            returnToOverview()            // guarantee a clean overview even if the care-portal visit bailed
-            visitFillDialog()             // Manage → Prime/Fill → FillDialogScreen
-            visitQuickLaunch()            // quick-launch pill gear → QuickLaunchConfigScreen
-            visitFoodManagement()         // Manage → Food → FoodManagementScreen + Add editor
-            visitProfileHelper()          // drawer → Profile helper: tabs
-            runCatching { visitMaintenance() } // drawer → Maintenance sheet (safe in-app sub-actions only)
-            returnToOverview()            // guarantee a clean overview after the maintenance sheet churn
-            visitSiteRotation()           // Manage → Site Rotation → SiteRotationManagementScreen
-            visitConfiguration()          // drawer → Configuration → category + plugin-category screens
-            visitAbout()                  // drawer → About dialog
+            // Each visit is preceded by a logcat breadcrumb (tag E2E_STEP) so a CI process-crash can be
+            // pinned to the last step reached (the crash gives 0-byte coverage with no assertion failure).
+            mark("insulinManagement"); visitInsulinManagement()
+            mark("profileManagement"); visitProfileManagement()
+            mark("bolusWizardCancel"); openAndCancelBolusWizard()
+            mark("preferences"); visitPreferences()
+            mark("statistics"); visitStatistics()
+            mark("historyBrowser"); visitHistoryBrowser()
+            mark("scenes"); visitScenes()
+            mark("treatments"); visitTreatments()
+            mark("quickWizard"); visitQuickWizard()
+            mark("carePortal"); runCatching { visitCarePortal() }; returnToOverview()
+            mark("fillDialog"); visitFillDialog()
+            mark("quickLaunch"); visitQuickLaunch()
+            mark("foodManagement"); visitFoodManagement()
+            mark("profileHelper"); visitProfileHelper()
+            mark("maintenance"); runCatching { visitMaintenance() }; returnToOverview()
+            mark("siteRotation"); visitSiteRotation()
+            mark("configuration"); visitConfiguration()
+            mark("about"); visitAbout()
+            mark("enableOpenLoop")
 
             // Enable Open Loop LAST — after this the loop churns the overview, so do no more navigation.
             enableOpenLoop()
@@ -182,6 +183,9 @@ class SetupWizardE2EHiltTest {
             assertContains("Open Loop")                             // UI: loop-mode chip
             assertDbInsert("RunningMode", "OPEN_LOOP")              // DB: the running mode was persisted
     }
+
+    /** Logcat breadcrumb (tag E2E_STEP) — shard C dumps these so a process-crash pins to the last step. */
+    private fun mark(step: String) = android.util.Log.i("E2E_STEP", step)
 
     // ---- wizard -------------------------------------------------------------------------------
 
