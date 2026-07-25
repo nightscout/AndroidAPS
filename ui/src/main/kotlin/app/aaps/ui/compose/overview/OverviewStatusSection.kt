@@ -210,7 +210,7 @@ private fun StatusLightsSettingsBottomSheet(
 }
 
 @Composable
-private fun StatusLightsSettingsContent(
+internal fun StatusLightsSettingsContent(
     settingsDef: PreferenceSubScreenDef,
     onCopyFromNightscout: () -> Unit
 ) {
