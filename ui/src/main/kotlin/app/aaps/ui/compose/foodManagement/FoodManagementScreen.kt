@@ -289,7 +289,7 @@ private fun FoodItem(
 }
 
 @Composable
-private fun FoodEditorContent(
+internal fun FoodEditorContent(
     state: FoodManagementUiState,
     onNameChange: (String) -> Unit,
     onCategoryChange: (String) -> Unit,
