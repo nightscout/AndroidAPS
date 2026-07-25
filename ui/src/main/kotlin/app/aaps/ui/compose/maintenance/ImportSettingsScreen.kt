@@ -142,7 +142,7 @@ fun ImportSettingsScreen(
 }
 
 @Composable
-private fun ImportFilePickerContent(
+internal fun ImportFilePickerContent(
     state: ImportStep.FilePicker,
     prefFileList: FileListProvider,
     onFileClick: (ImportFileItem) -> Unit,
