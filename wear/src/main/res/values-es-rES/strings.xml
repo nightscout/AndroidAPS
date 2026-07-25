@@ -61,6 +61,10 @@
     <string name="pref_single_target">Objetivo único</string>
     <string name="pref_wizard_percentage">Porcentaje en calculadora</string>
     <string name="pref_complication_tap_action">Acción al tocar la complicación</string>
+    <string name="pref_complication_bg_graph_hours">Rango de tiempo del gráfico de glucemia</string>
+    <string name="duration_1_hour">1 hora</string>
+    <string name="duration_3_hours">3 horas</string>
+    <string name="duration_6_hours">6 horas</string>
     <string name="pref_unicode_in_complications">Símbolos Unicode en complicaciones</string>
     <string name="pref_version">Versión:</string>
     <string name="pref_moreWatchfaceSettings">Más ajustes de la esfera del reloj</string>
