@@ -1,0 +1,50 @@
+package app.aaps.ui.compose.profileHelper
+
+import android.content.Context
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import app.aaps.ui.R
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+
+/** Robolectric composable test for [DefaultProfileContent]: renders the parameter fields (all shown). */
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@Config(sdk = [35])
+class DefaultProfileContentTest {
+
+    @get:Rule
+    val compose = createComposeRule()
+
+    private lateinit var title: String
+
+    @Before
+    fun setUp() {
+        val ctx: Context = RuntimeEnvironment.getApplication()
+        title = ctx.getString(R.string.profile_parameters)
+    }
+
+    @Test
+    fun rendersParametersTitleWithAllFields() {
+        compose.setContent {
+            MaterialTheme {
+                DefaultProfileContent(
+                    age = 40, onAgeChange = {},
+                    weight = 70.0, onWeightChange = {},
+                    tdd = 30.0, onTddChange = {},
+                    pct = 100.0, onPctChange = {},
+                    showPct = true, showWeight = true, showTdd = true
+                )
+            }
+        }
+        compose.onNodeWithText(title).assertIsDisplayed()
+    }
+}
