@@ -118,7 +118,7 @@ fun CalibrationDialogScreen(
 }
 
 @Composable
-private fun CalibrationDialogContent(
+internal fun CalibrationDialogContent(
     uiState: CalibrationDialogUiState,
     snackbarHostState: SnackbarHostState,
     preflightMessage: String?,
