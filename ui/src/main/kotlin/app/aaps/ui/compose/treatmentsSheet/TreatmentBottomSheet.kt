@@ -285,7 +285,7 @@ internal fun TreatmentSelectionContent(
 }
 
 @Composable
-private fun TreatmentSettingsContent(
+internal fun TreatmentSettingsContent(
     settingsDef: PreferenceSubScreenDef,
     onBack: () -> Unit
 ) {
