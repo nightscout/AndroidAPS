@@ -360,7 +360,7 @@ internal fun SiteRotationManagementContent(
 }
 
 @Composable
-private fun InlineEditorContent(
+internal fun InlineEditorContent(
     te: TE?,
     dateString: String,
     locationString: String,

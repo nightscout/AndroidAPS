@@ -6,6 +6,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -40,7 +42,7 @@ class InlineEditorContentTest {
         compose.setContent {
             MaterialTheme {
                 InlineEditorContent(
-                    te = null,
+                    te = TE(timestamp = 1000L, type = TE.Type.NOTE, glucoseUnit = GlucoseUnit.MGDL),
                     dateString = "2023-01-01 12:00",
                     locationString = "Left arm",
                     onArrowClick = { arrowClicked = true },
