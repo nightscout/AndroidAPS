@@ -460,8 +460,12 @@ fun niceNegativeSliver(value: Double): Double {
  * around 0), so [pivot] always lands exactly in the middle of the axis. Nice-ifying [min, max]
  * directly (via [niceScale]) would not preserve that centering.
  */
-fun niceScaleAroundPivot(min: Double, max: Double, pivot: Double, maxTickCount: Int = 5): NiceScale {
+fun niceScaleAroundPivot(min: Double, max: Double, pivot: Double, maxTickCount: Int = 5, minDeviation: Double = 0.0): NiceScale {
     val rawDeviation = maxOf(abs(pivot - min), abs(max - pivot))
+    // Below the floor (e.g. SENS sitting flat around 100%): snap to a fixed 3-tick scale
+    // (pivot-minDeviation, pivot, pivot+minDeviation) instead of nice-ifying a near-zero range,
+    // which would otherwise produce an overly tight, non-round scale (e.g. 99/99.5/100/100.5/101).
+    if (minDeviation > 0.0 && rawDeviation <= minDeviation) return NiceScale(pivot - minDeviation, pivot + minDeviation, minDeviation)
     val deviation = if (rawDeviation > 0.0) rawDeviation else 1.0
     val niceDeviation = niceNum(deviation, round = false)
     val step = niceNum(2 * niceDeviation / (maxTickCount - 1), round = true)

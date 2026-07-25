@@ -77,6 +77,9 @@ private const val IOB_GRAPH_TICK_COUNT = 3
 /** Tick count for series that use the graph's full height (COB, BGI/DEV/ACTIVITY/STEPS, SENS/VAR_SENS/HEART_RATE, DEV_SLOPE). */
 private const val SECONDARY_GRAPH_TICK_COUNT = 5
 
+/** Minimum half-width for SENSITIVITY's pivot scale — below this, snap to a fixed 95%/100%/105% scale instead of nice-ifying a near-zero deviation. */
+private const val SENS_MIN_DEVIATION = 5.0
+
 /**
  * Mostly-positive series: 0-floored by default (see [zeroFloorNiceRange]), allowing a
  * disparity-aware negative excursion without ever centering zero — the same rule used for IOB.
@@ -84,16 +87,21 @@ private const val SECONDARY_GRAPH_TICK_COUNT = 5
 private val ZERO_FLOOR_SERIES_TYPES = setOf(SeriesType.BGI, SeriesType.DEVIATIONS, SeriesType.ACTIVITY, SeriesType.STEPS, SeriesType.ABS_IOB)
 
 /**
- * Wraps a step-based [VerticalAxis.ItemPlacer], filtering out labels/gridlines above [visibleMax].
- * Used for the IOB/basal combo graph: the axis itself extends past the actual IOB data range to
- * reserve headroom for the basal overlay (see the `primaryYMax` computation), but tick labels
- * should stop at the real data boundary instead of continuing into the reserved band above it —
- * otherwise the axis visually implies IOB data exists where only the basal overlay is drawn.
+ * Wraps a step-based [VerticalAxis.ItemPlacer], filtering out labels/gridlines outside
+ * [visibleMin]..[visibleMax]. Two independent uses:
+ * - IOB/basal combo graph: the axis extends past the actual IOB data range to reserve headroom
+ *   for the basal overlay (see the `primaryYMax` computation), so labels should stop at the real
+ *   data boundary ([visibleMax]) instead of continuing into the reserved band above it.
+ * - Dual-axis combos where primary is zero-floor-style: its axis is pushed below its own real
+ *   floor purely to align its zero with the secondary/pivot series (see `dualAxisRanges`), so
+ *   labels should stop at primary's own real floor ([visibleMin]) instead of showing a fake
+ *   negative tick for a series that never actually goes negative.
  * Delegates everything else (margins, measurement, overlap-based thinning) to [delegate].
  */
 private class ClampedVerticalAxisItemPlacer(
     private val delegate: VerticalAxis.ItemPlacer,
-    private val visibleMax: () -> Double
+    private val visibleMin: () -> Double = { Double.NEGATIVE_INFINITY },
+    private val visibleMax: () -> Double = { Double.POSITIVE_INFINITY }
 ) : VerticalAxis.ItemPlacer by delegate {
 
     override fun getLabelValues(
@@ -101,14 +109,14 @@ private class ClampedVerticalAxisItemPlacer(
         axisHeight: Float,
         maxLabelHeight: Float,
         position: Axis.Position.Vertical
-    ): List<Double> = delegate.getLabelValues(context, axisHeight, maxLabelHeight, position).filter { it <= visibleMax() }
+    ): List<Double> = delegate.getLabelValues(context, axisHeight, maxLabelHeight, position).filter { it in visibleMin()..visibleMax() }
 
     override fun getLineValues(
         context: CartesianDrawingContext,
         axisHeight: Float,
         maxLabelHeight: Float,
         position: Axis.Position.Vertical
-    ): List<Double>? = delegate.getLineValues(context, axisHeight, maxLabelHeight, position)?.filter { it <= visibleMax() }
+    ): List<Double>? = delegate.getLineValues(context, axisHeight, maxLabelHeight, position)?.filter { it in visibleMin()..visibleMax() }
 }
 
 /**
@@ -637,11 +645,70 @@ fun SecondaryGraphCompose(
         val primaryY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
         val secondaryY = windowedY(processedSecondary, visibleMinX, visibleMaxX)
         if (primaryY.isEmpty() || secondaryY.isEmpty()) return@remember null
-        // SENSITIVITY's "no change" value is 100%, not 0 — treat it as this side's pivot so it
-        // aligns with another series' zero the same way two zero-crossing series would.
-        val primaryPivot = if (primaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
-        val secondaryPivot = if (secondaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
-        alignZeros(primaryY.min(), primaryY.max(), secondaryY.min(), secondaryY.max(), primaryPivot, secondaryPivot)
+
+        val primaryIsPivot = primaryType == SeriesType.SENSITIVITY || primaryType == SeriesType.DEV_SLOPE
+        val secondaryIsPivot = secondaryType == SeriesType.SENSITIVITY || secondaryType == SeriesType.DEV_SLOPE
+        if (primaryIsPivot != secondaryIsPivot) {
+            // Exactly one side is pivot-centered (SENS/DEV_SLOPE), the other zero-floor-style
+            // (e.g. COB, BGI): the pivot side gets a full nice-scaled symmetric range around its
+            // own pivot — unconditionally, no branching on where its bounds happen to sit relative
+            // to the pivot, so it never flips between "centered" and "pinned" between recomputes.
+            // The zero-floor side gets a symmetric (-half,+half) container sized from its own
+            // zero-floor nice range, so its zero lands exactly at the pivot's center (same pixel
+            // row) and its curve — normally never negative — fills only the upper half, scaled
+            // nicely up to its own real max (any rare negative sliver still fits, just not
+            // symmetric-looking, since half also covers it).
+            val isSensPivot = primaryType == SeriesType.SENSITIVITY || secondaryType == SeriesType.SENSITIVITY
+            val pivot = if (isSensPivot) 100.0 else 0.0
+            val pivotMinDeviation = if (isSensPivot) SENS_MIN_DEVIATION else 0.0
+            return@remember if (primaryIsPivot) {
+                val pivotNice = niceScaleAroundPivot(primaryY.min(), primaryY.max(), pivot, SECONDARY_GRAPH_TICK_COUNT, pivotMinDeviation)
+                val zeroFloorNice = zeroFloorNiceRange(secondaryY.min(), secondaryY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+                val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
+                // Primary is the pivot itself here — its own axis is fully meaningful in both
+                // directions, no label clamping needed.
+                AlignedRanges(pivotNice.min, pivotNice.max, -zeroFloorHalf, zeroFloorHalf)
+            } else {
+                val pivotNice = niceScaleAroundPivot(secondaryY.min(), secondaryY.max(), pivot, SECONDARY_GRAPH_TICK_COUNT, pivotMinDeviation)
+                val zeroFloorNice = zeroFloorNiceRange(primaryY.min(), primaryY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+                val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
+                // Primary is the zero-floor side, pushed into a symmetric container purely to
+                // align its zero with the pivot's center — its own real floor (e.g. 0 for COB)
+                // must still be the lowest label shown, or its axis reads as if COB/BGI/etc. can
+                // go negative when it can't.
+                AlignedRanges(-zeroFloorHalf, zeroFloorHalf, pivotNice.min, pivotNice.max, primaryLabelFloor = zeroFloorNice.min)
+            }
+        }
+        if (primaryIsPivot || secondaryIsPivot) {
+            // Both sides pivot-centered (SENS + DEV_SLOPE together — unusual but possible): keep
+            // the existing pivot-aware zero alignment, both are symmetric around their own pivot
+            // anyway so the old mechanism is adequate here.
+            val primaryPivot = if (primaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
+            val secondaryPivot = if (secondaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
+            return@remember alignZeros(primaryY.min(), primaryY.max(), secondaryY.min(), secondaryY.max(), primaryPivot, secondaryPivot)
+        }
+
+        // Neither series is pivot-centered (e.g. COB + VAR_SENSITIVITY, or BGI + STEPS): primary
+        // stays nice-scaled and zero-floored, secondary stays raw. Each series' own "negative
+        // fraction" is computed independently — primary from its nice bounds, secondary from its
+        // raw bounds — and the shared target is their average, so neither curve's height dominates
+        // the compromise. Each axis is then widened just enough to hit that shared fraction,
+        // anchored at whichever of its own real/nice bounds avoids clipping (see
+        // fractionAlignedRange / fractionAlignedNiceRange) so nothing is ever clipped.
+        val primaryNice = zeroFloorNiceRange(primaryY.min(), primaryY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+        val primaryFraction = if (primaryNice.max > primaryNice.min) -primaryNice.min / (primaryNice.max - primaryNice.min) else 0.0
+
+        val secondaryMax = secondaryY.max().coerceAtLeast(0.1)
+        val secondaryFraction = if (secondaryY.min() < 0.0) -secondaryY.min() / (secondaryMax - secondaryY.min()) else 0.0
+
+        val sharedFraction = (primaryFraction + secondaryFraction) / 2.0
+
+        val (aMin, aMax) = fractionAlignedNiceRange(primaryNice.min, primaryNice.max, sharedFraction)
+        val (bMin, bMax) = fractionAlignedRange(secondaryY.min(), secondaryMax, sharedFraction)
+        // primaryNice.min is primary's own real floor (0 unless it has a genuine negative sliver);
+        // aMin can be pushed below that purely to align zero with secondary — clamp labels back to
+        // primary's own floor so its axis never shows a fake negative tick.
+        AlignedRanges(aMin, aMax, bMin, bMax, primaryLabelFloor = primaryNice.min)
     }
 
     // Empty graph (only the normalizer series at y=0) would auto-range to a degenerate [0,0]
@@ -663,10 +730,10 @@ fun SecondaryGraphCompose(
     // same flattening/clipping problem the basal and dual-axis cases solve above — so window it
     // here too, using the same union-of-primary-series helper.
     val primaryAutoRange = remember(
-        hasBasalLayer, isDualAxis, processedIob, processedCob, processedSimpleSeries,
+        hasBasalLayer, dualAxisRanges, processedIob, processedCob, processedSimpleSeries,
         processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
     ) {
-        if (hasBasalLayer || isDualAxis) return@remember null
+        if (hasBasalLayer || dualAxisRanges != null) return@remember null
         val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
         if (allY.isEmpty()) return@remember null
         val dataMin = allY.min()
@@ -680,8 +747,8 @@ fun SecondaryGraphCompose(
     // COB alone (single-axis, no basal/dual overlay): always starts at 0 regardless of the
     // visible minimum, with a "nice" max/tick-step instead of the raw windowed value. Takes
     // precedence over primaryAutoRange/primaryConstantRange for this specific case.
-    val primaryCobScale = remember(hasCob, isDualAxis, processedCob, visibleMinX, visibleMaxX) {
-        if (!hasCob || isDualAxis) return@remember null
+    val primaryCobScale = remember(hasCob, dualAxisRanges, processedCob, visibleMinX, visibleMaxX) {
+        if (!hasCob || dualAxisRanges != null) return@remember null
         val allY = windowedY(processedCob.first, visibleMinX, visibleMaxX)
         if (allY.isEmpty()) return@remember null
         niceScale(0.0, allY.max().coerceAtLeast(0.0), SECONDARY_GRAPH_TICK_COUNT)
@@ -691,10 +758,10 @@ fun SecondaryGraphCompose(
     // negative excursion without ever centering zero (same rule as IOB). Takes precedence over
     // primaryAutoRange/primaryConstantRange for this specific case.
     val primaryZeroFloorScale = remember(
-        primaryType, isDualAxis, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
+        primaryType, dualAxisRanges, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
         processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
     ) {
-        if (isDualAxis || hasBasalLayer) return@remember null
+        if (dualAxisRanges != null || hasBasalLayer) return@remember null
         if (primaryType !in ZERO_FLOOR_SERIES_TYPES) return@remember null
         val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
         if (allY.isEmpty()) return@remember null
@@ -703,10 +770,10 @@ fun SecondaryGraphCompose(
     // VAR_SENSITIVITY / HEART_RATE alone: free-range nice scale — no zero anchor, since a
     // sensitivity ratio or heart rate has no meaningful "zero" reference point.
     val primaryFreeRangeScale = remember(
-        primaryType, isDualAxis, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
+        primaryType, dualAxisRanges, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
         processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
     ) {
-        if (isDualAxis || hasBasalLayer) return@remember null
+        if (dualAxisRanges != null || hasBasalLayer) return@remember null
         if (primaryType != SeriesType.VAR_SENSITIVITY && primaryType != SeriesType.HEART_RATE) return@remember null
         val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
         if (allY.isEmpty()) return@remember null
@@ -715,10 +782,10 @@ fun SecondaryGraphCompose(
     // SENSITIVITY (centered on 100%) / DEV_SLOPE (centered on 0) alone: pivot-centered nice
     // scale, so the pivot always lands exactly in the middle of the axis.
     val primaryPivotScale = remember(
-        primaryType, isDualAxis, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
+        primaryType, dualAxisRanges, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
         processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
     ) {
-        if (isDualAxis || hasBasalLayer) return@remember null
+        if (dualAxisRanges != null || hasBasalLayer) return@remember null
         val pivot = when (primaryType) {
             SeriesType.SENSITIVITY -> 100.0
             SeriesType.DEV_SLOPE   -> 0.0
@@ -726,7 +793,8 @@ fun SecondaryGraphCompose(
         }
         val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
         if (allY.isEmpty()) return@remember null
-        niceScaleAroundPivot(allY.min(), allY.max(), pivot, SECONDARY_GRAPH_TICK_COUNT)
+        val minDeviation = if (primaryType == SeriesType.SENSITIVITY) SENS_MIN_DEVIATION else 0.0
+        niceScaleAroundPivot(allY.min(), allY.max(), pivot, SECONDARY_GRAPH_TICK_COUNT, minDeviation)
     }
     // Dynamic tick step for the start axis' ItemPlacer — null falls back to Vico's own automatic
     // spacing for series that don't have a "nice" rule yet.
@@ -799,10 +867,15 @@ fun SecondaryGraphCompose(
     )
 
     // Common axis components
-    val startAxisItemPlacer = remember(primaryYStep, primaryIobDataMax) {
+    val startAxisItemPlacer = remember(primaryYStep, primaryIobDataMax, dualAxisRanges?.primaryLabelFloor) {
         val stepPlacer = VerticalAxis.ItemPlacer.step({ primaryYStep })
         val dataMax = primaryIobDataMax
-        if (dataMax != null) ClampedVerticalAxisItemPlacer(stepPlacer) { dataMax } else stepPlacer
+        val labelFloor = dualAxisRanges?.primaryLabelFloor
+        when {
+            dataMax != null   -> ClampedVerticalAxisItemPlacer(stepPlacer, visibleMax = { dataMax })
+            labelFloor != null -> ClampedVerticalAxisItemPlacer(stepPlacer, visibleMin = { labelFloor })
+            else               -> stepPlacer
+        }
     }
     val startAxis = VerticalAxis.rememberStart(
         itemPlacer = startAxisItemPlacer,
@@ -1322,8 +1395,13 @@ private data class ProcessedDeviationLines(
     val series: Map<DeviationType, List<Double>>
 )
 
-/** Aligned y-ranges for primary (a*) and secondary (b*) axes — zeros share the same fractional position. */
-private data class AlignedRanges(val aMin: Double, val aMax: Double, val bMin: Double, val bMax: Double)
+/**
+ * Aligned y-ranges for primary (a*) and secondary (b*) axes — zeros share the same fractional
+ * position. [primaryLabelFloor], when set, is primary's own real floor (below which its axis was
+ * artificially extended purely for zero-alignment) — the start axis' tick placer clamps labels to
+ * it so primary never shows a fake tick below a value it can actually reach.
+ */
+private data class AlignedRanges(val aMin: Double, val aMax: Double, val bMin: Double, val bMax: Double, val primaryLabelFloor: Double? = null)
 
 /**
  * Adjusts two y-ranges so [aPivot]/[bPivot] land at the same fractional height on both axes.
@@ -1379,5 +1457,32 @@ private fun alignZerosAtOrigin(aMin: Double, aMax: Double, bMin: Double, bMax: D
         // One all-positive, one all-negative (neither touches zero) → no useful shared alignment.
         else                 -> null
     }
+}
+
+/**
+ * Builds an axis range that keeps [dataMin, dataMax] fully in view while placing zero at
+ * [targetFraction] of the axis height. Anchors at dataMin first, stretching only the max to hit
+ * the fraction; if that would still clip dataMax, anchors at dataMax instead and stretches the
+ * min further negative. Either branch guarantees no clipping, for any fraction in range.
+ */
+private fun fractionAlignedRange(dataMin: Double, dataMax: Double, targetFraction: Double): Pair<Double, Double> {
+    val fraction = targetFraction.coerceIn(0.0, 0.9)
+    if (fraction <= 0.0) return dataMin.coerceAtMost(0.0) to dataMax
+    val candidateMax = dataMin * (fraction - 1.0) / fraction
+    return if (candidateMax >= dataMax) dataMin to candidateMax
+    else (-fraction / (1.0 - fraction) * dataMax) to dataMax
+}
+
+/**
+ * Same construction as [fractionAlignedRange], but whichever bound ends up stretched to hit
+ * [targetFraction] is rounded to a nice value too — used for the primary axis, which must stay
+ * nice-scaled even when its range is widened to align with a secondary axis' zero.
+ */
+private fun fractionAlignedNiceRange(niceMin: Double, niceMax: Double, targetFraction: Double): Pair<Double, Double> {
+    val fraction = targetFraction.coerceIn(0.0, 0.9)
+    if (fraction <= 0.0) return niceMin to niceMax
+    val candidateMax = niceMin * (fraction - 1.0) / fraction
+    return if (candidateMax >= niceMax) niceMin to niceUp(candidateMax)
+    else niceNegativeSliver(-fraction / (1.0 - fraction) * niceMax) to niceMax
 }
 
