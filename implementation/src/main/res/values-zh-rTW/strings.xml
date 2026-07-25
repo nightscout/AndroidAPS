@@ -17,6 +17,8 @@
     <string name="permission_directory_description">選取應用程式設定與記錄檔的目錄</string>
     <string name="permission_notifications_title">通知</string>
     <string name="permission_notifications_description">需要以顯示警示、警報與幫浦狀態更新</string>
+    <string name="permission_fsi_title">全螢幕警報</string>
+    <string name="permission_fsi_description">需要此權限，才能在手機鎖定時喚醒螢幕並以全螢幕顯示警報</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
