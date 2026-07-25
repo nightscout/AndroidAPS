@@ -395,7 +395,7 @@ private fun SourceBadge(source: ImportSource) {
 }
 
 @Composable
-private fun ImportReviewContent(
+internal fun ImportReviewContent(
     state: ImportStep.Review,
     rxBus: RxBus,
     onMasterPasswordChanged: (String) -> Unit,
