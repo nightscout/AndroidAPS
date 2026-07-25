@@ -218,7 +218,11 @@ fun SecondaryGraphCompose(
             GraphDataPoint(it.timestamp, it.value)
         }
 
-        SeriesType.SENSITIVITY     -> viewModel.ratioGraphFlow.collectAsStateWithLifecycle().value.ratio
+        SeriesType.SENSITIVITY     -> viewModel.ratioGraphFlow.collectAsStateWithLifecycle().value.ratio.map {
+            // Stored as 100*(ratio-1), display shifted by +100 to show as percentage (90%, 110%) —
+            // must match the same shift applied when SENSITIVITY is primary (see processedSimpleSeries).
+            GraphDataPoint(it.timestamp, it.value + 100.0)
+        }
         SeriesType.VAR_SENSITIVITY -> viewModel.varSensGraphFlow.collectAsStateWithLifecycle().value.varSens
         SeriesType.DEV_SLOPE       -> viewModel.devSlopeGraphFlow.collectAsStateWithLifecycle().value.dsMax
         SeriesType.HEART_RATE      -> viewModel.heartRateGraphFlow.collectAsStateWithLifecycle().value.heartRates
@@ -831,10 +835,20 @@ fun SecondaryGraphCompose(
     // stay flattened/clipped when scrolled away from the loaded range's peak.
     val basalMaxY = remember(basalData, processedBasalProfile, processedBasalActual, visibleMinX, visibleMaxX) {
         if (basalData == null || basalData.maxBasal <= 0.0) return@remember 1.0
-        val windowedAbsMax = (windowedY(processedBasalProfile, visibleMinX, visibleMaxX) + windowedY(processedBasalActual, visibleMinX, visibleMaxX))
-            .map { -it }
-            .maxOrNull()
-        (windowedAbsMax?.takeIf { it > 0.0 } ?: basalData.maxBasal) / BASAL_HEIGHT_FRACTION
+        // Profile/actual are stored sparsely (only at rate changes — see rebuildBasalGraph), so a
+        // zoom window entirely inside one constant segment (e.g. an extended zero-temp) can contain
+        // zero literal points for either series. Deliberately NOT using windowedY here: its own
+        // ifEmpty fallback dumps the *whole loaded day's* values the moment the window has no
+        // literal point, which is exactly what over-inflated this axis in the first place. Instead,
+        // filter to the window with no fallback, and separately fold in the profile rate actually
+        // in effect at the window start (stepValueAt), so a windowless stretch reflects just this
+        // window's real profile level instead of the whole day's range.
+        fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
+        val literalWindowed = processedBasalProfile.filter { inWindow(it.first) }.map { it.second } +
+            processedBasalActual.filter { inWindow(it.first) }.map { it.second }
+        val hiddenProfileValue = visibleMinX?.let { stepValueAt(processedBasalProfile, it) }
+        val windowedAbsMax = (literalWindowed + listOfNotNull(hiddenProfileValue)).map { -it }.maxOrNull()
+        (windowedAbsMax?.takeIf { it > 0.0 } ?: hiddenProfileValue?.let { -it } ?: basalData.maxBasal) / BASAL_HEIGHT_FRACTION
     }
     val basalRangeProvider = remember(maxX, basalMaxY) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = -basalMaxY, maxY = 0.0)
@@ -976,6 +990,16 @@ private fun windowedY(points: List<Pair<Double, Double>>, visibleMinX: Double?, 
     fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
     return points.filter { inWindow(it.first) }.map { it.second }.ifEmpty { points.map { it.second } }
 }
+
+/**
+ * Value in effect at [x] for a sparse change-point-only step series — [points] only stores a new
+ * entry when the value changes (see `rebuildBasalGraph`), so a narrow zoom window can contain zero
+ * literal points even though the series has a well-defined value throughout it. The value actually
+ * in effect at any [x] is whatever the most recent point at-or-before [x] holds (falls back to the
+ * first point if [x] precedes all of them).
+ */
+private fun stepValueAt(points: List<Pair<Double, Double>>, x: Double): Double? =
+    points.lastOrNull { it.first <= x }?.second ?: points.firstOrNull()?.second
 
 /**
  * Union of y-values across all primary-layer series (IOB, COB, simple series, DevSlope-min,
