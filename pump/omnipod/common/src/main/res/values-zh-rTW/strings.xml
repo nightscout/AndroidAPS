@@ -161,4 +161,5 @@
     <plurals name="omnipod_common_pod_alerts">
         <item quantity="other">Pod 警報：%1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod 強制結束</string>
 </resources>
