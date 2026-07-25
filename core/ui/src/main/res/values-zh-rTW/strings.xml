@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">選擇一個。同一時間只能啟用一個。</string>
     <string name="configbuilder_pick_many_hint">選擇所有適用的。</string>
     <string name="configbuilder_no_selection_warning">此分類未選擇任何外掛。</string>
+    <string name="configbuilder_switch_confirmation_title">切換外掛？</string>
+    <string name="configbuilder_switch_confirmation">這將停用 %1$s 並啟用 %2$s。</string>
     <string name="expand">展開</string>
     <string name="collapse">收合</string>
     <string name="no_compose_preferences">此外掛沒有可用的偏好設定</string>
