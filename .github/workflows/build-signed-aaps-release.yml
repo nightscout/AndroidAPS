@@ -1,13 +1,25 @@
-name: Build Signed Dev Release
+name: Build Signed AAPS Release
 
 on:
+  push:
+    branches:
+      - dev
   workflow_dispatch:
+    inputs:
+      source_branch:
+        description: Branch to build
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - master
 
 permissions:
   contents: read
 
 concurrency:
-  group: build-signed-dev-release
+  group: build-signed-aaps-release-${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -15,10 +27,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out trusted dev branch
+      - name: Check out selected branch
         uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
           fetch-depth: 0
           show-progress: false
 
@@ -42,14 +54,14 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          SOURCE_BRANCH: dev
+          SOURCE_BRANCH: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
         run: .github/scripts/build-signed-aaps-release.sh
 
       - name: Upload signed AAPS release
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AAPS-BYOESA-${{ steps.build.outputs.version }}-${{ github.run_number }}
+          name: AAPS-BYOESA-${{ steps.build.outputs.source_branch }}-${{ steps.build.outputs.version }}-${{ github.run_number }}
           path: |
             ${{ runner.temp }}/aaps-release/${{ steps.build.outputs.artifact_name }}
             ${{ runner.temp }}/aaps-release/build-report.json
@@ -62,7 +74,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: signed-dev-release-diagnostics
+          name: signed-aaps-release-diagnostics
           path: |
             ${{ runner.temp }}/aaps-release/build.log
             ${{ runner.temp }}/aaps-release/signature-verification.txt
