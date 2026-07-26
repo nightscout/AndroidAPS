@@ -56,6 +56,8 @@
     <string name="configbuilder_pick_one_hint">Alegeți unul. Doar unul poate fi activ odată.</string>
     <string name="configbuilder_pick_many_hint">Alegeți oricare care se potrivește.</string>
     <string name="configbuilder_no_selection_warning">Nu este selectat niciun modul în această categorie.</string>
+    <string name="configbuilder_switch_confirmation_title">Schimbați modul?</string>
+    <string name="configbuilder_switch_confirmation">Acest lucru va dezactiva %1$s și va activa %2$s.</string>
     <string name="expand">Extindeți</string>
     <string name="collapse">Restrângeți</string>
     <string name="no_compose_preferences">Nu există preferințe de compunere disponibile pentru acest modul</string>
