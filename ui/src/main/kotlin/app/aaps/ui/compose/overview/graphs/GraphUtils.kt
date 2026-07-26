@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.overview.graph.SeriesType
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
@@ -456,6 +457,13 @@ fun niceNegativeSliver(value: Double): Double {
 }
 
 /**
+ * Minimum half-width for SENSITIVITY's pivot scale (see [niceScaleAroundPivot]'s `minDeviation`
+ * param) — below this, snap to a fixed 95%/100%/105% scale instead of nice-ifying a near-zero
+ * deviation (e.g. a SENS ratio sitting flat around 100%).
+ */
+const val SENS_MIN_DEVIATION = 5.0
+
+/**
  * Nice-ify a symmetric deviation around [pivot] (e.g. SENSITIVITY around 100%, DEV_SLOPE
  * around 0), so [pivot] always lands exactly in the middle of the axis. Nice-ifying [min, max]
  * directly (via [niceScale]) would not preserve that centering.
@@ -474,13 +482,21 @@ fun niceScaleAroundPivot(min: Double, max: Double, pivot: Double, maxTickCount: 
 }
 
 /**
+ * Series that are 0-floored by default (see [zeroFloorNiceRange]): mostly-positive, allowing a
+ * disparity-aware negative excursion without ever centering zero. IOB follows the same rule but
+ * isn't included here — its basal-overlay combo graph has its own dedicated range computation
+ * (SecondaryGraphCompose's `primaryYMaxResult`) that calls [zeroFloorNiceRange] directly.
+ */
+val ZERO_FLOOR_SERIES_TYPES = setOf(SeriesType.BGI, SeriesType.DEVIATIONS, SeriesType.ACTIVITY, SeriesType.STEPS, SeriesType.ABS_IOB)
+
+/**
  * Zero-floor axis range, disparity-aware: when the negative excursion is tiny relative to the
  * positive side (ratio >= [disparityRatio]), one shared nice tick spacing across the whole
  * range would make the small negative part look arbitrary — so the two sides are nice-ified
  * independently instead (a small negative sliver just large enough to show the excursion, plus
  * a normal positive-side scale). When the two sides are comparable in magnitude, a single
  * unified nice scale spans the whole range, negative and positive sharing the same tick step.
- * Used for IOB, DEVIATIONS, BGI, ACTIVITY, STEPS.
+ * Used for IOB and [ZERO_FLOOR_SERIES_TYPES].
  */
 fun zeroFloorNiceRange(dataMin: Double, dataMax: Double, maxTickCount: Int = 5, disparityRatio: Double = 10.0): NiceScale {
     if (dataMin >= 0.0) return niceScale(0.0, dataMax, maxTickCount)

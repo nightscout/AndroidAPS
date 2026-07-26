@@ -69,28 +69,32 @@ private val VISIBLE_RANGE_KEY = ExtraStore.Key<Pair<Double?, Double?>>()
  * of 0/25/50). Requesting fewer ticks up front avoids that thinning.
  *
  * IOB only occupies the bottom half of its graph (basal reserves the top half — see
- * `primaryYMax`), so it has roughly half the vertical pixels per tick that a full-height graph
+ * `iobBasalScale`), so it has roughly half the vertical pixels per tick that a full-height graph
  * does, and needs the more conservative count.
  */
 private const val IOB_GRAPH_TICK_COUNT = 3
 
-/** Tick count for series that use the graph's full height (COB, BGI/DEV/ACTIVITY/STEPS, SENS/VAR_SENS/HEART_RATE, DEV_SLOPE). */
+/** Tick count for series that use the graph's full height (COB, BGI/DEV/ACTIVITY/STEPS, VAR_SENS/HEART_RATE, DEV_SLOPE). */
 private const val SECONDARY_GRAPH_TICK_COUNT = 5
 
-/** Minimum half-width for SENSITIVITY's pivot scale — below this, snap to a fixed 95%/100%/105% scale instead of nice-ifying a near-zero deviation. */
-private const val SENS_MIN_DEVIATION = 5.0
-
 /**
- * Mostly-positive series: 0-floored by default (see [zeroFloorNiceRange]), allowing a
- * disparity-aware negative excursion without ever centering zero — the same rule used for IOB.
+ * Tick count for SENSITIVITY's pivot scale specifically — lower than [SECONDARY_GRAPH_TICK_COUNT]
+ * so Vico's step thinning never has anything to thin (3 ticks always fit, at any graph height),
+ * guaranteeing the 100% pivot itself is always one of the displayed labels. Vico's step-based
+ * ItemPlacer only controls tick spacing, not count — when a denser request doesn't fit the
+ * available height it multiplies the step by an integer to compensate, which can drop the pivot
+ * (it isn't always one of the surviving ticks) and jumps unpredictably between tick counts as the
+ * graph is resized. There's no API for "always keep this value" short of a custom ItemPlacer
+ * overriding tick selection, which was tried and reverted for being too dense on some screens —
+ * this lower request sidesteps the whole mechanism instead.
  */
-private val ZERO_FLOOR_SERIES_TYPES = setOf(SeriesType.BGI, SeriesType.DEVIATIONS, SeriesType.ACTIVITY, SeriesType.STEPS, SeriesType.ABS_IOB)
+private const val SENS_PIVOT_TICK_COUNT = 3
 
 /**
  * Wraps a step-based [VerticalAxis.ItemPlacer], filtering out labels/gridlines outside
  * [visibleMin]..[visibleMax]. Two independent uses:
  * - IOB/basal combo graph: the axis extends past the actual IOB data range to reserve headroom
- *   for the basal overlay (see the `primaryYMax` computation), so labels should stop at the real
+ *   for the basal overlay (see the `iobBasalScale` computation), so labels should stop at the real
  *   data boundary ([visibleMax]) instead of continuing into the reserved band above it.
  * - Dual-axis combos where primary is zero-floor-style: its axis is pushed below its own real
  *   floor purely to align its zero with the secondary/pivot series (see `dualAxisRanges`), so
@@ -608,6 +612,16 @@ fun SecondaryGraphCompose(
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val decorations = remember(nowLine, visibleRangeReporter) { listOf(nowLine, visibleRangeReporter) }
 
+    // Union of Y values across all primary-layer series (IOB, COB, simple series, DevSlope-min,
+    // deviation lines), windowed to the visible scroll/zoom range — computed once here since the
+    // IOB+basal scale, the dual-axis alignment, the single-axis nice-scale dispatch, and the
+    // generic auto-range fallback below all need the exact same union.
+    val primaryYValues = remember(
+        processedIob, processedCob, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
+    ) {
+        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
+    }
+
     // IOB (with basal overlay active): zero-floor nice range — 0 if the visible window has no
     // negative IOB, else a disparity-aware negative sliver (never centering zero) — then reserve
     // the top BASAL_HEIGHT_FRACTION of the height for basal, ABOVE the actual data range (not
@@ -621,18 +635,17 @@ fun SecondaryGraphCompose(
     // Result pairs the final (inflated) axis range with the un-inflated data max — the latter is
     // where tick labels must stop (see ClampedVerticalAxisItemPlacer) so they don't extend into
     // the reserved basal band above the actual IOB data.
-    val primaryYMaxResult = remember(hasBasalLayer, processedIob, processedSimpleSeries, processedCob, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX) {
+    val iobBasalScaleResult = remember(hasBasalLayer, primaryYValues) {
         if (!hasBasalLayer) return@remember null // auto-range when no basal
-        val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
-        if (allY.isEmpty()) null
+        if (primaryYValues.isEmpty()) null
         else {
-            val nice = zeroFloorNiceRange(allY.min(), allY.max().coerceAtLeast(0.1), IOB_GRAPH_TICK_COUNT)
+            val nice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), IOB_GRAPH_TICK_COUNT)
             val axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
             NiceScale(nice.min, axisMax, nice.step) to nice.max
         }
     }
-    val primaryYMax = primaryYMaxResult?.first
-    val primaryIobDataMax = primaryYMaxResult?.second
+    val iobBasalScale = iobBasalScaleResult?.first
+    val iobDataMax = iobBasalScaleResult?.second
     // Dual-axis zero alignment.
     // Why: Vico computes each vertical axis range independently, so y=0 on the
     // left axis lands at a different pixel row than y=0 on the right axis. When
@@ -641,46 +654,32 @@ fun SecondaryGraphCompose(
     // below a point that is "below zero" on the other. We compute a shared zero
     // fraction from both data extents and extend each side's range to match it.
     // Only applied to true dual-axis case (no basal overlay, secondary present).
-    val dualAxisRanges = remember(
-        isDualAxis, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
-        processedDevSlopeMin, processedDeviationLines, processedSecondary, visibleMinX, visibleMaxX
-    ) {
+    val dualAxisRanges = remember(isDualAxis, hasBasalLayer, primaryYValues, processedSecondary, visibleMinX, visibleMaxX) {
         if (!isDualAxis || hasBasalLayer) return@remember null
-        val primaryY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
         val secondaryY = windowedY(processedSecondary, visibleMinX, visibleMaxX)
-        if (primaryY.isEmpty() || secondaryY.isEmpty()) return@remember null
+        if (primaryYValues.isEmpty() || secondaryY.isEmpty()) return@remember null
 
         val primaryIsPivot = primaryType == SeriesType.SENSITIVITY || primaryType == SeriesType.DEV_SLOPE
         val secondaryIsPivot = secondaryType == SeriesType.SENSITIVITY || secondaryType == SeriesType.DEV_SLOPE
         if (primaryIsPivot != secondaryIsPivot) {
             // Exactly one side is pivot-centered (SENS/DEV_SLOPE), the other zero-floor-style
-            // (e.g. COB, BGI): the pivot side gets a full nice-scaled symmetric range around its
-            // own pivot — unconditionally, no branching on where its bounds happen to sit relative
-            // to the pivot, so it never flips between "centered" and "pinned" between recomputes.
-            // The zero-floor side gets a symmetric (-half,+half) container sized from its own
-            // zero-floor nice range, so its zero lands exactly at the pivot's center (same pixel
-            // row) and its curve — normally never negative — fills only the upper half, scaled
-            // nicely up to its own real max (any rare negative sliver still fits, just not
-            // symmetric-looking, since half also covers it).
+            // (e.g. COB, BGI) — see [pivotZeroFloorPairing] for how each side's range is built.
             val isSensPivot = primaryType == SeriesType.SENSITIVITY || secondaryType == SeriesType.SENSITIVITY
             val pivot = if (isSensPivot) 100.0 else 0.0
             val pivotMinDeviation = if (isSensPivot) SENS_MIN_DEVIATION else 0.0
+            val pivotTickCount = if (isSensPivot) SENS_PIVOT_TICK_COUNT else SECONDARY_GRAPH_TICK_COUNT
             return@remember if (primaryIsPivot) {
-                val pivotNice = niceScaleAroundPivot(primaryY.min(), primaryY.max(), pivot, SECONDARY_GRAPH_TICK_COUNT, pivotMinDeviation)
-                val zeroFloorNice = zeroFloorNiceRange(secondaryY.min(), secondaryY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
-                val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
+                val pairing = pivotZeroFloorPairing(primaryYValues, secondaryY, pivot, pivotMinDeviation, pivotTickCount)
                 // Primary is the pivot itself here — its own axis is fully meaningful in both
                 // directions, no label clamping needed.
-                AlignedRanges(pivotNice.min, pivotNice.max, -zeroFloorHalf, zeroFloorHalf)
+                AlignedRanges(pairing.pivotNice.min, pairing.pivotNice.max, -pairing.zeroFloorHalf, pairing.zeroFloorHalf)
             } else {
-                val pivotNice = niceScaleAroundPivot(secondaryY.min(), secondaryY.max(), pivot, SECONDARY_GRAPH_TICK_COUNT, pivotMinDeviation)
-                val zeroFloorNice = zeroFloorNiceRange(primaryY.min(), primaryY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
-                val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
+                val pairing = pivotZeroFloorPairing(secondaryY, primaryYValues, pivot, pivotMinDeviation, pivotTickCount)
                 // Primary is the zero-floor side, pushed into a symmetric container purely to
                 // align its zero with the pivot's center — its own real floor (e.g. 0 for COB)
                 // must still be the lowest label shown, or its axis reads as if COB/BGI/etc. can
                 // go negative when it can't.
-                AlignedRanges(-zeroFloorHalf, zeroFloorHalf, pivotNice.min, pivotNice.max, primaryLabelFloor = zeroFloorNice.min)
+                AlignedRanges(-pairing.zeroFloorHalf, pairing.zeroFloorHalf, pairing.pivotNice.min, pairing.pivotNice.max, primaryLabelFloor = pairing.zeroFloorMin)
             }
         }
         if (primaryIsPivot || secondaryIsPivot) {
@@ -689,7 +688,7 @@ fun SecondaryGraphCompose(
             // anyway so the old mechanism is adequate here.
             val primaryPivot = if (primaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
             val secondaryPivot = if (secondaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
-            return@remember alignZeros(primaryY.min(), primaryY.max(), secondaryY.min(), secondaryY.max(), primaryPivot, secondaryPivot)
+            return@remember alignZeros(primaryYValues.min(), primaryYValues.max(), secondaryY.min(), secondaryY.max(), primaryPivot, secondaryPivot)
         }
 
         // Neither series is pivot-centered (e.g. COB + VAR_SENSITIVITY, or BGI + STEPS): primary
@@ -699,7 +698,7 @@ fun SecondaryGraphCompose(
         // the compromise. Each axis is then widened just enough to hit that shared fraction,
         // anchored at whichever of its own real/nice bounds avoids clipping (see
         // fractionAlignedRange / fractionAlignedNiceRange) so nothing is ever clipped.
-        val primaryNice = zeroFloorNiceRange(primaryY.min(), primaryY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+        val primaryNice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
         val primaryFraction = if (primaryNice.max > primaryNice.min) -primaryNice.min / (primaryNice.max - primaryNice.min) else 0.0
 
         val secondaryMax = secondaryY.max().coerceAtLeast(0.1)
@@ -733,96 +732,47 @@ fun SecondaryGraphCompose(
     // Vico's own auto-range would compute from the full loaded model, not the visible window —
     // same flattening/clipping problem the basal and dual-axis cases solve above — so window it
     // here too, using the same union-of-primary-series helper.
-    val primaryAutoRange = remember(
-        hasBasalLayer, dualAxisRanges, processedIob, processedCob, processedSimpleSeries,
-        processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
-    ) {
+    val primaryAutoRange = remember(hasBasalLayer, dualAxisRanges, primaryYValues) {
         if (hasBasalLayer || dualAxisRanges != null) return@remember null
-        val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
-        if (allY.isEmpty()) return@remember null
-        val dataMin = allY.min()
-        val dataMax = allY.max()
+        if (primaryYValues.isEmpty()) return@remember null
+        val dataMin = primaryYValues.min()
+        val dataMax = primaryYValues.max()
         if (dataMax - dataMin >= 1e-6) dataMin to dataMax
         else { // degenerate (near-flat) windowed subset — pad so Vico doesn't collapse the axis
             val low = minOf(0.0, dataMax)
             low to maxOf(dataMax, low + 1.0)
         }
     }
-    // COB alone (single-axis, no basal/dual overlay): always starts at 0 regardless of the
-    // visible minimum, with a "nice" max/tick-step instead of the raw windowed value. Takes
-    // precedence over primaryAutoRange/primaryConstantRange for this specific case.
-    val primaryCobScale = remember(hasCob, dualAxisRanges, processedCob, visibleMinX, visibleMaxX) {
-        if (!hasCob || dualAxisRanges != null) return@remember null
-        val allY = windowedY(processedCob.first, visibleMinX, visibleMaxX)
-        if (allY.isEmpty()) return@remember null
-        niceScale(0.0, allY.max().coerceAtLeast(0.0), SECONDARY_GRAPH_TICK_COUNT)
-    }
-    // BGI / DEVIATIONS / ACTIVITY / STEPS alone (single-axis, no basal/dual overlay): zero-floor
-    // nice range — these are mostly-positive series, so 0 by default, but allows a disparity-aware
-    // negative excursion without ever centering zero (same rule as IOB). Takes precedence over
-    // primaryAutoRange/primaryConstantRange for this specific case.
-    val primaryZeroFloorScale = remember(
-        primaryType, dualAxisRanges, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
-        processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
-    ) {
-        if (dualAxisRanges != null || hasBasalLayer) return@remember null
-        if (primaryType !in ZERO_FLOOR_SERIES_TYPES) return@remember null
-        val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
-        if (allY.isEmpty()) return@remember null
-        zeroFloorNiceRange(allY.min(), allY.max(), SECONDARY_GRAPH_TICK_COUNT)
-    }
-    // VAR_SENSITIVITY / HEART_RATE alone: free-range nice scale — no zero anchor, since a
-    // sensitivity ratio or heart rate has no meaningful "zero" reference point.
-    val primaryFreeRangeScale = remember(
-        primaryType, dualAxisRanges, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
-        processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
-    ) {
-        if (dualAxisRanges != null || hasBasalLayer) return@remember null
-        if (primaryType != SeriesType.VAR_SENSITIVITY && primaryType != SeriesType.HEART_RATE) return@remember null
-        val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
-        if (allY.isEmpty()) return@remember null
-        niceScale(allY.min(), allY.max(), SECONDARY_GRAPH_TICK_COUNT)
-    }
-    // SENSITIVITY (centered on 100%) / DEV_SLOPE (centered on 0) alone: pivot-centered nice
-    // scale, so the pivot always lands exactly in the middle of the axis.
-    val primaryPivotScale = remember(
-        primaryType, dualAxisRanges, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
-        processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
-    ) {
-        if (dualAxisRanges != null || hasBasalLayer) return@remember null
-        val pivot = when (primaryType) {
-            SeriesType.SENSITIVITY -> 100.0
-            SeriesType.DEV_SLOPE   -> 0.0
-            else                   -> return@remember null
+    // Single-axis nice-scale dispatch, by series-type rule (only when neither the IOB+basal combo
+    // nor a dual-axis combo already claimed the primary axis): COB always starts at 0 with a nice
+    // max; BGI/DEVIATIONS/ACTIVITY/STEPS/ABS_IOB are zero-floored (disparity-aware negative
+    // excursion, same rule as IOB); VAR_SENSITIVITY/HEART_RATE are free-range (no zero anchor);
+    // SENSITIVITY/DEV_SLOPE are pivot-centered (pivot always lands exactly at mid-axis). Takes
+    // precedence over primaryConstantRange/primaryAutoRange for these specific series types.
+    val primarySingleAxisScale = remember(primaryType, dualAxisRanges, hasBasalLayer, primaryYValues) {
+        if (dualAxisRanges != null || hasBasalLayer || primaryYValues.isEmpty()) return@remember null
+        when (primaryType) {
+            SeriesType.COB                                    -> niceScale(0.0, primaryYValues.max().coerceAtLeast(0.0), SECONDARY_GRAPH_TICK_COUNT)
+            in ZERO_FLOOR_SERIES_TYPES                         -> zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max(), SECONDARY_GRAPH_TICK_COUNT)
+            SeriesType.VAR_SENSITIVITY, SeriesType.HEART_RATE  -> niceScale(primaryYValues.min(), primaryYValues.max(), SECONDARY_GRAPH_TICK_COUNT)
+            SeriesType.SENSITIVITY                             -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 100.0, SENS_PIVOT_TICK_COUNT, SENS_MIN_DEVIATION)
+            SeriesType.DEV_SLOPE                               -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 0.0, SECONDARY_GRAPH_TICK_COUNT)
+            else                                               -> null
         }
-        val allY = windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
-        if (allY.isEmpty()) return@remember null
-        val minDeviation = if (primaryType == SeriesType.SENSITIVITY) SENS_MIN_DEVIATION else 0.0
-        niceScaleAroundPivot(allY.min(), allY.max(), pivot, SECONDARY_GRAPH_TICK_COUNT, minDeviation)
     }
     // Dynamic tick step for the start axis' ItemPlacer — null falls back to Vico's own automatic
     // spacing for series that don't have a "nice" rule yet.
-    val primaryYStep = primaryYMax?.step ?: primaryCobScale?.step ?: primaryZeroFloorScale?.step
-        ?: primaryFreeRangeScale?.step ?: primaryPivotScale?.step
-    val primaryRangeProvider = remember(
-        maxX, primaryYMax, dualAxisRanges, hasPrimaryData, primaryCobScale, primaryZeroFloorScale,
-        primaryFreeRangeScale, primaryPivotScale, primaryConstantRange, primaryAutoRange
-    ) {
+    val primaryYStep = iobBasalScale?.step ?: primarySingleAxisScale?.step
+    val primaryRangeProvider = remember(maxX, iobBasalScale, dualAxisRanges, hasPrimaryData, primarySingleAxisScale, primaryConstantRange, primaryAutoRange) {
         when {
             // Basal overlay case takes precedence (reserves the top BASAL_HEIGHT_FRACTION of axis for basal)
-            primaryYMax != null          -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryYMax.min, maxY = primaryYMax.max)
+            iobBasalScale != null        -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = iobBasalScale.min, maxY = iobBasalScale.max)
             // Dual-axis: use zero-aligned primary range so zeros line up with secondary axis
             dualAxisRanges != null       -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = dualAxisRanges.aMin, maxY = dualAxisRanges.aMax)
             // No data: anchor a default range so the empty frame is visible
             !hasPrimaryData              -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
-            // COB alone: nice 0-to-max scale
-            primaryCobScale != null      -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryCobScale.min, maxY = primaryCobScale.max)
-            // BGI/DEVIATIONS/ACTIVITY/STEPS alone: zero-floor nice range (disparity-aware negative excursion)
-            primaryZeroFloorScale != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryZeroFloorScale.min, maxY = primaryZeroFloorScale.max)
-            // VAR_SENSITIVITY/HEART_RATE alone: free-range nice scale, no zero anchor
-            primaryFreeRangeScale != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryFreeRangeScale.min, maxY = primaryFreeRangeScale.max)
-            // SENSITIVITY/DEV_SLOPE alone: pivot-centered nice scale
-            primaryPivotScale != null    -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryPivotScale.min, maxY = primaryPivotScale.max)
+            // Single-axis nice-scale dispatch (COB / zero-floor / free-range / pivot — see primarySingleAxisScale)
+            primarySingleAxisScale != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primarySingleAxisScale.min, maxY = primarySingleAxisScale.max)
             // Constant series (whole loaded range is flat): explicit range so it isn't collapsed to 0..1 and clipped
             primaryConstantRange != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryConstantRange.first, maxY = primaryConstantRange.second)
             // Single-axis: window the range to the visible portion instead of Vico's full-model auto-range
@@ -881,9 +831,9 @@ fun SecondaryGraphCompose(
     )
 
     // Common axis components
-    val startAxisItemPlacer = remember(primaryYStep, primaryIobDataMax, dualAxisRanges?.primaryLabelFloor) {
+    val startAxisItemPlacer = remember(primaryYStep, iobDataMax, dualAxisRanges?.primaryLabelFloor) {
         val stepPlacer = VerticalAxis.ItemPlacer.step({ primaryYStep })
-        val dataMax = primaryIobDataMax
+        val dataMax = iobDataMax
         val labelFloor = dualAxisRanges?.primaryLabelFloor
         when {
             dataMax != null   -> ClampedVerticalAxisItemPlacer(stepPlacer, visibleMax = { dataMax })
@@ -1426,6 +1376,28 @@ private data class ProcessedDeviationLines(
  * it so primary never shows a fake tick below a value it can actually reach.
  */
 private data class AlignedRanges(val aMin: Double, val aMax: Double, val bMin: Double, val bMax: Double, val primaryLabelFloor: Double? = null)
+
+/** Result of [pivotZeroFloorPairing]: the pivot side's full nice range, and the zero-floor side's symmetric container (half-width, and its own real floor for label clamping). */
+private data class PivotZeroFloorPairing(val pivotNice: NiceScale, val zeroFloorHalf: Double, val zeroFloorMin: Double)
+
+/**
+ * Builds the two ranges for a dual-axis combo where exactly one side is pivot-centered
+ * (SENS/DEV_SLOPE) and the other is zero-floor-style (e.g. COB, BGI): the pivot side gets a full
+ * nice-scaled symmetric range around [pivot] — unconditionally, no branching on where its bounds
+ * happen to sit relative to the pivot, so it never flips between "centered" and "pinned" between
+ * recomputes. The zero-floor side gets a symmetric (-half,+half) container sized from its own
+ * zero-floor nice range, so its zero lands exactly at the pivot's center (same pixel row) and its
+ * curve — normally never negative — fills only the upper half, scaled nicely up to its own real
+ * max (any rare negative sliver still fits, just not symmetric-looking, since half also covers it).
+ * [pivotTickCount] lets the pivot side request fewer ticks than [zeroFloorY]'s own (see
+ * [SENS_PIVOT_TICK_COUNT]).
+ */
+private fun pivotZeroFloorPairing(pivotY: List<Double>, zeroFloorY: List<Double>, pivot: Double, minDeviation: Double, pivotTickCount: Int): PivotZeroFloorPairing {
+    val pivotNice = niceScaleAroundPivot(pivotY.min(), pivotY.max(), pivot, pivotTickCount, minDeviation)
+    val zeroFloorNice = zeroFloorNiceRange(zeroFloorY.min(), zeroFloorY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+    val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
+    return PivotZeroFloorPairing(pivotNice, zeroFloorHalf, zeroFloorNice.min)
+}
 
 /**
  * Adjusts two y-ranges so [aPivot]/[bPivot] land at the same fractional height on both axes.
