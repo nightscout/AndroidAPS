@@ -29,6 +29,16 @@ for variable in "${required_variables[@]}"; do
   [[ -n "${!variable:-}" ]] || die "Missing GitHub secret ${variable}"
 done
 
+source_branch="${SOURCE_BRANCH:-$(git branch --show-current)}"
+case "${source_branch}" in
+  dev|master)
+    ;;
+  *)
+    die "Unsupported source branch: ${source_branch}. Expected dev or master."
+    ;;
+esac
+safe_branch="$(printf '%s' "${source_branch}" | tr -cs 'A-Za-z0-9._-' '-' | sed 's/^-*//;s/-*$//')"
+
 signing_dir="${RUNNER_TEMP}/aaps-signing"
 output_dir="${RUNNER_TEMP}/aaps-release"
 keystore_path="${signing_dir}/aaps-release.jks"
@@ -104,7 +114,7 @@ version_name="$(sed -n "s/^package:.*versionName='\([^']*\)'.*/\1/p" <<< "${badg
 safe_version="$(printf '%s' "${version_name}" | tr -cs 'A-Za-z0-9._-' '-' | sed 's/^-*//;s/-*$//')"
 source_sha="$(git rev-parse HEAD)"
 short_sha="${source_sha:0:7}"
-artifact_name="AAPS-BYOESA-${safe_version}-${short_sha}.apk"
+artifact_name="AAPS-BYOESA-${safe_branch}-${safe_version}-${short_sha}.apk"
 cp "${source_apk}" "${output_dir}/${artifact_name}"
 
 apk_sha256="$(sha256sum "${output_dir}/${artifact_name}" | awk '{print $1}')"
@@ -117,7 +127,7 @@ python3 - \
   "${actual_cert}" \
   "${source_sha}" \
   "${GITHUB_RUN_NUMBER}" \
-  "${SOURCE_BRANCH:-dev}" <<'PY'
+  "${source_branch}" <<'PY'
 import json
 import sys
 
@@ -161,5 +171,6 @@ PY
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   echo "version=${safe_version}" >> "${GITHUB_OUTPUT}"
+  echo "source_branch=${safe_branch}" >> "${GITHUB_OUTPUT}"
   echo "artifact_name=${artifact_name}" >> "${GITHUB_OUTPUT}"
 fi

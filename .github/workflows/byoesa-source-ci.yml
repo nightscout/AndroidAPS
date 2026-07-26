@@ -10,6 +10,7 @@ on:
       - "app/src/test/kotlin/app/aaps/receivers/DataReceiverTest.kt"
       - "core/interfaces/src/main/kotlin/app/aaps/core/interfaces/receivers/Intents.kt"
       - "plugins/source/**"
+      - ".github/scripts/build-signed-aaps-release.sh"
       - ".github/workflows/byoesa-source-ci.yml"
       - ".github/workflows/build-signed-aaps-release.yml"
   workflow_dispatch:
@@ -40,6 +41,9 @@ jobs:
 
       - name: Grant execute permission
         run: chmod +x gradlew
+
+      - name: Validate signed release helper syntax
+        run: bash -n .github/scripts/build-signed-aaps-release.sh
 
       - name: Test BYOESA source plugin
         shell: bash
