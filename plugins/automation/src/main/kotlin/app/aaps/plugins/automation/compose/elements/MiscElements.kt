@@ -23,11 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.elements.WeekDay
 
+/**
+ * @see PreviewString
+ */
 @Composable
 fun InputStringEditor(
     value: String,
@@ -58,6 +59,8 @@ fun InputStringEditor(
  * [onChange] is invoked after each toggle to let callers refresh / persist.
  * Pass a [version] that you bump on each toggle to force recomposition since
  * [WeekDay] is not observable.
+ *
+ * @see PreviewWeekdays
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -151,24 +154,4 @@ fun AutomationElementColumn(content: @Composable () -> Unit) {
             .padding(vertical = 2.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) { content() }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 360)
-@Composable
-private fun PreviewString() {
-    MaterialTheme {
-        var v by remember { mutableStateOf("Example") }
-        InputStringEditor(value = v, onValueChange = { v = it }, label = "Text")
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 360)
-@Composable
-private fun PreviewWeekdays() {
-    MaterialTheme {
-        val wd = remember { WeekDay().apply { set(WeekDay.DayOfWeek.MONDAY, true); set(WeekDay.DayOfWeek.WEDNESDAY, true) } }
-        InputWeekDayEditor(weekdays = wd, onChange = {})
-    }
 }

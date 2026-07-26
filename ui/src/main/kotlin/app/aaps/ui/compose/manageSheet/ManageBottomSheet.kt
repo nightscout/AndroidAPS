@@ -41,18 +41,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.keys.interfaces.ElementVisibility
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
 import app.aaps.core.ui.compose.icons.IcTbrCancel
+import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.descriptionResId
@@ -125,6 +123,9 @@ fun ManageBottomSheet(
     }
 }
 
+/**
+ * @see ManageBottomSheetContentPreview
+ */
 @Composable
 internal fun ManageBottomSheetContent(
     isSimpleMode: Boolean = false,
@@ -579,7 +580,9 @@ private fun ManageGridItem(
         enabled = enabled,
         modifier = modifier
     ) {
-        Column(modifier = Modifier.alpha(if (enabled) 1f else 0.38f).padding(12.dp)) {
+        Column(modifier = Modifier
+            .alpha(if (enabled) 1f else 0.38f)
+            .padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SmallTonalIcon(icon = icon, color = color)
                 Spacer(modifier = Modifier.width(8.dp))
@@ -614,24 +617,6 @@ private fun SmallTonalIcon(icon: ImageVector, color: Color) {
             contentDescription = null,
             tint = color,
             modifier = Modifier.size(12.dp)
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun ManageBottomSheetContentPreview() {
-    MaterialTheme {
-        ManageBottomSheetContent(
-            showTempTarget = true,
-            showTempBasal = true,
-            showCancelTempBasal = false,
-            showExtendedBolus = true,
-            showCancelExtendedBolus = false,
-            cancelTempBasalText = "",
-            cancelExtendedBolusText = "",
-            customActions = emptyList()
         )
     }
 }

@@ -37,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
@@ -46,11 +45,9 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.plugins.calibration.CalibrationFit
 import app.aaps.plugins.calibration.FitMode
 import app.aaps.plugins.calibration.R
 import kotlin.math.roundToInt
@@ -91,6 +88,10 @@ internal fun CalibrationScreen(
     )
 }
 
+/**
+ * @see CalibrationScreenContentPreview
+ * @see CalibrationScreenContentNoSessionPreview
+ */
 @Composable
 internal fun CalibrationScreenContent(
     state: CalibrationUiState,
@@ -180,56 +181,6 @@ internal fun CalibrationScreenContent(
                     Text(stringResource(android.R.string.cancel))
                 }
             }
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Calibration applied")
-@Composable
-private fun CalibrationScreenContentPreview() {
-    val now = 1_700_000_000_000L
-    val hour = 3_600_000L
-    val entries = listOf(
-        CAL(id = 1, timestamp = now - 5 * hour, fingerstickMgdl = 120.0, sensorMgdlAtPairing = 110.0),
-        CAL(id = 2, timestamp = now - 3 * hour, fingerstickMgdl = 150.0, sensorMgdlAtPairing = 145.0),
-        CAL(id = 3, timestamp = now - 1 * hour, fingerstickMgdl = 95.0, sensorMgdlAtPairing = 90.0)
-    )
-    MaterialTheme {
-        CalibrationScreenContent(
-            state = CalibrationUiState(
-                sessionStart = now - 6 * hour,
-                warmUpEndsAt = now - 4 * hour,
-                isInWarmUp = false,
-                entries = entries,
-                fit = CalibrationFit(slope = 1.05, offset = 2.0, mode = FitMode.Full),
-                now = now,
-                selectedEntryId = 3,
-                glucoseUnit = GlucoseUnit.MGDL
-            ),
-            formatDateTime = { "01 Jan 12:00" },
-            formatTime = { "14:00" },
-            onMarkSensorChange = {},
-            onAddCalibration = {},
-            onSelectEntry = {},
-            onDeleteEntry = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "No session")
-@Composable
-private fun CalibrationScreenContentNoSessionPreview() {
-    MaterialTheme {
-        CalibrationScreenContent(
-            state = CalibrationUiState(),
-            formatDateTime = { "" },
-            formatTime = { "" },
-            onMarkSensorChange = {},
-            onAddCalibration = {},
-            onSelectEntry = {},
-            onDeleteEntry = {}
         )
     }
 }

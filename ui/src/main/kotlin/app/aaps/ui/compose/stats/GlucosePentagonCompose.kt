@@ -27,12 +27,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.ui.R
 import kotlin.math.PI
@@ -59,21 +57,31 @@ data class CgpData(
 )
 
 private const val AXIS_COUNT = 5
+
 private const val BASELINE_OFFSET = 0.18
+
 private const val ANGLE_STEP_DEG = 72.0
 
 // Max values for each axis
 private const val TOR_MAX = 100.0
+
 private const val CV_MAX = 60.0
+
 private const val HYPO_MAX = 20.0
+
 private const val HYPER_MAX = 80.0
+
 private const val MEAN_MAX = 300.0
 
 // Reference (healthy) values
 private const val TOR_REF = 0.0
+
 private const val CV_REF = 17.0
+
 private const val HYPO_REF = 0.0
+
 private const val HYPER_REF = 0.0
+
 private const val MEAN_REF = 90.0
 
 /**
@@ -158,8 +166,11 @@ fun GlucosePentagonCompose(
     )
 }
 
+/**
+ * @see GlucosePentagonPreview
+ */
 @Composable
-private fun GlucosePentagonCard(
+internal fun GlucosePentagonCard(
     cgpData: CgpData,
     meanGlucoseFormatted: String,
     modifier: Modifier = Modifier
@@ -395,30 +406,6 @@ fun LegendItem(
         Text(
             text = text,
             style = MaterialTheme.typography.labelSmall
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, backgroundColor = 0xFF1C1B1F)
-@Composable
-private fun GlucosePentagonPreview() {
-    val sampleData = CgpData(
-        torPct = 28.0,
-        cvPct = 27.3,
-        hypoPct = 5.7,
-        hyperPct = 22.3,
-        meanGlucose = 154.0,
-        normalizedValues = listOf(0.41, 0.55, 0.41, 0.41, 0.60),
-        referenceValues = listOf(0.18, 0.41, 0.18, 0.18, 0.43),
-        pgr = 3.3
-    )
-
-    MaterialTheme {
-        GlucosePentagonCard(
-            cgpData = sampleData,
-            meanGlucoseFormatted = "154",
-            modifier = Modifier.fillMaxWidth()
         )
     }
 }

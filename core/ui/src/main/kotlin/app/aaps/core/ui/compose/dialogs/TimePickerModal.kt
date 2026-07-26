@@ -2,17 +2,14 @@ package app.aaps.core.ui.compose.dialogs
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * A modal time picker dialog.
@@ -22,6 +19,8 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * @param initialHour Initial hour (0-23)
  * @param initialMinute Initial minute (0-59)
  * @param is24Hour Whether to use 24-hour format
+ *
+ * @see TimePickerModalPreview
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,18 +55,4 @@ fun TimePickerModal(
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun TimePickerModalPreview() {
-    MaterialTheme {
-        TimePickerModal(
-            onTimeSelected = { _, _ -> },
-            onDismiss = {},
-            initialHour = 14,
-            initialMinute = 30
-        )
-    }
 }

@@ -1,19 +1,12 @@
 package app.aaps.core.ui.compose.icons
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Material Symbols Outlined: clinical_notes
@@ -22,6 +15,8 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * Source: https://fonts.google.com/icons?selected=Material+Symbols+Outlined:clinical_notes
  *
  * Bounding box: viewport 24x24
+ *
+ * @see IcClinicalNotesPreview
  */
 val IcClinicalNotes: ImageVector by lazy {
     ImageVector.Builder(
@@ -99,18 +94,4 @@ val IcClinicalNotes: ImageVector by lazy {
             reflectiveQuadTo(9f, 20.1f)
         }
     }.build()
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IcClinicalNotesPreview() {
-    Icon(
-        imageVector = IcClinicalNotes,
-        contentDescription = null,
-        modifier = Modifier
-            .padding(0.dp)
-            .size(48.dp),
-        tint = Color.Unspecified
-    )
 }

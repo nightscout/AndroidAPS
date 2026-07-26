@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TrendArrow
@@ -28,7 +27,6 @@ import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.LocalAapsScale
 import kotlin.math.cos
 import kotlin.math.sin
@@ -44,6 +42,11 @@ import kotlin.math.sin
  *   [LocalAapsScale] so the circle grows on tablets to match scaled typography. Pass an explicit
  *   value only if you want to override the tablet-aware default.
  * @param showTimeAgo Whether to render the small "time ago" line below the BG value.
+ *
+ * @see BgInfoSectionInRangePreview
+ * @see BgInfoSectionHighPreview
+ * @see BgInfoSectionLowPreview
+ * @see BgInfoSectionNullPreview
  */
 @Composable
 fun BgInfoSection(
@@ -231,95 +234,5 @@ private fun TrendArrow.toArcIndicator(): ArcIndicator? {
         TrendArrow.DOUBLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, triangleCount = 2)
         TrendArrow.TRIPLE_UP       -> ArcIndicator(centerAngle = -90f, sweepAngle = sweepAngle, triangleCount = 3)
         TrendArrow.TRIPLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, triangleCount = 3)
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun BgInfoSectionInRangePreview() {
-    MaterialTheme {
-        BgInfoSection(
-            bgInfo = BgInfoData(
-                bgValue = 120.0,
-                bgText = "120",
-                bgRange = BgRange.IN_RANGE,
-                isOutdated = false,
-                timestamp = System.currentTimeMillis(),
-                trendArrow = TrendArrow.FLAT,
-                trendDescription = "Flat",
-                delta = 2.0,
-                deltaText = "+2",
-                shortAvgDelta = 1.5,
-                shortAvgDeltaText = "+1.5",
-                longAvgDelta = 1.0,
-                longAvgDeltaText = "+1.0"
-            ),
-            timeAgoText = "2 min"
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun BgInfoSectionHighPreview() {
-    MaterialTheme {
-        BgInfoSection(
-            bgInfo = BgInfoData(
-                bgValue = 220.0,
-                bgText = "220",
-                bgRange = BgRange.HIGH,
-                isOutdated = false,
-                timestamp = System.currentTimeMillis(),
-                trendArrow = TrendArrow.DOUBLE_UP,
-                trendDescription = "Rising fast",
-                delta = 15.0,
-                deltaText = "+15",
-                shortAvgDelta = 12.0,
-                shortAvgDeltaText = "+12",
-                longAvgDelta = 10.0,
-                longAvgDeltaText = "+10"
-            ),
-            timeAgoText = "1 min"
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun BgInfoSectionLowPreview() {
-    MaterialTheme {
-        BgInfoSection(
-            bgInfo = BgInfoData(
-                bgValue = 65.0,
-                bgText = "65",
-                bgRange = BgRange.LOW,
-                isOutdated = false,
-                timestamp = System.currentTimeMillis(),
-                trendArrow = TrendArrow.TRIPLE_DOWN,
-                trendDescription = "Falling rapidly",
-                delta = -10.0,
-                deltaText = "-10",
-                shortAvgDelta = -8.0,
-                shortAvgDeltaText = "-8",
-                longAvgDelta = -6.0,
-                longAvgDeltaText = "-6"
-            ),
-            timeAgoText = "3 min"
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun BgInfoSectionNullPreview() {
-    MaterialTheme {
-        BgInfoSection(
-            bgInfo = null,
-            timeAgoText = ""
-        )
     }
 }

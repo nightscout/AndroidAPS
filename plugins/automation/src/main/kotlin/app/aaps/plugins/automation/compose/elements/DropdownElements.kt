@@ -6,7 +6,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -19,10 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.plugins.automation.elements.InputLocationMode
 
+/**
+ * @see PreviewDropdown
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AutomationDropdown(
@@ -61,6 +61,9 @@ fun AutomationDropdown(
     }
 }
 
+/**
+ * @see PreviewOnOff
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputDropdownOnOffEditor(
@@ -99,24 +102,4 @@ fun InputLocationModeEditor(
         },
         modifier = modifier
     )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 360)
-@Composable
-private fun PreviewDropdown() {
-    MaterialTheme {
-        var v by remember { mutableStateOf("Profile A") }
-        AutomationDropdown(value = v, options = listOf("Profile A", "Profile B"), onValueChange = { v = it })
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 360)
-@Composable
-private fun PreviewOnOff() {
-    MaterialTheme {
-        var v by remember { mutableStateOf(true) }
-        InputDropdownOnOffEditor(on = v, onValueChange = { v = it })
-    }
 }

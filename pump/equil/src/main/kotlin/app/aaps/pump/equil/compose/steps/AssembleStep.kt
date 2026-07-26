@@ -11,9 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.equil.R
@@ -39,9 +37,13 @@ internal fun AssembleStep(
     )
 }
 
+/**
+ * @see AssembleStepPairPreview
+ * @see AssembleStepDressingPreview
+ */
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun AssembleStepContent(
+internal fun AssembleStepContent(
     isDressing: Boolean,
     @DrawableRes imageRes: Int,
     onNext: () -> Unit,
@@ -76,28 +78,4 @@ private fun AssembleStepContent(
             contentScale = ContentScale.Fit
         )
     }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AssembleStepPairPreview() {
-    AssembleStepContent(
-        isDressing = false,
-        imageRes = R.drawable.equil_animation_wizard_assemble,
-        onNext = {},
-        onCancel = {}
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AssembleStepDressingPreview() {
-    AssembleStepContent(
-        isDressing = true,
-        imageRes = R.drawable.equil_animation_wizard_assemble,
-        onNext = {},
-        onCancel = {}
-    )
 }

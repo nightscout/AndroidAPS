@@ -1,19 +1,12 @@
 package app.aaps.core.ui.compose.icons
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Icon for Announcement treatment type.
@@ -22,6 +15,8 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * replaces ic_cp_announcement
  *
  * Bounding box: x: 1.5-22.0, y: 1.2-22.8 (viewport: 24x24, ~90% height)
+ *
+ * @see IcAnnouncementIconPreview
  */
 val IcAnnouncement: ImageVector by lazy {
     ImageVector.Builder(
@@ -126,55 +121,3 @@ val IcAnnouncement: ImageVector by lazy {
         }
     }.build()
 }
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IcAnnouncementIconPreview() {
-    Icon(
-        imageVector = IcAnnouncement,
-        contentDescription = null,
-        modifier = Modifier
-            .padding(0.dp)
-            .size(48.dp),
-        tint = Color.Unspecified
-    )
-}
-
-/*
-
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
-	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
-<g id="ic_announcement">
-	<g display="inline">
-		<path fill="#CF8BFE" d="M11.139,17.791c0.359,0.441,0.721,0.908,0.656,1.567c-0.028,0.287,0.254,0.422,0.468,0.566
-			c0.379,0.255,0.776,0.486,1.134,0.768c0.584,0.459,0.551,0.893-0.068,1.282c-0.024,0.015-0.053,0.023-0.077,0.037
-			c-1.908,1.116-1.91,1.119-3.503-0.445c-0.308-0.302-0.648-0.557-0.996-0.808c-0.523-0.378-1.029-0.565-1.636-0.145
-			c-0.397,0.274-0.893,0.242-1.336,0.159c-1.938-0.361-3.766-2.196-3.628-4.353c0.027-0.421,0.15-0.782,0.425-1.092
-			c0.473-0.534,0.94-1.075,1.433-1.591c1.053-1.102,1.622-2.391,1.616-3.93C5.622,8.494,5.615,7.183,6.298,5.981
-			c0.668-1.176,1.45-1.552,2.78-1.272c1.491,0.314,2.75,1.096,3.937,1.997c1.723,1.309,3.164,2.882,4.262,4.754
-			c0.566,0.966,1.028,1.963,1.05,3.126c0.016,0.838-0.361,1.439-1.01,1.864c-0.722,0.473-1.512,0.762-2.415,0.753
-			c-1.109-0.01-2.218,0.085-3.312,0.298C11.422,17.534,11.25,17.566,11.139,17.791z M15.964,15.131
-			c0.814,0.019,1.146-0.311,1.054-0.994c-0.076-0.565-0.261-1.102-0.549-1.609c-1.297-2.287-3.143-4.054-5.262-5.554
-			c-0.672-0.476-1.398-0.873-2.246-1.009C8.118,5.828,7.792,6.08,7.812,6.941c0.015,0.653,0.28,1.225,0.603,1.764
-			c1.327,2.218,3.098,4.016,5.248,5.441C14.402,14.636,15.183,15.05,15.964,15.131z M14.074,15.887
-			c-2.942-1.676-5.256-3.962-7.018-6.86C6.968,9.339,6.98,9.61,6.966,9.881c-0.046,0.886-0.116,1.806-0.571,2.56
-			c-0.493,0.817-0.344,1.495,0.07,2.226c0.588,1.039,1.428,1.764,2.583,2.108c0.309,0.092,0.636,0.154,0.919-0.004
-			C11.235,16.063,12.615,15.945,14.074,15.887z"/>
-		<path fill="#CF8BFE" d="M19.315,10.836c-0.356,0-0.527,0.007-0.697-0.002c-0.224-0.012-0.376-0.132-0.426-0.351
-			c-0.053-0.231,0.073-0.402,0.266-0.48c0.421-0.169,0.852-0.314,1.285-0.453c0.351-0.113,0.709-0.202,1.064-0.304
-			c0.687-0.197,0.768-0.122,0.985,0.505c0.228,0.659-0.219,0.742-0.64,0.82C20.485,10.695,19.807,10.768,19.315,10.836z"/>
-		<path fill="#CF8BFE" d="M11.967,3.94c0.111-0.717,0.227-1.505,0.358-2.29c0.09-0.541,0.518-0.471,0.873-0.405
-			c0.404,0.074,0.677,0.279,0.495,0.783c-0.26,0.724-0.48,1.462-0.723,2.192c-0.103,0.309-0.251,0.626-0.644,0.551
-			C11.911,4.692,11.956,4.327,11.967,3.94z"/>
-		<path fill="#CF8BFE" d="M16.128,7.225c-0.44-0.003-0.67-0.372-0.418-0.696c0.556-0.716,1.142-1.412,1.755-2.08
-			c0.296-0.322,0.647-0.132,0.903,0.113c0.23,0.22,0.43,0.521,0.125,0.814c-0.675,0.648-1.386,1.258-2.158,1.79
-			C16.269,7.212,16.174,7.213,16.128,7.225z"/>
-		<path fill="#CF8BFE" d="M13.662,11.656c0,0.2,0.03,0.406-0.006,0.599c-0.087,0.47-0.46,0.662-0.805,0.357
-			c-0.922-0.813-1.819-1.658-2.594-2.618C10,9.675,10.075,9.445,10.491,9.296C12.09,8.724,13.686,9.897,13.662,11.656z"/>
-	</g>
-</g>
-</svg>
- */

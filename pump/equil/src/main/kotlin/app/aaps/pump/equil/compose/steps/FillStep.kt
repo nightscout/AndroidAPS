@@ -15,11 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -48,8 +46,14 @@ internal fun FillStep(
     )
 }
 
+/**
+ * @see FillStepIdlePreview
+ * @see FillStepFillingPreview
+ * @see FillStepCompletePreview
+ * @see FillStepErrorPreview
+ */
 @Composable
-private fun FillStepContent(
+internal fun FillStepContent(
     isLoading: Boolean,
     autoFilling: Boolean,
     fillComplete: Boolean,
@@ -120,68 +124,4 @@ private fun FillStepContent(
             ErrorBanner(message = errorMessage)
         }
     }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun FillStepIdlePreview() {
-    FillStepContent(
-        isLoading = false,
-        autoFilling = false,
-        fillComplete = false,
-        errorMessage = null,
-        onStartFill = {},
-        onStopFill = {},
-        onNext = {},
-        onCancel = {}
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun FillStepFillingPreview() {
-    FillStepContent(
-        isLoading = false,
-        autoFilling = true,
-        fillComplete = false,
-        errorMessage = null,
-        onStartFill = {},
-        onStopFill = {},
-        onNext = {},
-        onCancel = {}
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun FillStepCompletePreview() {
-    FillStepContent(
-        isLoading = false,
-        autoFilling = false,
-        fillComplete = true,
-        errorMessage = null,
-        onStartFill = {},
-        onStopFill = {},
-        onNext = {},
-        onCancel = {}
-    )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun FillStepErrorPreview() {
-    FillStepContent(
-        isLoading = false,
-        autoFilling = false,
-        fillComplete = false,
-        errorMessage = "Replace reservoir",
-        onStartFill = {},
-        onStopFill = {},
-        onNext = {},
-        onCancel = {}
-    )
 }

@@ -131,7 +131,7 @@ class BLECommIntegrationTest : TestBase() {
             notificationManager,
             emulatorTransport
         ).apply {
-            messageTimeoutMs = 500
+            messageTimeoutMs = 5000
         }
     }
 

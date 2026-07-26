@@ -1,6 +1,5 @@
 package app.aaps.ui.widget
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,11 +31,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.ui.R
 
+/**
+ * @see WidgetConfigureScreenPreview
+ */
 @Composable
 fun WidgetConfigureScreen(
     initialOpacity: Int,
@@ -132,21 +132,5 @@ fun WidgetConfigureScreen(
                 }
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Light", widthDp = 360, heightDp = 480)
-@Preview(showBackground = true, name = "Dark", widthDp = 360, heightDp = 480, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun WidgetConfigureScreenPreview() {
-    MaterialTheme {
-        WidgetConfigureScreen(
-            initialOpacity = 180,
-            initialUseBlack = true,
-            onOpacityChange = {},
-            onUseBlackChange = {},
-            onClose = {}
-        )
     }
 }

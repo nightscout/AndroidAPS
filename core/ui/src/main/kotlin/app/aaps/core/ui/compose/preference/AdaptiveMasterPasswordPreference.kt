@@ -7,10 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
@@ -25,6 +23,8 @@ import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
  * @param preferences The Preferences instance
  * @param checkPassword Function to verify password: (enteredPassword, storedHash) -> Boolean
  * @param hashPassword Function to hash password before storing: (password) -> String
+ *
+ * @see AdaptiveMasterPasswordPreferencePreview
  */
 @Composable
 fun AdaptiveMasterPasswordPreferenceItem(
@@ -142,19 +142,6 @@ fun AdaptiveMasterPasswordPreferenceItem(
                 onShowMessage(notChangedMsg)
                 showSetDialog = false
             }
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AdaptiveMasterPasswordPreferencePreview() {
-    PreviewTheme {
-        AdaptiveMasterPasswordPreferenceItem(
-            checkPassword = { _, _ -> false },
-            hashPassword = { it },
-            onShowMessage = { }
         )
     }
 }

@@ -36,7 +36,13 @@ project.afterEvaluate {
             "**/*Directions$*",
             "**/*Directions.*",
             "**/*Binding.*",
-            "**/BR.class"
+            "**/BR.class",
+            // Compose @Preview-only files: exclude the whole class including the synthetic $lambda$N
+            // methods the Compose compiler extracts from each preview lambda (a method-level
+            // annotation cannot reach those extracted methods). Convention: keep every @Preview
+            // function in a dedicated *Previews.kt file.
+            "**/*PreviewsKt.class",
+            "**/*PreviewsKt$*.class"
         )
 
         val classes = HashSet<ConfigurableFileTree>()

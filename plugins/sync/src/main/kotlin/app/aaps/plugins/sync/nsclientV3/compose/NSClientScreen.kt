@@ -46,12 +46,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.interfaces.nsclient.NSClientLog
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
 import kotlinx.serialization.json.Json
@@ -61,9 +58,11 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 private val jsonPrettyPrint = Json { prettyPrint = true }
+
 private val timeFormatPreview = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault())
 
 private const val JSON_EXPANDED = "json_expanded"
+
 private const val JSON_COLLAPSED = "json_collapsed"
 
 @Composable
@@ -121,6 +120,9 @@ fun NSClientScreen(
     )
 }
 
+/**
+ * @see NSClientScreenPreview
+ */
 @Composable
 fun NSClientScreenContent(
     uiState: NSClientUiState,
@@ -293,27 +295,6 @@ fun NSClientScreenContent(
                 }
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun NSClientScreenPreview() {
-    MaterialTheme {
-        NSClientScreenContent(
-            uiState = NSClientUiState(
-                url = "https://nightscout.example.com",
-                status = "Connected",
-                queue = "0",
-                paused = false,
-                logList = listOf(
-                    NSClientLog(action = "UPLOAD", logText = "Uploading treatments"),
-                    NSClientLog(action = "READ", logText = "Reading entries"),
-                    NSClientLog(action = "SYNC", logText = "Synchronization complete"),
-                )
-            )
-        )
     }
 }
 

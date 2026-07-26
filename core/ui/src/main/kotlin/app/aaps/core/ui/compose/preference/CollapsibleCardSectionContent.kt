@@ -26,19 +26,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Composable for a collapsible card section.
  * This is separated from the LazyListScope extension to avoid cross-module compilation issues
  * with @Composable lambda parameters.
+ *
+ * @see CollapsibleCardSectionContentPreview
  */
 @Composable
 fun CollapsibleCardSectionContent(
@@ -80,21 +77,6 @@ fun CollapsibleCardSectionContent(
                     content()
                 }
             }
-        }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun CollapsibleCardSectionContentPreview() {
-    PreviewTheme {
-        CollapsibleCardSectionContent(
-            titleResId = R.string.configbuilder_insulin,
-            expanded = true,
-            onToggle = {}
-        ) {
-            Text("Section content", modifier = Modifier.padding(start = 16.dp))
         }
     }
 }

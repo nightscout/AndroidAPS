@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.graph.BasalProfileGraphCompose
 import app.aaps.core.graph.IcProfileGraphCompose
@@ -27,7 +26,6 @@ import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Data class representing a single row in a profile comparison table.
@@ -423,6 +421,9 @@ fun ProfileCompareContent(
     }
 }
 
+/**
+ * @see ProfileRowPreview
+ */
 @Composable
 fun ProfileInlineRow(label: String, value: String) {
     Row(
@@ -512,19 +513,6 @@ fun ProfileRow(label: String, value: String, showColon: Boolean = true) {
                     )
                 }
             }
-        }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun ProfileRowPreview() {
-    MaterialTheme {
-        Column {
-            ProfileRow(label = "Units", value = "mg/dL")
-            ProfileRow(label = "IC", value = "08:00 10.0\n12:00 8.5\n18:00 9.0")
-            ProfileInlineRow(label = "Insulin", value = "Humalog")
         }
     }
 }
