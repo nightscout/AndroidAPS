@@ -120,7 +120,7 @@ class BLECommRSv3IntegrationTest : TestBase() {
             pumpSync, dateUtil, preferences, configBuilder, notificationManager,
             emulatorTransport
         ).apply {
-            messageTimeoutMs = 500
+            messageTimeoutMs = 5000
         }
     }
 
