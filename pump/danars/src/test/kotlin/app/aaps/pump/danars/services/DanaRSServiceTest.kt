@@ -1,16 +1,23 @@
 package app.aaps.pump.danars.services
 
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
+import app.aaps.pump.danars.comm.DanaRSPacketBasalSetCancelTemporaryBasal
+import app.aaps.pump.danars.comm.DanaRSPacketBolusSetStepBolusStop
+import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
+import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -18,11 +25,6 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
-import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
-import app.aaps.pump.danars.comm.DanaRSPacketBolusSetStepBolusStop
-import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
-import app.aaps.pump.danars.comm.DanaRSPacketBasalSetCancelTemporaryBasal
 import javax.inject.Provider
 
 class DanaRSServiceTest : TestBaseWithProfile() {
@@ -30,11 +32,9 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
     @Mock lateinit var danaPump: DanaPump
-    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var bleComm: BLEComm
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var pumpEnactResult: PumpEnactResult
     @Mock lateinit var danaRSPacketGeneralInitialScreenInformationProvider: Provider<DanaRSPacketGeneralInitialScreenInformation>
     @Mock lateinit var danaRSPacketOptionSetUserOptionProvider: Provider<DanaRSPacketOptionSetUserOption>
     @Mock lateinit var danaRSPacketBolusSetStepBolusStopProvider: Provider<DanaRSPacketBolusSetStepBolusStop>
@@ -56,18 +56,18 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         danaRSService.rxBus = rxBus
         danaRSService.preferences = preferences
         danaRSService.rh = rh
-        danaRSService.profileFunction = profileFunction
+        //danaRSService.profileFunction = profileFunction
         danaRSService.commandQueue = commandQueue
         danaRSService.context = context
         danaRSService.danaRSPlugin = danaRSPlugin
         danaRSService.danaPump = danaPump
         danaRSService.activePlugin = activePlugin
-        danaRSService.constraintChecker = constraintChecker
         danaRSService.uiInteraction = uiInteraction
         danaRSService.bleComm = bleComm
         danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
+        danaRSService.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
         danaRSService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRSService.danaRSPacketGeneralInitialScreenInformation = danaRSPacketGeneralInitialScreenInformationProvider
         danaRSService.danaRSPacketOptionSetUserOption = danaRSPacketOptionSetUserOptionProvider
@@ -77,7 +77,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
 
         `when`(rh.gs(anyInt())).thenReturn("test string")
         `when`(rh.gs(anyInt(), any())).thenReturn("test string")
-        `when`(activePlugin.activePump).thenReturn(danaRSPlugin)
+        `when`(activePlugin.activePumpInternal).thenReturn(danaRSPlugin)
         `when`(danaRSPlugin.pumpDescription).thenReturn(mockPumpDescription())
 
         // Setup packet providers
@@ -171,7 +171,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testTempBasal_notConnected() {
+    fun testTempBasal_notConnected() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
 
         val result = danaRSService.tempBasal(120, 1)
@@ -180,7 +180,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testTempBasalStop_notConnected() {
+    fun testTempBasalStop_notConnected() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
 
         val result = danaRSService.tempBasalStop()
@@ -189,14 +189,14 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testTempBasalShortDuration_invalidDuration() {
+    fun testTempBasalShortDuration_invalidDuration() = runTest {
         val result = danaRSService.tempBasalShortDuration(120, 20)
 
         assertThat(result).isFalse()
     }
 
     @Test
-    fun testTempBasalShortDuration_validDuration15() {
+    fun testTempBasalShortDuration_validDuration15() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
 
         val result = danaRSService.tempBasalShortDuration(120, 15)
@@ -206,7 +206,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testTempBasalShortDuration_validDuration30() {
+    fun testTempBasalShortDuration_validDuration30() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
 
         val result = danaRSService.tempBasalShortDuration(120, 30)
@@ -216,7 +216,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testExtendedBolus_notConnected() {
+    fun testExtendedBolus_notConnected() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
 
         val result = danaRSService.extendedBolus(2.0, 2)
@@ -225,7 +225,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testExtendedBolusStop_notConnected() {
+    fun testExtendedBolusStop_notConnected() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
 
         val result = danaRSService.extendedBolusStop()
@@ -234,9 +234,9 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testUpdateBasalsInPump_notConnected() {
+    fun testUpdateBasalsInPump_notConnected() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
-        `when`(profileFunction.getProfile()).thenReturn(validProfile)
+        `when`(profileFunction.getProfile()).thenReturn(effectiveProfile)
 
         val result = danaRSService.updateBasalsInPump(validProfile)
 
@@ -276,7 +276,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testHighTempBasal() {
+    fun testHighTempBasal() = runTest {
         `when`(bleComm.isConnected).thenReturn(false)
 
         val result = danaRSService.highTempBasal(150)

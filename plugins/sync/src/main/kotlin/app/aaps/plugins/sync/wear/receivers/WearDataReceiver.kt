@@ -10,14 +10,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.utils.receivers.BundleLogger
-import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.DaggerBroadcastReceiver
 import javax.inject.Inject
 
 open class WearDataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
 
@@ -36,8 +34,8 @@ open class WearDataReceiver : DaggerBroadcastReceiver() {
                 }
                 // Check for allowed configuration
                 if (
-                    config.AAPSCLIENT1 && client == 2 ||
-                    (config.APS || config.PUMPCONTROL) && (client == 1 || client == 2)
+                    config.AAPSCLIENT1 && (client == 2 || client == 3) ||
+                    (config.APS || config.PUMPCONTROL) && (client == 1 || client == 2 || client == 3)
                 ) {
                     // Send to phone
                     val eventData = EventData.deserialize(data)
@@ -45,8 +43,6 @@ open class WearDataReceiver : DaggerBroadcastReceiver() {
                         rxBus.send(EventMobileToWear(eventData))
                 }
             }
-
-            else                          -> null
         }
     }
 

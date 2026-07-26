@@ -10,8 +10,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.keys.BooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -31,25 +30,14 @@ class MM640gWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector { injector ->
-            if (injector is MM640gPlugin.MM640gWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.mM640gPlugin = mM640gPlugin
-                injector.persistenceLayer = persistenceLayer
-                injector.dateUtil = dateUtil
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
-        worker = MM640gPlugin.MM640gWorker(context, workerParameters)
+        worker = MM640gPlugin.MM640gWorker(context, workerParameters, aapsLogger, fabricPrivacy, mM640gPlugin, dateUtil, persistenceLayer)
     }
 
     @Test
     fun `When plugin disabled then return success`() {
-        runBlocking {
+        runTest {
             whenever(mM640gPlugin.isEnabled()).thenReturn(false)
 
             val result = worker.doWork()
@@ -62,10 +50,10 @@ class MM640gWorkerTest : TestBaseWithProfile() {
     @Test
     fun `When plugin enabled then insert data`() {
         val timestamp = (now - 60000)
-        runBlocking {
+        runTest {
             whenever(mM640gPlugin.isEnabled()).thenReturn(true)
             whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf(
                     "collection" to "entries",
@@ -102,7 +90,7 @@ class MM640gWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When collection is missing then return failure`() {
-        runBlocking {
+        runTest {
             whenever(mM640gPlugin.isEnabled()).thenReturn(true)
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf("wrong" to "data")
@@ -116,7 +104,7 @@ class MM640gWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When no entries return failure`() {
-        runBlocking {
+        runTest {
             whenever(mM640gPlugin.isEnabled()).thenReturn(true)
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf("collection" to "something_else")

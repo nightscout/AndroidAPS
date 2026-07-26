@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="calibration_shortname">CAL</string>
+    <string name="no_calibration_name">No calibration</string>
+    <string name="description_no_calibration">"No calibration override applied. Sensor values are used as-is. Use this when the sensor is already factory-calibrated and accurate."</string>
+    <string name="linear_calibration_name">Linear calibration</string>
+    <string name="description_linear_calibration">"Per-sensor linear calibration override (slope and offset) computed from your fingerstick entries. Recent entries are weighted higher. Override is applied after the current sensor session start; first 2 hours are skipped as warm-up."</string>
+    <string name="sensor_change_detected_text">Possible sensor change detected at %1$s. Mark as new sensor?</string>
+    <string name="sensor_change_detected_action">Mark sensor change</string>
+
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Log a sensor change to enable calibration.</string>
+    <string name="cal_status_warmup">Sensor warm-up — calibration active after %1$s.</string>
+    <string name="cal_status_need_more_entries">Need at least 2 fingerstick entries (currently %1$d).</string>
+    <string name="cal_status_unsafe_fit">Fit out of safe range — calibration not applied.</string>
+    <string name="cal_status_applied">Calibration applied.</string>
+    <string name="cal_status_applied_offset_only">Offset-only calibration applied — sensor range too narrow for slope.</string>
+    <string name="cal_status_applied_slope_clamped">Calibration applied — slope clamped to safe range. Add more entries to relax.</string>
+    <string name="cal_slope_offset">Slope %1$.2f, mid-range correction %2$s</string>
+    <string name="cal_session_started">Session started: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Log sensor change</string>
+    <string name="cal_add_calibration">Add calibration</string>
+    <string name="cal_entries_header">Fingerstick entries (%1$d)</string>
+    <string name="cal_no_entries">No fingerstick entries yet.</string>
+    <string name="cal_entry_pair">Fingerstick %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Remove entry?</string>
+    <string name="cal_remove_entry_message">This will invalidate the entry. The fit will be recalculated.</string>
+    <string name="cal_chart_entry_readout">Entry %1$d/%2$d · %3$s · sensor %4$s → BG %5$s</string>
+</resources>

@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Skonfigurowano udział w Open Humans. Jeśli chcesz przerwać przesyłanie, kliknij \"Wyloguj\".</string>
     <string name="not_setup_info">Udział w projekcie Open Humans nie został skonfigurowany. Aby rozpocząć przesyłanie danych, kliknij przycisk \'Konfiguracja\'.</string>
     <string name="project_member_id">Identyfikator członka projektu: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Prześlij tylko jeśli połączono poprzez WiFi</string>
-    <string name="only_upload_if_charging">Prześlij tylko gdy telefon jest ładowany</string>
     <string name="open_humans_uploading">Przesyłanie do Open Humans…</string>
     <string name="open_humans_notifications">Powiadomienia Open Humans</string>
     <string name="uploading_to_open_humans">AAPS wysyła dane do Open Humans. To może chwilę potrwać.</string>

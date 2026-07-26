@@ -1,6 +1,9 @@
 package app.aaps.core.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.SyncChannel
+import app.aaps.core.keys.interfaces.SyncDirection
+import app.aaps.core.keys.interfaces.SyncSpec
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 
 enum class UnitDoubleKey(
@@ -8,6 +11,9 @@ enum class UnitDoubleKey(
     override val defaultValue: Double,
     override val minMgdl: Int,
     override val maxMgdl: Int,
+    override val titleResId: Int,
+    override val summaryResId: Int? = null,
+    override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -15,13 +21,21 @@ enum class UnitDoubleKey(
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
+    override val exportable: Boolean = true,
+    override val sync: SyncSpec? = null
 ) : UnitDoublePreferenceKey {
 
-    OverviewEatingSoonTarget("eatingsoon_target", 90.0, 72, 160, defaultedBySM = true),
-    OverviewActivityTarget("activity_target", 140.0, 108, 180, defaultedBySM = true),
-    OverviewHypoTarget("hypo_target", 160.0, 108, 180, defaultedBySM = true),
-    OverviewLowMark("low_mark", 72.0, 25, 160, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    OverviewHighMark("high_mark", 180.0, 90, 250, showInNsClientMode = false),
-    ApsLgsThreshold("lgsThreshold", 65.0, 60, 100, defaultedBySM = true, dependency = BooleanKey.ApsUseDynamicSensitivity)
+    OverviewLowMark(key = "low_mark", defaultValue = 72.0, minMgdl = 25, maxMgdl = 160, titleResId = R.string.pref_title_low_mark, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    OverviewHighMark(key = "high_mark", defaultValue = 180.0, minMgdl = 90, maxMgdl = 250, titleResId = R.string.pref_title_high_mark, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsLgsThreshold(
+        key = "lgsThreshold",
+        defaultValue = 65.0,
+        minMgdl = 60,
+        maxMgdl = 100,
+        titleResId = R.string.pref_title_lgs_threshold,
+        summaryResId = R.string.lgs_threshold_summary,
+        defaultedBySM = true,
+        dependency = BooleanKey.ApsUseDynamicSensitivity,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    )
 }

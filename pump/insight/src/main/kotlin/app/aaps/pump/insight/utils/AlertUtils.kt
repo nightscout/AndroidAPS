@@ -1,5 +1,10 @@
 package app.aaps.pump.insight.utils
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Warning
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.insight.R
 import app.aaps.pump.insight.descriptors.AlertCategory
@@ -109,9 +114,9 @@ class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
     }
 
     fun getAlertIcon(alertCategory: AlertCategory) = when (alertCategory) {
-        AlertCategory.ERROR       -> R.drawable.ic_error
-        AlertCategory.MAINTENANCE -> app.aaps.core.ui.R.drawable.ic_maintenance
-        AlertCategory.WARNING     -> R.drawable.ic_warning
-        AlertCategory.REMINDER    -> R.drawable.ic_reminder
+        AlertCategory.ERROR       -> Icons.Default.Error
+        AlertCategory.MAINTENANCE -> Icons.Default.Build
+        AlertCategory.WARNING     -> Icons.Default.Warning
+        AlertCategory.REMINDER    -> Icons.Default.Alarm
     }
 }

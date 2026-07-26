@@ -22,7 +22,7 @@ class OpenAPSAMAPluginTest : TestBaseWithProfile() {
         openAPSAMAPlugin = OpenAPSAMAPlugin(
             aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin,
             iobCobCalculator, processedTbrEbData, hardLimits, dateUtil, persistenceLayer, glucoseStatusProvider, preferences, determineBasalAMA,
-            GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider
+            GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider, ch
         )
     }
 
@@ -36,10 +36,4 @@ class OpenAPSAMAPluginTest : TestBaseWithProfile() {
         assertThat(openAPSAMAPlugin.specialShowInListCondition()).isTrue()
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        openAPSAMAPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

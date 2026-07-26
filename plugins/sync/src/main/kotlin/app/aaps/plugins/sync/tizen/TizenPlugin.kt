@@ -8,6 +8,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,16 +19,17 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.UnitDoubleKey
@@ -35,10 +37,16 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.durationInMinutes
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringFull
+import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -58,14 +66,16 @@ class TizenPlugin @Inject constructor(
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val pumpStatusProvider: PumpStatusProvider
+    private val pumpStatusProvider: PumpStatusProvider,
+    private val bolusProgressData: BolusProgressData
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
+        .icon(IcPluginTizen)
         .pluginName(R.string.tizen)
         .shortName(R.string.tizen_short)
         .description(R.string.tizen_description),
@@ -73,8 +83,12 @@ class TizenPlugin @Inject constructor(
 ) {
 
     private val disposable = CompositeDisposable()
-    override fun onStart() {
+    private var scope: CoroutineScope? = null
+
+    override suspend fun onStart() {
         super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         disposable += rxBus
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
@@ -83,14 +97,18 @@ class TizenPlugin @Inject constructor(
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendData(it) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOverviewBolusProgress::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        bolusProgressData.state
+            .collectResilient(newScope, aapsLogger, LTag.CORE) { state ->
+                if (state != null && !state.isSMB) {
+                    sendBolusProgressData(state)
+                }
+            }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         disposable.clear()
+        scope?.cancel()
+        scope = null
         super.onStop()
     }
 
@@ -101,10 +119,23 @@ class TizenPlugin @Inject constructor(
         basalStatus(bundle)
         pumpStatus(bundle)
 
-        if (event is EventOverviewBolusProgress && !BolusProgressData.isSMB) {
-            bundle.putInt("progressPercent", BolusProgressData.percent)
-            bundle.putString("progressStatus", BolusProgressData.status)
+        bolusProgressData.state.value?.let { state ->
+            if (!state.isSMB) {
+                bundle.putInt("progressPercent", state.percent)
+                bundle.putString("progressStatus", state.status)
+            }
         }
+    }
+
+    private fun sendBolusProgressData(state: BolusProgressState) {
+        val bundle = Bundle()
+        prepareData(EventLoopUpdateGui(), bundle)
+        // prepareData already includes bolus progress from bolusProgressData.state
+        sendBroadcast(
+            Intent(Intents.AAPS_BROADCAST)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .putExtras(bundle)
+        )
     }
 
     private fun sendData(event: Event) {
@@ -133,14 +164,14 @@ class TizenPlugin @Inject constructor(
     }
 
     private fun iobCob(bundle: Bundle) {
-        profileFunction.getProfile() ?: return
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        runBlocking { profileFunction.getProfile() } ?: return
+        val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+        val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
         bundle.putDouble("bolusIob", bolusIob.iob)
         bundle.putDouble("basalIob", basalIob.basaliob)
         bundle.putDouble("iob", bolusIob.iob + basalIob.basaliob) // total IOB
 
-        val cob = iobCobCalculator.getCobInfo("broadcast")
+        val cob = runBlocking { iobCobCalculator.getCobInfo("broadcast") }
         bundle.putDouble("cob", cob.displayCob ?: -1.0) // COB [g] or -1 if N/A
         bundle.putDouble("futureCarbs", cob.futureCarbs) // future scheduled carbs
     }
@@ -172,11 +203,11 @@ class TizenPlugin @Inject constructor(
 
     private fun basalStatus(bundle: Bundle) {
         val now = System.currentTimeMillis()
-        val profile = profileFunction.getProfile() ?: return
+        val profile = runBlocking { profileFunction.getProfile() } ?: return
         bundle.putLong("basalTimeStamp", now)
         bundle.putDouble("baseBasal", profile.getBasal())
-        bundle.putString("profile", profileFunction.getProfileName())
-        processedTbrEbData.getTempBasalIncludingConvertedExtended(now)?.let {
+        bundle.putString("profile", runBlocking { profileFunction.getProfileName() })
+        runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(now) }?.let {
             bundle.putLong("tempBasalStart", it.timestamp)
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR
@@ -187,10 +218,11 @@ class TizenPlugin @Inject constructor(
 
     private fun pumpStatus(bundle: Bundle) {
         val pump = activePlugin.activePump
-        bundle.putLong("pumpTimeStamp", pump.lastDataTime)
-        pump.batteryLevel?.let { bundle.putInt("pumpBattery", it) }
-        bundle.putDouble("pumpReservoir", pump.reservoirLevel)
-        bundle.putString("pumpStatus", pumpStatusProvider.shortStatus(false))
+        val iCfg = insulin.iCfg
+        bundle.putLong("pumpTimeStamp", pump.lastDataTime.value)
+        pump.batteryLevel.value?.let { bundle.putInt("pumpBattery", it) }
+        bundle.putDouble("pumpReservoir", pump.reservoirLevel.value.iU(iCfg.concentration))
+        bundle.putString("pumpStatus", runBlocking { pumpStatusProvider.shortStatus(false) })
     }
 
     private fun sendBroadcast(intent: Intent) {

@@ -22,10 +22,9 @@ import java.util.TimeZone
         childColumns = ["referenceId"]
     )],
     indices = [
-        Index("id"),
         Index("referenceId"),
         Index("timestamp"),
-        Index("isValid")
+        Index("nightscoutId")
     ]
 )
 data class EffectiveProfileSwitch(
@@ -51,6 +50,8 @@ data class EffectiveProfileSwitch(
     var originalPercentage: Int, // 1 ~ XXX [%]
     var originalDuration: Long, // [milliseconds]
     var originalEnd: Long, // not used (calculated from duration)
+    /** ID of the ProfileSwitch that triggered this EPS (null for legacy/synced records) */
+    var originalPsId: Long? = null,
     @Embedded
     var insulinConfiguration: InsulinConfiguration
 ) : TraceableDBEntry, DBEntryWithTime

@@ -76,6 +76,9 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
         return serverSocket?.isBound == true
     }
 
+    /** Actual bound local port (differs from [port] when constructed with port 0 / ephemeral). -1 until bound. */
+    val localPort: Int get() = serverSocket?.localPort ?: -1
+
     /** Register an endpoint (path) to handle requests. */
     fun registerEndpoint(path: String, endpoint: (SocketAddress, URI, String?) -> Pair<Int, CharSequence>) {
         aapsLogger.info(LTag.GARMIN, "Register: '$path'")
@@ -153,6 +156,9 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
         if (policy != null) StrictMode.setThreadPolicy(policy)
         readyLock.withLock {
             serverSocket = ServerSocket()
+            // Allow rebinding a port still lingering in TIME_WAIT (e.g. a quick server restart on a port change,
+            // or back-to-back tests reusing a fixed port) instead of failing with "Address already in use".
+            serverSocket!!.reuseAddress = true
             serverSocket!!.bind(
                 // Garmin will only connect to IP4 localhost. Therefore, we need to explicitly listen
                 // on that loopback interface and cannot use InetAddress.getLoopbackAddress(). That

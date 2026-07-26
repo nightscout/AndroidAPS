@@ -9,13 +9,13 @@ data class EB(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     override var ids: IDs = IDs(),
-    var timestamp: Long,
+    override var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     /** Duration in milliseconds */
     var duration: Long,
     var amount: Double,
     var isEmulatingTempBasal: Boolean = false
-) : HasIDs {
+) : HasIDs, TimeStamped {
 
     init {
         require(duration > 0)

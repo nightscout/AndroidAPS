@@ -16,6 +16,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -101,5 +102,28 @@ internal interface NightscoutRemoteService {
 
     @POST("v3/profile")
     suspend fun createProfile(@Body profile: JsonObject): Response<RemoteCreateUpdateResponse>
+
+    @GET("v3/settings/{identifier}")
+    suspend fun getSetting(@Path("identifier") identifier: String): Response<NSResponse<JSONObject>>
+
+    @GET("v3/settings/history/{from}")
+    suspend fun getSettingsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 100): Response<NSResponse<List<JSONObject>>>
+
+    @GET("v3/settings")
+    suspend fun searchSettings(@Query("limit") limit: Int = 100): Response<NSResponse<List<JSONObject>>>
+
+    @POST("v3/settings")
+    suspend fun createSetting(@Body settings: JsonObject): Response<RemoteCreateUpdateResponse>
+
+    @PATCH("v3/settings/{identifier}")
+    suspend fun patchSetting(@Body settings: JsonObject, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
+
+    /** PUT (NS3 "UPDATE") = upsert. Replaces existing doc, or inserts if absent. */
+    @PUT("v3/settings/{identifier}")
+    suspend fun updateSetting(@Body settings: JsonObject, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
+
+    /** [permanent] = `null` → soft delete (tombstone); `true` → NS `?permanent=true` hard delete. */
+    @DELETE("v3/settings/{identifier}")
+    suspend fun deleteSetting(@Path("identifier") identifier: String, @Query("permanent") permanent: Boolean?): Response<RemoteCreateUpdateResponse>
 
 }

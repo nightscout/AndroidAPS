@@ -1,7 +1,9 @@
 package app.aaps.implementation.utils
 
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.implementation.R
 import dagger.Reusable
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -27,6 +29,8 @@ class DecimalFormatterImpl @Inject constructor(
     override fun toPumpSupportedBolus(value: Double, bolusStep: Double): String = if (bolusStep <= 0.051) to2Decimal(value) else to1Decimal(value)
     override fun toPumpSupportedBolusWithUnits(value: Double, bolusStep: Double): String =
         if (bolusStep <= 0.051) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, value) else rh.gs(app.aaps.core.ui.R.string.format_insulin_units1, value)
+    override fun toPumpSupportedBolusWithUnits(value: PumpInsulin, bolusStep: Double): String =
+        if (bolusStep <= 0.051) rh.gs(app.aaps.core.ui.R.string.pump_insulin_cu, value.cU) else rh.gs(app.aaps.core.ui.R.string.pump_insulin_cu1, value.cU)
 
     override fun pumpSupportedBolusFormat(bolusStep: Double): DecimalFormat = if (bolusStep <= 0.051) DecimalFormat("0.00") else DecimalFormat("0.0")
 }

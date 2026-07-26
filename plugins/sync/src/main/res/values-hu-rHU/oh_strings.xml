@@ -5,8 +5,6 @@
     <string name="setup">Beállítás</string>
     <string name="setup_completed_info">Az Open Humans beállítása megtörtént. Ha le szeretné állítani az adatfeltöltést, kattintson a \"Kijelentkezés\" gombra.</string>
     <string name="not_setup_info">Az Open Humans jelenleg inaktív. Az adatok feltöltésének megkezdéséhez kattintson a \"Beállítás\" gombra.</string>
-    <string name="only_upload_if_connected_to_wifi">Adatfeltöltés csak WiFi kapcsolat esetén</string>
-    <string name="only_upload_if_charging">Adatfeltöltés csak töltés alatt</string>
     <string name="open_humans_uploading">Adatfeltöltés Open Humans rendszerbe…</string>
     <string name="open_humans_notifications">Open Humans értesítések</string>
     <string name="you_have_been_signed_out_of_open_humans">Kijelentkezett az Open Humans rendszerből</string>

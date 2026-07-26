@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Password and PIN retention [s]</string>
     <string name="protection_timeout_summary">Time before the password or PIN should be entered</string>
-    <string name="biometric">Biometric</string>
-    <string name="custom_password">Custom password</string>
-    <string name="custom_pin">Custom PIN</string>
-    <string name="noprotection">No protection</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Unsecure Fallback</string>
     <string name="unsecure_fallback_descriotion_biometric">In order to be effective, biometric protection needs a master password set for fallback.\n\nPlease set a master password!</string>
 
@@ -28,9 +25,14 @@
     <string name="password_not_changed">Password not changed</string>
     <string name="pin_not_changed">PIN not changed</string>
     <string name="pin_cleared">PIN cleared!</string>
-    <string name="password_hint">Enter password here</string>
-    <string name="pin_hint">Enter PIN here</string>
+    <string name="protection_password_hint">Enter password here</string>
+    <string name="protection_pin_hint">Enter PIN here</string>
+    <string name="auth_hint_master_password">Enter master password</string>
+    <string name="auth_hint_master_or_pin">Enter master password or PIN</string>
+    <string name="auth_hint_master_or_password">Enter master password or custom password</string>
 
+    <string name="use_pin_password">Use PIN/Password</string>
+    <string name="current_master_password">Current master password</string>
     <string name="master_password_not_set">Master password not set</string>
     <string name="aaps_directory_not_selected">AAPS directory not selected</string>
 </resources>

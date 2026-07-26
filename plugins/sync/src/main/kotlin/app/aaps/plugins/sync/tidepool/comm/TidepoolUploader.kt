@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolBooleanKey
@@ -20,6 +20,10 @@ import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.DatasetReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.OpenDatasetRequestMessage
 import app.aaps.plugins.sync.tidepool.messages.UploadReplyMessage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -45,6 +49,7 @@ class TidepoolUploader @Inject constructor(
 
     private val isAllowed get() = receiverDelegate.allowed
     private var wl: PowerManager.WakeLock? = null
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     companion object {
 
@@ -126,7 +131,8 @@ class TidepoolUploader @Inject constructor(
 
         // Check if already in a connected or connecting state
         if (authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED ||
-            authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.FETCHING_TOKEN) {
+            authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.FETCHING_TOKEN
+        ) {
             aapsLogger.debug(LTag.TIDEPOOL, "Already connected or connecting")
             return
         }
@@ -171,9 +177,14 @@ class TidepoolUploader @Inject constructor(
         session?.let { session ->
             if (session.authReply?.userid != null) {
                 // See if we already have an open data set to write to
+                // Must match the client.name the dataset is CREATED with (OpenDatasetRequestMessage -> ClientInfo(config.APPLICATION_ID)).
+                // A hardcoded "AAPS" here never matched config.APPLICATION_ID ("info.nightscout.androidaps"), so the existing open
+                // dataset was never found and a new dataset (new uploadId) was opened on every session. Because the Tidepool
+                // dataset.delete.origin deduplicator is scoped to a single uploadId, prior syncs' data could never be replaced,
+                // so every full sync duplicated all data. Reusing one dataset lets the per-uploadId origin dedup collapse re-uploads.
                 val datasetCall = session.service?.getOpenDataSets(
                     session.token!!,
-                    session.authReply!!.userid!!, "AAPS", 1
+                    session.authReply!!.userid!!, config.APPLICATION_ID, 1
                 )
                 datasetCall?.enqueue(
                     TidepoolCallback<List<DatasetReplyMessage>>(
@@ -187,7 +198,7 @@ class TidepoolUploader @Inject constructor(
                                         aapsLogger, rxBus, session, "Open New Dataset",
                                         {
                                             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED, "New dataset OK")
-                                            if (doUpload) doUpload("startSession openDataset")
+                                            if (doUpload) scope.launch { doUpload("startSession openDataset") }
                                             else releaseWakeLock()
                                         }, {
                                             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "New dataset FAILED")
@@ -199,7 +210,7 @@ class TidepoolUploader @Inject constructor(
                                 // TODO: Wouldn't need to do this if we could block on the above `call.enqueue`.
                                 // ie, do the openDataSet conditionally, and then do `doUpload` either way.
                                 authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED, "Appending to existing dataset")
-                                if (doUpload) doUpload("startSession existing dataset")
+                                if (doUpload) scope.launch { doUpload("startSession existing dataset") }
                                 else releaseWakeLock()
                             }
                         }, onFail = {
@@ -215,8 +226,7 @@ class TidepoolUploader @Inject constructor(
         }
     }
 
-    @Synchronized
-    fun doUpload(from: String?) {
+    suspend fun doUpload(from: String?) {
         //aapsLogger.debug(LTag.TIDEPOOL, "doUpload $from")
         if (!isAllowed) {
             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.BLOCKED)
@@ -281,7 +291,7 @@ class TidepoolUploader @Inject constructor(
         if (uploadChunk.getLastEnd() < dateUtil.now() - T.hours(3).msecs() - T.mins(1).msecs()) {
             SystemClock.sleep(3000)
             aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + dateUtil.dateAndTimeString(uploadChunk.getLastEnd()))
-            doUpload("uploadNext")
+            scope.launch { doUpload("uploadNext") }
         }
     }
 

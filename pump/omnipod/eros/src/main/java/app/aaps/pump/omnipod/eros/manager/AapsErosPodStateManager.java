@@ -4,9 +4,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.core.interfaces.logging.AAPSLogger;
-import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.notifications.NotificationId;
+import app.aaps.core.interfaces.notifications.NotificationManager;
 import app.aaps.core.interfaces.rx.bus.RxBus;
-import app.aaps.core.interfaces.rx.events.EventDismissNotification;
 import app.aaps.core.keys.interfaces.Preferences;
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;
@@ -19,12 +19,14 @@ import app.aaps.pump.omnipod.eros.keys.ErosStringNonPreferenceKey;
 public class AapsErosPodStateManager extends ErosPodStateManager {
     private final Preferences preferences;
     private final RxBus rxBus;
+    private final NotificationManager notificationManager;
 
     @Inject
-    public AapsErosPodStateManager(AAPSLogger aapsLogger, Preferences preferences, RxBus rxBus) {
+    public AapsErosPodStateManager(AAPSLogger aapsLogger, Preferences preferences, RxBus rxBus, NotificationManager notificationManager) {
         super(aapsLogger);
         this.preferences = preferences;
         this.rxBus = rxBus;
+        this.notificationManager = notificationManager;
     }
 
     @Override
@@ -54,6 +56,6 @@ public class AapsErosPodStateManager extends ErosPodStateManager {
     }
 
     @Override protected void onUpdatedFromResponse() {
-        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED));
+        notificationManager.dismiss(NotificationId.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED);
     }
 }

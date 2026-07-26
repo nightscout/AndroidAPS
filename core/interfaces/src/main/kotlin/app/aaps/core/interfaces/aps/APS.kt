@@ -1,9 +1,8 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.interfaces.configuration.ConfigExportImport
 import app.aaps.core.interfaces.profile.Profile
 
-interface APS : ConfigExportImport {
+interface APS {
 
     /**
      * Algorithm used
@@ -84,7 +83,7 @@ interface APS : ConfigExportImport {
      * @param initiator caller
      * @param tempBasalFallback if true previous enact of SMB failed. Try calculation without SMB
      */
-    fun invoke(initiator: String, tempBasalFallback: Boolean)
+    suspend fun invoke(initiator: String, tempBasalFallback: Boolean)
 
     /**
      * Provide glucose status calculation

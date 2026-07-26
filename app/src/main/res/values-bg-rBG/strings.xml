@@ -1,33 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Настройки на %1$s</string>
-    <string name="nav_exit">Изход</string>
-    <string name="delta">Изменение (Δ)</string>
-    <string name="save">Съхрани</string>
-    <string name="wear">Часовник</string>
-    <string name="nav_about">За приложението</string>
-    <string name="sensitivity_warning">Когато включите Autosense, трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно, като повишена чувствителност!!</string>
-    <string name="invalid">НЕВАЛИДНО</string>
-    <string name="gradually_increase_notification_volume">Постепенно увеличаване на звука за сигнали и аларми</string>
-    <string name="localalertsettings_title">Локални аларми</string>
-    <string name="enable_missed_bg_readings_alert">Аларма при липса на данни за КЗ</string>
-    <string name="enable_pump_unreachable_alert">Аларма при недостъпна помпа</string>
-    <string name="pump_unreachable_threshold">Лимит за недостъпна помпа [мин]</string>
-    <string name="enable_carbs_req_alert">Аларма ако трябват въглехидрати</string>
-    <string name="open_navigation">Отвори меню</string>
-    <string name="close_navigation">Затвори меню</string>
-    <string name="remove_items">Премахни артикули</string>
-    <string name="sort_items">Подреди артикули</string>
-    <string name="unitsnosemicolon">Единици</string>
-    <string name="authorizationfailed">Удостоверяването неуспешно</string>
-    <string name="cannula">Канюла</string>
-    <string name="identification_not_set">Идентификацията не е зададена в режим на разработчик</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Премахнете избраните елементи</string>
-    <string name="count_selected">%1$d избрано</string>
-    <string name="sort_label">Сортиране</string>
-    <string name="search">Търсене</string>
-    <string name="simple_mode">Опростен режим</string>
+    <string name="authorizationfailed">Грешка при оторизация</string>
+    <string name="identification_not_set">Идентификацията не е зададена в dev режим</string>
     <string name="select">Избери</string>
     <string name="set">Приложи</string>
+    <string name="migrating_preferences">Мигриране на настройките...</string>
+    <string name="optimizing_database">Оптимизиране на базата данни...</string>
+    <string name="initializing_plugins">Инициализиране на плъгини...</string>
+    <string name="initializing">Инициализация...</string>
+    <string name="migrating_profile_switches">Мигриране на профилите...</string>
+    <string name="migrating_effective_profile_switches">Мигриране на профилните промени...</string>
+    <string name="migrating_boluses">Мигриране на болусите...</string>
 </resources>

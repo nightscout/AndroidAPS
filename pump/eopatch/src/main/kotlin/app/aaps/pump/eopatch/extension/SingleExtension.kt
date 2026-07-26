@@ -11,5 +11,3 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 fun <T : Any> Single<T>.subscribeDefault(aapsLogger: AAPSLogger, onSuccess: (T) -> Unit): Disposable = subscribe(onSuccess) {
     aapsLogger.error(LTag.PUMP, "onError", it)
 }
-
-fun <T : Any> Single<T>.with(): Single<T> = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

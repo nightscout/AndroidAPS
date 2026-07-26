@@ -1,6 +1,7 @@
 package app.aaps.wear.interaction
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,9 +12,11 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
+import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
+import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.preference.WearPreferenceActivity
 import javax.inject.Inject
 
@@ -59,6 +62,12 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     }
 
     override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String?) {
+        if (key == getString(R.string.key_complication_bg_graph_hours)) {
+            // Re-render the graph complication immediately instead of waiting for the next BG/poll
+            ComplicationDataSourceUpdateRequester
+                .create(this, ComponentName(this, BgGraphComplication::class.java))
+                .requestUpdateAll()
+        }
         if (key == getString(R.string.key_heart_rate_sampling) && sp.getBoolean(key, false))
             requestBodySensorPermission()
         if (key == getString(R.string.key_steps_sampling)) {

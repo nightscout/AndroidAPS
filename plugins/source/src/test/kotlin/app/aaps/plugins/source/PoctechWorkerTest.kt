@@ -3,6 +3,7 @@ package app.aaps.plugins.source
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -10,8 +11,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.keys.BooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -31,24 +31,14 @@ class PoctechWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var workerParameters: WorkerParameters
 
-    init {
-        addInjector { injector ->
-            if (injector is PoctechPlugin.PoctechWorker) {
-                injector.aapsLogger = aapsLogger
-                injector.poctechPlugin = poctechPlugin
-                injector.persistenceLayer = persistenceLayer
-            }
-        }
-    }
-
     @BeforeEach
     fun setupMock() {
-        worker = PoctechPlugin.PoctechWorker(context, workerParameters)
+        worker = PoctechPlugin.PoctechWorker(context, workerParameters, aapsLogger, fabricPrivacy, poctechPlugin, persistenceLayer)
     }
 
     @Test
     fun `When plugin disabled then return success`() {
-        runBlocking {
+        runTest {
             whenever(poctechPlugin.isEnabled()).thenReturn(false)
 
             val result = worker.doWork()
@@ -61,10 +51,10 @@ class PoctechWorkerTest : TestBaseWithProfile() {
     @Test
     fun `When plugin enabled then insert mmol data`() {
         val timestamp = (now - 60000)
-        runBlocking {
+        runTest {
             whenever(poctechPlugin.isEnabled()).thenReturn(true)
             whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf(
                     "collection" to "entries",
@@ -86,7 +76,7 @@ class PoctechWorkerTest : TestBaseWithProfile() {
             Assertions.assertEquals(ListenableWorker.Result.success(), result)
             val expectedGv = GV(
                 timestamp = timestamp,
-                value = 180.0,
+                value = 10.0 * Constants.MMOLL_TO_MGDL, // mmol/l → mg/dl conversion
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
@@ -99,10 +89,10 @@ class PoctechWorkerTest : TestBaseWithProfile() {
     @Test
     fun `When plugin enabled then insert mgdl data`() {
         val timestamp = (now - 60000)
-        runBlocking {
+        runTest {
             whenever(poctechPlugin.isEnabled()).thenReturn(true)
             whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf(
                     "collection" to "entries",
@@ -136,7 +126,7 @@ class PoctechWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When collection is missing then return failure`() {
-        runBlocking {
+        runTest {
             whenever(poctechPlugin.isEnabled()).thenReturn(true)
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf("wrong" to "data")

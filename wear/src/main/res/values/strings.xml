@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AAPS</string>
-    <string name="label_actions_activity">AAPS</string>
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
-    <string name="label_actions_tile">AAPS(Actions)</string>
-    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
-    <string name="label_user_action_tile">AAPS(User Action)</string>
-    <string name="label_warning_sync">No data!</string>
-    <string name="label_warning_old">Old data!</string>
-    <string name="label_warning_since">Since %1$s</string>
-    <string name="label_warning_sync_aaps">Sync with AAPS!</string>
+    <string name="label_actions_tile">Actions</string>
+    <string name="label_temp_target_tile">Temp Target</string>
+    <string name="label_quick_wizard_tile">Quick Wizard</string>
+    <string name="label_user_action_tile">User Action</string>
+    <string name="label_scene_tile">Scene</string>
     <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
     <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
@@ -20,6 +15,7 @@
     <string name="pref_display_settings">Display</string>
     <string name="pref_graph_settings">Graph</string>
     <string name="pref_interface_settings">Interface</string>
+    <string name="pref_tile_settings">Tiles</string>
     <string name="pref_others_settings">Others</string>
     <string name="pref_complication_settings">Complication</string>
     <string name="pref_show_date">Show Date</string>
@@ -56,11 +52,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Input Design</string>
-    <string name="pref_default">Default</string>
-    <string name="pref_quick_righty">Quick righty</string>
-    <string name="pref_quick_lefty">Quick lefty</string>
-    <string name="pref_modern_sparse">Modern Sparse</string>
     <string name="pref_big_numbers">Big Numbers</string>
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
@@ -70,11 +61,16 @@
     <string name="pref_single_target">Single Target</string>
     <string name="pref_wizard_percentage">Calculator Percentage</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
+    <string name="pref_complication_bg_graph_hours">BG graph time range</string>
+    <string name="duration_1_hour">1 hour</string>
+    <string name="duration_3_hours">3 hours</string>
+    <string name="duration_6_hours">6 hours</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">More Watchface settings</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Look into Watchface configuration, please.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Temp Target</string>
     <string name="menu_wizard">Calculator</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Treatment</string>
@@ -84,32 +80,37 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_status">Status</string>
+    <string name="menu_bg_graph">BG graph</string>
     <string name="menu_resync">Re-Sync</string>
     <string name="menu_prime_fill">Prime/Fill</string>
     <string name="menu_none">None</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Duration\n[minutes]</string>
     <string name="action_tempt_confirmation">Temp Target Requested</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard Requested</string>
     <string name="action_user_action_confirmation">User Action Requested</string>
+    <string name="action_scene_confirmation">Scene Requested</string>
+    <string name="scene_end">End</string>
     <string name="action_treatment_confirmation">Treatment Requested</string>
     <string name="action_bolus_confirmation">Bolus Requested</string>
     <string name="action_wizard_confirmation">Calculation Requested</string>
     <string name="action_fill_confirmation">Fill Requested</string>
     <string name="action_ecarb_confirmation">Carbs Requested</string>
     <string name="action_profile_switch_confirmation">Profile Switch Requested</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Target\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Low\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">High\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Target [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Low [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">High [%s]</string>
     <string name="action_carbs">Carbs</string>
     <string name="action_carbs_gram">Carbs [g]</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
-    <string name="action_duration_h">Duration [h]</string>
     <string name="action_duration_hours">Duration\n[hours]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="action_confirm_timeshift">Timeshift: %1$s</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Preset 1</string>
@@ -148,7 +149,6 @@
     <string name="color_name_gray">gray</string>
     <string name="color_name_bluegray">blue gray</string>
     <string name="color_name_white">white</string>
-    <string name="color_name_black">black</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Simplify UI</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
@@ -182,13 +182,14 @@
     <string name="wear_control_not_enabled">Wear controls disabled</string>
     <string name="wear_control_no_data">No data available</string>
     <string name="key_preference_id" translatable="false">preference_id</string>
-    <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_bolus_wizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="key_treatments_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
     <string name="key_treatments_safety_max_bolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="key_quick_wizard_data" translatable="false">quick_wizard_data</string>
     <string name="key_user_action_data" translatable="false">user_action_data</string>
+    <string name="key_scene_data" translatable="false">scene_data</string>
+    <string name="key_active_scene_state" translatable="false">active_scene_state</string>
     <string name="key_prime_fill" translatable="false">primefill</string>
     <string name="key_show_wizard" translatable="false">showWizard</string>
     <string name="key_single_target" translatable="false">singletarget</string>
@@ -229,14 +230,12 @@
     <string name="key_match_divider" translatable="false">match_divider</string>
     <string name="key_simplify_ui" translatable="false">simplify_ui</string>
     <string name="key_dark" translatable="false">dark</string>
-    <string name="key_input_design" translatable="false">input_design</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
+    <string name="key_complication_bg_graph_hours" translatable="false">complication_bg_graph_hours</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="key_last_selected_watchface" translatable="false">last_selected_watchface</string>
-    <string name="increment">increment</string>
-    <string name="decrement">decrement</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -249,11 +248,10 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">old</string>
-    <string name="old_warning">!old!</string>
-    <string name="error">!err!</string>
+    <string name="error">Error</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="key_heart_rate_smoothing" translatable="false">heart_rate_smoothing</string>
@@ -268,6 +266,12 @@
     <string name="tile_action_2">Action 2</string>
     <string name="tile_action_3">Action 3</string>
     <string name="tile_action_4">Action 4</string>
+    <string name="tile_scene_1">Scene 1</string>
+    <string name="tile_scene_2">Scene 2</string>
+    <string name="tile_scene_3">Scene 3</string>
+    <string name="tile_scene_4">Scene 4</string>
+    <string name="tile_scene_auto">Automatic</string>
+    <string name="tile_scene_unavailable">Unavailable</string>
     <string name="datalayer_notification_title">Data Layer Foreground Service</string>
     <string name="datalayer_notification_text">AAPS is running in the foreground. To hide notification go to Developer options, App notifications, Allowed watch apps, select AAPS, Turn off Data Layer Foreground Service Channel notification.</string>
     <string name="on">ON</string>
@@ -275,42 +279,41 @@
     <string name="complication_full_status">Full Status</string>
     <string name="complication_full_status_flipped">Full Status (flipped)</string>
     <string name="complication_blood_glucose">Blood Glucose</string>
+    <string name="complication_blood_glucose_large">Blood Glucose (large)</string>
     <string name="complication_blood_glucose_ext1">Blood Glucose Ext1</string>
     <string name="complication_blood_glucose_ext2">Blood Glucose Ext2</string>
+    <string name="complication_bg_graph">BG Graph</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Basal rate</string>"
+    <string name="complication_br_tt">BR &amp; Target</string>
+    <string name="complication_target">Target</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">CoB Icon</string>
     <string name="complication_cob_detailed">CoB Detailed</string>
     <string name="complication_iob_icon">IoB Icon</string>
     <string name="complication_iob_detailed">IoB Detailed</string>
     <string name="complication_uploader_phone_battery">Uploader/Phone Battery</string>
-    <string name="status_loop_state">Loop state</string>
-    <string name="key_loop_states_data" translatable="false">loop_states</string>
-    <string name="label_loop_state_title">AAPS(Loop state)</string>
-    <string name="action_loop_state_selected">Loop state requested</string>
-    <string name="wizard_total_insulin">Total Insulin</string>
-    <string name="wizard_calculation">Calculation</string>
-    <string name="wizard_carbs_format">%1$d g carbs</string>
-    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Swipe left to confirm</string>
-    <string name="wizard_result_bg">BG</string>
-    <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
-    <string name="wizard_result_trend">15\' trend</string>
-    <string name="wizard_result_iob">IOB</string>
-    <string name="wizard_result_new_iob">New IOB: %1$s U</string>
-    <string name="wizard_result_cob">COB (%1$.1f g)</string>
-    <string name="wizard_result_carbs">Carbs (%1$d g)</string>
-    <string name="wizard_result_subtotal">Subtotal</string>
-    <string name="wizard_result_total">Total</string>
-    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="key_running_mode_data" translatable="false">loop_states</string>
+    <string name="label_running_mode_title">Running mode</string>
+    <string name="label_bg_graph_tile">BG Graph</string>
+    <string name="tile_tap_action">Tap action</string>
+    <string name="tile_graph_time_range">Time range</string>
+    <string name="tile_tap_bg_graph">BG Graph</string>
+    <string name="tile_tap_main_menu">Main Menu</string>
+    <string name="tile_tap_loop_status">Loop Status</string>
+    <string name="action_running_mode_selected">Running mode requested</string>
+    <string name="title_activity_disconnect_pump">Disconnect pump</string>
+    <string name="title_activity_suspend_loop">Suspend Loop</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
-    <string name="expand_calculation_details">Click to expand calculation details</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Sent</string>
+    <string name="contacting_master">Contacting master…</string>
+    <string name="contacting_master_unknown">State unknown — check phone</string>
     <string name="tile_settings">Tile settings</string>
     <string name="loop_status_error">Failed to load status</string>
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
@@ -326,6 +329,8 @@
     <string name="loop_status_lgs">Low glucose suspend</string>
     <string name="loop_status_disabled">Loop disabled</string>
     <string name="loop_status_suspended">Loop suspended</string>
+    <string name="loop_status_pump_suspended">Pump suspended</string>
+    <string name="loop_status_dst_suspended">Suspended by DST</string>
     <string name="loop_status_disconnected">Pump disconnected</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Unknown</string>
@@ -341,5 +346,27 @@
     <string name="loop_status_temp_target">Temp Target</string>
     <string name="loop_status_target_range">Range</string>
     <string name="loop_status_target">Target</string>
+    <string name="loop_status_adjusted_target">Adjusted target</string>
     <string name="loop_status">Loop status</string>
+    <string name="loop_status_refresh">Refresh</string>
+    <string name="confirm">Confirm</string>
+    <string name="request">Request</string>
+    <string name="constraint_applied">Constraint applied!</string>
+    <string name="wizard_total_insulin">Total Insulin</string>
+    <string name="wizard_calculation">Calculation</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">BG</string>
+    <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
+    <string name="wizard_result_trend">15\' trend</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">New IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Carbs (%1$d g)</string>
+    <string name="wizard_result_subtotal">Subtotal</string>
+    <string name="wizard_result_correction">Correction</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

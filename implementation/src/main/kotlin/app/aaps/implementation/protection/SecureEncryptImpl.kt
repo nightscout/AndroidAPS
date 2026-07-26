@@ -9,6 +9,7 @@ import javax.inject.Inject
 // Android KeyStore
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.security.keystore.StrongBoxUnavailableException
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.utils.hexStringToByteArray
 import java.io.IOException
@@ -86,6 +87,22 @@ class SecureEncryptImpl @Inject constructor(
         return ""
     }
 
+    /***
+     * Delete a key from the Android KeyStore by alias. No-op if alias is absent.
+     */
+    override fun deleteKey(keystoreAlias: String) {
+        try {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            if (keyStore.containsAlias(keystoreAlias)) {
+                keyStore.deleteEntry(keystoreAlias)
+                log.info(LTag.CORE, "$MODULE: deleted KeyStore alias=$keystoreAlias")
+            }
+        } catch (e: Exception) {
+            log.error(LTag.CORE, "$MODULE: deleteKey, alias=$keystoreAlias, msg=${e.message}, $e")
+        }
+    }
+
     /**
      * Check if header part of the DataString is valid hash
      */
@@ -126,20 +143,29 @@ class SecureEncryptImpl @Inject constructor(
 
         // Create new KeyStore alias or reuse existing key generation or retrieval
         if (!keyStoreIsAvailable || forceNew) {
-            // Keystore alias does not exist in KeyStore: generate new key
-            val keyGenParameterSpec = KeyGenParameterSpec.Builder(
-                keyAlias, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-            )
-                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .build()
-            val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
-            keyGenerator.init(keyGenParameterSpec)
-            // Return newly generated key
-            return keyGenerator.generateKey()
+            // Prefer StrongBox-backed key (separate secure chip) when available, fall back to TEE-backed
+            return generateAesKey(keyAlias, strongBox = true) ?: generateAesKey(keyAlias, strongBox = false)!!
         }
         // Else: Alias exists in KeyStore: retrieve existing key
         return retrieveSecretKeyFromKeyStore(keyAlias)
+    }
+
+    private fun generateAesKey(keyAlias: String, strongBox: Boolean): SecretKey? = try {
+        val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+            keyAlias, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .apply { if (strongBox) setIsStrongBoxBacked(true) }
+            .build()
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+        keyGenerator.init(keyGenParameterSpec)
+        keyGenerator.generateKey()
+    } catch (e: StrongBoxUnavailableException) {
+        if (strongBox) {
+            log.info(LTag.CORE, "$MODULE: StrongBox unavailable, falling back to TEE-backed key for alias=$keyAlias")
+            null
+        } else throw e
     }
 
     /***

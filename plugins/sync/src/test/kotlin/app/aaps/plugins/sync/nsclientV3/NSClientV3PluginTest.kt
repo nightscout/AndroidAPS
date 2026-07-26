@@ -22,25 +22,36 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -60,12 +71,13 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var nsClientSource: NSClientSource
-    @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
-    @Mock lateinit var insulin: Insulin
     @Mock lateinit var l: L
     @Mock lateinit var nsClientV3Service: NSClientV3Service
+    @Mock lateinit var nsClientRepository: NSClientRepository
+    @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var uel: UserEntryLogger
 
     private lateinit var storeDataForDb: StoreDataForDbImpl
     private lateinit var sut: NSClientV3Plugin
@@ -74,18 +86,21 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
+        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
+        whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
-        whenever(activePlugin.activeInsulin).thenReturn(insulin)
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, preferences, config, nsClientSource, virtualPump)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
         sut =
             NSClientV3Plugin(
-                aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
+                aapsLogger, rh, preferences, rxBus, context,
                 receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-                nsClientSource, storeDataForDb, decimalFormatter, l
+                nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
+                mock(), mock(), mock(), mock(), mock(), mock(), profileRepository
             )
         sut.nsAndroidClient = nsAndroidClient
         sut.nsClientV3Service = nsClientV3Service
-        whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)
+        runBlocking { whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(effectiveProfile) }
     }
 
     @Test
@@ -113,6 +128,78 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(nsAndroidClient.createDeviceStatus(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsAdd("devicestatus", dataPair, "1/3")
         assertThat(storeDataForDb.nsIdDeviceStatuses).hasSize(2) // still only 1
+    }
+
+    // ---- masterReachable (client→master edit/control gating) ----
+
+    private fun buildPlugin(orphanDetector: OrphanDetector): NSClientV3Plugin =
+        NSClientV3Plugin(
+            aapsLogger, rh, preferences, rxBus, context,
+            receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
+            mock(), mock(), mock(), orphanDetector, mock(), mock(), profileRepository
+        )
+
+    /** Poll the (WhileSubscribed) flow's value until it settles to [expected]; a live collector keeps it computing. */
+    private suspend fun awaitValue(flow: StateFlow<Boolean>, expected: Boolean) =
+        withTimeout(2_000) { while (flow.value != expected) delay(10) }
+
+    /** A master device is always reachable for control — the four client-side terms are short-circuited. */
+    @Test
+    fun masterReachableAlwaysReachableOnMaster() {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        val master = buildPlugin(orphanDetector = mock())
+        assertThat(master.masterReachable.value).isTrue()
+    }
+
+    /**
+     * On a client, masterReachable requires ALL of: live WS, a fresh master heartbeat, a current
+     * pairing, and not being orphaned. It FAILS CLOSED before the first heartbeat (no optimistic
+     * enable at boot) and times out to stale if heartbeats later stop.
+     */
+    @Test
+    fun masterReachableGatedByPairingAuthorizationAndFreshnessOnClient() {
+        val fixedNow = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(fixedNow)
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val pairedFlow = MutableStateFlow("")            // start UNPAIRED
+        val authorizedFlow = MutableStateFlow(true)
+        val orphanDetector = mock<OrphanDetector>()
+        whenever(orphanDetector.authorized).thenReturn(authorizedFlow)
+        whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(pairedFlow)
+        // pairedFlow (NsClient.pairedFlow) is seeded synchronously from this at construction — start unpaired.
+        whenever(preferences.get(StringNonKey.NsClientControlClientId)).thenReturn("")
+        // Master's allow-client-control switch, synced master→client — the 5th masterReachable term. Default ON.
+        val controlFlow = MutableStateFlow(true)
+        whenever(preferences.observe(BooleanKey.NsClientAllowClientControl)).thenReturn(controlFlow)
+
+        val client = buildPlugin(orphanDetector)
+        // Heartbeat stays 0L until the first batch — the gate FAILS CLOSED at boot (no optimistic enable).
+        assertThat(client.lastDevicestatusReceivedAt.value).isEqualTo(0L)
+        client.setWsConnected(true)                      // ws term true
+
+        runBlocking {
+            val collector = launch(Dispatchers.Default) { client.masterReachable.collect { } }
+            try {
+                awaitValue(client.masterReachable, false)                         // unpaired + no heartbeat → gated
+                pairedFlow.value = "client-id"
+                awaitValue(client.masterReachable, false)                         // paired but NO heartbeat yet → stays gated (fail-closed)
+                client.bumpDevicestatusHeartbeat(fixedNow - 10 * 60_000L)         // catch-up pulls a STALE historical devicestatus (created 10 min ago)
+                awaitValue(client.masterReachable, false)                         // stale heartbeat must NOT unlock (the app-restart-with-offline-master bug)
+                client.bumpDevicestatusHeartbeat(fixedNow)                        // a genuinely fresh master heartbeat confirms it alive
+                awaitValue(client.masterReachable, true)                          // ws + fresh + paired + authorized
+                authorizedFlow.value = false
+                awaitValue(client.masterReachable, false)                         // revoked / orphaned → gated
+                authorizedFlow.value = true
+                awaitValue(client.masterReachable, true)
+                controlFlow.value = false
+                awaitValue(client.masterReachable, false)                         // master switched OFF client control → gated
+                controlFlow.value = true
+                awaitValue(client.masterReachable, true)
+            } finally {
+                collector.cancel()
+            }
+        }
     }
 
     @Test
@@ -184,7 +271,8 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
                 pumpId = 11000,
                 pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
-            )
+            ),
+            iCfg = someICfg
         )
         val dataPair = DataSyncSelector.PairBolus(bolus, 1000)
         // create
@@ -283,19 +371,19 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         val profileSwitch = EPS(
             timestamp = 10000,
             isValid = true,
-            basalBlocks = validProfile.basalBlocks,
-            isfBlocks = validProfile.isfBlocks,
-            icBlocks = validProfile.icBlocks,
-            targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units,
+            basalBlocks = effectiveProfile.basalBlocks,
+            isfBlocks = effectiveProfile.isfBlocks,
+            icBlocks = effectiveProfile.icBlocks,
+            targetBlocks = effectiveProfile.targetBlocks,
+            glucoseUnit = effectiveProfile.units,
             originalProfileName = "SomeProfile",
             originalCustomizedName = "SomeProfile (150%, 1h)",
             originalTimeshift = 3600000,
             originalPercentage = 150,
             originalDuration = 3600000,
             originalEnd = 0,
-            iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+            iCfg = insulin.iCfg.also {
+                it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
                 nightscoutId = "nightscoutId",
@@ -321,17 +409,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         val profileSwitch = PS(
             timestamp = 10000,
             isValid = true,
-            basalBlocks = validProfile.basalBlocks,
-            isfBlocks = validProfile.isfBlocks,
-            icBlocks = validProfile.icBlocks,
-            targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units,
+            basalBlocks = effectiveProfile.basalBlocks,
+            isfBlocks = effectiveProfile.isfBlocks,
+            icBlocks = effectiveProfile.icBlocks,
+            targetBlocks = effectiveProfile.targetBlocks,
+            glucoseUnit = effectiveProfile.units,
             profileName = "SomeProfile",
             timeshift = 0,
             percentage = 100,
             duration = 0,
-            iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+            iCfg = insulin.iCfg.also {
+                it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
                 nightscoutId = "nightscoutId",
@@ -402,6 +490,76 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
         assertThat(storeDataForDb.nsIdRunningModes).hasSize(2)
+    }
+
+    // ---- 404/400-on-UPDATE bounded retry (NS read-after-write race fix) ----
+    // nsUpdate()'s Boolean return is what DataSyncSelectorV3 uses to advance the cursor:
+    // false = held (retry next round, cursor NOT advanced), true = advance.
+
+    private fun runningModePair(nsId: String, valid: Boolean = true, syncId: Long = 1000) =
+        DataSyncSelector.PairRunningMode(
+            RM(timestamp = 10000, isValid = valid, mode = RM.Mode.SUSPENDED_BY_PUMP, duration = 30000, ids = IDs(nightscoutId = nsId)),
+            syncId
+        )
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun `404 on UPDATE of a valid record is retried (cursor held) up to the cap then gives up`() = runTest {
+        val dataPair = runningModePair("rm-retry")
+        whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(404, null))
+        // first (maxUpdateRetries - 1) attempts -> retry -> false -> cursor NOT advanced
+        repeat(4) { assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isFalse() }
+        // cap reached -> give up -> true -> cursor advances (queue not wedged)
+        assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isTrue()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun `two different records 404ing on UPDATE do not thrash the per-id retry counter`() = runTest {
+        val a = runningModePair("rm-A", syncId = 1000)
+        val b = runningModePair("rm-B", syncId = 1001)
+        whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(404, null))
+        // interleaved, as in a single doUpload pass — each id is counted independently
+        repeat(4) {
+            assertThat(sut.nsUpdate("treatments", a, "1/3")).isFalse()
+            assertThat(sut.nsUpdate("treatments", b, "1/3")).isFalse()
+        }
+        // both reach the cap and give up independently (a single shared slot never would)
+        assertThat(sut.nsUpdate("treatments", a, "1/3")).isTrue()
+        assertThat(sut.nsUpdate("treatments", b, "1/3")).isTrue()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun `404 on a deletion (invalid record) is not retried`() = runTest {
+        val dataPair = runningModePair("rm-del", valid = false)
+        whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(404, null))
+        // a successful idempotent delete surfaces as 404 -> must advance immediately, not retry
+        assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isTrue()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun `400 on UPDATE is not retried`() = runTest {
+        val dataPair = runningModePair("rm-400")
+        whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(400, null))
+        // deterministic bad request -> advance immediately, no pointless retries
+        assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isTrue()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun `a successful UPDATE clears the retry counter and restores the full budget`() = runTest {
+        val dataPair = runningModePair("rm-clear")
+        whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(404, null))
+        repeat(3) { assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isFalse() } // count = 3
+        // a success resets the per-id counter
+        whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, null))
+        assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isTrue()
+        // failing again gets the full budget back: 4 more held attempts, then give up
+        whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(404, null))
+        repeat(4) { assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isFalse() }
+        assertThat(sut.nsUpdate("treatments", dataPair, "1/3")).isTrue()
     }
 
     @Test
@@ -509,14 +667,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        sut.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
-
-    @Test
-    fun `resetToFullSync should clear sync timestamps and reset initialLoadFinished flag`() {
+    fun `resetToFullSync should clear sync timestamps and reset initialLoadFinished flag`() = runTest {
         // Arrange
         // 1. Set the plugin's state to a "synced" status to ensure the reset works.
         sut.initialLoadFinished = true
@@ -696,7 +847,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // Assert
         // Verify that the call was passed through to the nsClientV3Service with the correct parameters.
         verify(nsClientV3Service).handleClearAlarm(mockAlarm, silenceDuration)
-        sut.setPluginEnabledBlocking(PluginType.SYNC, false)
     }
 
     @Test

@@ -1,134 +1,212 @@
 package app.aaps.wear.interaction.actions
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.wear.activity.ConfirmationActivity
+import androidx.wear.compose.foundation.pager.HorizontalPager
+import androidx.wear.compose.foundation.pager.rememberPagerState
+import androidx.wear.compose.material3.HorizontalPageIndicator
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.Text
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionProfileSwitchPreCheck
-import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.wear.R
-import app.aaps.wear.interaction.utils.EditPlusMinusViewAdapter
-import app.aaps.wear.interaction.utils.PlusMinusEditText
-import app.aaps.wear.widgets.PagerAdapter
+import dagger.android.support.DaggerAppCompatActivity
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class ProfileSwitchActivity : ViewSelectorActivity() {
+class ProfileSwitchActivity : DaggerAppCompatActivity() {
 
-    var editPercentage: PlusMinusEditText? = null
-    var editTimeshift: PlusMinusEditText? = null
-    var editDuration: PlusMinusEditText? = null
-    var percentage = -1
-    var timeshift = -25
-    var duration = 0.0
+    @Inject lateinit var rxBus: RxBus
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        percentage = intent.extras?.getInt("percentage", -1) ?: -1
-        timeshift = intent.extras?.getInt("timeshift", -25) ?: -25
+
+        val percentage = intent.extras?.getInt("percentage", -1) ?: -1
+        val timeshift = intent.extras?.getInt("timeshift", -25) ?: -25
         if (percentage == -1 || timeshift == -25) {
             finish()
             return
         }
-        setAdapter(MyPagerAdapter())
+
+        setContent {
+            MaterialTheme {
+                var currentTimeshift by remember { mutableStateOf(timeshift.toDouble()) }
+                var currentPercentage by remember { mutableStateOf(percentage.toDouble()) }
+                var currentDuration by remember { mutableStateOf(0.0) }
+                val pagerState = rememberPagerState(pageCount = { 4 })
+
+                Box(modifier = Modifier.fillMaxSize()) {
+                    HorizontalPager(state = pagerState) { page ->
+                        when (page) {
+                            0    -> PlusMinusInputScreen(
+                                value = currentTimeshift,
+                                onValueChange = { currentTimeshift = it },
+                                min = Constants.CPP_MIN_TIMESHIFT.toDouble(),
+                                max = Constants.CPP_MAX_TIMESHIFT.toDouble(),
+                                stepValues = listOf(1.0, 1.0, 1.0),
+                                format = DecimalFormat("0"),
+                                label = stringResource(R.string.action_timeshift_hours),
+                                allowZero = false,
+                                isActive = pagerState.currentPage == 0,
+                                simpleMode = true,
+                                enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.status_profile_switch),
+                            )
+                            1    -> PlusMinusInputScreen(
+                                value = currentPercentage,
+                                onValueChange = { currentPercentage = it },
+                                min = Constants.CPP_MIN_PERCENTAGE.toDouble(),
+                                max = Constants.CPP_MAX_PERCENTAGE.toDouble(),
+                                stepValues = listOf(5.0, 20.0, 20.0),
+                                format = DecimalFormat("0"),
+                                label = stringResource(R.string.action_percentage),
+                                allowZero = false,
+                                isActive = pagerState.currentPage == 1,
+                                simpleMode = true,
+                                symmetricLargeSteps = true,
+                                enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.status_profile_switch),
+                            )
+                            2    -> PlusMinusInputScreen(
+                                value = currentDuration,
+                                onValueChange = { currentDuration = it },
+                                min = 0.0,
+                                max = Constants.MAX_PROFILE_SWITCH_DURATION,
+                                stepValues = listOf(10.0, 60.0, 240.0),
+                                format = DecimalFormat("0"),
+                                displayText = if (currentDuration == 0.0) "\u221E" else formatDurationMinutes(currentDuration.toInt()),
+                                label = stringResource(R.string.loop_status_duration),
+                                allowZero = false,
+                                isActive = pagerState.currentPage == 2,
+                                enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.status_profile_switch),
+                            )
+                            else -> ProfileSwitchRequestScreen(
+                                timeshift = currentTimeshift.toInt(),
+                                percentage = currentPercentage.toInt(),
+                                duration = currentDuration.toInt(),
+                                onConfirm = {
+                                    confirmProfileSwitch(
+                                        currentTimeshift.toInt(),
+                                        currentPercentage.toInt(),
+                                        currentDuration.toInt()
+                                    )
+                                },
+                            )
+                        }
+                    }
+                    HorizontalPageIndicator(
+                        pagerState = pagerState,
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 4.dp)
+                    )
+                }
+            }
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
+    private fun confirmProfileSwitch(timeshift: Int, percentage: Int, duration: Int) {
+        rxBus.send(EventWearToMobile(ActionProfileSwitchPreCheck(timeshift, percentage, duration)))
+        startActivity(
+            Intent(this, ConfirmationActivity::class.java).apply {
+                putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)
+                putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.action_profile_switch_confirmation))
+            }
+        )
         finish()
     }
+}
 
-    private inner class MyPagerAdapter : PagerAdapter() {
+@Composable
+private fun ProfileSwitchRequestScreen(
+    timeshift: Int,
+    percentage: Int,
+    duration: Int,
+    onConfirm: () -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+    var confirmationSent by remember { mutableStateOf(false) }
 
-        override fun getPageCount(): Int = 4
+    val timeshiftText = "${if (timeshift > 0) "+" else ""}${stringResource(R.string.action_duration_hours_format, timeshift)}"
+    val durationText = if (duration == 0) "\u221E" else formatDurationMinutes(duration)
+    val detailLine = "$timeshiftText / $durationText"
 
-        override fun instantiateItem(container: ViewGroup, position: Int): View = when (position) {
-            0    -> {
-                // Page 0: Timeshift input page
-                val frameLayout = FrameLayout(applicationContext).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, frameLayout, false)
-                val initValue = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString(), timeshift.toDouble())
-                editTimeshift = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift_hours), true)
-                viewAdapter.root.apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-            }
-
-            1    -> {
-                // Page 1: Percentage input page
-                val frameLayout = FrameLayout(applicationContext).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, frameLayout, false)
-                val initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage.toDouble())
-                editPercentage = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
-                viewAdapter.root.apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-            }
-
-            2    -> {
-                // Page 2: Duration input page
-                val frameLayout = FrameLayout(applicationContext).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, frameLayout, false)
-                val initValue = SafeParse.stringToDouble(editDuration?.editText?.text.toString(), duration)
-                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, getString(R.string.action_duration_minutes))
-                viewAdapter.root.apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-            }
-
-            else -> {
-                // Page 3: Confirm page
-                LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false).apply {
-                    val confirmButton = findViewById<ImageView>(R.id.confirmbutton)
-                    confirmButton.setOnClickListener { view ->
-                        // Visual feedback: scale animation
-                        view.animate()
-                            .scaleX(1.2f)
-                            .scaleY(1.2f)
-                            .setDuration(150)
-                            .start()
-
-                        // Haptic feedback
-                        view.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
-
-                        val ps =
-                            ActionProfileSwitchPreCheck(SafeParse.stringToInt(editTimeshift?.editText?.text.toString()), SafeParse.stringToInt(editPercentage?.editText?.text.toString()), SafeParse.stringToInt(editDuration?.editText?.text.toString()))
-                        rxBus.send(EventWearToMobile(ps))
-                        showToast(this@ProfileSwitchActivity, R.string.action_profile_switch_confirmation)
-                        finishAffinity()
-                    }
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-            }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp, vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.request),
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .size(90.dp)
+                .clip(CircleShape)
+                .clickable(enabled = !confirmationSent) {
+                    confirmationSent = true
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onConfirm()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_confirm),
+                contentDescription = stringResource(R.string.confirm),
+                tint = ConfirmGreen,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "$percentage%",
+            color = Color.White,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+        if (detailLine.isNotEmpty()) {
+            Text(
+                text = detailLine,
+                color = WearSecondaryText,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

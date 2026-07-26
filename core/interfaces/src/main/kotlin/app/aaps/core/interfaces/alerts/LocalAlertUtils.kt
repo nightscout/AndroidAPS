@@ -24,12 +24,12 @@ interface LocalAlertUtils {
      * Report pump status has been read.
      * Shifts threshold for next alarm to now + preset_interval
      */
-    fun reportPumpStatusRead()
+    suspend fun reportPumpStatusRead()
 
     /**
      * Check for missing BGs.
      * Raise alarm if needed.
      * Overview notification with sound, Therapy event
      */
-    fun checkStaleBGAlert()
+    suspend fun checkStaleBGAlert()
 }

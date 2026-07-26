@@ -1,20 +1,18 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HourglassBottom
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -36,7 +34,7 @@ class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
@@ -79,15 +77,9 @@ class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerInsulinAgeDesc, rh.gs(comparator.value.stringRes), insulinAgeHours.value)
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_insulin)
+    override fun composeIcon() = Icons.Filled.HourglassBottom
+    override fun elementType() = ElementType.FILL
 
     override fun duplicate(): Trigger = TriggerInsulinAge(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggerInsulinAgeLabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerInsulinAgeLabel) + ": ", rh.gs(app.aaps.core.interfaces.R.string.unit_hour), insulinAgeHours))
-            .build(root)
-    }
 }

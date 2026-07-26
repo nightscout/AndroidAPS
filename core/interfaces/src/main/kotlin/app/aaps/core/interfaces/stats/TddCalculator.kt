@@ -1,7 +1,5 @@
 package app.aaps.core.interfaces.stats
 
-import android.content.Context
-import android.widget.TableLayout
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.TDD
@@ -18,7 +16,7 @@ interface TddCalculator {
      * @param allowMissingDays if true intervals without data are allowed (no profile, bolus, TBR)
      * @return list of TDDs or null if data is not available
      */
-    fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>?
+    suspend fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>?
 
     /**
      * Calculate past whole 'days' before now
@@ -26,13 +24,13 @@ interface TddCalculator {
      * @param allowMissingDays if true intervals without data are allowed (no profile, bolus, TBR)
      * @return list of TDDs or null if data is not available
      */
-    fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>?
+    suspend fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>?
 
     /**
      * Calculate today up to now
      * @return TDD or null if data is not available
      */
-    fun calculateToday(): TDD?
+    suspend fun calculateToday(): TDD?
 
     /**
      * Calculate interval in the past from now
@@ -40,7 +38,7 @@ interface TddCalculator {
      * @param endHours hours back. It must be <= 0 because we want data in the past
      * @return TDD or null if data is not available
      */
-    fun calculateDaily(startHours: Long, endHours: Long): TDD?
+    suspend fun calculateDaily(startHours: Long, endHours: Long): TDD?
 
     /**
      * Calculate interval in the past from timestamp
@@ -49,7 +47,7 @@ interface TddCalculator {
      * @param endHours hours back. It must be <= 0 because we want data in the past
      * @return TDD or null if data is not available
      */
-    fun calculateDaily(timestamp: Long, startHours: Long, endHours: Long): TDD?
+    suspend fun calculateDaily(timestamp: Long, startHours: Long, endHours: Long): TDD?
 
     /**
      * Calculate interval in the past
@@ -58,7 +56,7 @@ interface TddCalculator {
      * @param allowMissingData if true intervals without data are allowed (no profile, bolus, TBR)
      * @return TDD or null if data is not available
      */
-    fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD?
+    suspend fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD?
 
     /**
      * Calculate average TDD from list of daily TDDs
@@ -66,11 +64,4 @@ interface TddCalculator {
      * @return [AverageTDD] or null if data is not available
      */
     fun averageTDD(tdds: LongSparseArray<TDD>?): AverageTDD?
-
-    /**
-     * Prepare TableLayout for displaying data of last 7 days. Missing data is allowed
-     * @param context android context
-     * @return TableLayout
-     */
-    fun stats(context: Context): TableLayout
 }

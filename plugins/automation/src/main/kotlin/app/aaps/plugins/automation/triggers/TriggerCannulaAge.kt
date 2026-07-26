@@ -1,20 +1,17 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcCannulaChange
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -36,7 +33,7 @@ class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
@@ -74,22 +71,9 @@ class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerCannulaAgeDesc, rh.gs(comparator.value.stringRes), cannulaAgeHours.value)
 
-    override fun icon(): Optional<Int> {
-        val isPatchPump = activePlugin.activePump.pumpDescription.isPatchPump
-        return if (isPatchPump) {
-            Optional.of(app.aaps.core.objects.R.drawable.ic_patch_pump_outline)
-        } else {
-            Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_cannula)
-        }
-    }
+    override fun composeIcon() = IcCannulaChange
+    override fun elementType() = ElementType.CANNULA_CHANGE
 
     override fun duplicate(): Trigger = TriggerCannulaAge(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggerCannulaAgeLabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerCannulaAgeLabel) + ": ", rh.gs(app.aaps.core.interfaces.R.string.unit_hour), cannulaAgeHours))
-            .build(root)
-    }
 }

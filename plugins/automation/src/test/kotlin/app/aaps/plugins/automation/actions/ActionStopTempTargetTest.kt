@@ -2,10 +2,8 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.queue.Callback
-import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -33,11 +31,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
         assertThat(sut.shortDescription()).isEqualTo("Stop temp target")
     }
 
-    @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(R.drawable.ic_stop_24dp)
-    }
-
-    @Test fun doActionTest() {
+    @Test fun doActionTest() = runTest {
         val inserted = mutableListOf<TT>().apply {
             // insert all inserted TTs
         }
@@ -46,16 +40,13 @@ class ActionStopTempTargetTest : ActionsTestBase() {
             // insert all updated TTs
         }
         whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any()))
-            .thenReturn(Single.just(PersistenceLayer.TransactionResult<TT>().apply {
+            .thenReturn(PersistenceLayer.TransactionResult<TT>().apply {
                 inserted.addAll(inserted)
                 updated.addAll(updated)
-            }))
+            })
 
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
         verify(persistenceLayer, times(1)).cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any())
     }
 

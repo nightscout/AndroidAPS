@@ -15,7 +15,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
 import com.google.gson.Gson
-import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 /**
@@ -53,7 +52,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpSerial = this.pumpSerial,
                 insulin = this.insulin,
                 type = NSBolus.BolusType.fromString(this.type),
-                isBasalInsulin = isBasalInsulin == true
+                isBasalInsulin = isBasalInsulin == true,
+                iCfg = this.iCfg.toNSICfg()
             )
 
         carbs != null && carbs != 0.0                                      -> {
@@ -220,13 +220,14 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                profileJson = JSONObject(this.profileJson),
+                profileJson = this.profileJson,
                 originalProfileName = this.originalProfileName,
                 originalCustomizedName = this.originalCustomizedName,
                 originalTimeshift = this.originalTimeshift,
                 originalPercentage = this.originalPercentage,
                 originalDuration = this.originalDuration,
-                originalEnd = this.originalEnd
+                originalEnd = this.originalEnd,
+                iCfg = this.iCfg.toNSICfg()
             )
         }
 
@@ -252,13 +253,14 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                profileJson = this.profileJson?.let { JSONObject(this.profileJson) },
+                profileJson = this.profileJson,
                 profile = this.profile,
                 originalProfileName = this.originalProfileName,
                 originalDuration = this.originalDuration,
                 duration = durationInMilliseconds,
                 timeShift = this.timeshift,
                 percentage = this.percentage,
+                iCfg = this.iCfg.toNSICfg()
             )
         }
 
@@ -410,7 +412,8 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             pumpSerial = pumpSerial,
             insulin = insulin,
             type = type.name,
-            isBasalInsulin = isBasalInsulin
+            isBasalInsulin = isBasalInsulin,
+            iCfg = iCfg.toRemoteICfg()
         )
 
         is NSCarbs                  -> RemoteTreatment(
@@ -500,13 +503,14 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             endId = endId,
             pumpType = pumpType,
             pumpSerial = pumpSerial,
-            profileJson = profileJson.toString(),
+            profileJson = profileJson,
             originalProfileName = originalProfileName,
             originalCustomizedName = originalCustomizedName,
             originalTimeshift = originalTimeshift,
             originalPercentage = originalPercentage,
             originalDuration = originalDuration,
-            originalEnd = originalEnd
+            originalEnd = originalEnd,
+            iCfg = iCfg.toRemoteICfg()
         )
 
         is NSProfileSwitch          -> RemoteTreatment(
@@ -534,6 +538,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             durationInMilliseconds = duration,
             timeshift = timeShift,
             percentage = percentage,
+            iCfg = iCfg.toRemoteICfg()
         )
 
         is NSBolusWizard            -> RemoteTreatment(
@@ -636,6 +641,4 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
                 pumpType = pumpType,
                 pumpSerial = pumpSerial
             )
-
-        else                        -> null
     }

@@ -7,10 +7,13 @@ import app.aaps.pump.danars.comm.DanaRSPacketNotifyDeliveryRateDisplay
 import app.aaps.pump.danars.comm.DanaRSPacketNotifyMissedBolusAlarm
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import javax.inject.Qualifier
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 interface DanaRSCommModule {
 

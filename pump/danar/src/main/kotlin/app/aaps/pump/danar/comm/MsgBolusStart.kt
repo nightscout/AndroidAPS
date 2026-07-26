@@ -1,18 +1,16 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.objects.constraints.ConstraintObject
 import dagger.android.HasAndroidInjector
 
 class MsgBolusStart(
     injector: HasAndroidInjector,
-    private var amount: Double
+    private val amount: Double
 ) : MessageBase(injector) {
 
     init {
         setCommand(0x0102)
-        // HARDCODED LIMIT
-        amount = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
+        // Amount already constrained in IU (queue) and cU (PumpWithConcentration boundary).
         addParamInt((amount * 100).toInt())
         aapsLogger.debug(LTag.PUMPBTCOMM, "Bolus start : $amount")
     }

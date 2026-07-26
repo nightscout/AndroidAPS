@@ -6,5 +6,7 @@
     <string name="avg_smoothing_name">Smoothing medio</string>
     <string name="description_avg_smoothing">"Algoritmo di smoothing medio, il valore più recente non ne è influenzato"</string>
     <string name="no_smoothing_name">No smoothing</string>
-    <string name="description_no_smoothing">"Nessuno smoothing eseguito sui dati glicemici di input. Usalo quando hai già filtrato i dati, ad esempio da BYODA G6."</string>
+    <string name="description_no_smoothing">"Usalo quando hai già filtrato i dati, ad esempio da BYODA G6."</string>
+    <string name="UKF_name">Filtro Kalman</string>
+    <string name="description_UKF">"Algoritmo avanzato con regolazione automatica del rumore e levigatura RTS."</string>
 </resources>

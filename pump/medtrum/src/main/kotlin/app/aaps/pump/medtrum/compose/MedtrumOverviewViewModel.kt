@@ -1,0 +1,386 @@
+package app.aaps.pump.medtrum.compose
+
+import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.runtime.Stable
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.pump.ActionCategory
+import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.core.ui.compose.pump.PumpInfoRow
+import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
+import app.aaps.core.ui.compose.pump.PumpOverviewUiState
+import app.aaps.core.ui.compose.pump.StatusBanner
+import app.aaps.core.ui.compose.pump.tickerFlow
+import app.aaps.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.medtrum.MedtrumPump
+import app.aaps.pump.medtrum.R
+import app.aaps.pump.medtrum.code.ConnectionState
+import app.aaps.pump.medtrum.code.PatchStep
+import app.aaps.pump.medtrum.comm.enums.BasalType
+import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
+import app.aaps.pump.medtrum.comm.enums.ModelType
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import java.util.Locale
+import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
+
+sealed class MedtrumOverviewEvent {
+    data class StartPatchWorkflow(val startStep: PatchStep) : MedtrumOverviewEvent()
+    data class ShowDialog(val title: String, val message: String) : MedtrumOverviewEvent()
+    data object ConfirmUnpair : MedtrumOverviewEvent()
+}
+
+@HiltViewModel
+@Stable
+class MedtrumOverviewViewModel @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val rh: ResourceHelper,
+    private val profileFunction: ProfileFunction,
+    private val commandQueue: CommandQueue,
+    private val rxBus: RxBus,
+    private val dateUtil: DateUtil,
+    private val medtrumPlugin: MedtrumPlugin,
+    val medtrumPump: MedtrumPump,
+    private val ch: ConcentrationHelper,
+    private val preferences: Preferences,
+    private val uel: UserEntryLogger,
+    @ApplicationContext private val context: Context
+) : ViewModel() {
+
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val stateBuilder = PumpOverviewStateBuilder(rh)
+
+    private val _events = MutableSharedFlow<MedtrumOverviewEvent>(extraBufferCapacity = 5)
+    val events: SharedFlow<MedtrumOverviewEvent> = _events
+
+    val uiState: StateFlow<PumpOverviewUiState> = combine(
+        medtrumPump.connectionStateFlow,
+        medtrumPump.pumpStateFlow,
+        medtrumPump.lastBasalTypeFlow,
+        medtrumPump.lastBasalRateFlow,
+        medtrumPump.reservoirFlow,
+        medtrumPump.batteryVoltage_BFlow,
+        medtrumPump.bolusAmountDeliveredFlow,
+        medtrumPump.lastBolusTimeFlow,
+        medtrumPump.lastBolusAmountFlow,
+        medtrumPump.lastConnectionFlow,
+        communicationStatus.refreshTrigger,
+        tickerFlow(60_000L)
+    ) { values ->
+        @Suppress("UNCHECKED_CAST")
+        val connectionState = values[0] as ConnectionState
+        val pumpState = values[1] as MedtrumPumpState
+        val basalType = values[2] as BasalType
+        val tempBasalRate = values[3] as Double
+        val reservoir = values[4] as Double
+        val batteryVoltage = values[5] as Double
+        val bolusDelivered = values[6] as Double
+        val lastBolusTime = values[7] as Long?
+        val lastBolusAmount = values[8] as Double?
+        val lastConnectionTime = values[9] as Long
+
+        buildUiState(
+            connectionState, pumpState, medtrumPump.baseBasalRate, basalType, tempBasalRate, medtrumPump.lastBasalStartTime, medtrumPump.lastBasalDuration, reservoir, batteryVoltage,
+            bolusDelivered, lastBolusTime, lastBolusAmount, lastConnectionTime
+        )
+    }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildInitialState())
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
+    }
+
+    fun onClickRefresh() {
+        viewModelScope.launch { commandQueue.readStatus(rh.gs(R.string.requested_by_user)) }
+    }
+
+    fun onClickResetAlarms() {
+        viewModelScope.launch { commandQueue.clearAlarms() }
+    }
+
+    fun onClickChangePatch() {
+        aapsLogger.debug(LTag.PUMP, "ChangePatch clicked!")
+        viewModelScope.launch {
+            val nextStep = when {
+                medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                                                    ->
+                    PatchStep.PREPARE_PATCH
+
+                medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMING && medtrumPump.patchPrimed) ->
+                    PatchStep.RETRY_ACTIVATION
+
+                else                                                                                                                                ->
+                    PatchStep.START_DEACTIVATION
+            }
+            _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
+        }
+    }
+
+    fun onUnpairClick() {
+        _events.tryEmit(MedtrumOverviewEvent.ConfirmUnpair)
+    }
+
+    fun performUnpair() {
+        aapsLogger.debug(LTag.PUMP, "performUnpair")
+        uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Medtrum)
+        medtrumPlugin.getService()?.disconnect("Unpair")
+        preferences.put(MedtrumStringNonKey.SnInput, "0")
+        medtrumPump.patchPrimed = false
+        medtrumPump.pumpState = MedtrumPumpState.NONE
+        medtrumPump.resetPatchParameters()
+        medtrumPump.loadUserSettingsFromSP()
+    }
+
+    private fun buildInitialState(): PumpOverviewUiState {
+        return buildUiState(
+            connectionState = medtrumPump.connectionState,
+            pumpState = medtrumPump.pumpState,
+            basalRate = medtrumPump.baseBasalRate,
+            basalType = medtrumPump.lastBasalType,
+            tempBasalRate = medtrumPump.lastBasalRate.takeIf { medtrumPump.tempBasalInProgress }, // only show temp basal if it is in progress
+            tempBasalStartTime = medtrumPump.lastBasalStartTime,
+            tempBasalDuration = medtrumPump.lastBasalDuration,
+            reservoir = medtrumPump.reservoir,
+            batteryVoltage = medtrumPump.batteryVoltage_B,
+            bolusDelivered = medtrumPump.bolusAmountDeliveredFlow.value,
+            lastBolusTime = medtrumPump.lastBolusTime,
+            lastBolusAmount = medtrumPump.lastBolusAmount,
+            lastConnectionTime = medtrumPump.lastConnection
+        )
+    }
+
+    private fun buildUiState(
+        connectionState: ConnectionState,
+        pumpState: MedtrumPumpState,
+        basalRate: Double,
+        basalType: BasalType,
+        tempBasalRate: Double?,
+        tempBasalStartTime: Long,
+        tempBasalDuration: Int,
+        reservoir: Double,
+        batteryVoltage: Double,
+        bolusDelivered: Double,
+        lastBolusTime: Long?,
+        lastBolusAmount: Double?,
+        lastConnectionTime: Long
+    ): PumpOverviewUiState {
+        // Status banner: communication status from shared helper, or pump-specific warning
+        val statusBanner = buildStatusBanner(pumpState) ?: communicationStatus.statusBanner()
+        val queueStatus = communicationStatus.queueStatus()
+
+        // Connection state for action button enablement
+        val isDisconnected = connectionState == ConnectionState.DISCONNECTED
+        val isPumpActive = pumpState > MedtrumPumpState.EJECTED && pumpState < MedtrumPumpState.STOPPED
+        val canRefresh = isDisconnected && isPumpActive
+
+        // Last connection
+        val lastConnection = if (lastConnectionTime != 0L) {
+            val agoMinutes = (System.currentTimeMillis() - lastConnectionTime) / 1000 / 60
+            rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes)
+        } else ""
+
+        // Last bolus
+        val lastBolus = if (lastBolusTime != null && lastBolusAmount != null) {
+            ch.insulinAmountAgoString(
+                PumpInsulin(lastBolusAmount),
+                lastBolusTime
+            )
+        } else null
+
+        // Active bolus
+        val activeBolusText = if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized() && bolusDelivered > 0.0) {
+            ch.insulinDeliveryAgoString(
+                amount = PumpInsulin(bolusDelivered),
+                totalAmount = PumpInsulin(medtrumPump.bolusAmountToBeDelivered),
+                startTime = medtrumPump.bolusStartTime
+            )
+        } else null
+
+        // Battery voltage
+        val batteryText = if (batteryVoltage > 0.0) String.format(Locale.getDefault(), "%.2f V", batteryVoltage) else null
+
+        // Reservoir
+        val reservoirText = if (reservoir > 0.0) ch.insulinAmountString(PumpInsulin(reservoir)) else null
+
+        // Common rows from builder
+        val commonRows = stateBuilder.buildCommonRows(
+            lastConnection = lastConnection,
+            lastBolus = lastBolus,
+            battery = batteryText,
+            reservoir = reservoirText,
+            serialNumber = medtrumPump.pumpSNFromSP.toString(radix = 16).uppercase()
+        )
+
+        // Medtrum-specific rows
+        val specificRows = buildList {
+            // Pump state
+            add(PumpInfoRow(label = rh.gs(R.string.pump_state_label), value = rh.gs(pumpState.label)))
+            // tempBasal rate
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = ch.basalRateString(PumpRate(basalRate), true)))
+            tempBasalRate?.let {
+                // Basal type
+                // add(PumpInfoRow(label = rh.gs(R.string.basal_type_label), value = basalType.toString()))
+                // tempBasal rate
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.tempbasal_label), value = ch.basalTbrString(PumpRate(it), tempBasalStartTime, tempBasalDuration, basalType != BasalType.RELATIVE_TEMP)))
+            }
+            // Active bolus
+            activeBolusText?.let {
+                add(PumpInfoRow(label = rh.gs(R.string.active_bolus_label), value = it))
+            }
+            // Active alarms
+            val activeAlarmStrings = medtrumPump.activeAlarms.map { medtrumPump.alarmStateToString(it) }
+            val alarmsText = activeAlarmStrings.joinToString("\n")
+            if (alarmsText.isNotEmpty()) {
+                add(PumpInfoRow(label = rh.gs(R.string.active_alarms_label), value = alarmsText, level = StatusLevel.WARNING))
+            }
+            // Pump type
+            add(PumpInfoRow(label = rh.gs(R.string.pump_type_label), value = ModelType.fromValue(medtrumPump.deviceType).toString()))
+            // FW version
+            if (medtrumPump.swVersion.isNotEmpty()) {
+                add(PumpInfoRow(label = rh.gs(R.string.fw_version_label), value = medtrumPump.swVersion))
+            }
+            // Patch no
+            add(PumpInfoRow(label = rh.gs(R.string.patch_no_label), value = medtrumPump.patchId.toString()))
+            // Patch age
+            if (medtrumPump.patchStartTime != 0L) {
+                val age = System.currentTimeMillis() - medtrumPump.patchStartTime
+                val agoString = dateUtil.timeAgoFullString(age, rh)
+                val ageString = dateUtil.dateAndTimeString(medtrumPump.patchStartTime) + "\n" + agoString
+                add(PumpInfoRow(label = rh.gs(R.string.patch_activation_time_label), value = ageString))
+            }
+            // Patch expiry
+            val expiryText = buildExpiryText()
+            if (expiryText.isNotEmpty()) {
+                add(PumpInfoRow(label = rh.gs(R.string.patch_expiry_label), value = expiryText))
+            }
+        }
+
+        // Primary actions
+        val primaryActions = listOf(
+            PumpAction(
+                label = rh.gs(CoreUiR.string.refresh),
+                icon = Icons.Filled.Refresh,
+                category = ActionCategory.PRIMARY,
+                enabled = canRefresh,
+                onClick = { onClickRefresh() }
+            ),
+            PumpAction(
+                label = rh.gs(R.string.reset_alarms_label),
+                icon = Icons.Filled.PlayArrow,
+                category = ActionCategory.PRIMARY,
+                enabled = pumpState.isSuspendedByPump(),
+                visible = pumpState.isSuspendedByPump(),
+                onClick = { onClickResetAlarms() }
+            )
+        )
+
+        val isPaired = medtrumPump.pumpSN != 0L
+
+        // Management actions
+        val managementActions = buildList {
+            add(
+                PumpAction(
+                    label = rh.gs(R.string.change_patch_label),
+                    icon = Icons.Filled.SwapHoriz,
+                    category = ActionCategory.MANAGEMENT,
+                    onClick = { onClickChangePatch() }
+                )
+            )
+            if (isPaired) {
+                add(
+                    PumpAction(
+                        label = rh.gs(CoreUiR.string.pump_unpair),
+                        icon = Icons.Filled.Bluetooth,
+                        category = ActionCategory.MANAGEMENT,
+                        onClick = { onUnpairClick() }
+                    )
+                )
+            }
+        }
+
+        return PumpOverviewUiState(
+            statusBanner = statusBanner,
+            queueStatus = queueStatus,
+            infoRows = commonRows + specificRows,
+            primaryActions = primaryActions,
+            managementActions = managementActions
+        )
+    }
+
+    private fun buildStatusBanner(pumpState: MedtrumPumpState): StatusBanner? {
+        return when {
+            pumpState >= MedtrumPumpState.OCCLUSION                                     -> StatusBanner(
+                text = pumpState.toString(),
+                level = StatusLevel.CRITICAL
+            )
+
+            pumpState.isSuspendedByPump()                                               -> StatusBanner(
+                text = rh.gs(R.string.pump_is_suspended),
+                level = StatusLevel.WARNING
+            )
+
+            pumpState == MedtrumPumpState.STOPPED || pumpState == MedtrumPumpState.NONE -> StatusBanner(
+                text = rh.gs(R.string.patch_not_active),
+                level = StatusLevel.WARNING
+            )
+
+            else                                                                        -> null
+        }
+    }
+
+    private fun buildExpiryText(): String {
+        return if (medtrumPump.desiredPatchExpiration) {
+            if (medtrumPump.patchStartTime == 0L) {
+                ""
+            } else {
+                val expiry = medtrumPump.patchStartTime + T.hours(72).msecs()
+                val currentTime = System.currentTimeMillis()
+                val timeLeft = expiry - currentTime
+                val daysLeft = T.msecs(timeLeft).days()
+                val hoursLeft = T.msecs(timeLeft).hours() % 24
+
+                val daysString = if (daysLeft > 0) "$daysLeft ${rh.gs(app.aaps.core.interfaces.R.string.days)} " else ""
+                val hoursString = "$hoursLeft ${rh.gs(app.aaps.core.interfaces.R.string.hours)}"
+
+                dateUtil.dateAndTimeString(expiry) + "\n(" + daysString + hoursString + ")"
+            }
+        } else {
+            rh.gs(R.string.expiry_not_enabled)
+        }
+    }
+}

@@ -6,9 +6,12 @@ import app.aaps.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryRecordDao
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class OmnipodErosHistoryModule {
 
     @Provides

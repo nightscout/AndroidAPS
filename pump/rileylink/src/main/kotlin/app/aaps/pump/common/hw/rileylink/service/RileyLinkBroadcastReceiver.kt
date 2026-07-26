@@ -41,7 +41,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
     }
 
     private val rileyLinkService: RileyLinkService?
-        get() = (activePlugin.activePump as RileyLinkPumpDevice).rileyLinkService
+        get() = (activePlugin.activePumpInternal as RileyLinkPumpDevice).rileyLinkService
 
     private fun createBroadcastIdentifiers() {
 

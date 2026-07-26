@@ -1,0 +1,49 @@
+package app.aaps.core.interfaces.maintenance
+
+import androidx.compose.ui.graphics.vector.ImageVector
+
+/**
+ * Information about the current cloud directory configuration.
+ * Provider-specific strings are passed as resolved strings to avoid
+ * cross-module resource dependencies.
+ */
+data class CloudDirectoryInfo(
+    val isCloudActive: Boolean,
+    val hasCredentials: Boolean,
+    val hasConnectionError: Boolean,
+    val providerDisplayName: String,
+    val providerDescription: String,
+    val providerIcon: ImageVector,
+    val authorizedStatusText: String,
+    val cloudPath: String
+)
+
+/**
+ * Abstraction for cloud directory management.
+ * Lives in core/interfaces so the UI module can depend on it
+ * without importing plugins/configuration directly.
+ */
+interface CloudDirectoryManager {
+
+    fun getCloudDirectoryInfo(): CloudDirectoryInfo
+    fun clearCloudSettings()
+
+    /**
+     * Revoke the OAuth grant server-side (true deauthorize) and then clear all local cloud
+     * settings. Use this for the explicit "Clear Settings" action so the app's access is
+     * actually removed from the user's account, not just forgotten locally.
+     * Local settings are always cleared; the return value reports whether the server-side
+     * revoke was confirmed.
+     * @return true if the grant was revoked (or there was nothing to revoke); false if the
+     *         revoke could not be confirmed (local settings are still cleared).
+     */
+    suspend fun deauthorizeAndClearCloudSettings(): Boolean
+    fun resetExportToLocal()
+    fun enableAllCloudExport()
+    fun enableLocalStorage()
+    suspend fun testConnection(): Boolean
+    suspend fun startAuth(): String?
+    suspend fun waitForAuthCode(timeoutMs: Long = 60000): String?
+    suspend fun completeAuth(authCode: String): Boolean
+    suspend fun setupCloudStorage(): Boolean
+}

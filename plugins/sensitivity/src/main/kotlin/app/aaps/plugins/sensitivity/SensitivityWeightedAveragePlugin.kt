@@ -1,11 +1,9 @@
 package app.aaps.plugins.sensitivity
 
-import android.content.Context
 import androidx.collection.LongSparseArray
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
@@ -19,13 +17,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.store
+import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import org.json.JSONObject
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
@@ -42,13 +40,17 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
+        .icon(IcAs)
         .pluginName(R.string.sensitivity_weighted_average)
-        .shortName(R.string.sensitivity_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
+        .shortName(R.string.sensitivity_plugin_shortname)
         .description(R.string.description_sensitivity_weighted_average),
     aapsLogger, rh, preferences
 ) {
+
+    override fun specialShowInListCondition(): Boolean {
+        val aps = activePlugin.activeAPS ?: return true
+        return aps.algorithm == APSResult.Algorithm.AMA
+    }
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val hoursForDetection = preferences.get(IntKey.AutosensPeriod)
@@ -61,13 +63,13 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         if (profile == null) {
             aapsLogger.debug(LTag.AUTOSENS, "No profile available")
             return AutosensResult()
         }
-        val siteChanges = persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true)
-        val profileSwitches = persistenceLayer.getProfileSwitchesFromTime(fromTime, true).blockingGet()
+        val siteChanges = runBlocking { persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true) }
+        val profileSwitches = runBlocking { persistenceLayer.getProfileSwitchesFromTime(fromTime, true) }
         var pastSensitivity = ""
         var index = 0
         val data = LongSparseArray<Double>()
@@ -165,25 +167,13 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     override val id: SensitivityType
         get() = SensitivityType.SENSITIVITY_WEIGHTED
 
-    override fun configuration(): JSONObject =
-        JSONObject()
-            .put(DoubleKey.AutosensMin, preferences)
-            .put(DoubleKey.AutosensMax, preferences)
-            .put(DoubleKey.AbsorptionMaxTime, preferences)
-            .put(IntKey.AutosensPeriod, preferences)
+    // SensitivityAAPSPlugin is always registered, so preferences are always available.
+    // Override explicitly to avoid caching a `false` from a runtime lookup race during startup.
+    override fun hasPreferences(): Boolean = true
 
-    override fun applyConfiguration(configuration: JSONObject) {
-        configuration
-            .store(DoubleKey.AutosensMin, preferences)
-            .store(DoubleKey.AutosensMax, preferences)
-            .store(DoubleKey.AbsorptionMaxTime, preferences)
-            .store(IntKey.AutosensPeriod, preferences)
-
-    }
-
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+    override fun getPreferenceScreenContent(): PreferenceItem? {
         // Share with SensitivityAAPSPlugin
-        val aapsPlugin = activePlugin.getPluginsList().firstOrNull { it::class == SensitivityAAPSPlugin::class } ?: return
-        aapsPlugin.addPreferenceScreen(preferenceManager, parent, context, requiredKey)
+        val aapsPlugin = activePlugin.getPluginsList().firstOrNull { it::class == SensitivityAAPSPlugin::class } ?: return null
+        return aapsPlugin.getPreferenceScreenContent()
     }
 }

@@ -3,8 +3,8 @@ import java.util.Date
 
 plugins {
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
     id("com.android.application")
-    id("kotlin-android")
     kotlin("plugin.serialization")
     id("android-app-dependencies")
     id("test-app-dependencies")
@@ -66,6 +66,8 @@ android {
             applicationId = "info.nightscout.androidaps"
             dimension = "standard"
             resValue("string", "app_name", "AAPS")
+            resValue("string", "label_actions_activity", "AAPS")
+            resValue("color", "flavor_header_color", "#B0BEC5")
             versionName = Versions.appVersion
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
         }
@@ -73,6 +75,8 @@ android {
             applicationId = "info.nightscout.aapspumpcontrol"
             dimension = "standard"
             resValue("string", "app_name", "Pumpcontrol")
+            resValue("string", "label_actions_activity", "Pumpcontrol")
+            resValue("color", "flavor_header_color", "#B0BEC5")
             versionName = Versions.appVersion + "-pumpcontrol"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_pumpcontrol"
         }
@@ -80,6 +84,8 @@ android {
             applicationId = "info.nightscout.aapsclient"
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient")
+            resValue("string", "label_actions_activity", "AAPSClient")
+            resValue("color", "flavor_header_color", "#E8C50C")
             versionName = Versions.appVersion + "-aapsclient"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_yellowowl"
         }
@@ -87,12 +93,25 @@ android {
             applicationId = "info.nightscout.aapsclient2"
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient2")
+            resValue("string", "label_actions_activity", "AAPSClient2")
+            resValue("color", "flavor_header_color", "#0FBBE0")
             versionName = Versions.appVersion + "-aapsclient2"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
+        }
+        create("aapsclient3") {
+            applicationId = "info.nightscout.aapsclient3"
+            dimension = "standard"
+            resValue("string", "app_name", "AAPSClient3")
+            resValue("string", "label_actions_activity", "AAPSClient3")
+            resValue("color", "flavor_header_color", "#64E86A")
+            versionName = Versions.appVersion + "-aapsclient3"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_greenowl"
         }
     }
     buildFeatures {
         buildConfig = true
+        resValues = true
+        compose = true
     }
 }
 
@@ -106,7 +125,6 @@ dependencies {
     implementation(project(":shared:impl"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:ui"))
     implementation(project(":core:data"))
 
     implementation(libs.androidx.appcompat)
@@ -130,9 +148,18 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.protobuf)
 
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.wear.compose.material3)
+    implementation(libs.androidx.wear.compose.foundation)
+
     implementation(libs.com.google.android.gms.playservices.wearable)
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))
 
     ksp(libs.com.google.dagger.android.processor)
     ksp(libs.com.google.dagger.compiler)
+
+    // Robolectric lets a few Android-coupled unit tests (Intent/Build) run on the JVM. It is a JUnit4
+    // runner, so the vintage engine bridges those tests onto the JUnit Platform alongside the Jupiter tests.
+    testImplementation(libs.org.robolectric)
+    testRuntimeOnly(libs.org.junit.vintage.engine)
 }

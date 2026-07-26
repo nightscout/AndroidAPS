@@ -2,13 +2,13 @@
 <resources>
     <!--    General-->
     <string name="constraint_applied">Primenjeno ograničenje!</string>
-    <string name="tempbasals_iobtotal_label_string">Ukupno IOB:</string>
     <string name="tt_label">TT</string>
     <string name="save">Sačuvaj</string>
     <string name="virtual_pump">Virtuelna Pumpa</string>
     <string name="constraints">Ograničenja</string>
     <string name="result">Rezultat</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="pump">Pumpa</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="goingtodeliver">Isporučujem %1$.2f U</string>
@@ -31,49 +31,66 @@
     <!--    ProfileFunction-->
     <!--    APSResult-->
     <string name="duration">Trajanje</string>
+    <!--    Insulin / Concentration-->
+    <!--       Stats -->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="glucosetype_sensor">Senzor</string>
     <string name="wear">Sat</string>
     <string name="loop">Loop</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
-    <!--    TDDStatsActivity-->
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Odnos</string>
     <!--    Ntp-->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <!-- Autotune -->
     <!-- Alerts -->
     <!-- BolusWizard -->
-    <string name="quickwizard">Brzi Čarobnjak</string>
     <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
     <!--    Constraints-->
     <!--    Dialogs-->
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
-    <!-- NumberPicker -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <!--    Preferences -->
-    <!-- SmsCommunicator -->
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <!--    Maintenance-->
     <!--    Weekday-->
-    <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Food Management -->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

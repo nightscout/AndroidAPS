@@ -1,11 +1,12 @@
 package app.aaps.plugins.sync.openhumans.delegates
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.openhumans.OpenHumansState
 import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.reflect.KProperty
@@ -15,8 +16,8 @@ internal class OHStateDelegate @Inject internal constructor(
     private val preferences: Preferences
 ) {
 
-    private var _value = MutableLiveData(loadState())
-    val value = _value as LiveData<OpenHumansState?>
+    private val _stateFlow = MutableStateFlow(loadState())
+    val stateFlow: StateFlow<OpenHumansState?> = _stateFlow.asStateFlow()
 
     private fun loadState(): OpenHumansState? {
         return OpenHumansState(
@@ -28,10 +29,10 @@ internal class OHStateDelegate @Inject internal constructor(
         )
     }
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): OpenHumansState? = _value.value
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): OpenHumansState? = _stateFlow.value
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: OpenHumansState?) {
-        this._value.value = value
+        _stateFlow.value = value
         if (value == null) {
             preferences.remove(OhStringKey.AccessToken)
             preferences.remove(OhStringKey.RefreshToken)

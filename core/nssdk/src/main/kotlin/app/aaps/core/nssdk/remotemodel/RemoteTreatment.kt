@@ -1,7 +1,7 @@
 package app.aaps.core.nssdk.remotemodel
 
-import com.google.gson.annotations.SerializedName
 import app.aaps.core.nssdk.localmodel.treatment.EventType
+import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 
@@ -72,6 +72,7 @@ internal data class RemoteTreatment(
     @SerializedName("originalPercentage") val originalPercentage: Int? = null, // int "Effective Profile Switch"
     @SerializedName("originalDuration") val originalDuration: Long? = null,    // long "Effective Profile Switch", RunningMode
     @SerializedName("originalEnd") val originalEnd: Long? = null,              // long "Effective Profile Switch"
+    @SerializedName("icfg") val iCfg: RemoteICfg? = null,              // long "Effective Profile Switch"
 
     @SerializedName("bolusCalculatorResult") val bolusCalculatorResult: String? = null, // string "Bolus Wizard" json toString ex "bolusCalculatorResult": "{\"basalIOB\":-0.247,\"bolusIOB\":-1.837,\"carbs\":45.0,\"carbsInsulin\":9.0,\"cob\":0.0,\"cobInsulin\":0.0,\"dateCreated\":1626202788810,\"glucoseDifference\":44.0,\"glucoseInsulin\":0.8979591836734694,\"glucoseTrend\":5.5,\"glucoseValue\":134.0,\"ic\":5.0,\"id\":331,\"interfaceIDs_backing\":{\"nightscoutId\":\"60ede2a4c574da0004a3869d\"},\"isValid\":true,\"isf\":49.0,\"note\":\"\",\"otherCorrection\":0.0,\"percentageCorrection\":90,\"profileName\":\"Tuned 13/01 90%Lyum\",\"superbolusInsulin\":0.0,\"targetBGHigh\":90.0,\"targetBGLow\":90.0,\"timestamp\":1626202783325,\"totalInsulin\":7.34,\"trendInsulin\":0.336734693877551,\"utcOffset\":7200000,\"version\":1,\"wasBasalIOBUsed\":true,\"wasBolusIOBUsed\":true,\"wasCOBUsed\":true,\"wasGlucoseUsed\":true,\"wasSuperbolusUsed\":false,\"wasTempTargetUsed\":false,\"wasTrendUsed\":true,\"wereCarbsUsed\":false}",
     @SerializedName("type") val type: String? = null,                          // string "Meal Bolus", "Correction Bolus", "Combo Bolus", "Temp Basal" type of bolus "NORMAL", "SMB", "FAKE_EXTENDED"
@@ -96,7 +97,7 @@ internal data class RemoteTreatment(
             val parser = ISODateTimeFormat.dateTimeParser()
             val dateTime = DateTime.parse(isoDateString, parser)
             dateTime.toDate().time
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             0L
         }
 }

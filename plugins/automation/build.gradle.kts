@@ -1,14 +1,19 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    id("kotlin-android")
     id("android-module-dependencies")
     id("test-module-dependencies")
+    id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "app.aaps.plugins.automation"
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
@@ -18,7 +23,6 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":shared:impl"))
@@ -26,14 +30,23 @@ dependencies {
     testImplementation(project(":plugins:main"))
     testImplementation(project(":pump:virtual"))
 
-    api(libs.androidx.constraintlayout)
     api(libs.com.google.android.gms.playservices.location)
-    api(libs.kotlin.reflect)
-    // Places SDK
-    api(libs.com.google.android.places)
-    api(libs.com.github.rtchagas.pingplacepicker)
-    api(libs.com.google.firebase.config)
+    implementation(libs.kotlin.reflect)
+    // OpenStreetMap for map picker
+    implementation(libs.org.osmdroid)
+
+    // Compose dependencies
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.ui)
+    api(libs.androidx.ui.graphics)
+    api(libs.androidx.ui.tooling)
+    api(libs.androidx.ui.tooling.preview)
+    api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.material.icons.extended)
+    api(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.sh.calvin.reorderable)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

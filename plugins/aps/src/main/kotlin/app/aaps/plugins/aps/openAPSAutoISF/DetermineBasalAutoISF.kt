@@ -26,8 +26,8 @@ class DetermineBasalAutoISF @Inject constructor(
     private val profileUtil: ProfileUtil
 ) {
 
-    private val consoleError = mutableListOf<String>()
-    private val consoleLog = mutableListOf<String>()
+    private var consoleError = mutableListOf<String>()
+    private var consoleLog = mutableListOf<String>()
 
     private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
 
@@ -42,7 +42,14 @@ class DetermineBasalAutoISF @Inject constructor(
     }
 
     fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
-    fun round(value: Double): Int = value.roundToInt()
+    fun round(value: Double): Int =
+        // Crash backstop: roundToInt() throws on NaN. Substitute 0, but record a token that the
+        // reportNonFiniteRtFields tripwire (PersistenceLayerImpl) surfaces to Crashlytics, so laundering
+        // NaN→0 here does not silently hide the underlying bug.
+        if (value.isNaN()) {
+            consoleError.add("round(): non-finite value substituted with 0 (roundNaN=NaN)")
+            0
+        } else value.roundToInt()
 
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /
@@ -151,8 +158,8 @@ class DetermineBasalAutoISF @Inject constructor(
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, autoIsfMode: Boolean, loop_wanted_smb: String, profile_percentage: Int, smb_ratio: Double,
         smb_max_range_extension: Double, iob_threshold_percent: Int, auto_isf_consoleError: MutableList<String>, auto_isf_consoleLog: MutableList<String>
     ): RT {
-        consoleError.clear()
-        consoleLog.clear()
+        consoleError = mutableListOf()
+        consoleLog = mutableListOf()
         var rT = RT(
             algorithm = APSResult.Algorithm.AUTO_ISF,
             runningDynamicIsf = autoIsfMode,
@@ -388,7 +395,7 @@ class DetermineBasalAutoISF @Inject constructor(
         val expectedDelta = calculate_expected_delta(target_bg, eventualBG, bgi)
 
         // min_bg of 90 -> threshold of 65, 100 -> 70 110 -> 75, and 130 -> 85
-        var threshold = min_bg - 0.5 * (min_bg - 40)
+        val threshold = min_bg - 0.5 * (min_bg - 40)
         // if (profile.lgsThreshold != null) {
         //     val lgsThreshold = profile.lgsThreshold ?: error("lgsThreshold missing")
         //     if (lgsThreshold > threshold) {
@@ -467,7 +474,7 @@ class DetermineBasalAutoISF @Inject constructor(
         }
         var remainingCATimeMin = 3.0 // h; duration of expected not-yet-observed carb absorption
         // adjust remainingCATime (instead of CR) for autosens if sensitivityRatio defined
-        remainingCATimeMin = remainingCATimeMin / sensitivityRatio
+        remainingCATimeMin /= sensitivityRatio
         // 20 g/h means that anything <= 60g will get a remainingCATimeMin, 80g will get 4h, and 120g 6h
         // when actual absorption ramps up it will take over from remainingCATime
         val assumedCarbAbsorptionRate = 20 // g/h; maximum rate to assume carbs will absorb if no CI observed
@@ -491,8 +498,7 @@ class DetermineBasalAutoISF @Inject constructor(
         val totalCI = Math.max(0.0, ci / 5 * 60 * remainingCATime / 2)
         // totalCI (mg/dL) / CSF (mg/dL/g) = total carbs absorbed (g)
         val totalCA = totalCI / csf
-        val remainingCarbsCap: Int // default to 90
-        remainingCarbsCap = min(90, profile.remainingCarbsCap)
+        val remainingCarbsCap: Int = min(90, profile.remainingCarbsCap) // default to 90
         var remainingCarbs = max(0.0, meal_data.mealCOB - totalCA)
         remainingCarbs = Math.min(remainingCarbsCap.toDouble(), remainingCarbs)
         // assume remainingCarbs will absorb in a /\ shaped bilinear curve
@@ -785,10 +791,10 @@ class DetermineBasalAutoISF @Inject constructor(
             }, Target: ${convert_bg(target_bg)}, minPredBG ${convert_bg(minPredBG)}, minGuardBG ${convert_bg(minGuardBG)}, IOBpredBG ${convert_bg(lastIOBpredBG)}"
         )
         if (lastCOBpredBG != null) {
-            rT.reason.append(", COBpredBG " + convert_bg(lastCOBpredBG.toDouble()))
+            rT.reason.append(", COBpredBG " + convert_bg(lastCOBpredBG))
         }
         if (lastUAMpredBG != null) {
-            rT.reason.append(", UAMpredBG " + convert_bg(lastUAMpredBG.toDouble()))
+            rT.reason.append(", UAMpredBG " + convert_bg(lastUAMpredBG))
         }
         rT.reason.append("; ")
         // use naive_eventualBG if above 40, but switch to minGuardBG if both eventualBGs hit floor of 39

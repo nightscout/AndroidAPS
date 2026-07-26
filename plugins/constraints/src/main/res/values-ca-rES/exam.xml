@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Què és cert sobre la DIA (Durada de l\'Acció de la Insulina)?</string>
     <string name="dia_label_exam">Durada de l\'Acció de la Insulina (DIA)</string>
-    <string name="dia_profile">Heu de configurar el valor de la DIA al vostre perfil.</string>
     <string name="dia_minimumis5h">El mínim permès son 5 hores.</string>
     <string name="dia_valuemustbedetermined">Heu de determinar vosaltres mateixos el valor apropiat per la DIA.</string>
     <string name="hypott_label">Objectiu temporal hipo</string>
@@ -56,8 +55,6 @@
     <string name="prerequisites2_device">Un dispositiu Android compatible (p.ex. telèfon mòbil, rellotge Android o tauleta).</string>
     <string name="prerequisites2_supportedcgm">Un CGM (monitor continu de glucosa) compatible i l\'app adequada per rebre al telèfon/dispositiu els valors de glucèmia que proporciona.</string>
     <string name="update_label">Actualitzant AAPS</string>
-    <string name="update_git">Cal tenir Git instal·lat i configurat al vostre ordinador.</string>
-    <string name="update_keys">Haurieu de desar i anotar la ubicació del vostre \"keystore\" i utilitzar la mateixa clau de signatura per la instal·lació anterior que per les noves actualitzacions.</string>
     <string name="update_askfriend">Si teniu problemes en compilar l\'apk (aplicació), podeu instal·lar una apk que hagi estat compilada per una amiga.</string>
     <string name="troubleshooting_label">Resolució de problemes</string>
     <string name="troubleshooting_yourendo">Preguntant a la clínica on us porten la diabetis o a la vostra endocrinòloga.</string>

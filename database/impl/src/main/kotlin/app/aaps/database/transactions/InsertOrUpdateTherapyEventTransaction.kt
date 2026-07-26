@@ -1,6 +1,5 @@
 package app.aaps.database.transactions
 
-import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.TherapyEvent
 
 /**
@@ -10,7 +9,7 @@ class InsertOrUpdateTherapyEventTransaction(
     val therapyEvent: TherapyEvent
 ) : Transaction<InsertOrUpdateTherapyEventTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val current = database.therapyEventDao.findById(therapyEvent.id)
         if (current == null) {

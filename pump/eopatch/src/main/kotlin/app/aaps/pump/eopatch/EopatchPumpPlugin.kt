@@ -1,9 +1,7 @@
 package app.aaps.pump.eopatch
 
-import android.content.Context
+import android.Manifest
 import android.os.SystemClock
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -12,14 +10,18 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
@@ -28,26 +30,22 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.keys.interfaces.withEntries
+import app.aaps.core.ui.compose.icons.IcPluginEopatch
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.eopatch.alarm.IAlarmManager
 import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.code.BolusExDuration
+import app.aaps.pump.eopatch.compose.EopatchComposeContent
 import app.aaps.pump.eopatch.keys.EopatchBooleanKey
 import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.keys.EopatchStringNonKey
-import app.aaps.pump.eopatch.ui.EopatchOverviewFragment
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.TempBasal
@@ -55,6 +53,18 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -67,7 +77,6 @@ class EopatchPumpPlugin @Inject constructor(
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
-    private val rxBus: RxBus,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
@@ -75,18 +84,24 @@ class EopatchPumpPlugin @Inject constructor(
     private val patchManagerExecutor: PatchManagerExecutor,
     private val alarmManager: IAlarmManager,
     private val preferenceManager: PreferenceManager,
-    private val uiInteraction: UiInteraction,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val patchConfig: PatchConfig,
-    private val normalBasalManager: NormalBasalManager
+    private val normalBasalManager: NormalBasalManager,
+    private val protectionCheck: ProtectionCheck,
+    private val blePreCheck: BlePreCheck,
+    private val bolusProgressData: BolusProgressData
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(EopatchOverviewFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)
+        .composeContent { _ ->
+            EopatchComposeContent(
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck
+            )
+        }
+        .icon(IcPluginEopatch)
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.eopatch_pump_description),
     ownPreferences = listOf(
         EopatchIntKey::class.java, EopatchBooleanKey::class.java, EopatchStringNonKey::class.java
@@ -95,35 +110,54 @@ class EopatchPumpPlugin @Inject constructor(
 ), Pump {
 
     private val mDisposables = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     private var mPumpType: PumpType = PumpType.EOFLOW_EOPATCH2
-    private var mLastDataTime: Long = 0
+    private var mLastDataTime: Long
+        get() = _lastDataTime.value
+        set(value) {
+            _lastDataTime.value = value
+        }
     private val mPumpDescription = PumpDescription().fillFor(mPumpType)
 
-    override fun onStart() {
-        super.onStart()
-        mDisposables += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(EopatchIntKey.LowReservoirReminder.key) || event.isChanged(EopatchIntKey.ExpirationReminder.key)) {
-                               patchManager.changeReminderSetting()
-                           } else if (event.isChanged(EopatchBooleanKey.BuzzerReminder.key)) {
-                               patchManager.changeBuzzerSetting()
-                           }
-                       }, fabricPrivacy::logException)
+    override fun requiredPermissions(): List<PermissionGroup> = super.requiredPermissions() + listOf(
+        PermissionGroup(
+            permissions = listOf(Manifest.permission.SCHEDULE_EXACT_ALARM),
+            rationaleTitle = R.string.permission_exact_alarm_title,
+            rationaleDescription = R.string.permission_exact_alarm_description,
+            special = true,
+        )
+    )
 
-        mDisposables += rxBus
-            .toObservable(EventAppInitialized::class.java)
+    override suspend fun onStart() {
+        super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+
+        // Restore persisted patch state synchronously on start. Other pump plugins (e.g. Medtrum)
+        // load their state directly in onStart() instead of waiting for EventAppInitialized; none of
+        // these calls depend on other plugins being started, and deferring them to the one-shot
+        // event was racy under the suspend onStart() migration (the event could fire before the
+        // subscription was registered), causing the patch to appear deactivated after an app update.
+        preferenceManager.init()
+        patchManager.init()
+        alarmManager.init()
+
+        merge(
+            preferences.observe(EopatchIntKey.LowReservoirReminder).drop(1).map {},
+            preferences.observe(EopatchIntKey.ExpirationReminder).drop(1).map {},
+        ).onEach { patchManager.changeReminderSetting() }.launchIn(newScope)
+        preferences.observe(EopatchBooleanKey.BuzzerReminder).drop(1).onEach {
+            patchManager.changeBuzzerSetting()
+        }.launchIn(newScope)
+
+        // Subscribe after preferenceManager.init() so we observe the restored patchState instance.
+        mDisposables += preferenceManager.patchState.observe()
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           preferenceManager.init()
-                           patchManager.init()
-                           alarmManager.init()
+                           _reservoirLevel.value = PumpInsulin(if (!patchConfig.isActivated) 0.0 else it.remainedInsulin.toDouble())
+                           _batteryLevel.value = if (patchConfig.isActivated) it.batteryLevel() else null
                        }, fabricPrivacy::logException)
-
-        // following was moved from specialEnableCondition()
-        // specialEnableCondition() is called too often to add there executive code
 
         // This is a required code for maintaining the patch activation phase and maintaining the alarm. It should not be deleted.
         //BG -> FG, restart patch activation and trigger unhandled alarm
@@ -133,13 +167,18 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "EOPatchPumpPlugin onStop()")
+        scope?.cancel()
+        scope = null
+        mDisposables.clear()
     }
 
+    override fun isConfigured(): Boolean = patchConfig.isActivated
+
     override fun isInitialized(): Boolean {
-        return isConnected() && patchConfig.isActivated
+        return isConfigured() && isConnected()
     }
 
     override fun isSuspended(): Boolean {
@@ -177,7 +216,7 @@ class EopatchPumpPlugin @Inject constructor(
     override fun stopConnecting() {
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         if (patchConfig.isActivated) {
             if ("SMS" == reason) {
                 aapsLogger.debug("Acknowledged AAPS getPumpStatus request it was requested through an SMS")
@@ -193,7 +232,7 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         mLastDataTime = System.currentTimeMillis()
         if (patchConfig.isActivated) {
             if (preferenceManager.patchState.isTempBasalActive) {
@@ -230,20 +269,21 @@ class EopatchPumpPlugin @Inject constructor(
             disposable.dispose()
             aapsLogger.info(LTag.PUMP, "Basal Profile was set: $isSuccess")
             return if (isSuccess) {
-                uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+                // PROFILE_SET_OK posted centrally (onProfileChanged) on success && enacted.
                 pumpEnactResultProvider.get().success(true).enacted(true)
             } else {
-                pumpEnactResultProvider.get()
+                pumpEnactResultProvider.get().success(false).enacted(false).comment(app.aaps.core.ui.R.string.failed_update_basal_profile)
             }
         } else {
+            // Patch not activated — the basal is stored now and written when the patch is activated. Deferred,
+            // not an actual change: enacted=false => no PROFILE_SET_OK.
             normalBasalManager.setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
-            return pumpEnactResultProvider.get().success(true).enacted(true)
+            return pumpEnactResultProvider.get().success(true).enacted(false)
         }
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         // if (!patchManager.isActivated) {
         //     return true
         // }
@@ -253,17 +293,26 @@ class EopatchPumpPlugin @Inject constructor(
         return ret
     }
 
-    override val lastDataTime: Long get() = mLastDataTime
-    override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: Double? get() = null
-    override val baseBasalRate: Double
-        get() =
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
+
+    // EOPatch doesn't track last bolus
+    override val lastBolusTime: StateFlow<Long?> = MutableStateFlow(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = MutableStateFlow(null)
+
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
+
+    override val baseBasalRate: PumpRate
+        get() = PumpRate(
             if (!patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused) 0.0
             else normalBasalManager.normalBasal.getCurrentSegment()?.doseUnitPerHour?.toDouble() ?: 0.05
-    override val reservoirLevel: Double get() = if (!patchConfig.isActivated) 0.0 else preferenceManager.patchState.remainedInsulin.toDouble()
-    override val batteryLevel: Int? get() = if (patchConfig.isActivated) preferenceManager.patchState.batteryLevel() else null
+        )
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -285,12 +334,12 @@ class EopatchPumpPlugin @Inject constructor(
         do {
             SystemClock.sleep(100)
             if (patchManagerExecutor.patchConnectionState.isConnected) {
-                val delivering = preferenceManager.bolusCurrent.nowBolus.injected.toDouble()
-                rxBus.send(EventOverviewBolusProgress(rh, delivered = delivering, id = detailedBolusInfo.id))
+                val delivered = PumpInsulin(preferenceManager.bolusCurrent.nowBolus.injected.toDouble())
+                bolusProgressData.updateProgress(delivered = delivered)
             }
         } while (!preferenceManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
-        rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = detailedBolusInfo.id))
+        bolusProgressData.updateProgress(100)
 
         detailedBolusInfo.insulin = preferenceManager.bolusCurrent.nowBolus.injected.toDouble()
         patchManager.addBolusToHistory(detailedBolusInfo)
@@ -309,12 +358,13 @@ class EopatchPumpPlugin @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .observeOn(aapsSchedulers.main)
                 .subscribe {
-                    rxBus.send(EventOverviewBolusProgress(status = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, (it.injectedBolusAmount * 0.05f)), id = BolusProgressData.id))
+                    val status = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, (it.injectedBolusAmount * 0.05f))
+                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 100, status)
                 }
         )
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: ${absoluteRate.toFloat()}, durationInMinutes: ${durationInMinutes.toLong()}, enforceNew: $enforceNew")
         if (preferenceManager.patchState.isNormalBasalAct) {
             mLastDataTime = System.currentTimeMillis()
@@ -323,16 +373,18 @@ class EopatchPumpPlugin @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .observeOn(aapsSchedulers.main)
                 .doOnSuccess {
-                    pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = dateUtil.now(),
-                        rate = absoluteRate,
-                        duration = T.mins(durationInMinutes.toLong()).msecs(),
-                        isAbsolute = true,
-                        type = tbrType,
-                        pumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncTemporaryBasalWithPumpId(
+                            timestamp = dateUtil.now(),
+                            rate = PumpRate(absoluteRate),
+                            duration = T.mins(durationInMinutes.toLong()).msecs(),
+                            isAbsolute = true,
+                            type = tbrType,
+                            pumpId = dateUtil.now(),
+                            pumpType = PumpType.EOFLOW_EOPATCH2,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                     aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - tbrCurrent:${readTBR()}")
                 }
                 .map { pumpEnactResultProvider.get().success(true).enacted(true).duration(durationInMinutes).absolute(absoluteRate).isPercent(false).isTempCancel(false) }
@@ -347,7 +399,7 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalPercent - percent: $percent, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         if (preferenceManager.patchState.isNormalBasalAct && percent != 0) {
             mLastDataTime = System.currentTimeMillis()
@@ -356,16 +408,18 @@ class EopatchPumpPlugin @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .observeOn(aapsSchedulers.main)
                 .doOnSuccess {
-                    pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = dateUtil.now(),
-                        rate = percent.toDouble(),
-                        duration = T.mins(durationInMinutes.toLong()).msecs(),
-                        isAbsolute = false,
-                        type = tbrType,
-                        pumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncTemporaryBasalWithPumpId(
+                            timestamp = dateUtil.now(),
+                            rate = PumpRate(percent.toDouble()),
+                            duration = T.mins(durationInMinutes.toLong()).msecs(),
+                            isAbsolute = false,
+                            type = tbrType,
+                            pumpId = dateUtil.now(),
+                            pumpType = PumpType.EOFLOW_EOPATCH2,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                     aapsLogger.info(LTag.PUMP, "setTempBasalPercent - tbrCurrent:${readTBR()}")
                 }
                 .map { pumpEnactResultProvider.get().success(true).enacted(true).duration(durationInMinutes).percent(percent).isPercent(true).isTempCancel(false) }
@@ -380,21 +434,23 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setExtendedBolus - insulin: $insulin, durationInMinutes: $durationInMinutes")
 
         return patchManagerExecutor.startQuickBolus(0f, insulin.toFloat(), BolusExDuration.ofRaw(durationInMinutes))
             .doOnSuccess {
                 mLastDataTime = System.currentTimeMillis()
-                pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp = dateUtil.now(),
-                    amount = insulin,
-                    duration = T.mins(durationInMinutes.toLong()).msecs(),
-                    isEmulatingTB = false,
-                    pumpId = dateUtil.now(),
-                    pumpType = PumpType.EOFLOW_EOPATCH2,
-                    pumpSerial = serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        timestamp = dateUtil.now(),
+                        rate = PumpRate(insulin),
+                        duration = T.mins(durationInMinutes.toLong()).msecs(),
+                        isEmulatingTB = false,
+                        pumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = serialNumber()
+                    )
+                }
             }
             .map { pumpEnactResultProvider.get().success(true).enacted(true) }
             .onErrorReturnItem(
@@ -404,7 +460,7 @@ class EopatchPumpPlugin @Inject constructor(
             .blockingGet()
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val tbrCurrent = readTBR()
 
         if (tbrCurrent == null) {
@@ -423,12 +479,14 @@ class EopatchPumpPlugin @Inject constructor(
             .doOnSuccess {
                 mLastDataTime = System.currentTimeMillis()
                 aapsLogger.debug(LTag.PUMP, "cancelTempBasal - $it")
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = dateUtil.now(),
-                    endPumpId = dateUtil.now(),
-                    pumpType = PumpType.EOFLOW_EOPATCH2,
-                    pumpSerial = serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        timestamp = dateUtil.now(),
+                        endPumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = serialNumber()
+                    )
+                }
             }
             .doOnError {
                 aapsLogger.error(LTag.PUMP, "cancelTempBasal() - $it")
@@ -441,18 +499,20 @@ class EopatchPumpPlugin @Inject constructor(
             .blockingGet()
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         if (preferenceManager.patchState.isExtBolusActive) {
             return patchManagerExecutor.stopExtBolus()
                 .doOnSuccess {
                     aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus - success")
                     mLastDataTime = System.currentTimeMillis()
-                    pumpSync.syncStopExtendedBolusWithPumpId(
-                        timestamp = dateUtil.now(),
-                        endPumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncStopExtendedBolusWithPumpId(
+                            timestamp = dateUtil.now(),
+                            endPumpId = dateUtil.now(),
+                            pumpType = PumpType.EOFLOW_EOPATCH2,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                 }
                 .map { pumpEnactResultProvider.get().success(true).enacted(true).isTempCancel(true) }
                 .onErrorReturnItem(
@@ -481,7 +541,7 @@ class EopatchPumpPlugin @Inject constructor(
     override val pumpDescription: PumpDescription get() = mPumpDescription
     override val isFakingTempsByExtendedBoluses: Boolean = false
 
-    override fun loadTDDs(): PumpEnactResult {
+    override suspend fun loadTDDs(): PumpEnactResult {
         return pumpEnactResultProvider.get()
     }
 
@@ -501,32 +561,23 @@ class EopatchPumpPlugin @Inject constructor(
         return null
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
 
     }
 
     private fun readTBR(): PumpSync.PumpState.TemporaryBasal? {
-        return pumpSync.expectedPumpState().temporaryBasal
+        return runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
     }
 
-    override fun addPreferenceScreen(preferenceManager: androidx.preference.PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "eopatch_settings",
+        titleResId = R.string.eopatch,
+        items = listOf(
+            EopatchIntKey.LowReservoirReminder.withEntries((10..50 step 5).associateWith { "$it U" }),
+            EopatchIntKey.ExpirationReminder.withEntries((1..24).associateWith { "$it hr" }),
+            EopatchBooleanKey.BuzzerReminder
+        ),
+        icon = pluginDescription.icon
+    )
 
-        val lowReservoirEntries = arrayOf<CharSequence>("10 U", "15 U", "20 U", "25 U", "30 U", "35 U", "40 U", "45 U", "50 U")
-        val lowReservoirValues = arrayOf<CharSequence>("10", "15", "20", "25", "30", "35", "40", "45", "50")
-        val expirationRemindersEntries =
-            arrayOf<CharSequence>("1 hr", "2 hr", "3 hr", "4 hr", "5 hr", "6 hr", "7 hr", "8 hr", "9 hr", "10 hr", "11 hr", "12 hr", "13 hr", "14 hr", "15 hr", "16 hr", "17 hr", "18 hr", "19 hr", "20 hr", "21 hr", "22 hr", "23 hr", "24 hr")
-        val expirationRemindersValues = arrayOf<CharSequence>("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24")
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "eopatch_settings"
-            title = rh.gs(R.string.eopatch)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = EopatchIntKey.LowReservoirReminder, title = R.string.low_reservoir, entries = lowReservoirEntries, entryValues = lowReservoirValues))
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = EopatchIntKey.ExpirationReminder, title = R.string.patch_expiration_reminders, entries = expirationRemindersEntries, entryValues = expirationRemindersValues))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = EopatchBooleanKey.BuzzerReminder, title = R.string.patch_buzzer_reminders))
-        }
-    }
 }

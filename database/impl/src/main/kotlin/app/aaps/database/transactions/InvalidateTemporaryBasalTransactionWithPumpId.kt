@@ -6,7 +6,7 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 class InvalidateTemporaryBasalTransactionWithPumpId(val pumpId: Long, val pumpType: InterfaceIDs.PumpType, val pumpSerial: String) :
     Transaction<InvalidateTemporaryBasalTransactionWithPumpId.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val temporaryBasal = database.temporaryBasalDao.findByPumpIds(pumpId, pumpType, pumpSerial)
             ?: throw IllegalArgumentException("There is no such Temporary Basal with the specified temp ID.")

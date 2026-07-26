@@ -9,8 +9,13 @@ import app.aaps.plugins.aps.openAPSSMBAutoISF.DetermineBasalAdapterAutoISFJS
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
+// Contributes android-injectors for the JS reference algorithm adapters that live in app/src/androidTest
+// (test-only — not present in the production graph). Installed only in the test Hilt graph.
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class AlgModule {
 

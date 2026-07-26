@@ -9,7 +9,7 @@ class VersionChangeTransaction(
     private val commitHash: String?
 ) : Transaction<Unit>() {
 
-    override fun run() {
+    override suspend fun run() {
         val current = database.versionChangeDao.getMostRecentVersionChange()
         if (current == null
             || current.versionName != versionName

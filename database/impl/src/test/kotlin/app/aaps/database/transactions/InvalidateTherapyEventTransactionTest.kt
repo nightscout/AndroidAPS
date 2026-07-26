@@ -6,6 +6,7 @@ import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -27,7 +28,7 @@ class InvalidateTherapyEventTransactionTest {
     }
 
     @Test
-    fun `invalidates valid therapy event`() {
+    fun `invalidates valid therapy event`() = runTest {
         val event = createTherapyEvent(id = 1, isValid = true)
 
         whenever(therapyEventDao.findById(1)).thenReturn(event)
@@ -44,7 +45,7 @@ class InvalidateTherapyEventTransactionTest {
     }
 
     @Test
-    fun `does not update already invalid therapy event`() {
+    fun `does not update already invalid therapy event`() = runTest {
         val event = createTherapyEvent(id = 1, isValid = false)
 
         whenever(therapyEventDao.findById(1)).thenReturn(event)
@@ -60,7 +61,7 @@ class InvalidateTherapyEventTransactionTest {
     }
 
     @Test
-    fun `throws exception when therapy event not found`() {
+    fun `throws exception when therapy event not found`() = runTest {
         whenever(therapyEventDao.findById(999)).thenReturn(null)
 
         val transaction = InvalidateTherapyEventTransaction(id = 999)
@@ -75,7 +76,7 @@ class InvalidateTherapyEventTransactionTest {
     }
 
     @Test
-    fun `preserves event type when invalidating`() {
+    fun `preserves event type when invalidating`() = runTest {
         val type = TherapyEvent.Type.CANNULA_CHANGE
         val event = createTherapyEvent(id = 1, isValid = true, type = type)
 

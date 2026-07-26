@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.garmin
 
-
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -38,9 +37,9 @@ internal class DeltaVarEncodedListTest {
     @Test fun decode() {
         val bytes = ByteBuffer.allocate(6)
         bytes.order(ByteOrder.LITTLE_ENDIAN)
-        bytes.putChar(65044.toChar())
-        bytes.putChar(33026.toChar())
-        bytes.putChar(4355.toChar())
+        bytes.putChar(Char(65044))
+        bytes.putChar(Char(33026))
+        bytes.putChar(Char(4355))
         val l = DeltaVarEncodedList(intArrayOf(-1), bytes)
         assertEquals(4, l.size.toLong())
         assertArrayEquals(intArrayOf(10, 201, 8, -1), l.toArray())
@@ -49,10 +48,10 @@ internal class DeltaVarEncodedListTest {
     @Test fun decodeUneven() {
         val bytes = ByteBuffer.allocate(8)
         bytes.order(ByteOrder.LITTLE_ENDIAN)
-        bytes.putChar(65044.toChar())
-        bytes.putChar(33026.toChar())
-        bytes.putChar(59395.toChar())
-        bytes.putChar(10.toChar())
+        bytes.putChar(Char(65044))
+        bytes.putChar(Char(33026))
+        bytes.putChar(Char(59395))
+        bytes.putChar(Char(10))
         val l = DeltaVarEncodedList(intArrayOf(700), ByteBuffer.wrap(bytes.array(), 0, 7))
         assertEquals(4, l.size.toLong())
         assertArrayEquals(intArrayOf(10, 201, 8, 700), l.toArray())
@@ -132,11 +131,11 @@ internal class DeltaVarEncodedListTest {
     @Test fun decodePairs() {
         val bytes = ByteBuffer.allocate(10)
         bytes.order(ByteOrder.LITTLE_ENDIAN)
-        bytes.putChar(51220.toChar())
-        bytes.putChar(65025.toChar())
-        bytes.putChar(514.toChar())
-        bytes.putChar(897.toChar())
-        bytes.putChar(437.toChar())
+        bytes.putChar(Char(51220))
+        bytes.putChar(Char(65025))
+        bytes.putChar(Char(514))
+        bytes.putChar(Char(897))
+        bytes.putChar(Char(437))
         val l = DeltaVarEncodedList(intArrayOf(8, 10), bytes)
         assertEquals(3, l.size.toLong())
         assertArrayEquals(intArrayOf(10, 100, 201, 101, 8, 10), l.toArray())
@@ -173,7 +172,7 @@ internal class DeltaVarEncodedListTest {
             1511647426, 108
         )
 
-        for(i in values.indices step 2) {
+        for (i in values.indices step 2) {
             l.add(values[i], values[i + 1])
         }
         assertArrayEquals(values, l.toArray())

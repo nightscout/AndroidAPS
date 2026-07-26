@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Το Open Humans έχει ρυθμιστεί. Σε περίπτωση που θέλετε να σταματήσετε να ανεβάζετε δεδομένα, κάντε κλικ στο κουμπί \'Αποσύνδεση\'.</string>
     <string name="not_setup_info">Το Open Humans είναι προς το παρόν ανενεργό. Για να ξεκινήσετε το ανέβασμα δεδομένων, κάντε κλικ στο κουμπί \'Ρυθμίσεις\'.</string>
     <string name="project_member_id">ID Μέλους Έργου: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Μεταφορτώστε μόνο αν είστε συνδεδεμένοι σε WiFi</string>
-    <string name="only_upload_if_charging">Μεταφορτώστε μόνο κατά τη φόρτιση</string>
     <string name="open_humans_uploading">Μεταφόρτωση στο Open Humans…</string>
     <string name="open_humans_notifications">Ειδοποιήσεις Open Humans</string>
     <string name="uploading_to_open_humans">Το AAPS μεταφορτώνει στο Open Humans. Αυτό μπορεί να διαρκέσει λίγο.</string>

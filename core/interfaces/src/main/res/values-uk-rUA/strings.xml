@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <!--    DateUtil-->
@@ -56,4 +57,7 @@
     <string name="pref_show_ago">Показати Ago</string>
     <string name="default_custom_watchface_comment">Вікно за замовчуванням, ви можете натиснути на кнопку EXPORT WATCHFACE, щоб створити шаблон</string>
     <string name="wear_default_watchface">Циферблат за замовчуванням</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

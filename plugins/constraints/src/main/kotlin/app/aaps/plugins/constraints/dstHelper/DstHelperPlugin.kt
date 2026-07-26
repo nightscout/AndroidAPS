@@ -6,18 +6,21 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.dstHelper.keys.DstHelperLongKey
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,19 +31,18 @@ class DstHelperPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     private val activePlugin: ActivePlugin,
-    private val uiInteraction: UiInteraction,
+    private val notificationManager: NotificationManager,
     private val loop: Loop,
     private val profileFunction: ProfileFunction
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
-        .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.dst_plugin_name),
     ownPreferences = listOf(DstHelperLongKey::class.java),
     aapsLogger, rh, preferences
-) {
+), DstHelper {
 
     companion object {
 
@@ -49,31 +51,39 @@ class DstHelperPlugin @Inject constructor(
     }
 
     //Return false if time to DST change happened in the last 3 hours.
-    fun dstCheck() {
+    override fun dstCheck() {
         val pump = activePlugin.activePump
         if (pump.canHandleDST()) return
         val cal = Calendar.getInstance()
         if (willBeDST(cal)) {
             val snoozedTo: Long = preferences.get(DstHelperLongKey.SnoozeDstIn24h)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                uiInteraction.addNotification(Notification.DST_IN_24H, rh.gs(R.string.dst_in_24h_warning), Notification.LOW, app.aaps.core.ui.R.string.snooze, {
-                    preferences.put(DstHelperLongKey.SnoozeDstIn24h, System.currentTimeMillis() + T.hours(24).msecs())
-                }, null)
+                notificationManager.post(
+                    NotificationId.DST_IN_24H,
+                    R.string.dst_in_24h_warning,
+                    actions = listOf(NotificationAction(app.aaps.core.ui.R.string.snooze) {
+                        preferences.put(DstHelperLongKey.SnoozeDstIn24h, System.currentTimeMillis() + T.hours(24).msecs())
+                    })
+                )
             }
         }
         if (wasDST(cal)) {
-            if (!loop.runningMode.isSuspended()) {
-                val profile = profileFunction.getProfile() ?: return
-                loop.handleRunningModeChange(newRM = RM.Mode.SUSPENDED_BY_DST, durationInMinutes = T.hours((-DISABLE_TIME_FRAME_HOURS).toLong()).mins().toInt(), action = Action.SUSPEND, source = Sources.Aaps, profile = profile)
+            // dstCheck() is invoked from KeepAliveWorker on a background scope; the file
+            // already uses runBlocking for profileFunction. Keeping the same pattern here.
+            val mode = runBlocking { loop.runningMode() }
+            if (!mode.pausesLoopExecution()) {
+                val profile = runBlocking { profileFunction.getProfile() } ?: return
+                runBlocking {
+                    loop.handleRunningModeChange(newRM = RM.Mode.SUSPENDED_BY_DST, durationInMinutes = T.hours((-DISABLE_TIME_FRAME_HOURS).toLong()).mins().toInt(), action = Action.SUSPEND, source = Sources.Aaps, profile = profile)
+                }
                 val snoozedTo: Long = preferences.get(DstHelperLongKey.SnoozeLoopDisabled)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                    uiInteraction.addNotification(
-                        id = Notification.DST_LOOP_DISABLED,
-                        text = rh.gs(R.string.dst_loop_disabled_warning),
-                        level = Notification.LOW,
-                        actionButtonId = app.aaps.core.ui.R.string.snooze,
-                        action = { preferences.put(DstHelperLongKey.SnoozeLoopDisabled, System.currentTimeMillis() + T.hours(24).msecs()) },
-                        validityCheck = null
+                    notificationManager.post(
+                        NotificationId.DST_LOOP_DISABLED,
+                        R.string.dst_loop_disabled_warning,
+                        actions = listOf(NotificationAction(app.aaps.core.ui.R.string.snooze) {
+                            preferences.put(DstHelperLongKey.SnoozeLoopDisabled, System.currentTimeMillis() + T.hours(24).msecs())
+                        })
                     )
                 }
             } else {

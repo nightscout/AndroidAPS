@@ -10,6 +10,7 @@ data class LoopStatusData(
     val lastRun: Long?,
     val lastEnact: Long?,
     val tempTarget: TempTargetInfo?,
+    val autosensTarget: String? = null,
     val defaultRange: TargetRange,
     val oapsResult: OapsResultInfo?
 ) {
@@ -20,6 +21,8 @@ data class LoopStatusData(
         LGS,
         DISABLED,
         SUSPENDED,
+        PUMP_SUSPENDED,
+        DST_SUSPENDED,
         DISCONNECTED,
         SUPERBOLUS,
         UNKNOWN

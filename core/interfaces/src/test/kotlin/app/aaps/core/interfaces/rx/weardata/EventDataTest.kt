@@ -96,15 +96,15 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
-        EventData.ActionTempTargetConfirmed(false).let {
+        EventData.ActionTempTargetConfirmed(1L).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
-        EventData.ActionBolusConfirmed(1.0, 2).let {
+        EventData.ActionBolusConfirmed(1L).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
-        EventData.ActionECarbsConfirmed(1, 2, 3).let {
+        EventData.ActionECarbsConfirmed(2L).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
@@ -112,7 +112,7 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
-        EventData.ActionProfileSwitchConfirmed(1, 2, 3).let {
+        EventData.ActionProfileSwitchConfirmed(99L).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
@@ -189,7 +189,46 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
+        EventData.ConfirmAction(
+            "1", "2", null,
+            lines = listOf(EventData.ConfirmActionLine("BOLUS", "Bolus: 1.5 U"), EventData.ConfirmActionLine("CARBS", "Carbs: 30 g"))
+        ).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
         EventData.SnoozeAlert(1).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        // Running mode now rides the generic confirm path: Selected/Confirmed + the master-authored lines.
+        EventData.RunningModeSelected(1, 2, 60).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.RunningModeConfirmed(1234567890L).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.ConfirmAction(
+            "Running mode", "", EventData.RunningModeConfirmed(42L),
+            lines = listOf(EventData.ConfirmActionLine("PRIMARY", "Running mode: Closed Loop"), EventData.ConfirmActionLine("NORMAL", "Duration: 60 min"))
+        ).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        // Watch-on-client insulin relay feedback: the spinner trigger, the commit-success terminal, and a deferred confirm.
+        EventData.ContactingMaster.let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.RemoteDelivered.let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.ConfirmAction(
+            "Bolus", "", EventData.ActionBolusConfirmed(7L),
+            lines = listOf(EventData.ConfirmActionLine("BOLUS", "Bolus: 1.5 U")), deferConfirm = true
+        ).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }

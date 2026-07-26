@@ -13,6 +13,7 @@ import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.WearUtil
+import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,6 +41,15 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
+    // Not derived from DaggerService, so inject here for every concrete subclass. AndroidInjection
+    // resolves the injector by this instance's concrete runtime class, so each subclass is injected
+    // through its own @ContributesAndroidInjector binding in WearServicesModule — kept in the base to
+    // avoid duplicating the identical override in every complication.
+    override fun onCreate() {
+        AndroidInjection.inject(this)
+        super.onCreate()
+    }
 
     /**
      * Build complication data using modern DataStore-backed data models

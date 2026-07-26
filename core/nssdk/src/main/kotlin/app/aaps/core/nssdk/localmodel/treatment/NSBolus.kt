@@ -1,7 +1,11 @@
 package app.aaps.core.nssdk.localmodel.treatment
 
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+@SerialName("NSBolus")
 data class NSBolus(
     override var date: Long?,
     override val device: String? = null,
@@ -21,9 +25,9 @@ data class NSBolus(
     override val pumpSerial: String?,
     override var app: String? = null,
     val insulin: Double,
-    val type: BolusType,
-    val isBasalInsulin: Boolean
-
+    @SerialName("bolusType") val type: BolusType,
+    val isBasalInsulin: Boolean,
+    val iCfg: NSICfg?
 ) : NSTreatment {
 
     enum class BolusType {

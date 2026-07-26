@@ -4,7 +4,7 @@ import app.aaps.database.entities.TemporaryTarget
 
 class InvalidateTemporaryTargetTransaction(val id: Long) : Transaction<InvalidateTemporaryTargetTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val temporaryTarget = database.temporaryTargetDao.findById(id)
             ?: throw IllegalArgumentException("There is no such TemporaryTarget with the specified ID.")

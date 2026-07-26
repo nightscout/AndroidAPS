@@ -19,6 +19,7 @@ class PreferenceMenuActivity : MenuListActivity() {
             add(MenuItem(R.drawable.ic_display, getString(R.string.pref_display_settings)))
             add(MenuItem(R.drawable.ic_graph, getString(R.string.pref_graph_settings)))
             add(MenuItem(R.drawable.ic_interface, getString(R.string.pref_interface_settings)))
+            add(MenuItem(R.drawable.ic_tile_settings, getString(R.string.pref_tile_settings)))
             add(MenuItem(R.drawable.ic_complication, getString(R.string.pref_complication_settings)))
             add(MenuItem(R.drawable.ic_others, getString(R.string.pref_others_settings)))
             lastWatchface = SelectedWatchFace.fromId(sp.getInt(R.string.key_last_selected_watchface, SelectedWatchFace.NONE.ordinal))
@@ -43,6 +44,8 @@ class PreferenceMenuActivity : MenuListActivity() {
             getString(R.string.pref_interface_settings)    -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply {
                 putExtra(getString(R.string.key_preference_id), R.xml.interface_preferences)
             })
+
+            getString(R.string.pref_tile_settings)         -> startActivity(Intent(this, TileMenuActivity::class.java))
 
             getString(R.string.pref_complication_settings) -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply {
                 putExtra(getString(R.string.key_preference_id), R.xml.complication_preferences)

@@ -1,58 +1,59 @@
 package app.aaps.plugins.automation.actions
 
-import android.widget.LinearLayout
-import androidx.annotation.DrawableRes
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var insulin: Insulin
+    @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
-    var inputProfileName: InputProfileName = InputProfileName(rh, activePlugin, "")
+    var inputProfileName: InputProfileName = InputProfileName("")
+    val iCfg: ICfg
+        get() = insulin.iCfg         // use Current running iCfg, changing iCfg with Automation not allowed
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
+    override fun composeIcon() = IcProfile
+    override fun elementType() = ElementType.PROFILE_MANAGEMENT
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         val activeProfileName = profileFunction.getProfileName()
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.validators.R.string.error_field_must_not_be_empty)).run()
-            return
+            return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error_field_must_not_be_empty)
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)).run()
-            return
+            return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)
         }
         if (inputProfileName.value == activeProfileName) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
-            callback.result(pumpEnactResultProvider.get().success(true).comment(R.string.alreadyset)).run()
-            return
+            return pumpEnactResultProvider.get().success(true).comment(R.string.alreadyset)
         }
-        val profileStore = activePlugin.activeProfileSource.profile ?: return
+        val profileStore = profileRepository.profile.value
+            ?: return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.notexists)).run()
-            return
+            return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.notexists)
         }
         val result = profileFunction.createProfileSwitch(
             profileStore = profileStore,
@@ -66,15 +67,10 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             listValues = listOf(
                 ValueWithUnit.SimpleString(inputProfileName.value),
                 ValueWithUnit.Percent(100)
-            )
+            ),
+            iCfg = iCfg
         )
-        callback.result(pumpEnactResultProvider.get().success(result).comment(app.aaps.core.ui.R.string.ok)).run()
-    }
-
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.profilename), "", inputProfileName))
-            .build(root)
+        return pumpEnactResultProvider.get().success(result != null).comment(app.aaps.core.ui.R.string.ok)
     }
 
     override fun hasDialog(): Boolean = true
@@ -93,5 +89,5 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = activePlugin.activeProfileSource.profile?.getSpecificProfile(inputProfileName.value) != null
+    override fun isValid(): Boolean = profileRepository.profile.value?.getSpecificProfile(inputProfileName.value) != null
 }

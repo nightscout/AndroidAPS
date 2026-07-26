@@ -1,9 +1,5 @@
 package app.aaps.plugins.sensitivity
 
-import android.content.Context
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
@@ -20,14 +16,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.store
+import app.aaps.core.ui.compose.icons.IcAs
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import org.json.JSONObject
+import kotlinx.coroutines.runBlocking
 import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,18 +39,17 @@ class SensitivityOref1Plugin @Inject constructor(
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
+        .icon(IcAs)
         .pluginName(R.string.sensitivity_oref1)
-        .shortName(R.string.sensitivity_shortname)
+        .shortName(R.string.sensitivity_plugin_shortname)
         .enableByDefault(true)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_sensitivity_oref1)
         .setDefault(),
     aapsLogger, rh, preferences
 ), PluginConstraints {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         if (profile == null) {
             aapsLogger.error("No profile")
             return AutosensResult()
@@ -71,8 +65,8 @@ class SensitivityOref1Plugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val siteChanges = persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true)
-        val profileSwitches = persistenceLayer.getProfileSwitchesFromTime(fromTime, true).blockingGet()
+        val siteChanges = runBlocking { persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true) }
+        val profileSwitches = runBlocking { persistenceLayer.getProfileSwitchesFromTime(fromTime, true) }
 
         //[0] = 8 hour
         //[1] = 24 hour
@@ -210,21 +204,6 @@ class SensitivityOref1Plugin @Inject constructor(
     override val isMinCarbsAbsorptionDynamic: Boolean = false
     override val isOref1: Boolean = true
 
-    override fun configuration(): JSONObject =
-        JSONObject()
-            .put(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences)
-            .put(DoubleKey.AbsorptionCutOff, preferences)
-            .put(DoubleKey.AutosensMin, preferences)
-            .put(DoubleKey.AutosensMax, preferences)
-
-    override fun applyConfiguration(configuration: JSONObject) {
-        configuration
-            .store(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences)
-            .store(DoubleKey.AbsorptionCutOff, preferences)
-            .store(DoubleKey.AutosensMin, preferences)
-            .store(DoubleKey.AutosensMax, preferences)
-    }
-
     override val id: SensitivityType
         get() = SensitivityType.SENSITIVITY_OREF1
 
@@ -233,22 +212,21 @@ class SensitivityOref1Plugin @Inject constructor(
         return value
     }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "absorption_oref1_advanced") return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "sensitivity_oref1_settings"
-            title = rh.gs(R.string.absorption_settings_title)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsSmbMin5MinCarbsImpact, dialogMessage = R.string.openapsama_min_5m_carb_impact_summary, title = R.string.openapsama_min_5m_carb_impact))
-            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AbsorptionCutOff, dialogMessage = R.string.absorption_cutoff_summary, title = R.string.absorption_cutoff_title))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "absorption_oref1_advanced"
-                title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
-                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AutosensMax, dialogMessage = R.string.openapsama_autosens_max_summary, title = R.string.openapsama_autosens_max))
-                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AutosensMin, dialogMessage = R.string.openapsama_autosens_min_summary, title = R.string.openapsama_autosens_min))
-            })
-        }
-    }
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "sensitivity_oref1_settings",
+        titleResId = R.string.absorption_settings_title,
+        items = listOf(
+            DoubleKey.ApsSmbMin5MinCarbsImpact,
+            DoubleKey.AbsorptionCutOff,
+            PreferenceSubScreenDef(
+                key = "absorption_oref1_advanced",
+                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                items = listOf(
+                    DoubleKey.AutosensMax,
+                    DoubleKey.AutosensMin
+                )
+            )
+        ),
+        icon = pluginDescription.icon
+    )
 }

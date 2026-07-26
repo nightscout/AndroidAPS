@@ -6,5 +6,4 @@
     <string name="avg_smoothing_name">Μέση εξομάλυνση</string>
     <string name="description_avg_smoothing">"Αλγόριθμος εξομάλυνσης μέσου όρου, η νεότερη τιμή δεν επηρεάζεται"</string>
     <string name="no_smoothing_name">Χωρίς εξομάλυνση</string>
-    <string name="description_no_smoothing">"Δε γίνεται εξομάλυνση των δεδομένων γλυκόζης εισαγωγής. Χρησιμοποιήστε το όταν έχετε ήδη φιλτράρει τα δεδομένα, π.χ. από το BYODA G6."</string>
 </resources>

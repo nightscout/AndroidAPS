@@ -1,11 +1,12 @@
 package app.aaps.core.interfaces.profile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
@@ -23,7 +24,7 @@ interface Profile {
     /**
      * Check validity of profile
      */
-    fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
+    fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**
      * Units used for ISF & target
@@ -31,7 +32,7 @@ interface Profile {
     val units: GlucoseUnit
 
     //@Deprecated("Replace in favor of accessing InsulinProfile")
-    val dia: Double
+    val iCfg: ICfg?
 
     val percentage: Int
 
@@ -43,7 +44,7 @@ interface Profile {
     /**
      * is equal to another profile?
      */
-    fun isEqual(profile: Profile): Boolean
+    fun isEqual(profile: Profile, ignoreName: Boolean = false): Boolean
 
     /**
      * Basal value according to "now"
@@ -88,6 +89,18 @@ interface Profile {
     fun getTargetLowMgdl(timestamp: Long): Double
     fun getTargetHighMgdl(): Double
     fun getTargetHighMgdl(timestamp: Long): Double
+
+    /**
+     * Average target in MGDL with the low/high targets each rounded to 0.1 mg/dL first — exactly how
+     * the APS builds its target_bg (min_bg/max_bg = Round.roundTo(getTargetLow/HighMgdl(), 0.1), then
+     * target_bg = (min_bg + max_bg) / 2).
+     *
+     * Use this — not [getTargetMgdl] — when comparing the profile target against the APS result target
+     * to decide whether the loop has adjusted it. [getTargetMgdl] is unrounded, so with a non-integer
+     * mmol→mg/dL factor (e.g. 5.0 mmol = 90.078 mg/dL) it never equals the APS value (90.1) and would
+     * falsely flag every loop run as "adjusted".
+     */
+    fun getRoundedTargetMgdl(): Double = (Round.roundTo(getTargetLowMgdl(), 0.1) + Round.roundTo(getTargetHighMgdl(), 0.1)) / 2.0
 
     /**
      * Basal value according to elapsed seconds from midnight

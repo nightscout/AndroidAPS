@@ -303,7 +303,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage>(
     }
 
     private fun getPumpDevice(): RileyLinkPumpDevice {
-        return activePlugin.activePump as RileyLinkPumpDevice
+        return activePlugin.activePumpInternal as RileyLinkPumpDevice
     }
 
     abstract fun isDeviceReachable(): Boolean

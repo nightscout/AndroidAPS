@@ -1,18 +1,15 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcBgCheck
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.util.Optional
 import kotlin.math.roundToInt
 
 class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
@@ -45,7 +42,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -86,15 +83,9 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
             rh.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, rh.gs(comparator.value.stringRes), bg.value, bg.units)
     }
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_bgcheck)
+    override fun composeIcon() = IcBgCheck
+    override fun elementType() = ElementType.BG_CHECK
 
     override fun duplicate(): Trigger = TriggerBg(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, app.aaps.core.ui.R.string.glucose, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.glucose_u, bg.units), "", bg))
-            .build(root)
-    }
 }

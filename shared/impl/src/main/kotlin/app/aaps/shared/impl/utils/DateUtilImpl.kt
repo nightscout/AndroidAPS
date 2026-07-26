@@ -114,9 +114,9 @@ class DateUtilImpl @Inject constructor(
         val startOfTodayMillis = beginOfDay(nowMillis)
         return if (mills < nowMillis) { // Past
             when {
-                mills > startOfTodayMillis                                  -> rh.gs(R.string.today)
-                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> rh.gs(R.string.yesterday)
-                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> dayAgo(mills, rh, true)
+                mills > startOfTodayMillis                                  -> "${rh.gs(R.string.today)} - ${dateString(mills)}"
+                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> "${rh.gs(R.string.yesterday)} - ${dateString(mills)}"
+                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> "${dayAgo(mills, rh, true)} - ${dateString(mills)}"
                 else                                                        -> dateString(mills)
             }
         } else { // Future
@@ -218,6 +218,15 @@ class DateUtilImpl @Inject constructor(
         }
     }
 
+    override fun minOrSec(rh: ResourceHelper, durationMs: Long): String {
+        if (durationMs < 0) return ""
+        val duration = durationMs.milliseconds
+        return when {
+            duration.inWholeMinutes >= 2 -> rh.gs(R.string.min_plus, duration.inWholeMinutes.toInt())
+            else                         -> rh.gs(R.string.sec_plus, duration.inWholeSeconds.toInt())
+        }
+    }
+
     override fun minAgoShort(time: Long?): String {
         if (time == null) return ""
         val duration = (time - now()).milliseconds
@@ -271,20 +280,29 @@ class DateUtilImpl @Inject constructor(
         return t
     }
 
-    override fun timeFrameString(timeInMillis: Long, rh: ResourceHelper): String {
+    override fun timeFrameString(timeInMillis: Long, rh: ResourceHelper, withParentheses: Boolean): String {
         val duration = timeInMillis.milliseconds
         val totalHours = duration.inWholeHours
         val remainingMinutes = (duration - totalHours.hours).inWholeMinutes
         val hoursPart = if (totalHours > 0) "$totalHours${rh.gs(R.string.shorthour)} " else ""
-        return "($hoursPart$remainingMinutes')"
+        val body = "$hoursPart$remainingMinutes'"
+        return if (withParentheses) "($body)" else body
     }
 
     override fun sinceString(timestamp: Long, rh: ResourceHelper): String =
         timeFrameString(now() - timestamp, rh)
 
-    override fun untilString(timestamp: Long, rh: ResourceHelper): String {
+    override fun untilString(timestamp: Long, rh: ResourceHelper, withParentheses: Boolean): String {
         val durationMillis = timestamp - now()
-        return timeFrameString(durationMillis, rh)
+        return timeFrameString(durationMillis, rh, withParentheses)
+    }
+
+    override fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String {
+        val duration = timeInMillis.milliseconds
+        val totalHours = duration.inWholeHours.toInt()
+        val remainingMinutes = (duration - totalHours.hours).inWholeMinutes.toInt()
+        return if (totalHours > 0) rh.gs(R.string.time_remaining_h_m, totalHours, remainingMinutes)
+        else rh.gs(R.string.time_remaining_m, remainingMinutes)
     }
 
     override fun now(): Long = clock.millis()

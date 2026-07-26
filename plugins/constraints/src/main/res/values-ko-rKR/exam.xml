@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">DIA에 대하여 올바른 것은?</string>
     <string name="dia_label_exam">활성 인슐린 지속 시간 (DIA)</string>
-    <string name="dia_profile">프로파일에 DIA 값을 입력해야 합니다.</string>
     <string name="dia_minimumis5h">허용되는 최소값은 5시간입니다.</string>
     <string name="dia_meaningisequaltodiapump">AAPS를 사용하기 전에 펌프에서 사용한 DIA 값이 정상적으로 작동하여 만족하는 경우, 루프를 시작하기 전에 이 값을 변경할 필요가 있습니다.</string>
     <string name="dia_valuemustbedetermined">적절한 DIA 값을 스스로 찾아야 합니다.</string>
@@ -64,9 +63,7 @@
     <string name="prerequisites2_internet">AAPS를 실행하기 위해서는 closed loop에서 인터넷 연결이 필요합니다.</string>
     <string name="prerequisites2_supportedcgm">지원되는 CGM과 핸드폰 또는 장치에 혈당값을 수신하기 위한 적절한 어플.</string>
     <string name="update_label">AAPS 업데이트하기</string>
-    <string name="update_git">컴퓨터에 Git을 설치하고 환경 설정해야 합니다.</string>
     <string name="update_asap">AAPS의 업데이트 버전이 배포되면, 일정 시간이 지난 후 이전 버전은 원격으로 제한됩니다.</string>
-    <string name="update_keys">Keystore의 위치를 저장하고 기록해두어야 이전에 설치할 때 사용했던 동일한 signing key를 업데이트할 때 사용할 수 있습니다.</string>
     <string name="update_askfriend">만약 apk를 만드는 것이 어렵다면, 친구가 만든 apk를 사용하여 설치할 수 있습니다.</string>
     <string name="troubleshooting_label">문제 해결</string>
     <string name="troubleshooting_wheretoask">어디에서 AAPS에 대한 도움을 받을 수 있습니까?</string>

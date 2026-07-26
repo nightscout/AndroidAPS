@@ -3,8 +3,10 @@ package app.aaps.database.transactions
 import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.BolusDao
 import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +28,7 @@ class InsertOrUpdateBolusTransactionTest {
     }
 
     @Test
-    fun `inserts new bolus when id not found`() {
+    fun `inserts new bolus when id not found`() = runTest {
         val bolus = createBolus(id = 1, amount = 5.0)
 
         whenever(bolusDao.findById(1)).thenReturn(null)
@@ -44,7 +46,7 @@ class InsertOrUpdateBolusTransactionTest {
     }
 
     @Test
-    fun `updates existing bolus when id found`() {
+    fun `updates existing bolus when id found`() = runTest {
         val bolus = createBolus(id = 1, amount = 5.0)
         val existing = createBolus(id = 1, amount = 3.0)
 
@@ -63,7 +65,7 @@ class InsertOrUpdateBolusTransactionTest {
     }
 
     @Test
-    fun `inserts SMB bolus`() {
+    fun `inserts SMB bolus`() = runTest {
         val bolus = createBolus(id = 1, amount = 0.5, type = Bolus.Type.SMB)
 
         whenever(bolusDao.findById(1)).thenReturn(null)
@@ -77,7 +79,7 @@ class InsertOrUpdateBolusTransactionTest {
     }
 
     @Test
-    fun `updates bolus amount`() {
+    fun `updates bolus amount`() = runTest {
         val existing = createBolus(id = 1, amount = 3.0)
         val updated = createBolus(id = 1, amount = 7.5)
 
@@ -92,7 +94,7 @@ class InsertOrUpdateBolusTransactionTest {
     }
 
     @Test
-    fun `inserts invalid bolus`() {
+    fun `inserts invalid bolus`() = runTest {
         val bolus = createBolus(id = 1, amount = 5.0, isValid = false)
 
         whenever(bolusDao.findById(1)).thenReturn(null)
@@ -106,7 +108,7 @@ class InsertOrUpdateBolusTransactionTest {
     }
 
     @Test
-    fun `transaction result has correct structure`() {
+    fun `transaction result has correct structure`() = runTest {
         val result = InsertOrUpdateBolusTransaction.TransactionResult()
 
         assertThat(result.inserted).isEmpty()
@@ -123,6 +125,7 @@ class InsertOrUpdateBolusTransactionTest {
         amount = amount,
         type = type,
         isValid = isValid,
-        interfaceIDs_backing = InterfaceIDs()
+        interfaceIDs_backing = InterfaceIDs(),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0)
     ).also { it.id = id }
 }

@@ -5,6 +5,7 @@ import app.aaps.database.daos.TotalDailyDoseDao
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransactionTest {
     }
 
     @Test
-    fun `inserts new TDD when not found by timestamp`() {
+    fun `inserts new TDD when not found by timestamp`() = runTest {
         val tdd = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0)
 
         whenever(totalDailyDoseDao.findByPumpTimestamp(1000L, InterfaceIDs.PumpType.CACHE)).thenReturn(null)
@@ -45,7 +46,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransactionTest {
     }
 
     @Test
-    fun `updates existing TDD when basal amount changed`() {
+    fun `updates existing TDD when basal amount changed`() = runTest {
         val tdd = createTotalDailyDose(timestamp = 1000L, basalAmount = 12.0, bolusAmount = 15.0)
         val existing = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0)
 
@@ -65,7 +66,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransactionTest {
     }
 
     @Test
-    fun `updates existing TDD when bolus amount changed`() {
+    fun `updates existing TDD when bolus amount changed`() = runTest {
         val tdd = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 20.0)
         val existing = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0)
 
@@ -82,7 +83,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransactionTest {
     }
 
     @Test
-    fun `updates existing TDD when total amount changed`() {
+    fun `updates existing TDD when total amount changed`() = runTest {
         val tdd = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0, totalAmount = 30.0)
         val existing = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0, totalAmount = 25.0)
 
@@ -99,7 +100,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransactionTest {
     }
 
     @Test
-    fun `updates existing TDD when carbs changed`() {
+    fun `updates existing TDD when carbs changed`() = runTest {
         val tdd = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0, carbs = 200.0)
         val existing = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0, carbs = 150.0)
 
@@ -116,7 +117,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransactionTest {
     }
 
     @Test
-    fun `does not update when all fields are same`() {
+    fun `does not update when all fields are same`() = runTest {
         val tdd = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0, totalAmount = 25.0, carbs = 150.0)
         val existing = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0, totalAmount = 25.0, carbs = 150.0)
 
@@ -135,7 +136,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransactionTest {
     }
 
     @Test
-    fun `updates multiple fields when changed`() {
+    fun `updates multiple fields when changed`() = runTest {
         val tdd = createTotalDailyDose(timestamp = 1000L, basalAmount = 12.0, bolusAmount = 18.0, totalAmount = 30.0, carbs = 200.0)
         val existing = createTotalDailyDose(timestamp = 1000L, basalAmount = 10.0, bolusAmount = 15.0, totalAmount = 25.0, carbs = 150.0)
 

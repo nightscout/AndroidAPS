@@ -14,3 +14,6 @@ fun Data.Builder.copyInt(key: String, bundle:  Bundle?, defaultValue : Int = 0):
 
 fun Data.Builder.copyDouble(key: String, bundle:  Bundle?, defaultValue : Double = 0.0): Data.Builder =
     this.also { putDouble(key, bundle?.getDouble(key) ?: defaultValue) }
+
+fun Data.Builder.copyBoolean(key: String, bundle:  Bundle?, defaultValue : Boolean = false): Data.Builder =
+    this.also { putBoolean(key, bundle?.getBoolean(key) ?: defaultValue) }

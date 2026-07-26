@@ -7,6 +7,7 @@ import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -26,7 +27,7 @@ class InsertEffectiveProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `inserts effective profile switch`() {
+    fun `inserts effective profile switch`() = runTest {
         val eps = createEffectiveProfileSwitch()
 
         val transaction = InsertEffectiveProfileSwitchTransaction(eps)
@@ -52,7 +53,7 @@ class InsertEffectiveProfileSwitchTransactionTest {
         originalPercentage = 100,
         originalDuration = 0,
         originalEnd = 0,
-        insulinConfiguration = InsulinConfiguration("Test", 0, 0),
+        insulinConfiguration = InsulinConfiguration("Test", 0, 0, 1.0),
         interfaceIDs_backing = InterfaceIDs()
     )
 }

@@ -2,13 +2,16 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 
 class DanaRSPacketGeneralInitialScreenInformation @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump
+    private val danaPump: DanaPump,
+    private val notificationManager: NotificationManager
 ) : DanaRSPacket() {
 
     var isTempBasalInProgress = false
@@ -43,6 +46,13 @@ class DanaRSPacketGeneralInitialScreenInformation @Inject constructor(
             danaPump.errorState = DanaPump.ErrorState[intFromBuff(data, 15, 1)]
                 ?: DanaPump.ErrorState.NONE
             aapsLogger.debug(LTag.PUMPCOMM, "ErrorState: " + danaPump.errorState.name)
+            // "Bolus block" is a pump setting that blocks all bolus delivery. It is a wrong
+            // configuration for AAPS (no insulin can be delivered and the loop gets suspended),
+            // so raise an urgent notification asking the user to disable it.
+            if (danaPump.errorState == DanaPump.ErrorState.BOLUS_BLOCK)
+                notificationManager.post(NotificationId.DANA_BOLUS_BLOCK, app.aaps.pump.dana.R.string.danar_disablebolusblock)
+            else
+                notificationManager.dismiss(NotificationId.DANA_BOLUS_BLOCK)
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Pump suspended: " + danaPump.pumpSuspended)
         aapsLogger.debug(LTag.PUMPCOMM, "Temp basal in progress: $isTempBasalInProgress")

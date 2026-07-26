@@ -3,7 +3,9 @@ package app.aaps.database.dao
 import android.content.Context
 import androidx.room.Room
 import androidx.room.testing.MigrationTestHelper
+import androidx.room.useReaderConnection
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -11,6 +13,7 @@ import app.aaps.database.AppDatabase
 import app.aaps.database.di.DatabaseModule
 import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TABLE_STEPS_COUNT
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,9 +21,11 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class StepsCountDaoTest {
 
-    private val context = ApplicationProvider.getApplicationContext<Context>()
+    private val context: Context by lazy { ApplicationProvider.getApplicationContext() }
     private fun createDatabase() =
-        Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .setDriver(BundledSQLiteDriver())
+            .build()
 
     private fun getDbObjects(supportDb: SupportSQLiteDatabase, type: String): Set<String> {
         val names = mutableSetOf<String>()
@@ -31,7 +36,6 @@ class StepsCountDaoTest {
     }
 
     private fun getTableNames(db: SupportSQLiteDatabase) = getDbObjects(db, "table")
-    private fun getIndexNames(db: SupportSQLiteDatabase) = getDbObjects(db, "index")
 
     private fun insertAndFind(database: AppDatabase) {
         val sc1 = createStepsCount()
@@ -62,18 +66,29 @@ class StepsCountDaoTest {
     }
 
     @Test
-    fun migrate_createsTableAndIndices() {
+    fun migrate_createsTableAndIndices() = runTest {
         val helper = MigrationTestHelper(
             InstrumentationRegistry.getInstrumentation(),
             AppDatabase::class.java
         )
         val startVersion = 24
+        // Seed a DB at the old schema version (still missing the stepsCount table)...
         val supportDb = helper.createDatabase(TEST_DB_NAME, startVersion)
         Assert.assertFalse(getTableNames(supportDb).contains(TABLE_STEPS_COUNT))
-        DatabaseModule().migrations.filter { m -> m.startVersion >= startVersion }.forEach { m -> m.migrate(supportDb) }
-        Assert.assertTrue(getTableNames(supportDb).contains(TABLE_STEPS_COUNT))
-        Assert.assertTrue(getIndexNames(supportDb).contains("index_stepsCount_id"))
-        Assert.assertTrue(getIndexNames(supportDb).contains("index_stepsCount_timestamp"))
+        // ...then reopen through the production driver so the migration chain runs under the bundled driver.
+        Room.databaseBuilder(context, AppDatabase::class.java, TEST_DB_NAME)
+            .setDriver(BundledSQLiteDriver())
+            .addMigrations(*DatabaseModule().migrations)
+            .build().also { db ->
+                val objects = db.useReaderConnection { connection ->
+                    connection.usePrepared("SELECT type, name FROM sqlite_master") { statement ->
+                        buildList { while (statement.step()) add(statement.getText(0) to statement.getText(1)) }
+                    }
+                }
+                Assert.assertTrue(objects.contains("table" to TABLE_STEPS_COUNT))
+                Assert.assertTrue(objects.contains("index" to "index_stepsCount_timestamp"))
+                db.close()
+            }
     }
 
     @Test
@@ -88,6 +103,7 @@ class StepsCountDaoTest {
         Assert.assertFalse(getTableNames(supportDb).contains(TABLE_STEPS_COUNT))
         // Room.databaseBuilder will use the previously created db file that has version 22.
         Room.databaseBuilder(ApplicationProvider.getApplicationContext(), AppDatabase::class.java, TEST_DB_NAME)
+            .setDriver(BundledSQLiteDriver())
             .addMigrations(*DatabaseModule().migrations)
             .build().also { db ->
                 insertAndFind(db)
@@ -96,8 +112,9 @@ class StepsCountDaoTest {
     }
 
     @Test
-    fun getFromTime() {
-        createDatabase().also { db ->
+    fun getFromTime() = runTest {
+        val db = createDatabase()
+        try {
             val dao = db.stepsCountDao
             val timestamp = System.currentTimeMillis()
             val sc1 = createStepsCount(timestamp = timestamp, steps5Min = 80)
@@ -105,16 +122,18 @@ class StepsCountDaoTest {
             dao.insertNewEntry(sc1)
             dao.insertNewEntry(sc2)
 
-            Assert.assertEquals(listOf(sc1, sc2), dao.getFromTime(timestamp).blockingGet())
-            Assert.assertEquals(listOf(sc2), dao.getFromTime(timestamp + 1).blockingGet())
-            Assert.assertTrue(dao.getFromTime(timestamp + 2).blockingGet().isEmpty())
+            Assert.assertEquals(listOf(sc1, sc2), dao.getFromTime(timestamp))
+            Assert.assertEquals(listOf(sc2), dao.getFromTime(timestamp + 1))
+            Assert.assertTrue(dao.getFromTime(timestamp + 2).isEmpty())
+        } finally {
             db.close()
         }
     }
 
     @Test
-    fun getFromTimeToTime() {
-        createDatabase().also { db ->
+    fun getFromTimeToTime() = runTest {
+        val db = createDatabase()
+        try {
             val dao = db.stepsCountDao
             val timestamp = System.currentTimeMillis()
             val hr1 = createStepsCount(timestamp = timestamp, steps5Min = 80)
@@ -124,10 +143,11 @@ class StepsCountDaoTest {
             dao.insertNewEntry(hr2)
             dao.insertNewEntry(hr3)
 
-            Assert.assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2).blockingGet())
-            Assert.assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1).blockingGet())
-            Assert.assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1).blockingGet())
-            Assert.assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).blockingGet().isEmpty())
+            Assert.assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2))
+            Assert.assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1))
+            Assert.assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1))
+            Assert.assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).isEmpty())
+        } finally {
             db.close()
         }
     }

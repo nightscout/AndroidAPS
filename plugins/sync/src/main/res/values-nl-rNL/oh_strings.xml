@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans is ingesteld. Als u wilt stoppen met uploaden, klik dan op \'Uitloggen\'.</string>
     <string name="not_setup_info">Open Humans is momenteel inactief. Klik op \'Instellen\' om gegevens te uploaden.</string>
     <string name="project_member_id">Projectdeelnemer ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Alleen uploaden indien verbonden met WiFi</string>
-    <string name="only_upload_if_charging">Alleen uploaden tijdens opladen</string>
     <string name="open_humans_uploading">Uploaden naar Open Humans…</string>
     <string name="open_humans_notifications">Open Humans notificaties</string>
     <string name="uploading_to_open_humans">AndroidAPS is aan het uploaden naar Open Humans. Dit kan even duren.</string>

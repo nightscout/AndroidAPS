@@ -5,6 +5,7 @@ import app.aaps.database.daos.ExtendedBolusDao
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InvalidateExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `invalidates valid extended bolus`() {
+    fun `invalidates valid extended bolus`() = runTest {
         val eb = createExtendedBolus(id = 1, isValid = true)
 
         whenever(extendedBolusDao.findById(1)).thenReturn(eb)
@@ -42,7 +43,7 @@ class InvalidateExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `does not update already invalid extended bolus`() {
+    fun `does not update already invalid extended bolus`() = runTest {
         val eb = createExtendedBolus(id = 1, isValid = false)
 
         whenever(extendedBolusDao.findById(1)).thenReturn(eb)
@@ -57,7 +58,7 @@ class InvalidateExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `throws exception when extended bolus not found`() {
+    fun `throws exception when extended bolus not found`() = runTest {
         whenever(extendedBolusDao.findById(999)).thenReturn(null)
 
         val transaction = InvalidateExtendedBolusTransaction(id = 999)

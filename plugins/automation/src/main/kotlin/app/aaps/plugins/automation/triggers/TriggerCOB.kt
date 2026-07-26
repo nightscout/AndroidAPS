@@ -1,20 +1,17 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.IntKey
+import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -38,7 +35,7 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val cobInfo = iobCobCalculator.getCobInfo("AutomationTriggerCOB")
         if (cobInfo.displayCob == null) {
             return if (comparator.value === Comparator.Compare.IS_NOT_AVAILABLE) {
@@ -74,15 +71,9 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.cobcompared, rh.gs(comparator.value.stringRes), cob.value)
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_bolus_carbs)
+    override fun composeIcon() = IcCarbs
+    override fun elementType() = ElementType.COB
 
     override fun duplicate(): Trigger = TriggerCOB(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggercoblabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggercoblabel) + ": ", "", cob))
-            .build(root)
-    }
 }

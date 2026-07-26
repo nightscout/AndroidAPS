@@ -2,7 +2,7 @@ package app.aaps.pump.common.defs
 
 import app.aaps.pump.common.R
 
-// TODO there are 3 classes now, that do similar things, sort of, need to define exact rules: PumpDeviceState, PumpDriverState, PumpStatusState
+// TODO there are 2 classes now, that do similar things, sort of, need to define exact rules: PumpDeviceState, PumpDriverState
 
 // TODO split this enum into 2
 enum class PumpDriverState(var resourceId: Int) {

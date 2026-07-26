@@ -6,7 +6,7 @@
         <activity
             android:name=".widget.WidgetConfigureActivity"
             android:exported="false"
-            android:theme="@android:style/Theme.Material.Dialog.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Translucent">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -24,49 +24,49 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
-        <activity
-            android:name=".activities.TDDStatsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="app.aaps.ui.activities.BolusProgressHelperActivity"
-            android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Translucent" />
-        <activity
-            android:name=".activities.ErrorHelperActivity"
-            android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Translucent" />
-        <activity
-            android:name=".activities.SurveyActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.StatsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.TreatmentsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ProfileHelperActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="app.aaps.ui.activities.QuickWizardListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
+        <receiver
+            android:name=".widget.BgGraphWidget"
+            android:exported="true">
             <intent-filter>
-                <action android:name="app.aaps.ui.activities.QuickWizardListActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-        </activity>
 
-        <service
-            android:name=".services.AlarmSoundService"
-            android:enabled="true"
-            android:exported="false" />
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/bg_graph_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.CompactBgWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/compact_bg_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.SmallWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/small_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".activities.ErrorActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboardHidden"
+            android:exported="false"
+            android:showWhenLocked="true"
+            android:theme="@style/Theme.MaterialComponents.Translucent"
+            android:turnScreenOn="true" />
 
     </application>
 

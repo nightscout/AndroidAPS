@@ -2,14 +2,7 @@ package app.aaps.ui.activityMonitor
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.graphics.Typeface
 import android.os.Bundle
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -17,9 +10,28 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.ui.R
 import javax.inject.Inject
 import javax.inject.Singleton
+
+/**
+ * Data class representing statistics for a single Android Activity.
+ *
+ * This class encapsulates the usage metrics for an activity, including how long
+ * users have spent in the activity and over what time period the data was collected.
+ *
+ * @property activityName The simplified name of the activity (without "Activity" suffix)
+ * @property duration Human-readable duration string representing total time spent in the activity,
+ *                    formatted using [app.aaps.core.interfaces.utils.DateUtil.niceTimeScalar]
+ * @property days Number of days since the activity was first tracked, calculated from
+ *                the difference between now and the start timestamp
+ *
+ * @see ActivityMonitor.getActivityStats
+ */
+data class ActivityStats(
+    val activityName: String,
+    val duration: String,
+    val days: Double
+)
 
 @Singleton
 class ActivityMonitor @Inject constructor(
@@ -66,45 +78,20 @@ class ActivityMonitor @Inject constructor(
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
-    fun stats(context: Context): TableLayout =
-        TableLayout(context).also { layout ->
-            layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-            layout.addView(
-                TextView(context).apply {
-                    text = rh.gs(R.string.activity_monitor)
-                    setTypeface(typeface, Typeface.BOLD)
-                    gravity = Gravity.CENTER_HORIZONTAL
-                    setTextAppearance(android.R.style.TextAppearance_Material_Medium)
-                })
-            layout.addView(
-                TableRow(context).also { row ->
-                    val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
-                    row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-                    row.gravity = Gravity.CENTER_HORIZONTAL
-                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = rh.gs(app.aaps.core.ui.R.string.activity) })
-                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = rh.gs(app.aaps.core.ui.R.string.duration) })
-                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 } })
-                }
+    fun getActivityStats(): List<ActivityStats> {
+        return preferences.allMatchingStrings(LongComposedKey.ActivityMonitorTotal).map { activityName ->
+            val v = preferences.get(LongComposedKey.ActivityMonitorTotal, activityName)
+            val activity = activityName.replace("Activity", "")
+            val duration = dateUtil.niceTimeScalar(v, rh)
+            val start = preferences.get(LongComposedKey.ActivityMonitorStart, activityName)
+            val days = T.msecs(dateUtil.now() - start).days()
+            ActivityStats(
+                activityName = activity,
+                duration = duration,
+                days = days.toDouble()
             )
-
-            preferences.allMatchingStrings(LongComposedKey.ActivityMonitorTotal).forEach { activityName ->
-                val v = preferences.get(LongComposedKey.ActivityMonitorTotal, activityName)
-                val activity = activityName.replace("Activity", "")
-                val duration = dateUtil.niceTimeScalar(v, rh)
-                val start = preferences.get(LongComposedKey.ActivityMonitorStart, activityName)
-                val days = T.msecs(dateUtil.now() - start).days()
-                layout.addView(
-                    TableRow(context).also { row ->
-                        val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
-                        row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-                        row.gravity = Gravity.CENTER_HORIZONTAL
-                        row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = activity })
-                        row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = duration })
-                        row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(app.aaps.core.interfaces.R.string.in_days, days.toDouble()) })
-                    }
-                )
-            }
         }
+    }
 
     fun reset() {
         preferences.allMatchingStrings(LongComposedKey.ActivityMonitorTotal).forEach { activityName ->

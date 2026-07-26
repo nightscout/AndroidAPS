@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -37,7 +38,7 @@ class LastBgDataImplTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun lastBg() {
+    fun lastBg() = runTest {
         val bucketedData: MutableList<InMemoryGlucoseValue> = mutableListOf()
         bucketedData.add(InMemoryGlucoseValue(time, 70.0, sourceSensor = SourceSensor.UNKNOWN))
         // no data
@@ -63,7 +64,7 @@ class LastBgDataImplTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun isActualBg() {
+    fun isActualBg() = runTest {
         // no bucketed but in db
         whenever(autosensDataStore.bucketedData).thenReturn(null)
         whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(glucoseValue)

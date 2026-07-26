@@ -9,40 +9,30 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
 import javax.inject.Provider
 
 class CommandBolus(
-    injector: HasAndroidInjector,
+    private val aapsLogger: AAPSLogger,
+    private val rh: ResourceHelper,
+    private val activePlugin: ActivePlugin,
+    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val bolusProgressData: BolusProgressData,
     private val detailedBolusInfo: DetailedBolusInfo,
     override val callback: Callback?,
     type: Command.CommandType,
-    private val carbsRunnable: Runnable
+    private val bolusGeneration: Long,
 ) : Command {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    override var commandType: Command.CommandType = type
 
-    override var commandType: Command.CommandType
-
-    init {
-        injector.androidInjector().inject(this)
-        this.commandType = type
-    }
-
-    override fun execute() {
+    override suspend fun execute(): PumpEnactResult {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
-        if (r.success) carbsRunnable.run()
-        BolusProgressData.bolusEnded = true
-        rxBus.send(EventDismissBolusProgressIfRunning(r.success, detailedBolusInfo.id))
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-        callback?.result(r)?.run()
+        // Generation-scoped both ways: never stamp completion onto / wipe a NEWER bolus enqueued behind this one
+        // (an SMB + manual bolus get adjacent generations at enqueue; see BolusProgressData.clear / completeAndAutoClear).
+        if (r.success) bolusProgressData.completeAndAutoClear(bolusGeneration)
+        else bolusProgressData.clear(bolusGeneration)
+        return r
     }
 
     override fun status(): String {
@@ -52,11 +42,11 @@ class CommandBolus(
 
     override fun log(): String {
         return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(app.aaps.core.objects.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
+            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(app.aaps.core.ui.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 
-    override fun cancel() {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+    override fun cancel(commentResId: Int, success: Boolean) {
+        super.cancel(commentResId, success)
+        bolusProgressData.clear(bolusGeneration)
     }
 }

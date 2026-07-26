@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmation</string>
+
     <!--    Events-->
     <string name="bolus_delivering">Delivering %1$.2fU</string>
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU delivered</string>
@@ -11,6 +14,8 @@
     <!--    DateUtil-->
     <string name="minago">%1$dm ago</string>
     <string name="secago">%1$ds ago</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minutes ago</string>
     <string name="hoursago">%1$.1fh ago</string>
     <string name="days_ago">%1$.1f days ago</string>
@@ -45,6 +50,8 @@
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dh %2$dm remaining</string>
+    <string name="time_remaining_m">%1$dm remaining</string>
     <string name="later_today">Later today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
@@ -94,5 +101,28 @@
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Forever</string>
+
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Application needs bluetooth permission to communicate with pump</string>
+
+    <!-- Insulin -->
+    <string name="unknown">Unknown</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Peak Time [min]</string>
+
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
 
 </resources>

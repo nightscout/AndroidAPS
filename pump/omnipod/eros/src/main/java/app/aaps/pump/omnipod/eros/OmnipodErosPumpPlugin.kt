@@ -9,9 +9,6 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.os.SystemClock
 import android.text.TextUtils
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -22,51 +19,47 @@ import app.aaps.core.data.time.T.Companion.msecs
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.OmnipodEros
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.PumpState
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.fillFor
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.isSame
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginOmnipod
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.DateTimeUtil.getTimeInFutureFromMinutes
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.common.defs.TempBasalPair
-import app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
-import app.aaps.pump.common.hw.rileylink.keys.RileyLinkIntentPreferenceKey
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey
 import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
@@ -102,11 +95,22 @@ import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import app.aaps.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
-import app.aaps.pump.omnipod.eros.ui.OmnipodErosOverviewFragment
+import app.aaps.pump.omnipod.eros.ui.compose.OmnipodErosComposeContent
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.joda.time.Instant
@@ -134,24 +138,29 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private val aapsOmnipodErosManager: AapsOmnipodErosManager,
     private val fabricPrivacy: FabricPrivacy,
     private val rileyLinkServiceData: RileyLinkServiceData,
-    private val dateUtil: DateUtil,
     private val aapsOmnipodUtil: AapsOmnipodUtil,
     private val rileyLinkUtil: RileyLinkUtil,
     private val omnipodAlertUtil: OmnipodAlertUtil,
-    private val profileFunction: ProfileFunction,
     private val pumpSync: PumpSync,
     private val uiInteraction: UiInteraction,
+    private val notificationManager: NotificationManager,
     private val erosHistoryDatabase: ErosHistoryDatabase,
-    private val decimalFormatter: DecimalFormatter,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,
+    private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(OmnipodErosOverviewFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
+        .composeContent { _ ->
+            OmnipodErosComposeContent(
+                pluginName = rh.gs(R.string.omnipod_eros_name),
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck
+            )
+        }
+        .icon(IcPluginOmnipod)
         .pluginName(R.string.omnipod_eros_name)
         .shortName(R.string.omnipod_eros_name_short)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.omnipod_eros_pump_description),
     ownPreferences = listOf(
         ErosBooleanPreferenceKey::class.java, ErosLongNonPreferenceKey::class.java, ErosStringNonPreferenceKey::class.java
@@ -160,6 +169,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
 ), Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private val displayConnectionMessages = false
     private val statusChecker: Runnable
 
@@ -197,8 +207,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     if (podStateManager.isPodRunning && !podStateManager.isSuspended) aapsOmnipodErosManager.cancelSuspendedFakeTbrIfExists()
                     else aapsOmnipodErosManager.createSuspendedFakeTbrIfNotExists()
 
-                    if (this@OmnipodErosPumpPlugin.hasTimeDateOrTimeZoneChanged) commandQueue.customCommand(CommandHandleTimeChange(false), null)
-                    if (!this@OmnipodErosPumpPlugin.verifyPodAlertConfiguration()) commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
+                    if (this@OmnipodErosPumpPlugin.hasTimeDateOrTimeZoneChanged) pluginScope.launch { commandQueue.customCommand(CommandHandleTimeChange(false)) }
+                    if (!this@OmnipodErosPumpPlugin.verifyPodAlertConfiguration()) pluginScope.launch { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
                     if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodActivationCompleted &&
                         !podStateManager.isPodDead && podStateManager.activeAlerts.size() > 0 && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
                     ) queueAcknowledgeAlertsCommand()
@@ -210,7 +220,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         }
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
 
         serviceConnection = object : ServiceConnection {
@@ -273,36 +283,34 @@ class OmnipodErosPumpPlugin @Inject constructor(
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(OmnipodBooleanPreferenceKey.BasalBeepsEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.BolusBeepsEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.TbrBeepsEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SmbBeepsEnabled.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.ShowSuspendDeliveryButton.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.ShowPulseLogButton.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.ShowRileyLinkStatsButton.key) ||
-                               event.isChanged(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.BatteryChangeLogging.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.TimeChangeEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts.key)
-                           ) {
-                               aapsOmnipodErosManager.reloadSettings()
-                           } else if (event.isChanged(OmnipodBooleanPreferenceKey.ExpirationReminder.key) ||
-                               event.isChanged(OmnipodIntPreferenceKey.ExpirationAlarmHours.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.LowReservoirAlert.key) ||
-                               event.isChanged(OmnipodIntPreferenceKey.LowReservoirAlertUnits.key)
-                           ) {
-                               if (!verifyPodAlertConfiguration()) {
-                                   commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
-                               }
-                           }
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        merge(
+            preferences.observe(OmnipodBooleanPreferenceKey.BasalBeepsEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.BolusBeepsEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.TbrBeepsEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SmbBeepsEnabled).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.ShowSuspendDeliveryButton).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.ShowPulseLogButton).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.ShowRileyLinkStatsButton).drop(1).map {},
+            preferences.observe(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.BatteryChangeLogging).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.TimeChangeEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts).drop(1).map {},
+        ).collectResilient(newScope, aapsLogger, LTag.PUMP) { aapsOmnipodErosManager.reloadSettings() }
+        merge(
+            preferences.observe(OmnipodBooleanPreferenceKey.ExpirationReminder).drop(1).map {},
+            preferences.observe(OmnipodIntPreferenceKey.ExpirationAlarmHours).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.LowReservoirAlert).drop(1).map {},
+            preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
+        ).collectResilient(newScope, aapsLogger, LTag.PUMP) {
+            if (!verifyPodAlertConfiguration()) {
+                commandQueue.customCommand(CommandUpdateAlertConfiguration())
+            }
+        }
         disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)
@@ -327,14 +335,14 @@ class OmnipodErosPumpPlugin @Inject constructor(
     override fun isRileyLinkReady(): Boolean = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
     private fun handleCancelledTbr() {
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
         if (!podStateManager.isTempBasalRunning && tbr != null && !aapsOmnipodErosManager.hasSuspendedFakeTbr()) {
             aapsOmnipodErosManager.reportCancelledTbr()
         }
     }
 
     private fun handleUncertainTbrRecovery() {
-        val tempBasal = pumpSync.expectedPumpState().temporaryBasal
+        val tempBasal = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
 
         if (podStateManager.isTempBasalRunning && tempBasal == null) {
             if (podStateManager.hasTempBasal()) {
@@ -344,27 +352,29 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     TempBasalPair(podStateManager.tempBasalAmount, false, podStateManager.tempBasalDuration.standardMinutes.toInt())
                 )
 
-                pumpSync.syncTemporaryBasalWithPumpId(
-                    podStateManager.tempBasalStartTime.millis,
-                    podStateManager.tempBasalAmount,
-                    podStateManager.tempBasalDuration.millis,
-                    true,
-                    TemporaryBasalType.NORMAL,
-                    pumpId,
-                    PumpType.OMNIPOD_EROS,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        podStateManager.tempBasalStartTime.millis,
+                        PumpRate(podStateManager.tempBasalAmount),
+                        podStateManager.tempBasalDuration.millis,
+                        true,
+                        TemporaryBasalType.NORMAL,
+                        pumpId,
+                        PumpType.OMNIPOD_EROS,
+                        serialNumber()
+                    )
+                }
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS")
-                uiInteraction.addNotificationWithSound(Notification.OMNIPOD_UNKNOWN_TBR, rh.gs(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), Notification.NORMAL, app.aaps.core.ui.R.raw.boluserror)
+                notificationManager.post(NotificationId.OMNIPOD_UNKNOWN_TBR, R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware, soundRes = app.aaps.core.ui.R.raw.boluserror)
             }
         } else if (!podStateManager.isTempBasalRunning && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded")
-            pumpSync.invalidateTemporaryBasal(tempBasal.id, Sources.OmnipodEros, tempBasal.timestamp)
+            runBlocking { pumpSync.invalidateTemporaryBasal(tempBasal.id, Sources.OmnipodEros, tempBasal.timestamp) }
         }
 
-        rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+        notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
     }
 
     private fun handleActivePodAlerts() {
@@ -373,8 +383,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
             if (activeAlerts.size() > 0) {
                 val alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager))
                 val notificationText = rh.gq(app.aaps.pump.omnipod.common.R.plurals.omnipod_common_pod_alerts, activeAlerts.size(), alerts)
-                uiInteraction.addNotification(Notification.OMNIPOD_POD_ALERTS, notificationText, Notification.URGENT)
-                pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber())
+                notificationManager.post(NotificationId.OMNIPOD_POD_ALERTS, notificationText)
+                runBlocking { pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber()) }
 
                 if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)) {
                     queueAcknowledgeAlertsCommand()
@@ -386,13 +396,15 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private fun handlePodFaultEvent() {
         if (podStateManager.isPodFaulted) {
             val notificationText = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_status_pod_fault_description, podStateManager.faultEventCode.value, podStateManager.faultEventCode.name)
-            pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber())
+            runBlocking { pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber()) }
         }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "OmnipodPumpPlugin.onStop()")
+        scope?.cancel()
+        scope = null
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()
         handler = null
@@ -402,29 +414,28 @@ class OmnipodErosPumpPlugin @Inject constructor(
     }
 
     private fun queueAcknowledgeAlertsCommand() {
-        commandQueue.customCommand(CommandSilenceAlerts(), object : Callback() {
-            override fun run() {
-                aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment)
-            }
-        })
+        pluginScope.launch {
+            val result = commandQueue.customCommand(CommandSilenceAlerts())
+            aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment)
+        }
     }
 
     private fun updatePodWarningNotifications() {
         if (System.currentTimeMillis() > this.nextPodWarningCheck) {
             if (!podStateManager.isPodRunning) {
-                uiInteraction.addNotification(Notification.OMNIPOD_POD_NOT_ATTACHED, rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_not_attached), Notification.NORMAL)
+                notificationManager.post(NotificationId.OMNIPOD_POD_NOT_ATTACHED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_not_attached)
             } else {
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
+                notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
 
                 if (podStateManager.isSuspended) {
-                    uiInteraction.addNotification(Notification.OMNIPOD_POD_SUSPENDED, rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_suspended), Notification.NORMAL)
+                    notificationManager.post(NotificationId.OMNIPOD_POD_SUSPENDED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_suspended)
                 } else {
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
+                    notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
 
                     if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                        uiInteraction.addNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC, rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_time_out_of_sync), Notification.NORMAL)
+                        notificationManager.post(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_time_out_of_sync)
                     } else {
-                        rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
+                        notificationManager.dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
                     }
                 }
             }
@@ -444,8 +455,11 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return false
     }
 
-    // TODO is this correct?
-    override fun isBusy(): Boolean = busy || rileyLinkOmnipodService == null || !podStateManager.isPodRunning
+    override fun isBusy(): Boolean {
+        val progress = podStateManager.getActivationProgress()
+        return busy || rileyLinkOmnipodService == null ||
+            (progress != ActivationProgress.NONE && !progress.isCompleted())
+    }
 
     override fun setBusy(busy: Boolean) {
         this.busy = busy
@@ -481,7 +495,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
      * And when the basal and/or temp basal status is uncertain
      * When the user explicitly requested it by clicking the Refresh button on the Omnipod tab (which is executed through [.executeCustomCommand])
      */
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         if (firstRun) {
             initializeAfterRileyLinkConnection()
             firstRun = false
@@ -500,42 +514,44 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return executeCommand(OmnipodCommandType.GET_POD_STATUS) { aapsOmnipodErosManager.getPodStatus() }!!
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        if (!podStateManager.hasPodState()) return pumpEnactResultProvider.get().enacted(false).success(false).comment("Null pod state")
-        val result: PumpEnactResult = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE) { aapsOmnipodErosManager.setBasalProfile(profile, true) }!!
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
+        // No pod yet — deferred, not a genuine error; the profile is applied when a pod is activated (see
+        // isThisProfileSet). success=true keeps it out of the central failure alarm; enacted=false => no OK.
+        if (!podStateManager.hasPodState()) return pumpEnactResultProvider.get().enacted(false).success(true).comment("Null pod state")
+        val result: PumpEnactResult = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE) { aapsOmnipodErosManager.setBasalProfile(profile) }!!
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success)
 
         return result
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean =
+    override fun isThisProfileSet(profile: PumpProfile): Boolean =
         if (!podStateManager.isPodActivationCompleted) {
             // When no Pod is active, return true here in order to prevent AAPS from setting a profile
             // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
             true
         } else podStateManager.basalSchedule == AapsOmnipodErosManager.mapProfileToBasalSchedule(profile)
 
-    override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: Double? get() = null
-    override val lastDataTime: Long get() = if (podStateManager.isPodInitialized) podStateManager.lastSuccessfulCommunication.millis else 0
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
 
-    override val baseBasalRate: Double
-        get() =
+    override val baseBasalRate: PumpRate
+        get() = PumpRate(
             if (!podStateManager.isPodRunning) 0.0
-            else podStateManager.basalSchedule?.rateAt(TimeUtil.toDuration(DateTime.now())) ?: 0.0
+            else model().determineCorrectBasalSize(podStateManager.basalSchedule?.rateAt(TimeUtil.toDuration(DateTime.now())) ?: 0.0)
+        )
 
-    override val reservoirLevel: Double
-        get() =
-            if (!podStateManager.isPodRunning) 0.0
-            // Omnipod only reports reservoir level when it's 50 units or less.
-            // When it's over 50 units, we don't know, so return some default over 50 units
-            else podStateManager.reservoirLevel ?: RESERVOIR_OVER_50_UNITS_DEFAULT
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
 
-    override val batteryLevel: Int?
-        get() = if (aapsOmnipodErosManager.isShowRileyLinkBatteryLevel) rileyLinkServiceData.batteryLevel else null
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin == 0.0 || detailedBolusInfo.carbs > 0) {
             throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
         }
@@ -548,7 +564,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
     // if enforceNew is true, current temp basal is cancelled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes)
 
         if (durationInMinutes <= 0 || durationInMinutes % OmnipodConstants.BASAL_STEP_DURATION.standardMinutes != 0L) {
@@ -584,7 +600,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return result
     }
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val tbrCurrent = readTBR()
 
         if (tbrCurrent == null) {
@@ -618,7 +634,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.SUSPEND_DELIVERY) { aapsOmnipodErosManager.suspendDelivery() }
         }
         if (customCommand is CommandResumeDelivery) {
-            return executeCommand<PumpEnactResult?>(OmnipodCommandType.RESUME_DELIVERY) { aapsOmnipodErosManager.setBasalProfile(profileFunction.getProfile(), false) }
+            return executeCommand<PumpEnactResult?>(OmnipodCommandType.RESUME_DELIVERY) { aapsOmnipodErosManager.setBasalProfile(runBlocking { pumpSync.expectedPumpState() }.profile) }
         }
         if (customCommand is CommandDeactivatePod) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.DEACTIVATE_POD) { aapsOmnipodErosManager.deactivatePod() }
@@ -669,10 +685,10 @@ class OmnipodErosPumpPlugin @Inject constructor(
             podStateManager.expirationAlertTimeBeforeShutdown = expirationReminderTimeBeforeShutdown
             podStateManager.lowReservoirAlertUnits = lowReservoirAlertUnits
 
-            uiInteraction.addNotificationValidFor(
-                Notification.OMNIPOD_POD_ALERTS_UPDATED,
-                rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_expiration_alerts_updated),
-                Notification.INFO, 60
+            notificationManager.post(
+                NotificationId.OMNIPOD_POD_ALERTS_UPDATED,
+                app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_expiration_alerts_updated,
+                validMinutes = 60
             )
         } else {
             aapsLogger.warn(LTag.PUMP, "Failed to configure alerts in Pod")
@@ -697,10 +713,10 @@ class OmnipodErosPumpPlugin @Inject constructor(
             timeChangeRetries = 0
 
             if (!requestedByUser && aapsOmnipodErosManager.isTimeChangeEventEnabled) {
-                uiInteraction.addNotificationValidFor(
-                    Notification.TIME_OR_TIMEZONE_CHANGE,
-                    rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_time_on_pod_updated),
-                    Notification.INFO, 60
+                notificationManager.post(
+                    NotificationId.TIME_OR_TIMEZONE_CHANGE,
+                    app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_time_on_pod_updated,
+                    validMinutes = 60
                 )
             }
         } else {
@@ -709,10 +725,10 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
                 if (timeChangeRetries > 3) {
                     if (aapsOmnipodErosManager.isTimeChangeEventEnabled) {
-                        uiInteraction.addNotificationValidFor(
-                            Notification.TIME_OR_TIMEZONE_CHANGE,
-                            rh.gs(R.string.omnipod_eros_error_automatic_time_or_timezone_change_failed),
-                            Notification.INFO, 60
+                        notificationManager.post(
+                            NotificationId.TIME_OR_TIMEZONE_CHANGE,
+                            R.string.omnipod_eros_error_automatic_time_or_timezone_change_failed,
+                            validMinutes = 60
                         )
                     }
                     this.hasTimeDateOrTimeZoneChanged = false
@@ -724,7 +740,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return result
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name + ", eventHandlingEnabled=" + aapsOmnipodErosManager.isTimeChangeEventEnabled + "]")
 
         val now = Instant.now()
@@ -785,31 +801,20 @@ class OmnipodErosPumpPlugin @Inject constructor(
         if (displayConnectionMessages) aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.")
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
-        if (percent == 0) {
-            return setTempBasalAbsolute(0.0, durationInMinutes, profile, enforceNew, tbrType)
-        } else {
-            var absoluteValue = profile.getBasal() * (percent / 100.0)
-            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue)
-            aapsLogger.warn(
-                LTag.PUMP,
-                "setTempBasalPercent [OmnipodPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% ($percent). This will start setTempBasalAbsolute, with calculated value ($absoluteValue). Result might not be 100% correct."
-            )
-            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType)
-        }
-    }
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult =
+        error("Pump doesn't support percent basal rate")
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         aapsLogger.debug(LTag.PUMP, "setExtendedBolus [OmnipodPumpPlugin] - Not implemented.")
         return getOperationNotSupportedWithCustomText(app.aaps.pump.common.R.string.pump_operation_not_supported_by_pump_driver)
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.")
         return getOperationNotSupportedWithCustomText(app.aaps.pump.common.R.string.pump_operation_not_supported_by_pump_driver)
     }
 
-    override fun loadTDDs(): PumpEnactResult {
+    override suspend fun loadTDDs(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMP, "loadTDDs [OmnipodPumpPlugin] - Not implemented.")
         return getOperationNotSupportedWithCustomText(app.aaps.pump.common.R.string.pump_operation_not_supported_by_pump_driver)
     }
@@ -833,7 +838,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             }
             if (!success) {
                 aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup")
-                uiInteraction.addNotification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_refresh_status_on_startup), Notification.NORMAL)
+                notificationManager.post(NotificationId.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_refresh_status_on_startup)
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running")
@@ -863,9 +868,19 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
             return supplier.get()
         } finally {
+            syncPumpFlows()
             rxBus.send(EventRefreshOverview("Omnipod command: " + commandType.name, false))
             rxBus.send(EventOmnipodErosPumpValuesChanged())
         }
+    }
+
+    private fun syncPumpFlows() {
+        _lastDataTime.value = if (podStateManager.isPodInitialized) podStateManager.lastSuccessfulCommunication.millis else 0
+        _reservoirLevel.value = PumpInsulin(
+            if (!podStateManager.isPodRunning) 0.0
+            else podStateManager.reservoirLevel ?: RESERVOIR_OVER_50_UNITS_DEFAULT
+        )
+        _batteryLevel.value = if (aapsOmnipodErosManager.isShowRileyLinkBatteryLevel) rileyLinkServiceData.batteryLevel else null
     }
 
     private fun verifyPodAlertConfiguration(): Boolean {
@@ -886,7 +901,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     }
 
     private fun readTBR(): PumpState.TemporaryBasal? {
-        return pumpSync.expectedPumpState().temporaryBasal
+        return runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
     }
 
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult {
@@ -897,192 +912,67 @@ class OmnipodErosPumpPlugin @Inject constructor(
         erosHistoryDatabase.clearAllTables()
     }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        val rileyLinkCategory = PreferenceCategory(context)
-        parent.addPreference(rileyLinkCategory)
-        rileyLinkCategory.apply {
-            key = "omnipod_eros_riley_link"
-            title = rh.gs(R.string.omnipod_eros_preferences_category_riley_link)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context, intentKey = RileyLinkIntentPreferenceKey.MacAddressSelector, title = app.aaps.pump.common.hw.rileylink.R.string.rileylink_configuration,
-                    intent = Intent(context, RileyLinkBLEConfigActivity::class.java)
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "omnipod_eros_settings",
+        titleResId = R.string.omnipod_eros_name,
+        items = listOf(
+            // RileyLink subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_eros_riley_link",
+                titleResId = R.string.omnipod_eros_preferences_category_riley_link,
+                items = listOf(
+                    RileylinkBooleanPreferenceKey.OrangeUseScanning,
+                    RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel,
+                    ErosBooleanPreferenceKey.BatteryChangeLogging
+                )
+            ),
+            // Beeps subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_eros_beeps",
+                titleResId = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_confirmation_beeps,
+                items = listOf(
+                    OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
+                    OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
+                    OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
+                    OmnipodBooleanPreferenceKey.TbrBeepsEnabled
+                )
+            ),
+            // Alerts subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_eros_alerts",
+                titleResId = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_alerts,
+                items = listOf(
+                    OmnipodBooleanPreferenceKey.ExpirationReminder,
+                    OmnipodIntPreferenceKey.ExpirationAlarmHours,
+                    OmnipodBooleanPreferenceKey.LowReservoirAlert,
+                    OmnipodIntPreferenceKey.LowReservoirAlertUnits,
+                    OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts
+                )
+            ),
+            // Notifications subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_eros_notifications",
+                titleResId = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_notifications,
+                items = listOf(
+                    OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification,
+                    OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
+                    OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification
+                )
+            ),
+            // Other subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_eros_other",
+                titleResId = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_other,
+                items = listOf(
+                    ErosBooleanPreferenceKey.ShowSuspendDeliveryButton,
+                    ErosBooleanPreferenceKey.ShowPulseLogButton,
+                    ErosBooleanPreferenceKey.ShowRileyLinkStatsButton,
+                    ErosBooleanPreferenceKey.TimeChangeEnabled
                 )
             )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = RileylinkBooleanPreferenceKey.OrangeUseScanning,
-                    title = app.aaps.pump.common.hw.rileylink.R.string.orange_use_scanning_level,
-                    summary = app.aaps.pump.common.hw.rileylink.R.string.orange_use_scanning_level_summary
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel,
-                    title = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level,
-                    summary = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level_summary
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = ErosBooleanPreferenceKey.BatteryChangeLogging,
-                    title = R.string.omnipod_eros_preferences_battery_change_logging_enabled,
-                    summary = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level_summary
-                )
-            )
-        }
-        val beepCategory = PreferenceCategory(context)
-        parent.addPreference(beepCategory)
-        beepCategory.apply {
-            key = "omnipod_eros_beeps"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_confirmation_beeps)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_bolus_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_basal_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_smb_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.TbrBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_tbr_beeps_enabled
-                )
-            )
-        }
-        val alertsCategory = PreferenceCategory(context)
-        parent.addPreference(alertsCategory)
-        alertsCategory.apply {
-            key = "omnipod_eros_alerts"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_alerts)
-            initialExpandedChildrenCount = 0
-
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.ExpirationReminder,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled,
-                    summary = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled_summary
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.ExpirationAlarmHours,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_hours_before_shutdown
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.LowReservoirAlert,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_enabled
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.LowReservoirAlertUnits,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_units
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_automatically_silence_alerts
-                )
-            )
-            val notificationsCategory = PreferenceCategory(context)
-            parent.addPreference(notificationsCategory)
-            notificationsCategory.apply {
-                key = "omnipod_eros_notifications"
-                title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_notifications)
-                initialExpandedChildrenCount = 0
-
-                addPreference(
-                    AdaptiveSwitchPreference(
-                        ctx = context,
-                        booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification,
-                        title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_tbr_sound_enabled
-                    )
-                )
-                addPreference(
-                    AdaptiveSwitchPreference(
-                        ctx = context,
-                        booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
-                        title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_smb_sound_enabled
-                    )
-                )
-                addPreference(
-                    AdaptiveSwitchPreference(
-                        ctx = context,
-                        booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
-                        title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_bolus_sound_enabled
-                    )
-                )
-            }
-
-        }
-        val otherCategory = PreferenceCategory(context)
-        parent.addPreference(otherCategory)
-        otherCategory.apply {
-            key = "omnipod_eros_other_settings"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_other)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = ErosBooleanPreferenceKey.ShowSuspendDeliveryButton,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_suspend_delivery_button_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = ErosBooleanPreferenceKey.ShowPulseLogButton,
-                    title = R.string.omnipod_eros_preferences_pulse_log_button_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = ErosBooleanPreferenceKey.ShowRileyLinkStatsButton,
-                    title = R.string.omnipod_eros_preferences_riley_link_stats_button_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = ErosBooleanPreferenceKey.TimeChangeEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_time_change_enabled
-                )
-            )
-        }
-
-    }
+        ),
+        icon = pluginDescription.icon
+    )
 
     companion object {
 

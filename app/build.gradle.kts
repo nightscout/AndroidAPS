@@ -1,11 +1,11 @@
-import org.gradle.kotlin.dsl.debugImplementation
 import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt)
     id("com.android.application")
-    id("kotlin-android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
@@ -20,7 +20,7 @@ repositories {
 
 fun generateGitBuild(): String {
     try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always")
+        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7")
         val output = File.createTempFile("git-build", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
@@ -95,11 +95,11 @@ android {
         buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
 
-        // For Dagger injected instrumentation tests in app module
-        testInstrumentationRunner = "app.aaps.runners.InjectedTestRunner"
+        // For Hilt injected instrumentation tests in app module
+        testInstrumentationRunner = "app.aaps.runners.HiltTestRunner"
     }
 
-    flavorDimensions.add("standard")
+    flavorDimensions += "standard"
     productFlavors {
         create("full") {
             isDefault = true
@@ -134,14 +134,71 @@ android {
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
             manifestPlaceholders["appIconRound"] = "@mipmap/ic_blueowl"
         }
+        create("aapsclient3") {
+            applicationId = "info.nightscout.aapsclient3"
+            dimension = "standard"
+            resValue("string", "app_name", "AAPSClient3")
+            versionName = Versions.appVersion + "-aapsclient3"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_greenowl"
+            manifestPlaceholders["appIconRound"] = "@mipmap/ic_greenowl"
+        }
     }
 
     useLibrary("org.apache.http.legacy")
 
-    //Deleting it causes a binding error
     buildFeatures {
-        dataBinding = true
         buildConfig = true
+        compose = true
+        resValues = true
+    }
+
+    // ---- Gradle Managed Devices (DRAFT — not yet wired into .circleci/config.yml) -----------------
+    // Splits the app module's androidTest suite across emulators WITHOUT hand-rolling coverage or
+    // result collection: AGP owns the emulator lifecycle and merges each shard's JaCoCo .ec files and
+    // JUnit XMLs through the normal pipeline, so jacocoAllDebugReport / Codecov keep working. The
+    // system image mirrors the hand-launched CI emulator (android-31, google_apis_playstore, x86_64);
+    // adopting this replaces the `emulator -avd citest` + taskset launch in the CI config, so it is a
+    // real change to that file — kept here as a reviewable draft.
+    //
+    // Two ways to drive it (choose in the CI config):
+    //   1. AUTO-shard by test COUNT across N instances of `emu` — annotations unused, a new test
+    //      distributes itself, zero maintenance, but balance is approximate (count, not time):
+    //        ./gradlew :app:emuFullDebugAndroidTest \
+    //          -Pandroid.experimental.androidTest.numManagedDeviceShards=2
+    //   2. EXPLICIT time-balance via the @ShardA annotation (the ~278s/277s split we measured) —
+    //      run each shard as its own task, filtered, on its own device:
+    //        :app:emuAFullDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.annotation=app.aaps.testcategories.ShardA
+    //        :app:emuBFullDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notAnnotation=app.aaps.testcategories.ShardA
+    //      Caveat: two Gradle invocations of the same module collide on build outputs, so option 2
+    //      needs them serialised or in separate checkouts. Option 1 is the simpler parallel path;
+    //      option 2 buys guaranteed balance for this lopsided suite at the cost of that orchestration.
+    testOptions {
+        managedDevices {
+            localDevices {
+                create("emu") {   // for option 1 (auto-shard: numManagedDeviceShards=2 spins up 2 instances)
+                    device = "Pixel 6"
+                    apiLevel = 31
+                    systemImageSource = "google_apis_playstore"
+                }
+                create("emuA") {  // for option 2 (explicit @ShardA balance across two devices)
+                    device = "Pixel 6"
+                    apiLevel = 31
+                    systemImageSource = "google_apis_playstore"
+                }
+                create("emuB") {
+                    device = "Pixel 6"
+                    apiLevel = 31
+                    systemImageSource = "google_apis_playstore"
+                }
+            }
+        }
+    }
+
+    sourceSets {
+        getByName("full") { kotlin.directories.add("src/withPumps/kotlin") }
+        getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }
+        getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
+        getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
     }
 }
 
@@ -151,73 +208,86 @@ allprojects {
 }
 
 dependencies {
-    // in order to use internet"s versions you"d need to enable Jetifier again
-    // https://github.com/nightscout/graphview.git
-    // https://github.com/nightscout/iconify.git
     implementation(project(":shared:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:objects"))
-    implementation(project(":core:graph"))
-    implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
     implementation(project(":ui"))
-    implementation(project(":plugins:aps"))
-    implementation(project(":plugins:automation"))
-    implementation(project(":plugins:configuration"))
-    implementation(project(":plugins:constraints"))
-    implementation(project(":plugins:insulin"))
-    implementation(project(":plugins:main"))
-    implementation(project(":plugins:sensitivity"))
-    implementation(project(":plugins:smoothing"))
-    implementation(project(":plugins:source"))
-    implementation(project(":plugins:sync"))
+    // Feature plugins self-register into the Hilt plugin map (see e.g. :plugins:smoothing SmoothingModule).
+    // Adding/removing a plugin is therefore just an include in settings.gradle — no edit needed here.
+    rootProject.subprojects
+        .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() }
+        .forEach { implementation(project(it.path)) }
     implementation(project(":implementation"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
-    implementation(project(":pump:combov2"))
-    implementation(project(":pump:dana"))
-    implementation(project(":pump:danars"))
-    implementation(project(":pump:danar"))
-    implementation(project(":pump:diaconn"))
-    implementation(project(":pump:eopatch"))
-    implementation(project(":pump:medtrum"))
-    implementation(project(":pump:equil"))
-    implementation(project(":pump:insight"))
-    implementation(project(":pump:medtronic"))
-    implementation(project(":pump:common"))
-    implementation(project(":pump:omnipod:common"))
-    implementation(project(":pump:omnipod:eros"))
-    implementation(project(":pump:omnipod:dash"))
-    implementation(project(":pump:rileylink"))
     implementation(project(":pump:virtual"))
     implementation(project(":workflow"))
+
+    // Pump drivers — only for full + pumpcontrol flavors. Derived from the :pump:* modules included
+    // in settings.gradle (single source of truth) minus two exceptions:
+    //  - :pump:virtual is @AllConfigs (all flavors) and is wired above as a plain implementation
+    //  - :pump:combov2:comboctl is a support lib pulled in transitively by :pump:combov2
+    // buildFile.exists() skips the phantom :pump:omnipod container Gradle auto-creates from the
+    // nested :pump:omnipod:* includes (it has no build script / no consumable variant).
+    val pumpExclusions = setOf(":pump:virtual", ":pump:combov2:comboctl")
+    rootProject.subprojects
+        .filter { it.path.startsWith(":pump:") && it.path !in pumpExclusions && it.buildFile.exists() }
+        .forEach {
+            "fullImplementation"(project(it.path))
+            "pumpcontrolImplementation"(project(it.path))
+        }
+
+    implementation(libs.androidx.lifecycle.process)
 
     testImplementation(project(":shared:tests"))
     androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(libs.androidx.test.rules)
+    // UiAutomator for the in-process E2E UI test (app/src/androidTest/.../e2e). Drives the real
+    // Compose UI (booted under the Hilt test app) via the accessibility bridge.
+    androidTestImplementation(libs.androidx.test.uiautomator)
+    // Initializes WorkManager for instrumented tests (BaseTestApp), since the production
+    // Configuration.Provider/manifest initializer don't apply under the Hilt test application.
+    androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    // Rhino is needed by the openAPS adapter test fixtures under app/src/androidTest
+    // (these files reference org.mozilla.javascript.* classes directly).
+    androidTestImplementation(libs.org.mozilla.rhino)
 
     debugImplementation(libs.com.squareup.leakcanary.android)
-
-
-    kspAndroidTest(libs.com.google.dagger.android.processor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
     ksp(libs.com.google.dagger.android.processor)
     ksp(libs.com.google.dagger.compiler)
+    implementation(libs.com.google.dagger.hilt.android)
+    ksp(libs.com.google.dagger.hilt.compiler)
+    // Hilt WorkManager integration: HiltWorkerFactory + @HiltWorker assisted-injection glue.
+    // androidx.hilt:hilt-compiler is a SEPARATE annotation processor from the dagger hilt-compiler above.
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+    // Hilt instrumentation testing: lets androidTest reuse the production @InstallIn graph
+    // (single source of truth) with @TestInstallIn overrides instead of a hand-maintained component.
+    androidTestImplementation(libs.com.google.dagger.hilt.android.testing)
+    // KSP no longer inherits main-config processors into androidTest (KSP 2.3.10+), so the Hilt
+    // test-app (@CustomTestApplication → HiltTestApplication_Application) and @HiltAndroidTest
+    // graph must be generated by registering the processors on the androidTest config explicitly.
+    kspAndroidTest(libs.com.google.dagger.hilt.compiler)
+    kspAndroidTest(libs.com.google.dagger.compiler)
+    kspAndroidTest(libs.com.google.dagger.android.processor)
 
     // MainApp
-    api(libs.com.uber.rxdogtag2.rxdogtag)
+    implementation(libs.com.uber.rxdogtag2.rxdogtag)
     // Remote config
     api(libs.com.google.firebase.config)
+    // Navigation Compose
+    api(libs.androidx.compose.navigation)
 }
 
 println("-------------------")

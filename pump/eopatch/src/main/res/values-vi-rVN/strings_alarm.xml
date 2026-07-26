@@ -24,7 +24,7 @@
     <string name="string_a118">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
     <string name="string_b000">Thời gian hoạt động của Patch sẽ hết hạn vào %s. Hãy sẵn sàng thay Patch.</string>
     <string name="string_b001">Kết thúc tạm dừng insulin\nNhấn \'Tiếp tục\' để khởi động lại việc bơm insulin.</string>
-    <string name="string_b003">Mức ống chứa thấp\nHãy sớm thay Patch.</string>
+    <string name="string_b003">Mức bình chứa thấp\nHãy sớm thay Patch.</string>
     <string name="string_b005">Thời gian hoạt động của Patch đã hết hạn\nHãy thay Patch ngay bây giờ.</string>
     <string name="string_b006">Patch sắp hết hạn\nHãy thay Patch ngay bây giờ.</string>
     <string name="string_b012">Kích hoạt Patch chưa hoàn tất\nHoàn tất quá trình ‘Kích hoạt Patch\'.</string>

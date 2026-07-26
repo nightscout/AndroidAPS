@@ -2,9 +2,11 @@ package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.PureProfile
+import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.profile.ProfileSealed
@@ -26,13 +28,33 @@ fun PS.getCustomizedName(decimalFormatter: DecimalFormatter): String {
 }
 
 /**
+ * Convert a [SingleProfile] to a [PureProfile] for graph rendering, validation, or
+ * activation. Single source of truth for the JSON-build pattern that was previously
+ * duplicated across ProfileManagementViewModel and ProfileEditorViewModel.
+ */
+fun SingleProfile.toPureProfile(dateUtil: DateUtil): PureProfile? {
+    val json = JSONObject().apply {
+        put("carbratio", ic)
+        put("sens", isf)
+        put("basal", basal)
+        put("target_low", targetLow)
+        put("target_high", targetHigh)
+        put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
+        put("timezone", TimeZone.getDefault().id)
+    }
+    return pureProfileFromJson(json, dateUtil)
+}
+
+/**
  * Pure profile doesn't contain timestamp, percentage, timeshift, profileName
  */
 fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): PureProfile? {
     try {
         val txtUnits = JsonHelper.safeGetStringAllowNull(jsonObject, "units", defaultUnits) ?: return null
         val units = GlucoseUnit.fromText(txtUnits)
-        val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
+        val iCfg = JsonHelper.safeGetJSONObject(jsonObject, "iCfg", null)?.let {
+            ICfg.fromJson(it)
+        }
         val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
 
         val isfBlocks = blockFromJsonArray(jsonObject.getJSONArray("sens"), dateUtil) ?: return null
@@ -51,9 +73,9 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits
             targetBlocks = targetBlocks,
             glucoseUnit = units,
             timeZone = timezone,
-            dia = dia
+            iCfg = iCfg
         )
-    } catch (ignored: Exception) {
+    } catch (_: Exception) {
         return null
     }
 }

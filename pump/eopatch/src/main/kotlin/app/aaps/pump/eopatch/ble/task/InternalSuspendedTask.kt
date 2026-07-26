@@ -3,11 +3,10 @@ package app.aaps.pump.eopatch.ble.task
 import android.os.SystemClock
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.eopatch.core.api.GetInternalSuspendTime
@@ -19,19 +18,21 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Predicate
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class InternalSuspendedTask @Inject constructor(
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : BolusTask(TaskFunc.INTERNAL_SUSPEND) {
 
-    private val INTERNAL_SUSPEND_TIME_GET: GetInternalSuspendTime = GetInternalSuspendTime()
+    @Inject lateinit var internalSuspendTimeGet: GetInternalSuspendTime
     private val bolusCheckSubject = BehaviorSubject.create<Boolean>()
     private val extendedBolusCheckSubject = BehaviorSubject.create<Boolean>()
     private val basalCheckSubject = BehaviorSubject.create<Boolean>()
@@ -58,45 +59,40 @@ class InternalSuspendedTask @Inject constructor(
         }
 
         if (commandQueue.isRunning(Command.CommandType.BOLUS)) {
-            uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
+            uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", ArrayList())
             commandQueue.cancelAllBoluses(null)
             SystemClock.sleep(650)
         }
         bolusCheckSubject.onNext(true)
 
-        if (pumpSync.expectedPumpState().extendedBolus != null) {
-            uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
-            commandQueue.cancelExtended(object : Callback() {
-                override fun run() {
-                    extendedBolusCheckSubject.onNext(true)
-                }
-            })
-        } else {
+        appScope.launch {
+            if (pumpSync.expectedPumpState().extendedBolus != null) {
+                uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList())
+                commandQueue.cancelExtended()
+            }
             extendedBolusCheckSubject.onNext(true)
         }
 
-        if (pumpSync.expectedPumpState().temporaryBasal != null) {
-            uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
-            commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
-                override fun run() {
-                    basalCheckSubject.onNext(true)
-                }
-            })
-        } else {
+        appScope.launch {
+            if (pumpSync.expectedPumpState().temporaryBasal != null) {
+                uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList())
+                commandQueue.cancelTempBasal(enforceNew = true)
+            }
             basalCheckSubject.onNext(true)
         }
 
-        return Observable.zip<Boolean, Boolean, Boolean, Boolean>(getBolusSubject(), getExtendedBolusSubject(), getBasalSubject(),
-                                                                  Function3 { bolusReady: Boolean, extendedBolusReady: Boolean, basalReady: Boolean -> (bolusReady && extendedBolusReady && basalReady) })
+        return Observable.zip(
+            getBolusSubject(), getExtendedBolusSubject(), getBasalSubject(),
+            Function3 { bolusReady: Boolean, extendedBolusReady: Boolean, basalReady: Boolean -> (bolusReady && extendedBolusReady && basalReady) })
             .filter(Predicate { ready: Boolean -> ready })
-            .flatMap<TaskFunc>(Function { isReady() })
-            .concatMapSingle<Long>(Function { getInternalSuspendTime() })
+            .flatMap(Function { isReady() })
+            .concatMapSingle(Function { getInternalSuspendTime() })
             .firstOrError()
             .doOnError(Consumer { e: Throwable -> aapsLogger.error(LTag.PUMPCOMM, e.message ?: "InternalSuspendedTask error") })
     }
 
     private fun getInternalSuspendTime(): Single<Long> {
-        return INTERNAL_SUSPEND_TIME_GET.get()
+        return internalSuspendTimeGet.get()
             .doOnSuccess(Consumer { response: PatchInternalSuspendTimeResponse -> this.checkResponse(response) })
             .map(Function { obj: PatchInternalSuspendTimeResponse -> obj.totalSeconds })
     }

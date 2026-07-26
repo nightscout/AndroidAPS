@@ -13,10 +13,7 @@
     <string name="bolus_pin">PIN בולוס</string>
     <string name="protection_timeout_title">זמן השיהוי של הסיסמא וה-PIN [שניות]</string>
     <string name="protection_timeout_summary">זמן לפני בקשת סיסמא או PIN</string>
-    <string name="biometric">זיהוי ביומטרי</string>
-    <string name="custom_password">סיסמא מותאמת אישית</string>
-    <string name="custom_pin">PIN מותאם אישית</string>
-    <string name="noprotection">ללא הגנה</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">גיבוי לא מאובטח</string>
     <string name="unsecure_fallback_descriotion_biometric">על מנת להיות אפקטיבית, הגנה ביומטרית זקוקה להגדרת סיסמא ראשית לצורך לגיבוי.\n\nנא להגדיר סיסמה ראשית!</string>
     <string name="password_set">הסיסמה הוגדרה!</string>
@@ -26,8 +23,6 @@
     <string name="password_not_changed">הסיסמה לא השתנתה</string>
     <string name="pin_not_changed">ה-PIN לא שונה</string>
     <string name="pin_cleared">ה-PIN נמחק!</string>
-    <string name="password_hint">הזינו את הסיסמה</string>
-    <string name="pin_hint">הזינו PIN כאן</string>
     <string name="master_password_not_set">הסיסמה הראשית לא הוגדרה</string>
     <string name="aaps_directory_not_selected">לא נבחרה תיקיית AAPS</string>
 </resources>
