@@ -43,8 +43,19 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Grant execute permission
-        run: chmod +x gradlew .github/scripts/build-signed-aaps-release.sh
+      - name: Verify clean build scripts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ -f gradlew ]]
+          [[ -f .github/scripts/build-signed-aaps-release.sh ]]
+          bash -n gradlew
+          bash -n .github/scripts/build-signed-aaps-release.sh
+          if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+            echo "Tracked checkout changes detected before the release build:" >&2
+            git status --short >&2
+            exit 1
+          fi
 
       - name: Build and verify signed full release APK
         id: build
@@ -55,7 +66,7 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           SOURCE_BRANCH: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
-        run: .github/scripts/build-signed-aaps-release.sh
+        run: bash .github/scripts/build-signed-aaps-release.sh
 
       - name: Upload signed AAPS release
         if: success()

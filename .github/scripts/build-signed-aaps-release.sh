@@ -64,7 +64,7 @@ keytool -list \
   -alias "${ANDROID_KEY_ALIAS}" >/dev/null
 
 set +e
-./gradlew :app:assembleFullRelease \
+bash ./gradlew :app:assembleFullRelease \
   --stacktrace \
   -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
   -Dkotlin.daemon.jvm.options="-Xmx2g" \
