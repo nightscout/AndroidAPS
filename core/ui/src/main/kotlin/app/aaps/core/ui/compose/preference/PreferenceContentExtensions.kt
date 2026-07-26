@@ -2,7 +2,9 @@ package app.aaps.core.ui.compose.preference
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +25,7 @@ import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.LongPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import kotlinx.coroutines.delay
 
 /**
@@ -181,10 +184,14 @@ private fun shouldShowSubScreenInline(
     return true
 }
 
+/** How long a search-highlighted preference stays tinted before fading out. */
+private const val HIGHLIGHT_DURATION_MS = 5000L
+
 /**
  * Wrapper that highlights a preference if it matches the LocalHighlightKey.
- * Shows a brief color flash animation to draw attention to the preference.
+ * Scrolls the preference into view, then shows a color flash animation to draw attention to it.
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HighlightablePreference(
     preferenceKey: String,
@@ -195,11 +202,15 @@ private fun HighlightablePreference(
 
     var isHighlighted by remember { mutableStateOf(shouldHighlight) }
 
+    // The whole screen renders as one LazyColumn item, so index-based scrolling can't reach the
+    // row — bring it into view through the nearest scrollable ancestor instead.
+    val bringIntoViewRequester = rememberBringIntoViewOnExpand(shouldHighlight)
+
     // Animate highlight fade out
     LaunchedEffect(shouldHighlight) {
         if (shouldHighlight) {
             isHighlighted = true
-            delay(2000) // Keep highlight for 2 seconds
+            delay(HIGHLIGHT_DURATION_MS)
             isHighlighted = false
         }
     }
@@ -217,6 +228,7 @@ private fun HighlightablePreference(
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .bringIntoViewRequester(bringIntoViewRequester)
             .background(highlightColor)
     ) {
         content()

@@ -5,15 +5,12 @@
 package app.aaps.core.ui.compose.preference
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.rangeResId
@@ -75,16 +72,14 @@ fun AdaptiveIntPreferenceItem(
                 .fillMaxWidth()
                 .padding(theme.padding)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(effectiveTitleResId),
-                    style = theme.titleTextStyle,
-                    // Mirror Preference's disabled styling (the switch row greys the same way) since this
-                    // slider branch builds its own row instead of going through Preference.
-                    color = theme.titleColor.let { if (visibility.enabled) it else it.copy(alpha = theme.disabledOpacity) }
-                )
-                SyncBadge(intKey, Modifier.padding(start = 6.dp))
-            }
+            TextWithSyncBadge(
+                text = stringResource(effectiveTitleResId),
+                key = intKey,
+                style = theme.titleTextStyle,
+                // Mirror Preference's disabled styling (the switch row greys the same way) since this
+                // slider branch builds its own row instead of going through Preference.
+                color = theme.titleColor.let { if (visibility.enabled) it else it.copy(alpha = theme.disabledOpacity) }
+            )
             if (summary != null) {
                 Text(
                     text = summary,
