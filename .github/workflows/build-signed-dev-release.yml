@@ -38,11 +38,10 @@ jobs:
         id: build
         shell: bash
         env:
-          KEYSTORE_SET: ${{ secrets.KEYSTORE_SET }}
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           set -Eeuo pipefail
 
@@ -51,26 +50,10 @@ jobs:
             exit 1
           }
 
-          keystore_b64="${KEYSTORE_BASE64:-}"
-          store_password="${KEYSTORE_PASSWORD:-}"
-          key_alias="${KEY_ALIAS:-}"
-          key_password="${KEY_PASSWORD:-}"
-
-          # Existing repository format:
-          # base64-keystore|store-password|alias|key-password
-          if [[ -n "${KEYSTORE_SET:-}" ]]; then
-            IFS='|' read -r combined_b64 combined_store combined_alias combined_key combined_extra <<< "${KEYSTORE_SET}"
-            [[ -z "${combined_extra:-}" ]] || die "KEYSTORE_SET must contain exactly four pipe-delimited fields"
-            keystore_b64="${keystore_b64:-${combined_b64:-}}"
-            store_password="${store_password:-${combined_store:-}}"
-            key_alias="${key_alias:-${combined_alias:-}}"
-            key_password="${key_password:-${combined_key:-}}"
-          fi
-
-          [[ -n "${keystore_b64}" ]] || die "Missing KEYSTORE_BASE64 or KEYSTORE_SET"
-          [[ -n "${store_password}" ]] || die "Missing KEYSTORE_PASSWORD or KEYSTORE_SET"
-          [[ -n "${key_alias}" ]] || die "Missing KEY_ALIAS or KEYSTORE_SET"
-          [[ -n "${key_password}" ]] || die "Missing KEY_PASSWORD or KEYSTORE_SET"
+          [[ -n "${ANDROID_KEYSTORE_B64}" ]] || die "Missing GitHub secret ANDROID_KEYSTORE_B64"
+          [[ -n "${ANDROID_KEYSTORE_PASSWORD}" ]] || die "Missing GitHub secret ANDROID_KEYSTORE_PASSWORD"
+          [[ -n "${ANDROID_KEY_ALIAS}" ]] || die "Missing GitHub secret ANDROID_KEY_ALIAS"
+          [[ -n "${ANDROID_KEY_PASSWORD}" ]] || die "Missing GitHub secret ANDROID_KEY_PASSWORD"
 
           signing_dir="${RUNNER_TEMP}/aaps-signing"
           output_dir="${RUNNER_TEMP}/aaps-release"
@@ -79,22 +62,22 @@ jobs:
           chmod 700 "${signing_dir}"
           umask 077
 
-          printf '%s' "${keystore_b64}" | base64 --decode > "${keystore_path}"
+          printf '%s' "${ANDROID_KEYSTORE_B64}" | base64 --decode > "${keystore_path}"
           chmod 600 "${keystore_path}"
 
           keytool -list \
             -keystore "${keystore_path}" \
-            -storepass "${store_password}" \
-            -alias "${key_alias}" >/dev/null
+            -storepass "${ANDROID_KEYSTORE_PASSWORD}" \
+            -alias "${ANDROID_KEY_ALIAS}" >/dev/null
 
           set +e
           ./gradlew :app:assembleFullRelease \
             --no-daemon \
             --stacktrace \
             "-Pandroid.injected.signing.store.file=${keystore_path}" \
-            "-Pandroid.injected.signing.store.password=${store_password}" \
-            "-Pandroid.injected.signing.key.alias=${key_alias}" \
-            "-Pandroid.injected.signing.key.password=${key_password}" \
+            "-Pandroid.injected.signing.store.password=${ANDROID_KEYSTORE_PASSWORD}" \
+            "-Pandroid.injected.signing.key.alias=${ANDROID_KEY_ALIAS}" \
+            "-Pandroid.injected.signing.key.password=${ANDROID_KEY_PASSWORD}" \
             2>&1 | tee "${output_dir}/build.log"
           gradle_status=${PIPESTATUS[0]}
           set -e
@@ -102,7 +85,10 @@ jobs:
 
           mapfile -d '' apks < <(
             find app/build/outputs/apk/full/release \
-              -maxdepth 1 -type f -name '*.apk' -print0
+              -maxdepth 1 \
+              -type f \
+              -name '*.apk' \
+              -print0
           )
           [[ ${#apks[@]} -eq 1 ]] || die "Expected exactly one full release APK; found ${#apks[@]}"
           source_apk="${apks[0]}"
@@ -120,14 +106,17 @@ jobs:
           actual_cert="$(
             sed -n 's/^Signer #1 certificate SHA-256 digest: //p' \
               "${output_dir}/signature-verification.txt" \
-              | head -n 1 | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]:'
+              | head -n 1 \
+              | tr '[:upper:]' '[:lower:]' \
+              | tr -d '[:space:]:'
           )"
           expected_cert="$(
             keytool -exportcert \
               -keystore "${keystore_path}" \
-              -storepass "${store_password}" \
-              -alias "${key_alias}" \
-              | openssl dgst -sha256 | awk '{print tolower($NF)}'
+              -storepass "${ANDROID_KEYSTORE_PASSWORD}" \
+              -alias "${ANDROID_KEY_ALIAS}" \
+              | openssl dgst -sha256 \
+              | awk '{print tolower($NF)}'
           )"
           [[ -n "${actual_cert}" ]] || die "Could not read APK signing-certificate digest"
           [[ "${actual_cert}" == "${expected_cert}" ]] || die "APK signer does not match configured keystore"
