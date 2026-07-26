@@ -61,6 +61,10 @@
     <string name="pref_single_target">Mục tiêu đơn lẻ</string>
     <string name="pref_wizard_percentage">Tính toán theo phần trăm</string>
     <string name="pref_complication_tap_action">Hoạt động khi chạm vào ô hiển thị</string>
+    <string name="pref_complication_bg_graph_hours">Khoảng thời gian hiển thị biểu đồ đường huyết</string>
+    <string name="duration_1_hour">1 giờ</string>
+    <string name="duration_3_hours">3 giờ</string>
+    <string name="duration_6_hours">6 giờ</string>
     <string name="pref_unicode_in_complications">Hỗ trợ Unicode trong ô hiển thị</string>
     <string name="pref_version">Phiên bản:</string>
     <string name="pref_moreWatchfaceSettings">Thêm cài đặt mặt đồng hồ</string>
@@ -204,6 +208,12 @@
     <string name="tile_action_2">Action 2</string>
     <string name="tile_action_3">Action 3</string>
     <string name="tile_action_4">Action 4</string>
+    <string name="tile_scene_1">Ngữ cảnh 1</string>
+    <string name="tile_scene_2">Ngữ cảnh 2</string>
+    <string name="tile_scene_3">Ngữ cảnh 3</string>
+    <string name="tile_scene_4">Ngữ cảnh 4</string>
+    <string name="tile_scene_auto">Tự động</string>
+    <string name="tile_scene_unavailable">Không khả dụng</string>
     <string name="datalayer_notification_title">Dịch vụ Foreground của lớp dữ liệu</string>
     <string name="datalayer_notification_text">AAPS đang chạy ở chế độ nền. Để ẩn thông báo, vào Tùy chọn Nhà phát triển → Thông báo ứng dụng → Ứng dụng đồng hồ được phép → chọn AAPS → Tắt thông báo Kênh Dịch vụ chế độ nền của Lớp dữ liệu.</string>
     <string name="on">BẬT</string>
@@ -214,6 +224,7 @@
     <string name="complication_blood_glucose_large">Đường huyết (lớn)</string>
     <string name="complication_blood_glucose_ext1">Đường huyết Ext1</string>
     <string name="complication_blood_glucose_ext2">Đường huyết Ext2</string>
+    <string name="complication_bg_graph">Đồ thị BG</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
@@ -237,6 +248,7 @@
     <string name="action_running_mode_selected">Đã yêu cầu chế độ thể dục</string>
     <string name="title_activity_disconnect_pump">Ngắt kết nối bơm</string>
     <string name="title_activity_suspend_loop">Tạm dừng vòng lặp</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -292,7 +304,10 @@
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Carbs (%1$d g)</string>
     <string name="wizard_result_subtotal">Tạm tính</string>
+    <string name="wizard_result_correction">Hiệu chỉnh</string>
     <string name="wizard_result_total">Tổng</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s phút)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d giờ (+%3$d phút)</string>
 </resources>
