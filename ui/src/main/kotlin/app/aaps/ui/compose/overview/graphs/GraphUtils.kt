@@ -448,8 +448,9 @@ fun niceUp(value: Double): Double {
 
 /**
  * Rounds [value] (expected negative) further negative to the nearest nice magnitude — e.g.
- * -0.3 -> -0.5, -0.05 -> -0.1. Used to give a small negative excursion its own clean bound,
- * decoupled from a much larger positive-side scale (see [zeroFloorNiceRange]).
+ * -0.3 -> -0.5, -0.07 -> -0.1 (but -0.05 is already nice and is left unchanged). Used to give a
+ * small negative excursion its own clean bound, decoupled from a much larger positive-side scale
+ * (see [zeroFloorNiceRange]).
  */
 fun niceNegativeSliver(value: Double): Double {
     if (value >= 0.0) return 0.0

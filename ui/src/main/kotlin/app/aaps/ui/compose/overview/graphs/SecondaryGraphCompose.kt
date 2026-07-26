@@ -72,10 +72,10 @@ private val VISIBLE_RANGE_KEY = ExtraStore.Key<Pair<Double?, Double?>>()
  * `iobBasalScale`), so it has roughly half the vertical pixels per tick that a full-height graph
  * does, and needs the more conservative count.
  */
-private const val IOB_GRAPH_TICK_COUNT = 3
+internal const val IOB_GRAPH_TICK_COUNT = 3
 
 /** Tick count for series that use the graph's full height (COB, BGI/DEV/ACTIVITY/STEPS, VAR_SENS/HEART_RATE, DEV_SLOPE). */
-private const val SECONDARY_GRAPH_TICK_COUNT = 5
+internal const val SECONDARY_GRAPH_TICK_COUNT = 5
 
 /**
  * Tick count for SENSITIVITY's pivot scale specifically — lower than [SECONDARY_GRAPH_TICK_COUNT]
@@ -88,7 +88,7 @@ private const val SECONDARY_GRAPH_TICK_COUNT = 5
  * overriding tick selection, which was tried and reverted for being too dense on some screens —
  * this lower request sidesteps the whole mechanism instead.
  */
-private const val SENS_PIVOT_TICK_COUNT = 3
+internal const val SENS_PIVOT_TICK_COUNT = 3
 
 /**
  * Wraps a step-based [VerticalAxis.ItemPlacer], filtering out labels/gridlines outside
@@ -102,7 +102,7 @@ private const val SENS_PIVOT_TICK_COUNT = 3
  *   negative tick for a series that never actually goes negative.
  * Delegates everything else (margins, measurement, overlap-based thinning) to [delegate].
  */
-private class ClampedVerticalAxisItemPlacer(
+internal class ClampedVerticalAxisItemPlacer(
     private val delegate: VerticalAxis.ItemPlacer,
     private val visibleMin: () -> Double = { Double.NEGATIVE_INFINITY },
     private val visibleMax: () -> Double = { Double.POSITIVE_INFINITY }
@@ -936,7 +936,7 @@ private sealed class SeriesSlot {
  * (unwindowed) values when the visible window currently has no points (e.g. scrolled into a
  * future gap with no data).
  */
-private fun windowedY(points: List<Pair<Double, Double>>, visibleMinX: Double?, visibleMaxX: Double?): List<Double> {
+internal fun windowedY(points: List<Pair<Double, Double>>, visibleMinX: Double?, visibleMaxX: Double?): List<Double> {
     fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
     return points.filter { inWindow(it.first) }.map { it.second }.ifEmpty { points.map { it.second } }
 }
@@ -948,7 +948,7 @@ private fun windowedY(points: List<Pair<Double, Double>>, visibleMinX: Double?, 
  * in effect at any [x] is whatever the most recent point at-or-before [x] holds (falls back to the
  * first point if [x] precedes all of them).
  */
-private fun stepValueAt(points: List<Pair<Double, Double>>, x: Double): Double? =
+internal fun stepValueAt(points: List<Pair<Double, Double>>, x: Double): Double? =
     points.lastOrNull { it.first <= x }?.second ?: points.firstOrNull()?.second
 
 /**
@@ -962,7 +962,7 @@ private fun stepValueAt(points: List<Pair<Double, Double>>, x: Double): Double? 
  * [processedDeviationLines] stores y-values per type without paired x, so pairs are reconstituted
  * by zipping each type's y-array against the shared allX before filtering.
  */
-private fun windowedPrimaryY(
+internal fun windowedPrimaryY(
     visibleMinX: Double?,
     visibleMaxX: Double?,
     processedIob: List<Pair<Double, Double>>,
@@ -1364,7 +1364,7 @@ private fun createDeviationLine(type: DeviationType): LineCartesianLayer.Line {
 }
 
 /** Processed deviation data split by type for multi-series line rendering */
-private data class ProcessedDeviationLines(
+internal data class ProcessedDeviationLines(
     val allX: List<Double>,
     val series: Map<DeviationType, List<Double>>
 )
@@ -1375,10 +1375,10 @@ private data class ProcessedDeviationLines(
  * artificially extended purely for zero-alignment) — the start axis' tick placer clamps labels to
  * it so primary never shows a fake tick below a value it can actually reach.
  */
-private data class AlignedRanges(val aMin: Double, val aMax: Double, val bMin: Double, val bMax: Double, val primaryLabelFloor: Double? = null)
+internal data class AlignedRanges(val aMin: Double, val aMax: Double, val bMin: Double, val bMax: Double, val primaryLabelFloor: Double? = null)
 
 /** Result of [pivotZeroFloorPairing]: the pivot side's full nice range, and the zero-floor side's symmetric container (half-width, and its own real floor for label clamping). */
-private data class PivotZeroFloorPairing(val pivotNice: NiceScale, val zeroFloorHalf: Double, val zeroFloorMin: Double)
+internal data class PivotZeroFloorPairing(val pivotNice: NiceScale, val zeroFloorHalf: Double, val zeroFloorMin: Double)
 
 /**
  * Builds the two ranges for a dual-axis combo where exactly one side is pivot-centered
@@ -1392,7 +1392,7 @@ private data class PivotZeroFloorPairing(val pivotNice: NiceScale, val zeroFloor
  * [pivotTickCount] lets the pivot side request fewer ticks than [zeroFloorY]'s own (see
  * [SENS_PIVOT_TICK_COUNT]).
  */
-private fun pivotZeroFloorPairing(pivotY: List<Double>, zeroFloorY: List<Double>, pivot: Double, minDeviation: Double, pivotTickCount: Int): PivotZeroFloorPairing {
+internal fun pivotZeroFloorPairing(pivotY: List<Double>, zeroFloorY: List<Double>, pivot: Double, minDeviation: Double, pivotTickCount: Int): PivotZeroFloorPairing {
     val pivotNice = niceScaleAroundPivot(pivotY.min(), pivotY.max(), pivot, pivotTickCount, minDeviation)
     val zeroFloorNice = zeroFloorNiceRange(zeroFloorY.min(), zeroFloorY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
     val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
@@ -1408,7 +1408,7 @@ private fun pivotZeroFloorPairing(pivotY: List<Double>, zeroFloorY: List<Double>
  * Implemented by shifting both ranges into pivot-relative space, reusing the plain zero-based
  * alignment logic, then shifting the result back.
  */
-private fun alignZeros(aMin: Double, aMax: Double, bMin: Double, bMax: Double, aPivot: Double = 0.0, bPivot: Double = 0.0): AlignedRanges? {
+internal fun alignZeros(aMin: Double, aMax: Double, bMin: Double, bMax: Double, aPivot: Double = 0.0, bPivot: Double = 0.0): AlignedRanges? {
     val shifted = alignZerosAtOrigin(aMin - aPivot, aMax - aPivot, bMin - bPivot, bMax - bPivot) ?: return null
     return AlignedRanges(shifted.aMin + aPivot, shifted.aMax + aPivot, shifted.bMin + bPivot, shifted.bMax + bPivot)
 }
@@ -1428,7 +1428,7 @@ private fun alignZeros(aMin: Double, aMax: Double, bMin: Double, bMax: Double, a
  * is simpler, always works without clipping, and matches how the old
  * OverviewFragment aligned bipolar series (see GraphData.kt lines 150/151).
  */
-private fun alignZerosAtOrigin(aMin: Double, aMax: Double, bMin: Double, bMax: Double): AlignedRanges? {
+internal fun alignZerosAtOrigin(aMin: Double, aMax: Double, bMin: Double, bMax: Double): AlignedRanges? {
     // Treat touching zero (min=0 or max=0) as crossing — the zero line is in-range either way.
     val aCrosses = aMin <= 0 && aMax >= 0
     val bCrosses = bMin <= 0 && bMax >= 0
@@ -1461,7 +1461,7 @@ private fun alignZerosAtOrigin(aMin: Double, aMax: Double, bMin: Double, bMax: D
  * the fraction; if that would still clip dataMax, anchors at dataMax instead and stretches the
  * min further negative. Either branch guarantees no clipping, for any fraction in range.
  */
-private fun fractionAlignedRange(dataMin: Double, dataMax: Double, targetFraction: Double): Pair<Double, Double> {
+internal fun fractionAlignedRange(dataMin: Double, dataMax: Double, targetFraction: Double): Pair<Double, Double> {
     val fraction = targetFraction.coerceIn(0.0, 0.9)
     if (fraction <= 0.0) return dataMin.coerceAtMost(0.0) to dataMax
     val candidateMax = dataMin * (fraction - 1.0) / fraction
@@ -1474,7 +1474,7 @@ private fun fractionAlignedRange(dataMin: Double, dataMax: Double, targetFractio
  * [targetFraction] is rounded to a nice value too — used for the primary axis, which must stay
  * nice-scaled even when its range is widened to align with a secondary axis' zero.
  */
-private fun fractionAlignedNiceRange(niceMin: Double, niceMax: Double, targetFraction: Double): Pair<Double, Double> {
+internal fun fractionAlignedNiceRange(niceMin: Double, niceMax: Double, targetFraction: Double): Pair<Double, Double> {
     val fraction = targetFraction.coerceIn(0.0, 0.9)
     if (fraction <= 0.0) return niceMin to niceMax
     val candidateMax = niceMin * (fraction - 1.0) / fraction
