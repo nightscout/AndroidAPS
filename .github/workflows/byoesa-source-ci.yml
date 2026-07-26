@@ -57,33 +57,63 @@ jobs:
             --tests app.aaps.receivers.DataReceiverTest \
             --stacktrace 2>&1 | tee "${RUNNER_TEMP}/byoesa-receiver-test.log"
 
+      - name: Upload test failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: byoesa-unit-test-diagnostics
+          path: |
+            ${{ runner.temp }}/byoesa-source-plugin.log
+            ${{ runner.temp }}/byoesa-receiver-test.log
+            plugins/source/build/reports/tests/
+            app/build/reports/tests/
+          if-no-files-found: warn
+          retention-days: 7
+
+  release-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
       - name: Compile unsigned full release
         id: release
         continue-on-error: true
         shell: bash
         run: |
           set -o pipefail
-          ./gradlew :app:assembleFullRelease \
-            --stacktrace \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx2g" \
-            -Dkotlin.compiler.execution.strategy="in-process" \
-            -Dorg.gradle.daemon=true \
-            -Dorg.gradle.workers.max=4 \
-            -Dorg.gradle.caching=true \
-            2>&1 | tee "${RUNNER_TEMP}/byoesa-full-release.log"
+          timeout --foreground 300m \
+            ./gradlew :app:assembleFullRelease \
+              --stacktrace \
+              -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+              -Dkotlin.daemon.jvm.options="-Xmx2g" \
+              -Dkotlin.compiler.execution.strategy="in-process" \
+              -Dorg.gradle.daemon=true \
+              -Dorg.gradle.workers.max=4 \
+              -Dorg.gradle.caching=true \
+              2>&1 | tee "${RUNNER_TEMP}/byoesa-full-release.log"
 
-      - name: Upload failure diagnostics
-        if: failure() || steps.release.outcome == 'failure'
+      - name: Upload release failure diagnostics
+        if: steps.release.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: byoesa-source-ci-diagnostics
+          name: byoesa-release-compile-diagnostics
           path: |
-            ${{ runner.temp }}/byoesa-source-plugin.log
-            ${{ runner.temp }}/byoesa-receiver-test.log
             ${{ runner.temp }}/byoesa-full-release.log
-            plugins/source/build/reports/tests/
-            app/build/reports/tests/
             app/build/reports/
           if-no-files-found: warn
           retention-days: 7
@@ -94,6 +124,6 @@ jobs:
           RELEASE_OUTCOME: ${{ steps.release.outcome }}
         run: |
           if [[ "${RELEASE_OUTCOME}" != "success" ]]; then
-            echo "Full release assembly failed; see the diagnostics artifact." >&2
+            echo "Full release assembly failed or exceeded five hours; see the diagnostics artifact." >&2
             exit 1
           fi

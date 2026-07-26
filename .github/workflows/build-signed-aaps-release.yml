@@ -40,11 +40,10 @@ jobs:
         id: build
         shell: bash
         env:
-          KEYSTORE_SET: ${{ secrets.KEYSTORE_SET }}
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           set -Eeuo pipefail
 
@@ -53,26 +52,10 @@ jobs:
             exit 1
           }
 
-          keystore_b64="${KEYSTORE_BASE64:-}"
-          store_password="${KEYSTORE_PASSWORD:-}"
-          key_alias="${KEY_ALIAS:-}"
-          key_password="${KEY_PASSWORD:-}"
-
-          # Preserve compatibility with the repository's existing combined secret:
-          # base64-keystore|store-password|alias|key-password
-          if [[ -n "${KEYSTORE_SET:-}" ]]; then
-            IFS='|' read -r combined_b64 combined_store combined_alias combined_key combined_extra <<< "${KEYSTORE_SET}"
-            [[ -z "${combined_extra:-}" ]] || die "KEYSTORE_SET must contain exactly four pipe-delimited fields"
-            keystore_b64="${keystore_b64:-${combined_b64:-}}"
-            store_password="${store_password:-${combined_store:-}}"
-            key_alias="${key_alias:-${combined_alias:-}}"
-            key_password="${key_password:-${combined_key:-}}"
-          fi
-
-          [[ -n "${keystore_b64}" ]] || die "Missing KEYSTORE_BASE64 or KEYSTORE_SET"
-          [[ -n "${store_password}" ]] || die "Missing KEYSTORE_PASSWORD or KEYSTORE_SET"
-          [[ -n "${key_alias}" ]] || die "Missing KEY_ALIAS or KEYSTORE_SET"
-          [[ -n "${key_password}" ]] || die "Missing KEY_PASSWORD or KEYSTORE_SET"
+          [[ -n "${ANDROID_KEYSTORE_B64}" ]] || die "Missing GitHub secret ANDROID_KEYSTORE_B64"
+          [[ -n "${ANDROID_KEYSTORE_PASSWORD}" ]] || die "Missing GitHub secret ANDROID_KEYSTORE_PASSWORD"
+          [[ -n "${ANDROID_KEY_ALIAS}" ]] || die "Missing GitHub secret ANDROID_KEY_ALIAS"
+          [[ -n "${ANDROID_KEY_PASSWORD}" ]] || die "Missing GitHub secret ANDROID_KEY_PASSWORD"
 
           signing_dir="${RUNNER_TEMP}/aaps-signing"
           output_dir="${RUNNER_TEMP}/aaps-release"
@@ -81,13 +64,13 @@ jobs:
           chmod 700 "${signing_dir}"
           umask 077
 
-          printf '%s' "${keystore_b64}" | base64 --decode > "${keystore_path}"
+          printf '%s' "${ANDROID_KEYSTORE_B64}" | base64 --decode > "${keystore_path}"
           chmod 600 "${keystore_path}"
 
           keytool -list \
             -keystore "${keystore_path}" \
-            -storepass "${store_password}" \
-            -alias "${key_alias}" >/dev/null
+            -storepass "${ANDROID_KEYSTORE_PASSWORD}" \
+            -alias "${ANDROID_KEY_ALIAS}" >/dev/null
 
           set +e
           ./gradlew :app:assembleFullRelease \
@@ -99,9 +82,9 @@ jobs:
             -Dorg.gradle.workers.max=4 \
             -Dorg.gradle.caching=true \
             "-Pandroid.injected.signing.store.file=${keystore_path}" \
-            "-Pandroid.injected.signing.store.password=${store_password}" \
-            "-Pandroid.injected.signing.key.alias=${key_alias}" \
-            "-Pandroid.injected.signing.key.password=${key_password}" \
+            "-Pandroid.injected.signing.store.password=${ANDROID_KEYSTORE_PASSWORD}" \
+            "-Pandroid.injected.signing.key.alias=${ANDROID_KEY_ALIAS}" \
+            "-Pandroid.injected.signing.key.password=${ANDROID_KEY_PASSWORD}" \
             2>&1 | tee "${output_dir}/build.log"
           gradle_status=${PIPESTATUS[0]}
           set -e
@@ -127,15 +110,18 @@ jobs:
           "${apksigner}" verify --verbose --print-certs "${source_apk}" \
             | tee "${output_dir}/signature-verification.txt"
 
-          actual_cert="$({
+          actual_cert="$(
             sed -n 's/^Signer #1 certificate SHA-256 digest: //p' \
-              "${output_dir}/signature-verification.txt" | head -n 1
-          } | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]:')"
+              "${output_dir}/signature-verification.txt" \
+              | head -n 1 \
+              | tr '[:upper:]' '[:lower:]' \
+              | tr -d '[:space:]:'
+          )"
           expected_cert="$(
             keytool -exportcert \
               -keystore "${keystore_path}" \
-              -storepass "${store_password}" \
-              -alias "${key_alias}" \
+              -storepass "${ANDROID_KEYSTORE_PASSWORD}" \
+              -alias "${ANDROID_KEY_ALIAS}" \
               | openssl dgst -sha256 \
               | awk '{print tolower($NF)}'
           )"
@@ -143,26 +129,17 @@ jobs:
           [[ "${actual_cert}" == "${expected_cert}" ]] || die "APK signer does not match configured keystore"
 
           badging="$("${aapt}" dump badging "${source_apk}")"
-          application_id="$(
-            sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<< "${badging}" | head -n 1
-          )"
-          version_name="$(
-            sed -n "s/^package:.*versionName='\([^']*\)'.*/\1/p" <<< "${badging}" | head -n 1
-          )"
+          application_id="$(sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<< "${badging}" | head -n 1)"
+          version_name="$(sed -n "s/^package:.*versionName='\([^']*\)'.*/\1/p" <<< "${badging}" | head -n 1)"
           [[ "${application_id}" == "info.nightscout.androidaps" ]] || die "Unexpected application ID: ${application_id}"
           [[ -n "${version_name}" ]] || die "Could not determine APK version name"
 
-          safe_version="$(
-            printf '%s' "${version_name}" \
-              | tr -cs 'A-Za-z0-9._-' '-' \
-              | sed 's/^-*//;s/-*$//'
-          )"
+          safe_version="$(printf '%s' "${version_name}" | tr -cs 'A-Za-z0-9._-' '-' | sed 's/^-*//;s/-*$//')"
           short_sha="${GITHUB_SHA:0:7}"
           artifact_name="AAPS-BYOESA-${safe_version}-${short_sha}.apk"
-          artifact_apk="${output_dir}/${artifact_name}"
-          cp "${source_apk}" "${artifact_apk}"
+          cp "${source_apk}" "${output_dir}/${artifact_name}"
 
-          apk_sha256="$(sha256sum "${artifact_apk}" | awk '{print $1}')"
+          apk_sha256="$(sha256sum "${output_dir}/${artifact_name}" | awk '{print $1}')"
           python3 - \
             "${output_dir}/build-report.json" \
             "${artifact_name}" \
