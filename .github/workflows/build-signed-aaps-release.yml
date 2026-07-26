@@ -1,0 +1,235 @@
+name: Build Signed AAPS Release
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-signed-aaps-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          show-progress: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Build and verify signed full release APK
+        id: build
+        shell: bash
+        env:
+          KEYSTORE_SET: ${{ secrets.KEYSTORE_SET }}
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          set -Eeuo pipefail
+
+          die() {
+            echo "ERROR: $*" >&2
+            exit 1
+          }
+
+          keystore_b64="${KEYSTORE_BASE64:-}"
+          store_password="${KEYSTORE_PASSWORD:-}"
+          key_alias="${KEY_ALIAS:-}"
+          key_password="${KEY_PASSWORD:-}"
+
+          # Preserve compatibility with the repository's existing combined secret:
+          # base64-keystore|store-password|alias|key-password
+          if [[ -n "${KEYSTORE_SET:-}" ]]; then
+            IFS='|' read -r combined_b64 combined_store combined_alias combined_key combined_extra <<< "${KEYSTORE_SET}"
+            [[ -z "${combined_extra:-}" ]] || die "KEYSTORE_SET must contain exactly four pipe-delimited fields"
+            keystore_b64="${keystore_b64:-${combined_b64:-}}"
+            store_password="${store_password:-${combined_store:-}}"
+            key_alias="${key_alias:-${combined_alias:-}}"
+            key_password="${key_password:-${combined_key:-}}"
+          fi
+
+          [[ -n "${keystore_b64}" ]] || die "Missing KEYSTORE_BASE64 or KEYSTORE_SET"
+          [[ -n "${store_password}" ]] || die "Missing KEYSTORE_PASSWORD or KEYSTORE_SET"
+          [[ -n "${key_alias}" ]] || die "Missing KEY_ALIAS or KEYSTORE_SET"
+          [[ -n "${key_password}" ]] || die "Missing KEY_PASSWORD or KEYSTORE_SET"
+
+          signing_dir="${RUNNER_TEMP}/aaps-signing"
+          output_dir="${RUNNER_TEMP}/aaps-release"
+          keystore_path="${signing_dir}/aaps-release.jks"
+          mkdir -p "${signing_dir}" "${output_dir}"
+          chmod 700 "${signing_dir}"
+          umask 077
+
+          printf '%s' "${keystore_b64}" | base64 --decode > "${keystore_path}"
+          chmod 600 "${keystore_path}"
+
+          keytool -list \
+            -keystore "${keystore_path}" \
+            -storepass "${store_password}" \
+            -alias "${key_alias}" >/dev/null
+
+          set +e
+          ./gradlew :app:assembleFullRelease \
+            --stacktrace \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.daemon=true \
+            -Dorg.gradle.workers.max=4 \
+            -Dorg.gradle.caching=true \
+            "-Pandroid.injected.signing.store.file=${keystore_path}" \
+            "-Pandroid.injected.signing.store.password=${store_password}" \
+            "-Pandroid.injected.signing.key.alias=${key_alias}" \
+            "-Pandroid.injected.signing.key.password=${key_password}" \
+            2>&1 | tee "${output_dir}/build.log"
+          gradle_status=${PIPESTATUS[0]}
+          set -e
+          [[ ${gradle_status} -eq 0 ]] || exit "${gradle_status}"
+
+          mapfile -d '' apks < <(
+            find app/build/outputs/apk/full/release \
+              -maxdepth 1 \
+              -type f \
+              -name '*.apk' \
+              -print0
+          )
+          [[ ${#apks[@]} -eq 1 ]] || die "Expected exactly one full release APK; found ${#apks[@]}"
+          source_apk="${apks[0]}"
+
+          build_tools_dir="$(find "${ANDROID_HOME}/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
+          [[ -n "${build_tools_dir}" ]] || die "Android build-tools directory not found"
+          apksigner="${build_tools_dir}/apksigner"
+          aapt="${build_tools_dir}/aapt"
+          [[ -x "${apksigner}" ]] || die "apksigner not found at ${apksigner}"
+          [[ -x "${aapt}" ]] || die "aapt not found at ${aapt}"
+
+          "${apksigner}" verify --verbose --print-certs "${source_apk}" \
+            | tee "${output_dir}/signature-verification.txt"
+
+          actual_cert="$({
+            sed -n 's/^Signer #1 certificate SHA-256 digest: //p' \
+              "${output_dir}/signature-verification.txt" | head -n 1
+          } | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]:')"
+          expected_cert="$(
+            keytool -exportcert \
+              -keystore "${keystore_path}" \
+              -storepass "${store_password}" \
+              -alias "${key_alias}" \
+              | openssl dgst -sha256 \
+              | awk '{print tolower($NF)}'
+          )"
+          [[ -n "${actual_cert}" ]] || die "Could not read APK signing-certificate digest"
+          [[ "${actual_cert}" == "${expected_cert}" ]] || die "APK signer does not match configured keystore"
+
+          badging="$("${aapt}" dump badging "${source_apk}")"
+          application_id="$(
+            sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<< "${badging}" | head -n 1
+          )"
+          version_name="$(
+            sed -n "s/^package:.*versionName='\([^']*\)'.*/\1/p" <<< "${badging}" | head -n 1
+          )"
+          [[ "${application_id}" == "info.nightscout.androidaps" ]] || die "Unexpected application ID: ${application_id}"
+          [[ -n "${version_name}" ]] || die "Could not determine APK version name"
+
+          safe_version="$(
+            printf '%s' "${version_name}" \
+              | tr -cs 'A-Za-z0-9._-' '-' \
+              | sed 's/^-*//;s/-*$//'
+          )"
+          short_sha="${GITHUB_SHA:0:7}"
+          artifact_name="AAPS-BYOESA-${safe_version}-${short_sha}.apk"
+          artifact_apk="${output_dir}/${artifact_name}"
+          cp "${source_apk}" "${artifact_apk}"
+
+          apk_sha256="$(sha256sum "${artifact_apk}" | awk '{print $1}')"
+          python3 - \
+            "${output_dir}/build-report.json" \
+            "${artifact_name}" \
+            "${version_name}" \
+            "${application_id}" \
+            "${apk_sha256}" \
+            "${actual_cert}" \
+            "${GITHUB_SHA}" \
+            "${GITHUB_RUN_NUMBER}" <<'PY'
+          import json
+          import sys
+
+          report_path, apk, version, application_id, apk_sha256, cert_sha256, git_sha, run_number = sys.argv[1:]
+          report = {
+              "status": "success",
+              "variant": "fullRelease",
+              "apk": apk,
+              "version_name": version,
+              "application_id": application_id,
+              "apk_sha256": apk_sha256,
+              "signing_certificate_sha256": cert_sha256,
+              "git_sha": git_sha,
+              "github_run_number": int(run_number),
+              "validation": {
+                  "signature_valid": True,
+                  "signer_matches_configured_keystore": True,
+                  "application_id_valid": True,
+              },
+          }
+          with open(report_path, "w", encoding="utf-8") as stream:
+              json.dump(report, stream, indent=2, sort_keys=True)
+              stream.write("\n")
+          PY
+
+          (
+            cd "${output_dir}"
+            sha256sum "${artifact_name}" build-report.json > checksums.txt
+          )
+
+          echo "version=${safe_version}" >> "${GITHUB_OUTPUT}"
+          echo "artifact_name=${artifact_name}" >> "${GITHUB_OUTPUT}"
+
+      - name: Upload signed AAPS release
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AAPS-BYOESA-${{ steps.build.outputs.version }}-${{ github.run_number }}
+          path: |
+            ${{ runner.temp }}/aaps-release/${{ steps.build.outputs.artifact_name }}
+            ${{ runner.temp }}/aaps-release/build-report.json
+            ${{ runner.temp }}/aaps-release/checksums.txt
+            ${{ runner.temp }}/aaps-release/signature-verification.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-aaps-release-diagnostics
+          path: |
+            ${{ runner.temp }}/aaps-release/build.log
+            ${{ runner.temp }}/aaps-release/signature-verification.txt
+            app/build/reports/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Remove signing material
+        if: always()
+        run: rm -rf "${RUNNER_TEMP}/aaps-signing"

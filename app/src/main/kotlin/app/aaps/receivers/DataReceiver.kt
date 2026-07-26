@@ -22,6 +22,7 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomInbox
+import app.aaps.plugins.source.EversenseInbox
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.PatchedSiAppPlugin
@@ -133,6 +134,9 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
             Intents.DEXCOM_BG, Intents.DEXCOM_G7_BG   ->
                 dataInbox.putAndEnqueue(DexcomInbox, bundle)
+
+            Intents.BYOESA_BG                         ->
+                dataInbox.putAndEnqueue(EversenseInbox, bundle)
 
             Intents.AIDEX_NEW_BG_ESTIMATE             ->
                 enqueueInline(

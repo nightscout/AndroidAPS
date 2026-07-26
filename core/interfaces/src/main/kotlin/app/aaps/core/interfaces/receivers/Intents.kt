@@ -39,6 +39,7 @@ interface Intents {
         const val GLIMP_BG = "it.ct.glicemia.ACTION_GLUCOSE_MEASURED"
         const val DEXCOM_BG = "com.dexcom.cgm.EXTERNAL_BROADCAST"
         const val DEXCOM_G7_BG = "com.dexcom.g7.EXTERNAL_BROADCAST"
+        const val BYOESA_BG = "com.byoesa.eversense365.EXTERNAL_BROADCAST"
         const val POCTECH_BG = "com.china.poctech.data"
         const val TOMATO_BG = "com.fanqies.tomatofn.BgEstimate"
 

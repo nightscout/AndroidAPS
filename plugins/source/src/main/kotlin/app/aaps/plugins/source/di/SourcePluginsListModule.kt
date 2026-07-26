@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.di.AllConfigs
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.EversensePlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.GlunovoPlugin
 import app.aaps.plugins.source.IntelligoPlugin
@@ -27,7 +28,7 @@ import dagger.multibindings.IntoMap
 
 /**
  * Self-registration of :plugins:source BG-source plugins into the global @AllConfigs plugin map
- * (@IntKey block 400–550, step 10). Including :plugins:source in settings.gradle is enough — no central
+ * (@IntKey block 400–560, step 10). Including :plugins:source in settings.gradle is enough — no central
  * list edit needed. See PluginsListModule for the overall @IntKey ordering overview.
  */
 @Module
@@ -130,4 +131,10 @@ abstract class SourcePluginsListModule {
     @IntoMap
     @IntKey(550)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(560)
+    abstract fun bindEversensePlugin(plugin: EversensePlugin): PluginBase
 }

@@ -2,11 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
+    <uses-permission android:name="com.byoesa.eversense365.EXTERNAL_PERMISSION" />
+
+    <queries>
+        <package android:name="com.byoesa.eversense365" />
+    </queries>
 
     <application>
 
         <activity
             android:name=".activities.RequestDexcomPermissionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.RequestEversensePermissionActivity"
             android:exported="false" />
 
         <service

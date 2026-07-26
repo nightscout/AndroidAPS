@@ -88,6 +88,8 @@
                 <!-- Receiver from Dexcom -->
                 <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
                 <action android:name="com.dexcom.g7.EXTERNAL_BROADCAST" />
+                <!-- Receiver from BYOESA -->
+                <action android:name="com.byoesa.eversense365.EXTERNAL_BROADCAST" />
                 <!-- Receiver from Poctech -->
                 <action android:name="com.china.poctech.data" />
                 <!-- Receiver from Tomato -->

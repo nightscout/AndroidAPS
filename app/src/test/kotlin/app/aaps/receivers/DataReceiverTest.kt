@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomInbox
+import app.aaps.plugins.source.EversenseInbox
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.PatchedSiAppPlugin
@@ -103,6 +104,12 @@ class DataReceiverTest : TestBase() {
     fun `DEXCOM_G7_BG routes to DexcomInbox`() {
         dataReceiver.processIntent(context, createIntent(Intents.DEXCOM_G7_BG))
         verify(dataInbox).putAndEnqueue(eq(DexcomInbox), eq(bundle))
+    }
+
+    @Test
+    fun `BYOESA_BG routes to EversenseInbox`() {
+        dataReceiver.processIntent(context, createIntent(Intents.BYOESA_BG))
+        verify(dataInbox).putAndEnqueue(eq(EversenseInbox), eq(bundle))
     }
 
     // ---- Inline-Data worker routing ----

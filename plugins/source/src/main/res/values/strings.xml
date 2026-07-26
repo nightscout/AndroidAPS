@@ -9,6 +9,9 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receive BG values from the \'Build Your Own Dexcom App\'.</string>
+    <string name="byoesa">BYOESA</string>
+    <string name="byoesa_short">BYOESA</string>
+    <string name="description_source_byoesa">Receive glucose values from the Build Your Own Eversense App.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -49,6 +52,8 @@
     <!-- Permission rationales -->
     <string name="permission_dexcom_title">Dexcom CGM</string>
     <string name="permission_dexcom_description">Application needs permission to receive CGM data from Dexcom app</string>
+    <string name="permission_byoesa_title">BYOESA</string>
+    <string name="permission_byoesa_description">AAPS needs permission to receive glucose data from BYOESA.</string>
     <string name="permission_notification_listener_title">Notification Access</string>
     <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
 

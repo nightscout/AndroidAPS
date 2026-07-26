@@ -1,0 +1,99 @@
+name: BYOESA Source CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - "app/src/main/AndroidManifest.xml"
+      - "app/src/main/kotlin/app/aaps/receivers/DataReceiver.kt"
+      - "app/src/test/kotlin/app/aaps/receivers/DataReceiverTest.kt"
+      - "core/interfaces/src/main/kotlin/app/aaps/core/interfaces/receivers/Intents.kt"
+      - "plugins/source/**"
+      - ".github/workflows/byoesa-source-ci.yml"
+      - ".github/workflows/build-signed-aaps-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: byoesa-source-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Test BYOESA source plugin
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew :plugins:source:testFullDebugUnitTest \
+            --tests app.aaps.plugins.source.EversensePluginTest \
+            --stacktrace 2>&1 | tee "${RUNNER_TEMP}/byoesa-source-plugin.log"
+
+      - name: Test broadcast receiver routing
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew :app:testFullDebugUnitTest \
+            --tests app.aaps.receivers.DataReceiverTest \
+            --stacktrace 2>&1 | tee "${RUNNER_TEMP}/byoesa-receiver-test.log"
+
+      - name: Compile unsigned full release
+        id: release
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleFullRelease \
+            --stacktrace \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.daemon=true \
+            -Dorg.gradle.workers.max=4 \
+            -Dorg.gradle.caching=true \
+            2>&1 | tee "${RUNNER_TEMP}/byoesa-full-release.log"
+
+      - name: Upload failure diagnostics
+        if: failure() || steps.release.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: byoesa-source-ci-diagnostics
+          path: |
+            ${{ runner.temp }}/byoesa-source-plugin.log
+            ${{ runner.temp }}/byoesa-receiver-test.log
+            ${{ runner.temp }}/byoesa-full-release.log
+            plugins/source/build/reports/tests/
+            app/build/reports/tests/
+            app/build/reports/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Enforce release build result
+        if: always()
+        env:
+          RELEASE_OUTCOME: ${{ steps.release.outcome }}
+        run: |
+          if [[ "${RELEASE_OUTCOME}" != "success" ]]; then
+            echo "Full release assembly failed; see the diagnostics artifact." >&2
+            exit 1
+          fi

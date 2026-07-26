@@ -24,7 +24,7 @@ import javax.inject.Qualifier
  *   100–120   sensitivity                                 :plugins:sensitivity
  *   200–240   aps (loop, openAPS engines, autotune)       :plugins:aps
  *   300–370   sync (sms, nsclient, upload, wear, …)       :plugins:sync
- *   400–550   bg sources                                  :plugins:source
+ *   400–560   bg sources                                  :plugins:source
  *   600–630   smoothing                                   :plugins:smoothing
  *   700–710   calibration                                 :plugins:calibration
  *   800–860   constraints (safety, objectives, …)         :plugins:constraints
