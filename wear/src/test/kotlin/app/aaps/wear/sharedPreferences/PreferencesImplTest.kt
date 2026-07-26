@@ -108,7 +108,7 @@ internal class PreferencesImplTest {
     }
 
     @Test
-    fun getDependingOnReturnsDependencyAndNegativeDependencyChildren() {
+    fun getDependingOnReturnsDependencyChildren() {
         val wearControlDependents = sut.getDependingOn("wearcontrol")
         assertThat(wearControlDependents).containsAtLeast(
             BooleanKey.WearWizardBg,
@@ -117,10 +117,6 @@ internal class PreferencesImplTest {
             BooleanKey.WearWizardCob,
             BooleanKey.WearWizardIob
         )
-
-        // ApsUseAutosens declares a negativeDependency on ApsUseDynamicSensitivity (key "use_dynamic_sensitivity")
-        val dynSensDependents = sut.getDependingOn("use_dynamic_sensitivity")
-        assertThat(dynSensDependents).contains(BooleanKey.ApsUseAutosens)
     }
 
     @Test

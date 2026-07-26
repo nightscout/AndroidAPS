@@ -72,6 +72,14 @@ interface VisibilityContext {
      */
     val isConcentrationEnabled: Boolean
         get() = false
+
+    /**
+     * Whether the active APS algorithm offers the "Use dynamic sensitivity" option
+     * (static capability, independent of the preference value). False when no APS
+     * is active (client mode, early startup) or on platforms without APS (wear).
+     */
+    val apsOffersDynamicSensitivity: Boolean
+        get() = false
 }
 
 /**
