@@ -16,6 +16,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.min
 
 internal val BgInRangeColor = Color(0xFF00FF00)
 internal val BgHighColor    = Color(0xFFFFFF00)
@@ -55,7 +56,8 @@ internal fun ageColor(ageMs: Long): Color {
 internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, showNowLabel: Boolean = true) {
     val now = System.currentTimeMillis()
     val historyMs = historyHours * 60 * 60 * 1000L
-    val predictionMs = 90 * 60 * 1000L
+    // Cap predictions at the history span so short ranges (1h) aren't dominated by the prediction area
+    val predictionMs = min(90 * 60 * 1000L, historyMs)
     val startTime = now - historyMs
     val endTime = now + predictionMs
     val timeSpan = (endTime - startTime).toFloat()
