@@ -17,6 +17,8 @@
     <string name="permission_directory_description">为应用程序设置和日志文件选择一个目录</string>
     <string name="permission_notifications_title">通知</string>
     <string name="permission_notifications_description">需要显示提醒、警报与泵状态更新</string>
+    <string name="permission_fsi_title">全屏报警</string>
+    <string name="permission_fsi_description">必要权限，以便在手机锁定时闹钟能够唤醒屏幕并以全屏方式显示</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
