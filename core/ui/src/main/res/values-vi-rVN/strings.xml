@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Hãy chọn một. Chỉ một cái có thể hoạt động tại một thời điểm.</string>
     <string name="configbuilder_pick_many_hint">Chọn tất cả mục phù hợp.</string>
     <string name="configbuilder_no_selection_warning">Chưa có plugin nào được chọn trong danh mục này.</string>
+    <string name="configbuilder_switch_confirmation_title">Chuyển sang plugin này không?</string>
+    <string name="configbuilder_switch_confirmation">Thao tác này sẽ tắt %1$s và bật %2$s.</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>
     <string name="no_compose_preferences">Plugin này không có cài đặt Compose</string>
