@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">请选择一个。一次只能激活一个。</string>
     <string name="configbuilder_pick_many_hint">选择所有适用的项。</string>
     <string name="configbuilder_no_selection_warning">此类别中未选择任何插件。</string>
+    <string name="configbuilder_switch_confirmation_title">切换插件？</string>
+    <string name="configbuilder_switch_confirmation">这将禁用 %1$s 并启用 %2$s。</string>
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
     <string name="no_compose_preferences">此插件没有可用的首选项设置</string>
