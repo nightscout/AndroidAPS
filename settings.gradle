@@ -3,6 +3,7 @@ plugins {
 }
 include ':app'
 include ':wear'
+include ':wear:watchfacepush'
 include ':benchmark'
 include ':core:data'
 include ':core:graph'

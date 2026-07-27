@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Watch Face Format face installed at runtime by the wear app via the Watch Face Push API.
+     Must stay code-free: Watch Face Push only accepts APKs whose manifest contains
+     manifest / uses-feature / uses-sdk / application / property / meta-data elements. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <application
+        android:allowBackup="true"
+        android:hasCode="false"
+        android:label="@string/watchface_name">
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <property
+            android:name="com.google.wear.watchface.format.version"
+            android:value="1" />
+    </application>
+</manifest>
