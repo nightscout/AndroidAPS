@@ -894,6 +894,9 @@
     <string name="add">Adăugați</string>
     <string name="remove">Eliminați</string>
     <string name="reorder">Reordonați</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mutați mai devreme</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mutați mai târziu</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Afișați detalii</string>
     <string name="status">Stare</string>
     <string name="pump_actions">Acțiuni pompă</string>
     <string name="tempbasal_button">Bazală temporară</string>
