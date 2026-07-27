@@ -125,6 +125,7 @@ class BLEComm @Inject constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         pumpCheckSent = false  // Reset the guard flag for new connection
+        notificationsEnabled = false  // Same lifetime: a new connection registers notifications again
         isConnecting = true
         bufferLength = 0
         bleTransport.updatePairingState(PairingState(step = PairingStep.CONNECTING))
@@ -202,6 +203,7 @@ class BLEComm @Inject constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         pumpCheckSent = false  // Reset for next connection attempt
+        notificationsEnabled = false
     }
 
     @SuppressLint("MissingPermission")
@@ -240,8 +242,23 @@ class BLEComm @Inject constructor(
         }.start()
     }
 
+    /**
+     * Notification registration completed for the current connection.
+     *
+     * [connect] enables notifications eagerly and [findCharacteristic] enables them again once services are
+     * discovered, so one connection legitimately produces two [onDescriptorWritten] callbacks. Only the first may
+     * drive the handshake: the second used to republish [PairingStep.HANDSHAKE_IN_PROGRESS], which downgrades the
+     * pair wizard from a user-input step back to the progress spinner — and, unlike [PairingStep.CONNECTING],
+     * restarts no timeout, so a first-time RSv3 pairing hung on the spinner instead of showing the PIN entry.
+     * On real hardware the second callback is usually masked by timing; the emulated transport is synchronous and
+     * hits it every time.
+     */
+    private var notificationsEnabled = false
+
     override fun onDescriptorWritten() {
         if (isConnected) return // Already connected, ignore duplicate notification enable
+        if (notificationsEnabled) return // Second registration for this same connection — see the field's doc
+        notificationsEnabled = true
         bleTransport.updatePairingState(PairingState(step = PairingStep.HANDSHAKE_IN_PROGRESS))
         sendConnect()
         // 1st message sent to pump after connect
@@ -260,6 +277,7 @@ class BLEComm @Inject constructor(
             encryptedDataRead = false
             encryptedCommandSent = false
             pumpCheckSent = false  // Reset for next connection attempt
+            notificationsEnabled = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
             aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected")

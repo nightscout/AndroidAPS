@@ -9,6 +9,8 @@ import app.aaps.core.interfaces.pump.ble.BleAdapter
 import app.aaps.core.interfaces.pump.ble.BleGatt
 import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.PairingState
+import app.aaps.core.interfaces.pump.ble.PairingStep
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.DanaPump
@@ -23,6 +25,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 
 class BLECommTest : TestBase() {
 
@@ -44,6 +48,8 @@ class BLECommTest : TestBase() {
     @Mock lateinit var bleGatt: BleGatt
 
     private lateinit var bleComm: BLEComm
+
+    private companion object { private const val ADDRESS = "00:11:22:33:44:55" }
 
     @BeforeEach
     fun setup() {
@@ -134,5 +140,36 @@ class BLECommTest : TestBase() {
     @Test
     fun testIsConnecting_initiallyFalse() {
         assertThat(bleComm.isConnecting).isFalse()
+    }
+
+    /**
+     * One connection legitimately produces two `onDescriptorWritten` callbacks — [BLEComm.connect] enables
+     * notifications eagerly and `findCharacteristic` enables them again after service discovery. Only the first may
+     * drive the handshake.
+     *
+     * The second used to republish [PairingStep.HANDSHAKE_IN_PROGRESS], which downgrades the pair wizard from a
+     * user-input step (ENTER_PIN / ENTER_PASSWORD) back to the progress spinner and restarts no timeout — a
+     * first-time RSv3 pairing then hung on the spinner forever instead of accepting the PINs.
+     */
+    @Test
+    fun onDescriptorWritten_duplicateForSameConnection_doesNotRepublishHandshake() {
+        bleComm.onDescriptorWritten()
+        bleComm.onDescriptorWritten()
+
+        verify(bleTransport, times(1)).updatePairingState(PairingState(step = PairingStep.HANDSHAKE_IN_PROGRESS))
+    }
+
+    @Test
+    fun onDescriptorWritten_afterReconnect_drivesTheHandshakeAgain() {
+        `when`(bleAdapter.getDeviceName(ADDRESS)).thenReturn("Dana")
+        `when`(bleAdapter.isDeviceBonded(ADDRESS)).thenReturn(true)
+        `when`(bleGatt.connect(ADDRESS)).thenReturn(true)
+
+        bleComm.onDescriptorWritten()
+        // A new connection must clear the guard, or the pump could never be reconnected after a drop.
+        bleComm.connect("test", ADDRESS)
+        bleComm.onDescriptorWritten()
+
+        verify(bleTransport, times(2)).updatePairingState(PairingState(step = PairingStep.HANDSHAKE_IN_PROGRESS))
     }
 }

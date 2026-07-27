@@ -22,10 +22,15 @@ class EmulatorBleTransportTest {
     private val deviceName = "UHH00002TI"
     private val responses = mutableListOf<ByteArray>()
 
+    private var descriptorWrittenCount = 0
+
     private val listener = object : BleTransportListener {
         override fun onConnectionStateChanged(connected: Boolean) {}
         override fun onServicesDiscovered(success: Boolean) {}
-        override fun onDescriptorWritten() {}
+        override fun onDescriptorWritten() {
+            descriptorWrittenCount++
+        }
+
         override fun onCharacteristicChanged(data: ByteArray) {
             responses.add(data)
         }
@@ -39,6 +44,51 @@ class EmulatorBleTransportTest {
         transport.setListener(listener)
         appEncryption = BleEncryption()
         responses.clear()
+        descriptorWrittenCount = 0
+    }
+
+    /**
+     * BLEComm enables notifications twice per connection — eagerly in `connect()`, then again after service
+     * discovery. On hardware only the second completes: before discovery `uartRead` is null, so BleTransportImpl
+     * fabricates a bare characteristic whose CCCD lookup returns null and no `writeDescriptor` is issued. The
+     * emulator must match that, or the extra callback drives the pair wizard off its PIN step and hangs RSv3 pairing.
+     */
+    @Test
+    fun enableNotificationsBeforeDiscovery_doesNotCallBack() {
+        transport.gatt.connect("00:00:00:00:00:00")
+
+        transport.gatt.enableNotifications()
+
+        assertThat(descriptorWrittenCount).isEqualTo(0)
+    }
+
+    @Test
+    fun oneConnection_yieldsExactlyOneDescriptorWritten() {
+        transport.gatt.connect("00:00:00:00:00:00")
+
+        transport.gatt.enableNotifications()          // BLEComm.connect(), pre-discovery — no-op on hardware
+        transport.gatt.discoverServices()
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()          // findCharacteristic(), post-discovery — the real one
+
+        assertThat(descriptorWrittenCount).isEqualTo(1)
+    }
+
+    @Test
+    fun reconnect_registersNotificationsAgain() {
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()
+        transport.gatt.disconnect()
+
+        // A new connection must discover again before notifications register, exactly like the first.
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.enableNotifications()
+        assertThat(descriptorWrittenCount).isEqualTo(1)
+
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()
+        assertThat(descriptorWrittenCount).isEqualTo(2)
     }
 
     @Test
