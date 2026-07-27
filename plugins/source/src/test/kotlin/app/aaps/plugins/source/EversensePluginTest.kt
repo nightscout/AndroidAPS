@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.model.advancedFilteringSupported
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -42,6 +43,11 @@ class EversensePluginTest : TestBaseWithProfile() {
         val allPermissions = eversensePlugin.requiredPermissions().flatMap { it.permissions }
 
         assertThat(allPermissions).doesNotContain(EversensePlugin.PERMISSION)
+    }
+
+    @Test
+    fun `BYOESA source supports advanced filtering for SMB`() {
+        assertThat(SourceSensor.EVERSENSE.advancedFilteringSupported()).isTrue()
     }
 
     @Test

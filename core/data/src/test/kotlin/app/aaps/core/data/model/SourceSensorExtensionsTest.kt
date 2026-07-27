@@ -35,8 +35,8 @@ class SourceSensorExtensionsTest {
     }
 
     @Test
-    fun `eversense does not support advanced filtering`() {
-        assertThat(SourceSensor.EVERSENSE.advancedFilteringSupported()).isFalse()
+    fun `BYOESA eversense source supports advanced filtering`() {
+        assertThat(SourceSensor.EVERSENSE.advancedFilteringSupported()).isTrue()
     }
 
     @Test
