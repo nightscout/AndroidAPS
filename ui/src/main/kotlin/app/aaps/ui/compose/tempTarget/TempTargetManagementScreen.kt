@@ -1,17 +1,17 @@
 package app.aaps.ui.compose.tempTarget
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,12 +19,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,14 +44,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -65,10 +68,11 @@ import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
+import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
-import app.aaps.ui.compose.components.PageIndicatorDots
+import app.aaps.ui.compose.components.ManagementCarousel
+import kotlinx.coroutines.launch
 import java.util.Calendar
-import kotlin.math.absoluteValue
 
 /**
  * Screen for managing temporary target presets and activating TTs.
@@ -193,45 +197,110 @@ fun TempTargetManagementScreen(
     // Track current page for floating toolbar actions
     var currentPage by remember { mutableIntStateOf(0) }
 
+    // Non-null working order == reorder ("sort") mode is on.
+    val reorderOrder by viewModel.reorderOrder.collectAsStateWithLifecycle()
+    val isReorderMode = reorderOrder != null
+    // Deliberately NOT gated on unsaved editor changes: the editor's values live in the view model,
+    // so hiding it while sorting does not discard them — Save comes back with the edits intact.
+    val canEnterReorder = !isPlayMode && editingEnabled && viewModel.canReorder()
+    val scope = rememberCoroutineScope()
+    var showOverflowMenu by remember { mutableStateOf(false) }
+
+    // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded.
+    BackHandler(enabled = isReorderMode) { viewModel.cancelReorder() }
+
+    // The view model outlives the screen, so an uncommitted order would otherwise survive until the
+    // screen is reopened — dropping the user straight back into sort mode with a stale order.
+    DisposableEffect(Unit) {
+        onDispose { viewModel.cancelReorder() }
+    }
+
     AapsTheme {
         Scaffold(
             topBar = {
-                AapsTopAppBar(
-                    title = { Text(stringResource(ElementType.TEMP_TARGET_MANAGEMENT.labelResId())) },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
-                            )
-                        }
-                    },
-                    actions = {
-                        if (isPlayMode) {
-                            // Edit mode button (shown in PLAY mode)
-                            IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
+                if (isReorderMode) {
+                    AapsTopAppBar(
+                        title = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                        navigationIcon = {
+                            IconButton(onClick = { viewModel.cancelReorder() }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.cancel)
                                 )
                             }
-                        } else {
-                            // Save button (shown when editor has unsaved changes in EDIT mode)
-                            if (uiState.selectedPreset != null && viewModel.hasUnsavedChanges()) {
-                                IconButton(onClick = {
-                                    focusManager.clearFocus()
-                                    viewModel.saveCurrentPreset()
-                                }) {
+                        },
+                        actions = {
+                            IconButton(onClick = { scope.launch { viewModel.commitReorder() } }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Check,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.ok)
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    AapsTopAppBar(
+                        title = { Text(stringResource(ElementType.TEMP_TARGET_MANAGEMENT.labelResId())) },
+                        navigationIcon = {
+                            IconButton(onClick = onNavigateBack) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                )
+                            }
+                        },
+                        actions = {
+                            if (isPlayMode) {
+                                // Edit mode button (shown in PLAY mode)
+                                IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                     Icon(
-                                        imageVector = Icons.Default.Save,
-                                        contentDescription = stringResource(app.aaps.core.ui.R.string.save),
-                                        tint = MaterialTheme.colorScheme.primary
+                                        imageVector = Icons.Filled.Edit,
+                                        contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
                                     )
+                                }
+                            } else {
+                                // Save button (shown when editor has unsaved changes in EDIT mode)
+                                if (uiState.selectedPreset != null && viewModel.hasUnsavedChanges()) {
+                                    IconButton(onClick = {
+                                        focusManager.clearFocus()
+                                        viewModel.saveCurrentPreset()
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Save,
+                                            contentDescription = stringResource(app.aaps.core.ui.R.string.save),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                }
+                                // Menu entry as well as the long-press: the long-press is
+                                // undiscoverable on its own, and this is the only route a screen
+                                // reader can take.
+                                Box {
+                                    IconButton(onClick = { showOverflowMenu = true }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.MoreVert,
+                                            contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
+                                        )
+                                    }
+                                    DropdownMenu(
+                                        expanded = showOverflowMenu,
+                                        onDismissRequest = { showOverflowMenu = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                                            enabled = canEnterReorder,
+                                            onClick = {
+                                                showOverflowMenu = false
+                                                focusManager.clearFocus()
+                                                viewModel.enterReorderMode()
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         ) { paddingValues ->
             Column(
@@ -268,15 +337,28 @@ fun TempTargetManagementScreen(
                         // Depends on cardCount so it retries when pager updates with new page count
                         LaunchedEffect(scrollToPage, cardCount) {
                             scrollToPage?.let { page ->
-                                if (page < cardCount) {
+                                if (page < cardCount && !isReorderMode) {
                                     pagerState.animateScrollToPage(page)
                                     scrollToPage = null
                                 }
                             }
                         }
 
+                        // Settle on the card that was moved once sorting is over. Keyed on the stored
+                        // index rather than the mode, so toggling the mode never starts or cancels a
+                        // scroll of its own.
+                        LaunchedEffect(uiState.currentCardIndex) {
+                            if (!isReorderMode && pagerState.currentPage != uiState.currentCardIndex) {
+                                pagerState.animateScrollToPage(uiState.currentCardIndex.coerceIn(0, (cardCount - 1).coerceAtLeast(0)))
+                            }
+                        }
+
                         // Update selected preset when pager changes
                         LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+                            currentPage = pagerState.currentPage
+                            // A reorder step moves the carousel too; treating that as a selection
+                            // would reload the editor from whichever preset slid past.
+                            if (isReorderMode) return@LaunchedEffect
                             if (!pagerState.isScrollInProgress) {
                                 viewModel.updateCurrentCardIndex(pagerState.currentPage)
                                 val presetIndex = if (hasStandaloneActiveTT && pagerState.currentPage > 0) {
@@ -290,26 +372,63 @@ fun TempTargetManagementScreen(
                                 if (presetIndex != null) viewModel.selectPreset(presetIndex)
                                 else viewModel.selectActiveTT()
                             }
-                            currentPage = pagerState.currentPage
                         }
 
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             // TT Preset Carousel
-                            HorizontalPager(
+                            //
+                            // Carousel pages are not preset indices: page 0 is the standalone
+                            // active-TT card when there is one, and that card is not a preset, so it
+                            // can never be moved or displaced.
+                            val presetOffset = if (hasStandaloneActiveTT) 1 else 0
+                            val workingOrder = reorderOrder
+                            val moveEarlierLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_earlier)
+                            val moveLaterLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_later)
+                            val reorderLabel = stringResource(app.aaps.core.ui.R.string.reorder)
+                            val selectLabel = stringResource(app.aaps.core.ui.R.string.carousel_show_card)
+
+                            ManagementCarousel(
                                 state = pagerState,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp),
-                                contentPadding = PaddingValues(horizontal = 64.dp),
-                                pageSpacing = 16.dp
-                            ) { page ->
+                                reorder = workingOrder?.let { order ->
+                                    CarouselReorderConfig(
+                                        isActive = true,
+                                        itemCount = order.size + presetOffset,
+                                        canMove = { page ->
+                                            viewModel.isReorderPositionMovable(page - presetOffset)
+                                        },
+                                        onMove = { fromPage, toPage ->
+                                            viewModel.moveReorderItem(fromPage - presetOffset, toPage - presetOffset)
+                                        },
+                                        moveEarlierLabel = moveEarlierLabel,
+                                        moveLaterLabel = moveLaterLabel,
+                                        positionLabel = { page ->
+                                            viewModel.rh.gs(
+                                                app.aaps.core.ui.R.string.carousel_position,
+                                                page + 1,
+                                                order.size + presetOffset
+                                            )
+                                        },
+                                        positionDescription = { page ->
+                                            viewModel.rh.gs(
+                                                app.aaps.core.ui.R.string.carousel_position_description,
+                                                page + 1,
+                                                order.size + presetOffset
+                                            )
+                                        }
+                                    )
+                                }
+                            ) { itemState ->
+                                val page = itemState.page
                                 val isStandaloneActiveCard = hasStandaloneActiveTT && page == 0
+                                // While sorting, the card at a position shows the preset the working
+                                // order puts there — not the one at that index in the stored list.
                                 val presetIndex = when {
                                     isStandaloneActiveCard -> null
-                                    hasStandaloneActiveTT  -> page - 1
-                                    else                   -> page
+                                    else                   -> (page - presetOffset).let { position ->
+                                        workingOrder?.getOrNull(position) ?: position
+                                    }
                                 }
                                 val preset = presetIndex?.let { uiState.presets.getOrNull(it) }
                                 val isActivePreset = presetIndex != null && presetIndex == uiState.activePresetIndex
@@ -318,43 +437,36 @@ fun TempTargetManagementScreen(
                                     preset = preset,
                                     activeTT = if (isStandaloneActiveCard || isActivePreset) uiState.activeTT else null,
                                     remainingTimeMs = uiState.remainingTimeMs,
-                                    isSelected = pagerState.currentPage == page,
+                                    isSelected = itemState.isSelected,
                                     units = viewModel.units,
                                     onExpired = { viewModel.refreshData() },
-                                    modifier = Modifier
-                                        .graphicsLayer {
-                                            val pageOffset = (
-                                                (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                                                ).absoluteValue
-                                            // Scale effect for carousel
-                                            lerp(
-                                                start = 0.85f,
-                                                stop = 1f,
-                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                            ).also { scale ->
-                                                scaleX = scale
-                                                scaleY = scale
+                                    // While sorting the card carries no gestures: the move buttons sit
+                                    // below the row and a tap or long-press here would only compete.
+                                    modifier = if (itemState.isReordering) Modifier else Modifier.combinedClickable(
+                                        onClickLabel = selectLabel,
+                                        onClick = { scope.launch { pagerState.animateScrollToPage(page) } },
+                                        onLongClickLabel = reorderLabel,
+                                        onLongClick = if (canEnterReorder) {
+                                            {
+                                                // A long press does not fire onClick, so without this
+                                                // a peeking card would open the mode centred on — and
+                                                // acting on — a different preset.
+                                                pagerState.requestScrollToPage(page)
+                                                viewModel.updateCurrentCardIndex(page)
+                                                presetIndex?.let { viewModel.selectPreset(it) }
+                                                viewModel.enterReorderMode()
                                             }
-                                            // Alpha effect
-                                            alpha = lerp(
-                                                start = 0.5f,
-                                                stop = 1f,
-                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                            )
-                                        }
+                                        } else null
+                                    )
                                 )
                             }
-
-                            // Page indicator dots
-                            PageIndicatorDots(
-                                pageCount = cardCount,
-                                currentPage = pagerState.currentPage
-                            )
 
                             // TT Editor — hidden when offline on a client: tweaking is pointless when you can
                             // neither Save (toolbar hidden) nor Activate (FAB hidden). Stays for the tweak-and-
                             // activate one-off-TT workflow when the master is reachable (or on master).
-                            if (editingEnabled) {
+                            // Also hidden while sorting: Save has given up its slot to Done, so an edit made
+                            // there would have nowhere to go.
+                            if (editingEnabled && !isReorderMode) {
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -389,7 +501,7 @@ fun TempTargetManagementScreen(
 
                     // Mini FAB for Cancel (only visible when TT is active). Hidden on a client whose master is
                     // unreachable — canceling a TT is a master/NS action that couldn't be delivered.
-                    if (editingEnabled && uiState.activeTT != null) {
+                    if (editingEnabled && uiState.activeTT != null && !isReorderMode) {
                         SmallFloatingActionButton(
                             onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
                             modifier = Modifier
@@ -404,8 +516,9 @@ fun TempTargetManagementScreen(
                         }
                     }
 
-                    // Floating Toolbar with FAB (M3 style)
-                    Row(
+                    // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
+                    // cards, so they are hidden while sorting rather than left floating over the sort controls.
+                    if (!isReorderMode) Row(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(16.dp),

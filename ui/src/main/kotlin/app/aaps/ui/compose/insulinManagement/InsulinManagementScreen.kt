@@ -1,13 +1,11 @@
 package app.aaps.ui.compose.insulinManagement
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,12 +47,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -77,7 +71,7 @@ import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.ui.R
-import kotlin.math.absoluteValue
+import app.aaps.ui.compose.components.ManagementCarousel
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -298,35 +292,16 @@ fun InsulinManagementScreen(
                         }
                     }
 
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
-                        contentPadding = PaddingValues(horizontal = 64.dp),
-                        pageSpacing = 16.dp
-                    ) { page ->
-                        val iCfg = insulins[page]
+                    ManagementCarousel(state = pagerState) { itemState ->
+                        val iCfg = insulins[itemState.page]
                         val isActive = iCfg.insulinLabel == uiState.activeInsulinLabel
-                        val pageOffset = ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
 
                         InsulinCarouselCard(
                             iCfg = iCfg,
                             isActive = isActive,
-                            isSelected = pagerState.currentPage == page,
-                            modifier = Modifier.graphicsLayer {
-                                scaleX = lerp(0.85f, 1f, 1f - pageOffset.coerceIn(0f, 1f))
-                                scaleY = lerp(0.85f, 1f, 1f - pageOffset.coerceIn(0f, 1f))
-                                alpha = lerp(0.5f, 1f, 1f - pageOffset.coerceIn(0f, 1f))
-                            }
+                            isSelected = itemState.isSelected
                         )
                     }
-
-                    // Page indicator dots
-                    PageIndicatorDots(
-                        pageCount = cardCount,
-                        currentPage = pagerState.currentPage
-                    )
 
                     // Editor section (only in EDIT mode)
                     if (!isPlayMode) {
@@ -591,43 +566,6 @@ private fun PeakPresetChips(
                     onClick = { onPresetClick(preset) },
                     label = { Text(stringResource(preset.label)) }
                 )
-            }
-        }
-    }
-}
-
-// --- Local PageIndicatorDots ---
-
-@Composable
-private fun PageIndicatorDots(
-    pageCount: Int,
-    currentPage: Int,
-    modifier: Modifier = Modifier
-) {
-    val selectedColor = MaterialTheme.colorScheme.primary
-    val unselectedColor = MaterialTheme.colorScheme.outlineVariant
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        repeat(pageCount) { index ->
-            val isSelected = currentPage == index
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .width(if (isSelected) 24.dp else 8.dp)
-                    .height(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Canvas(modifier = Modifier.fillMaxSize()) {
-                    drawRoundRect(
-                        color = if (isSelected) selectedColor else unselectedColor,
-                        cornerRadius = CornerRadius(4.dp.toPx())
-                    )
-                }
             }
         }
     }

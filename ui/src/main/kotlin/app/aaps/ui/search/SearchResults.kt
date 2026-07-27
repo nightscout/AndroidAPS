@@ -210,9 +210,9 @@ private fun SearchResultItem(
     // Whole-row tap: open an enabled plugin/preference; for a disabled but toggleable plugin, enable it — so the
     // entire row is actionable, not just the small switch.
     val rowClick: (() -> Unit)? = when {
-        isEnabled                   -> { { onResultClick(entry) } }
-        canToggle && plugin != null -> { { onPluginToggle(plugin) } }
-        else                        -> null
+        isEnabled -> { { onResultClick(entry) } }
+        canToggle -> { { onPluginToggle(plugin) } }
+        else      -> null
     }
 
     Row(

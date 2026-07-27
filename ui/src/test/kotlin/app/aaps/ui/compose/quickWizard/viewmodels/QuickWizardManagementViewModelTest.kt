@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
+import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.ui.events.EventQuickWizardChange
@@ -18,13 +19,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -137,5 +146,138 @@ internal class QuickWizardManagementViewModelTest {
         sut.setScreenMode(ScreenMode.PLAY)
 
         assertThat(sut.uiState.value.screenMode).isEqualTo(ScreenMode.PLAY)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Reorder ("sort") mode
+    // ---------------------------------------------------------------------------------------------
+
+    /** Minimal entry stub: only what [loadData] reads into the editor without tripping a null. */
+    private fun entry(guid: String, label: String): QuickWizardEntry = mock<QuickWizardEntry>().also {
+        whenever(it.guid()).thenReturn(guid)
+        whenever(it.buttonText()).thenReturn(label)
+        whenever(it.mode()).thenReturn(QuickWizardMode.WIZARD)
+    }
+
+    private suspend fun TestScope.givenEntries(vararg guids: String) {
+        // Built before the whenever(...) below: stubbing the entries inside the outer stubbing call
+        // leaves Mockito with an unfinished stub.
+        val entries = ArrayList(guids.map { entry(it, "btn-$it") })
+        whenever(quickWizard.list()).thenReturn(entries)
+        sut.loadData()
+        advanceUntilIdle()
+    }
+
+    @Test
+    fun `reorderOrder is null until reorder mode is entered`() {
+        assertThat(sut.reorderOrder.value).isNull()
+    }
+
+    @Test
+    fun `canReorder needs more than one entry`() = runTest {
+        givenEntries("a")
+        assertThat(sut.canReorder()).isFalse()
+
+        givenEntries("a", "b")
+        assertThat(sut.canReorder()).isTrue()
+    }
+
+    @Test
+    fun `entering reorder mode starts from the identity order`() = runTest {
+        givenEntries("a", "b", "c")
+        sut.enterReorderMode()
+
+        assertThat(sut.reorderOrder.value).containsExactly(0, 1, 2).inOrder()
+    }
+
+    @Test
+    fun `a non-adjacent move is applied as remove-then-insert, not a swap`() = runTest {
+        givenEntries("a", "b", "c", "d")
+        sut.enterReorderMode()
+
+        assertThat(sut.moveReorderItem(0, 3)).isTrue()
+        assertThat(sut.reorderOrder.value).containsExactly(1, 2, 3, 0).inOrder()
+    }
+
+    @Test
+    fun `moves that cannot apply are rejected so the carousel does not follow them`() = runTest {
+        givenEntries("a", "b", "c")
+        sut.enterReorderMode()
+
+        assertThat(sut.moveReorderItem(1, 1)).isFalse()
+        assertThat(sut.moveReorderItem(-1, 2)).isFalse()
+        assertThat(sut.moveReorderItem(0, 9)).isFalse()
+        assertThat(sut.reorderOrder.value).containsExactly(0, 1, 2).inOrder()
+    }
+
+    @Test
+    fun `committing an unchanged order never writes the entries`() = runTest {
+        givenEntries("a", "b", "c")
+        sut.enterReorderMode()
+
+        sut.commitReorder()
+
+        assertThat(sut.reorderOrder.value).isNull()
+        // The entries ride a bidirectionally synced preference, so a pointless write would be a full
+        // round trip to the paired device.
+        verify(quickWizard, never()).reorder(any())
+    }
+
+    @Test
+    fun `committing writes the working order exactly once`() = runTest {
+        givenEntries("a", "b", "c", "d")
+        whenever(quickWizard.reorder(any())).thenReturn(true)
+        sut.enterReorderMode()
+        sut.moveReorderItem(3, 0)
+
+        sut.commitReorder()
+
+        verify(quickWizard, times(1)).reorder(listOf(3, 0, 1, 2))
+    }
+
+    @Test
+    fun `committing settles on the entry that was moved`() = runTest {
+        givenEntries("a", "b", "c", "d")
+        whenever(quickWizard.reorder(any())).thenReturn(true)
+        sut.enterReorderMode()
+        // Move the entry originally at index 3 to the front.
+        sut.moveReorderItem(3, 0)
+
+        assertThat(sut.commitReorder()).isEqualTo(0)
+    }
+
+    @Test
+    fun `a replacement of the entry list aborts the commit`() = runTest {
+        whenever(rh.gs(any<Int>())).thenReturn("message")
+        givenEntries("a", "b", "c")
+        sut.enterReorderMode()
+        sut.moveReorderItem(0, 2)
+
+        // Entries synced in from the main phone while sorting: the working order is a list of
+        // indices, so applying it would rearrange entries the user never saw.
+        givenEntries("x", "y", "z")
+
+        assertThat(sut.commitReorder()).isNull()
+        assertThat(sut.reorderOrder.value).isNull()
+        verify(quickWizard, never()).reorder(any())
+    }
+
+    @Test
+    fun `cancelling leaves the entries untouched`() = runTest {
+        givenEntries("a", "b", "c")
+        sut.enterReorderMode()
+        sut.moveReorderItem(0, 2)
+        sut.cancelReorder()
+
+        assertThat(sut.reorderOrder.value).isNull()
+        verify(quickWizard, never()).reorder(any())
+    }
+
+    @Test
+    fun `moves and commits outside reorder mode do nothing`() = runTest {
+        givenEntries("a", "b")
+        assertThat(sut.moveReorderItem(0, 1)).isFalse()
+        assertThat(sut.commitReorder()).isNull()
+        verify(quickWizard, never()).reorder(any())
     }
 }

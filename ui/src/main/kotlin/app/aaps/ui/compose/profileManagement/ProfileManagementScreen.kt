@@ -1,17 +1,17 @@
 package app.aaps.ui.compose.profileManagement
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,10 +19,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,19 +37,19 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.graph.profile.ProfileCompareContent
 import app.aaps.core.graph.profile.ProfileSingleContent
@@ -56,10 +61,17 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
+import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
-import app.aaps.ui.compose.components.PageIndicatorDots
+import app.aaps.ui.compose.components.ManagementCarousel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileManagementViewModel
-import kotlin.math.absoluteValue
+import kotlinx.coroutines.launch
+
+/**
+ * Profile cards carry less content than the other management screens, so they sit lower than
+ * the shared `CarouselDefaults.CardHeight`.
+ */
+private val PROFILE_CARD_HEIGHT = 140.dp
 
 /**
  * Screen for managing local profiles.
@@ -84,6 +96,23 @@ fun ProfileManagementScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isPlayMode = uiState.screenMode == ScreenMode.PLAY
+
+    // Non-null working order == reorder ("sort") mode is on. Modelled as a flag rather than a third
+    // ScreenMode, which is documented as a one-way PLAY -> EDIT switch.
+    val reorderOrder by viewModel.reorderOrder.collectAsStateWithLifecycle()
+    val isReorderMode = reorderOrder != null
+    val canReorder = !isPlayMode && uiState.profileNames.size > 1
+    val scope = rememberCoroutineScope()
+    var showOverflowMenu by remember { mutableStateOf(false) }
+
+    // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded.
+    BackHandler(enabled = isReorderMode) { viewModel.cancelReorder() }
+
+    // The view model is activity-scoped, so an uncommitted order would otherwise survive until the
+    // screen is reopened — dropping the user straight back into sort mode with a stale order.
+    DisposableEffect(Unit) {
+        onDispose { viewModel.cancelReorder() }
+    }
 
     // Set initial screen mode
     LaunchedEffect(initialMode) {
@@ -146,27 +175,73 @@ fun ProfileManagementScreen(
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
-                AapsTopAppBar(
-                    title = { Text(stringResource(ElementType.PROFILE_MANAGEMENT.labelResId())) },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
-                            )
-                        }
-                    },
-                    actions = {
-                        if (isPlayMode) {
-                            IconButton(onClick = onRequestEditMode) {
+                if (isReorderMode) {
+                    AapsTopAppBar(
+                        title = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                        navigationIcon = {
+                            IconButton(onClick = { viewModel.cancelReorder() }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.cancel)
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { scope.launch { viewModel.commitReorder() } }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Check,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.ok)
                                 )
                             }
                         }
-                    }
-                )
+                    )
+                } else {
+                    AapsTopAppBar(
+                        title = { Text(stringResource(ElementType.PROFILE_MANAGEMENT.labelResId())) },
+                        navigationIcon = {
+                            IconButton(onClick = onNavigateBack) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                )
+                            }
+                        },
+                        actions = {
+                            if (isPlayMode) {
+                                IconButton(onClick = onRequestEditMode) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Edit,
+                                        contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
+                                    )
+                                }
+                            } else {
+                                // Menu entry as well as the long-press: the long-press is undiscoverable
+                                // on its own, and this is the only route a screen reader can take.
+                                Box {
+                                    IconButton(onClick = { showOverflowMenu = true }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.MoreVert,
+                                            contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
+                                        )
+                                    }
+                                    DropdownMenu(
+                                        expanded = showOverflowMenu,
+                                        onDismissRequest = { showOverflowMenu = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                                            enabled = canReorder,
+                                            onClick = {
+                                                showOverflowMenu = false
+                                                viewModel.enterReorderMode()
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
             }
         ) { paddingValues ->
             Box(
@@ -180,7 +255,10 @@ fun ProfileManagementScreen(
                 ) {
                     // Calculate initial page based on active profile - store stable value once computed
                     var stableInitialPage by remember { mutableIntStateOf(-1) }
-                    if (stableInitialPage == -1 && uiState.activeProfileName != null && uiState.profileNames.isNotEmpty()) {
+                    // Never latch it during a sort: changing the key below would dispose the pager
+                    // and its effects mid-session, jumping the carousel to an unrelated card while
+                    // the working order lives on in the view model.
+                    if (stableInitialPage == -1 && !isReorderMode && uiState.activeProfileName != null && uiState.profileNames.isNotEmpty()) {
                         val index = uiState.profileNames.indexOfFirst { it == uiState.activeProfileName }
                         stableInitialPage = if (index >= 0) index else 0
                     }
@@ -193,38 +271,73 @@ fun ProfileManagementScreen(
                             pageCount = { uiState.profileNames.size }
                         )
 
-                        // Sync pager with selected profile (for programmatic selection)
+                        // Sync pager with selected profile (for programmatic selection).
+                        //
+                        // isReorderMode is deliberately NOT a key: toggling the mode would restart
+                        // this effect, cancelling any in-flight scroll and — on the way out —
+                        // animating back to the pre-sort index. It is the sole writer of the
+                        // programmatic page, and commitReorder settles the selection itself, so a
+                        // committed reorder arrives here as an ordinary index change.
                         LaunchedEffect(uiState.currentProfileIndex) {
-                            if (pagerState.currentPage != uiState.currentProfileIndex) {
+                            if (!isReorderMode && pagerState.currentPage != uiState.currentProfileIndex) {
                                 pagerState.animateScrollToPage(uiState.currentProfileIndex)
                             }
                         }
 
                         // Update selected profile when pager changes
                         LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+                            // Tracked even while sorting so the toolbar acts on the right card the
+                            // moment the mode is left.
+                            currentPage = pagerState.currentPage
+                            // A reorder step moves the carousel too; treating that as a selection
+                            // would fight the working order.
+                            if (isReorderMode) return@LaunchedEffect
                             if (!pagerState.isScrollInProgress && pagerState.currentPage != uiState.currentProfileIndex) {
                                 viewModel.selectProfile(pagerState.currentPage)
                             }
-                            currentPage = pagerState.currentPage
                         }
 
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             // Profile Carousel
-                            HorizontalPager(
+                            val moveEarlierLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_earlier)
+                            val moveLaterLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_later)
+                            val reorderLabel = stringResource(app.aaps.core.ui.R.string.reorder)
+                            val selectLabel = stringResource(app.aaps.core.ui.R.string.carousel_show_card)
+                            val workingOrder = reorderOrder
+
+                            ManagementCarousel(
                                 state = pagerState,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(140.dp),
-                                contentPadding = PaddingValues(horizontal = 64.dp),
-                                pageSpacing = 16.dp
-                            ) { page ->
-                                val name = uiState.profileNames.getOrNull(page) ?: ""
-                                val basalSum = uiState.basalSums.getOrNull(page) ?: 0.0
+                                cardHeight = PROFILE_CARD_HEIGHT,
+                                reorder = workingOrder?.let { order ->
+                                    CarouselReorderConfig(
+                                        isActive = true,
+                                        // The working order, not the live list: a profile arriving
+                                        // mid-sort must not enable a move past its end.
+                                        itemCount = order.size,
+                                        onMove = viewModel::moveReorderItem,
+                                        moveEarlierLabel = moveEarlierLabel,
+                                        moveLaterLabel = moveLaterLabel,
+                                        // rh rather than stringResource: these are read inside a
+                                        // non-composable lambda, per position.
+                                        positionLabel = { page ->
+                                            viewModel.rh.gs(app.aaps.core.ui.R.string.carousel_position, page + 1, order.size)
+                                        },
+                                        positionDescription = { page ->
+                                            viewModel.rh.gs(app.aaps.core.ui.R.string.carousel_position_description, page + 1, order.size)
+                                        }
+                                    )
+                                }
+                            ) { itemState ->
+                                // While sorting, the card at a position shows the profile the working
+                                // order puts there — not the one at that index in the stored list.
+                                val dataIndex = workingOrder?.getOrNull(itemState.page) ?: itemState.page
+                                val name = uiState.profileNames.getOrNull(dataIndex) ?: ""
+                                val basalSum = uiState.basalSums.getOrNull(dataIndex) ?: 0.0
                                 val isActive = name == uiState.activeProfileName
-                                val hasErrors = uiState.profileErrors.getOrNull(page)?.isNotEmpty() == true
-                                val pumpIncompatible = uiState.pumpWarnings.getOrNull(page) == true
+                                val hasErrors = uiState.profileErrors.getOrNull(dataIndex)?.isNotEmpty() == true
+                                val pumpIncompatible = uiState.pumpWarnings.getOrNull(dataIndex) == true
 
                                 ProfileCarouselCard(
                                     profileName = name,
@@ -235,35 +348,30 @@ fun ProfileManagementScreen(
                                     activeProfileSwitch = if (isActive) uiState.activeProfileSwitch else null,
                                     nextProfileName = if (isActive) uiState.nextProfileName else null,
                                     formatBasalSum = viewModel::formatBasalSum,
-                                    modifier = Modifier
-                                        .graphicsLayer {
-                                            val pageOffset = (
-                                                (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                                                ).absoluteValue
-                                            // Scale effect for carousel
-                                            lerp(
-                                                start = 0.85f,
-                                                stop = 1f,
-                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                            ).also { scale ->
-                                                scaleX = scale
-                                                scaleY = scale
+                                    // While sorting, the card carries the move buttons instead: a tap
+                                    // that re-centres and a long-press that re-enters the mode would
+                                    // both be noise, and they sit under the same fingers.
+                                    modifier = if (itemState.isReordering) Modifier else Modifier.combinedClickable(
+                                        // Tapping a peeking neighbour centres it, which also gives
+                                        // the long-press something honest to hang off.
+                                        onClickLabel = selectLabel,
+                                        onClick = { scope.launch { pagerState.animateScrollToPage(itemState.page) } },
+                                        onLongClickLabel = reorderLabel,
+                                        onLongClick = if (canReorder) {
+                                            {
+                                                // A long press does not fire onClick, so a peeking
+                                                // card would otherwise open the mode centred on —
+                                                // and acting on — a different profile. Snap without
+                                                // animating: an in-progress scroll would arrive with
+                                                // the move buttons already disabled.
+                                                pagerState.requestScrollToPage(itemState.page)
+                                                viewModel.selectProfile(itemState.page)
+                                                viewModel.enterReorderMode()
                                             }
-                                            // Alpha effect
-                                            alpha = lerp(
-                                                start = 0.5f,
-                                                stop = 1f,
-                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                            )
-                                        }
+                                        } else null
+                                    )
                                 )
                             }
-
-                            // Page indicator dots
-                            PageIndicatorDots(
-                                pageCount = uiState.profileNames.size,
-                                currentPage = pagerState.currentPage
-                            )
 
                             // Profile Viewer
                             uiState.selectedProfile?.let { profile ->
@@ -308,8 +416,9 @@ fun ProfileManagementScreen(
                     } // end key
                 }
 
-                // Floating Toolbar with FAB (M3 style)
-                Row(
+                // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
+                // cards, so they are hidden while sorting rather than left floating over the sort controls.
+                if (!isReorderMode) Row(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(16.dp),

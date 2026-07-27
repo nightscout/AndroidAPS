@@ -978,6 +978,12 @@
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="reorder">Reorder</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move earlier</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move later</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Show details</string>
+    <string name="presets_changed_reorder_aborted">Presets changed elsewhere. The new order was not saved.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d of %2$d</string>
     <string name="status">Status</string>
     <string name="pump_actions">Pump actions</string>
     <string name="tempbasal_button">Temp Basal</string>

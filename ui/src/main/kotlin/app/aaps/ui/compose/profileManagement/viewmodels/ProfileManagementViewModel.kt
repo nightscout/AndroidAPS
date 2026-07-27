@@ -52,7 +52,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
@@ -61,6 +63,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 
 /**
@@ -383,6 +386,112 @@ class ProfileManagementViewModel @Inject constructor(
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Reorder ("sort") mode
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Working order while reorder mode is on, as `value[position] == originalIndex`; null when the
+     * mode is off — which is also the flag the screen uses to decide it is sorting.
+     *
+     * Deliberately its own flow rather than part of [uiState]: a reorder step must not re-run
+     * profile validation, and must not be read as the user selecting a different profile.
+     */
+    private val _reorderOrder = MutableStateFlow<List<Int>?>(null)
+    val reorderOrder: StateFlow<List<Int>?> = _reorderOrder.asStateFlow()
+
+    /**
+     * Original index of the profile the carousel re-centres on when the mode is left: the last one
+     * moved, or the selected profile if nothing was moved. Tracked as an *original* index so it
+     * survives the permutation.
+     */
+    private var reorderAnchor: Int = 0
+
+    /**
+     * Profile names as they were when reorder mode was entered. The working order is a list of
+     * indices, so it only means anything against the list it was derived from — a same-length
+     * replacement (an NS push of a different profile set) would otherwise pass the repository's
+     * permutation check and apply the user's intent to profiles they never saw.
+     */
+    private var reorderNames: List<String> = emptyList()
+
+    fun enterReorderMode() {
+        val profiles = profileRepository.profiles.value
+        if (profiles.isEmpty()) return
+        reorderAnchor = _selectedIndex.value.coerceIn(0, profiles.size - 1)
+        reorderNames = profiles.map { it.name }
+        _reorderOrder.value = List(profiles.size) { it }
+    }
+
+    fun cancelReorder() {
+        _reorderOrder.value = null
+    }
+
+    /**
+     * Apply one move as remove-then-insert, not a swap, so a non-adjacent move shifts the items in
+     * between rather than scrambling them. The buttons only ever step by one, but
+     * `CarouselReorderConfig.onMove` is declared for arbitrary index pairs.
+     *
+     * @return true if the order changed. The carousel follows the moved card only on true, so a
+     *         rejected move must not look like it succeeded.
+     */
+    fun moveReorderItem(from: Int, to: Int): Boolean {
+        val current = _reorderOrder.value ?: return false
+        if (from == to || from !in current.indices || to !in current.indices) return false
+        reorderAnchor = current[from]
+        _reorderOrder.value = current.toMutableList().apply { add(to, removeAt(from)) }
+        return true
+    }
+
+    /**
+     * Persist the working order and leave reorder mode.
+     *
+     * Commits once, here — not per move — because each persist bumps the profile-store timestamp
+     * and provokes a full Nightscout upload.
+     *
+     * @return the carousel position to settle on, or null if the commit failed (the profile list
+     *         was replaced underneath us, e.g. by an NS push mid-sort).
+     */
+    suspend fun commitReorder(): Int? {
+        val order = _reorderOrder.value ?: return null
+        // Selection is positional, so it must follow the profile through the permutation — otherwise
+        // the screen silently ends up showing a different profile. Resolved for both branches, so an
+        // undone move lands on the same card a committed one would.
+        val anchorPosition = order.indexOf(reorderAnchor).takeIf { it >= 0 } ?: _selectedIndex.value
+        // Nothing moved — skip the repository entirely so leaving the mode is free.
+        if (order.withIndex().all { (position, original) -> position == original }) {
+            _selectedIndex.value = anchorPosition
+            _reorderOrder.value = null
+            return anchorPosition
+        }
+        if (profileRepository.profiles.value.map { it.name } != reorderNames) {
+            // The list changed under us; the indices in `order` no longer mean what they meant.
+            return failReorder()
+        }
+        val expectedNames = order.map { reorderNames[it] }
+        return profileRepository.reorder(order).fold(
+            onSuccess = {
+                _selectedIndex.value = anchorPosition
+                // Hold the working order until the recomputed state actually carries the new list.
+                // uiState re-validates every profile and hits the DB, so clearing immediately would
+                // leave the cards rendering the pre-sort order at post-sort positions for a frame —
+                // the moved profile visibly snapping back before jumping again.
+                withTimeoutOrNull(UI_STATE_SETTLE_TIMEOUT_MS) {
+                    uiState.first { it.profileNames == expectedNames }
+                }
+                _reorderOrder.value = null
+                anchorPosition
+            },
+            onFailure = { failReorder() }
+        )
+    }
+
+    private fun failReorder(): Int? {
+        _snackbarEvent.tryEmit(rh.gs(app.aaps.ui.R.string.profile_no_longer_exists))
+        _reorderOrder.value = null
+        return null
+    }
+
     // Profile viewer formatting helpers
     fun getIcList(profile: Profile): String = profile.getIcList(rh, dateUtil)
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
@@ -514,6 +623,16 @@ class ProfileManagementViewModel @Inject constructor(
 
             else                       -> false // Unconfirmed → handled by the app-level pending modal
         }
+    }
+
+    companion object {
+
+        /**
+         * How long [commitReorder] waits for [uiState] to carry the committed order before giving up
+         * and leaving reorder mode anyway. A safety net only — the recomputation normally lands in a
+         * frame or two, and this exists so the mode cannot get stuck if nothing is collecting.
+         */
+        private const val UI_STATE_SETTLE_TIMEOUT_MS = 1_000L
     }
 }
 

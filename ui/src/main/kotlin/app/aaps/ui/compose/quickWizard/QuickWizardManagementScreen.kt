@@ -5,14 +5,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,11 +18,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,19 +36,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
@@ -58,10 +61,11 @@ import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
+import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
-import app.aaps.ui.compose.components.PageIndicatorDots
+import app.aaps.ui.compose.components.ManagementCarousel
+import kotlinx.coroutines.launch
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
-import kotlin.math.absoluteValue
 import app.aaps.core.ui.R as CoreR
 
 /**
@@ -158,13 +162,29 @@ fun QuickWizardManagementScreen(
         )
     }
 
+    // Non-null working order == reorder ("sort") mode is on.
+    val reorderOrder by viewModel.reorderOrder.collectAsStateWithLifecycle()
+    val isReorderMode = reorderOrder != null
+    val canEnterReorder = !isPlayMode && editingEnabled && viewModel.canReorder()
+    val scope = rememberCoroutineScope()
+    var showOverflowMenu by remember { mutableStateOf(false) }
+
+    // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded. Takes
+    // precedence over the unsaved-changes handler below: sorting does not touch the editor.
+    BackHandler(enabled = isReorderMode) { viewModel.cancelReorder() }
+
     // Back button handler - check for unsaved changes (skip in PLAY mode)
-    BackHandler {
+    BackHandler(enabled = !isReorderMode) {
         if (!isPlayMode && viewModel.hasUnsavedChanges()) {
             showUnsavedChangesDialog = true
         } else {
             onNavigateBack()
         }
+    }
+
+    // The view model outlives the screen, so an uncommitted order would otherwise resurrect the mode.
+    DisposableEffect(Unit) {
+        onDispose { viewModel.cancelReorder() }
     }
 
     // Track current page for floating toolbar actions
@@ -173,48 +193,95 @@ fun QuickWizardManagementScreen(
     AapsTheme {
         Scaffold(
             topBar = {
-                AapsTopAppBar(
-                    title = { Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId())) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            if (!isPlayMode && viewModel.hasUnsavedChanges()) {
-                                showUnsavedChangesDialog = true
-                            } else {
-                                onNavigateBack()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(CoreR.string.back)
-                            )
-                        }
-                    },
-                    actions = {
-                        if (isPlayMode) {
-                            // Edit mode button (shown in PLAY mode)
-                            IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
+                if (isReorderMode) {
+                    AapsTopAppBar(
+                        title = { Text(stringResource(CoreR.string.reorder)) },
+                        navigationIcon = {
+                            IconButton(onClick = { viewModel.cancelReorder() }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = stringResource(CoreR.string.switch_to_edit)
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = stringResource(CoreR.string.cancel)
                                 )
                             }
-                        } else {
-                            // Save button (shown when editor has unsaved changes in EDIT mode)
-                            if (uiState.entries.isNotEmpty() && uiState.hasUnsavedChanges) {
-                                IconButton(onClick = {
-                                    focusManager.clearFocus()
-                                    viewModel.saveCurrentEntry()
-                                }) {
+                        },
+                        actions = {
+                            IconButton(onClick = { scope.launch { viewModel.commitReorder() } }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Check,
+                                    contentDescription = stringResource(CoreR.string.ok)
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    AapsTopAppBar(
+                        title = { Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId())) },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                if (!isPlayMode && viewModel.hasUnsavedChanges()) {
+                                    showUnsavedChangesDialog = true
+                                } else {
+                                    onNavigateBack()
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(CoreR.string.back)
+                                )
+                            }
+                        },
+                        actions = {
+                            if (isPlayMode) {
+                                // Edit mode button (shown in PLAY mode)
+                                IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                     Icon(
-                                        imageVector = Icons.Default.Save,
-                                        contentDescription = stringResource(CoreR.string.save),
-                                        tint = MaterialTheme.colorScheme.primary
+                                        imageVector = Icons.Filled.Edit,
+                                        contentDescription = stringResource(CoreR.string.switch_to_edit)
                                     )
+                                }
+                            } else {
+                                // Save button (shown when editor has unsaved changes in EDIT mode)
+                                if (uiState.entries.isNotEmpty() && uiState.hasUnsavedChanges) {
+                                    IconButton(onClick = {
+                                        focusManager.clearFocus()
+                                        viewModel.saveCurrentEntry()
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Save,
+                                            contentDescription = stringResource(CoreR.string.save),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                }
+                                // Menu entry as well as the long-press: the long-press is
+                                // undiscoverable on its own, and this is the only route a screen
+                                // reader can take.
+                                Box {
+                                    IconButton(onClick = { showOverflowMenu = true }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.MoreVert,
+                                            contentDescription = stringResource(CoreR.string.more_options)
+                                        )
+                                    }
+                                    DropdownMenu(
+                                        expanded = showOverflowMenu,
+                                        onDismissRequest = { showOverflowMenu = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(CoreR.string.reorder)) },
+                                            enabled = canEnterReorder,
+                                            onClick = {
+                                                showOverflowMenu = false
+                                                focusManager.clearFocus()
+                                                viewModel.enterReorderMode()
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         ) { paddingValues ->
             Column(modifier = Modifier
@@ -242,15 +309,31 @@ fun QuickWizardManagementScreen(
                         // Handle scroll to page request (e.g., after adding new entry)
                         LaunchedEffect(scrollToPage, cardCount) {
                             scrollToPage?.let { page ->
-                                if (page < cardCount) {
+                                if (page < cardCount && !isReorderMode) {
                                     pagerState.animateScrollToPage(page)
                                     scrollToPage = null
                                 }
                             }
                         }
 
+                        // Settle on the card that was moved once sorting is over. Keyed on the stored
+                        // index rather than the mode, so toggling the mode never starts or cancels a
+                        // scroll of its own.
+                        LaunchedEffect(uiState.currentCardIndex) {
+                            if (!isReorderMode && pagerState.currentPage != uiState.currentCardIndex) {
+                                pagerState.animateScrollToPage(uiState.currentCardIndex.coerceIn(0, (cardCount - 1).coerceAtLeast(0)))
+                            }
+                        }
+
                         // Update selected entry when pager changes
                         LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+                            // A reorder step moves the carousel too. It changes no editor field, so
+                            // the unsaved-changes prompt below must not fire — it would interrupt the
+                            // sort with a modal and scroll the moved card back.
+                            if (isReorderMode) {
+                                currentPage = pagerState.currentPage
+                                return@LaunchedEffect
+                            }
                             if (!pagerState.isScrollInProgress) {
                                 val newPage = pagerState.currentPage
                                 // Check if we have unsaved changes before switching
@@ -272,50 +355,43 @@ fun QuickWizardManagementScreen(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             // QuickWizard Entry Carousel
-                            HorizontalPager(
+                            val workingOrder = reorderOrder
+                            val moveEarlierLabel = stringResource(CoreR.string.carousel_move_earlier)
+                            val moveLaterLabel = stringResource(CoreR.string.carousel_move_later)
+
+                            ManagementCarousel(
                                 state = pagerState,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp),
-                                contentPadding = PaddingValues(horizontal = 64.dp),
-                                pageSpacing = 16.dp,
-                                userScrollEnabled = !viewModel.hasUnsavedChanges()  // Disable swipe if unsaved changes
-                            ) { page ->
-                                val entry = uiState.entries.getOrNull(page)
+                                // Swiping stays available while sorting even with unsaved changes:
+                                // it is how you reach the card you want to move, and it cannot lose
+                                // an edit because the veto above is skipped in this mode.
+                                userScrollEnabled = isReorderMode || !viewModel.hasUnsavedChanges(),
+                                reorder = workingOrder?.let { order ->
+                                    CarouselReorderConfig(
+                                        isActive = true,
+                                        itemCount = order.size,
+                                        onMove = viewModel::moveReorderItem,
+                                        moveEarlierLabel = moveEarlierLabel,
+                                        moveLaterLabel = moveLaterLabel,
+                                        positionLabel = { page ->
+                                            viewModel.rh.gs(CoreR.string.carousel_position, page + 1, order.size)
+                                        },
+                                        positionDescription = { page ->
+                                            viewModel.rh.gs(CoreR.string.carousel_position_description, page + 1, order.size)
+                                        }
+                                    )
+                                }
+                            ) { itemState ->
+                                // While sorting, the card at a position shows the entry the working
+                                // order puts there — not the one at that index in the stored list.
+                                val dataIndex = workingOrder?.getOrNull(itemState.page) ?: itemState.page
+                                val entry = uiState.entries.getOrNull(dataIndex)
                                 if (entry != null) {
                                     QuickWizardCarouselCard(
                                         entry = entry,
-                                        isSelected = pagerState.currentPage == page,
-                                        modifier = Modifier
-                                            .graphicsLayer {
-                                                val pageOffset = (
-                                                    (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                                                    ).absoluteValue
-                                                // Scale effect for carousel
-                                                lerp(
-                                                    start = 0.85f,
-                                                    stop = 1f,
-                                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                                ).also { scale ->
-                                                    scaleX = scale
-                                                    scaleY = scale
-                                                }
-                                                // Alpha effect
-                                                alpha = lerp(
-                                                    start = 0.5f,
-                                                    stop = 1f,
-                                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                                )
-                                            }
+                                        isSelected = itemState.isSelected
                                     )
                                 }
                             }
-
-                            // Page indicator dots
-                            PageIndicatorDots(
-                                pageCount = cardCount,
-                                currentPage = pagerState.currentPage
-                            )
 
                             // QuickWizard Editor (hidden in PLAY mode)
                             Column(
@@ -324,7 +400,9 @@ fun QuickWizardManagementScreen(
                                     .weight(1f)
                                     .verticalScroll(rememberScrollState())
                             ) {
-                                if (!isPlayMode && uiState.selectedIndex >= 0 && uiState.selectedIndex < uiState.entries.size) {
+                                // Editor hidden while sorting: Save has given up its toolbar slot to
+                                // Done, so an edit made there would have nowhere to go.
+                                if (!isPlayMode && !isReorderMode && uiState.selectedIndex >= 0 && uiState.selectedIndex < uiState.entries.size) {
                                     QuickWizardEditor(
                                         mode = uiState.editorMode,
                                         buttonText = uiState.editorButtonText,
@@ -384,8 +462,9 @@ fun QuickWizardManagementScreen(
                         }
                     }
 
-                    // Floating Toolbar with FAB (M3 style)
-                    Row(
+                    // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
+                    // cards, so they are hidden while sorting rather than left floating over the sort controls.
+                    if (!isReorderMode) Row(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(16.dp),

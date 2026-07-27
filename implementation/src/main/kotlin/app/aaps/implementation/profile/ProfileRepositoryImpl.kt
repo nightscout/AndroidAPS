@@ -164,6 +164,28 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun reorder(order: List<Int>): Result<Unit> = mutex.withLock {
+        if (order.size != profilesList.size || order.toSet() != profilesList.indices.toSet()) {
+            return@withLock Result.failure(
+                IllegalArgumentException("reorder($order): not a permutation of 0..${profilesList.size - 1}")
+            )
+        }
+        // Identity order — skip the write entirely. Persisting would bump LocalProfileLastChange and
+        // trigger a full profile-store upload to NS/xDrip for a list that did not actually change.
+        if (order.withIndex().all { (newIndex, oldIndex) -> newIndex == oldIndex }) {
+            return@withLock Result.success(Unit)
+        }
+        runCatching {
+            withContext(Dispatchers.IO) {
+                // Rebuild rather than shuffle in place: storeSettingsInternal rewrites every indexed
+                // preference key from scratch, so the new list only has to be correct, not minimal.
+                profilesList = order.mapTo(ArrayList(order.size)) { profilesList[it] }
+                storeSettingsInternal(timestamp = dateUtil.now())
+            }
+            snapshot()
+        }
+    }
+
     override suspend fun replace(index: Int, profile: SingleProfile): Result<Unit> = mutex.withLock {
         if (index !in profilesList.indices) {
             return@withLock Result.failure(IndexOutOfBoundsException("replace($index): list size ${profilesList.size}"))

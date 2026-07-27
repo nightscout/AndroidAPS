@@ -21,6 +21,7 @@ import app.aaps.ui.events.EventQuickWizardChange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,10 +29,13 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 
 /**
@@ -204,6 +208,107 @@ class QuickWizardManagementViewModel @Inject constructor(
      * Check if current editor has unsaved changes
      */
     fun hasUnsavedChanges(): Boolean = uiState.value.hasUnsavedChanges
+
+    // ---------------------------------------------------------------------------------------------
+    // Reorder ("sort") mode
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Working order while reorder mode is on, as `value[position] == originalIndex`; null when the
+     * mode is off — which is also the flag the screen uses to decide it is sorting.
+     */
+    private val _reorderOrder = MutableStateFlow<List<Int>?>(null)
+    val reorderOrder: StateFlow<List<Int>?> = _reorderOrder.asStateFlow()
+
+    /** Entry guids as they were when the mode was entered. See [commitReorder]. */
+    private var reorderGuids: List<String> = emptyList()
+
+    /** Original index of the entry the carousel re-centres on: the last one moved, else the selected one. */
+    private var reorderAnchor: Int = 0
+
+    /** Nothing to rearrange with a single entry. */
+    fun canReorder(): Boolean = uiState.value.entries.size > 1
+
+    fun enterReorderMode() {
+        val entries = uiState.value.entries
+        if (entries.size < 2) return
+        reorderGuids = entries.map { it.guid() }
+        reorderAnchor = uiState.value.selectedIndex.coerceIn(0, entries.size - 1)
+        _reorderOrder.value = List(entries.size) { it }
+    }
+
+    fun cancelReorder() {
+        _reorderOrder.value = null
+    }
+
+    /**
+     * Apply one move as remove-then-insert, not a swap, so a non-adjacent move shifts the items in
+     * between rather than scrambling them.
+     *
+     * @return true if the order changed. The carousel follows the moved card only on true.
+     */
+    fun moveReorderItem(from: Int, to: Int): Boolean {
+        val current = _reorderOrder.value ?: return false
+        if (from == to || from !in current.indices || to !in current.indices) return false
+        reorderAnchor = current[from]
+        _reorderOrder.value = current.toMutableList().apply { add(to, removeAt(from)) }
+        return true
+    }
+
+    /**
+     * Persist the working order and leave reorder mode.
+     *
+     * Commits once, here — not per move — because the entry list is a single JSON blob on a
+     * bidirectionally synced preference.
+     *
+     * Note the write makes [QuickWizard] reload, which repopulates the editor from whichever entry
+     * ends up selected — so unsaved editor changes do not survive a commit, exactly as they do not
+     * survive an entry list synced in from the main phone.
+     *
+     * @return the card index to settle on, or null if the commit was abandoned because the entry
+     *         list changed underneath us.
+     */
+    suspend fun commitReorder(): Int? {
+        val order = _reorderOrder.value ?: return null
+        // Resolved for both branches, so an undone move lands on the same card a committed one would.
+        val anchorPosition = order.indexOf(reorderAnchor).takeIf { it >= 0 } ?: 0
+        if (order.withIndex().all { (position, original) -> position == original }) {
+            _reorderOrder.value = null
+            return anchorPosition
+        }
+        // The order is a list of indices, so it only means anything against the list it came from.
+        if (uiState.value.entries.map { it.guid() } != reorderGuids) return failReorder()
+        val expectedGuids = order.map { reorderGuids[it] }
+        return try {
+            val applied = withContext(Dispatchers.IO) { quickWizard.reorder(order) }
+            if (!applied) return failReorder()
+            rxBus.send(EventQuickWizardChange())
+            // Hold the working order until the reloaded list carries the new arrangement, otherwise
+            // the cards would render the pre-sort order at post-sort positions for a frame.
+            withTimeoutOrNull(ENTRY_RELOAD_TIMEOUT_MS) {
+                uiState.first { state -> state.entries.map { it.guid() } == expectedGuids }
+            }
+            _reorderOrder.value = null
+            // The reload preserves the selection by position, which now points at a different entry.
+            selectEntry(anchorPosition)
+            updateCurrentCardIndex(anchorPosition)
+            anchorPosition
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.UI, "Failed to persist reordered QuickWizard entries", e)
+            failReorder()
+        }
+    }
+
+    private fun failReorder(): Int? {
+        _reorderOrder.value = null
+        rxBus.send(
+            EventShowSnackbar(
+                rh.gs(app.aaps.core.ui.R.string.presets_changed_reorder_aborted),
+                EventShowSnackbar.Type.Error
+            )
+        )
+        return null
+    }
 
     /**
      * Save current entry
@@ -491,4 +596,14 @@ class QuickWizardManagementViewModel @Inject constructor(
      * Convert boolean to QuickWizardEntry radio number (0 = true/YES, 1 = false/NO)
      */
     private fun booleanToRadioNumber(value: Boolean): Int = if (value) 0 else 1
+
+    companion object {
+
+        /**
+         * How long [commitReorder] waits for the reloaded entry list to carry the new order before
+         * leaving reorder mode anyway. A safety net only — the reload normally lands in a frame or
+         * two, and this exists so the mode cannot get stuck.
+         */
+        private const val ENTRY_RELOAD_TIMEOUT_MS = 1_000L
+    }
 }
