@@ -790,15 +790,21 @@ fun SecondaryGraphCompose(
         // zero literal points for either series. Deliberately NOT using windowedY here: its own
         // ifEmpty fallback dumps the *whole loaded day's* values the moment the window has no
         // literal point, which is exactly what over-inflated this axis in the first place. Instead,
-        // filter to the window with no fallback, and separately fold in the profile rate actually
-        // in effect at the window start (stepValueAt), so a windowless stretch reflects just this
-        // window's real profile level instead of the whole day's range.
+        // filter to the window with no fallback, and separately fold in the rate actually in effect
+        // at the window start (stepValueAt) for BOTH series — e.g. a high temp basal that started
+        // just 1 minute before the window but runs for 2 hours has no literal change-point inside
+        // the window either, so without this it would be invisible to this scale computation even
+        // though its bar is drawn across the whole visible window (and could overlap IOB if it's
+        // the true max) — reflects just this window's real level instead of the whole day's range.
         fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
         val literalWindowed = processedBasalProfile.filter { inWindow(it.first) }.map { it.second } +
             processedBasalActual.filter { inWindow(it.first) }.map { it.second }
-        val hiddenProfileValue = visibleMinX?.let { stepValueAt(processedBasalProfile, it) }
-        val windowedAbsMax = (literalWindowed + listOfNotNull(hiddenProfileValue)).map { -it }.maxOrNull()
-        (windowedAbsMax?.takeIf { it > 0.0 } ?: hiddenProfileValue?.let { -it } ?: basalData.maxBasal) / BASAL_HEIGHT_FRACTION
+        val hiddenValues = listOfNotNull(
+            visibleMinX?.let { stepValueAt(processedBasalProfile, it) },
+            visibleMinX?.let { stepValueAt(processedBasalActual, it) }
+        )
+        val windowedAbsMax = (literalWindowed + hiddenValues).map { -it }.maxOrNull()
+        (windowedAbsMax?.takeIf { it > 0.0 } ?: hiddenValues.maxOfOrNull { -it } ?: basalData.maxBasal) / BASAL_HEIGHT_FRACTION
     }
     val basalRangeProvider = remember(maxX, basalMaxY) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = -basalMaxY, maxY = 0.0)
