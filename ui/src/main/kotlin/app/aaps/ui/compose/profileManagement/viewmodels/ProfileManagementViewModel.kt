@@ -14,7 +14,6 @@ import app.aaps.core.graph.profile.buildProfileCompareData
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failTextResId
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -31,7 +30,6 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.ProfileValidationError
 import app.aaps.core.interfaces.profile.SingleProfile
-import app.aaps.core.interfaces.profile.getRunningOrRequestedICfg
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -43,6 +41,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
+import app.aaps.core.ui.clientcontrol.failTextResId
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.icons.IcProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,8 +56,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
@@ -619,17 +618,19 @@ class ProfileManagementViewModel @Inject constructor(
                         onOk = {
                             appScope.launch {
                                 when (val result = batchExecutor.commit(prepared.id, Sources.ProfileSwitchDialog, label)) {
-                                    is ActionProgress.Applied -> {
+                                    is ActionProgress.Applied  -> {
                                         if (percentage == 90 && durationMinutes == 10) preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
                                         withContext(Dispatchers.Main) { onSuccess() }
                                     }
+
                                     is ActionProgress.Rejected ->
                                         if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
                                             rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failTextResId())))
                                         else result.detail?.let { detail ->
                                             rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                                         }
-                                    else                      -> Unit // Unconfirmed → app-level modal
+
+                                    else                       -> Unit // Unconfirmed → app-level modal
                                 }
                             }
                         }

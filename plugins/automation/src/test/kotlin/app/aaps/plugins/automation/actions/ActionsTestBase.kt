@@ -45,7 +45,6 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.smsCommunicator = smsCommunicator
             }
             if (it is ActionProfileSwitch) {
-                it.insulin = insulin
                 it.profileFunction = profileFunction
                 it.dateUtil = dateUtil
                 it.profileRepository = profileRepository

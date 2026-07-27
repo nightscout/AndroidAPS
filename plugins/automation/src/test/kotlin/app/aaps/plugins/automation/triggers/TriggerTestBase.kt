@@ -52,9 +52,6 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.dateUtil = dateUtil
                 it.profileUtil = profileUtil
             }
-            if (it is TriggerReservoirLevel) {
-                it.insulin = insulin
-            }
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction
             }

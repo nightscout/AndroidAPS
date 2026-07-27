@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -135,9 +134,7 @@ internal class ProfileManagementViewModelTest {
 
     @Test
     fun `no picker is offered while an insulin is in force`() = runTest {
-        val running = mock<EffectiveProfile>()
-        whenever(running.iCfg).thenReturn(iCfg("Running"))
-        whenever(profileFunction.getProfile()).thenReturn(running)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(iCfg("Running"))
 
         // The master resolves the in-force insulin itself, so the screen must not ask.
         assertThat(sut.insulinChoice().choices).isEmpty()
@@ -145,8 +142,7 @@ internal class ProfileManagementViewModelTest {
 
     @Test
     fun `with nothing in force the catalogue is offered, preselected from the last switch`() = runTest {
-        whenever(profileFunction.getProfile()).thenReturn(null)
-        whenever(profileFunction.getRequestedProfile()).thenReturn(null)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
         whenever(insulinManager.insulins).thenReturn(arrayListOf(iCfg("Novorapid"), iCfg("Fiasp")))
         val older = mock<PS>().also { whenever(it.timestamp).thenReturn(1_000L); whenever(it.iCfg).thenReturn(iCfg("Novorapid")) }
         val newest = mock<PS>().also { whenever(it.timestamp).thenReturn(2_000L); whenever(it.iCfg).thenReturn(iCfg("Fiasp")) }
@@ -160,8 +156,7 @@ internal class ProfileManagementViewModelTest {
 
     @Test
     fun `preselection is empty when the last used insulin is no longer in the catalogue`() = runTest {
-        whenever(profileFunction.getProfile()).thenReturn(null)
-        whenever(profileFunction.getRequestedProfile()).thenReturn(null)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
         whenever(insulinManager.insulins).thenReturn(arrayListOf(iCfg("Novorapid")))
         val deleted = mock<PS>().also { whenever(it.timestamp).thenReturn(1L); whenever(it.iCfg).thenReturn(iCfg("Deleted")) }
         whenever(persistenceLayer.getProfileSwitches()).thenReturn(listOf(deleted))

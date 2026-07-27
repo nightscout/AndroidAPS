@@ -1,14 +1,13 @@
 package app.aaps.implementation.bolus
 
+import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
-import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -497,10 +496,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val store = mock<ProfileStore>()
         whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
-        // A named switch has to record an insulin; here it comes from the profile in force.
-        val running = mock<EffectiveProfile>()
-        whenever(running.iCfg).thenReturn(someICfg)
-        whenever(profileFunction.getProfile()).thenReturn(running)
+        // A named switch has to record an insulin; here it comes from the insulin in force.
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch"))) as WizardBolusExecutor.PrepareResult.Preview
@@ -518,8 +515,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
         // Nothing running and nothing pending — but the caller already asked the user (fill/prime, activation).
-        whenever(profileFunction.getProfile()).thenReturn(null)
-        whenever(profileFunction.getRequestedProfile()).thenReturn(null)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
         val chosen = ICfg(insulinLabel = "Chosen", insulinEndTime = 420, insulinPeakTime = 55, concentration = 1.0)
         val executor = create()
 
@@ -536,8 +532,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val store = mock<ProfileStore>()
         whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
-        whenever(profileFunction.getProfile()).thenReturn(null)
-        whenever(profileFunction.getRequestedProfile()).thenReturn(null)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
         val executor = create()
 
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch")))
@@ -547,24 +542,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
     }
 
-    @Test
-    fun prepareBatch_namedProfileSwitch_fallsBackToARequestedButNotYetEffectiveSwitch() = runTest {
-        stubPassthroughConstraints()
-        val store = mock<ProfileStore>()
-        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
-        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
-        // No EPS yet (pump hasn't confirmed), but the user has already requested a switch — still a real choice.
-        whenever(profileFunction.getProfile()).thenReturn(null)
-        val requested = mock<PS>()
-        whenever(requested.iCfg).thenReturn(someICfg)
-        whenever(profileFunction.getRequestedProfile()).thenReturn(requested)
-        val executor = create()
-
-        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch"))) as WizardBolusExecutor.PrepareResult.Preview
-        executor.confirm(prepared.bolusId, Sources.NSClient, { })
-
-        verify(profileFunction).createProfileSwitch(eq(store), eq("Lunch"), eq(60), eq(110), eq(0), any(), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), eq(someICfg))
-    }
+    // The running-vs-requested precedence itself belongs to ProfileFunction and is asserted in
+    // ProfileFunctionImplTest; here it is a stubbed collaborator, so re-testing it would prove nothing.
 
     @Test
     fun prepareBatch_namedProfileSwitch_notInMasterStore_returnsError() = runTest {

@@ -34,7 +34,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.profile.getRunningOrRequestedICfg
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
@@ -372,7 +371,7 @@ class WizardBolusExecutorImpl @Inject constructor(
                 // (fill/prime, activation), else the insulin in force. With neither, refuse rather than
                 // substitute — a named switch is reachable with nothing running (first activation, expired EPS).
                 if (ps.iCfg == null && profileFunction.getRunningOrRequestedICfg() == null)
-                    return WizardBolusExecutor.PrepareResult.Error(rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin))
+                    return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.profile_switch_no_insulin))
             } else if (profileFunction.getProfile() == null) {
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.no_profile_set))
             }

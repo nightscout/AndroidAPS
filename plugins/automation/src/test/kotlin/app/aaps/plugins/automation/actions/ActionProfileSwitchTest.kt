@@ -5,6 +5,7 @@ import app.aaps.core.data.model.PS
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,7 +34,8 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         whenever(rh.gs(app.aaps.core.ui.R.string.notexists)).thenReturn("not exists")
         whenever(rh.gs(app.aaps.core.ui.R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
         whenever(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
-        whenever(insulin.iCfg).thenReturn(iCfg)
+        // Automation keeps whatever insulin is in force; it never picks one from the catalogue.
+        runBlocking { whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(iCfg) }
 
         sut = ActionProfileSwitch(injector)
     }

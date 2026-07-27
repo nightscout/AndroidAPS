@@ -59,8 +59,6 @@ class InsulinImpl @Inject constructor(
     // the per-insulin [storeSettings] so the normalize persists at most once (via putRemote) at the end.
     @Volatile private var applying = false
 
-    override val friendlyName get() = iCfg.insulinNickname  // No more used to delete or a way to provide Nickname ?
-
     @Volatile private var cachedICfg: ICfg? = null
 
     // Non-blocking: this getter is read during Compose composition (e.g. BolusCarbsScreen,

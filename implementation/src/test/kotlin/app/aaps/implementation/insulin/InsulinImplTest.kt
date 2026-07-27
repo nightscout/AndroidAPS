@@ -5,7 +5,6 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -56,11 +55,6 @@ class InsulinImplTest : TestBase() {
         whenever(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
         whenever(rh.gs(eq(R.string.u100))).thenReturn("U100")
         sut = InsulinImpl(preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel, testScope)
-    }
-
-    @Test
-    fun getFriendlyNameTest() {
-        assertThat(sut.friendlyName).isEqualTo("Free-Peak Oref")
     }
 
     @Test

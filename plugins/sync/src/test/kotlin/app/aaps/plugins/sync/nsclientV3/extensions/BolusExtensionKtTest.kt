@@ -21,7 +21,6 @@ internal class BolusExtensionKtTest : TestBase() {
 
     @BeforeEach
     fun doMock() {
-        `when`(insulin.friendlyName).thenReturn("Name")
         `when`(insulin.iCfg).thenReturn(ICfg(insulinLabel = "Name", insulinEndTime = (8.0 * 3600 * 1000).toLong(), insulinPeakTime = 45 * 60 * 1000, concentration = 1.0))
     }
 
