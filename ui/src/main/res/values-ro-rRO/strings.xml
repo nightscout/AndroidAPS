@@ -136,9 +136,15 @@
     <string name="clientcontrol_pending_working_title">Se aplică…</string>
     <string name="clientcontrol_pending_working_text">Se așteaptă confirmarea din partea dispozitivului principal…</string>
     <string name="clientcontrol_pending_rejected_title">Neaplicat</string>
+    <string name="clientcontrol_pending_failed_format">%1$s nu a putut fi realizată.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Aplicat parțial</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s a fost aplicată, dar unele acțiuni nu.\n Verificați starea activă.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Nu s-a putut confirma</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s a fost trimis, dar nu s-a întors nicio confirmare.\n%2$s\n va apărea aici când/dacă dispozitivul principal îl aplică.</string>
+    <string name="clientcontrol_pending_stop_waiting">Opriți așteptarea</string>
     <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
     <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
     <string name="load_peak_from">Încărcați maxim de la</string>
