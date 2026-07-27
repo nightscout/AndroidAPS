@@ -4,9 +4,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 @Suppress("ConstPropertyName")
 object Versions {
 
-    // On change edit aaps-ci.yml
-    const val appVersion = "4.0.0-dev-b"
-    const val versionCode = 1500
+    // Production releases use a numeric-only version so Config.isDev() is false.
+    // Increment versionCode for every signed production update.
+    const val appVersion = "4.0.0"
+    const val versionCode = 1501
 
     const val compileSdk = 37
     const val minSdk = 31
