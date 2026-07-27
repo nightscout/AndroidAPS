@@ -690,6 +690,12 @@ class BLEComm @Inject constructor(
     }
 
     // the rest of packets
+    // @Synchronized: this is a single-request-in-flight request/response primitive — it sets the shared
+    // processedMessage, does a check-then-act on mSendQueue, writes, then blocks for the reply. Without
+    // serialization a second caller (e.g. a post-bolus appScope coroutine) could interleave packets and
+    // clobber processedMessage mid-exchange. The reply path (processMessage) takes no `this` lock, so
+    // holding it across the reply wait is deadlock-safe.
+    @Synchronized
     fun sendMessage(message: DanaRSPacket) {
         encryptedCommandSent = true
         processedMessage = message
