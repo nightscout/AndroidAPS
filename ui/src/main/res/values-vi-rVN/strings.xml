@@ -277,7 +277,7 @@
     <string name="quick_launch_category_care">Care Portal</string>
     <string name="quick_launch_category_profile">Cấu hình</string>
     <string name="quick_launch_category_temp_target">Các cài đặt sẵn cho mục tiêu tạm thời</string>
-    <string name="quick_launch_category_quick_wizard">Hướng dẫn nhanh</string>
+    <string name="quick_launch_category_quick_wizard">Cấu hình nhanh</string>
     <string name="quick_launch_category_automation">Tự động</string>
     <string name="quick_launch_all_selected">Tất cả mục đã chọn</string>
     <string name="quick_launch_no_quick_wizard">Thêm hướng dẫn nhanh để sử dụng tại đây</string>
