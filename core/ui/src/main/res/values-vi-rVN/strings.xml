@@ -477,7 +477,7 @@
     <string name="activity">Hoạt động</string>
     <string name="wear">Wear</string>
     <string name="automation">Tự động hóa</string>
-    <string name="automation_management_desc">Create rules that run actions automatically based on triggers</string>
+    <string name="automation_management_desc">Tạo quy tắc để tự động thực hiện các hành động dựa trên các điều kiện kích hoạt</string>
     <string name="settingsexport">Xuất cài đặt</string>
     <string name="custom">Tuỳ chỉnh</string>
     <string name="preset_settings">Thiết lập cài đặt sẵn</string>
@@ -925,6 +925,12 @@
     <string name="add">Thêm</string>
     <string name="remove">Loại bỏ</string>
     <string name="reorder">Sắp xếp lại</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Chuyển sớm hơn</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Chuyển muộn hơn</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Hiện các chi tiết</string>
+    <string name="presets_changed_reorder_aborted">Các cài đặt sẵn đã được thay đổi ở nơi khác. Thứ tự mới không được lưu.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Vị trí %1$d của %2$d</string>
     <string name="status">Trạng thái</string>
     <string name="pump_actions">Các thao tác với bơm</string>
     <string name="tempbasal_button">Liều nền tạm thời</string>
