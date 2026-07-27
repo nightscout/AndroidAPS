@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -35,6 +34,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.profile.getRunningOrRequestedICfg
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
@@ -75,7 +75,6 @@ class WizardBolusExecutorImpl @Inject constructor(
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
-    private val insulin: Insulin,
     private val iobCobCalculator: IobCobCalculator,
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
@@ -343,6 +342,11 @@ class WizardBolusExecutorImpl @Inject constructor(
                 // Named switch: the target must exist in the MASTER's store (a client may relay a name the master resolves).
                 if (profileRepository.profile.value?.getSpecificProfile(psName) == null)
                     return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.scene_profile_not_found, psName))
+                // The switch has to record an insulin. Accept one the caller already asked the user for
+                // (fill/prime, activation), else the insulin in force. With neither, refuse rather than
+                // substitute — a named switch is reachable with nothing running (first activation, expired EPS).
+                if (ps.iCfg == null && profileFunction.getRunningOrRequestedICfg() == null)
+                    return WizardBolusExecutor.PrepareResult.Error(rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin))
             } else if (profileFunction.getProfile() == null) {
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.no_profile_set))
             }
@@ -728,6 +732,12 @@ class WizardBolusExecutorImpl @Inject constructor(
         val psName = ps.profileName
         if (psName != null) {
             val store = profileRepository.profile.value ?: return
+            // Supplied by the caller that asked the user, else the insulin in force. prepare() refuses the
+            // batch when neither exists, so null here means the batch bypassed prepare — a bug, not a user state.
+            val iCfg = ps.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: run {
+                aapsLogger.error(LTag.CORE, "applyProfileSwitch: no insulin config available for '$psName' — prepare should have refused this batch")
+                return
+            }
             profileFunction.createProfileSwitch(
                 profileStore = store,
                 profileName = psName,
@@ -744,7 +754,7 @@ class WizardBolusExecutorImpl @Inject constructor(
                     ValueWithUnit.Hour(ps.timeShiftHours).takeIf { ps.timeShiftHours != 0 },
                     ValueWithUnit.Minute(ps.durationMinutes).takeIf { ps.durationMinutes != 0 }
                 ),
-                iCfg = profileFunction.getProfile()?.iCfg ?: insulin.iCfg
+                iCfg = iCfg
             )
         } else {
             profileFunction.createProfileSwitch(

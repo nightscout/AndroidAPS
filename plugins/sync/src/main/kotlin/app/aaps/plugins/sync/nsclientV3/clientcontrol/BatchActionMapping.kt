@@ -31,7 +31,10 @@ internal fun BatchAction.toDto(): BatchActionDto = when (this) {
     is BatchAction.ProfileSwitch       -> BatchActionDto(
         type = BatchActionDto.TYPE_PROFILE_SWITCH,
         percentage = percentage, timeShiftHours = timeShiftHours, durationMinutes = durationMinutes,
-        profileName = profileName, notes = notes ?: ""
+        profileName = profileName, notes = notes ?: "",
+        // Only set when the client already asked the user (fill/prime, activation). Null → the master
+        // resolves the insulin in force itself, or refuses the batch when there is none.
+        iCfgJson = iCfg?.toJsonObject()?.toString()
     )
 
     is BatchAction.RunningMode         -> BatchActionDto(
@@ -66,25 +69,31 @@ internal fun BatchAction.toDto(): BatchActionDto = when (this) {
     )
 }
 
+/** Parse the shared, type-gated [BatchActionDto.iCfgJson] slot; null when absent or unparseable. */
+private fun String?.toICfgOrNull(): ICfg? =
+    this?.let { j -> runCatching { (Json.parseToJsonElement(j) as? JsonObject)?.let { ICfg.fromJsonObject(it) } }.getOrNull() }
+
 /** Wire [BatchActionDto] → domain [BatchAction] (master receive side); null if the type is unknown. */
 internal fun BatchActionDto.toDomain(): BatchAction? = when (type) {
     BatchActionDto.TYPE_BOLUS                 -> BatchAction.Bolus(
         insulin = insulin, carbs = carbs, carbsTimeOffsetMinutes = carbsTimeOffsetMinutes,
         carbsDurationHours = carbsDurationHours, recordOnly = recordOnly, notes = notes, timestamp = timestamp,
-        iCfg = iCfgJson?.let { j -> runCatching { (Json.parseToJsonElement(j) as? JsonObject)?.let { ICfg.fromJsonObject(it) } }.getOrNull() },
+        iCfg = iCfgJson.toICfgOrNull(),
         eCarbsGrams = eCarbsGrams, eCarbsDelayMinutes = eCarbsDelayMinutes, eCarbsDurationHours = eCarbsDurationHours,
         quickWizardGuid = quickWizardGuid
     )
 
     BatchActionDto.TYPE_TEMP_TARGET           -> reason?.let { BatchAction.TempTarget(it, lowMgdl, highMgdl, durationMinutes, startOffsetMinutes, notes.ifEmpty { null }) }
-    BatchActionDto.TYPE_PROFILE_SWITCH        -> BatchAction.ProfileSwitch(percentage, timeShiftHours, durationMinutes, profileName, notes.ifEmpty { null })
+    // An unparseable iCfg degrades to null (the master then resolves the in-force insulin or refuses) rather
+    // than dropping the action — unlike INSULIN_ACTIVATE, the switch is still meaningful without it.
+    BatchActionDto.TYPE_PROFILE_SWITCH        -> BatchAction.ProfileSwitch(percentage, timeShiftHours, durationMinutes, profileName, notes.ifEmpty { null }, iCfgJson.toICfgOrNull())
     BatchActionDto.TYPE_RUNNING_MODE          -> runningMode?.let { name -> runCatching { RM.Mode.valueOf(name) }.getOrNull()?.let { BatchAction.RunningMode(it, durationMinutes) } }
     BatchActionDto.TYPE_TEMP_BASAL            -> BatchAction.TempBasal(rate, isPercent, durationMinutes)
     BatchActionDto.TYPE_EXTENDED_BOLUS        -> BatchAction.ExtendedBolus(insulin, durationMinutes)
     BatchActionDto.TYPE_CANCEL_TEMP_BASAL     -> BatchAction.CancelTempBasal
     BatchActionDto.TYPE_CANCEL_EXTENDED_BOLUS -> BatchAction.CancelExtendedBolus
     // null (unparseable iCfg) drops the action — prepareBatch's no-action guard then rejects an insulin-only batch.
-    BatchActionDto.TYPE_INSULIN_ACTIVATE      -> iCfgJson?.let { j -> runCatching { (Json.parseToJsonElement(j) as? JsonObject)?.let { ICfg.fromJsonObject(it) } }.getOrNull() }?.let { BatchAction.InsulinActivate(it) }
+    BatchActionDto.TYPE_INSULIN_ACTIVATE      -> iCfgJson.toICfgOrNull()?.let { BatchAction.InsulinActivate(it) }
     // Unknown/unparseable teType drops the action (the master's no-action guard then rejects an empty batch).
     BatchActionDto.TYPE_THERAPY_EVENT         -> teType?.let { runCatching { TE.Type.valueOf(it) }.getOrNull() }?.let { type ->
         BatchAction.TherapyEvent(

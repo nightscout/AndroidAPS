@@ -2,7 +2,6 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpStatusProvider
@@ -20,7 +19,6 @@ import javax.inject.Singleton
 @Singleton
 class PumpStatusProviderImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     private val pumpSync: PumpSync,
     private val profileFunction: ProfileFunction,
     private val persistenceLayer: PersistenceLayer,
@@ -33,7 +31,10 @@ class PumpStatusProviderImpl @Inject constructor(
 
     override suspend fun shortStatus(veryShort: Boolean): String {
         val pump = activePlugin.activePump
-        val iCfg = insulin.iCfg
+        // Concentration comes from the running profile, which owns the authoritative iCfg. Null means
+        // no profile is running, so there is no IU/cU conversion to state — the last-bolus line is
+        // omitted rather than rendered at a guessed concentration. Same source as generatePumpJsonStatus.
+        val concentration = profileFunction.getProfile()?.insulinConcentration()
         val lines = mutableListOf<String>()
         if (!pump.isInitialized())
             lines += rh.gs(R.string.short_status_not_initialized)
@@ -48,11 +49,13 @@ class PumpStatusProviderImpl @Inject constructor(
 
             pump.lastBolusAmount.value?.let { lastBolusAmount ->
                 pump.lastBolusTime.value?.let { lastBolusTimestamp ->
-                    lines += rh.gs(
-                        R.string.short_status_last_bolus,
-                        decimalFormatter.to2Decimal(lastBolusAmount.iU(iCfg.concentration)),
-                        dateUtil.timeString(lastBolusTimestamp)
-                    )
+                    concentration?.let {
+                        lines += rh.gs(
+                            R.string.short_status_last_bolus,
+                            decimalFormatter.to2Decimal(lastBolusAmount.iU(it)),
+                            dateUtil.timeString(lastBolusTimestamp)
+                        )
+                    }
                 }
             }
 

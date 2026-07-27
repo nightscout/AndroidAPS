@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -31,6 +30,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -81,7 +81,6 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val config: Config,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     preferences: Preferences,
@@ -143,8 +142,9 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun getIsfMgdl(profile: Profile, caller: String): Double? {
         val start = dateUtil.now()
-        val multiplier = (profile as ProfileSealed.EPS).value.originalPercentage / 100.0
-        val sensitivity = runBlocking { calculateVariableIsf(start, multiplier) }
+        val epsProfile = profile as ProfileSealed.EPS
+        val multiplier = epsProfile.value.originalPercentage / 100.0
+        val sensitivity = runBlocking { calculateVariableIsf(epsProfile, start, multiplier) }
         if (sensitivity.second == null)
             notificationManager.post(
                 NotificationId.DYN_ISF_FALLBACK,
@@ -193,7 +193,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     private val dynIsfCache = LongSparseArray<Double>()
 
-    private suspend fun calculateVariableIsf(timestamp: Long, multiplier: Double): Pair<String, Double?> {
+    private suspend fun calculateVariableIsf(profile: EffectiveProfile, timestamp: Long, multiplier: Double): Pair<String, Double?> {
         if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)
 
         val result = persistenceLayer.getApsResultCloseTo(timestamp)
@@ -212,7 +212,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             return Pair("HIT", cached)
         }
 
-        val dynIsfResult = calculateRawDynIsf(multiplier)
+        val dynIsfResult = calculateRawDynIsf(profile, multiplier)
         if (!dynIsfResult.tddPartsCalculated()) return Pair("TDD miss", null)
         // no cached result found, let's calculate the value
         //aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
@@ -244,7 +244,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             "DynIsfResult: tdd1D=$tdd1D tdd7D=$tdd7D tddLast24H=$tddLast24H tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tdd=$tdd variableSensitivity=$variableSensitivity insulinDivisor=$insulinDivisor tdd7DDataCarbs=$tdd7DDataCarbs tdd7DAllDaysHaveCarbs=$tdd7DAllDaysHaveCarbs"
     }
 
-    private suspend fun calculateRawDynIsf(multiplier: Double): DynIsfResult {
+    private suspend fun calculateRawDynIsf(profile: EffectiveProfile, multiplier: Double): DynIsfResult {
         val dynIsfResult = DynIsfResult()
         // DynamicISF specific
         // without these values DynISF doesn't work properly
@@ -263,10 +263,14 @@ open class OpenAPSSMBPlugin @Inject constructor(
         dynIsfResult.tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount
         dynIsfResult.tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount
 
+        // Peak comes from the profile this calculation is about, which owns the authoritative (non-null)
+        // iCfg. The result is cached per timestamp for ISF replay, so a global "currently active
+        // insulin" would be the wrong source even when one is available.
+        val peak = profile.iCfg.peak
         dynIsfResult.insulinDivisor = when {
-            insulin.iCfg.peak > 65 -> 55 // rapid peak: 75
-            insulin.iCfg.peak > 50 -> 65 // ultra rapid peak: 55
-            else                   -> 75 // lyumjev peak: 45
+            peak > 65 -> 55 // rapid peak: 75
+            peak > 50 -> 65 // ultra rapid peak: 55
+            else      -> 75 // lyumjev peak: 45
         }
 
 
@@ -350,7 +354,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
         // var variableSensitivity = 0.0
         // var tdd = 0.0
         // var insulinDivisor = 0
-        val dynIsfResult = calculateRawDynIsf((profile as ProfileSealed.EPS).value.originalPercentage / 100.0)
+        val epsProfile = profile as ProfileSealed.EPS
+        val dynIsfResult = calculateRawDynIsf(epsProfile, epsProfile.value.originalPercentage / 100.0)
         if (dynIsfMode && !dynIsfResult.tddPartsCalculated()) {
             notificationManager.post(
                 NotificationId.SMB_FALLBACK,

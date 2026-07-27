@@ -388,11 +388,12 @@ class AutotuneViewModel(
 
     private suspend fun resolveProfile() {
         val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JSONObject())
-        val iCfg = profileFunction.getProfile()?.iCfg ?: insulin.iCfg
         profileFunction.getProfile()?.let { currentProfile ->
             profile = atProfileProvider.get().with(
                 profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile,
-                iCfg
+                // The running profile owns the authoritative, non-null iCfg. Nothing here is reachable
+                // without it — the previous fallback was computed outside this let and then discarded.
+                currentProfile.iCfg
             )
         }
     }

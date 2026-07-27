@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.profile.getRunningOrRequestedICfg
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
@@ -150,7 +151,7 @@ class InsulinDialogViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getRunningIcfg() = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg
+    private suspend fun getRunningIcfg() = profileFunction.getRunningOrRequestedICfg() ?: activeInsulin.iCfg
 
     fun refreshInsulinButtons() {
         _uiState.update {

@@ -54,13 +54,19 @@ sealed interface BatchAction {
      * [profileName] null → switch the **currently active** profile (wear / CPP); non-null → switch to that
      * **named** profile from the master's profile store. The master resolves the store by name, so a client can
      * relay a named switch the master executes. [notes] is an optional user note.
+     *
+     * [iCfg] is the insulin to stamp on the resulting switch, supplied by callers that asked the user —
+     * the pump fill/prime and activation flows. Leave it null and the master resolves the insulin in
+     * force (running profile, else a pending switch); if neither exists the batch is refused at prepare,
+     * because the insulin list is a catalogue to choose from, never a source of "the current one".
      */
     data class ProfileSwitch(
         val percentage: Int,
         val timeShiftHours: Int,
         val durationMinutes: Int,
         val profileName: String? = null,
-        val notes: String? = null
+        val notes: String? = null,
+        val iCfg: ICfg? = null
     ) : BatchAction
 
     /**

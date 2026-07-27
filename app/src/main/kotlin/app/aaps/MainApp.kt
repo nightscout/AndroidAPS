@@ -47,6 +47,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.profile.getRunningOrRequestedICfg
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -826,8 +827,19 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
     private suspend fun dataMigrations() {
         // Migrate to database 33 (ICfg)
+        //
+        // Goal: legacy rows predate ICfg, so they carry the `insulinEndTime = -1` sentinel and their IOB
+        // is computed from the clamped math floors in ICfg.iobCalcForTreatment — which under-counts IOB.
+        // Stamping them makes the insulin curve a property of the record, as v33 intends.
+        //
+        // The value must be the insulin those records were actually delivered with. Legacy preferences
+        // (below) reconstruct it; failing that the running profile owns the authoritative iCfg. Only when
+        // there is neither is a substitute used — declared to the user rather than guessed silently, and
+        // never taken from the insulin list, whose first entry is a positional accident, not "the current
+        // insulin". Note this is one-way: once stamped the sentinel is consumed and these records are not
+        // revisited, which is why the notification says so.
         val runningICfg = if (profileNameToDia.isEmpty())
-            profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
+            profileFunction.getRunningOrRequestedICfg() ?: substituteICfgForMigration()
         else {
             val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
                 profileNameToDia[profileName]
@@ -873,6 +885,24 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             )
         }
     }
+
+    /**
+     * Insulin config stamped onto legacy records when neither legacy preferences nor a running profile
+     * can tell us what was actually used — a rare upgrade case (no active profile switch at first start).
+     *
+     * Ultra-rapid: an 8h DIA is the same across every [InsulinType] template, so the only real choice is
+     * the peak. Concentration is 1.0 by construction, which is not a guess — these records predate
+     * concentration entirely, so 1.0 is the identity that leaves historical doses unscaled.
+     */
+    private fun substituteICfgForMigration(): ICfg =
+        InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg(rh.get()).also {
+            aapsLogger.warn(LTag.CORE, "Migration to DB 33: no profile and no legacy DIA, substituting ${it.insulinLabel}")
+            notificationManager.post(
+                id = NotificationId.INSULIN_MIGRATION_DEFAULT_USED,
+                rh.get().gs(R.string.insulin_migration_default_used, it.insulinLabel),
+                level = NotificationLevel.IMPORTANT
+            )
+        }
 
     private val timeDateReceiver = TimeDateOrTZChangeReceiver()
     private val networkReceiver = NetworkChangeReceiver()

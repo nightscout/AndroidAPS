@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.getRunningOrRequestedICfg
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -173,7 +174,7 @@ class TreatmentDialogViewModel @Inject constructor(
      * record is stamped "now" (timestamp 0 = now in the executor).
      */
     private suspend fun buildActions(state: TreatmentDialogUiState): List<BatchAction> {
-        val iCfg = if (state.forcedRecordOnly) profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg else null
+        val iCfg = if (state.forcedRecordOnly) profileFunction.getRunningOrRequestedICfg() ?: activeInsulin.iCfg else null
         // Floor to the deliverable bolus step so the confirmed amount equals what the pump delivers (the
         // concentration boundary floors the converted cU to the native pulse grid). ch.bolusStep is
         // amount-aware (Insight) + concentration-adjusted.

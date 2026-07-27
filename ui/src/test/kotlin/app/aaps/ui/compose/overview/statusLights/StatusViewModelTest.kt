@@ -3,7 +3,7 @@ package app.aaps.ui.compose.overview.statusLights
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -34,7 +34,7 @@ internal class StatusViewModelTest {
 
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var activePlugin: ActivePlugin
-    @Mock private lateinit var insulin: Insulin
+    @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var config: Config
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var dateUtil: DateUtil
@@ -59,7 +59,7 @@ internal class StatusViewModelTest {
         whenever(persistenceLayer.observeChanges(TE::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.databaseClearedFlow).thenReturn(emptyFlow())
         sut = StatusViewModel(
-            rh, activePlugin, insulin, config, persistenceLayer, dateUtil, rxBus, preferences,
+            rh, activePlugin, profileFunction, config, persistenceLayer, dateUtil, rxBus, preferences,
             tddCalculator, decimalFormatter, processedDeviceStatusData
         )
     }

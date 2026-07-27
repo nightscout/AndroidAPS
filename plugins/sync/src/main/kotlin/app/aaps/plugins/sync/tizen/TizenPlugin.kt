@@ -8,7 +8,6 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -66,7 +65,6 @@ class TizenPlugin @Inject constructor(
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider,
@@ -218,10 +216,14 @@ class TizenPlugin @Inject constructor(
 
     private fun pumpStatus(bundle: Bundle) {
         val pump = activePlugin.activePump
-        val iCfg = insulin.iCfg
         bundle.putLong("pumpTimeStamp", pump.lastDataTime.value)
         pump.batteryLevel.value?.let { bundle.putInt("pumpBattery", it) }
-        bundle.putDouble("pumpReservoir", pump.reservoirLevel.value.iU(iCfg.concentration))
+        // Concentration comes from the running profile, which owns the authoritative iCfg. With no
+        // profile there is no IU conversion to make, so the key is omitted rather than broadcast at a
+        // guessed concentration — same shape as the optional battery key above.
+        runBlocking { profileFunction.getProfile() }?.let {
+            bundle.putDouble("pumpReservoir", pump.reservoirLevel.value.iU(it.insulinConcentration()))
+        }
         bundle.putString("pumpStatus", runBlocking { pumpStatusProvider.shortStatus(false) })
     }
 

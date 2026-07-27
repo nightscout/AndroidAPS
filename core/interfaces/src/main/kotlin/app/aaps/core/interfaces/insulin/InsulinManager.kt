@@ -9,11 +9,6 @@ import app.aaps.core.data.model.ICfg
  */
 interface InsulinManager {
 
-    /**
-     * Provide default Insulin
-     */
-    val iCfg: ICfg
-
     /** All configured insulins */
     val insulins: ArrayList<ICfg>
 

@@ -7,9 +7,9 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
@@ -47,7 +47,7 @@ import javax.inject.Inject
 class StatusViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
+    private val profileFunction: ProfileFunction,
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
@@ -157,7 +157,10 @@ class StatusViewModel @Inject constructor(
         val reservoirLevel = if (config.AAPSCLIENT) {
             processedDeviceStatusData.pumpData?.reservoir ?: 0.0
         } else {
-            activePlugin.activePump.reservoirLevel.value.iU(insulin.iCfg.concentration)
+            // Concentration comes from the running profile, which owns the authoritative iCfg. With no
+            // profile there is no IU conversion to make, so the reservoir reads as unavailable — 0.0
+            // takes the existing "-" / UNSPECIFIED branch below rather than showing a mis-scaled figure.
+            profileFunction.getProfile()?.let { activePlugin.activePump.reservoirLevel.value.iU(it.insulinConcentration()) } ?: 0.0
         }
         val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
 

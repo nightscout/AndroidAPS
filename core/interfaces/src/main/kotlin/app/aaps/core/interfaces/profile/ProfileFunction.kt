@@ -58,6 +58,7 @@ interface ProfileFunction {
      */
     suspend fun isProfileChangePending(): Boolean
 
+
     /**
      * Build a new circadian profile switch request based on provided profile
      *
@@ -118,3 +119,22 @@ interface ProfileFunction {
      */
     suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean
 }
+
+/**
+ * Insulin configuration currently in force, resolved in precedence order:
+ *  1. the running [EffectiveProfile] — authoritative
+ *  2. a [PS] the user has requested that has not become effective yet — still a real user choice
+ *
+ * Both tiers are values the user actually selected: insulin is chosen when filling/priming the pump and
+ * carried into the resulting profile switch. There is deliberately **no** third tier — the insulin list
+ * is a catalogue to choose from, never a source of "the current one" — so a null result means the caller
+ * must ask the user or refuse the action, and must not substitute.
+ *
+ * Deliberately an extension, not a member: it is a pure derivation of [ProfileFunction.getProfile] and
+ * [ProfileFunction.getRequestedProfile], so making it non-mockable keeps the precedence rule identical in
+ * tests and in production — a stubbed member could silently disagree with the real one.
+ *
+ * @return the in-force [ICfg], or null when no profile is running and none is pending
+ */
+suspend fun ProfileFunction.getRunningOrRequestedICfg(): ICfg? =
+    getProfile()?.iCfg ?: getRequestedProfile()?.iCfg
