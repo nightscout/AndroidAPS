@@ -42,6 +42,10 @@
     <string name="setupwizard_open_ns_receive_settings">Acceptarea datelor Nightscout</string>
     <string name="setupwizard_pair_with_master_info">Asociați acest client cu AAPS principal astfel încât să poată trimite comenzi pe un canal securizat.</string>
     <string name="setupwizard_pairing_ws_warning">Conexiunea Nightscout WebSocket este necesară pentru asociere. Mergeți înapoi la pasul anterior și activați mai întâi.</string>
+    <string name="setupwizard_pairing_status_master">Clienți asociați: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Niciun client asociat încă</string>
+    <string name="setupwizard_pairing_status_client_paired">Asociat cu un principal</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Nu este asociat încă</string>
     <string name="readstatus">Citiți stare</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme legate de performanță.</string>
