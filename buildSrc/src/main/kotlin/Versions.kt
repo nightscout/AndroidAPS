@@ -7,7 +7,7 @@ object Versions {
     // Production releases use a numeric-only version so Config.isDev() is false.
     // Increment versionCode for every signed production update.
     const val appVersion = "4.0.0"
-    const val versionCode = 1501
+    const val versionCode = 1502
 
     const val compileSdk = 37
     const val minSdk = 31
