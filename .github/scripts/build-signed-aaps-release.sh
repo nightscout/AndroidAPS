@@ -19,6 +19,15 @@ extract_certificate_sha256() {
   ' "${verification_file}"
 }
 
+is_aaps_dev_version() {
+  local candidate="$1"
+  if [[ "${candidate}" == *-* || "${candidate}" =~ [[:alpha:]] ]]; then
+    [[ "${candidate}" == *-beta* || "${candidate}" == *-rc* ]] && return 1
+    return 0
+  fi
+  return 1
+}
+
 required_variables=(
   ANDROID_KEYSTORE_B64
   ANDROID_KEYSTORE_PASSWORD
@@ -55,7 +64,7 @@ keytool -list \
   -alias "${ANDROID_KEY_ALIAS}" >/dev/null
 
 set +e
-./gradlew :app:assembleFullRelease \
+bash ./gradlew :app:assembleFullRelease \
   --stacktrace \
   -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
   -Dkotlin.daemon.jvm.options="-Xmx2g" \
@@ -110,6 +119,9 @@ application_id="$(sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<< "${badging}" 
 version_name="$(sed -n "s/^package:.*versionName='\([^']*\)'.*/\1/p" <<< "${badging}" | head -n 1)"
 [[ "${application_id}" == "info.nightscout.androidaps" ]] || die "Unexpected application ID: ${application_id}"
 [[ -n "${version_name}" ]] || die "Could not determine APK version name"
+if [[ "${source_branch}" == "master" ]] && is_aaps_dev_version "${version_name}"; then
+  die "Refusing to publish master as AAPS dev version: ${version_name}"
+fi
 
 safe_version="$(printf '%s' "${version_name}" | tr -cs 'A-Za-z0-9._-' '-' | sed 's/^-*//;s/-*$//')"
 source_sha="$(git rev-parse HEAD)"
@@ -142,6 +154,11 @@ import sys
     run_number,
     source_branch,
 ) = sys.argv[1:]
+is_dev_version = (
+    ("-" in version or any(character.isalpha() for character in version))
+    and "-beta" not in version
+    and "-rc" not in version
+)
 report = {
     "status": "success",
     "source_branch": source_branch,
@@ -157,6 +174,7 @@ report = {
         "signature_valid": True,
         "signer_matches_configured_keystore": True,
         "application_id_valid": True,
+        "master_version_is_not_dev": source_branch != "master" or not is_dev_version,
     },
 }
 with open(report_path, "w", encoding="utf-8") as stream:
