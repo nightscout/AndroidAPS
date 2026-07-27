@@ -175,21 +175,26 @@ class EversenseCGMPlugin(
             return
         }
         try {
-            if (gattCallback.is365()) {
-                if (isEnabled) {
-                    gattCallback.writePacket<EnterDiagnosticMode365Packet.Response>(EnterDiagnosticMode365Packet())
+            // Routed through bleExecutor (like every other write path) so this can't race a
+            // concurrently in-flight write from the Keep Alive sync cycle.
+            val future = gattCallback.submitToExecutor {
+                if (gattCallback.is365()) {
+                    if (isEnabled) {
+                        gattCallback.writePacket<EnterDiagnosticMode365Packet.Response>(EnterDiagnosticMode365Packet())
+                    } else {
+                        gattCallback.writePacket<ExitDiagnosticMode365Packet.Response>(ExitDiagnosticMode365Packet())
+                    }
+                    EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (365)")
                 } else {
-                    gattCallback.writePacket<ExitDiagnosticMode365Packet.Response>(ExitDiagnosticMode365Packet())
+                    if (isEnabled) {
+                        gattCallback.writePacket<EnterDiagnosticModePacket.Response>(EnterDiagnosticModePacket())
+                    } else {
+                        gattCallback.writePacket<ExitDiagnosticModePacket.Response>(ExitDiagnosticModePacket())
+                    }
+                    EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (E3)")
                 }
-                EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (365)")
-            } else {
-                if (isEnabled) {
-                    gattCallback.writePacket<EnterDiagnosticModePacket.Response>(EnterDiagnosticModePacket())
-                } else {
-                    gattCallback.writePacket<ExitDiagnosticModePacket.Response>(ExitDiagnosticModePacket())
-                }
-                EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (E3)")
             }
+            future.get(20000, java.util.concurrent.TimeUnit.MILLISECONDS)
         } catch (e: Exception) {
             EversenseLogger.warning(TAG, "setDiagnosticMode failed: $e")
         }
@@ -315,14 +320,19 @@ class EversenseCGMPlugin(
     fun readSignalStrength() {
         if (!gattCallback.isConnected()) { EversenseLogger.warning(TAG, "Cannot read signal strength — not connected"); return }
         try {
-            val signalStrength = if (gattCallback.is365()) {
-                val response = gattCallback.writePacket<GetSignalStrengthPacket.Response>(GetSignalStrengthPacket())
-                response.signalStrength
-            } else {
-                val response = gattCallback.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket())
-                EversenseLogger.info(TAG, "E3 signal raw: ${response.rawValue} -> ${response.signalStrength}%")
-                response.signalStrength
+            // Routed through bleExecutor (like every other write path) so this can't race a
+            // concurrently in-flight write from the Keep Alive sync cycle.
+            val future = gattCallback.submitToExecutor {
+                if (gattCallback.is365()) {
+                    val response = gattCallback.writePacket<GetSignalStrengthPacket.Response>(GetSignalStrengthPacket())
+                    response.signalStrength
+                } else {
+                    val response = gattCallback.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket())
+                    EversenseLogger.info(TAG, "E3 signal raw: ${response.rawValue} -> ${response.signalStrength}%")
+                    response.signalStrength
+                }
             }
+            val signalStrength = future.get(20000, java.util.concurrent.TimeUnit.MILLISECONDS)
             val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
             val state = JSON.decodeFromString<EversenseState>(stateJson)
             state.sensorSignalStrength = signalStrength

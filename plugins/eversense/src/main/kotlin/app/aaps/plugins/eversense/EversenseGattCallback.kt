@@ -96,6 +96,17 @@ class EversenseGattCallback(
     private var connected: Boolean = false
     private var transmitterReady: Boolean = false
 
+    // Set for the duration of cleanUp() so any write already blocked in packet.wait() (or one
+    // that starts concurrently, e.g. from setDiagnosticMode()/readSignalStrength() before those
+    // were routed through bleExecutor) can recognize it's racing a teardown and fail cleanly,
+    // instead of falling through to parseResponse() on a packet that never got a real response.
+    // Mirrors EversenseKit's isCleaningUp guard in PeripheralManager.swift (loopandlearn's
+    // reference implementation) - adapted for this class being a long-lived, reused object
+    // rather than one discarded per connection, so it's reset at the end of cleanUp() instead
+    // of being a one-way flag.
+    @Volatile
+    private var isCleaningUp: Boolean = false
+
     // Tracks consecutive status-19 failures to detect transmitter placement issues
     @Volatile
     private var failedConnectionAttempts: Int = 0
@@ -134,7 +145,7 @@ class EversenseGattCallback(
     // Submit a task to the bleExecutor and return a Future so callers can block until complete.
     // This ensures calibration and other ad-hoc BLE operations are serialised with Keep Alive
     // cycles and do not race with currentPacket assignment.
-    fun submitToExecutor(task: () -> Unit): java.util.concurrent.Future<*> =
+    fun <R> submitToExecutor(task: () -> R): java.util.concurrent.Future<R> =
         bleExecutor.submit(task)
 
     // FIX 4: Added disconnect() which calls both disconnect() and close() on the GATT client.
@@ -170,6 +181,7 @@ class EversenseGattCallback(
 
     @SuppressLint("MissingPermission")
     fun cleanUp() {
+        isCleaningUp = true
         bluetoothGatt?.disconnect()
         bluetoothGatt?.close()
         bluetoothGatt = null
@@ -177,6 +189,7 @@ class EversenseGattCallback(
         transmitterReady = false
         bleExecutor.shutdownNow()
         bleExecutor = Executors.newSingleThreadExecutor()
+        isCleaningUp = false
         EversenseLogger.info(TAG, "GATT cleaned up before reconnect")
     }
     @SuppressLint("MissingPermission")
@@ -579,6 +592,8 @@ class EversenseGattCallback(
     @OptIn(ExperimentalStdlibApi::class)
     @Throws(EversenseWriteException::class)
     fun <T : EversenseBasePacket.Response> writePacket(packet: EversenseBasePacket, timeoutMs: Long = WRITE_TIMEOUT_MS): T {
+        if (isCleaningUp) throw EversenseWriteException("GATT is being cleaned up — write rejected")
+
         val gatt = bluetoothGatt ?: throw EversenseWriteException("Gatt is null — not connected")
 
         val requestCharacteristic = requestCharacteristic
@@ -613,6 +628,13 @@ class EversenseGattCallback(
                 }
             } catch (e: EversenseWriteException) {
                 throw e
+            } catch (e: InterruptedException) {
+                // Only happens when cleanUp()'s bleExecutor.shutdownNow() interrupts this wait
+                // mid-write - the GATT is already being torn down, so there's no response coming.
+                // Reject cleanly here instead of falling through to parseResponse() on a packet
+                // that was never actually populated.
+                currentPacket.set(null)
+                throw EversenseWriteException("Write interrupted — GATT is being cleaned up: $e")
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "Exception during packet wait: $e")
                 e.printStackTrace()
