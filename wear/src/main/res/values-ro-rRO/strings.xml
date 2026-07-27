@@ -208,6 +208,12 @@
     <string name="tile_action_2">Acțiune 2</string>
     <string name="tile_action_3">Acțiune 3</string>
     <string name="tile_action_4">Acțiune 4</string>
+    <string name="tile_scene_1">Scenariu 1</string>
+    <string name="tile_scene_2">Scenariu 2</string>
+    <string name="tile_scene_3">Scenariu 3</string>
+    <string name="tile_scene_4">Scenariu 4</string>
+    <string name="tile_scene_auto">Automat</string>
+    <string name="tile_scene_unavailable">Indisponibil</string>
     <string name="datalayer_notification_title">Serviciu de prim-plan din stratul de date</string>
     <string name="datalayer_notification_text">AAPS rulează în prim-plan. Pentru a ascunde notificările, accesați opțiunile de dezvoltator, notificările aplicațiilor, aplicațiile de ceas permise, selectați AAPS, dezactivați notificarea canalului de date din prim-plan.</string>
     <string name="on">PORNIT</string>
