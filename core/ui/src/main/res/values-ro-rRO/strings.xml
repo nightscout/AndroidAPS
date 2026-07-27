@@ -2,6 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">Acest câmp nu trebuie lăsat necompletat</string>
     <string name="error_mustbe4hexadidits">Trebuie să conțină 4 caractere din șirul ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Clienți autorizați</string>
+    <string name="authorized_clients_manage_desc">Gestionează clienții asociați care controlează acest dispozitiv principal.</string>
+    <string name="pair_with_master_manage_label">Asociați cu dispozitivul principal</string>
+    <string name="pair_with_master_manage_desc">Introduceți codul PIN de asociere al dispozitivului principal pentru a permite clientului să trimită comenzi semnate.</string>
     <!--    General-->
     <string name="treatments">Tratamente</string>
     <string name="treatments_history">Istoricul tratamentelor</string>
@@ -16,6 +20,7 @@
     <string name="refresh">Actualizați</string>
     <string name="no_history_records">Nu s-au găsit înregistrări</string>
     <string name="error">Eroare</string>
+    <string name="navigation_error_screen_not_found">Ecranul nu a putut fi deschis (opțiunea nu este disponibilă în această configurație)</string>
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
     <string name="invalid_input">Date de intrare incorecte</string>
     <string name="invalid_number">Număr incorect</string>
@@ -105,6 +110,8 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Obiective</string>
     <string name="please_wait">Așteptați…</string>
     <string name="stop">Stop</string>
@@ -191,6 +198,7 @@
     <string name="reset">Resetați</string>
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
     <string name="profile">Profil</string>
+    <string name="percentage_label">Procentaj</string>
     <string name="timeshift_label">Decalare temporală</string>
     <string name="confirm_remove_multiple_items">Sigur vreți să eliminați %1$d elemente</string>
     <string name="overview_treatment_label">Tratament</string>
@@ -244,6 +252,7 @@
     <string name="engineering_mode_enabled">Mod inginer activat</string>
     <string name="back">Înapoi</string>
     <string name="next">Înainte</string>
+    <string name="pref_syncs_with_main_phone">Se sincronizează cu telefonul principal</string>
     <string name="show_hide_records">Ascundeți înregistrările buclei</string>
     <!--    Protection-->
     <string name="wrongpassword">Parola greșită</string>
@@ -329,6 +338,8 @@
     <string name="temporary_target">Țintă temporară</string>
     <string name="temporary_targets">Ținte temporare</string>
     <string name="running_mode">Mod de rulare</string>
+    <string name="running_mode_change_not_allowed">Schimbarea modului de funcționare nu este disponibilă</string>
+    <string name="pump_reconnect">Reconectați pompa</string>
     <string name="scene">Scenariu</string>
     <string name="scenes">Scenarii</string>
     <string name="scene_desc">Presetări situații — activați mai multe acțiuni simultan</string>
@@ -375,6 +386,7 @@
     <string name="scene_no_profile_store">Niciun spațiu de stocare pentru profiluri disponibil</string>
     <string name="scene_no_actions">Scenariul nu are acțiuni</string>
     <string name="scene_profile_not_found">Profilul \"%1$s\" nu a fost găsit</string>
+    <string name="scene_lock_banner_master_offline">Dispozitivul principal nu este accesibil. Controlul scenariilor se va relua atunci când conexiunea va fi restabilită.</string>
     <string name="scene_lock_banner_control_disabled">Principalul are dezactivat controlul la distanță. Controalele de scenarii vor fi reluate când sunt reactivate pe principal.</string>
     <string name="master_control_disabled_banner">Principalul are control la distanță dezactivat. Editarea este dezactivată până când este reactivată pe principal.</string>
     <string name="scene_lock_reason_control_disabled">Control la distanță dezactivat</string>
@@ -897,6 +909,9 @@
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mutați mai devreme</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mutați mai târziu</string>
     <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Afișați detalii</string>
+    <string name="presets_changed_reorder_aborted">Presetări schimbate în altă parte. Ordinea nouă nu a fost salvată.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Poziția %1$d din %2$d</string>
     <string name="status">Stare</string>
     <string name="pump_actions">Acțiuni pompă</string>
     <string name="tempbasal_button">Bazală temporară</string>
