@@ -177,7 +177,10 @@ enum class NotificationId(
     SCENE_ENDED(INFO, AUTOMATION, allowMultiple = true),
     SCENE_CHAINED(INFO, AUTOMATION, allowMultiple = true),
     SCENE_CHAIN_SKIPPED(NORMAL, AUTOMATION, allowMultiple = true),
-    SCENE_CHAIN_ERROR(IMPORTANT, AUTOMATION, allowMultiple = true);
+    SCENE_CHAIN_ERROR(IMPORTANT, AUTOMATION, allowMultiple = true),
+
+    /** Bolus succeeded but the accompanying carbs could not be persisted — the user must re-enter them. */
+    CARBS_STORE_FAILED(URGENT, PUMP);
 
     companion object {
 

@@ -243,6 +243,46 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun bolusSucceedsButCarbsFailToStore_postsCarbsLostNotification() = runTest {
+        // Regression: bolus delivered, but persisting the accompanying carbs threw. This used to be
+        // swallowed log-only, leaving COB/IOB silently wrong. The failure must now surface a notification
+        // so the user knows to re-enter the carbs. See CommandQueueImplementation.bolus() post-bolus catch.
+        commandQueue = CommandQueueImplementation(
+            aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider,
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            jobName, workManager, testScope, bolusProgressData
+        )
+        val handler: Handler = mock()
+        whenever(handler.post(anyOrNull())).thenAnswer { invocation: InvocationOnMock ->
+            (invocation.arguments[0] as Runnable).run()
+            true
+        }
+        commandQueue.handler = handler
+        whenever(rh.gs(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus)).thenReturn("Carbs could not be saved")
+        // The pump delivers successfully (TestPumpPlugin), but storing carbs blows up.
+        whenever(persistenceLayer.insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
+            .thenThrow(RuntimeException("db unavailable"))
+
+        // Run the whole bolus() on a real dispatcher: its internal deferred.await() must resume on real
+        // threads (the queue worker completes it off the test scheduler), which Thread.sleep can advance.
+        // insulin != 0 → NOT the carbs-only path; carbs != 0 → carbs persisted only after the bolus succeeds.
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 }) }
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
+        assertThat(result?.success).isTrue()
+
+        // The user is alerted (URGENT) that the carbs were lost — not silently dropped.
+        verify(notificationManager).post(
+            eq(NotificationId.CARBS_STORE_FAILED), eq("Carbs could not be saved"), any<NotificationLevel>(),
+            any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
+        )
+    }
+
+    @Test
     fun profileChangeCollectorSurvivesException() = runTest {
         // Regression: a throwable during one profile change must not permanently wedge the
         // profile-change collector. Before hardening, the first failure cancelled the flow and every
