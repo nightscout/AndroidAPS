@@ -5,7 +5,6 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -34,7 +33,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import kotlinx.coroutines.delay
@@ -60,6 +58,11 @@ import app.aaps.core.keys.R as KeysR
  * @param dialogLabel Label for the input dialog
  * @param dialogSummary Summary/description for the input dialog
  * @param modifier Modifier for the Row container
+ *
+ * @see SliderWithButtonsPreview
+ * @see SliderWithButtonsValuePreview
+ * @see SliderWithButtonsIntPreview
+ * @see SliderWithButtonsNonLinearPreview
  */
 @Composable
 fun SliderWithButtons(
@@ -321,89 +324,5 @@ fun RepeatingIconButton(
         }
     ) {
         content()
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SliderWithButtonsPreview() {
-    MaterialTheme {
-        SliderWithButtons(
-            value = 5.0,
-            onValueChange = {},
-            valueRange = 0.0..10.0,
-            step = 0.5
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SliderWithButtonsValuePreview() {
-    MaterialTheme {
-        SliderWithButtons(
-            value = 3.5,
-            onValueChange = {},
-            valueRange = 0.0..10.0,
-            step = 0.1,
-            showValue = true,
-            valueFormat = DecimalFormat("0.0"),
-            unitLabel = "U"
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SliderWithButtonsIntPreview() {
-    MaterialTheme {
-        SliderWithButtons(
-            value = 45.0,
-            onValueChange = {},
-            valueRange = 0.0..120.0,
-            step = 5.0,
-            showValue = true,
-            valueFormat = DecimalFormat("0"),
-            unitLabelResId = KeysR.string.units_min
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SliderWithButtonsNonLinearPreview() {
-    MaterialTheme {
-        Column {
-            SliderWithButtons(
-                value = 50.0,
-                onValueChange = {},
-                valueRange = 0.0..500.0,
-                step = 1.0,
-                controlPoints = listOf(
-                    0.0 to 0.0,
-                    0.5 to 50.0,
-                    1.0 to 500.0
-                ),
-                showValue = true,
-                valueFormat = DecimalFormat("0")
-            )
-            SliderWithButtons(
-                value = 250.0,
-                onValueChange = {},
-                valueRange = 0.0..500.0,
-                step = 1.0,
-                controlPoints = listOf(
-                    0.0 to 0.0,
-                    0.5 to 50.0,
-                    1.0 to 500.0
-                ),
-                showValue = true,
-                valueFormat = DecimalFormat("0")
-            )
-        }
     }
 }

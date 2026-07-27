@@ -1,19 +1,12 @@
 package app.aaps.core.ui.compose.icons
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Icon for Carbs treatment type.
@@ -22,6 +15,8 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * replaces ic_cp_bolus_carbs
  *
  * Bounding box: x: 1.2-22.8, y: 1.2-22.8 (viewport: 24x24, ~90% width)
+ *
+ * @see IcCarbsIconPreview
  */
 val IcCarbs: ImageVector by lazy {
     ImageVector.Builder(
@@ -124,49 +119,3 @@ val IcCarbs: ImageVector by lazy {
         }
     }.build()
 }
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IcCarbsIconPreview() {
-    Icon(
-        imageVector = IcCarbs,
-        contentDescription = null,
-        modifier = Modifier
-            .padding(0.dp)
-            .size(48.dp),
-        tint = Color.Unspecified
-    )
-}
-
-/*
-
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
-	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
-<g id="ic_carbs">
-	<path display="inline" fill="none" d="M0,0h24v24H0V0z"/>
-	<path display="inline" fill="#FEAF05" d="M18.885,15.904c-0.607,0.761-1.263,1.32-1.992,1.815
-		c-0.691,0.469-1.542,0.712-2.199,0.855c-1.257,0.229-0.457,0.343,0.175,1.201c-2.279,3.255-6.121,3.472-9.326,1.811
-		c-0.257-0.133-0.498-0.301-0.737-0.466C4.3,20.773,4.078,20.69,3.655,21.127c-0.342,0.354-1.148,1.13-1.558,1.532L1.2,21.687
-		c0.44-0.4,0.948-0.897,1.312-1.239c0.795-0.747,0.614-0.837-0.02-1.745c-2.204-3.153-1.529-7.269,1.57-9.572
-		c1.32,0.845,1.035,0.645,1.464-0.598c0.458-1.327,1.238-2.459,2.422-3.248c1.204,1.064,1.004,0.578,1.488-0.642
-		c0.523-1.319,1.342-2.393,2.473-3.301c1.271,0.837,1.854,1.767,2.289,2.812c0.499,1.198,0.692,0.796,1.568-0.054
-		c1.87-1.813,4.155-2.533,6.383-1.987c0.524,2.899-0.714,5.493-3.399,7.188c1.409,0.381,2.742,1.143,4.05,2.684
-		c-0.802,1.175-2.217,2.302-3.644,2.541C17.114,14.868,18.264,14.946,18.885,15.904z M20.915,4.178
-		c0.023-0.808-0.233-1.023-0.933-0.929c-2.274,0.305-4.411,2.347-4.791,4.577c-0.131,0.771,0.274,1.184,1.044,1.007
-		c0.489-0.113,0.983-0.263,1.431-0.485C19.462,7.457,20.578,6.034,20.915,4.178z M13.739,7.363c0.02-1.277-0.422-2.3-1.034-3.261
-		c-0.589-0.925-0.998-0.922-1.587-0.021c-1.36,2.081-0.807,4.5,0.277,6.276c0.347,0.568,0.814,0.573,1.222,0.02
-		C13.297,9.457,13.764,8.442,13.739,7.363z M9.473,21.345c0.945,0,2.276-0.426,2.957-0.942c0.58-0.439,0.628-0.797,0.055-1.192
-		c-2.128-1.467-4.303-1.786-6.553-0.218c-0.757,0.528-0.714,0.957,0.115,1.444C7.103,21.059,8.257,21.32,9.473,21.345z
-		 M9.809,11.176C9.845,9.96,9.387,8.904,8.768,7.911C8.191,6.984,7.796,7.006,7.206,7.957c-1.137,1.835-1.041,4.403,0.23,6.16
-		c0.441,0.61,0.821,0.649,1.292,0.055C9.42,13.299,9.834,12.308,9.809,11.176z M17.046,13.63c1.209-0.005,2.524-0.396,3.21-0.918
-		c0.586-0.445,0.602-0.736,0.066-1.206c-1.711-1.5-4.815-1.597-6.59-0.207c-0.642,0.503-0.654,0.963,0.034,1.347
-		C14.819,13.235,15.934,13.665,17.046,13.63z M2.523,14.762C2.48,15.764,2.75,16.802,3.34,17.746
-		c0.558,0.893,1.039,0.903,1.632,0.066c1.288-1.819,1.179-4.583-0.247-6.285c-0.465-0.555-0.861-0.552-1.304,0.056
-		C2.76,12.493,2.51,13.535,2.523,14.762z M12.957,14.157c-1.219-0.057-2.285,0.352-3.235,1.076c-0.475,0.362-0.495,0.76-0.009,1.162
-		c1.558,1.287,4.921,1.398,6.579,0.208c0.671-0.481,0.688-0.881,0.009-1.327C15.287,14.609,14.202,14.127,12.957,14.157z"/>
-</g>
-</svg>
- */

@@ -35,18 +35,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.compose.components.DialogStatusBar
 import app.aaps.ui.compose.overview.chips.CobUiState
@@ -131,8 +129,11 @@ fun TreatmentDialogScreen(
     )
 }
 
+/**
+ * @see TreatmentDialogScreenPreview
+ */
 @Composable
-private fun TreatmentDialogContent(
+internal fun TreatmentDialogContent(
     uiState: TreatmentDialogUiState,
     bgInfo: BgInfoUiState,
     iob: IobUiState,
@@ -247,30 +248,5 @@ private fun TreatmentDialogContent(
 
             Spacer(modifier = Modifier.height(8.dp))
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun TreatmentDialogScreenPreview() {
-    MaterialTheme {
-        TreatmentDialogContent(
-            uiState = TreatmentDialogUiState(
-                insulin = 1.5,
-                carbs = 20,
-                maxInsulin = 10.0,
-                maxCarbs = 100,
-                bolusStep = 0.1
-            ),
-            bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
-            iob = IobUiState(),
-            cob = CobUiState(),
-            bolusFormat = DecimalFormat("0.0"),
-            onInsulinChange = {},
-            onCarbsChange = {},
-            onNavigateBack = {},
-            onConfirmClick = {}
-        )
     }
 }

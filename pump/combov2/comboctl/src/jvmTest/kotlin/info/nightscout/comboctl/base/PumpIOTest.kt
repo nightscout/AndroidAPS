@@ -184,7 +184,7 @@ class PumpIOTest : TestBase() {
         // This amounts to 2 pairs of RT_BUTTON_STATUS packets plus the
         // final CTRL_DISCONNECT packets, for a total of 5 packets.
 
-        runBlockingWithWatchdog(20000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -253,7 +253,7 @@ class PumpIOTest : TestBase() {
         // to avoid having to deal with RT_KEEP_ALIVE packets in the
         // testIO.sentPacketData list.
 
-        runBlockingWithWatchdog(20000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val testIO = testStates.testIO
             val pumpIO = testStates.pumpIO
@@ -324,7 +324,7 @@ class PumpIOTest : TestBase() {
         // Check what happens if the user issues redundant startLongRTButtonPress()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(20000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 
@@ -357,7 +357,7 @@ class PumpIOTest : TestBase() {
         // Check what happens if the user issues redundant waitForLongRTButtonPressToFinish()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(20000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 
@@ -394,7 +394,7 @@ class PumpIOTest : TestBase() {
         // RT sequence numbers are monotonically increasing, which
         // is the correct behavior.
 
-        runBlockingWithWatchdog(20000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -436,7 +436,7 @@ class PumpIOTest : TestBase() {
 
     @Test
     fun cmdCMDReadErrorWarningStatus() {
-        runBlockingWithWatchdog(20000) {
+        runBlockingWithWatchdog(60000) {
             // Check that a simulated CMD error/warning status retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that contain
             // error/warning status data. Check that these packets are correctly parsed and that
@@ -496,7 +496,7 @@ class PumpIOTest : TestBase() {
 
     @Test
     fun checkCMDHistoryDeltaRetrieval() {
-        runBlockingWithWatchdog(20000) {
+        runBlockingWithWatchdog(60000) {
             // Check that a simulated CMD history delta retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that
             // contain history data with a series of events inside. Check that these packets

@@ -13,11 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.pump.BolusProgressState
-import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.ui.compose.AapsSmallFab
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * FAB indicating active pump communication.
@@ -25,6 +22,9 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * Visible when pump is communicating or bolus is in progress.
  * Shows pump icon normally, or delivery percentage during SMB.
  * Tap opens the PumpActivityDialog.
+ *
+ * @see PreviewPumpFabIcon
+ * @see PreviewPumpFabSmbPercent
  */
 @Composable
 fun PumpActivityFab(
@@ -53,41 +53,5 @@ fun PumpActivityFab(
                 )
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun PreviewPumpFabIcon() {
-    MaterialTheme {
-        PumpActivityFab(
-            visible = true,
-            bolusState = null,
-            onClick = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun PreviewPumpFabSmbPercent() {
-    MaterialTheme {
-        PumpActivityFab(
-            visible = true,
-            bolusState = BolusProgressState(
-                insulin = 0.3,
-                isSMB = true,
-                isPriming = false,
-                percent = 42,
-                status = "Delivering 0.13U",
-                wearStatus = "Delivering 0.13U",
-                delivered = PumpInsulin(0.13),
-                stopPressed = false,
-                stopDeliveryEnabled = true
-            ),
-            onClick = {}
-        )
     }
 }

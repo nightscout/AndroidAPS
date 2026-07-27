@@ -32,15 +32,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.overview.graph.AapsClientLevel
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
-import app.aaps.core.interfaces.overview.graph.AapsClientStatusItem
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 
+/**
+ * @see AapsClientStatusCardCollapsedPreview
+ * @see AapsClientStatusCardMixedLevelsPreview
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AapsClientStatusCard(
@@ -110,68 +110,5 @@ fun AapsClientStatusCard(
                 }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AapsClientStatusCardCollapsedPreview() {
-    MaterialTheme {
-        AapsClientStatusCard(
-            statusData = AapsClientStatusData(
-                pump = AapsClientStatusItem(
-                    label = "Pump",
-                    value = "2 min ago",
-                    level = AapsClientLevel.INFO,
-                    dialogTitle = "Pump status",
-                    dialogText = "Last connection: 2 min ago\nReservoir: 120 U"
-                ),
-                openAps = AapsClientStatusItem(
-                    label = "OpenAPS",
-                    value = "1 min ago",
-                    level = AapsClientLevel.INFO,
-                    dialogTitle = "OpenAPS",
-                    dialogText = "Last enacted: 1 min ago"
-                ),
-                uploader = AapsClientStatusItem(
-                    label = "Uploader",
-                    value = "85%",
-                    level = AapsClientLevel.INFO,
-                    dialogTitle = "Uploader",
-                    dialogText = "Battery: 85%"
-                )
-            ),
-            flavorTint = Color(0x40FF9800)
-        )
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AapsClientStatusCardMixedLevelsPreview() {
-    MaterialTheme {
-        AapsClientStatusCard(
-            statusData = AapsClientStatusData(
-                pump = AapsClientStatusItem(
-                    label = "Pump",
-                    value = "12 min ago",
-                    level = AapsClientLevel.WARN,
-                    dialogTitle = "Pump status",
-                    dialogText = "Last connection: 12 min ago\nReservoir: 45 U"
-                ),
-                openAps = AapsClientStatusItem(
-                    label = "OpenAPS",
-                    value = "16 min ago",
-                    level = AapsClientLevel.URGENT,
-                    dialogTitle = "OpenAPS",
-                    dialogText = "Last enacted: 16 min ago"
-                )
-            ),
-            flavorTint = Color(0x40FF9800)
-        )
     }
 }

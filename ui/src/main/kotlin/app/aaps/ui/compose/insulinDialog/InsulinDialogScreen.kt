@@ -50,21 +50,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -200,8 +198,11 @@ fun InsulinDialogScreen(
     )
 }
 
+/**
+ * @see InsulinDialogScreenPreview
+ */
 @Composable
-private fun InsulinDialogContent(
+internal fun InsulinDialogContent(
     uiState: InsulinDialogUiState,
     bgInfo: BgInfoUiState,
     iob: IobUiState,
@@ -479,46 +480,6 @@ private fun InsulinDialogContent(
     }
 }
 
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun InsulinDialogScreenPreview() {
-    MaterialTheme {
-        InsulinDialogContent(
-            uiState = InsulinDialogUiState(
-                insulin = 2.5,
-                selectedIcfg = null,
-                insulins = ArrayList(),
-                maxInsulin = 10.0,
-                bolusStep = 0.1,
-                insulinButtonIncrement1 = 0.5,
-                insulinButtonIncrement2 = 1.0,
-                insulinButtonIncrement3 = 2.0,
-                showNotesFromPreferences = true
-            ),
-            bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
-            iob = IobUiState(),
-            cob = CobUiState(),
-            dateString = "25/02/2026",
-            timeString = "14:30",
-            bolusFormat = DecimalFormat("0.0"),
-            formatAmount = { DecimalFormat("0.0").format(it) },
-            onEatingSoonChange = {},
-            onRecordOnlyChange = {},
-            onInsulinChange = {},
-            onAddInsulin = {},
-            onTimeOffsetChange = {},
-            onNotesChange = {},
-            onDateClick = {},
-            onTimeClick = {},
-            onSettingsClick = null,
-            onNavigateBack = {},
-            onConfirmClick = {},
-            onInsulinTypeSelect = {}
-        )
-    }
-}
-
 @Composable
 private fun InsulinQuickAddButtons(
     increment1: Double,
@@ -569,4 +530,3 @@ private fun InsulinButtonSettingsSheet(
         )
     }
 }
-

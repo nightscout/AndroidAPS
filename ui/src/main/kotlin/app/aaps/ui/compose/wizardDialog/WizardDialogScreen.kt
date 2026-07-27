@@ -214,7 +214,7 @@ fun WizardDialogScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun WizardDialogContent(
+internal fun WizardDialogContent(
     uiState: WizardDialogUiState,
     decimalFormatter: DecimalFormatter,
     profileUtil: ProfileUtil,

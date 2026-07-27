@@ -1,27 +1,23 @@
 package app.aaps.pump.equil.compose
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 private val ResumeInnerColor = Color(0xFF67E86A)
+
 private val OutlineColor = Color(0xFF9E9E9E)
 
 /**
  * Equil pump icon — resume delivery (green play/pause symbol inside pump outline).
  *
  * Replaces ic_equil_overview_resume_delivery.xml
+ *
+ * @see IcEquilResumeDeliveryPreview
  */
 val IcEquilResumeDelivery: ImageVector by lazy {
     ImageVector.Builder(
@@ -154,18 +150,4 @@ val IcEquilResumeDelivery: ImageVector by lazy {
             close()
         }
     }.build()
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IcEquilResumeDeliveryPreview() {
-    Icon(
-        imageVector = IcEquilResumeDelivery,
-        contentDescription = null,
-        modifier = Modifier
-            .padding(0.dp)
-            .size(48.dp),
-        tint = Color.Unspecified
-    )
 }

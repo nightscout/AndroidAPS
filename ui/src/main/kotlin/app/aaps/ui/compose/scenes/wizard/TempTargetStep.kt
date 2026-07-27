@@ -11,16 +11,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.ui.compose.scenes.TempTargetEditor
 
+/**
+ * @see TempTargetStepPreview
+ */
 @Composable
 internal fun TempTargetStep(
     state: SceneWizardViewModel.WizardState,
@@ -64,20 +65,5 @@ internal fun TempTargetStep(
                 )
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun TempTargetStepPreview() {
-    MaterialTheme {
-        TempTargetStep(
-            state = previewState,
-            onToggle = {}, onUpdate = {},
-            ttPresets = previewPresets,
-            formatBgWithUnits = { "${it.toInt()} mg/dl" },
-            onBack = {}, onNext = {}
-        )
     }
 }

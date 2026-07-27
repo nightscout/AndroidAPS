@@ -280,6 +280,14 @@ class BLEComm @Inject constructor(
         if (buffer.isEmpty()) return
 
         synchronized(readBuffer) {
+            // Overflow guard: a desynced stream that never yields a valid packet start would keep
+            // accumulating past the fixed readBuffer capacity and crash on the arraycopy below with
+            // ArrayIndexOutOfBoundsException. Drop the un-parsable backlog and keep only the newest
+            // chunk (a single BLE notification, ≤20 B, which may hold a fresh packet start).
+            if (bufferLength + buffer.size > readBuffer.size) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "Read buffer overflow ($bufferLength + ${buffer.size} > ${readBuffer.size}); dropping unparsable backlog")
+                bufferLength = 0
+            }
             // Append incoming data to input buffer
             System.arraycopy(buffer, 0, readBuffer, bufferLength, buffer.size)
             bufferLength += buffer.size
@@ -339,7 +347,10 @@ class BLEComm @Inject constructor(
                             }
                             break
                         }
-                        break
+                        // NB: no unconditional break here — the loop must keep scanning so that a
+                        // packet start preceded by leading trash is found and re-synced (the block
+                        // above shifts it to offset 0). A stray break used to exit after index 0,
+                        // making that trash-skip/re-sync dead code and wedging comms on any desync.
                     }
                 }
             }

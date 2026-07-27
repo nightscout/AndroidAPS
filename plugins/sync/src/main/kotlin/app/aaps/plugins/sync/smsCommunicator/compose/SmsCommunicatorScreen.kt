@@ -17,10 +17,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 @Composable
 internal fun SmsCommunicatorScreen(
@@ -31,6 +29,9 @@ internal fun SmsCommunicatorScreen(
     SmsCommunicatorScreenContent(uiState = uiState, modifier = modifier)
 }
 
+/**
+ * @see SmsCommunicatorScreenPreview
+ */
 @Composable
 internal fun SmsCommunicatorScreenContent(
     uiState: SmsCommunicatorUiState,
@@ -86,22 +87,4 @@ private fun SmsLogItem(
         color = MaterialTheme.colorScheme.onSurface,
         modifier = modifier.fillMaxWidth()
     )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SmsCommunicatorScreenPreview() {
-    MaterialTheme {
-        SmsCommunicatorScreenContent(
-            uiState = SmsCommunicatorUiState(
-                messages = listOf(
-                    SmsItem(time = "12:00", phoneNumber = "+1234567890", text = "BG", isReceived = true, isSent = false, isProcessed = true, isIgnored = false),
-                    SmsItem(time = "12:00", phoneNumber = "+1234567890", text = "BG: 5.5 mmol/l", isReceived = false, isSent = true, isProcessed = true, isIgnored = false),
-                    SmsItem(time = "12:05", phoneNumber = "+9876543210", text = "BOLUS 1.5", isReceived = true, isSent = false, isProcessed = false, isIgnored = false),
-                    SmsItem(time = "12:10", phoneNumber = "+1111111111", text = "LOOP STATUS", isReceived = true, isSent = false, isProcessed = false, isIgnored = true),
-                )
-            )
-        )
-    }
 }

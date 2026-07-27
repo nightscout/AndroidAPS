@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -36,21 +35,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.Scene
-import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
-import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
@@ -205,6 +200,11 @@ fun SceneListScreen(
     }
 }
 
+/**
+ * @see SceneCardNormalPreview
+ * @see SceneCardActivePreview
+ * @see SceneCardInvalidPreview
+ */
 @Composable
 internal fun SceneCard(
     scene: Scene,
@@ -414,86 +414,3 @@ private fun SceneDeactivationDialog(
 }
 
 // --- Previews ---
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SceneCardNormalPreview() {
-    MaterialTheme {
-        Surface {
-            SceneCard(
-                scene = Scene(
-                    id = "1",
-                    name = "Exercise",
-                    icon = "exercise",
-                    defaultDurationMinutes = 60,
-                    actions = listOf(
-                        SceneAction.TempTarget(reason = TT.Reason.ACTIVITY, targetMgdl = 140.0),
-                        SceneAction.SmbToggle(enabled = false)
-                    )
-                ),
-                subtitle = "2 actions, 1 hour",
-                isActive = false,
-                onActivate = {},
-                onDeactivate = {},
-                onEdit = {},
-                onDelete = {}
-            )
-        }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SceneCardActivePreview() {
-    MaterialTheme {
-        Surface {
-            SceneCard(
-                scene = Scene(
-                    id = "2",
-                    name = "Sick Day",
-                    icon = "sick",
-                    defaultDurationMinutes = 480,
-                    actions = listOf(
-                        SceneAction.TempTarget(reason = TT.Reason.CUSTOM, targetMgdl = 120.0)
-                    )
-                ),
-                subtitle = "1 actions, 8 hours",
-                isActive = true,
-                onActivate = {},
-                onDeactivate = {},
-                onEdit = {},
-                onDelete = {}
-            )
-        }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SceneCardInvalidPreview() {
-    MaterialTheme {
-        Surface {
-            SceneCard(
-                scene = Scene(
-                    id = "3",
-                    name = "Broken Scene",
-                    icon = "star",
-                    defaultDurationMinutes = 60,
-                    actions = listOf(
-                        SceneAction.ProfileSwitch(profileName = "Deleted Profile")
-                    )
-                ),
-                subtitle = "1 actions, 1 hour",
-                isActive = false,
-                isInvalid = true,
-                onActivate = {},
-                onDeactivate = {},
-                onEdit = {},
-                onDelete = {}
-            )
-        }
-    }
-}
