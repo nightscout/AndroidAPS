@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.ui.clientcontrol.failTextResId
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -24,6 +25,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -71,6 +74,7 @@ class FillDialogViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val wizardBolusExecutor: WizardBolusExecutor,
     private val batchExecutor: BatchExecutor,
+    private val rxBus: RxBus,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -79,7 +83,6 @@ class FillDialogViewModel @Inject constructor(
 
     sealed class SideEffect {
         data object ShowNoActionDialog : SideEffect()
-        data class ShowDeliveryError(val comment: String) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -88,6 +91,18 @@ class FillDialogViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
+
+    /**
+     * Report a failure that happens AFTER the dialog has closed.
+     *
+     * `confirmAndSave` is fire-and-forget on [appScope] and the screen navigates back the moment confirm is tapped,
+     * which cancels the collector of [sideEffect]. That flow has `replay = 0`, so anything emitted once the screen is
+     * gone is dropped silently — exactly the outcomes the user most needs to see. Route them through the app-level
+     * dialog bus instead, which outlives this screen.
+     */
+    private fun reportAfterClose(titleResId: Int, message: String) {
+        rxBus.send(EventShowDialog.Ok(title = rh.gs(titleResId), message = message))
+    }
 
     init {
         val preselect = FillPreselect.entries[savedStateHandle.get<Int>("preselect") ?: 0]
@@ -315,7 +330,14 @@ class FillDialogViewModel @Inject constructor(
                     amount = state.insulinAfterConstraints,
                     notes = notes,
                     source = Sources.FillDialog,
-                    onError = { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) },
+                    onError = { error ->
+                        // The switch is chained to onSuccess, so a failed prime silently skips it — but the
+                        // confirmation already promised it. Say so in the SAME message rather than two dialogs.
+                        reportAfterClose(
+                            CoreUiR.string.treatmentdeliveryerror,
+                            if (doProfileSwitch) rh.gs(CoreUiR.string.fill_prime_failed_insulin_not_switched, error) else error
+                        )
+                    },
                     onSuccess = {
                         // After successful prime, do profile switch if insulin changed
                         if (doProfileSwitch) {
@@ -380,22 +402,48 @@ class FillDialogViewModel @Inject constructor(
 
     /**
      * Non-interactive insulin activation for the fill flow (a chained profile switch after a prime) — relays through
-     * the master-controlled [BatchExecutor] like everything else, but with NO confirmation UI: prepare then commit
-     * back-to-back. Master → local; client → signed round-trip. Failures are surfaced by the round-trip's app-level
-     * modal (client); on the master-local path they have no UI here, so a [ActionProgress.Rejected] prepare/commit is
-     * logged (no longer silently swallowed), matching the prior fire-and-forget semantics otherwise.
+     * the master-controlled [BatchExecutor] like everything else, but with NO confirmation UI of its own: prepare then
+     * commit back-to-back. Master → local; client → signed round-trip.
+     *
+     * The fill confirmation already told the user "profile switch will be applied", so every outcome other than
+     * success has to reach them: silently dropping it leaves them believing their insulin changed when it did not,
+     * and every later IOB calculation is then scaled by the wrong peak/DIA/concentration. Hence one funnel through
+     * [reportInsulinActivation] rather than a `when` with a silent `else`.
      */
     private suspend fun activateInsulin(iCfg: ICfg) {
         val label = rh.gs(CoreUiR.string.activate_insulin)
-        when (val prepared = batchExecutor.prepare(listOf(BatchAction.InsulinActivate(iCfg)), Sources.FillDialog, label)) {
-            is ActionProgress.Prepared -> {
-                val committed = batchExecutor.commit(prepared.id, Sources.FillDialog, label)
-                if (committed is ActionProgress.Rejected)
-                    aapsLogger.warn(LTag.UI, "Fill insulin activation commit rejected: ${committed.reason} ${committed.detail}")
+        val outcome = when (val prepared = batchExecutor.prepare(listOf(BatchAction.InsulinActivate(iCfg)), Sources.FillDialog, label)) {
+            is ActionProgress.Prepared -> batchExecutor.commit(prepared.id, Sources.FillDialog, label)
+            else                       -> prepared
+        }
+        reportInsulinActivation(outcome)
+    }
+
+    /**
+     * Turn the terminal [outcome] of the promised insulin switch into user-visible feedback.
+     *
+     * [ActionProgress.Unconfirmed] is deliberately NOT reported as a failure: the command was sent and may still
+     * land via sync-back, so it is reported as unknown and the user is pointed at their active profile. Claiming
+     * either "done" or "not done" on an unknown therapy outcome is exactly what the round-trip exists to avoid.
+     */
+    private fun reportInsulinActivation(outcome: ActionProgress) {
+        when (outcome) {
+            is ActionProgress.Applied     -> Unit
+            is ActionProgress.Unconfirmed -> {
+                aapsLogger.warn(LTag.UI, "Fill insulin activation unconfirmed: ${outcome.reason} ${outcome.detail}")
+                reportAfterClose(CoreUiR.string.activate_insulin, rh.gs(CoreUiR.string.insulin_activation_unconfirmed))
             }
 
-            is ActionProgress.Rejected -> aapsLogger.warn(LTag.UI, "Fill insulin activation prepare rejected: ${prepared.reason} ${prepared.detail}")
-            else                       -> Unit
+            else                          -> {
+                // Rejected, or a non-terminal value that can never become one here (nothing further awaits it).
+                val detail = (outcome as? ActionProgress.Rejected)?.let { rh.gs(it.reason.failTextResId()) }
+                aapsLogger.warn(LTag.UI, "Fill insulin activation failed: $outcome")
+                reportAfterClose(
+                    CoreUiR.string.activate_insulin,
+                    detail?.let { rh.gs(CoreUiR.string.insulin_activation_failed_reason, it) }
+                        ?: rh.gs(CoreUiR.string.insulin_activation_failed)
+                )
+            }
         }
     }
 

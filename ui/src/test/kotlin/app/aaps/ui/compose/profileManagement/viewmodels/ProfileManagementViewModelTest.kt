@@ -1,11 +1,15 @@
 package app.aaps.ui.compose.profileManagement.viewmodels
 
 import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.PS
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -35,6 +39,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -52,6 +57,7 @@ internal class ProfileManagementViewModelTest {
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var decimalFormatter: DecimalFormatter
     @Mock private lateinit var persistenceLayer: PersistenceLayer
+    @Mock private lateinit var insulinManager: InsulinManager
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var config: Config
     @Mock private lateinit var batchExecutor: BatchExecutor
@@ -93,7 +99,7 @@ internal class ProfileManagementViewModelTest {
         whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
         sut = ProfileManagementViewModel(
             profileRepository, profileFunction, rh, dateUtil, aapsLogger, activePlugin,
-            profileUtil, decimalFormatter, persistenceLayer, preferences, config,
+            profileUtil, decimalFormatter, persistenceLayer, insulinManager, preferences, config,
             batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
         )
     }
@@ -119,6 +125,51 @@ internal class ProfileManagementViewModelTest {
     @Test
     fun `isPumpCompatible returns true when there is no profile at the index`() {
         assertThat(sut.isPumpCompatible(0, 100)).isTrue()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Insulin choice for the activation screen
+    // ---------------------------------------------------------------------------------------------
+
+    private fun iCfg(label: String) = ICfg(insulinLabel = label, insulinEndTime = 360, insulinPeakTime = 75, concentration = 1.0)
+
+    @Test
+    fun `no picker is offered while an insulin is in force`() = runTest {
+        val running = mock<EffectiveProfile>()
+        whenever(running.iCfg).thenReturn(iCfg("Running"))
+        whenever(profileFunction.getProfile()).thenReturn(running)
+
+        // The master resolves the in-force insulin itself, so the screen must not ask.
+        assertThat(sut.insulinChoice().choices).isEmpty()
+    }
+
+    @Test
+    fun `with nothing in force the catalogue is offered, preselected from the last switch`() = runTest {
+        whenever(profileFunction.getProfile()).thenReturn(null)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(null)
+        whenever(insulinManager.insulins).thenReturn(arrayListOf(iCfg("Novorapid"), iCfg("Fiasp")))
+        val older = mock<PS>().also { whenever(it.timestamp).thenReturn(1_000L); whenever(it.iCfg).thenReturn(iCfg("Novorapid")) }
+        val newest = mock<PS>().also { whenever(it.timestamp).thenReturn(2_000L); whenever(it.iCfg).thenReturn(iCfg("Fiasp")) }
+        whenever(persistenceLayer.getProfileSwitches()).thenReturn(listOf(older, newest))
+
+        val choice = sut.insulinChoice()
+        assertThat(choice.choices).hasSize(2)
+        // The most recent switch wins, not merely the last element of the list.
+        assertThat(choice.preselected?.insulinLabel).isEqualTo("Fiasp")
+    }
+
+    @Test
+    fun `preselection is empty when the last used insulin is no longer in the catalogue`() = runTest {
+        whenever(profileFunction.getProfile()).thenReturn(null)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(null)
+        whenever(insulinManager.insulins).thenReturn(arrayListOf(iCfg("Novorapid")))
+        val deleted = mock<PS>().also { whenever(it.timestamp).thenReturn(1L); whenever(it.iCfg).thenReturn(iCfg("Deleted")) }
+        whenever(persistenceLayer.getProfileSwitches()).thenReturn(listOf(deleted))
+
+        // Nothing sensible to suggest → leave it unset so the user must choose; never substitute insulins[0].
+        val choice = sut.insulinChoice()
+        assertThat(choice.choices).hasSize(1)
+        assertThat(choice.preselected).isNull()
     }
 
     // ---------------------------------------------------------------------------------------------

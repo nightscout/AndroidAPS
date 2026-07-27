@@ -50,10 +50,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
+import app.aaps.core.ui.compose.InsulinSelector
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
@@ -79,7 +81,12 @@ import java.util.Calendar
  * @param checkPumpCompatible Returns whether the profile's basal is deliverable by the current pump
  *        at the given percentage. Re-queried as the percentage changes so the screen can block
  *        activation before the user confirms.
- * @param onActivate Callback when profile is activated with (duration, percentage, timeshift, withTT, notes, timestamp, timeChanged)
+ * @param insulinChoices Non-empty ONLY when no insulin is in force (no running profile and none pending) —
+ *        i.e. the first-ever switch. The switch has to record an insulin, and the catalogue is a list to
+ *        choose from rather than a source of "the current one", so the user picks and activation stays
+ *        disabled until they do. Empty in the normal case, where the master resolves the in-force insulin.
+ * @param preselectedInsulin Suggested entry from the most recent profile switch, or null to force a choice.
+ * @param onActivate Callback when profile is activated with (duration, percentage, timeshift, withTT, notes, timestamp, timeChanged, iCfg)
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,7 +100,9 @@ fun ProfileActivationScreen(
     rh: ResourceHelper,
     onNavigateBack: () -> Unit,
     checkPumpCompatible: (percentage: Int) -> Boolean = { true },
-    onActivate: (durationMinutes: Int, percentage: Int, timeshiftHours: Int, withTT: Boolean, notes: String, timestamp: Long, timeChanged: Boolean) -> Unit
+    insulinChoices: List<ICfg> = emptyList(),
+    preselectedInsulin: ICfg? = null,
+    onActivate: (durationMinutes: Int, percentage: Int, timeshiftHours: Int, withTT: Boolean, notes: String, timestamp: Long, timeChanged: Boolean, iCfg: ICfg?) -> Unit
 ) {
     val dateUtil = LocalDateUtil.current
     val focusManager = LocalFocusManager.current
@@ -102,6 +111,9 @@ fun ProfileActivationScreen(
     var timeshift by remember { mutableDoubleStateOf(0.0) }
     var withTT by remember { mutableStateOf(false) }
     var notes by remember { mutableStateOf("") }
+    // Only meaningful when insulinChoices is non-empty; null then means "user hasn't chosen yet".
+    var selectedInsulin by remember { mutableStateOf(preselectedInsulin) }
+    val insulinChoiceSatisfied = insulinChoices.isEmpty() || selectedInsulin != null
 
     // Date/time state
     val originalTimestamp = remember { initialTimestamp }
@@ -174,10 +186,11 @@ fun ProfileActivationScreen(
                         showTTOption && withTT,
                         notes,
                         eventTime,
-                        eventTimeChanged
+                        eventTimeChanged,
+                        selectedInsulin
                     )
                 },
-                enabled = pumpCompatible,
+                enabled = pumpCompatible && insulinChoiceSatisfied,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bottomBarSafeArea()
@@ -221,6 +234,29 @@ fun ProfileActivationScreen(
                         color = MaterialTheme.colorScheme.onErrorContainer,
                         modifier = Modifier.padding(16.dp)
                     )
+                }
+            }
+
+            // No insulin is in force (nothing running, nothing pending) — typically the first-ever switch.
+            // The switch must record one, and we never substitute from the catalogue, so ask here instead
+            // of letting the master refuse the batch.
+            if (insulinChoices.isNotEmpty()) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = stringResource(app.aaps.core.ui.R.string.profile_switch_select_insulin_hint),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        InsulinSelector(
+                            insulins = insulinChoices,
+                            selected = selectedInsulin,
+                            onSelect = { selectedInsulin = it }
+                        )
+                    }
                 }
             }
 

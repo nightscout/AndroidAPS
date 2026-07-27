@@ -276,9 +276,8 @@ fun NavGraphBuilder.appNavGraph(
         FillDialogScreen(
             fillButtonsDef = builtInSearchables.fillButtons,
             onNavigateBack = { navController.safePopBackStack() },
-            onShowDeliveryError = { comment ->
-                onShowDeliveryError(comment, app.aaps.core.ui.R.string.treatmentdeliveryerror)
-            },
+            // No delivery-error callback: this dialog's failures all land after it has navigated away, so the
+            // ViewModel reports them on the app-level dialog bus instead of through a screen-scoped collector.
             onPickSiteLocation = {
                 navController.navigate(AppRoute.SiteLocationPicker.createRoute(TE.Type.CANNULA_CHANGE))
             },
@@ -398,6 +397,12 @@ fun NavGraphBuilder.appNavGraph(
         val profileName = profileManagementViewModel.uiState.value.profileNames.getOrNull(profileIndex) ?: ""
         val reuseValues = profileManagementViewModel.getReuseValues()
         val coroutineScope = rememberCoroutineScope()
+        // Resolving "is an insulin in force?" is suspending, so the screen starts with no picker and gains
+        // one only if the answer comes back empty-handed (first-ever switch).
+        val insulinChoice by produceState(
+            initialValue = ProfileManagementViewModel.InsulinChoice(emptyList(), null),
+            key1 = profileIndex
+        ) { value = profileManagementViewModel.insulinChoice() }
 
         ProfileActivationScreen(
             profileName = profileName,
@@ -409,7 +414,9 @@ fun NavGraphBuilder.appNavGraph(
             rh = rh,
             onNavigateBack = { navController.safePopBackStack() },
             checkPumpCompatible = { percentage -> profileManagementViewModel.isPumpCompatible(profileIndex, percentage) },
-            onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
+            insulinChoices = insulinChoice.choices,
+            preselectedInsulin = insulinChoice.preselected,
+            onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged, iCfg ->
                 coroutineScope.launch {
                     profileManagementViewModel.activateProfile(
                         profileIndex = profileIndex,
@@ -420,10 +427,17 @@ fun NavGraphBuilder.appNavGraph(
                         notes = notes,
                         timestamp = timestamp,
                         timeChanged = timeChanged,
+                        iCfg = iCfg,
                         // Close only AFTER the user confirms and the switch actually commits (not when the confirm
-                        // dialog is merely shown). inclusive = true pops the Profile management screen too, so we
-                        // return to the screen it was opened from (e.g. Overview).
-                        onSuccess = { navController.popBackStack(AppRoute.Profile.route, inclusive = true) }
+                        // dialog is merely shown). Opened from Profile management, inclusive = true pops that screen
+                        // too so we land on whatever opened it (e.g. Overview). Opened from the setup wizard there is
+                        // no Profile route on the stack at all — that call then pops nothing and returns false, which
+                        // used to leave this screen sitting open after a successful first-ever switch. Fall back to
+                        // popping this destination by its own route (not lifecycle-dependent, unlike safePopBackStack).
+                        onSuccess = {
+                            if (!navController.popBackStack(AppRoute.Profile.route, inclusive = true))
+                                navController.popBackStack(AppRoute.ProfileActivation.route, inclusive = true)
+                        }
                     )
                 }
             }

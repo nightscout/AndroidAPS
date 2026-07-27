@@ -472,6 +472,26 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun prepareBatch_twoBatchesInTheSameMillisecond_getDistinctIdsAndBothCommit() = runTest {
+        stubPassthroughConstraints()
+        // dateUtil.now() is frozen in the test base — which is exactly the production race. The fill dialog fires
+        // its insulin activation, site change and cartridge change as separate coroutines, so two prepares can land
+        // in the same millisecond. When the id was `dateUtil.now()` they shared a key: the second park overwrote the
+        // first, so one commit applied the WRONG batch and the other was rejected as NoPending.
+        val executor = create()
+        val cannula = BatchAction.TherapyEvent(teType = TE.Type.CANNULA_CHANGE, timestamp = 1_000L, source = Sources.FillDialog)
+        val cartridge = BatchAction.TherapyEvent(teType = TE.Type.INSULIN_CHANGE, timestamp = 2_000L, source = Sources.FillDialog)
+
+        val first = executor.prepareBatch(listOf(cannula)) as WizardBolusExecutor.PrepareResult.Preview
+        val second = executor.prepareBatch(listOf(cartridge)) as WizardBolusExecutor.PrepareResult.Preview
+
+        assertThat(first.bolusId).isNotEqualTo(second.bolusId)
+        // Both parked batches must survive independently — neither may consume or evict the other.
+        assertThat(executor.confirm(first.bolusId, Sources.FillDialog, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(executor.confirm(second.bolusId, Sources.FillDialog, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test
     fun prepareBatch_namedProfileSwitch_appliesViaNamedCreateProfileSwitchFromMasterStore() = runTest {
         stubPassthroughConstraints()
         val store = mock<ProfileStore>()

@@ -84,7 +84,6 @@ fun FillDialogScreen(
     viewModel: FillDialogViewModel = hiltViewModel(),
     fillButtonsDef: PreferenceSubScreenDef,
     onNavigateBack: () -> Unit,
-    onShowDeliveryError: (String) -> Unit,
     onPickSiteLocation: () -> Unit = {},
     siteLocationResult: Pair<String?, String?>? = null
 ) {
@@ -127,9 +126,6 @@ fun FillDialogScreen(
                     showNoAction = true
                 }
 
-                is FillDialogViewModel.SideEffect.ShowDeliveryError  -> {
-                    onShowDeliveryError(effect.comment)
-                }
             }
         }
     }

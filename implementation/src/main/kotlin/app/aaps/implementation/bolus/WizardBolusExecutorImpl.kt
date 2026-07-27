@@ -55,6 +55,7 @@ import app.aaps.core.ui.compose.formatMinutesAsDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -149,6 +150,31 @@ class WizardBolusExecutorImpl @Inject constructor(
     private fun evictStalePending() {
         val cutoff = dateUtil.now() - pendingTtlMs
         pending.keys.removeIf { it < cutoff }
+    }
+
+    private val lastPendingId = AtomicLong(0L)
+
+    /**
+     * Unique key for a parked batch.
+     *
+     * The key doubles as the park time ([evictStalePending] trims by it), so it stays a millisecond value — but
+     * `dateUtil.now()` alone is NOT unique under concurrency. The fill dialog, for one, fires its insulin activation,
+     * site change and cartridge change as three separate coroutines; two prepares landing in the same millisecond
+     * would share a key, so the second park overwrites the first. The first commit then applies the WRONG batch and
+     * the second is rejected as [WizardBolusExecutor.ConfirmResult.NoPending] — observed in the wild as a fill whose
+     * insulin switch silently didn't happen.
+     *
+     * Hand out a strictly increasing value instead. It still tracks the clock, running ahead only by the number of
+     * collisions inside one millisecond, so the TTL sweep is unaffected. The [pending] check additionally steps over
+     * keys parked by the callers that supply their own id (the wear wizard uses its `timeStamp`).
+     */
+    private fun nextPendingId(): Long {
+        while (true) {
+            val prev = lastPendingId.get()
+            var candidate = maxOf(dateUtil.now(), prev + 1)
+            while (pending.containsKey(candidate)) candidate++
+            if (lastPendingId.compareAndSet(prev, candidate)) return candidate
+        }
     }
 
     override fun setPending(insulin: Double, carbs: Int, bolusCalculatorResult: BCR?, bolusId: Long) {
@@ -415,8 +441,8 @@ class WizardBolusExecutorImpl @Inject constructor(
         // Nothing to do after caps/clamps (e.g. negative carbs with no COB to remove): a no-op, NOT a delivery
         // error — the caller renders the neutral "no action selected" message, never the bolus-error title.
             return WizardBolusExecutor.PrepareResult.NoAction
-        val bolusId = dateUtil.now()
         evictStalePending()
+        val bolusId = nextPendingId()
         pending[bolusId] = PendingBolus(
             insulin = insulin, carbs = carbs, bcr = null, bolusId = bolusId, entry = entry,
             carbTimeMinutes = bolus?.carbsTimeOffsetMinutes ?: 0, notes = bolus?.notes, mode = BolusMode.FIXED,
