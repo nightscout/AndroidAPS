@@ -925,6 +925,12 @@
     <string name="add">Añadir</string>
     <string name="remove">Eliminar</string>
     <string name="reorder">Reordenar</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Elemento anterior</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Elemento siguiente</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Mostrar detalles</string>
+    <string name="presets_changed_reorder_aborted">Los ajustes preestablecidos han cambiado en otro lugar. No se guardó el nuevo orden</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posición %1$d de \%2$d</string>
     <string name="status">Estado</string>
     <string name="pump_actions">Acciones de la bomba</string>
     <string name="tempbasal_button">Basal temporal</string>
