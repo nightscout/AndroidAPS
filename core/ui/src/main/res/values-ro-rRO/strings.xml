@@ -388,10 +388,27 @@
     <string name="scene_profile_not_found">Profilul \"%1$s\" nu a fost găsit</string>
     <string name="scene_lock_banner_master_offline">Dispozitivul principal nu este accesibil. Controlul scenariilor se va relua atunci când conexiunea va fi restabilită.</string>
     <string name="scene_lock_banner_control_disabled">Principalul are dezactivat controlul la distanță. Controalele de scenarii vor fi reluate când sunt reactivate pe principal.</string>
+    <string name="master_offline_banner">Dispozitivul principal nu este accesibil. Editarea este dezactivată până când conexiunea este restabilită.</string>
     <string name="master_control_disabled_banner">Principalul are control la distanță dezactivat. Editarea este dezactivată până când este reactivată pe principal.</string>
+    <string name="scene_lock_reason_master_offline">Dispozitiv principal deconectat</string>
     <string name="scene_lock_reason_control_disabled">Control la distanță dezactivat</string>
+    <string name="scene_lock_reason_scene_active">Opriți mai întâi scenariul în derulare</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Setați ținta temporară</string>
+    <string name="clientcontrol_action_cancel_temp_target">Opriți ținta temporară</string>
+    <string name="clientcontrol_action_activate_scene">Activați scenariul %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Încheiați scenariul</string>
+    <string name="clientcontrol_action_update_settings">Actualizați setările</string>
+    <string name="clientcontrol_action_deliver_bolus">Administrați bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Acest dispozitiv nu este asociat cu un dispozitiv principal.</string>
+    <string name="clientcontrol_fail_not_reachable">Dispozitivul principal este deconectat.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Configurația pompei nu este sincronizată cu dispozitivul principal. Vă rugăm să încercați din nou.</string>
+    <string name="clientcontrol_fail_no_reply">Niciun răspuns la timp de la dispozitivul principal.</string>
+    <string name="clientcontrol_fail_expired">Comanda a expirat înainte ca dispozitivul principal să o aplice.</string>
+    <string name="clientcontrol_fail_busy">O altă acțiune este deja în desfășurare.</string>
+    <string name="clientcontrol_fail_send_failed">Nu s-a putut ajunge la Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Dispozitivul principal nu are niciun profil activ pe care să aplice modificările.</string>
     <string name="clientcontrol_fail_scene_not_found">Scenariul nu mai există.</string>
     <string name="clientcontrol_fail_site_entry_not_found">Intrarea de sait nu mai există.</string>
     <string name="clientcontrol_fail_scene_disabled">Scenariul este dezactivat.</string>
@@ -652,6 +669,7 @@
     <string name="no_profile_selected">Niciun profil selectat</string>
     <string name="missing_profile_name">Lipsește numele profilului</string>
     <string name="profile_not_saved_activate">Profilul nu a fost salvat. Vă rugăm să salvați profilul înainte de activare.</string>
+    <string name="profile_basal_not_compatible_with_pump">Rata bazală nu este compatibilă cu pompa curentă și nu poate fi activată. Reduceți procentajul sau ajustați rata bazală.</string>
     <string name="profile_pump_incompatible_label">Limita pompei</string>
     <string name="error_in_ic_values">Eroare în valorile IC</string>
     <string name="error_in_isf_values">Eroare în valorile ISF</string>
@@ -855,6 +873,7 @@
     <string name="clear_cloud_action">Ștergeți setările</string>
     <string name="clear_cloud_settings">Ștergeți setările Cloud</string>
     <string name="clear_cloud_settings_message">Se va comuta la stocarea locală și se va șterge autorizarea. Continuați?</string>
+    <string name="cloud_revoke_incomplete">Setările de cloud au fost eliminate de pe dispozitiv, dar contul nu a putut fi accesat pentru revocarea completa a accesului. S-ar putea să doriți să eliminați manual accesul dispozitivului din setările contului de cloud.</string>
     <string name="cloud_connection_failed">Conexiune eșuată către stocarea din cloud</string>
     <string name="cloud_reauthorize_message">Conexiunea către stocarea din cloud a eșuat. Doriți să vă reautentificați?</string>
     <string name="reauthorize">Reautentificați-vă</string>
