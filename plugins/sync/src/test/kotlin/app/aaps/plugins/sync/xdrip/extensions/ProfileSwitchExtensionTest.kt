@@ -18,7 +18,6 @@ internal class ProfileSwitchExtensionTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        whenever(insulin.iCfg).thenReturn(insulinConfiguration)
     }
 
     private fun ps(ids: IDs = IDs()) = PS(
@@ -27,7 +26,7 @@ internal class ProfileSwitchExtensionTest : TestBaseWithProfile() {
         icBlocks = effectiveProfile.icBlocks, targetBlocks = effectiveProfile.targetBlocks,
         glucoseUnit = effectiveProfile.units, profileName = "SomeProfile",
         timeshift = 3600000, percentage = 150, duration = 3600000,
-        iCfg = insulin.iCfg.also { it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong() },
+        iCfg = someICfg.also { it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong() },
         ids = ids
     )
 

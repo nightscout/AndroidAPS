@@ -1,8 +1,8 @@
 package app.aaps.implementation.insulin
 
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -25,7 +26,7 @@ import org.mockito.kotlin.whenever
 class ConcentrationHelperImplTest : TestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var insulin: Insulin
+    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var decimalFormatter: DecimalFormatter
     @Mock lateinit var dateUtil: DateUtil
@@ -39,8 +40,22 @@ class ConcentrationHelperImplTest : TestBase() {
     }
 
     private fun sut(concentration: Double): ConcentrationHelperImpl {
-        whenever(insulin.iCfg).thenReturn(ICfg("Insulin", 75, 6.0, concentration))
-        return ConcentrationHelperImpl(aapsLogger, activePlugin, insulin, rh, decimalFormatter, dateUtil)
+        whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(ICfg("Insulin", 75, 6.0, concentration)))
+        return ConcentrationHelperImpl(aapsLogger, activePlugin, profileFunction, rh, decimalFormatter, dateUtil)
+    }
+
+    // Before the first profile switch there is no insulin in force. Every conversion here multiplies or divides
+    // by concentration, so 1.0 (the identity) passes the pump's own units through untouched rather than scaling
+    // them by an insulin the user never chose.
+    @Test
+    fun withNoInsulinInForceConversionsAreIdentity() {
+        whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(null))
+        val sut = ConcentrationHelperImpl(aapsLogger, activePlugin, profileFunction, rh, decimalFormatter, dateUtil)
+
+        assertThat(sut.concentration).isEqualTo(1.0)
+        assertThat(sut.isU100()).isTrue()
+        assertThat(sut.toPump(10.0).cU).isEqualTo(10.0)
+        assertThat(sut.fromPump(PumpInsulin(10.0), isPriming = false)).isEqualTo(10.0)
     }
 
     @Test

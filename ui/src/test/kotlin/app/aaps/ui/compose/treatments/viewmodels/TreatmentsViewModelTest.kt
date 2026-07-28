@@ -1,7 +1,6 @@
 package app.aaps.ui.compose.treatments.viewmodels
 
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -32,7 +31,6 @@ internal class TreatmentsViewModelTest {
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var activePlugin: ActivePlugin
-    @Mock private lateinit var insulin: Insulin
     @Mock private lateinit var profileRepository: ProfileRepository
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var translator: Translator
@@ -56,7 +54,7 @@ internal class TreatmentsViewModelTest {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.pumpDescription).thenReturn(pumpDescription)
         sut = TreatmentsViewModel(
-            persistenceLayer, profileUtil, profileFunction, activePlugin, insulin, profileRepository,
+            persistenceLayer, profileUtil, profileFunction, activePlugin, profileRepository,
             rh, translator, dateUtil, decimalFormatter, uiInteraction, userEntryPresentationHelper,
             importExportPrefs, uel, aapsLogger, rxBus
         )

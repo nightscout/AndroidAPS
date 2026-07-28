@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -57,7 +56,6 @@ class InsulinDialogViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     activePlugin: ActivePlugin,
-    val activeInsulin: Insulin,
     private val ch: ConcentrationHelper,
     val insulinManager: InsulinManager,
     val config: Config,
@@ -150,7 +148,7 @@ class InsulinDialogViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getRunningIcfg() = profileFunction.getRunningOrRequestedICfg() ?: activeInsulin.iCfg
+    private suspend fun getRunningIcfg() = profileFunction.getRunningOrRequestedICfg()
 
     fun refreshInsulinButtons() {
         _uiState.update {
@@ -285,7 +283,7 @@ class InsulinDialogViewModel @Inject constructor(
      */
     private fun buildActions(state: InsulinDialogUiState): List<BatchAction> {
         val units = profileFunction.getUnits()
-        val iCfg = if (state.recordOnlyChecked) state.selectedIcfg ?: activeInsulin.iCfg else null
+        val iCfg = if (state.recordOnlyChecked) state.selectedIcfg else null
         return buildList {
             if (state.eatingSoonTtChecked) {
                 val mgdl = profileUtil.convertToMgdl(state.eatingSoonTtTarget, units)

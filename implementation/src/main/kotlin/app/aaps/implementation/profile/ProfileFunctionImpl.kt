@@ -28,6 +28,10 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -50,7 +54,12 @@ class ProfileFunctionImpl @Inject constructor(
     @VisibleForTesting
     val cache = ConcurrentHashMap<Long, EffectiveProfile>()
 
+    private val _runningICfg = MutableStateFlow<ICfg?>(null)
+    override val runningICfg: StateFlow<ICfg?> = _runningICfg.asStateFlow()
+
     init {
+        // Populate the mirror off the main thread so the synchronous readers never block on the DB.
+        appScope.launch { _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable } }
         persistenceLayer.observeChanges(EPS::class.java)
             .collectResilient(appScope, aapsLogger, LTag.PROFILE) { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
@@ -61,6 +70,10 @@ class ProfileFunctionImpl @Inject constructor(
                     val rounded = timestamp - timestamp % 1000
                     synchronized(cache) { cache.keys.removeIf { key -> key >= rounded } }
                 }
+                // Refresh the mirror in the SAME subscription, after the invalidation above — a separate
+                // collector on this flow has no ordering guarantee against it and could re-read the stale
+                // cache, pinning the mirror to the previous insulin until the next profile change.
+                _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable }
             }
     }
 

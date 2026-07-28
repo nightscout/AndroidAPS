@@ -59,6 +59,17 @@ data class ICfg(
         get() = (insulinPeakTime / 60000).toInt()
 
     /**
+     * False for the `insulinEndTime = -1` sentinel the DB v33 migration writes into rows that predate ICfg
+     * (and for anything else non-positive). Such a record is not an insulin: [dia] rounds to `0.0`, which is
+     * outside the hard limits, so an APS run that accepts it aborts every cycle instead of dosing.
+     *
+     * Treat it as "no insulin" — the same as absent — so callers fall through to their normal
+     * ask-or-refuse path rather than propagating a degenerate curve.
+     */
+    val isUsable: Boolean
+        get() = insulinEndTime > 0 && insulinPeakTime > 0
+
+    /**
      * Set insulinEndTime aka DIA
      * @param hours duration in hours
      */

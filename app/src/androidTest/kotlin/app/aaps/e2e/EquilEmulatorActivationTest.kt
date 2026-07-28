@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -134,7 +133,6 @@ class EquilEmulatorActivationTest {
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var config: Config
-    @Inject lateinit var insulin: Insulin
     @Inject lateinit var dateUtil: DateUtil
     @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
 
@@ -479,7 +477,7 @@ class EquilEmulatorActivationTest {
                 action = Action.PROFILE_SWITCH,
                 source = Sources.Aaps,
                 listValues = emptyList(),
-                iCfg = insulin.iCfg
+                iCfg = insulinManager.insulins.first()
             )
         }
         checkNotNull(switch) { "Could not activate the seeded local profile '$PROFILE_NAME'" }

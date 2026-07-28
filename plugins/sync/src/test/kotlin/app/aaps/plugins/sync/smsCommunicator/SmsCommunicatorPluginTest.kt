@@ -104,7 +104,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
                 persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
             ).thenReturn(PersistenceLayer.TransactionResult<TT>())
         }
-        whenever(insulin.iCfg).thenReturn(iCfg)
         // Use a real RunningModeGuard so the gate decisions actually fire from the mocked loop
         // (a mock guard returns null for everything → all gate-protected paths silently allow).
         runningModeGuard = RunningModeGuard(loop, rh, rxBus)
@@ -112,7 +111,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // Without this, the gate sees null mode and PumpCommandGate.check throws NPE.
         runBlocking { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            aapsLogger, rh, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, insulin, profileRepository,
+            aapsLogger, rh, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, profileRepository,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
             runningModeGuard, bolusProgressData, testScope, repository

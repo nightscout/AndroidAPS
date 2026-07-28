@@ -1,7 +1,7 @@
 package app.aaps.implementation.insulin
 
 import app.aaps.core.data.model.BS
-import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -14,20 +14,15 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -54,35 +49,18 @@ class InsulinImplTest : TestBase() {
         // Mock rh.gs() for nickname resolution (OREF_FREE_PEAK template) and buildSuffix (U100 concentration)
         whenever(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
         whenever(rh.gs(eq(R.string.u100))).thenReturn("U100")
-        sut = InsulinImpl(preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel, testScope)
+        sut = InsulinImpl(preferences, rh, profileFunction, aapsLogger, config, hardLimits, uel, testScope)
     }
 
-    @Test
-    fun cachedICfgCollectorSurvivesException() = runTest {
-        // Regression: a failure while reacting to an EPS change must not permanently kill the collector.
-        // An unguarded collector would be cancelled on the first throw, freezing cachedICfg (and thus the
-        // insulin DIA/peak used in IOB/COB math) until the process is restarted. See collectResilient.
-        val changes = MutableSharedFlow<List<EPS>>(extraBufferCapacity = 8)
-        whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(changes)
-        // Call order: init's one-off cache seed (returns null), then the two EPS-driven refreshes.
-        // The first EPS change makes updateCachedICfg() throw; the second must still be processed.
-        whenever(profileFunction.getProfile())
-            .thenReturn(null)                               // init: appScope.launch { updateCachedICfg() }
-            .thenThrow(RuntimeException("induced failure"))  // 1st EPS change, caught by collectResilient
-            .thenReturn(null)                               // 2nd EPS change must still reach updateCachedICfg()
-        val localSut = InsulinImpl(preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel, CoroutineScope(Dispatchers.Unconfined))
-        assertThat(localSut).isNotNull() // keep reference; collector is launched in its init
-
-        changes.tryEmit(emptyList()) // 1st: getProfile() throws, caught by collectResilient
-        changes.tryEmit(emptyList()) // 2nd: must still reach updateCachedICfg()
-
-        // 3 = seed + both EPS changes. Would be 2 if the first throw had cancelled the collector.
-        verify(profileFunction, times(3)).getProfile()
-    }
+    // The EPS-driven refresh this class used to own now lives in ProfileFunctionImpl, together with the
+    // collectResilient regression that guarded it — see ProfileFunctionImplTest.
 
     @Test
     fun testIobCalcForTreatment() {
-        val treatment = BS(timestamp = 0, amount = 10.0, type = BS.Type.NORMAL, iCfg = sut.iCfg)
+        // The curve is carried by the bolus record itself, so state it here rather than asking the plugin
+        // "what insulin is in use" — that question belongs to the profile now. Matches insulinConfiguration.
+        val iCfg = ICfg(insulinLabel = "test", insulinEndTime = 18_000_000, insulinPeakTime = 1_800_000, concentration = 1.0)
+        val treatment = BS(timestamp = 0, amount = 10.0, type = BS.Type.NORMAL, iCfg = iCfg)
         val time = System.currentTimeMillis()
         // check directly after bolus
         treatment.timestamp = time

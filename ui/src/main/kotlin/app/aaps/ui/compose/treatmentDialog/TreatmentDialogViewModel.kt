@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -43,7 +42,6 @@ import javax.inject.Inject
 class TreatmentDialogViewModel @Inject constructor(
     constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
-    private val activeInsulin: Insulin,
     private val ch: ConcentrationHelper,
     private val config: Config,
     val decimalFormatter: DecimalFormatter,
@@ -173,7 +171,7 @@ class TreatmentDialogViewModel @Inject constructor(
      * record is stamped "now" (timestamp 0 = now in the executor).
      */
     private suspend fun buildActions(state: TreatmentDialogUiState): List<BatchAction> {
-        val iCfg = if (state.forcedRecordOnly) profileFunction.getRunningOrRequestedICfg() ?: activeInsulin.iCfg else null
+        val iCfg = if (state.forcedRecordOnly) profileFunction.getRunningOrRequestedICfg() else null
         // Floor to the deliverable bolus step so the confirmed amount equals what the pump delivers (the
         // concentration boundary floors the converted cU to the native pulse grid). ch.bolusStep is
         // amount-aware (Insight) + concentration-adjusted.

@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.local.LocaleDependentSetting
@@ -142,7 +141,6 @@ class ImplementationModule {
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
-        @Binds fun bindInsulin(insulinImpl: InsulinImpl): Insulin
         @Binds fun bindInsulinManager(insulinImpl: InsulinImpl): InsulinManager
         @Binds fun bindBatchExecutor(impl: BatchExecutorImpl): BatchExecutor
         @Binds fun bindConcentrationHelper(concentrationHelperImpl: ConcentrationHelperImpl): ConcentrationHelper

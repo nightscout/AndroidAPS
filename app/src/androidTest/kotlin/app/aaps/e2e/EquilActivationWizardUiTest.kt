@@ -19,7 +19,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -96,7 +96,7 @@ class EquilActivationWizardUiTest {
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var insulin: Insulin
+    @Inject lateinit var insulinManager: InsulinManager
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
@@ -236,7 +236,7 @@ class EquilActivationWizardUiTest {
             profileFunction.createProfileSwitch(
                 profileStore = store, profileName = PROFILE_NAME, durationInMinutes = 0, percentage = 100,
                 timeShiftInHours = 0, timestamp = dateUtil.now(), action = Action.PROFILE_SWITCH,
-                source = Sources.Aaps, listValues = emptyList(), iCfg = insulin.iCfg
+                source = Sources.Aaps, listValues = emptyList(), iCfg = insulinManager.insulins.first()
             )
         }
         checkNotNull(switch) { "Could not activate the seeded local profile" }

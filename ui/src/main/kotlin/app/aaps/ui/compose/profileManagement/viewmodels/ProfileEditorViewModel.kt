@@ -5,7 +5,6 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -92,7 +91,6 @@ class ProfileEditorViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     private val hardLimits: HardLimits,
     val dateUtil: DateUtil,
     private val protectionCheck: ProtectionCheck
@@ -452,8 +450,6 @@ class ProfileEditorViewModel @Inject constructor(
         // legacy "discard changes" semantics.
         viewModelScope.launch { profileRepository.reset() }
     }
-
-    fun getActiveInsulin() = insulin
 
     private fun SingleProfile.toState(): SingleProfileState {
         return SingleProfileState(

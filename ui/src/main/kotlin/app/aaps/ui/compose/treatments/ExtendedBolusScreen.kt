@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.extensions.iobCalc
@@ -57,7 +56,6 @@ import app.aaps.ui.compose.treatments.viewmodels.ExtendedBolusViewModel
  *
  * @param viewModel ViewModel managing state and business logic
  * @param profileFunction Profile function for getting profiles
- * @param activeInsulin Active insulin plugin for IOB calculation
  * @param setToolbarConfig Callback to set the toolbar configuration
  * @param onNavigateBack Callback to navigate back
  */
@@ -66,7 +64,6 @@ import app.aaps.ui.compose.treatments.viewmodels.ExtendedBolusViewModel
 fun ExtendedBolusScreen(
     viewModel: ExtendedBolusViewModel,
     profileFunction: ProfileFunction,
-    activeInsulin: Insulin,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit = { }
 ) {
@@ -139,7 +136,6 @@ fun ExtendedBolusScreen(
                                 }
                             },
                             profileFunction = profileFunction,
-                            activeInsulin = activeInsulin,
                             rh = viewModel.rh
                         )
                     }
@@ -158,7 +154,6 @@ private fun ExtendedBolusItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     profileFunction: ProfileFunction,
-    activeInsulin: Insulin,
     rh: ResourceHelper
 ) {
     val dateUtil = LocalDateUtil.current

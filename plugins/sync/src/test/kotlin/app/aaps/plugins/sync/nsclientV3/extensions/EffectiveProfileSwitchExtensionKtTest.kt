@@ -19,7 +19,6 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        whenever(insulin.iCfg).thenReturn(insulinConfiguration)
     }
 
     @Test
@@ -38,7 +37,7 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             originalPercentage = 150,
             originalDuration = 3600000,
             originalEnd = 0,
-            iCfg = insulin.iCfg.also {
+            iCfg = insulinConfiguration.also {
                 it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
@@ -49,7 +48,7 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        val profileSwitch2 = (profileSwitch.toNSEffectiveProfileSwitch(dateUtil).convertToRemoteAndBack() as NSEffectiveProfileSwitch).toEffectiveProfileSwitch(dateUtil, insulin)!!
+        val profileSwitch2 = (profileSwitch.toNSEffectiveProfileSwitch(dateUtil).convertToRemoteAndBack() as NSEffectiveProfileSwitch).toEffectiveProfileSwitch(dateUtil, insulinConfiguration)!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
     }

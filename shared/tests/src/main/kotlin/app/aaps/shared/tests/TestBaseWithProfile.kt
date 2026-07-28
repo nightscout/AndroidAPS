@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -83,7 +82,6 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var theme: Resources.Theme
     @Mock lateinit var typedArray: TypedArray
     @Mock lateinit var profileRepository: ProfileRepository
-    @Mock lateinit var insulin: Insulin
     @Mock lateinit var ch: ConcentrationHelper
 
     lateinit var dateUtil: DateUtil
@@ -149,7 +147,10 @@ open class TestBaseWithProfile : TestBase() {
         whenever(context.obtainStyledAttributes(anyOrNull(), any(), any(), any())).thenReturn(typedArray)
         whenever(dateUtil.now()).thenReturn(now)
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
-        whenever(insulin.iCfg).thenReturn(someICfg)
+        // Synchronous mirror of the running profile's insulin. Non-null by default so the many non-suspend
+        // readers (concentration conversions) behave as if a profile is running; stub it to a StateFlow of
+        // null in a test that needs the "nothing in force" path.
+        whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(someICfg))
         whenever(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
         whenever(preferences.observe(any<BooleanNonPreferenceKey>())).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(any<StringNonPreferenceKey>())).thenReturn(MutableStateFlow(""))

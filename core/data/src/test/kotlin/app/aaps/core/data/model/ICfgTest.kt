@@ -54,4 +54,25 @@ class ICfgTest {
         val iob = iCfg.iobCalcForTreatment(bolus(1.0, iCfg, timestamp = 0L), time = 6 * 60 * 60 * 1000L)
         assertThat(iob.iobContrib).isEqualTo(0.0)
     }
+
+    // The DB v33 migration stamps this sentinel onto every pre-ICfg row, including the active profile's.
+    // Read back as a value it yields DIA 0.0, which fails the APS hard-limit check and aborts every cycle.
+    @Test
+    fun `the v33 migration sentinel is not a usable insulin`() {
+        val sentinel = ICfg(insulinLabel = "", insulinEndTime = -1, insulinPeakTime = -1, concentration = 1.0)
+
+        assertThat(sentinel.isUsable).isFalse()
+        assertThat(sentinel.dia).isEqualTo(0.0) // the value that blocks the loop
+    }
+
+    @Test
+    fun `a real insulin is usable`() {
+        assertThat(ICfg(insulinLabel = "test", peak = 75, dia = 5.0, concentration = 1.0).isUsable).isTrue()
+    }
+
+    @Test
+    fun `a zero or negative DIA or peak is not usable`() {
+        assertThat(ICfg(insulinLabel = "", insulinEndTime = 0, insulinPeakTime = 4_500_000, concentration = 1.0).isUsable).isFalse()
+        assertThat(ICfg(insulinLabel = "", insulinEndTime = 18_000_000, insulinPeakTime = 0, concentration = 1.0).isUsable).isFalse()
+    }
 }

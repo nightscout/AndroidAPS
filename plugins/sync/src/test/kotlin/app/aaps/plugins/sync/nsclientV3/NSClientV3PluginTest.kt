@@ -89,7 +89,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
-        whenever(insulin.iCfg).thenReturn(insulinConfiguration)
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
         sut =
             NSClientV3Plugin(
@@ -382,7 +381,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             originalPercentage = 150,
             originalDuration = 3600000,
             originalEnd = 0,
-            iCfg = insulin.iCfg.also {
+            iCfg = someICfg.also {
                 it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
@@ -418,7 +417,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             timeshift = 0,
             percentage = 100,
             duration = 0,
-            iCfg = insulin.iCfg.also {
+            iCfg = someICfg.also {
                 it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(

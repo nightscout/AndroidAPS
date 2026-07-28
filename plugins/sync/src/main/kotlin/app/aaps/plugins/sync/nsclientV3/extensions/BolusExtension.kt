@@ -5,17 +5,17 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
 import app.aaps.core.nssdk.localmodel.treatment.NSICfg
 import java.security.InvalidParameterException
 
-fun NSBolus.toBolus(insulinFallback: Insulin): BS {
+/** [insulinFallback] stamps records uploaded without one — see `NsIncomingDataProcessor.fallbackICfg`. */
+fun NSBolus.toBolus(insulinFallback: ICfg): BS {
     val iCfg =
         iCfg?.let {
             ICfg(insulinLabel = it.insulinLabel, insulinEndTime = it.insulinEndTime, insulinPeakTime = it.insulinPeakTime, concentration = it.concentration)
-        } ?: insulinFallback.iCfg
+        } ?: insulinFallback
     return BS(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),

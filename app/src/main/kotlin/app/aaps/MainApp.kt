@@ -887,7 +887,16 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
     /**
      * Insulin config stamped onto legacy records when neither legacy preferences nor a running profile
-     * can tell us what was actually used — a rare upgrade case (no active profile switch at first start).
+     * can tell us what was actually used: no active profile switch at first start, or — the case that
+     * matters — a running profile whose own row still carries the v33 sentinel.
+     *
+     * That second case is why this must not read the running profile unguarded. The SQL step of the
+     * migration stamps `insulinEndTime = -1` onto every pre-ICfg row *including the active one*, so
+     * reading it back yields a DIA of 0.0 and writes the sentinel straight back over itself. The rows stay
+     * unmigrated, the profile keeps reporting a zero DIA, and the APS hard-limit check aborts every loop
+     * cycle. [app.aaps.core.interfaces.profile.ProfileFunction.getRunningOrRequestedICfg] rejects an
+     * unusable [ICfg] so that path lands here instead — and because the repair re-runs on every start and
+     * still matches the sentinel rows, an install already broken this way heals on its next launch.
      *
      * Ultra-rapid: an 8h DIA is the same across every [InsulinType] template, so the only real choice is
      * the peak. Concentration is 1.0 by construction, which is not a guess — these records predate

@@ -3,10 +3,11 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -14,6 +15,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.source.NSClientSource
@@ -63,7 +65,7 @@ class NsIncomingDataProcessor @Inject constructor(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val nsClient: NsClient,
-    private val insulin: Insulin,
+    private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
@@ -71,6 +73,21 @@ class NsIncomingDataProcessor @Inject constructor(
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository
 ) {
+
+    /**
+     * Insulin to stamp on an incoming record that carries none — uploaded by an older AAPS or by a non-AAPS
+     * client. `BS.iCfg` / `PS.iCfg` / `EPS.iCfg` are non-null, so the alternative to guessing here is discarding
+     * the record, and losing the user's history on a restore is the worse outcome.
+     *
+     * The running profile's insulin is the best available answer, but it is still only a guess: for a record
+     * from months ago the correct value is whatever was in force *then*, which would need a suspending,
+     * per-record `getProfile(timestamp)` — and on the full sync of a fresh install that history has not been
+     * imported yet anyway. [OREF_RAPID_ACTING] backstops exactly that case (nothing in force, because the very
+     * profile switches that would establish it are arriving in this same batch); it matches what a fresh
+     * install seeds. Read per record, not hoisted, so records later in a batch pick up a profile switch that
+     * landed earlier in it.
+     */
+    private fun fallbackICfg(): ICfg = profileFunction.runningICfg.value ?: InsulinType.OREF_RAPID_ACTING.iCfg
 
     /**
      * Preprocess list of SGVs
@@ -141,7 +158,7 @@ class NsIncomingDataProcessor @Inject constructor(
                 when (treatment) {
                     is NSBolus                  ->
                         if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT || doFullSync)
-                            storeDataForDb.addToBoluses(treatment.toBolus(insulin))
+                            storeDataForDb.addToBoluses(treatment.toBolus(fallbackICfg()))
 
                     is NSCarbs                  ->
                         if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT || doFullSync)
@@ -170,14 +187,14 @@ class NsIncomingDataProcessor @Inject constructor(
 
                     is NSEffectiveProfileSwitch ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toEffectiveProfileSwitch(dateUtil, insulin)?.let { effectiveProfileSwitch ->
+                            treatment.toEffectiveProfileSwitch(dateUtil, fallbackICfg())?.let { effectiveProfileSwitch ->
                                 storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                             }
                         }
 
                     is NSProfileSwitch          ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toProfileSwitch(profileRepository, dateUtil, insulin)?.let { profileSwitch ->
+                            treatment.toProfileSwitch(profileRepository, dateUtil, fallbackICfg())?.let { profileSwitch ->
                                 storeDataForDb.addToProfileSwitches(profileSwitch)
                             }
                         }

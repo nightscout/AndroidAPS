@@ -18,7 +18,6 @@ internal class EffectiveProfileSwitchExtensionTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        whenever(insulin.iCfg).thenReturn(insulinConfiguration)
     }
 
     private fun eps(ids: IDs = IDs()) = EPS(
@@ -28,7 +27,7 @@ internal class EffectiveProfileSwitchExtensionTest : TestBaseWithProfile() {
         glucoseUnit = effectiveProfile.units,
         originalProfileName = "SomeProfile", originalCustomizedName = "SomeProfile (150%, 1h)",
         originalTimeshift = 3600000, originalPercentage = 150, originalDuration = 3600000, originalEnd = 0,
-        iCfg = insulin.iCfg.also { it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong() },
+        iCfg = someICfg.also { it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong() },
         ids = ids
     )
 
