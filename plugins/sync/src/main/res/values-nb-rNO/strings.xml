@@ -77,6 +77,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Laster opp data til Tidepool</string>
     <string name="upload_now">Last opp nå</string>
+    <string name="tidepool_purge_data">Slett alle data</string>
+    <string name="tidepool_purge_data_confirm">Slette ALLE data som AAPS har lastet opp til Tidepool? Dette kan ikke angres. Bruk dette for å fjerne data som ble ødelagt av en eldre versjon, og kjør deretter «Full synkronisering» for å laste opp dataene på nytt.</string>
     <string name="not_connected">Ikke tilkoblet</string>
     <string name="read_only">Skrivebeskyttet</string>
     <string name="working">Prosesserer</string>
