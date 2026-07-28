@@ -19,6 +19,11 @@
     <!-- androidx.wear.watchfacepush requires minSdk 36; all usages are runtime-guarded by SDK checks -->
     <uses-sdk tools:overrideLibrary="androidx.wear.tiles,androidx.wear.watchfacepush" />
 
+    <!-- Package visibility for the pushed watchface, so the install state can be verified -->
+    <queries>
+        <package android:name="${applicationId}.watchfacepush.aapsv4" />
+    </queries>
+
     <application
         android:name=".WearApp"
         android:allowBackup="true"

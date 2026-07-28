@@ -84,7 +84,8 @@
     <string name="menu_resync">Re-Sync</string>
     <string name="menu_prime_fill">Prime/Fill</string>
     <string name="menu_install_watchface">Install watchface</string>
-    <string name="watchface_installed">Watchface installed</string>
+    <string name="watchface_installed_active">Watchface installed and set as active</string>
+    <string name="watchface_installed_select">Watchface installed, select it in the watch face picker</string>
     <string name="watchface_install_failed">Watchface installation failed</string>
     <string name="menu_none">None</string>
     <string name="menu_default">Default</string>

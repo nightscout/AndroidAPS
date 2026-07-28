@@ -1,6 +1,7 @@
 package app.aaps.wear.watchfaces
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.wear.watchfacepush.WatchFacePushManager
@@ -60,7 +61,10 @@ class WatchFacePushHelper @Inject constructor(
     suspend fun isFaceInstalled(): Boolean = withContext(Dispatchers.IO) {
         if (!isSupported()) return@withContext false
         try {
-            val installed = installedFaceSlotId(createManager()) != null
+            // Slot occupancy alone is not enough: after a manual uninstall of the face package
+            // the slot can stay stale, and the user needs the install entry back (the install
+            // then takes the update path and revives the slot)
+            val installed = installedFaceSlotId(createManager()) != null && facePackagePresent()
             sp.putBoolean(KEY_FACE_INSTALLED, installed)
             installed
         } catch (e: Exception) {
@@ -79,7 +83,7 @@ class WatchFacePushHelper @Inject constructor(
     suspend fun syncOnStartup() = withContext(Dispatchers.IO) {
         if (!isSupported()) return@withContext
         try {
-            val installed = installedFaceSlotId(createManager()) != null
+            val installed = installedFaceSlotId(createManager()) != null && facePackagePresent()
             sp.putBoolean(KEY_FACE_INSTALLED, installed)
             if (installed && sp.getString(KEY_SYNCED_VERSION, "") != BuildConfig.BUILDVERSION) {
                 aapsLogger.debug(LTag.WEAR, "WatchFacePush: app updated, refreshing installed face")
@@ -93,13 +97,17 @@ class WatchFacePushHelper @Inject constructor(
     }
 
     /**
-     * Installs the embedded face (or updates it if already installed) and, on first install,
-     * tries to make it the active watch face — the API allows that once without the
-     * `SET_PUSHED_WATCH_FACE_AS_ACTIVE` permission.
+     * Installs the embedded face (or updates it if already installed).
      *
+     * @param activate also try to make the face the active watch face afterwards. Pass true only
+     *   for user-triggered installs (menu tap = the user wants the face on the wrist, including
+     *   reinstalls over a stale slot); the background version sync must never steal the active
+     *   face from a user who deliberately switched away. Activation needs the
+     *   `SET_PUSHED_WATCH_FACE_AS_ACTIVE` permission (or the API's one-shot allowance) and fails
+     *   soft — the face stays installed and selectable in the picker.
      * @return true when the face ended up installed/updated
      */
-    suspend fun installOrUpdate(): Boolean = withContext(Dispatchers.IO) {
+    suspend fun installOrUpdate(activate: Boolean = false): Boolean = withContext(Dispatchers.IO) {
         if (!isSupported()) return@withContext false
         val apkFile = File(context.cacheDir, "wfpush_aapsv4.apk")
         try {
@@ -116,7 +124,7 @@ class WatchFacePushHelper @Inject constructor(
                     manager.updateWatchFace(existingSlotId, fd, token)
                 }
             }
-            if (existingSlotId == null) {
+            if (activate) {
                 installedFaceSlotId(manager)?.let { slotId -> setActive(manager, slotId) }
             }
             sp.putString(KEY_SYNCED_VERSION, BuildConfig.BUILDVERSION)
@@ -132,6 +140,25 @@ class WatchFacePushHelper @Inject constructor(
             apkFile.delete()
         }
     }
+
+    /** Whether the embedded face is the currently shown watch face */
+    suspend fun isFaceActive(): Boolean = withContext(Dispatchers.IO) {
+        if (!isSupported()) return@withContext false
+        try {
+            createManager().isWatchFaceActive(facePackageName)
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WEAR, "WatchFacePush: active check failed", e)
+            false
+        }
+    }
+
+    private fun facePackagePresent(): Boolean =
+        try {
+            context.packageManager.getPackageInfo(facePackageName, 0)
+            true
+        } catch (_: PackageManager.NameNotFoundException) {
+            false
+        }
 
     private fun createManager(): WatchFacePushManager =
         WatchFacePushManagerFactory.createWatchFacePushManager(context)
