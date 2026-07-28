@@ -159,6 +159,9 @@
     <string name="pref_simplify_ui">Simplify UI</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
+    <string name="pref_complication_1">Complication 1</string>
+    <string name="pref_complication_2">Complication 2</string>
+    <string name="pref_complication_3">Complication 3</string>
     <string name="pref_include_external">Include external views in template</string>
     <string name="pref_switch_external">Switch external datas in Watchface</string>
     <string name="custom_pref_show_seconds">Show seconds</string>
@@ -243,6 +246,9 @@
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="key_last_selected_watchface" translatable="false">last_selected_watchface</string>
+    <string name="key_complication_1" translatable="false">complication_1</string>
+    <string name="key_complication_2" translatable="false">complication_2</string>
+    <string name="key_complication_3" translatable="false">complication_3</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>

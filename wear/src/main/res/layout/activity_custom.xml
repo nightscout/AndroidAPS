@@ -33,6 +33,27 @@
         android:orientation="vertical"
         android:visibility="gone" />
 
+    <FrameLayout
+        android:id="@+id/complication1"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:layout_marginTop="100px"
+        android:layout_marginLeft="100px" />
+
+    <FrameLayout
+        android:id="@+id/complication2"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:layout_marginTop="200px"
+        android:layout_marginLeft="100px" />
+
+    <FrameLayout
+        android:id="@+id/complication3"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:layout_marginTop="300px"
+        android:layout_marginLeft="100px" />
+
     <TextView
         android:id="@+id/freetext1"
         android:layout_width="0px"

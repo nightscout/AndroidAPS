@@ -30,6 +30,8 @@ enum class JsonKeys(val key: String) {
     FONT("font"),
     FONTSTYLE("fontStyle"),
     FONTCOLOR("fontColor"),
+    FONTTITLE("fontTitle"),
+    FONTTITLECOLOR("fontTitleColor"),
     COLOR("color"),
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),

@@ -219,6 +219,12 @@ class CustomWatchface : BaseWatchFace() {
         binding.secondHand.visibility = (binding.secondHand.isVisible && showSecond).toVisibility()
     }
 
+    // NOTE: complications are not wired up yet. This codebase runs on the modern
+    // androidx.wear.watchface API (see WatchFace.kt), where complication slots are declared via
+    // ComplicationSlotsManager and taps on them are routed by the framework itself — there is no
+    // onComplicationDataUpdate/onTapCommand override to add here. That part is intentionally left
+    // out of this file pending the real ComplicationSlot-based implementation.
+
     private fun setWatchfaceStyle() {
         var customWatchfaceData = runBlocking {
             complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
@@ -276,6 +282,11 @@ class CustomWatchface : BaseWatchFace() {
                             is TextView                                 -> viewMap.customizeTextView(view, this)
                             is ImageView                                -> viewMap.customizeImageView(view, this)
                             is lecho.lib.hellocharts.view.LineChartView -> viewMap.customizeGraphView(view, this)
+                            // complication1/2/3 (FrameLayout) placeholders currently just get generic
+                            // position/size/visibility from the CWF json, same as any other view with no
+                            // dedicated customize* function. Actual complication rendering/behavior (real
+                            // ComplicationSlots, provider selection, framework-routed taps) is not implemented
+                            // yet — see _docs/CWF_ComplicationSlotsPrompt.md for the plan.
                             else                                        -> viewMap.customizeViewCommon(view, this)
                         }
                         if (viewMap.external == 1 && view.isVisible)
@@ -338,33 +349,38 @@ class CustomWatchface : BaseWatchFace() {
             val params = view.layoutParams as FrameLayout.LayoutParams
             ViewMap.fromId(view.id)?.let {
                 if (it.external == 0 || externalViews) {
-                    if (view is TextView) {
-                        json.put(
-                            it.key,
-                            JSONObject()
-                                .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
-                                .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
-                                .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                                .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                                .put(JsonKeys.ROTATION.key, view.rotation.toInt())
-                                .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
-                                .put(JsonKeys.TEXTSIZE.key, view.textSize.toInt())
-                                .put(JsonKeys.GRAVITY.key, GravityMap.key(view.gravity))
-                                .put(JsonKeys.FONT.key, FontMap.key())
-                                .put(JsonKeys.FONTSTYLE.key, StyleMap.key(view.typeface.style))
-                                .put(JsonKeys.FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
-                        )
-                    }
-                    if (view is ImageView || view is lecho.lib.hellocharts.view.LineChartView) {
-                        json.put(
-                            it.key,
-                            JSONObject()
-                                .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
-                                .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
-                                .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                                .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                                .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
-                        )
+                    when (view) {
+                        is TextView                                 ->
+                            json.put(
+                                it.key,
+                                JSONObject()
+                                    .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
+                                    .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
+                                    .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                                    .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                                    .put(JsonKeys.ROTATION.key, view.rotation.toInt())
+                                    .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
+                                    .put(JsonKeys.TEXTSIZE.key, view.textSize.toInt())
+                                    .put(JsonKeys.GRAVITY.key, GravityMap.key(view.gravity))
+                                    .put(JsonKeys.FONT.key, FontMap.key())
+                                    .put(JsonKeys.FONTSTYLE.key, StyleMap.key(view.typeface.style))
+                                    .put(JsonKeys.FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
+                            )
+
+                        // TODO CWF-COMPLICATION: as in the old code, complication slots (FrameLayout) are included
+                        //  in the default CWF here (position/size/visibility), same as ImageView/graph views. Only
+                        //  the "chosen provider" part (whatever mechanism ends up tracking it per slot) obviously
+                        //  has no place in a default CWF zip — it stays a per-user preference, not baked into the zip.
+                        is ImageView, is FrameLayout, is lecho.lib.hellocharts.view.LineChartView ->
+                            json.put(
+                                it.key,
+                                JSONObject()
+                                    .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
+                                    .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
+                                    .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                                    .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                                    .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
+                            )
                     }
                 }
             }
@@ -480,6 +496,12 @@ class CustomWatchface : BaseWatchFace() {
             customHigh = ResFileMap.BACKGROUND_HIGH,
             customLow = ResFileMap.BACKGROUND_LOW
         ),
+        // Plain FrameLayout placeholders that carry position/size/visibility for the real
+        // ComplicationSlots (see complicationSlotConfigs / customizeComplicationView). They draw
+        // nothing themselves - the framework renders the actual complication onto the Canvas.
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3),
         CHART(ViewKeys.CHART.key, R.id.chart),
         COVER_CHART(
             key = ViewKeys.COVER_CHART.key,
@@ -616,11 +638,11 @@ class CustomWatchface : BaseWatchFace() {
         var lowCustom: Drawable? = null
         var textDrawable: Drawable? = null
         fun drawable(cwf: CustomWatchface): Drawable? = dynData?.getDrawable(cwf) ?: when (cwf.singleBg[0].sgvLevel) {
-                1L   -> highCustom ?: rangeCustom
-                0L   -> rangeCustom
-                -1L  -> lowCustom ?: rangeCustom
-                else -> rangeCustom
-            }
+            1L   -> highCustom ?: rangeCustom
+            0L   -> rangeCustom
+            -1L  -> lowCustom ?: rangeCustom
+            else -> rangeCustom
+        }
         var twinView: ViewMap? = null
             get() = field ?: viewJson?.let { viewJson -> ViewMap.fromKey(viewJson.optString(JsonKeys.TWINVIEW.key)).also { twinView = it } }
 
@@ -946,46 +968,46 @@ class CustomWatchface : BaseWatchFace() {
             get() = dynTextValue[0]?.let { dynTextValue.size - 1 } ?: dynTextValue.size
 
         fun dataValue(cwf: CustomWatchface): Double? = when (valueMap) {
-                ValueMap.NONE             -> 0.0
-                ValueMap.SGV              -> if (cwf.singleBg[0].sgvString != "---") cwf.singleBg[0].sgv else null
-                ValueMap.SGV_LEVEL        -> if (cwf.singleBg[0].sgvString != "---") cwf.singleBg[0].sgvLevel.toDouble() else null
-                ValueMap.DIRECTION        -> TrendArrowMap.value(cwf.singleBg[0])
-                ValueMap.DELTA            -> cwf.singleBg[0].deltaMgdl
-                ValueMap.AVG_DELTA        -> cwf.singleBg[0].avgDeltaMgdl
-                ValueMap.TEMP_TARGET      -> cwf.status[0].tempTargetLevel.toDouble()
-                ValueMap.RESERVOIR        -> cwf.status[0].reservoir
-                ValueMap.RESERVOIR_LEVEL  -> cwf.status[0].reservoirLevel.toDouble()
-                ValueMap.RIG_BATTERY      -> cwf.status[0].rigBattery.replace("%", "").toDoubleOrNull()
-                ValueMap.UPLOADER_BATTERY -> cwf.status[0].battery.replace("%", "").toDoubleOrNull()
-                ValueMap.LOOP             -> if (cwf.status[0].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[0].openApsStatus) / 1000 / 60).toDouble() else null
-                ValueMap.TIMESTAMP        -> if (cwf.singleBg[0].timeStamp != 0L) floor(cwf.timeSince() / (1000 * 60)) else null
-                ValueMap.DAY              -> LocalDateTime.now().dayOfMonth.toDouble()
-                ValueMap.DAY_NAME         -> LocalDateTime.now().dayOfWeek.value.toDouble()
-                ValueMap.MONTH            -> LocalDateTime.now().monthValue.toDouble()
-                ValueMap.WEEK_NUMBER      -> LocalDateTime.now().get(WeekFields.ISO.weekOfWeekBasedYear()).toDouble()
-                ValueMap.SGV_EXT1         -> if (cwf.singleBg[1].sgvString != "---") cwf.singleBg[1].sgv else null
-                ValueMap.SGV_LEVEL_EXT1   -> if (cwf.singleBg[1].sgvString != "---") cwf.singleBg[1].sgvLevel.toDouble() else null
-                ValueMap.DIRECTION_EXT1   -> TrendArrowMap.value(cwf.singleBg[1])
-                ValueMap.DELTA_EXT1       -> cwf.singleBg[1].deltaMgdl
-                ValueMap.AVG_DELTA_EXT1   -> cwf.singleBg[1].avgDeltaMgdl
-                ValueMap.TEMP_TARGET_EXT1 -> cwf.status[1].tempTargetLevel.toDouble()
-                ValueMap.RESERVOIR_EXT1   -> cwf.status[1].reservoir
-                ValueMap.RESERVOIR_LEVEL_EXT1 -> cwf.status[1].reservoirLevel.toDouble()
-                ValueMap.RIG_BATTERY_EXT1 -> cwf.status[1].rigBattery.replace("%", "").toDoubleOrNull()
-                ValueMap.LOOP_EXT1        -> if (cwf.status[1].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[1].openApsStatus) / 1000 / 60).toDouble() else null
-                ValueMap.TIMESTAMP_EXT1   -> if (cwf.singleBg[1].timeStamp != 0L) floor(cwf.timeSince(1) / (1000 * 60)) else null
-                ValueMap.SGV_EXT2         -> if (cwf.singleBg[2].sgvString != "---") cwf.singleBg[2].sgv else null
-                ValueMap.SGV_LEVEL_EXT2   -> if (cwf.singleBg[2].sgvString != "---") cwf.singleBg[2].sgvLevel.toDouble() else null
-                ValueMap.DIRECTION_EXT2   -> TrendArrowMap.value(cwf.singleBg[2])
-                ValueMap.DELTA_EXT2       -> cwf.singleBg[2].deltaMgdl
-                ValueMap.AVG_DELTA_EXT2   -> cwf.singleBg[2].avgDeltaMgdl
-                ValueMap.TEMP_TARGET_EXT2 -> cwf.status[2].tempTargetLevel.toDouble()
-                ValueMap.RESERVOIR_EXT2   -> cwf.status[2].reservoir
-                ValueMap.RESERVOIR_LEVEL_EXT2 -> cwf.status[2].reservoirLevel.toDouble()
-                ValueMap.RIG_BATTERY_EXT2 -> cwf.status[2].rigBattery.replace("%", "").toDoubleOrNull()
-                ValueMap.LOOP_EXT2        -> if (cwf.status[2].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[2].openApsStatus) / 1000 / 60).toDouble() else null
-                ValueMap.TIMESTAMP_EXT2   -> if (cwf.singleBg[2].timeStamp != 0L) floor(cwf.timeSince(2) / (1000 * 60)) else null
-            }
+            ValueMap.NONE             -> 0.0
+            ValueMap.SGV              -> if (cwf.singleBg[0].sgvString != "---") cwf.singleBg[0].sgv else null
+            ValueMap.SGV_LEVEL        -> if (cwf.singleBg[0].sgvString != "---") cwf.singleBg[0].sgvLevel.toDouble() else null
+            ValueMap.DIRECTION        -> TrendArrowMap.value(cwf.singleBg[0])
+            ValueMap.DELTA            -> cwf.singleBg[0].deltaMgdl
+            ValueMap.AVG_DELTA        -> cwf.singleBg[0].avgDeltaMgdl
+            ValueMap.TEMP_TARGET      -> cwf.status[0].tempTargetLevel.toDouble()
+            ValueMap.RESERVOIR        -> cwf.status[0].reservoir
+            ValueMap.RESERVOIR_LEVEL  -> cwf.status[0].reservoirLevel.toDouble()
+            ValueMap.RIG_BATTERY      -> cwf.status[0].rigBattery.replace("%", "").toDoubleOrNull()
+            ValueMap.UPLOADER_BATTERY -> cwf.status[0].battery.replace("%", "").toDoubleOrNull()
+            ValueMap.LOOP             -> if (cwf.status[0].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[0].openApsStatus) / 1000 / 60).toDouble() else null
+            ValueMap.TIMESTAMP        -> if (cwf.singleBg[0].timeStamp != 0L) floor(cwf.timeSince() / (1000 * 60)) else null
+            ValueMap.DAY              -> LocalDateTime.now().dayOfMonth.toDouble()
+            ValueMap.DAY_NAME         -> LocalDateTime.now().dayOfWeek.value.toDouble()
+            ValueMap.MONTH            -> LocalDateTime.now().monthValue.toDouble()
+            ValueMap.WEEK_NUMBER      -> LocalDateTime.now().get(WeekFields.ISO.weekOfWeekBasedYear()).toDouble()
+            ValueMap.SGV_EXT1         -> if (cwf.singleBg[1].sgvString != "---") cwf.singleBg[1].sgv else null
+            ValueMap.SGV_LEVEL_EXT1   -> if (cwf.singleBg[1].sgvString != "---") cwf.singleBg[1].sgvLevel.toDouble() else null
+            ValueMap.DIRECTION_EXT1   -> TrendArrowMap.value(cwf.singleBg[1])
+            ValueMap.DELTA_EXT1       -> cwf.singleBg[1].deltaMgdl
+            ValueMap.AVG_DELTA_EXT1   -> cwf.singleBg[1].avgDeltaMgdl
+            ValueMap.TEMP_TARGET_EXT1 -> cwf.status[1].tempTargetLevel.toDouble()
+            ValueMap.RESERVOIR_EXT1   -> cwf.status[1].reservoir
+            ValueMap.RESERVOIR_LEVEL_EXT1 -> cwf.status[1].reservoirLevel.toDouble()
+            ValueMap.RIG_BATTERY_EXT1 -> cwf.status[1].rigBattery.replace("%", "").toDoubleOrNull()
+            ValueMap.LOOP_EXT1        -> if (cwf.status[1].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[1].openApsStatus) / 1000 / 60).toDouble() else null
+            ValueMap.TIMESTAMP_EXT1   -> if (cwf.singleBg[1].timeStamp != 0L) floor(cwf.timeSince(1) / (1000 * 60)) else null
+            ValueMap.SGV_EXT2         -> if (cwf.singleBg[2].sgvString != "---") cwf.singleBg[2].sgv else null
+            ValueMap.SGV_LEVEL_EXT2   -> if (cwf.singleBg[2].sgvString != "---") cwf.singleBg[2].sgvLevel.toDouble() else null
+            ValueMap.DIRECTION_EXT2   -> TrendArrowMap.value(cwf.singleBg[2])
+            ValueMap.DELTA_EXT2       -> cwf.singleBg[2].deltaMgdl
+            ValueMap.AVG_DELTA_EXT2   -> cwf.singleBg[2].avgDeltaMgdl
+            ValueMap.TEMP_TARGET_EXT2 -> cwf.status[2].tempTargetLevel.toDouble()
+            ValueMap.RESERVOIR_EXT2   -> cwf.status[2].reservoir
+            ValueMap.RESERVOIR_LEVEL_EXT2 -> cwf.status[2].reservoirLevel.toDouble()
+            ValueMap.RIG_BATTERY_EXT2 -> cwf.status[2].rigBattery.replace("%", "").toDoubleOrNull()
+            ValueMap.LOOP_EXT2        -> if (cwf.status[2].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[2].openApsStatus) / 1000 / 60).toDouble() else null
+            ValueMap.TIMESTAMP_EXT2   -> if (cwf.singleBg[2].timeStamp != 0L) floor(cwf.timeSince(2) / (1000 * 60)) else null
+        }
 
         fun getTopOffset(cwf: CustomWatchface): Int = dataRange?.let { dataRange ->
             topRange?.let { topRange ->
@@ -1174,5 +1196,3 @@ class CustomWatchface : BaseWatchFace() {
         s != PrefMap.fromKey(prefMap)?.let { if (it.typeBool) sp.getBoolean(it.prefKey, it.defaultValue as Boolean).toString() else sp.getString(it.prefKey, it.defaultValue as String) }
     }
 }
-
-
