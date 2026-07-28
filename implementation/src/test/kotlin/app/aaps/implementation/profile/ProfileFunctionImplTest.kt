@@ -3,6 +3,7 @@ package app.aaps.implementation.profile
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -162,5 +163,35 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
 
         // Null means "ask the user or refuse" — never substitute a catalogue entry.
         assertThat(createSut().getRunningOrRequestedICfg()).isNull()
+    }
+
+    // Dedup: getProfile() caches per second, but every distinct second within one profile-switch window
+    // must reuse a SINGLE deep copy of the effective profile rather than retaining a duplicate per second.
+    // getEffectiveProfileSwitchActiveAt() deep-copies a fresh EPS on every real DB read, so model that with
+    // thenAnswer { copy() } (distinct instances, same id) — the assertion then proves those later copies are
+    // dropped and the whole window shares the first one.
+    @Test
+    fun secondsInOneWindowShareASingleCanonicalEps() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        // Fresh instance per call (same id), mirroring fromDb()'s deep copy.
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenAnswer { effectiveProfileSwitch.copy() }
+
+        val sut = createSut()
+        advanceUntilIdle()
+        // The init{} mirror read already populated the maps at "now"; reset so the query set below is exact.
+        sut.cache.clear()
+        sut.canonicalEps.clear()
+
+        // Five distinct seconds within the same window (all still the same active EPS).
+        val base = 1_000_000_000L
+        val profiles = (0 until 5).map { sut.getProfile(base + it * 1000L) }
+
+        // One cache entry per distinct second…
+        assertThat(sut.cache).hasSize(5)
+        // …but a single shared deep copy of the profile, not five.
+        assertThat(sut.canonicalEps).hasSize(1)
+        // …and every returned wrapper points at that one shared EPS instance (the throwaway copies were dropped).
+        val shared = (profiles.first() as ProfileSealed.EPS).value
+        assertThat(profiles.all { (it as ProfileSealed.EPS).value === shared }).isTrue()
     }
 }

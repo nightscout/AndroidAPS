@@ -54,6 +54,18 @@ class ProfileFunctionImpl @Inject constructor(
     @VisibleForTesting
     val cache = ConcurrentHashMap<Long, EffectiveProfile>()
 
+    // Dedup for the per-second [cache]. getEffectiveProfileSwitchActiveAt() deep-copies a brand-new EPS
+    // (fresh block lists + Block objects, see EffectiveProfileSwitchExtension.fromDb) on every call, so
+    // without this every distinct second queried would retain its OWN full copy of the very same running
+    // profile — up to 30000 identical copies within one switch's window. Canonicalize by EPS id: the first
+    // deep copy seen for an id is kept and every later second reuses it, so the whole window shares one
+    // instance. The wrapper stays per-second (cheap, re-captures activePlugin.activeAPS exactly as before).
+    // Guarded by the [cache] monitor. Safe to share because the cached EPS profile is only ever READ
+    // (getBasal/getIsf/… derive fresh lists via shiftBlock) — the one in-place mutator, validatePump()'s
+    // basal clamp, runs solely on freshly built Pure/PS profiles, never on a getProfile() result.
+    @VisibleForTesting
+    val canonicalEps = HashMap<Long, EPS>()
+
     private val _runningICfg = MutableStateFlow<ICfg?>(null)
     override val runningICfg: StateFlow<ICfg?> = _runningICfg.asStateFlow()
 
@@ -68,7 +80,13 @@ class ProfileFunctionImpl @Inject constructor(
                     // which the change happened. A strict > against the raw ms timestamp would leave
                     // the current-second entry stale and getProfile() would keep returning the old EPS.
                     val rounded = timestamp - timestamp % 1000
-                    synchronized(cache) { cache.keys.removeIf { key -> key >= rounded } }
+                    synchronized(cache) {
+                        cache.keys.removeIf { key -> key >= rounded }
+                        // An edited EPS keeps its id but changes content, so a stale canonical copy would be
+                        // re-served on the next miss. Clear the whole map (not just changed ids): it rebuilds
+                        // lazily and any surviving older wrapper already holds its own reference — nothing dangles.
+                        canonicalEps.clear()
+                    }
                 }
                 // Refresh the mirror in the SAME subscription, after the invalidation above — a separate
                 // collector on this flow has no ordering guarantee against it and could re-read the stale
@@ -110,6 +128,7 @@ class ProfileFunctionImpl @Inject constructor(
         synchronized(cache) {
             if (cache.keys.size > 30000) {
                 cache.clear()
+                canonicalEps.clear()
                 aapsLogger.debug("Profile cache cleared")
             }
             if (cache.containsKey(rounded)) {
@@ -118,11 +137,14 @@ class ProfileFunctionImpl @Inject constructor(
         }
         val ps = persistenceLayer.getEffectiveProfileSwitchActiveAt(time)
         if (ps != null) {
-            val sealed = ProfileSealed.EPS(ps, activePlugin)
             synchronized(cache) {
+                // Reuse the first deep copy seen for this EPS id; the throwaway copy from this DB read is
+                // dropped (GC'd) when a canonical entry already exists, so the window keeps a single copy.
+                val shared = canonicalEps.getOrPut(ps.id) { ps }
+                val sealed = ProfileSealed.EPS(shared, activePlugin)
                 cache.put(rounded, sealed)
+                return sealed
             }
-            return sealed
         }
         /*
         // Commented out because it's not possible to simply take Pure profile
