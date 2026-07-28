@@ -119,6 +119,12 @@
     <string name="carbs">Carbohidratos</string>
     <string name="invalid_profile">Perfil inválido</string>
     <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
+    <string name="profile_switch_no_insulin">No se puede cambiar de perfil: no hay ninguna insulina en uso y no se ha seleccionado ninguna</string>
+    <string name="profile_switch_select_insulin_hint">Todavía no hay ninguna insulina en uso. Selecciona la insulina que estás utilizando para que este cambio de perfil pueda registrarla</string>
+    <string name="insulin_activation_failed">La insulina no se ha cambiado. Se sigue utilizando tu insulina anterior</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">La insulina no se ha cambiado: %1$s. Se sigue utilizando tu insulina anterior</string>
+    <string name="insulin_activation_unconfirmed">No se ha podido confirmar el cambio de insulina. Comprueba qué insulina está activa en tu perfil antes de administrar la dosis</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nTampoco se ha cambiado la insulina</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Fecha</string>
     <string name="units_label">Unidades</string>
