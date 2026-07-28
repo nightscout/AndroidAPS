@@ -114,7 +114,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private var mainMenuProvider: MenuProvider? = null
 
     // 15天过期毫秒常量
-    private val EXPIRE_15DAY_MS = 10L * 24 * 60 * 60 * 1000
+    private val EXPIRE_15DAY_MS = 365L * 24 * 60 * 60 * 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
