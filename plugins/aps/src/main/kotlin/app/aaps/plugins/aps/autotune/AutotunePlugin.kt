@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -66,7 +65,6 @@ class AutotunePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,
-    private val insulin: Insulin,
     private val profileRepository: ProfileRepository,
     private val autotuneFS: AutotuneFS,
     private val autotuneIob: AutotuneIob,
@@ -96,7 +94,6 @@ class AutotunePlugin @Inject constructor(
                 rxBus = rxBus,
                 uel = uel,
                 loop = loop,
-                insulin = insulin,
                 profileStoreProvider = profileStoreProvider,
                 atProfileProvider = atProfileProvider
             )
@@ -167,7 +164,18 @@ class AutotunePlugin @Inject constructor(
         profileFunction.getProfile()?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile
         }
-        val iCfg = ICfg("PumpInsulin", insulin.iCfg.peak, insulin.iCfg.dia, insulin.iCfg.concentration) // var because localInsulin could be updated later with Tune Insulin peak/dia
+        // The curve to tune against belongs to the profile being tuned, not to whatever sits first in the insulin
+        // catalogue — the run reconstructs IOB over that profile's history, so its peak/DIA/concentration are the
+        // only correct inputs. A profile taken from the store is a ProfileSealed.Pure and carries no insulin of its
+        // own (insulin lives on the switch, not on the stored profile), so for those fall back to the insulin in
+        // force. Copied into a new ICfg because "Tune Insulin peak/dia" mutates it during the run.
+        val profileICfg = profile.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: run {
+            result = rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin)
+            rxBus.send(EventAutotuneUpdateGui())
+            calculationRunning = false
+            return
+        }
+        val iCfg = ICfg("PumpInsulin", profileICfg.peak, profileICfg.dia, profileICfg.concentration)
 
         log("Start Autotune with $daysBack days back")
         autotuneFS.createAutotuneFolder()                           //create autotune subfolder for autotune files if not exists
@@ -176,7 +184,7 @@ class AutotunePlugin @Inject constructor(
         var endTime = MidnightTime.calc(lastRun) + autotuneStartHour * 60 * 60 * 1000L
         if (endTime > lastRun) endTime -= 24 * 60 * 60 * 1000L      // Check if 4 AM is before now
         val startTime = endTime - daysBack * 24 * 60 * 60 * 1000L
-        autotuneFS.exportSettings(settings(lastRun, daysBack, startTime, endTime))
+        autotuneFS.exportSettings(settings(lastRun, daysBack, startTime, endTime, iCfg))
         tunedProfile = atProfileProvider.get().with(profile, iCfg).also {
             it.profileName = rh.gs(R.string.autotune_tunedprofile_name)
         }
@@ -266,8 +274,17 @@ class AutotunePlugin @Inject constructor(
                     value = ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
-                val iCfg = insulin.iCfg      // use Current running iCfg, changing iCfg with Automation not allowed
-                tunedP.profileStore(circadian)?.let { profileStore ->
+                // Keep the insulin in force — autotune tunes basal/IC/ISF, never the insulin. The switch it writes
+                // applies from now on, so "in force now" is the right value even though the tuning covers past days.
+                // Unattended auto-switch, so with nothing in force there is nobody to ask: skip rather than substitute.
+                val iCfg = profileFunction.getRunningOrRequestedICfg()
+                if (iCfg == null) {
+                    // Skipping the switch means the tuned profile was never applied, so undo the GONE above and
+                    // say why — otherwise the user is left with no switch, no button and no explanation.
+                    log("Profile Switch skipped, no insulin in use")
+                    result = rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin)
+                    updateButtonVisibility = View.VISIBLE
+                } else tunedP.profileStore(circadian)?.let { profileStore ->
                     val psResult = profileFunction.createProfileSwitch(
                         profileStore = profileStore,
                         profileName = tunedP.profileName,
@@ -330,10 +347,13 @@ class AutotunePlugin @Inject constructor(
         return strResult
     }
 
-    private fun settings(runDate: Long, nbDays: Int, firstLoopStart: Long, lastLoopEnd: Long): String {
+    /**
+     * [iCfg] is the profile's insulin, the same one the tuned [ATProfile] is built with — passed in rather than
+     * re-read so the oref0 settings and the profile can never describe two different insulins.
+     */
+    private fun settings(runDate: Long, nbDays: Int, firstLoopStart: Long, lastLoopEnd: Long, iCfg: ICfg): String {
         var jsonString = ""
         val jsonSettings = JSONObject()
-        val insulinInterface = insulin
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         val startDateString = dateUtil.toISOString(firstLoopStart).substring(0, 10)
         val endDateString = dateUtil.toISOString(lastLoopEnd - 24 * 60 * 60 * 1000L).substring(0, 10)
@@ -363,7 +383,7 @@ class AutotunePlugin @Inject constructor(
             // InsulinType "curve" was only a preset peak (rapid-acting=75 / ultra-rapid=55). Pick the curve
             // whose valid peak range contains iCfg.peak and always pass the peak explicitly — this reproduces
             // every former InsulinType branch exactly (75→rapid, 55/45→ultra) and works for any custom peak.
-            val peakTime: Int = insulinInterface.iCfg.peak
+            val peakTime: Int = iCfg.peak
             jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
             jsonSettings.put("useCustomPeakTime", true)
             jsonSettings.put("insulinPeakTime", peakTime)

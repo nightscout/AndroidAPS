@@ -21,7 +21,6 @@ import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -55,7 +54,6 @@ import app.aaps.core.ui.compose.formatMinutesAsDuration
 @Singleton
 class SceneExecutor @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val insulin: Insulin,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
@@ -433,7 +431,10 @@ class SceneExecutor @Inject constructor(
                     // Use the BASE profile name as fallback — getProfileName() returns the display name
                     // including temp-% suffix (e.g. "Test (60%)"), which doesn't exist in the profile store.
                     val profileName = action.profileName.ifEmpty { profileFunction.getOriginalProfileName() }
-                    if (store != null) {
+                    // The switch has to record an insulin. A scene runs unattended, so with nothing in force there is
+                    // nobody to ask — fail the action rather than stamp an arbitrary catalogue entry onto it.
+                    val iCfg = profileFunction.getRunningOrRequestedICfg()
+                    if (store != null && iCfg != null) {
                         // Scene-driven profile write: suppress the central "Basal profile in pump updated"
                         // notification for the pump write this insert triggers (issue #4959). createProfileSwitch
                         // wrote a PS row (and will emit) iff it returns non-null; silencedProfileWrite resets the
@@ -454,7 +455,7 @@ class SceneExecutor @Inject constructor(
                                     ValueWithUnit.Percent(action.percentage),
                                     ValueWithUnit.Minute(sceneDurationMinutes)
                                 ),
-                                iCfg = insulin.iCfg
+                                iCfg = iCfg
                             )
                         }
                         SceneExecutionResult.ActionResult(
@@ -463,8 +464,10 @@ class SceneExecutor @Inject constructor(
                             recordId = ps?.id,
                             errorMessage = if (ps == null) "createProfileSwitch returned null for '$profileName'" else null
                         )
-                    } else {
+                    } else if (store == null) {
                         SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiR.string.scene_no_profile_store))
+                    } else {
+                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiR.string.profile_switch_no_insulin))
                     }
                 }
 

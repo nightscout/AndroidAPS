@@ -691,7 +691,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                             percentage = finalPercentage,
                             receivedSms = receivedSms,
                             store = store,
-                            insulin = insulin,
                             profileFunction = profileFunction,
                             dateUtil = dateUtil,
                             rh = rh,

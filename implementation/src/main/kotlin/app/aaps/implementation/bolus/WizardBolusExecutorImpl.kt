@@ -93,8 +93,8 @@ class WizardBolusExecutorImpl @Inject constructor(
 ) : WizardBolusExecutor {
 
     /**
-     * The consumed-once slot. [entry] is non-null only for a quick-wizard prepare (carb timing / super-bolus /
-     * eCarbs). [carbTimeMinutes]/[notes] are carried so a manual-wizard prepare (no entry) delivers identically.
+     * The consumed-once slot. `entry` is non-null only for a quick-wizard prepare (carb timing / super-bolus /
+     * eCarbs). `carbTimeMinutes`/`notes` are carried so a manual-wizard prepare (no entry) delivers identically.
      */
     private enum class BolusMode {
 
@@ -750,7 +750,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         buildTempTargetLines(localizeTtReason(tt.reason), tt.lowMgdl, tt.highMgdl, tt.durationMinutes, standalone)
 
     /**
-     * Apply a batch ProfileSwitch via the dialog-free domain path. [profileName] non-null → switch to that named
+     * Apply a batch ProfileSwitch via the dialog-free domain path. `profileName` non-null → switch to that named
      * profile from the master's store (a relayed/dialog switch); null → modify the currently active profile (wear / CPP).
      */
     private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources) {

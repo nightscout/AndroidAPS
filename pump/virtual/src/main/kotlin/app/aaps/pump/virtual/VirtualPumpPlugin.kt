@@ -13,11 +13,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -70,7 +70,7 @@ open class VirtualPumpPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val ch: ConcentrationHelper,
-    private val insulin: Insulin,
+    private val profileFunction: ProfileFunction,
     private val bolusProgressData: BolusProgressData,
     @ApplicationScope private val appScope: CoroutineScope
 ) : PumpPluginBase(
@@ -241,9 +241,15 @@ open class VirtualPumpPlugin @Inject constructor(
         if (delivering > 0) {
             if (config.AAPSCLIENT) // do not store pump serial (record will not be marked PH)
                 appScope.launch {
+                    // Same rule as the master branch below (PumpSync): a pump bolus carries the insulin the
+                    // profile was running at delivery time, and is not stored at all when none was running.
+                    val iCfg = profileFunction.getProfile(detailedBolusInfo.timestamp)?.iCfg ?: run {
+                        aapsLogger.debug(LTag.DATABASE, "Storing of bolus $delivering ${dateUtil.dateAndTimeAndSecondsString(detailedBolusInfo.timestamp)} ignored. No profile running.")
+                        return@launch
+                    }
                     val partialBolus = detailedBolusInfo.copy().apply { insulin = delivering }
                     persistenceLayer.insertOrUpdateBolus(
-                        bolus = partialBolus.createBolus(insulin.iCfg),
+                        bolus = partialBolus.createBolus(iCfg),
                         action = Action.BOLUS,
                         source = Sources.Pump
                     )

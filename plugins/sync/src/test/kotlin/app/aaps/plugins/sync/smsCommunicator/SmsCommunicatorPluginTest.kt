@@ -56,6 +56,8 @@ import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
@@ -136,6 +138,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0)) }
 
         runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
+        // A remote profile switch records the insulin in force; without one the SMS action refuses by design.
+        runBlocking { whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg) }
         runBlocking { whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true)) }
         whenever(otp.name()).thenReturn("User")
         whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
@@ -750,6 +754,26 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Profile switch created")
+    }
+
+    // A remote switch has to record an insulin and must not invent one: the requester is not at the phone, so with
+    // nothing in force the reply carries the reason and no switch is written.
+    @Test fun processProfileWithNoInsulinInForceTest() = runBlocking {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
+        whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
+        whenever(rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin)).thenReturn("No insulin in use")
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "PROFILE 1 90"))
+        val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("No insulin in use")
+        verifyBlocking(profileFunction, never()) {
+            createProfileSwitch(anyOrNull(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+        }
     }
 
     @Test fun processBasalTest() = runBlocking {
