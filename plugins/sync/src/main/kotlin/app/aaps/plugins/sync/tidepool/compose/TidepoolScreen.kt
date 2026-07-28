@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.plugins.sync.R
 import java.time.Instant
 import java.time.ZoneId
@@ -56,6 +57,7 @@ internal fun TidepoolScreen(
     onLogout: () -> Unit,
     onUploadNow: () -> Unit,
     onFullSync: () -> Unit,
+    onPurge: () -> Unit,
     onClearLog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -90,6 +92,7 @@ internal fun TidepoolScreen(
                         onLogout = onLogout,
                         onUploadNow = onUploadNow,
                         onFullSync = onFullSync,
+                        onPurge = onPurge,
                         onClearLog = onClearLog
                     )
                 }
@@ -182,9 +185,11 @@ private fun TidepoolMenu(
     onLogout: () -> Unit,
     onUploadNow: () -> Unit,
     onFullSync: () -> Unit,
+    onPurge: () -> Unit,
     onClearLog: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
+    var showPurgeConfirm by remember { mutableStateOf(false) }
 
     Box {
         IconButton(onClick = { showMenu = true }) {
@@ -226,6 +231,13 @@ private fun TidepoolMenu(
                 }
             )
             DropdownMenuItem(
+                text = { Text(stringResource(R.string.tidepool_purge_data)) },
+                onClick = {
+                    showMenu = false
+                    showPurgeConfirm = true
+                }
+            )
+            DropdownMenuItem(
                 text = { Text(stringResource(R.string.clear_log)) },
                 onClick = {
                     showMenu = false
@@ -233,5 +245,17 @@ private fun TidepoolMenu(
                 }
             )
         }
+    }
+
+    if (showPurgeConfirm) {
+        OkCancelDialog(
+            title = stringResource(R.string.tidepool_purge_data),
+            message = stringResource(R.string.tidepool_purge_data_confirm),
+            onConfirm = {
+                showPurgeConfirm = false
+                onPurge()
+            },
+            onDismiss = { showPurgeConfirm = false }
+        )
     }
 }

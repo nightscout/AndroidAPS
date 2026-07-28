@@ -78,6 +78,7 @@ class TidepoolPlugin @Inject constructor(
                 },
                 onUploadNow = { rxBus.send(EventTidepoolDoUpload()) },
                 onFullSync = { preferences.put(TidepoolLongNonKey.LastEnd, 0) },
+                onPurge = { tidepoolUploader.purge() },
                 onClearLog = { tidepoolRepository.clearLog() }
             )
         }
