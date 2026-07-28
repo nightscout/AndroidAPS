@@ -55,9 +55,11 @@ class MainMenuActivity : MenuListActivity() {
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             // Top of the menu: only present on Wear OS 6+ (where CWF and the other code-based
-            // faces cannot run) and only while the pushed face is not installed
+            // faces cannot run) and only while the pushed face is not installed. While an install
+            // runs the label switches to an inert "Installing…" so the tap is visibly acknowledged
+            // (install can take a few seconds and a silent wait provokes second taps)
             if (watchFacePushHelper.isSupported() && !sp.getBoolean(WatchFacePushHelper.KEY_FACE_INSTALLED, false))
-                add(MenuItem(R.drawable.watchface_aapsv4, getString(R.string.menu_install_watchface)))
+                add(MenuItem(R.drawable.watchface_aapsv4, getString(if (installing) R.string.menu_installing_watchface else R.string.menu_install_watchface)))
             if (!preferences.get(BooleanKey.WearControl)) {
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
                 add(MenuItem(R.drawable.ic_sync, getString(R.string.menu_resync)))
@@ -118,6 +120,7 @@ class MainMenuActivity : MenuListActivity() {
     private fun doInstallWatchFace() {
         if (installing) return
         installing = true
+        refreshElements()
         lifecycleScope.launch {
             try {
                 val success = watchFacePushHelper.installOrUpdate(activate = true)
@@ -127,9 +130,9 @@ class MainMenuActivity : MenuListActivity() {
                     else                               -> R.string.watchface_installed_select
                 }
                 Toast.makeText(this@MainMenuActivity, getString(message), Toast.LENGTH_SHORT).show()
-                refreshElements()
             } finally {
                 installing = false
+                refreshElements()
             }
         }
     }
