@@ -80,19 +80,12 @@ class WatchFacePushHelper @Inject constructor(
      * pushing the embedded APK again after an app update. Never installs uninvited — the initial
      * install is user-triggered from the main menu.
      */
-    suspend fun syncOnStartup() = withContext(Dispatchers.IO) {
-        if (!isSupported()) return@withContext
-        try {
-            val installed = installedFaceSlotId(createManager()) != null && facePackagePresent()
-            sp.putBoolean(KEY_FACE_INSTALLED, installed)
-            if (installed && sp.getString(KEY_SYNCED_VERSION, "") != BuildConfig.BUILDVERSION) {
-                aapsLogger.debug(LTag.WEAR, "WatchFacePush: app updated, refreshing installed face")
-                installOrUpdate()
-            }
-        } catch (e: Exception) {
-            // Broad on purpose: this runs on every app start and must never take the app down —
-            // the manager surfaces raw RuntimeExceptions (e.g. SecurityException) across its IPC
-            aapsLogger.error(LTag.WEAR, "WatchFacePush: startup sync failed", e)
+    suspend fun syncOnStartup() {
+        // Both callees catch all their failures internally — this path runs on every app start
+        // and must never take the app down
+        if (isFaceInstalled() && sp.getString(KEY_SYNCED_VERSION, "") != BuildConfig.BUILDVERSION) {
+            aapsLogger.debug(LTag.WEAR, "WatchFacePush: app updated, refreshing installed face")
+            installOrUpdate()
         }
     }
 
