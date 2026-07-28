@@ -30,6 +30,7 @@ import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
+import kotlin.math.max
 
 class ExtendedBolusDialog : DialogFragmentWithDate() {
 
@@ -70,9 +71,10 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         val maxInsulin = constraintChecker.getMaxExtendedBolusAllowed().value()
         val extendedStep = pumpDescription.extendedBolusStep
+        val minInsulin = pumpDescription.extendedBolusMinAmount
         binding.insulin.setParams(
             savedInstanceState?.getDouble("insulin")
-                ?: extendedStep, extendedStep, maxInsulin, extendedStep, DecimalFormat("0.00"), false, binding.okcancel.ok
+                ?: minInsulin, minInsulin, maxInsulin, extendedStep, DecimalFormat("0.00"), false, binding.okcancel.ok
         )
 
         val extendedDurationStep = pumpDescription.extendedBolusDurationStep

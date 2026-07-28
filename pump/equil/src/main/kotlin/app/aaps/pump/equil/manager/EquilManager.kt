@@ -185,7 +185,7 @@ class EquilManager @Inject constructor(
             updateHistory(equilHistoryRecord, command.resolvedResult)
             loadEquilHistory()
             result.success = command.cmdSuccess
-            result.enacted(true)
+            result.enacted(command.cmdSuccess)
         } catch (ex: Exception) {
             ex.printStackTrace()
             result.success(false).enacted(false).comment(ex.message ?: "Exception")

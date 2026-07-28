@@ -33,7 +33,7 @@ fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUt
         profileName = originalProfileName ?: profile,
         timeshift = timeShift ?: 0,
         percentage = percentage ?: 100,
-        duration = duration ?: 0L,
+        duration = originalDuration ?: duration ?: 0L,
         iCfg = profileSealed.iCfg,
         ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )

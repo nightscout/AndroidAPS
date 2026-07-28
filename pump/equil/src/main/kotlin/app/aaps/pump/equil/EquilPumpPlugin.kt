@@ -61,6 +61,7 @@ import app.aaps.pump.equil.manager.command.PumpEvent
 import app.aaps.pump.equil.manager.customCommands.CmdModeAndHistoryGet
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlin.math.max
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import javax.inject.Inject
@@ -146,18 +147,28 @@ class EquilPumpPlugin @Inject constructor(
                                            else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
                                        }
                                    })
-                           } else if (event.isChanged(DoubleKey.SafetyMaxBolus.key)) {
-                               val profile = pumpSync.expectedPumpState().profile ?: return@subscribe
-                               commandQueue.customCommand(
-                                   CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
-                                   object : Callback() {
-                                       override fun run() {
-                                           if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
-                                           else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
-                                       }
-                                   })
+                           } else if (event.isChanged(DoubleKey.SafetyMaxBolus.key) || event.isChanged(DoubleKey.ApsMaxBasal.key)) {
+                               resendPumpSettings()
                            }
                        }, fabricPrivacy::logException)
+    }
+
+    // Re-program the pod's bolus/basal thresholds. The pod enforces the basal threshold (see CmdSettingSet)
+    // as a hard limit; if it goes stale-low, temp basals in the gap are silently rejected (the pump drops
+    // BLE with status 19). Use the STABLE max(ApsMaxBasal, maxDailyBasal) for basal — the same ceiling
+    // OpenAPS caps temp basals to — not the time-of-day-dependent getMaxBasalAllowed. Kept in sync on
+    // max-bolus / max-basal pref changes and on profile set (maxDailyBasal is profile-dependent).
+    private fun resendPumpSettings() {
+        val profile = pumpSync.expectedPumpState().profile ?: return
+        val maxBasal = max(preferences.get(DoubleKey.ApsMaxBasal), profile.getMaxDailyBasal())
+        commandQueue.customCommand(
+            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), maxBasal, aapsLogger, preferences, equilManager),
+            object : Callback() {
+                override fun run() {
+                    if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
+                    else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                }
+            })
     }
 
     var tempActivationProgress = ActivationProgress.NONE
@@ -210,6 +221,17 @@ class EquilPumpPlugin @Inject constructor(
         val mode = equilManager.equilState?.runMode
         if (mode === RunMode.RUN || mode === RunMode.SUSPEND) {
             val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
+            // Raise the pod's max-basal threshold BEFORE programming the schedule, so the pod accepts both
+            // the base schedule and later temp basals. Use the STABLE max(ApsMaxBasal, maxDailyBasal) — the
+            // same ceiling OpenAPS caps temp basals to — NOT getMaxBasalAllowed, which is time-of-day
+            // dependent (4x current basal) and can dip below the profile's own peak, wrongly starving the
+            // threshold. Sent directly (we're already inside a queued command — don't re-queue), gated on
+            // success (don't program the schedule on a stale threshold), and paced by EQUIL_BLE_NEXT_CMD
+            // like every other chained-command site so the second BLE write isn't dropped.
+            val maxBasal = max(preferences.get(DoubleKey.ApsMaxBasal), profile.getMaxDailyBasal())
+            val settingResult = equilManager.executeCmd(CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), maxBasal, aapsLogger, preferences, equilManager))
+            if (!settingResult.success) return settingResult
+            SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
             val pumpEnactResult = equilManager.executeCmd(CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager))
             if (pumpEnactResult.success) equilManager.equilState?.basalSchedule = basalSchedule
             return pumpEnactResult
