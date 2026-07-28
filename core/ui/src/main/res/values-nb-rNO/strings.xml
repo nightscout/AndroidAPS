@@ -119,6 +119,12 @@
     <string name="carbs">Karbo</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
+    <string name="profile_switch_no_insulin">Kan ikke bytte profil: Ingen insulin er i bruk, og ingen er valgt.</string>
+    <string name="profile_switch_select_insulin_hint">Ingen insulin er i bruk ennå. Velg insulinet du bruker, slik at dette profilbyttet kan registrere det.</string>
+    <string name="insulin_activation_failed">Insulinet ble ikke byttet. Det forrige insulinet er fortsatt i bruk.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Insulinet ble ikke byttet: %1$s. Det forrige insulinet er fortsatt i bruk.</string>
+    <string name="insulin_activation_unconfirmed">Kunne ikke bekrefte insulinbyttet. Kontroller hvilket insulin som er aktivt i profilen før du doserer.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet ble heller ikke byttet.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
     <string name="units_label">Enheter</string>
