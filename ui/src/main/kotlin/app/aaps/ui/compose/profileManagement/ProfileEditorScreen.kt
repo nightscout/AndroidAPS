@@ -262,14 +262,14 @@ fun ProfileEditorScreen(
                             viewModel = viewModel,
                             profile = profile,
                             state = state,
-                            supportsDynamic = state.supportsDynamicIc
+                            supportsDynamic = state.usingDynamicIc
                         )
 
                         1 -> IsfContent(
                             viewModel = viewModel,
                             profile = profile,
                             state = state,
-                            supportsDynamic = state.supportsDynamicIsf
+                            supportsDynamic = state.usingDynamicIsf
                         )
 
                         2 -> BasalContent(

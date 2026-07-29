@@ -160,7 +160,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         aapsLogger.debug(LTag.APS, "Loaded $count variable sensitivity values from database")
     }
 
-    override fun supportsDynamicIsf() = true //: Boolean = preferences.get(BooleanKey.ApsUseAutoIsf)
+    override fun usingDynamicIsf() = true //: Boolean = preferences.get(BooleanKey.ApsUseAutoIsf)
 
     override fun getIsfMgdl(profile: Profile, caller: String): Double? {
         val start = dateUtil.now()
@@ -274,7 +274,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
         // End of check, start gathering data
 
-        val autoIsfMode = supportsDynamicIsf()  // preferences.get(BooleanKey.ApsUseAutoIsf)
+        val autoIsfMode = usingDynamicIsf()  // preferences.get(BooleanKey.ApsUseAutoIsf)
         val smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
         val advancedFiltering = constraintsChecker.isAdvancedFilteringEnabled().also { inputConstraints.copyReasons(it) }.value()
 
@@ -594,7 +594,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             sensitivityRatio = autosensResult.ratio
             // consoleError.add("Autosens ratio: $sensitivityRatio; ")
         }
-        if (!supportsDynamicIsf() || !autoIsfWeights || glucose_status == null) {
+        if (!usingDynamicIsf() || !autoIsfWeights || glucose_status == null) {
             consoleError.add("autoISF weights disabled in Preferences")
             consoleError.add("----------------------------------")
             consoleError.add("end AutoISF")
