@@ -67,6 +67,24 @@ class CalculationWorkflowImpl @Inject constructor(
         aapsLogger.warn(LTag.WORKER, "Calculation thread did not stop within ${STOP_WAIT_TIMEOUT_MS}ms: $from")
     }
 
+    override fun waitForCalculationFinish(job: String, reason: String) {
+        val workManager = WorkManager.getInstance(context)
+        val tag = prepareTag(job)
+        val deadline = System.currentTimeMillis() + STOP_WAIT_TIMEOUT_MS
+        var logged = false
+        while (System.currentTimeMillis() < deadline) {
+            // Old finished works keep their tag until WorkManager prunes them; only unfinished ones matter.
+            val running = workManager.getWorkInfosByTag(tag).get().any { !it.state.isFinished }
+            if (!running) return
+            if (!logged) {
+                aapsLogger.debug(LTag.AUTOSENS, "Waiting for calculation to finish: $reason")
+                logged = true
+            }
+            SystemClock.sleep(STOP_WAIT_POLL_MS)
+        }
+        aapsLogger.warn(LTag.AUTOSENS, "Calculation did not finish within ${STOP_WAIT_TIMEOUT_MS}ms: $reason")
+    }
+
     override fun runCalculation(
         job: String,
         iobCobCalculator: IobCobCalculator,
@@ -114,6 +132,9 @@ class CalculationWorkflowImpl @Inject constructor(
                     job, ExistingWorkPolicy.REPLACE,
                     OneTimeWorkRequest.Builder(PrepareGraphDataWorker::class.java)
                         .setInputData(jobData)
+                        // Tag only the data-producing stage so waitForCalculationFinish() can await it
+                        // without waiting on the loop-invoking PostCalculationWorker (would self-stall).
+                        .addTag(prepareTag(job))
                         .build()
                 )
                 .then(
@@ -148,6 +169,9 @@ class CalculationWorkflowImpl @Inject constructor(
             )
         }
     }
+
+    // Distinct per-job tag on the Prepare (data-producing) worker; used by waitForCalculationFinish().
+    private fun prepareTag(job: String): String = "$job:prepare"
 
     private fun dataForJob(job: String, generation: Long): Data =
         Data.Builder()

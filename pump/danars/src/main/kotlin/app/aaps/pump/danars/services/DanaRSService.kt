@@ -393,9 +393,16 @@ class DanaRSService : DaggerService() {
         danaPump.bolusStopForced = true
         if (isConnected) {
             sendMessage(stop)
-            while (!danaPump.bolusStopped) {
+            // Bound the retries: re-check the connection each iteration and cap at 10s so a lost stop
+            // ack or a link drop mid-stop can't spin this thread forever.
+            val giveUpAt = System.currentTimeMillis() + 10 * 1000L
+            while (!danaPump.bolusStopped && isConnected && System.currentTimeMillis() < giveUpAt) {
                 sendMessage(stop)
                 SystemClock.sleep(200)
+            }
+            if (!danaPump.bolusStopped) {
+                aapsLogger.warn(LTag.PUMPCOMM, "bolusStop: no stop confirmation (connected=$isConnected) — forcing stopped after timeout")
+                danaPump.bolusStopped = true
             }
         } else {
             danaPump.bolusStopped = true

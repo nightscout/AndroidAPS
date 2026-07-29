@@ -104,6 +104,7 @@
     <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Old data</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
+    <string name="carbs_not_saved_after_bolus">Bolus delivered, but the carbs could not be saved. Please enter the carbs again.</string>
     <string name="androidaps_start">AAPS started</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>

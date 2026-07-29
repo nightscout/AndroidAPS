@@ -115,7 +115,6 @@ class IobCobCalculatorPlugin @Inject constructor(
     override var ads: AutosensDataStore = AutosensDataStoreObject()
 
     private val dataLock = Any()
-    private var thread: Thread? = null
 
     override suspend fun onStart() {
         super.onStart()
@@ -354,14 +353,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     }
 
     override fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData? {
-        if (thread?.isAlive == true) {
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA is waiting for calculation thread: $reason")
-            try {
-                thread?.join(5000)
-            } catch (_: InterruptedException) { // ignore
-            }
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA finished waiting for calculation thread: $reason")
-        }
+        calculationWorkflow.waitForCalculationFinish(CalculationWorkflow.MAIN_CALCULATION, reason)
         return ads.getLastAutosensData(reason, aapsLogger, dateUtil)
     }
 

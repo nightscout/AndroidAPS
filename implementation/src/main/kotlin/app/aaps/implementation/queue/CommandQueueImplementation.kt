@@ -411,7 +411,8 @@ class CommandQueueImplementation @Inject constructor(
                     source = Sources.Database
                 )
                 pumpEnactResultProvider.get().enacted(false).success(true)
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs", e)
                 pumpEnactResultProvider.get().enacted(false).success(false)
             }
         }
@@ -471,6 +472,9 @@ class CommandQueueImplementation @Inject constructor(
                 )
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs after bolus", e)
+                // The bolus succeeded but the carbs weren't persisted, so COB/IOB would be wrong and the
+                // loss was previously silent (log-only). Alert the user so they can re-enter the carbs.
+                notificationManager.post(NotificationId.CARBS_STORE_FAILED, rh.gs(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus))
             }
         }
         return result
