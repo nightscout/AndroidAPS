@@ -2,10 +2,12 @@ package app.aaps.wear.watchfaces
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.format.DateFormat
@@ -27,6 +29,15 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
+import androidx.wear.watchface.CanvasComplicationFactory
+import androidx.wear.watchface.ComplicationSlot
+import androidx.wear.watchface.ComplicationSlotsManager
+import androidx.wear.watchface.complications.ComplicationSlotBounds
+import androidx.wear.watchface.complications.DefaultComplicationDataSourcePolicy
+import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
+import androidx.wear.watchface.complications.rendering.ComplicationDrawable
+import androidx.wear.watchface.style.CurrentUserStyleRepository
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
@@ -71,6 +82,105 @@ class CustomWatchface : BaseWatchFace() {
     private var resDataMap: CwfResDataMap = mutableMapOf()
     private var json = JSONObject()
     private var jsonString = ""
+    private var backgroundDrawable: Drawable? = null
+
+    companion object {
+
+        // Stable slot IDs: the system persists the chosen provider per (watch face component, slot
+        // id) across app updates, so these must never change once shipped. Public so the in-app
+        // complication picker (WatchfaceConfigurationActivity) can target the same slots.
+        const val COMPLICATION_SLOT_ID_1 = 101
+        const val COMPLICATION_SLOT_ID_2 = 102
+        const val COMPLICATION_SLOT_ID_3 = 103
+    }
+
+    private class ComplicationSlotConfig(val slotId: Int, @IdRes val viewId: Int, val viewKey: String, val defaultBounds: RectF)
+
+    // defaultBounds match the original hardcoded placeholder positions (100..150 x 100..150 etc.
+    // in the 400x400 templeResolution space) - used only on a truly first-ever launch, before any
+    // CWF (including the default one) has been persisted yet, so slots never start zero-sized.
+    private val complicationSlotConfigs = listOf(
+        ComplicationSlotConfig(COMPLICATION_SLOT_ID_1, R.id.complication1, ViewKeys.COMPLICATION1.key, RectF(100f / 400f, 100f / 400f, 150f / 400f, 150f / 400f)),
+        ComplicationSlotConfig(COMPLICATION_SLOT_ID_2, R.id.complication2, ViewKeys.COMPLICATION2.key, RectF(100f / 400f, 200f / 400f, 150f / 400f, 250f / 400f)),
+        ComplicationSlotConfig(COMPLICATION_SLOT_ID_3, R.id.complication3, ViewKeys.COMPLICATION3.key, RectF(100f / 400f, 300f / 400f, 150f / 400f, 350f / 400f))
+    )
+    private val complicationSupportedTypes = listOf(
+        ComplicationType.SHORT_TEXT,
+        ComplicationType.LONG_TEXT,
+        ComplicationType.RANGED_VALUE,
+        ComplicationType.MONOCHROMATIC_IMAGE,
+        ComplicationType.SMALL_IMAGE,
+        ComplicationType.PHOTO_IMAGE
+    )
+
+    override fun createComplicationSlotsManager(currentUserStyleRepository: CurrentUserStyleRepository): ComplicationSlotsManager {
+        val storedJson = runBlocking {
+            complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
+        }?.json?.let { JSONObject(it) }
+        val slots = complicationSlotConfigs.map { config ->
+            buildComplicationSlot(config, storedJson?.optJSONObject(config.viewKey))
+        }
+        return ComplicationSlotsManager(slots, currentUserStyleRepository)
+    }
+
+    private fun buildComplicationSlot(config: ComplicationSlotConfig, viewJson: JSONObject?): ComplicationSlot {
+        val canvasComplicationFactory = CanvasComplicationFactory { watchState, invalidateCallback ->
+            CanvasComplicationDrawable(ComplicationDrawable(this), watchState, invalidateCallback)
+        }
+        return ComplicationSlot.createRoundRectComplicationSlotBuilder(
+            id = config.slotId,
+            canvasComplicationFactory = canvasComplicationFactory,
+            supportedTypes = complicationSupportedTypes,
+            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(),
+            bounds = complicationSlotBoundsFromJson(viewJson, config.defaultBounds)
+        ).build()
+    }
+
+    // ComplicationSlotBounds are fractional unit-square (canvas-relative), while the CWF json's
+    // WIDTH/HEIGHT/TOPMARGIN/LEFTMARGIN are expressed in the fixed 400x400 templeResolution space
+    // used by every other view. Dividing by templeResolution converts directly to the fraction -
+    // the zoomFactor used elsewhere to reach real display pixels cancels out (fraction is
+    // resolution-independent), so no screen-size lookup is needed here. Falls back to a per-slot
+    // default when there's no CWF json at all yet (truly first-ever launch).
+    private fun complicationSlotBoundsFromJson(viewJson: JSONObject?, default: RectF): ComplicationSlotBounds {
+        if (viewJson == null) return ComplicationSlotBounds(default)
+        val left = viewJson.optInt(JsonKeys.LEFTMARGIN.key) / templeResolution.toFloat()
+        val top = viewJson.optInt(JsonKeys.TOPMARGIN.key) / templeResolution.toFloat()
+        val width = viewJson.optInt(JsonKeys.WIDTH.key) / templeResolution.toFloat()
+        val height = viewJson.optInt(JsonKeys.HEIGHT.key) / templeResolution.toFloat()
+        return ComplicationSlotBounds(RectF(left, top, left + width, top + height))
+    }
+
+    // NOTE: ComplicationSlot.complicationSlotBounds and .enabled both have an internal setter in
+    // androidx.wear.watchface (confirmed against the real 1.2.1 sources) - they cannot be mutated
+    // from app code at all, only by the library itself. So position/size/visibility are fixed at
+    // whatever the CWF json said when the watch face engine was created (createComplicationSlotsManager);
+    // they only refresh the next time the engine restarts (watch face reselected, reboot, etc.),
+    // not instantly when a new CWF zip is loaded while running. Styling (colors/fonts) has no such
+    // restriction and IS kept live here on every (re)load, same as every other view.
+    private fun customizeComplicationView(view: FrameLayout, viewMap: ViewMap) {
+        viewMap.customizeViewCommon(view, this)
+        val config = complicationSlotConfigs.firstOrNull { it.viewId == view.id } ?: return
+        val slot = complicationSlotsManager?.get(config.slotId) ?: return
+        applyComplicationStyle(slot, viewMap.viewJson)
+    }
+
+    private fun applyComplicationStyle(slot: ComplicationSlot, viewJson: JSONObject?) {
+        val renderer = slot.renderer as? CanvasComplicationDrawable ?: return
+        val drawable = renderer.drawable
+        val textColor = getColor(viewJson?.optString(JsonKeys.FONTCOLOR.key) ?: "", Color.WHITE)
+        val titleColor = getColor(viewJson?.optString(JsonKeys.FONTTITLECOLOR.key) ?: "", Color.WHITE)
+        val textTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONT.key) ?: FontMap.DEFAULT.key)
+        val titleTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONTTITLE.key) ?: FontMap.DEFAULT.key)
+        val backgroundColor = if (viewJson?.has(JsonKeys.COLOR.key) == true) getColor(viewJson.optString(JsonKeys.COLOR.key)) else null
+        for (style in listOf(drawable.activeStyle, drawable.ambientStyle)) {
+            style.textColor = textColor
+            style.titleColor = titleColor
+            style.setTextTypeface(textTypeface)
+            style.setTitleTypeface(titleTypeface)
+            backgroundColor?.let { style.backgroundColor = it }
+        }
+    }
 
     private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
         1L   -> highColor
@@ -113,6 +223,25 @@ class CustomWatchface : BaseWatchFace() {
 
     // Always update at 1 second intervals for smooth analog clock hand movement
     override fun getInteractiveModeUpdateRate(): Long = 1000L
+
+    // Defers mainLayout's own draw (chart, cover_chart, ..., cover_plate, hands - unchanged
+    // internal order) until after complications have rendered, so complications land behind
+    // cover_chart and the analog hands instead of on top of them. background is intentionally not
+    // part of mainLayout at all (see resolveBackgroundDrawable()/onDraw()), so it paints first.
+    override fun deferMainLayoutDraw(): Boolean = true
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        backgroundDrawable?.let {
+            val size = (templeResolution * zoomFactor).toInt()
+            it.setBounds(0, 0, size, size)
+            it.draw(canvas)
+        }
+    }
+
+    override fun onDrawOverlay(canvas: Canvas) {
+        drawMainLayout(canvas)
+    }
 
     override fun onTimeChanged(oldTime: app.aaps.wear.watchfaces.utils.WatchFaceTime, newTime: app.aaps.wear.watchfaces.utils.WatchFaceTime) {
         super.onTimeChanged(oldTime, newTime)
@@ -219,12 +348,6 @@ class CustomWatchface : BaseWatchFace() {
         binding.secondHand.visibility = (binding.secondHand.isVisible && showSecond).toVisibility()
     }
 
-    // NOTE: complications are not wired up yet. This codebase runs on the modern
-    // androidx.wear.watchface API (see WatchFace.kt), where complication slots are declared via
-    // ComplicationSlotsManager and taps on them are routed by the framework itself — there is no
-    // onComplicationDataUpdate/onTapCommand override to add here. That part is intentionally left
-    // out of this file pending the real ComplicationSlot-based implementation.
-
     private fun setWatchfaceStyle() {
         var customWatchfaceData = runBlocking {
             complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
@@ -282,11 +405,7 @@ class CustomWatchface : BaseWatchFace() {
                             is TextView                                 -> viewMap.customizeTextView(view, this)
                             is ImageView                                -> viewMap.customizeImageView(view, this)
                             is lecho.lib.hellocharts.view.LineChartView -> viewMap.customizeGraphView(view, this)
-                            // complication1/2/3 (FrameLayout) placeholders currently just get generic
-                            // position/size/visibility from the CWF json, same as any other view with no
-                            // dedicated customize* function. Actual complication rendering/behavior (real
-                            // ComplicationSlots, provider selection, framework-routed taps) is not implemented
-                            // yet — see _docs/CWF_ComplicationSlotsPrompt.md for the plan.
+                            is FrameLayout                              -> customizeComplicationView(view, viewMap)
                             else                                        -> viewMap.customizeViewCommon(view, this)
                         }
                         if (viewMap.external == 1 && view.isVisible)
@@ -367,10 +486,8 @@ class CustomWatchface : BaseWatchFace() {
                                     .put(JsonKeys.FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
                             )
 
-                        // TODO CWF-COMPLICATION: as in the old code, complication slots (FrameLayout) are included
-                        //  in the default CWF here (position/size/visibility), same as ImageView/graph views. Only
-                        //  the "chosen provider" part (whatever mechanism ends up tracking it per slot) obviously
-                        //  has no place in a default CWF zip — it stays a per-user preference, not baked into the zip.
+                        // Complication slots (FrameLayout) get position/size/visibility here like any other
+                        // view. The chosen provider is a per-user preference, not stored in the CWF zip.
                         is ImageView, is FrameLayout, is lecho.lib.hellocharts.view.LineChartView ->
                             json.put(
                                 it.key,
@@ -466,15 +583,31 @@ class CustomWatchface : BaseWatchFace() {
         }
 
     private fun manageSpecificViews() {
-        //Background should fill all the watchface and must be visible
-        val params = FrameLayout.LayoutParams((templeResolution * zoomFactor).toInt(), (templeResolution * zoomFactor).toInt())
-        params.topMargin = 0
-        params.leftMargin = 0
-        binding.background.layoutParams = params
-        binding.background.visibility = View.VISIBLE
+        resolveBackgroundDrawable()
         updateSecondVisibility()
         setSecond() // Update second visibility for time view
         binding.timePeriod.visibility = (binding.timePeriod.isVisible && DateFormat.is24HourFormat(this).not()).toVisibility()
+    }
+
+    // background is drawn manually on the Canvas (see onDraw()), not through a View, so it can be
+    // painted before complications without disturbing mainLayout's own internal draw order (which
+    // must stay unchanged: chart, cover_chart, ..., cover_plate, hands, in their existing z-order).
+    // Resolved here - same setWatchfaceStyle() pass as everything else - so its BG-level-dependent
+    // image (customHigh/customLow, and any DYNDATA step image) never lags a tick behind the rest
+    // of the dial; onDraw() just paints whatever this last resolved to, every frame.
+    private fun resolveBackgroundDrawable() {
+        val size = (templeResolution * zoomFactor).toInt()
+        ViewMap.BACKGROUND.width = size
+        ViewMap.BACKGROUND.height = size
+        val viewJson = ViewMap.BACKGROUND.viewJson
+        ViewMap.BACKGROUND.dynData = DynProvider.getDyn(
+            this,
+            viewJson?.optString(JsonKeys.DYNPREF.key) ?: "",
+            viewJson?.optString(JsonKeys.DYNDATA.key) ?: "",
+            size, size,
+            ViewMap.BACKGROUND.key
+        )
+        backgroundDrawable = ViewMap.BACKGROUND.drawable(this)
     }
 
     private enum class ViewMap(
@@ -490,7 +623,7 @@ class CustomWatchface : BaseWatchFace() {
 
         BACKGROUND(
             key = ViewKeys.BACKGROUND.key,
-            id = R.id.background,
+            id = View.NO_ID, // no real View anymore - drawn manually, see CustomWatchface.onDraw()
             defaultDrawable = R.drawable.background,
             customDrawable = ResFileMap.BACKGROUND,
             customHigh = ResFileMap.BACKGROUND_HIGH,

@@ -74,4 +74,16 @@
         android:title="@string/pref_simplify_ui"
         android:summary="%s" />
 
+    <Preference
+        android:key="@string/key_complication_1"
+        android:title="@string/pref_complication_1" />
+
+    <Preference
+        android:key="@string/key_complication_2"
+        android:title="@string/pref_complication_2" />
+
+    <Preference
+        android:key="@string/key_complication_3"
+        android:title="@string/pref_complication_3" />
+
 </PreferenceScreen>

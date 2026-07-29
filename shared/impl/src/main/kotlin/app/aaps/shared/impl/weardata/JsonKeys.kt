@@ -30,8 +30,8 @@ enum class JsonKeys(val key: String) {
     FONT("font"),
     FONTSTYLE("fontStyle"),
     FONTCOLOR("fontColor"),
-    FONTTITLE("fontTitle"),
-    FONTTITLECOLOR("fontTitleColor"),
+    FONTTITLE("fontTitle"),           // Complication slots only: typeface for the title/label text (see ComplicationStyle.titleTypeface)
+    FONTTITLECOLOR("fontTitleColor"), // Complication slots only: color for the title/label text (see ComplicationStyle.titleColor)
     COLOR("color"),
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),

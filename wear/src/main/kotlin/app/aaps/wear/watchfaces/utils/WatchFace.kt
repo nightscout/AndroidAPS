@@ -54,6 +54,10 @@ abstract class WatchFace : WatchFaceService() {
     protected var watchShape = WatchShape.UNKNOWN
     protected var layoutComplete = false
 
+    // Stores the manager passed into createWatchFace() (previously discarded). Empty for every
+    // watch face except those that override createComplicationSlotsManager() with real slots.
+    protected var complicationSlotsManager: ComplicationSlotsManager? = null
+
     protected val currentWatchMode: WatchMode
         get() = when {
             !isAmbient                        -> WatchMode.INTERACTIVE
@@ -186,6 +190,14 @@ abstract class WatchFace : WatchFaceService() {
      */
     protected open fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {}
 
+    /**
+     * Called after complications have rendered, so a subclass can draw content that must sit on
+     * top of complications (e.g. mainLayout's own draw deferred via [BaseWatchFace.deferMainLayoutDraw]).
+     * No-op by default - every watch face that doesn't override [BaseWatchFace.deferMainLayoutDraw]
+     * already drew everything inside [onDraw], so this never needs to do anything for them.
+     */
+    protected open fun onDrawOverlay(canvas: Canvas) {}
+
     // Renderer instance
     private var renderer: WatchFaceRenderer? = null
 
@@ -195,6 +207,8 @@ abstract class WatchFace : WatchFaceService() {
         complicationSlotsManager: ComplicationSlotsManager,
         currentUserStyleRepository: CurrentUserStyleRepository
     ): WatchFace {
+        this.complicationSlotsManager = complicationSlotsManager
+
         // Create renderer that delegates to abstract methods
         renderer = WatchFaceRenderer(
             context = applicationContext,
@@ -300,6 +314,14 @@ abstract class WatchFace : WatchFaceService() {
 
             // Delegate to abstract onDraw method
             onDraw(canvas)
+
+            // Generic render pass for whatever complication slots exist. Empty/no-op for every
+            // watch face that doesn't declare any (the default).
+            complicationSlotsManager?.complicationSlots?.values?.forEach { slot ->
+                if (slot.enabled) slot.render(canvas, zonedDateTime, renderParameters)
+            }
+
+            onDrawOverlay(canvas)
         }
 
         override fun renderHighlightLayer(
@@ -309,6 +331,9 @@ abstract class WatchFace : WatchFaceService() {
             sharedAssets: RendererSharedAssets
         ) {
             canvas.drawColor(renderParameters.highlightLayer!!.backgroundTint)
+            complicationSlotsManager?.complicationSlots?.values?.forEach { slot ->
+                if (slot.enabled) slot.renderHighlightLayer(canvas, zonedDateTime, renderParameters)
+            }
         }
 
         private fun updateTime(zonedDateTime: ZonedDateTime) {

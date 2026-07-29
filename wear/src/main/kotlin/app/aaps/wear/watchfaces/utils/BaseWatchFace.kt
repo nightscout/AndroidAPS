@@ -331,6 +331,20 @@ abstract class BaseWatchFace : WatchFace() {
         return if (showSecond) 1000L else 60 * 1000L // Only call onTimeChanged every 60 seconds
     }
 
+    /**
+     * Override to true when a subclass needs something (e.g. complications) painted on the
+     * Canvas strictly between measure/layout and the actual mainLayout draw - see [drawMainLayout].
+     * Default false preserves today's single measure+layout+draw pass for every other watch face.
+     */
+    protected open fun deferMainLayoutDraw(): Boolean = false
+
+    /** Performs the mainLayout draw that [onDraw] skipped because [deferMainLayoutDraw] is true. */
+    protected fun drawMainLayout(canvas: Canvas) {
+        if (::binding.isInitialized && layoutSet && !simpleUi.isEnabled(currentWatchMode)) {
+            binding.mainLayout.draw(canvas)
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         // Lazy initialization of layout on first render (called on main thread)
         // This avoids deadlock during headless engine creation on background thread
@@ -349,7 +363,7 @@ abstract class BaseWatchFace : WatchFace() {
                 binding.mainLayout.measure(specW, specH)
                 val y = if (forceSquareCanvas) displayWidth else displayHeight // Square Steampunk
                 binding.mainLayout.layout(0, 0, displayWidth, y)
-                binding.mainLayout.draw(canvas)
+                if (!deferMainLayoutDraw()) binding.mainLayout.draw(canvas)
             }
         }
     }

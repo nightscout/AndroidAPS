@@ -6,15 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".watchfaces.CustomWatchface">
 
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="400px"
-        android:layout_height="400px"
-        android:layout_marginLeft="0px"
-        android:layout_marginTop="0px"
-        android:orientation="vertical"
-        android:src="@drawable/background"
-        android:visibility="visible" />
+    <!-- background is drawn manually on the Canvas by CustomWatchface.onDraw() (before
+         complications), not as a View - see resolveBackgroundDrawable(). -->
+
+    <FrameLayout
+        android:id="@+id/complication1"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:layout_marginTop="100px"
+        android:layout_marginLeft="100px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication2"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:layout_marginTop="200px"
+        android:layout_marginLeft="100px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication3"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:layout_marginTop="300px"
+        android:layout_marginLeft="100px"
+        android:visibility="gone" />
 
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"
@@ -32,27 +49,6 @@
         android:layout_marginTop="0px"
         android:orientation="vertical"
         android:visibility="gone" />
-
-    <FrameLayout
-        android:id="@+id/complication1"
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:layout_marginTop="100px"
-        android:layout_marginLeft="100px" />
-
-    <FrameLayout
-        android:id="@+id/complication2"
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:layout_marginTop="200px"
-        android:layout_marginLeft="100px" />
-
-    <FrameLayout
-        android:id="@+id/complication3"
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:layout_marginTop="300px"
-        android:layout_marginLeft="100px" />
 
     <TextView
         android:id="@+id/freetext1"
