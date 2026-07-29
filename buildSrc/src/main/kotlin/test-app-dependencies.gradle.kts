@@ -39,12 +39,14 @@ tasks.withType<Test> {
 
 tasks.withType<Test>().configureEach {
     failOnNoDiscoveredTests = false
-    // CI runs the unit suite alongside three emulators + instrumentation shards on one self-hosted runner.
-    // Bound BOTH the fork count and each fork's heap so unit tests can't oversubscribe the box: without an
-    // explicit maxHeapSize every forked test JVM defaults its max heap to ~25% of machine RAM, which stacked
-    // on the 8g Gradle daemon + 2g Kotlin daemon + three emulators pushed the runner into OOM-kill / ANR
-    // territory. 1536m is ample for these mock/coroutine-test unit tests.
-    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1).coerceAtMost(4)
+    // CI runs the unit suite alongside three emulators on one self-hosted runner. Bound each forked test
+    // JVM's HEAP so the suite can't oversubscribe MEMORY: without maxHeapSize every fork defaults to ~25%
+    // of machine RAM, and that pressure (stacked on the 8g Gradle + 2g Kotlin daemons) knocked emulators
+    // offline mid-instrumentation. Do NOT also cut maxParallelForks: CPU is already isolated by taskset core
+    // pinning in CI, and fewer forks pack more tests per JVM, which surfaces cross-test coroutine-leak /
+    // timing flakes (UncaughtExceptionsBeforeTest) that stay dormant at the default fork count. Cap heap,
+    // keep the fork count.
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
     maxHeapSize = "1536m"
 }
 
