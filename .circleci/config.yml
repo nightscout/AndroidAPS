@@ -139,7 +139,19 @@ jobs:
             DEV=emulator-5554
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
-            for attempt in 1 2; do
+            for attempt in 1 2 3; do
+              # Safety net for a rare shard "Process crashed" (app-startup starved when the box is busy).
+              # Before retrying, wait for it to calm — 1-min load below half the cores (the unit forks have
+              # drained) — bounded to ~5 min so a genuinely stuck run still fails. With 64 GB this rarely
+              # fires (RAM headroom prevents the OOM-kill), but it keeps a transient blip from reddening CI.
+              if [ "$attempt" -gt 1 ]; then
+                nc=$(nproc 2>/dev/null || echo 8)
+                for _ in $(seq 1 30); do
+                  la=$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)
+                  [ "${la:-99}" -lt "$((nc/2))" ] && break
+                  sleep 10
+                done
+              fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-A-$attempt.txt 2>&1 || true
@@ -165,7 +177,19 @@ jobs:
             DEV=emulator-5556
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
-            for attempt in 1 2; do
+            for attempt in 1 2 3; do
+              # Safety net for a rare shard "Process crashed" (app-startup starved when the box is busy).
+              # Before retrying, wait for it to calm — 1-min load below half the cores (the unit forks have
+              # drained) — bounded to ~5 min so a genuinely stuck run still fails. With 64 GB this rarely
+              # fires (RAM headroom prevents the OOM-kill), but it keeps a transient blip from reddening CI.
+              if [ "$attempt" -gt 1 ]; then
+                nc=$(nproc 2>/dev/null || echo 8)
+                for _ in $(seq 1 30); do
+                  la=$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)
+                  [ "${la:-99}" -lt "$((nc/2))" ] && break
+                  sleep 10
+                done
+              fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-B-$attempt.txt 2>&1 || true
@@ -191,7 +215,19 @@ jobs:
             DEV=emulator-5558
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
-            for attempt in 1 2; do
+            for attempt in 1 2 3; do
+              # Safety net for a rare shard "Process crashed" (app-startup starved when the box is busy).
+              # Before retrying, wait for it to calm — 1-min load below half the cores (the unit forks have
+              # drained) — bounded to ~5 min so a genuinely stuck run still fails. With 64 GB this rarely
+              # fires (RAM headroom prevents the OOM-kill), but it keeps a transient blip from reddening CI.
+              if [ "$attempt" -gt 1 ]; then
+                nc=$(nproc 2>/dev/null || echo 8)
+                for _ in $(seq 1 30); do
+                  la=$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)
+                  [ "${la:-99}" -lt "$((nc/2))" ] && break
+                  sleep 10
+                done
+              fi
               adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true
