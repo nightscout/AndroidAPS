@@ -22,8 +22,11 @@ class MsgStatusTempBasal(
         val isAPSTempBasalInProgress = intFromBuff(bytes, 0, 1) and 0x02 == 0x02
         var tempBasalPercent = intFromBuff(bytes, 1, 1)
         if (tempBasalPercent > 200) tempBasalPercent = (tempBasalPercent - 200) * 10
-        var tempBasalTotalMin = intFromBuff(bytes, 2, 1) * 60
-        tempBasalTotalMin = if (tempBasalTotalMin == 150) 15 else if (tempBasalTotalMin == 160) 30 else tempBasalTotalMin
+        val rawTempBasalDuration = intFromBuff(bytes, 2, 1)
+        // 150/160 are the pump's short-duration codes (15 min / 30 min APS TBR, see MsgSetAPSTempBasalStartV2);
+        // any other value is a whole number of hours. Compare the RAW byte — multiplying by 60 first made both
+        // branches unreachable (byte * 60 can never equal 150 or 160), so 15/30-min TBRs decoded as 9000/9600 min.
+        val tempBasalTotalMin = if (rawTempBasalDuration == 150) 15 else if (rawTempBasalDuration == 160) 30 else rawTempBasalDuration * 60
         val tempBasalTotalSec = tempBasalTotalMin * 60
         val tempBasalRunningSeconds = intFromBuff(bytes, 3, 3)
         val tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60
