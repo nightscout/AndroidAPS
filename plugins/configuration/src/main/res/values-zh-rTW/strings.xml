@@ -36,6 +36,16 @@
     <string name="setupwizard_profile_info">使用你的基礎率、胰島素-碳水比 (IC)、胰島素敏感度 (ISF) 與目標值建立一個設定檔。之後可以新增多個設定檔。</string>
     <string name="setupwizard_permissions_info">AAPS 需要儲存空間存取與其他權限才能正常運作。請在下方授予所需權限。</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink狀態：</string>
+    <string name="setupwizard_client_control_title">用戶端控制</string>
+    <string name="setupwizard_client_control_info">配對用戶端裝置，使其能透過 Nightscout 向此主控端傳送已簽章的指令。這是遠端控制 AAPS 的新建議方式。</string>
+    <string name="setupwizard_ns_receive_info">直接接受來自 Nightscout 的治療與資料（較不安全的方式）現在預設為關閉。僅在仍然需要時才開啟下方設定。若你需要透過 NS 或第三方應用程式輸入資料，才有必要啟用。</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout 資料接收</string>
+    <string name="setupwizard_pair_with_master_info">將此用戶端與你的主控 AAPS 配對，使其能透過安全通道傳送指令。</string>
+    <string name="setupwizard_pairing_ws_warning">配對需要 Nightscout WebSocket 連線。請返回上一步先啟用它。</string>
+    <string name="setupwizard_pairing_status_master">已配對的用戶端：%1$d</string>
+    <string name="setupwizard_pairing_status_master_none">尚未配對任何用戶端</string>
+    <string name="setupwizard_pairing_status_client_paired">已與主控端配對</string>
+    <string name="setupwizard_pairing_status_client_not_paired">尚未配對</string>
     <string name="readstatus">讀取狀態</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>

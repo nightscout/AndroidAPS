@@ -77,6 +77,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Carga datos a Tidepool</string>
     <string name="upload_now">Subir ahora</string>
+    <string name="tidepool_purge_data">Eliminar todos los datos</string>
+    <string name="tidepool_purge_data_confirm">¿Eliminar TODOS los datos que AAPS ha subido a Tidepool? Esta acción no se puede deshacer. Utilízala para borrar los datos dañados por una versión anterior y, a continuación, ejecuta una \"Sincronización completa\" para volver a subirlos</string>
     <string name="not_connected">No conectado</string>
     <string name="read_only">Sólo lectura</string>
     <string name="working">Funcionando</string>

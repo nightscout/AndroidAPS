@@ -11,4 +11,5 @@
     <string name="migrating_profile_switches">Migrerer profilbytter…</string>
     <string name="migrating_effective_profile_switches">Migrerer effektive profilbytter…</string>
     <string name="migrating_boluses">Migrerer boluser…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Eldre oppføringer hadde ingen insulinkonfigurasjon og ingen aktiv profil, så %1$s ble brukt for dem. Kontroller insulininnstillingene dine – oppføringer som allerede er migrert blir ikke oppdatert i etterkant.</string>
 </resources>

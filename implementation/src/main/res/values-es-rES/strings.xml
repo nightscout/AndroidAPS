@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Seleccione un directorio para los ajustes de la aplicación y los archivos de registro</string>
     <string name="permission_notifications_title">Notificaciones</string>
     <string name="permission_notifications_description">Necesario para mostrar alertas, alarmas y actualizaciones del estado de la bomba</string>
+    <string name="permission_fsi_title">Alarmas a pantalla completa</string>
+    <string name="permission_fsi_description">Se requiere para que las alarmas puedan encender la pantalla y mostrarse a pantalla completa mientras el teléfono está bloqueado</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

@@ -36,6 +36,16 @@
     <string name="setupwizard_profile_info">Creați un profil cu ratele bazale, IC, ISF și valorile țintă. Puteți adăuga mai multe profiluri mai târziu.</string>
     <string name="setupwizard_permissions_info">AAPS are nevoie de acces și de permisiuni la stocare pentru a funcționa corect. Vă rugăm să acordați permisiunile necesare mai jos.</string>
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
+    <string name="setupwizard_client_control_title">Control client</string>
+    <string name="setupwizard_client_control_info">Asociază dispozitive client astfel încât să poată trimite comenzi semnate către acest principal prin Nightscout. Acesta este noul mod recomandat de a controla AAPS de la distanță.</string>
+    <string name="setupwizard_ns_receive_info">Acceptarea tratamentelor și a datelor direct de la Nightscout (mod mai puțin sigur) este acum dezactivată în mod implicit. Deschideți setările de mai jos numai dacă aveți nevoie de ele. Este necesar să introduceți date prin intermediul NS sau al aplicațiilor terțe.</string>
+    <string name="setupwizard_open_ns_receive_settings">Acceptarea datelor Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Asociați acest client cu AAPS principal astfel încât să poată trimite comenzi pe un canal securizat.</string>
+    <string name="setupwizard_pairing_ws_warning">Conexiunea Nightscout WebSocket este necesară pentru asociere. Mergeți înapoi la pasul anterior și activați mai întâi.</string>
+    <string name="setupwizard_pairing_status_master">Clienți asociați: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Niciun client asociat încă</string>
+    <string name="setupwizard_pairing_status_client_paired">Asociat cu un principal</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Nu este asociat încă</string>
     <string name="readstatus">Citiți stare</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme legate de performanță.</string>

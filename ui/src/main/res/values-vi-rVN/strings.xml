@@ -67,7 +67,7 @@
     <string name="aaps_tt_eating_icon_label">TT Chuẩn bị ăn</string>
     <string name="aaps_tt_hypo_icon_label">TT Hạ đường huyết</string>
     <string name="aaps_tt_manual_icon_label">TT Thủ công</string>
-    <string name="aaps_profile_icon_label">Cấu hình</string>
+    <string name="aaps_profile_icon_label">Cấu hình điều trị</string>
     <string name="aaps_loop_icon_label">Vòng lặp</string>
     <string name="aaps_smb_icon_label">SMB</string>
     <string name="aaps_bolus_icon_label">Liều bolus</string>
@@ -277,7 +277,7 @@
     <string name="quick_launch_category_care">Care Portal</string>
     <string name="quick_launch_category_profile">Cấu hình</string>
     <string name="quick_launch_category_temp_target">Các cài đặt sẵn cho mục tiêu tạm thời</string>
-    <string name="quick_launch_category_quick_wizard">Hướng dẫn nhanh</string>
+    <string name="quick_launch_category_quick_wizard">Thiết lập nhanh</string>
     <string name="quick_launch_category_automation">Tự động</string>
     <string name="quick_launch_all_selected">Tất cả mục đã chọn</string>
     <string name="quick_launch_no_quick_wizard">Thêm hướng dẫn nhanh để sử dụng tại đây</string>

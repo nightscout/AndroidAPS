@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Изберете един. Само един може да бъде активен.</string>
     <string name="configbuilder_pick_many_hint">Изберете всички валидни.</string>
     <string name="configbuilder_no_selection_warning">Няма избрани в тази категория.</string>
+    <string name="configbuilder_switch_confirmation_title">Да превключа ли плъгин?</string>
+    <string name="configbuilder_switch_confirmation">Това ще изключи %1$s и включи %2$s.</string>
     <string name="expand">Разшири</string>
     <string name="collapse">Свий</string>
     <string name="no_compose_preferences">Няма настройки за този плъгин</string>
@@ -117,6 +119,12 @@
     <string name="carbs">въглехидрати</string>
     <string name="invalid_profile">Грешен профил!</string>
     <string name="no_profile_set">НЕ Е ЗАДАДЕН ПРОФИЛ</string>
+    <string name="profile_switch_no_insulin">Не мога да сменя профил: няма избран инсулин.</string>
+    <string name="profile_switch_select_insulin_hint">Няма избран инсулин. Изберете какъв използвате за да може профилът да го използва.</string>
+    <string name="insulin_activation_failed">Превключването на инсулина не е направено. Старият ви инсулин е още избран.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Превключването на инсулина не е направено: %1$s. Използвам старият инсулин.</string>
+    <string name="insulin_activation_unconfirmed">Не мога да потвърдя смяната на инсулин. Проверете кой инсулин е активен в профила преди да направите болус.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n Инсулинът не е сменен.</string>
     <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
     <string name="units_label">Единици</string>
@@ -923,6 +931,12 @@
     <string name="add">Смени</string>
     <string name="remove">Изтрий</string>
     <string name="reorder">Подреди</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Премести по-рано</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Премести по-късно</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Повече информация</string>
+    <string name="presets_changed_reorder_aborted">Настройката е сменена на друго място. Новата последователност не е запазена.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Позиция %1$d от %2$d</string>
     <string name="status">Статус</string>
     <string name="pump_actions">Действия на помпата</string>
     <string name="tempbasal_button">Временен базал</string>

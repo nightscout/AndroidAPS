@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Изберете директория за настройки и логове</string>
     <string name="permission_notifications_title">Нотификации</string>
     <string name="permission_notifications_description">Нужно за да показва съобщения, аларми и статуси на помпата</string>
+    <string name="permission_fsi_title">Аларма на цял екран</string>
+    <string name="permission_fsi_description">Необходимо за да може алармите да събуждат екрана и да се показват дори при заключен екран</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0Е (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">Е%1$d</string>

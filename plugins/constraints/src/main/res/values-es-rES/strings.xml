@@ -41,4 +41,5 @@
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="objectives_button_unfinish">Restablecer estado finalizado</string>
     <string name="objectives_button_unstart">Restablecer estado iniciado</string>
+    <string name="bg_doubled_lgs">Modo LGS debido a valores duplicados en la fuente de glucosa</string>
 </resources>

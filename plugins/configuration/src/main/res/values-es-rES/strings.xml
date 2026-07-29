@@ -36,6 +36,16 @@
     <string name="setupwizard_profile_info">Cree un perfil con sus tasas basales, ratio de carbohidratos (IC), factor de sensibilidad a la insulina (ISF) y valores objetivo. Puede añadir más perfiles más adelante.</string>
     <string name="setupwizard_permissions_info">AAPS necesita acceso al almacenamiento y permisos para funcionar correctamente. Por favor, conceda los permisos necesarios a continuación.</string>
     <string name="setupwizard_pump_riley_link_status">Estado de RileyLink:</string>
+    <string name="setupwizard_client_control_title">Control de clientes</string>
+    <string name="setupwizard_client_control_info">Empareja dispositivos cliente para que puedan enviar comandos firmados a este máster a través de Nightscout. Esta es la nueva forma recomendada para controlar AAPS de forma remota</string>
+    <string name="setupwizard_ns_receive_info">La aceptación de tratamientos y datos directamente desde Nightscout (método menos seguro) está desactivada por defecto. Abre la configuración a continuación solo si todavía lo necesitas. Es necesario si necesitas introducir datos a través de NS o aplicaciones de terceros</string>
+    <string name="setupwizard_open_ns_receive_settings">Aceptación de datos de Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Empareja este cliente con tu máster de AAPS para que pueda enviar comandos a través de un canal seguro</string>
+    <string name="setupwizard_pairing_ws_warning">La conexión WebSocket de Nightscout es necesaria para el emparejamiento. Vuelve al paso anterior y actívala primero</string>
+    <string name="setupwizard_pairing_status_master">Clientes emparejados: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Ningún cliente emparejado todavía</string>
+    <string name="setupwizard_pairing_status_client_paired">Vinculado con un máster</string>
+    <string name="setupwizard_pairing_status_client_not_paired">No emparejado todavía</string>
     <string name="readstatus">Leer estado</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por medio de los ajustes - pueden ocurrir problemas de rendimiento.</string>

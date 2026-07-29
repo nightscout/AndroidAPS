@@ -42,4 +42,5 @@
     <string name="doyouwantresetstart">您想要重置目標開始嗎？您可能會失去進度。</string>
     <string name="objectives_button_unfinish">重置完成狀態</string>
     <string name="objectives_button_unstart">重置開始狀態</string>
+    <string name="bg_doubled_lgs">由於血糖來源的數值加倍，已進入 LGS 模式</string>
 </resources>

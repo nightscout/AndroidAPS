@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">请选择一个。一次只能激活一个。</string>
     <string name="configbuilder_pick_many_hint">选择所有适用的项。</string>
     <string name="configbuilder_no_selection_warning">此类别中未选择任何插件。</string>
+    <string name="configbuilder_switch_confirmation_title">切换插件？</string>
+    <string name="configbuilder_switch_confirmation">这将禁用 %1$s 并启用 %2$s。</string>
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
     <string name="no_compose_preferences">此插件没有可用的首选项设置</string>
@@ -117,6 +119,12 @@
     <string name="carbs">碳水化合物</string>
     <string name="invalid_profile">无效的配置文件</string>
     <string name="no_profile_set">没有配置文件</string>
+    <string name="profile_switch_no_insulin">无法切换配置文件：没有正在使用的胰岛素，也未选择任何胰岛素。</string>
+    <string name="profile_switch_select_insulin_hint">尚未使用任何胰岛素。请选择您正在使用的胰岛素，以便此次配置文件切换能够记录它。</string>
+    <string name="insulin_activation_failed">胰岛素未切换。您之前的胰岛素仍在使用中。</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">胰岛素未切换：%1$s。您之前的胰岛素仍在使用中。</string>
+    <string name="insulin_activation_unconfirmed">胰岛素切换无法确认。请在输注前检查配置文件中哪种胰岛素处于活动状态。</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
     <string name="units_label">单位</string>
@@ -923,6 +931,12 @@
     <string name="add">添加</string>
     <string name="remove">删除</string>
     <string name="reorder">重新排序</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">前移</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">后移</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">显示详情</string>
+    <string name="presets_changed_reorder_aborted">预设已在别处更改。新顺序未保存。</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">位置 %1$d / %2$d</string>
     <string name="status">状态</string>
     <string name="pump_actions">泵动作</string>
     <string name="tempbasal_button">临时基础率</string>

@@ -61,6 +61,10 @@
     <string name="pref_single_target">Единична цел</string>
     <string name="pref_wizard_percentage">Калкулатор Процент</string>
     <string name="pref_complication_tap_action">Допълнителни действия при почукване</string>
+    <string name="pref_complication_bg_graph_hours">Диапазон на графиката за КЗ</string>
+    <string name="duration_1_hour">1 час</string>
+    <string name="duration_3_hours">3 часа</string>
+    <string name="duration_6_hours">6 часа</string>
     <string name="pref_unicode_in_complications">Unicode кодиране</string>
     <string name="pref_version">Версия:</string>
     <string name="pref_moreWatchfaceSettings">Настройки на Watchface</string>
@@ -204,6 +208,12 @@
     <string name="tile_action_2">Действие 2</string>
     <string name="tile_action_3">Действие 3</string>
     <string name="tile_action_4">Действие 4</string>
+    <string name="tile_scene_1">Сценарий 1</string>
+    <string name="tile_scene_2">Сценарий 2</string>
+    <string name="tile_scene_3">Сценарий 3</string>
+    <string name="tile_scene_4">Сценарий 4</string>
+    <string name="tile_scene_auto">Автоматично</string>
+    <string name="tile_scene_unavailable">Неналично</string>
     <string name="datalayer_notification_title">Data Layer Foreground Service</string>
     <string name="datalayer_notification_text">AAPS работи на преден фон, За да скриете това отидете в Developer options, App notifications, Allowed watch apps, AAPS и изключете Data Layer Foreground Service Channel notification.</string>
     <string name="on">ВКЛ</string>
@@ -214,6 +224,7 @@
     <string name="complication_blood_glucose_large">Голяма КЗ</string>
     <string name="complication_blood_glucose_ext1">КЗ Ext1</string>
     <string name="complication_blood_glucose_ext2">КЗ Ext2</string>
+    <string name="complication_bg_graph">Графика на КЗ</string>
     <string name="complication_br_cob_iob">БАЗА, ВЪГЛ &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">БАЗА, ВЪГЛ &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">БАЗА, ВЪГЛ &amp; IoB Ext2</string>
@@ -237,6 +248,7 @@
     <string name="action_running_mode_selected">Желан режим</string>
     <string name="title_activity_disconnect_pump">Изключи помпа</string>
     <string name="title_activity_suspend_loop">Изключи цикъла</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d гр</string>
     <string name="insulin_unit_short">Е</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d гр</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f Е</string>
@@ -292,7 +304,10 @@
     <string name="wizard_result_cob">Въгл: (%1$.1f гр)</string>
     <string name="wizard_result_carbs">Въгл (%1$d гр)</string>
     <string name="wizard_result_subtotal">Междинна сума</string>
+    <string name="wizard_result_correction">Корекция</string>
     <string name="wizard_result_total">Общо</string>
     <string name="wizard_insulin_format">%1$s Е</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d гр (%2$s мин)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d гр / %2$d ч (+%3$d мин)</string>
 </resources>

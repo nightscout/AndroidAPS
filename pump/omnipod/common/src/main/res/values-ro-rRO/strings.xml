@@ -169,4 +169,5 @@
         <item quantity="few">Alerte Pompă: %1$s</item>
         <item quantity="other">Alerte Pompă: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Sfârșit tare pompă</string>
 </resources>

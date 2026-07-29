@@ -42,4 +42,5 @@
     <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
     <string name="objectives_button_unfinish">Resetare stare finalizată</string>
     <string name="objectives_button_unstart">Resetare stare de început</string>
+    <string name="bg_doubled_lgs">Modul Suspendare la hipoglicemie din cauza valorilor dublate în sursa de glicemie</string>
 </resources>
