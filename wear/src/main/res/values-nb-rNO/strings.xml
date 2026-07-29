@@ -83,6 +83,7 @@
     <string name="menu_bg_graph">BS-graf</string>
     <string name="menu_resync">Re-synk</string>
     <string name="menu_prime_fill">Prime/fylling</string>
+    <string name="menu_install_watchface">Installer urskive</string>
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Meny</string>
