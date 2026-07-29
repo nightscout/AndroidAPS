@@ -43,7 +43,7 @@ class WatchFacePushHelper @Inject constructor(
 
     private val facePackageName get() = "${context.packageName}.watchfacepush.aapsv4"
 
-    /** Not every flavor ships the face (pumpcontrol does not embed it) */
+    /** Defensive: every flavor currently embeds the face, but a build without the asset must report unsupported */
     private val hasEmbeddedFace: Boolean by lazy {
         try {
             context.assets.list("watchfacepush")?.isNotEmpty() == true
