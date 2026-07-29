@@ -119,6 +119,12 @@
     <string name="carbs">碳水化合物</string>
     <string name="invalid_profile">無效的設定檔！</string>
     <string name="no_profile_set">未設置設定檔</string>
+    <string name="profile_switch_no_insulin">無法切換設定檔：目前沒有使用中的胰島素，且也未選取任何胰島素。</string>
+    <string name="profile_switch_select_insulin_hint">目前尚未啟用任何胰島素。請選取你正在使用的胰島素，讓這次設定檔切換能記錄該胰島素。</string>
+    <string name="insulin_activation_failed">胰島素未切換。你先前的胰島素仍在使用中。</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">胰島素未切換：%1$s。你先前的胰島素仍在使用中。</string>
+    <string name="insulin_activation_unconfirmed">無法確認胰島素是否已切換。注射前，請先檢查你的設定檔中目前啟用的是哪一種胰島素。</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰島素也未切換。</string>
     <string name="active"><![CDATA[<已啟用的設定檔>]]></string>
     <string name="date">日期</string>
     <string name="units_label">單位</string>
