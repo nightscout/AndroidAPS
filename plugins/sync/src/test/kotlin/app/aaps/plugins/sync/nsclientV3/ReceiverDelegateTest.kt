@@ -24,6 +24,16 @@ class ReceiverDelegateTest : TestBase() {
     fun prepare() {
         whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
         whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
+        // ReceiverDelegate.init launches preferences.observe(key).drop(1)…launchIn(ioScope) for each of these
+        // keys. An unstubbed observe() returns null (mock default), so .drop(1) NPEs on the IO scope; that
+        // uncaught exception escapes this test and surfaces as "UncaughtExceptionsBeforeTest" in an unrelated
+        // later test in the same fork. Stub every observed key so the drop operates on a real flow.
+        whenever(preferences.observe(BooleanKey.NsClientUseWifi)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(BooleanKey.NsClientUseCellular)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(StringKey.NsClientWifiSsids)).thenReturn(MutableStateFlow(""))
+        whenever(preferences.observe(BooleanKey.NsClientUseRoaming)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(BooleanKey.NsClientUseOnCharging)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(BooleanKey.NsClientUseOnBattery)).thenReturn(MutableStateFlow(false))
         sut = ReceiverDelegate(rh, preferences, receiverStatusStore)
     }
 
