@@ -84,6 +84,10 @@
     <string name="menu_resync">Re-synk</string>
     <string name="menu_prime_fill">Prime/fylling</string>
     <string name="menu_install_watchface">Installer urskive</string>
+    <string name="menu_installing_watchface">Installerer urskiven…</string>
+    <string name="watchface_installed_active">Urskiven er installert og satt som aktiv</string>
+    <string name="watchface_installed_select">Urskive installert, velg den i urskivevelgeren</string>
+    <string name="watchface_install_failed">Installasjon av urskive mislyktes</string>
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Meny</string>
