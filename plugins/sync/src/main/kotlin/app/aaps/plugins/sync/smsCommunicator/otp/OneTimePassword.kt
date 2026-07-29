@@ -71,8 +71,11 @@ class OneTimePassword @Inject constructor(
         pin = preferences.get(StringKey.SmsOtpPassword).trim()
     }
 
-    private fun generateOneTimePassword(counter: Long): String =
-        key?.let { String.format(Locale.getDefault(), "%06d", totp.generateOneTimePassword(key, counter)) } ?: ""
+    internal fun generateOneTimePassword(counter: Long): String =
+        // Locale.ROOT (not getDefault): the OTP must be ASCII digits per RFC 6238 to match the user's
+        // Authenticator app. A non-Latin-digit device locale (e.g. fa/ar) would otherwise render the
+        // token with localized digits and OTP validation would never match.
+        key?.let { String.format(Locale.ROOT, "%06d", totp.generateOneTimePassword(key, counter)) } ?: ""
 
     /**
      * Check if given OTP+PIN is valid
