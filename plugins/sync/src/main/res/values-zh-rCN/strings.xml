@@ -77,6 +77,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">数据上传到Tidepool</string>
     <string name="upload_now">现在上传</string>
+    <string name="tidepool_purge_data">清除所有数据</string>
+    <string name="tidepool_purge_data_confirm">删除 AAPS 已上传至 Tidepool 的 ALL 数据？此操作不可撤销。用于移除因旧版本损坏的数据，完成后运行“完全同步”以重新上传。</string>
     <string name="not_connected">未连接</string>
     <string name="read_only">只读</string>
     <string name="working">工作中</string>
