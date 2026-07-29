@@ -3,6 +3,7 @@ package app.aaps.pump.danars.emulator
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import com.google.common.truth.Truth.assertThat
+import java.util.Collections
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -20,7 +21,10 @@ class EmulatorBleTransportTest {
     private lateinit var transport: EmulatorBleTransport
     private lateinit var appEncryption: BleEncryption
     private val deviceName = "UHH00002TI"
-    private val responses = mutableListOf<ByteArray>()
+    // onCharacteristicChanged can fire from a background thread (the deferred v1 pairing key) concurrently
+    // with a synchronous response on the test thread, so the sink must be thread-safe — a plain ArrayList
+    // could drop an element or throw during a racing add.
+    private val responses = Collections.synchronizedList(mutableListOf<ByteArray>())
 
     private var descriptorWrittenCount = 0
 
@@ -192,11 +196,14 @@ class EmulatorBleTransportTest {
         requestPairing()
         transport.awaitPendingCallbacks()
 
-        // The acknowledgement, then the key.
+        // Both the acknowledgement and the deferred key arrive. With a zero pairing delay the key thread
+        // and the synchronous ack race to append, so their order in `responses` is not fixed — assert the
+        // key is present by opcode rather than by position (the flake was the key landing at [0] and the
+        // ack, opcode PASSKEY_REQUEST=0xD1, at [1]).
         assertThat(responses).hasSize(2)
-        val key = appEncryption.getDecryptedPacket(responses[1])
+        val key = responses.mapNotNull { appEncryption.getDecryptedPacket(it) }
+            .singleOrNull { it[1] == BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte() }
         assertThat(key).isNotNull()
-        assertThat(key!![1]).isEqualTo(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte())
     }
 
     /**
