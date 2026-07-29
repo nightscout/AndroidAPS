@@ -53,6 +53,7 @@ import kotlinx.coroutines.launch
  * @param activePlugin ActivePlugin instance for accessing plugins by interface
  * @param rh ResourceHelper instance
  * @param builtInSearchables BuiltInSearchables instance (single source of truth for built-in screens)
+ * @param configBuilder ConfigBuilder for the synced-selection gate (client APS visibility)
  * @param onBackClick Callback when back button is clicked
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,8 +119,11 @@ fun AllPreferencesScreen(
         // 6. Sensitivity plugin
         getPreferenceContentIfEnabled(activePlugin.activeSensitivity as PluginBase)?.let { add(it) }
 
-        // 7. Pump plugin
-        getPreferenceContentIfEnabled(activePlugin.activePumpInternal as PluginBase)?.let { add(it) }
+        // 7. Pump plugin — master only: on a client the pump is virtual and its settings come from
+        // the master (mirrors the Configuration screen's category gate)
+        if (!config.AAPSCLIENT) {
+            getPreferenceContentIfEnabled(activePlugin.activePumpInternal as PluginBase)?.let { add(it) }
+        }
 
         // 8. SYNC type plugins
         activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { plugin ->
