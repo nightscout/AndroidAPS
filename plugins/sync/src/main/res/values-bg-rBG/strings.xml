@@ -77,6 +77,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Качване на данни в Tidepool</string>
     <string name="upload_now">Качи сега</string>
+    <string name="tidepool_purge_data">Изтрий всички данни</string>
+    <string name="tidepool_purge_data_confirm">Да изтрия ли всички данни, които AAPS e качил в Tidepool? Няма връщане наза. Използва се за цялостно премахване на данни от стара версия с включена пълна синхронизация.</string>
     <string name="not_connected">Няма активна връзка</string>
     <string name="read_only">Само за четене</string>
     <string name="working">Работи</string>
