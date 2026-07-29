@@ -241,6 +241,10 @@ class SetupWizardE2EHiltTest {
 
         // 13. Profile switch — activate the profile we just created
         openVia("Do Profile Switch", expect = "Activate")
+        // First-ever switch: nothing is in force yet, so the activation screen makes the user record an
+        // insulin and keeps Activate disabled until one is chosen (see ProfileActivationScreen +
+        // ProfileManagementViewModel.insulinChoice). Pick the seeded default before activating.
+        selectInsulin()
         clickLowest("Activate")       // the bottom action button, not the screen title
         click("OK")                   // confirmation
         assertDbInsert("ProfileSwitch") // DB: the profile switch was persisted
@@ -287,6 +291,16 @@ class SetupWizardE2EHiltTest {
 
         click("Save")
         click("Close")                // editor → profile manager
+    }
+
+    /**
+     * Choose an insulin on the profile-activation screen. Needed only for the first-ever switch, where
+     * nothing is in force and Activate stays disabled until one is picked. The fresh app seeds a single
+     * default (OREF_RAPID_ACTING → label "Novorapid <peak>m <dia>h …"), matched here by its nickname prefix.
+     */
+    private fun selectInsulin() {
+        click("Select Insulin")                              // open the ExposedDropdownMenu
+        withStaleRetry { findContains("Novorapid").click() } // take the seeded default (label carries a suffix)
     }
 
     // ---- treatments ---------------------------------------------------------------------------
