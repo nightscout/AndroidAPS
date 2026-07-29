@@ -140,10 +140,13 @@ jobs:
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
             for attempt in 1 2 3; do
-              # Safety net for a rare shard "Process crashed" (app-startup starved when the box is busy).
-              # Before retrying, wait for it to calm — 1-min load below half the cores (the unit forks have
-              # drained) — bounded to ~5 min so a genuinely stuck run still fails. With 64 GB this rarely
-              # fires (RAM headroom prevents the OOM-kill), but it keeps a transient blip from reddening CI.
+              # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
+              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
+              # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
+              # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
+              # immediate 2-attempt retry crashed twice into the same load spike, the settle is what makes the
+              # retry actually succeed. Bounded ~5 min so a genuinely stuck run still fails.
               if [ "$attempt" -gt 1 ]; then
                 nc=$(nproc 2>/dev/null || echo 8)
                 for _ in $(seq 1 30); do
@@ -178,10 +181,13 @@ jobs:
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
             for attempt in 1 2 3; do
-              # Safety net for a rare shard "Process crashed" (app-startup starved when the box is busy).
-              # Before retrying, wait for it to calm — 1-min load below half the cores (the unit forks have
-              # drained) — bounded to ~5 min so a genuinely stuck run still fails. With 64 GB this rarely
-              # fires (RAM headroom prevents the OOM-kill), but it keeps a transient blip from reddening CI.
+              # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
+              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
+              # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
+              # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
+              # immediate 2-attempt retry crashed twice into the same load spike, the settle is what makes the
+              # retry actually succeed. Bounded ~5 min so a genuinely stuck run still fails.
               if [ "$attempt" -gt 1 ]; then
                 nc=$(nproc 2>/dev/null || echo 8)
                 for _ in $(seq 1 30); do
@@ -216,10 +222,13 @@ jobs:
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
             for attempt in 1 2 3; do
-              # Safety net for a rare shard "Process crashed" (app-startup starved when the box is busy).
-              # Before retrying, wait for it to calm — 1-min load below half the cores (the unit forks have
-              # drained) — bounded to ~5 min so a genuinely stuck run still fails. With 64 GB this rarely
-              # fires (RAM headroom prevents the OOM-kill), but it keeps a transient blip from reddening CI.
+              # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
+              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
+              # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
+              # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
+              # immediate 2-attempt retry crashed twice into the same load spike, the settle is what makes the
+              # retry actually succeed. Bounded ~5 min so a genuinely stuck run still fails.
               if [ "$attempt" -gt 1 ]; then
                 nc=$(nproc 2>/dev/null || echo 8)
                 for _ in $(seq 1 30); do
