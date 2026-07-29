@@ -244,7 +244,11 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
         }
         SystemClock.sleep(200)
         mSerialIOThread?.sendMessage(MsgPCCommStop(injector))
-        result.success(true).comment("OK")
+        // The wait loop above also exits on disconnect, so completion is NOT guaranteed. Report the actual
+        // state (mirrors DanaRS loadEvents): a mid-download drop must not be reported as a full history load,
+        // or the caller acts on partial/missing history.
+        val loaded = danaPump.historyDoneReceived
+        result.success(loaded).comment(if (loaded) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.connection_error)
         return result
     }
 
