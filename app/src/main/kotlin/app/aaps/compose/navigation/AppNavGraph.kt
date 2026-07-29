@@ -33,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -151,6 +152,7 @@ fun NavGraphBuilder.appNavGraph(
     preferences: Preferences,
     rh: ResourceHelper,
     builtInSearchables: BuiltInSearchables,
+    configBuilder: ConfigBuilder,
     prefFileList: FileListProvider,
     persistenceLayer: PersistenceLayer,
     visibilityContext: VisibilityContext,
@@ -509,6 +511,7 @@ fun NavGraphBuilder.appNavGraph(
             activePlugin = activePlugin,
             rh = rh,
             builtInSearchables = builtInSearchables,
+            configBuilder = configBuilder,
             onBackClick = { navController.safePopBackStack() }
         )
     }

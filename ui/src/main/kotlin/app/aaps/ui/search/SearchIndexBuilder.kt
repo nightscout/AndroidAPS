@@ -1,5 +1,6 @@
 package app.aaps.ui.search
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -152,12 +153,30 @@ class SearchIndexBuilder @Inject constructor(
     }
 
     /**
-     * A plugin (and therefore its settings screen/category and individual preference keys) is searchable only
-     * when it's visible in its list. E.g. VirtualPump's showInList is `{ !config.AAPSCLIENT }`, so on a client it
-     * and all its settings drop out of search — the values come from the master and aren't editable locally.
+     * On a client the whole BG source category is hidden from Configuration — the collector runs on
+     * the master and can't be changed or configured locally — so BG source plugins, their settings
+     * screens and their keys stay out of search there too (mirrors ConfigurationViewModel's gate).
+     */
+    private fun PluginBase.categoryAvailable(): Boolean =
+        !(preferences.nsclientMode && pluginDescription.mainType == PluginType.BGSOURCE)
+
+    /**
+     * A plugin appears as a plugin row in search only when it's visible in its list, mirroring the
+     * Config Builder. E.g. VirtualPump's showInList is `{ !config.AAPSCLIENT }`, so on a client its
+     * row drops out of search.
      */
     private fun PluginBase.isListVisible(): Boolean =
-        showInList(pluginDescription.mainType) && pluginDescription.pluginName != -1
+        categoryAvailable() && showInList(pluginDescription.mainType) && pluginDescription.pluginName != -1
+
+    /**
+     * A plugin's settings (screen/category and individual preference keys) are searchable when the
+     * plugin is list-visible or permanently enabled. alwaysEnabled plugins (e.g. Safety) are hidden
+     * from the Config Builder list only because they cannot be toggled — their settings are still
+     * user-facing and shown in Preferences. VirtualPump on a client is hidden and not alwaysEnabled,
+     * so its settings stay out of search — the values come from the master and aren't editable locally.
+     */
+    private fun PluginBase.hasSearchableSettings(): Boolean =
+        categoryAvailable() && (showInList(pluginDescription.mainType) || pluginDescription.alwaysEnabled) && pluginDescription.pluginName != -1
 
     private fun collectPlugins(entries: MutableList<SearchIndexEntry>, seenKeys: MutableSet<String>) {
         activePlugin.getPluginsList()
@@ -174,8 +193,7 @@ class SearchIndexBuilder @Inject constructor(
 
     private fun collectPluginScreens(entries: MutableList<SearchIndexEntry>, seenKeys: MutableSet<String>) {
         activePlugin.getPluginsList()
-            // A plugin hidden from its list must not surface its settings screen/category in search either.
-            .filter { it.isListVisible() }
+            .filter { it.hasSearchableSettings() }
             .forEach { plugin ->
                 val content = plugin.getPreferenceScreenContent()
                 if (content is PreferenceSubScreenDef) {
@@ -226,10 +244,10 @@ class SearchIndexBuilder @Inject constructor(
             if (preferences.pumpControlMode && !prefKey.showInPumpControlMode) return@forEach
 
             val parentInfo = parentScreenMap[prefKey.key]
-            // Skip keys whose owning plugin is hidden from its list (e.g. VirtualPump on a client — its values
-            // come from the master, so its settings must not be searchable). Keys with no owning plugin pass.
+            // Skip keys whose owning plugin has no searchable settings (e.g. VirtualPump on a client — its
+            // values come from the master, so they must not be searchable). Keys with no owning plugin pass.
             val ownerPlugin = parentInfo?.plugin
-            if (ownerPlugin != null && !ownerPlugin.isListVisible()) return@forEach
+            if (ownerPlugin != null && !ownerPlugin.hasSearchableSettings()) return@forEach
             val item = SearchableItem.Preference(prefKey, parentInfo?.key, parentInfo?.plugin)
             val entry = createIndexEntry(item)
             val uniqueKey = "${entry.category.name}_${entry.item.key}"
@@ -270,7 +288,14 @@ class SearchIndexBuilder @Inject constructor(
     ) {
         screen.items.forEach { item ->
             when (item) {
-                is PreferenceKey          -> map[item.key] = ParentScreenInfo(screenKey, plugin)
+                is PreferenceKey          -> {
+                    // Shared keys sit on several plugins' screens (e.g. ApsUseAutosens on SMB/AMA/AutoISF).
+                    // Prefer an enabled plugin as owner so search doesn't dim the setting as belonging to a
+                    // disabled one and navigates to the screen that is actually in use.
+                    val existing = map[item.key]
+                    if (existing == null || (plugin?.isEnabled() == true && existing.plugin?.isEnabled() != true))
+                        map[item.key] = ParentScreenInfo(screenKey, plugin)
+                }
 
                 is PreferenceSubScreenDef -> collectPreferenceKeysFromScreen(item, item.key, plugin, map)
 
