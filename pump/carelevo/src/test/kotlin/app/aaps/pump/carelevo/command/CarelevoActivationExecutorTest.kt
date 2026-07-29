@@ -41,6 +41,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
@@ -112,9 +113,17 @@ internal class CarelevoActivationExecutorTest {
         whenever { bleSession.runSingle<BleResponse>(any(), any(), any()) }.thenReturn(response)
     }
 
+    private fun stubAdditionalPriming(response: SimpleResultResponse) {
+        whenever { bleSession.runAdditionalPriming(any()) }.thenReturn(response)
+    }
+
     /** Make the (suspend) generic [CarelevoBleSession.runSingle] throw. */
     private fun stubRunSingleThrows(message: String = BOOM) {
         whenever { bleSession.runSingle<BleResponse>(any(), any(), any()) }.thenAnswer { throw RuntimeException(message) }
+    }
+
+    private fun stubAdditionalPrimingThrows(message: String = BOOM) {
+        whenever { bleSession.runAdditionalPriming(any()) }.thenAnswer { throw RuntimeException(message) }
     }
 
     /** Drive the streaming safety check: feed [frames] to the executor's onFrame callback. */
@@ -523,20 +532,28 @@ internal class CarelevoActivationExecutorTest {
     }
 
     @Test fun `additionalPriming success when accepted`() {
-        stubRunSingle(SimpleResultResponse(resultCode = 0))
+        stubAdditionalPriming(SimpleResultResponse(resultCode = 0))
         val result = sut.execute(CmdAdditionalPriming())
         assertThat(result?.success).isTrue()
         assertThat(result?.enacted).isTrue()
     }
 
+    @Test fun `additionalPriming uses dedicated ble session path`() {
+        stubAdditionalPriming(SimpleResultResponse(resultCode = 0))
+
+        sut.execute(CmdAdditionalPriming())
+
+        verifyBlocking(bleSession) { runAdditionalPriming(any()) }
+    }
+
     @Test fun `additionalPriming fails when rejected`() {
-        stubRunSingle(SimpleResultResponse(resultCode = 7))
+        stubAdditionalPriming(SimpleResultResponse(resultCode = 7))
         val result = sut.execute(CmdAdditionalPriming())
         assertThat(result?.success).isFalse()
     }
 
     @Test fun `additionalPriming returns failed result on exception`() {
-        stubRunSingleThrows()
+        stubAdditionalPrimingThrows()
         val result = sut.execute(CmdAdditionalPriming())
         assertThat(result?.success).isFalse()
         assertThat(result?.comment).isEqualTo(BOOM)

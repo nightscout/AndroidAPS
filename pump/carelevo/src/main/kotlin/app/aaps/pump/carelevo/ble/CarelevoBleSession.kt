@@ -3,6 +3,7 @@ package app.aaps.pump.carelevo.ble
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.carelevo.ble.commands.AlertAlarmSetCommand
+import app.aaps.pump.carelevo.ble.commands.AdditionalPrimingCommand
 import app.aaps.pump.carelevo.ble.commands.AppAuthCommand
 import app.aaps.pump.carelevo.ble.commands.BasalProgramCommand
 import app.aaps.pump.carelevo.ble.commands.InfusionInfoCommand
@@ -12,6 +13,7 @@ import app.aaps.pump.carelevo.ble.commands.PatchInfoResponse
 import app.aaps.pump.carelevo.ble.commands.SafetyCheckCommand
 import app.aaps.pump.carelevo.ble.commands.SafetyCheckResponse
 import app.aaps.pump.carelevo.ble.commands.SetTimeForPatchInfoCommand
+import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.ble.commands.ThresholdSetupCommand
 import app.aaps.pump.carelevo.ble.gatt.BleTransportGattConnection
 import app.aaps.pump.carelevo.ble.gatt.GattConnState
@@ -146,6 +148,10 @@ class CarelevoBleSession @Inject constructor(
     /** Run any single-response [command] (write or read) on a fresh session. */
     suspend fun <R : BleResponse> runSingle(address: String, command: BleCommand<R>, timeoutMs: Long = READ_TIMEOUT_MS): R =
         withSession(address, command::class.simpleName ?: "command", timeoutMs) { it.request(command) }
+
+    /** Additional priming (0x1D -> 0x7D) may take longer than a normal single write. */
+    suspend fun runAdditionalPriming(address: String): SimpleResultResponse =
+        withSession(address, "additional priming", ADDITIONAL_PRIMING_TIMEOUT_MS) { it.request(AdditionalPrimingCommand()) }
 
     /**
      * Run the streaming Safety Check (0x12 → 0x72). [onFrame] is invoked for every decoded frame (each
@@ -485,6 +491,7 @@ class CarelevoBleSession @Inject constructor(
 
         const val CONNECT_TIMEOUT_MS = 20_000L
         const val READ_TIMEOUT_MS = 15_000L
+        const val ADDITIONAL_PRIMING_TIMEOUT_MS = 60_000L
 
         // Safety check streams progress for ~100-210 s before the terminal frame; give it headroom.
         const val SAFETY_CHECK_TIMEOUT_MS = 250_000L
