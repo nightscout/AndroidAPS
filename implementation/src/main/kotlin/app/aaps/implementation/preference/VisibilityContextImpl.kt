@@ -86,4 +86,7 @@ class VisibilityContextImpl @Inject constructor(
 
     override val isConcentrationEnabled: Boolean
         get() = constraintsChecker.isConcentrationEnabled().value()
+
+    override val apsOffersDynamicSensitivity: Boolean
+        get() = activePlugin.activeAPS?.offersDynamicSensitivity() == true
 }

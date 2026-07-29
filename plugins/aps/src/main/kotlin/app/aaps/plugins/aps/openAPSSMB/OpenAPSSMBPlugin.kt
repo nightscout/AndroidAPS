@@ -139,6 +139,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     override val algorithm = APSResult.Algorithm.SMB
     override var lastAPSResult: APSResult? = null
     override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseDynamicSensitivity)
+    override fun offersDynamicSensitivity(): Boolean = true
 
     override fun getIsfMgdl(profile: Profile, caller: String): Double? {
         val start = dateUtil.now()

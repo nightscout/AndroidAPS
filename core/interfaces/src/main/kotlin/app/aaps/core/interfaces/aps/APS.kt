@@ -26,6 +26,14 @@ interface APS {
     fun supportsDynamicIsf(): Boolean = false
 
     /**
+     * Does this algorithm offer the "Use dynamic sensitivity" option at all
+     * (static capability, independent of the preference value)?
+     * Unlike [supportsDynamicIsf] this does not depend on whether the user enabled it.
+     * @return true if yes
+     */
+    fun offersDynamicSensitivity(): Boolean = false
+
+    /**
      * Is APS providing variable IC calculation?
      * @return true if yes
      */
