@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -40,7 +39,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
@@ -139,6 +137,12 @@ private fun DashHistoryCard(
     )
 }
 
+/**
+ * @see PreviewSuccessCard
+ * @see PreviewSuccessSimple
+ * @see PreviewFailure
+ * @see PreviewTbr
+ */
 @Composable
 internal fun HistoryCardContent(
     commandName: String,
@@ -205,87 +209,6 @@ internal fun HistoryCardContent(
         }
     }
 }
-
-// region Previews
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "History Card - Success with details")
-@Composable
-private fun PreviewSuccessCard() {
-    MaterialTheme {
-        HistoryCardContent(
-            commandName = "Set Bolus",
-            time = "14:32",
-            isSuccess = true,
-            description = "2.50 U",
-            extra = "Total delivered: 48.25 U"
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "History Card - Success simple")
-@Composable
-private fun PreviewSuccessSimple() {
-    MaterialTheme {
-        HistoryCardContent(
-            commandName = "Acknowledge Alerts",
-            time = "09:15",
-            isSuccess = true
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "History Card - Failure")
-@Composable
-private fun PreviewFailure() {
-    MaterialTheme {
-        HistoryCardContent(
-            commandName = "Set Temporary Basal",
-            time = "11:47",
-            isSuccess = false,
-            description = "Command not received by the pod"
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "History Card - TBR")
-@Composable
-private fun PreviewTbr() {
-    MaterialTheme {
-        HistoryCardContent(
-            commandName = "Set Temporary Basal",
-            time = "08:00",
-            isSuccess = true,
-            description = "1.50 U/h for 60 min"
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Filter Chips")
-@Composable
-private fun PreviewFilterChips() {
-    val groups = listOf("All", "Bolus", "Basal", "Prime", "Alarm", "Config")
-    MaterialTheme {
-        FlowRow(
-            modifier = Modifier.padding(AapsSpacing.extraLarge),
-            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-        ) {
-            groups.forEachIndexed { index, name ->
-                FilterChip(
-                    selected = index == 0,
-                    onClick = {},
-                    label = { Text(name) }
-                )
-            }
-        }
-    }
-}
-
-// endregion
 
 private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: ProfileUtil): String {
     if (!record.isSuccess()) {

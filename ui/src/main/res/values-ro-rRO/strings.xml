@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Nicio bazală temporară în funcțiune</string>
     <string name="start_activity_tt">Start Țintă Temporară activitate</string>
     <string name="start_eating_soon_tt">Start Țintă Temporară mănânc-în-curând</string>
@@ -127,10 +128,23 @@
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Lipsă nume insulină</string>
     <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
+    <string name="insulin_external_update_title">Configurația insulinei a fost modificată</string>
+    <string name="insulin_external_update_message">Un client asociat a schimbat configurația insulinei. Apăsați OK pentru a încărca modificările lor și să renunțați la editările nesalvate sau Anulați pentru a continua editarea (următoarea dumneavoastră salvare o va suprascrie pe a lor).</string>
+    <string name="insulin_edit_target_gone">Această insulină a fost eliminată în altă parte, astfel încât editarea dumneavoastră nu a putut fi salvată. Lista a fost reîncărcată.</string>
+    <string name="insulin_activation_applied">Activarea insulinei a fost aplicată</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Se aplică…</string>
+    <string name="clientcontrol_pending_working_text">Se așteaptă confirmarea din partea dispozitivului principal…</string>
+    <string name="clientcontrol_pending_rejected_title">Neaplicat</string>
+    <string name="clientcontrol_pending_failed_format">%1$s nu a putut fi realizată.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Aplicat parțial</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s a fost aplicată, dar unele acțiuni nu.\n Verificați starea activă.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Nu s-a putut confirma</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s a fost trimis, dar nu s-a întors nicio confirmare.\n%2$s\n va apărea aici când/dacă dispozitivul principal îl aplică.</string>
+    <string name="clientcontrol_pending_stop_waiting">Opriți așteptarea</string>
     <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
     <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
     <string name="load_peak_from">Încărcați maxim de la</string>

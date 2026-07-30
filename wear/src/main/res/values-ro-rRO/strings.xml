@@ -61,6 +61,10 @@
     <string name="pref_single_target">Țintă unică</string>
     <string name="pref_wizard_percentage">Calculator Procentaj</string>
     <string name="pref_complication_tap_action">Acțiuni pentru complicații</string>
+    <string name="pref_complication_bg_graph_hours">Interval de timp grafic glicemie</string>
+    <string name="duration_1_hour">1 oră</string>
+    <string name="duration_3_hours">3 ore</string>
+    <string name="duration_6_hours">6 ore</string>
     <string name="pref_unicode_in_complications">Unicode în complicații</string>
     <string name="pref_version">Versiune:</string>
     <string name="pref_moreWatchfaceSettings">Mai multe setări cadran ceas</string>
@@ -85,6 +89,8 @@
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
+    <string name="action_scene_confirmation">Scena solicitată</string>
+    <string name="scene_end">Sfârșit</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
     <string name="action_bolus_confirmation">Bolus solicitat</string>
     <string name="action_wizard_confirmation">Calcul solicitat</string>
@@ -202,6 +208,12 @@
     <string name="tile_action_2">Acțiune 2</string>
     <string name="tile_action_3">Acțiune 3</string>
     <string name="tile_action_4">Acțiune 4</string>
+    <string name="tile_scene_1">Scenariu 1</string>
+    <string name="tile_scene_2">Scenariu 2</string>
+    <string name="tile_scene_3">Scenariu 3</string>
+    <string name="tile_scene_4">Scenariu 4</string>
+    <string name="tile_scene_auto">Automat</string>
+    <string name="tile_scene_unavailable">Indisponibil</string>
     <string name="datalayer_notification_title">Serviciu de prim-plan din stratul de date</string>
     <string name="datalayer_notification_text">AAPS rulează în prim-plan. Pentru a ascunde notificările, accesați opțiunile de dezvoltator, notificările aplicațiilor, aplicațiile de ceas permise, selectați AAPS, dezactivați notificarea canalului de date din prim-plan.</string>
     <string name="on">PORNIT</string>
@@ -212,6 +224,7 @@
     <string name="complication_blood_glucose_large">Glicemia (mare)</string>
     <string name="complication_blood_glucose_ext1">Glicemie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemie Ext2</string>
+    <string name="complication_bg_graph">Grafic glicemie</string>
     <string name="complication_br_cob_iob">RB, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">RB, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">RB, CoB &amp; IoB Ext2</string>
@@ -235,9 +248,13 @@
     <string name="action_running_mode_selected">Mod de rulare solicitat</string>
     <string name="title_activity_disconnect_pump">Deconectați pompa</string>
     <string name="title_activity_suspend_loop">Suspendați bucla</string>
-    <string name="wizard_carbs_format">%1$d g carbohidrați</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Trimis</string>
+    <string name="contacting_master">Se contactează dispozitivul principal…</string>
+    <string name="contacting_master_unknown">Stare necunoscută - verificați telefonul</string>
     <string name="tile_settings">Setări panouri</string>
     <string name="loop_status_error">Eroare la actualizarea stării</string>
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
@@ -276,4 +293,21 @@
     <string name="confirm">Confirmați</string>
     <string name="request">Cerință</string>
     <string name="constraint_applied">Constrângere aplicată!</string>
+    <string name="wizard_total_insulin">Insulină totală</string>
+    <string name="wizard_calculation">Calcul</string>
+    <string name="wizard_settings_format">IC: %1$s | FSI: %2$s</string>
+    <string name="wizard_result_bg">Glicemie</string>
+    <string name="wizard_result_bg_tt">Glicemie (Țintă temporară: %1$s)</string>
+    <string name="wizard_result_trend">Tendință 15\'</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Noul IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Carbohidrați (%1$d g)</string>
+    <string name="wizard_result_subtotal">Subtotal</string>
+    <string name="wizard_result_correction">Corecție</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

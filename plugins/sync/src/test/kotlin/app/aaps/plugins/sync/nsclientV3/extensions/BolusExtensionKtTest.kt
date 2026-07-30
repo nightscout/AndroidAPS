@@ -4,7 +4,6 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.plugins.sync.extensions.contentEqualsTo
@@ -17,13 +16,6 @@ import org.mockito.Mockito.`when`
 
 internal class BolusExtensionKtTest : TestBase() {
 
-    @Mock lateinit var insulin: Insulin
-
-    @BeforeEach
-    fun doMock() {
-        `when`(insulin.friendlyName).thenReturn("Name")
-        `when`(insulin.iCfg).thenReturn(ICfg(insulinLabel = "Name", insulinEndTime = (8.0 * 3600 * 1000).toLong(), insulinPeakTime = 45 * 60 * 1000, concentration = 1.0))
-    }
 
     val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
@@ -45,7 +37,7 @@ internal class BolusExtensionKtTest : TestBase() {
             iCfg = iCfg
         )
 
-        var bolus2 = (bolus.toNSBolus().convertToRemoteAndBack() as NSBolus).toBolus(insulin)
+        var bolus2 = (bolus.toNSBolus().convertToRemoteAndBack() as NSBolus).toBolus(iCfg)
         assertThat(bolus.contentEqualsTo(bolus2)).isTrue()
         assertThat(bolus.ids.contentEqualsTo(bolus2.ids)).isTrue()
 
@@ -65,7 +57,7 @@ internal class BolusExtensionKtTest : TestBase() {
             iCfg = iCfg
         )
 
-        bolus2 = (bolus.toNSBolus().convertToRemoteAndBack() as NSBolus).toBolus(insulin)
+        bolus2 = (bolus.toNSBolus().convertToRemoteAndBack() as NSBolus).toBolus(iCfg)
         assertThat(bolus.contentEqualsTo(bolus2)).isTrue()
         assertThat(bolus.ids.contentEqualsTo(bolus2.ids)).isTrue()
     }

@@ -18,6 +18,7 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
@@ -87,7 +88,7 @@ class InsulinImplMigrationTest : TestBase() {
     private fun create(initialConfig: String): InsulinImpl {
         storedConfig = initialConfig
         return InsulinImpl(
-            preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel,
+            preferences, rh, profileFunction, aapsLogger, config, hardLimits, uel,
             CoroutineScope(Dispatchers.Unconfined)
         )
     }
@@ -111,13 +112,9 @@ class InsulinImplMigrationTest : TestBase() {
         val sut = create(input)
 
         assertThat(sut.insulins).hasSize(1)
-        assertThat(sut.currentInsulinIndex).isEqualTo(0)
         assertThat(sut.insulins[0].insulinPeakTime).isEqualTo(rapidPeakMs)   // OREF_RAPID_ACTING default
         assertThat(sut.insulins[0].insulinEndTime).isEqualTo(rapidEndMs)
         assertThat(sut.insulins[0].concentration).isEqualTo(1.0)
-        // Neither accessor may throw with no profile present.
-        assertThat(sut.iCfg).isEqualTo(sut.insulins[0])
-        assertThat(sut.currentInsulin()).isEqualTo(sut.insulins[0])
     }
 
     @Test
@@ -175,12 +172,6 @@ class InsulinImplMigrationTest : TestBase() {
     fun twoDistinctInsulinsAreBothKept() {
         val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
         assertThat(sut.insulins).hasSize(2)
-    }
-
-    @Test
-    fun currentInsulinIndexAfterLoadPointsAtLastEntry() {
-        val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
-        assertThat(sut.currentInsulinIndex).isEqualTo(sut.insulins.size - 1)
     }
 
     @Test
@@ -271,63 +262,47 @@ class InsulinImplMigrationTest : TestBase() {
         sut.addNewInsulin(ICfg(insulinLabel = "", insulinEndTime = rapidEndMs, insulinPeakTime = lyumjevPeakMs, concentration = 1.0), ue = true)
 
         assertThat(sut.insulins).hasSize(2)
-        assertThat(sut.currentInsulinIndex).isEqualTo(1)
+        // Appended, not inserted — InsulinManagementViewModel opens insulins.lastIndex after adding.
+        assertThat(sut.insulins.last().insulinPeakTime).isEqualTo(lyumjevPeakMs)
         assertThat(storedInsulinCount()).isEqualTo(2)
         verify(uel).log(eq(Action.NEW_INSULIN), any<Sources>(), any<String>(), any<ValueWithUnit>())
     }
 
     @Test
-    fun removeCurrentInsulinRemovesResetsIndexPersistsAndLogs() {
+    fun removeInsulinRemovesTheOneAtTheGivenIndexPersistsAndLogs() {
         val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
-        sut.currentInsulinIndex = 1
 
-        sut.removeCurrentInsulin()
+        sut.removeInsulin(1)
 
         assertThat(sut.insulins).hasSize(1)
-        assertThat(sut.currentInsulinIndex).isEqualTo(0)
+        assertThat(sut.insulins[0].insulinPeakTime).isEqualTo(rapidPeakMs) // the other one survived
         assertThat(storedInsulinCount()).isEqualTo(1)
         verify(uel).log(eq(Action.INSULIN_REMOVED), any<Sources>(), any<String>(), any<ValueWithUnit>())
     }
 
     @Test
-    fun removeCurrentInsulinKeepsAtLeastOneInsulin() {
+    fun removeInsulinKeepsAtLeastOneInsulin() {
         // Invariant: the list is never emptied. With verbatim load there is no per-load prefill to
-        // recover an empty list, so removeCurrentInsulin must no-op on a single-element list.
+        // recover an empty list, so removeInsulin must no-op on a single-element list.
         val sut = create("{}") // one seeded default
         assertThat(sut.insulins).hasSize(1)
 
-        sut.removeCurrentInsulin()
+        sut.removeInsulin(0)
 
         assertThat(sut.insulins).hasSize(1)
     }
 
     @Test
-    fun currentInsulinReflectsCurrentInsulinIndex() {
+    fun removeInsulinIgnoresAnOutOfRangeIndex() {
         val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
 
-        sut.currentInsulinIndex = 0
-        assertThat(sut.currentInsulin()).isEqualTo(sut.insulins[0])
-        sut.currentInsulinIndex = 1
-        assertThat(sut.currentInsulin()).isEqualTo(sut.insulins[1])
+        sut.removeInsulin(5)
+
+        assertThat(sut.insulins).hasSize(2)
     }
 
     // ── iCfg sourcing: profile-driven, list only as fallback (orthogonal to the config cache) ────────
 
-    @Test
-    fun iCfgFallsBackToFirstInsulinWhenNoProfile() {
-        val sut = create(cfg(ins())) // no getProfile() stub → mock returns null → fallback path
-        assertThat(sut.iCfg).isEqualTo(sut.insulins[0])
-    }
-
-    @Test
-    fun iCfgComesFromActiveProfileWhenPresent() {
-        val known = ICfg(insulinLabel = "known", insulinEndTime = 18_000_000, insulinPeakTime = freePeak30Ms, concentration = 1.0)
-        val profile = mock<EffectiveProfile>()
-        whenever(profile.iCfg).thenReturn(known)
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
-
-        val sut = create(cfg(ins()))
-
-        assertThat(sut.iCfg).isEqualTo(known)
-    }
+    // "Which insulin is in use" is no longer answerable from here — it belongs to the running profile and is
+    // covered by ProfileFunctionImplTest. This class only owns the catalogue.
 }

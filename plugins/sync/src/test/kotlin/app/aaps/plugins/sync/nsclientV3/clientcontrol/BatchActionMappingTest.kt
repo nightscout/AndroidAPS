@@ -80,6 +80,46 @@ class BatchActionMappingTest {
     }
 
     @Test
+    fun profileSwitchRoundTrips() {
+        val original = BatchAction.ProfileSwitch(percentage = 110, timeShiftHours = 2, durationMinutes = 60, profileName = "Lunch", notes = "n")
+        val back = original.toDto().toDomain() as BatchAction.ProfileSwitch
+        assertThat(back.percentage).isEqualTo(110)
+        assertThat(back.timeShiftHours).isEqualTo(2)
+        assertThat(back.durationMinutes).isEqualTo(60)
+        assertThat(back.profileName).isEqualTo("Lunch")
+        assertThat(back.notes).isEqualTo("n")
+        // No insulin asked of the user → the master resolves the one in force (or refuses).
+        assertThat(back.iCfg).isNull()
+    }
+
+    @Test
+    fun profileSwitchRoundTripsTheICfgTheClientAskedTheUserFor() {
+        val original = BatchAction.ProfileSwitch(
+            percentage = 100, timeShiftHours = 0, durationMinutes = 0, profileName = "Lunch",
+            iCfg = ICfg(insulinLabel = "Rapid", insulinEndTime = 360, insulinPeakTime = 75, concentration = 2.0).also { it.insulinNickname = "Pen" }
+        )
+        val back = original.toDto().toDomain() as BatchAction.ProfileSwitch
+        assertThat(back.iCfg).isNotNull()
+        assertThat(back.iCfg?.insulinLabel).isEqualTo("Rapid")
+        assertThat(back.iCfg?.insulinPeakTime).isEqualTo(75L)
+        assertThat(back.iCfg?.insulinEndTime).isEqualTo(360L)
+        // Concentration must survive: a U200 pen recorded as U100 would halve every IOB calculation downstream.
+        assertThat(back.iCfg?.concentration).isEqualTo(2.0)
+        assertThat(back.iCfg?.insulinNickname).isEqualTo("Pen")
+    }
+
+    @Test
+    fun profileSwitchWithUnparseableICfgKeepsTheSwitchAndDropsOnlyTheICfg() {
+        // Unlike INSULIN_ACTIVATE, the switch is still meaningful without an insulin — the master resolves
+        // the one in force, or refuses at prepare when there is none. Dropping the whole action would be worse.
+        val back = BatchActionDto(
+            type = BatchActionDto.TYPE_PROFILE_SWITCH, percentage = 100, profileName = "Lunch", iCfgJson = "{not json"
+        ).toDomain() as BatchAction.ProfileSwitch
+        assertThat(back.profileName).isEqualTo("Lunch")
+        assertThat(back.iCfg).isNull()
+    }
+
+    @Test
     fun therapyEventBgCheckRoundTrips() {
         val original = BatchAction.TherapyEvent(
             teType = TE.Type.FINGER_STICK_BG_VALUE,

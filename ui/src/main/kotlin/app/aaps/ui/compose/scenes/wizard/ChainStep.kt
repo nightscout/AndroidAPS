@@ -12,14 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.Scene
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 
+/**
+ * @see ChainStepPreview
+ */
 @Composable
 internal fun ChainStep(
     state: SceneWizardViewModel.WizardState,
@@ -72,22 +73,5 @@ private fun ChainTargetRow(
     ) {
         RadioButton(selected = selected, onClick = null)
         Text(text = label, style = MaterialTheme.typography.bodyLarge)
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun ChainStepPreview() {
-    MaterialTheme {
-        ChainStep(
-            state = previewState,
-            availableTargets = listOf(
-                Scene(id = "b", name = "Post-Meal"),
-                Scene(id = "c", name = "Recovery")
-            ),
-            onSetChainTarget = {},
-            onBack = {}, onNext = {}
-        )
     }
 }

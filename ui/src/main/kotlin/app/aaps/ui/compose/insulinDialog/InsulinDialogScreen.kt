@@ -22,17 +22,12 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -50,21 +45,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
+import app.aaps.core.ui.compose.InsulinSelector
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -200,8 +194,11 @@ fun InsulinDialogScreen(
     )
 }
 
+/**
+ * @see InsulinDialogScreenPreview
+ */
 @Composable
-private fun InsulinDialogContent(
+internal fun InsulinDialogContent(
     uiState: InsulinDialogUiState,
     bgInfo: BgInfoUiState,
     iob: IobUiState,
@@ -384,47 +381,11 @@ private fun InsulinDialogContent(
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        var expanded by remember { mutableStateOf(false) }
-
-                        @OptIn(ExperimentalMaterial3Api::class)
-                        (ExposedDropdownMenuBox(
-                            expanded = expanded,
-                            onExpandedChange = { expanded = !expanded },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            OutlinedTextField(
-                                value = uiState.selectedIcfg?.insulinLabel ?: "",
-                                onValueChange = {},
-                                readOnly = true,
-                                label = { Text(stringResource(CoreUiR.string.select_insulin)) },
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                            )
-
-                            ExposedDropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                uiState.insulins.forEach { iCfg ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text(
-                                                text = iCfg.insulinLabel,
-                                                style = MaterialTheme.typography.bodyLarge
-                                            )
-                                        },
-                                        onClick = {
-                                            onInsulinTypeSelect(iCfg)
-                                            expanded = false
-                                        },
-                                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                                    )
-                                }
-                            }
-                        })
+                        InsulinSelector(
+                            insulins = uiState.insulins,
+                            selected = uiState.selectedIcfg,
+                            onSelect = onInsulinTypeSelect
+                        )
                     }
                 }
             }
@@ -479,46 +440,6 @@ private fun InsulinDialogContent(
     }
 }
 
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun InsulinDialogScreenPreview() {
-    MaterialTheme {
-        InsulinDialogContent(
-            uiState = InsulinDialogUiState(
-                insulin = 2.5,
-                selectedIcfg = null,
-                insulins = ArrayList(),
-                maxInsulin = 10.0,
-                bolusStep = 0.1,
-                insulinButtonIncrement1 = 0.5,
-                insulinButtonIncrement2 = 1.0,
-                insulinButtonIncrement3 = 2.0,
-                showNotesFromPreferences = true
-            ),
-            bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
-            iob = IobUiState(),
-            cob = CobUiState(),
-            dateString = "25/02/2026",
-            timeString = "14:30",
-            bolusFormat = DecimalFormat("0.0"),
-            formatAmount = { DecimalFormat("0.0").format(it) },
-            onEatingSoonChange = {},
-            onRecordOnlyChange = {},
-            onInsulinChange = {},
-            onAddInsulin = {},
-            onTimeOffsetChange = {},
-            onNotesChange = {},
-            onDateClick = {},
-            onTimeClick = {},
-            onSettingsClick = null,
-            onNavigateBack = {},
-            onConfirmClick = {},
-            onInsulinTypeSelect = {}
-        )
-    }
-}
-
 @Composable
 private fun InsulinQuickAddButtons(
     increment1: Double,
@@ -569,4 +490,3 @@ private fun InsulinButtonSettingsSheet(
         )
     }
 }
-

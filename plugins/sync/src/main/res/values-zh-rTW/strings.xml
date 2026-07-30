@@ -69,6 +69,7 @@
     <string name="full_sync_comment">完全同步？這可能需要很多小時，直到完成前您都不會看到新的資料在 NS 上。</string>
     <string name="ns_sync_options">同步選項</string>
     <string name="ns_alarm_options">警報選項</string>
+    <string name="ns_remote_control_options">遠端控制</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">若啟用，資料上傳將會發送至測試伺服器，而非一般的伺服器。</string>
     <string name="title_tidepool_dev_servers">使用集成（測試）伺服器</string>
@@ -76,6 +77,9 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">將資料上傳到 Tidepool</string>
     <string name="upload_now">立即上傳</string>
+    <string name="tidepool_purge_data">清除所有資料</string>
+    <string name="tidepool_purge_data_confirm">要刪除 AAPS 已上傳至 Tidepool 的所有資料嗎？此操作無法復原。
+此功能可用來移除舊版本所造成的損毀資料。刪除後，請執行「完整同步」以重新上傳資料。</string>
     <string name="not_connected">未連線</string>
     <string name="read_only">唯讀</string>
     <string name="working">工作中</string>

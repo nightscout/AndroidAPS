@@ -101,27 +101,31 @@ class QuickWizard @Inject constructor(
         return null
     }
 
-    fun move(from: Int, to: Int) {
-        //Log.i("QuickWizard", "moveItem: $from $to")
-        val fromEntry = storage[from] as JSONObject
-        storage.remove(from)
-        addToPos(to, fromEntry, storage)
+    /**
+     * Rearrange the entries in one shot. [order] is the new arrangement expressed as *current*
+     * indices: `order[newIndex] == oldIndex`. It must be a permutation of the current indices — no
+     * entry is added, removed or duplicated here.
+     *
+     * Takes the whole arrangement rather than repeated [move] calls because every [save] writes
+     * [StringNonKey.QuickWizard], which is bidirectionally synced: a reorder session should cost one
+     * round trip to the paired device, not one per step. An [order] that is already the identity
+     * does not write at all.
+     *
+     * Entry order is user-visible — it is the order of the overview buttons — but nothing resolves
+     * an entry *by position*: every consumer looks entries up by `guid`.
+     *
+     * @return true if the entries were rearranged, or were already in that order; false if [order]
+     *         is not a permutation of the current indices (the list changed underneath the caller).
+     */
+    fun reorder(order: List<Int>): Boolean {
+        val size = storage.length()
+        if (order.size != size || order.toSet() != (0 until size).toSet()) return false
+        if (order.withIndex().all { (newIndex, oldIndex) -> newIndex == oldIndex }) return true
+        val reordered = JSONArray()
+        order.forEach { reordered.put(storage.get(it)) }
+        storage = reordered
         save()
-    }
-
-    @Suppress("unused")
-    fun removePos(pos: Int, jsonObj: JSONObject?, jsonArr: JSONArray) {
-        for (i in jsonArr.length() downTo pos + 1) {
-            jsonArr.put(i, jsonArr[i - 1])
-        }
-        jsonArr.put(pos, jsonObj)
-    }
-
-    private fun addToPos(pos: Int, jsonObj: JSONObject?, jsonArr: JSONArray) {
-        for (i in jsonArr.length() downTo pos + 1) {
-            jsonArr.put(i, jsonArr[i - 1])
-        }
-        jsonArr.put(pos, jsonObj)
+        return true
     }
 
     fun newEmptyItem(): QuickWizardEntry {

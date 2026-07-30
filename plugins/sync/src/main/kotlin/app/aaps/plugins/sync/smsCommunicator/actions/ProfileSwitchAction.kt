@@ -3,7 +3,6 @@ package app.aaps.plugins.sync.smsCommunicator.actions
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -19,7 +18,6 @@ class ProfileSwitchAction(
     private val percentage: Int,
     private val receivedSms: Sms,
     private val store: ProfileStore,
-    private val insulin: Insulin,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val rh: ResourceHelper,
@@ -27,7 +25,12 @@ class ProfileSwitchAction(
 ) : SmsAction(pumpCommand = true) {
 
     override suspend fun run() {
-        val iCfg = insulin.iCfg          // use Current running iCfg, changing iCfg with Automation not allowed
+        // Keep whatever insulin is in force — a remote command must not change it. The requester is not in front of
+        // the phone, so with nothing in force there is nobody to ask: reply with the reason instead of substituting.
+        val iCfg = profileFunction.getRunningOrRequestedICfg() ?: run {
+            smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin)))
+            return
+        }
         if (profileFunction.createProfileSwitch(
                 profileStore = store,
                 profileName = profileName,

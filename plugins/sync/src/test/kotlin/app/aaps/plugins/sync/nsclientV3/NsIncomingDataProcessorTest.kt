@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.nsclientV3
 
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
@@ -25,6 +26,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
 import org.json.JSONObject
@@ -69,7 +71,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             preferences = preferences,
             dateUtil = dateUtil,
             nsClient = nsClient,
-            insulin = insulin,
+            profileFunction = profileFunction,
             profileRepository = profileRepository,
             storeDataForDb = storeDataForDb,
             config = config,
@@ -198,6 +200,36 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             amount == 2.5 && timestamp == bolusTime
         })
     }
+
+    // A record uploaded by an older AAPS or a non-AAPS client carries no iCfg, and BS.iCfg is non-null — so the
+    // choice is guess or discard, and discarding loses the user's history on a restore. The running profile is
+    // the best available answer.
+    @Test
+    fun `bolus arriving without an iCfg is stamped with the running profile's insulin`() {
+        val treatments = listOf<NSTreatment>(bolusWithoutICfg())
+
+        processor.processTreatments(treatments, doFullSync = false)
+
+        verify(storeDataForDb).addToBoluses(argThat { iCfg == someICfg })
+    }
+
+    // The fresh-install full sync: nothing is in force yet because the very profile switches that would
+    // establish it are arriving in this same batch. Falls back to the seeded default rather than dropping.
+    @Test
+    fun `bolus arriving without an iCfg falls back to the seeded default when nothing is in force`() {
+        whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(null))
+        val treatments = listOf<NSTreatment>(bolusWithoutICfg())
+
+        processor.processTreatments(treatments, doFullSync = false)
+
+        verify(storeDataForDb).addToBoluses(argThat { iCfg == InsulinType.OREF_RAPID_ACTING.iCfg })
+    }
+
+    private fun bolusWithoutICfg() = NSBolus(
+        identifier = "legacy_bolus", date = now - T.mins(20).msecs(), insulin = 2.5, utcOffset = null, isValid = true,
+        eventType = EventType.CORRECTION_BOLUS, notes = null, pumpId = null, endId = null, pumpType = null,
+        pumpSerial = null, type = NSBolus.BolusType.NORMAL, isBasalInsulin = false, iCfg = null
+    )
 
     @Test
     fun `processTreatments ignores carbs if preference is disabled`() {

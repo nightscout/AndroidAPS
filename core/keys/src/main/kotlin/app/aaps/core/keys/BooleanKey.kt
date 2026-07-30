@@ -73,7 +73,14 @@ enum class BooleanKey(
     BgSourceRandomBgRandomize("randombg_randomize", true, R.string.pref_title_random_bg_randomize, R.string.pref_summary_random_bg_randomize, defaultedBySM = true),
 
     ApsUseDynamicSensitivity("use_dynamic_sensitivity", false, R.string.pref_title_aps_use_dynamic_sensitivity, R.string.pref_summary_aps_use_dynamic_sensitivity, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
-    ApsUseAutosens("openapsama_useautosens", true, R.string.pref_title_aps_use_autosens, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsUseAutosens(
+        "openapsama_useautosens", true, R.string.pref_title_aps_use_autosens, defaultedBySM = true,
+        // Hidden only while the active APS both offers dynamic sensitivity and has it enabled.
+        // A plain negativeDependency on ApsUseDynamicSensitivity would also hide it on algorithms
+        // whose screens never show that toggle (AMA, AutoISF), with no way to reveal it (issue #4482).
+        visibility = ElementVisibility { !(it.apsOffersDynamicSensitivity && it.preferences.get(ApsUseDynamicSensitivity)) },
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     ApsUseSmb("use_smb", true, R.string.pref_title_aps_use_smb, R.string.pref_summary_aps_use_smb, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsUseSmbWithHighTt(
         "enableSMB_with_high_temptarget",

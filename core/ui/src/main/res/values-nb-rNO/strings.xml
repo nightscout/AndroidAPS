@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Velg én. Bare én kan være aktiv om gangen.</string>
     <string name="configbuilder_pick_many_hint">Velg de som gjelder.</string>
     <string name="configbuilder_no_selection_warning">Ingen plugin er valgt i denne kategorien.</string>
+    <string name="configbuilder_switch_confirmation_title">Bytt plugin?</string>
+    <string name="configbuilder_switch_confirmation">Dette vil deaktivere %1$s og aktivere %2$s.</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
     <string name="no_compose_preferences">Ingen innstillinger tilgjengelig for denne plugin</string>
@@ -117,6 +119,12 @@
     <string name="carbs">Karbo</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
+    <string name="profile_switch_no_insulin">Kan ikke bytte profil: Ingen insulin er i bruk, og ingen er valgt.</string>
+    <string name="profile_switch_select_insulin_hint">Ingen insulin er i bruk ennå. Velg insulinet du bruker, slik at dette profilbyttet kan registrere det.</string>
+    <string name="insulin_activation_failed">Insulinet ble ikke byttet. Det forrige insulinet er fortsatt i bruk.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Insulinet ble ikke byttet: %1$s. Det forrige insulinet er fortsatt i bruk.</string>
+    <string name="insulin_activation_unconfirmed">Kunne ikke bekrefte insulinbyttet. Kontroller hvilket insulin som er aktivt i profilen før du doserer.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet ble heller ikke byttet.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
     <string name="units_label">Enheter</string>
@@ -923,6 +931,12 @@
     <string name="add">Legg til</string>
     <string name="remove">Fjern</string>
     <string name="reorder">Endre rekkefølge</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Flytt tidligere</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Flytt senere</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Vis detaljer</string>
+    <string name="presets_changed_reorder_aborted">Forhåndsinnstillingene ble endret et annet sted. Den nye rekkefølgen ble ikke lagret.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posisjon %1$d av %2$d</string>
     <string name="status">Status</string>
     <string name="pump_actions">Pumpehandlinger</string>
     <string name="tempbasal_button">Midlertidig basal</string>

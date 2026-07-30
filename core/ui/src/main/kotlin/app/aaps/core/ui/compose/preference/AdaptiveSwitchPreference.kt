@@ -11,13 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.BooleanKeyWithChangeGuard
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.dialogs.OkDialog
 
 /**
@@ -26,6 +23,8 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
  * @param titleResId Optional title resource ID. If 0 or not provided, uses booleanKey.titleResId
  * @param summaryResId Optional summary resource ID. If null, uses booleanKey.summaryResId
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
+ *
+ * @see AdaptiveSwitchPreferencePreview
  */
 @Composable
 fun AdaptiveSwitchPreferenceItem(
@@ -97,17 +96,6 @@ fun AdaptiveSwitchPreferenceItem(
             title = stringResource(R.string.error),
             message = message,
             onDismiss = { guardMessage = null }
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AdaptiveSwitchPreferencePreview() {
-    PreviewTheme {
-        AdaptiveSwitchPreferenceItem(
-            booleanKey = BooleanKey.OverviewKeepScreenOn
         )
     }
 }

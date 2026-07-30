@@ -7,13 +7,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.ui.compose.scenes.SceneIconPicker
 
+/**
+ * @see NameIconStepPreview
+ */
 @Composable
 internal fun NameIconStep(
     state: SceneWizardViewModel.WizardState,
@@ -49,19 +50,6 @@ internal fun NameIconStep(
         SceneIconPicker(
             selectedKey = state.icon,
             onIconSelected = onSetIcon
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun NameIconStepPreview() {
-    MaterialTheme {
-        NameIconStep(
-            state = previewState,
-            onSetName = {}, onSetIcon = {},
-            onBack = {}, onFinish = {}
         )
     }
 }

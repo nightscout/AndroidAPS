@@ -12,18 +12,64 @@
     <!-- AAPSClient -->
     <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <string name="authorized_clients_title">Clienți autorizați</string>
+    <string name="authorized_clients_add">Adăugați un client</string>
+    <string name="authorized_clients_comm_switch_title">Permiteți controlul clientului</string>
+    <string name="authorized_clients_comm_switch_summary">Permiteți clienților să trimită comenzi semnate prin Nightscout. Dezactivați pentru a opri comunicarea fără a-i elimina.</string>
+    <string name="authorized_clients_state_active">Activ</string>
+    <string name="authorized_clients_state_pending">În așteptare</string>
+    <string name="authorized_clients_last_seen">Văzut ultima dată %1$s</string>
+    <string name="authorized_clients_never_seen">Niciodată utilizat</string>
+    <string name="authorized_clients_pending_expires_in">Asocierea expiră în %1$ss</string>
+    <string name="authorized_clients_empty_title">Niciun client autorizat</string>
+    <string name="authorized_clients_empty_subtitle">Asociați un client pentru a-i permite să trimită comenzi dispozitivului principal.</string>
+    <string name="authorized_clients_name_dialog_title">Client nou</string>
+    <string name="authorized_clients_name_placeholder">Numele dispozitivului</string>
+    <string name="authorized_clients_delete_dialog_title">Revocați accesul?</string>
+    <string name="authorized_clients_delete_dialog_message">%1$s nu va mai putea să trimită comenzi.</string>
+    <string name="authorized_clients_pin_dialog_title">Asociați client</string>
+    <string name="authorized_clients_pin_instructions">Introduceți acest PIN pe dispozitivul client. Codul este valid pentru o singură asociere.</string>
+    <string name="authorized_clients_pin_expires_in">Expiră în %1$ss</string>
+    <string name="authorized_clients_pin_done">Finalizat</string>
+    <string name="authorized_clients_pin_publishing">Se trimite oferta de asociere la Nightscout…</string>
+    <string name="authorized_clients_pin_published">Oferta de asociere este pregătită pentru Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Nu s-a putut încărca oferta de asociere către Nightscout.</string>
+    <string name="authorized_clients_pin_retry">Reîncercați</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_title">Asociați cu dispozitivul principal</string>
+    <string name="pair_with_master_pin_entry_title">Introduceți codul PIN de asociere</string>
+    <string name="pair_with_master_pin_entry_message">Deschideți secțiunea Clienți Autorizați pe dispozitivul principal pentru a adăuga acest client. Introduceți codul PIN format din 8 cifre care este afișat acolo.</string>
+    <string name="pair_with_master_pin_entry_label">PIN din 8 cifre</string>
+    <string name="pair_with_master_pin_entry_submit">Asociați</string>
+    <string name="pair_with_master_fetching">Se caută asocierea...</string>
+    <string name="pair_with_master_confirm_title">Asociați cu acest dispozitiv principal?</string>
+    <string name="pair_with_master_confirm_master">Dispozitiv principal: %1$s</string>
+    <string name="pair_with_master_confirm_warning">După asociere, acest dispozitiv principal va putea trimite comenzi semnate către aceste dispozitiv.</string>
+    <string name="pair_with_master_confirm_pair">Asociați</string>
+    <string name="pair_with_master_error_title">Nu poate fi asociat</string>
+    <string name="pair_with_master_error_wrong_pin">Nu a fost găsită nicio asociere pentru acel PIN. Verificați codul PIN de pe dispozitivul principal și încercați din nou.</string>
+    <string name="pair_with_master_error_ambiguous_pin">Au fost găsite mai multe asocieri care corespund acelui PIN. Cereți dispozitivului principal să genereze un PIN nou și reîncercați.</string>
+    <string name="pair_with_master_error_expired">Această asociere a expirat. Generați un PIN nou pe dispozitivul principal.</string>
+    <string name="pair_with_master_error_network">Nu se poate ajunge la Nightscout. Verificați conexiunea și încercați din nou.</string>
+    <string name="pair_with_master_retry">Încercați din nou</string>
+    <string name="pair_with_master_already_paired_title">Deja asociat</string>
+    <string name="pair_with_master_already_paired_master">Momentan asociat cu dispozitivul principal %1$s. Pentru a introduce un PIN nou, opriți mai întâi asocierea curentă.</string>
+    <string name="pair_with_master_unpair">Dezasociați</string>
+    <string name="pair_with_master_sending">Se trimite mesajul de asociere…</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="clientcontrol_orphan_notification">Dispozitivul principal AAPS nu mai recunoaște acest dispozitiv. Deschideți pagina Gestionare → Asociați cu dispozitivul principal pentru a re-asocia.</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Administrați acum</string>
     <string name="queue">Coadă:</string>
+    <string name="status_label">Stare:</string>
     <string name="clear_log">Ștergeți istoricul</string>
     <string name="full_sync">Sincronizare completă</string>
     <string name="full_sync_comment">Sincronizare completă? Poate dura multe ore şi până la final nu veți vedea date noi în NS.</string>
     <string name="ns_sync_options">Sincronizare</string>
     <string name="ns_alarm_options">Opțiuni alarmare</string>
+    <string name="ns_remote_control_options">Telecomandă</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Dacă este activată, încărcările vor merge către serverele de testare în loc de cele obișnuite</string>
     <string name="title_tidepool_dev_servers">Folosiți serverele Integration (test)</string>
@@ -31,6 +77,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Înregistrați datele la Tidepool</string>
     <string name="upload_now">Încărcați acum</string>
+    <string name="tidepool_purge_data">Ștergeți toate datele</string>
+    <string name="tidepool_purge_data_confirm">Ștergeți TOATE datele AAPS încărcate în Tidepool? Această acțiune nu poate fi anulată. Folosiți-o pentru a elimina datele corupte de o versiune mai veche, apoi rulați \"Sincronizare completă\" pentru a re-încărca.</string>
     <string name="not_connected">Neconectat</string>
     <string name="read_only">Doar vizualizare</string>
     <string name="working">În lucru</string>
@@ -110,6 +158,7 @@
     <string name="full_xdrip_sync_comment">Sincronizare completă? Poate dura ceva timp și până la finalizare nu vor exista date noi în xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Vă rugăm să încercați din nou.</string>
     <string name="wear_action_loop_state_invalid">Stare de buclă solicitată nevalidă</string>
+    <string name="wear_action_running_mode_title">Mod de rulare</string>
     <string name="garmin_request_key">Solicitare cheie</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicator SMS</string>

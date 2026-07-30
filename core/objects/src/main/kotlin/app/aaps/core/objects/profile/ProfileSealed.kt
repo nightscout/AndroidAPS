@@ -337,7 +337,7 @@ sealed class ProfileSealed(
         toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
 
     override fun getIsfMgdl(caller: String): Double =
-        if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
+        if (aps?.usingDynamicIsf() ?: error("APS not defined"))
             aps.getIsfMgdl(this, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
         else getProfileIsfMgdl()
 
@@ -345,7 +345,7 @@ sealed class ProfileSealed(
         if (config.AAPSCLIENT) {
             processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
         } else {
-            if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
+            if (aps?.usingDynamicIsf() ?: error("APS not defined"))
                 aps.getAverageIsfMgdl(timestamp, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
             else toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
         }

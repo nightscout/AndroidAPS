@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -120,7 +119,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     private val profileRepository: ProfileRepository,
     private val commandQueue: CommandQueue,
     private val loop: Loop,
@@ -691,7 +689,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                             percentage = finalPercentage,
                             receivedSms = receivedSms,
                             store = store,
-                            insulin = insulin,
                             profileFunction = profileFunction,
                             dateUtil = dateUtil,
                             rh = rh,

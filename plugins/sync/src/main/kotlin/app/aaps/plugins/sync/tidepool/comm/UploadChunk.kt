@@ -166,6 +166,12 @@ class UploadChunk @Inject constructor(
     private fun isSuspend(tbr: TB): Boolean =
         tbr.type == TB.Type.PUMP_SUSPEND || tbr.type == TB.Type.EMULATED_PUMP_SUSPEND
 
+    // A scheduled (no-TBR) gap enclosing [start] reaches back at most to the previous profile block, and the
+    // profile always has a 00:00 block, so ~1 day bounds it (26h leaves margin for a DST fall-back day). A
+    // temp basal straddling [start] reaches back to its own start, handled separately via the TBR look-back.
+    private val basalBlockLookBack = T.hours(26).msecs()
+    private val basalTbrLookBack = T.days(2).msecs()
+
     /**
      * Builds a continuous, non-overlapping basal timeline for [start]..[end]:
      *  - intervals with an active temporary basal -> `automated` (or `suspend` for pump suspends)
@@ -174,29 +180,43 @@ class UploadChunk @Inject constructor(
      * Segments are split where the profile (scheduled) rate changes or the active profile switches,
      * so each record carries a single correct rate. Tidepool renders the basal graph from these
      * events, so without the `scheduled` segments the profile basal line would not be visible.
+     *
+     * **Chunk invariance (idempotency).** Tidepool deduplicates `basal` records by their start time, so a
+     * segment's emitted start must depend only on the data, never on the upload window edges. The walk is
+     * therefore anchored on the real boundary that encloses [start] (the active temp basal's start, else the
+     * previous profile block) and every segment whose end is still <= [start] is dropped: the first emitted
+     * segment begins byte-identically to how the previous chunk rendered that same interval. The last segment
+     * is still clamped to [end] (we never emit past `now-3h`); the next chunk re-emits it in full from the
+     * same anchored start, so Tidepool replaces the clamped copy instead of orphaning it. Consequence:
+     * `get(t0,t1)` followed by `get(t1,t2)` leaves the same server state as `get(t0,t2)`.
      */
     private suspend fun getBasals(start: Long, end: Long): List<BasalElement> {
         if (end <= start) return emptyList()
-        // Include TBRs that started before the window but may still be active at start (covers the longest allowed TBR).
-        val tbrList = persistenceLayer
-            .getTemporaryBasalsStartingFromTimeToTime(max(0L, start - T.days(2).msecs()), end, true)
-            .filter { it.timestamp + it.duration > start }
+        // Include TBRs that started before the window but may still be active in it (covers the longest TBR).
+        val tbrs = persistenceLayer
+            .getTemporaryBasalsStartingFromTimeToTime(max(0L, start - basalTbrLookBack), end, true)
             .sortedBy { it.timestamp }
+        // Anchor the walk on the boundary that encloses [start]: a temp basal straddling it reaches back to
+        // its own start; a scheduled gap only to the previous profile block (<= basalBlockLookBack). The walk
+        // itself resolves the exact boundary from here, so this only has to be an early-enough lower bound.
+        val activeAtStart = tbrs.lastOrNull { start >= it.timestamp && start < it.timestamp + it.duration }
+        val anchor = max(0L, min(start - basalBlockLookBack, activeAtStart?.timestamp ?: Long.MAX_VALUE))
+        val tbrList = tbrs.filter { it.timestamp + it.duration > anchor }
         val profileSwitchStarts = persistenceLayer
-            .getEffectiveProfileSwitchesFromTimeToTime(start, end, true)
+            .getEffectiveProfileSwitchesFromTimeToTime(anchor, end, true)
             .map { it.timestamp }
-            .filter { it in (start + 1) until end }
+            .filter { it in (anchor + 1) until end }
             .sorted()
         // Split at running-mode changes so a single segment never spans an open<->closed loop transition;
         // the delivery type of a no-TBR (profile-rate) interval depends on whether the loop was closed there.
         val runningModeStarts = persistenceLayer
-            .getRunningModesFromTimeToTime(start, end, true)
+            .getRunningModesFromTimeToTime(anchor, end, true)
             .map { it.timestamp }
-            .filter { it in (start + 1) until end }
+            .filter { it in (anchor + 1) until end }
             .sorted()
 
         val results = LinkedList<BasalElement>()
-        var cursor = start
+        var cursor = anchor
         while (cursor < end) {
             val profile = profileFunction.getProfile(cursor)
             // Latest-starting TBR active at cursor wins (a newer TBR supersedes an overlapping older one).
@@ -214,7 +234,8 @@ class UploadChunk @Inject constructor(
             if (boundary <= cursor) break
             val duration = boundary - cursor
 
-            when {
+            // Skip the pre-window part of the anchored walk; only emit segments that reach into [start, end).
+            if (boundary > start) when {
                 activeTbr != null && isSuspend(activeTbr)        ->
                     results.add(BasalElement.pumpSuspend(cursor, duration, activeTbr.timestamp, dateUtil))
 

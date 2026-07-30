@@ -6,7 +6,6 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -19,6 +18,7 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,7 +37,6 @@ class PumpWithConcentrationImplTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var constraintsChecker: ConstraintsChecker
-    @Mock lateinit var insulin: Insulin
     @Mock lateinit var pump: Pump
     @Mock lateinit var pumpEnactResult: PumpEnactResult
     @Mock lateinit var effectiveProfile: EffectiveProfile
@@ -54,16 +53,29 @@ class PumpWithConcentrationImplTest : TestBase() {
         // Feature-2 last-resort guard queries the overall max; default to no effective cap.
         whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(Double.MAX_VALUE, aapsLogger))
         whenever(constraintsChecker.getMaxExtendedBolusAllowed()).thenReturn(ConstraintObject(Double.MAX_VALUE, aapsLogger))
-        sut = PumpWithConcentrationImpl(aapsLogger, activePlugin, profileFunction, constraintsChecker, Provider { pumpEnactResult }, insulin)
+        sut = PumpWithConcentrationImpl(aapsLogger, activePlugin, profileFunction, constraintsChecker, Provider { pumpEnactResult })
     }
 
     private suspend fun setupConcentration(concentration: Double) {
-        whenever(insulin.iCfg).thenReturn(ICfg("Test", 0L, 0L, concentration))
+        whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(ICfg("Test", 0L, 0L, concentration)))
         whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
     }
 
     private fun setupU100() {
-        whenever(insulin.iCfg).thenReturn(ICfg("Test", 0L, 0L, 1.0))
+        whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(ICfg("Test", 0L, 0L, 1.0)))
+    }
+
+    // Nothing in force (pre-first-profile-switch): the identity, so the driver receives exactly the requested
+    // amount rather than one scaled by an insulin the user never chose.
+    @Test
+    fun `deliverTreatment with no insulin in force passes the amount through unscaled`() = runBlocking<Unit> {
+        whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(null))
+        val dbi = DetailedBolusInfo().apply { insulin = 5.0; bolusType = BS.Type.NORMAL }
+        whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
+
+        sut.deliverTreatment(dbi)
+
+        verify(pump).deliverTreatment(argThat { insulin == 5.0 })
     }
 
     // --- deliverTreatment tests ---

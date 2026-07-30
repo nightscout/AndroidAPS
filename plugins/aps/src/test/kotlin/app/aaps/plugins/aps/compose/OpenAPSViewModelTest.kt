@@ -54,6 +54,11 @@ internal class OpenAPSViewModelTest {
     @Test
     fun onRefresh_setsRefreshingState() {
         whenever(apsPlugin.lastAPSResult).thenReturn(null)
+        // init's updateState() takes the no-result path and builds OpenAPSUiState(statusMessage = rh.gs(...)).
+        // Without this stub rh.gs returns null (mock default) -> non-null-param NPE inside the Unconfined init
+        // coroutine; the standalone scope has no leaked-coroutine check, so it escapes this test and trips
+        // "UncaughtExceptionsBeforeTest" in whatever runTest runs next in the same fork.
+        whenever(rh.gs(R.string.not_available_full)).thenReturn("N/A")
 
         val sut = viewModel()
         sut.onRefresh()

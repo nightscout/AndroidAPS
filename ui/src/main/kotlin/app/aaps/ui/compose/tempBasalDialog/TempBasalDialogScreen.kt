@@ -35,17 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
@@ -108,8 +106,12 @@ fun TempBasalDialogScreen(
     )
 }
 
+/**
+ * @see TempBasalDialogPercentPreview
+ * @see TempBasalDialogAbsolutePreview
+ */
 @Composable
-private fun TempBasalDialogContent(
+internal fun TempBasalDialogContent(
     uiState: TempBasalDialogUiState,
     onBasalPercentChange: (Double) -> Unit,
     onBasalAbsoluteChange: (Double) -> Unit,
@@ -223,53 +225,5 @@ private fun TempBasalDialogContent(
 
             Spacer(modifier = Modifier.height(8.dp))
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun TempBasalDialogPercentPreview() {
-    MaterialTheme {
-        TempBasalDialogContent(
-            uiState = TempBasalDialogUiState(
-                basalPercent = 100.0,
-                durationMinutes = 60.0,
-                isPercentPump = true,
-                maxTempPercent = 200.0,
-                tempPercentStep = 10.0,
-                tempDurationStep = 60.0,
-                tempMaxDuration = 720.0,
-            ),
-            onBasalPercentChange = {},
-            onBasalAbsoluteChange = {},
-            onDurationChange = {},
-            onNavigateBack = {},
-            onConfirmClick = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun TempBasalDialogAbsolutePreview() {
-    MaterialTheme {
-        TempBasalDialogContent(
-            uiState = TempBasalDialogUiState(
-                basalAbsolute = 0.85,
-                durationMinutes = 60.0,
-                isPercentPump = false,
-                maxTempAbsolute = 10.0,
-                tempAbsoluteStep = 0.05,
-                tempDurationStep = 60.0,
-                tempMaxDuration = 720.0,
-            ),
-            onBasalPercentChange = {},
-            onBasalAbsoluteChange = {},
-            onDurationChange = {},
-            onNavigateBack = {},
-            onConfirmClick = {}
-        )
     }
 }

@@ -12,9 +12,23 @@ import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerReservoirLevelTest : TriggerTestBase() {
 
+    /** The reservoir reading is converted with the in-force insulin's concentration. */
+    private suspend fun givenRunningInsulin() {
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+    }
+
+    @Test fun shouldNotRunWithoutInsulinInUse() = runTest {
+        whenever(pumpPluginWithConcentration.reservoirLevel).thenReturn(MutableStateFlow(PumpInsulin(6.0)))
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
+
+        // No insulin in force → no correct unit conversion, so the trigger must not fire rather than guess.
+        val t = TriggerReservoirLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        assertThat(t.shouldRun()).isFalse()
+    }
+
     @Test fun shouldRunTest() = runTest {
         whenever(pumpPluginWithConcentration.reservoirLevel).thenReturn(MutableStateFlow(PumpInsulin(6.0)))
-        whenever(insulin.iCfg).thenReturn(someICfg)
+        givenRunningInsulin()
 
         var t: TriggerReservoirLevel = TriggerReservoirLevel(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()

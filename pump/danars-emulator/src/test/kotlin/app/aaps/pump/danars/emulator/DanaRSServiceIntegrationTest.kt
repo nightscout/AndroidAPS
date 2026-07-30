@@ -196,7 +196,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
             danaRSPlugin, bleEncryption, pumpSync, dateUtil, preferences,
             configBuilder, notificationManager, emulatorTransport
         ).apply {
-            messageTimeoutMs = 500 // Emulator responds instantly; short timeout catches races faster
+            messageTimeoutMs = 5000 // Prod default; a tighter budget times out spuriously under CI CPU starvation
         }
 
         // Create service and wire all dependencies

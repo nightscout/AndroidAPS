@@ -165,4 +165,5 @@
         <item quantity="one">Alerta Pod: %1$s</item>
         <item quantity="other">Alertas Pod: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Fin de vida del Pod</string>
 </resources>

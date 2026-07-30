@@ -61,6 +61,10 @@
     <string name="pref_single_target">Objetivo único</string>
     <string name="pref_wizard_percentage">Porcentaje en calculadora</string>
     <string name="pref_complication_tap_action">Acción al tocar la complicación</string>
+    <string name="pref_complication_bg_graph_hours">Rango de tiempo del gráfico de glucemia</string>
+    <string name="duration_1_hour">1 hora</string>
+    <string name="duration_3_hours">3 horas</string>
+    <string name="duration_6_hours">6 horas</string>
     <string name="pref_unicode_in_complications">Símbolos Unicode en complicaciones</string>
     <string name="pref_version">Versión:</string>
     <string name="pref_moreWatchfaceSettings">Más ajustes de la esfera del reloj</string>
@@ -106,7 +110,7 @@
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
     <string name="action_minutes_format">%1$d min</string>
     <string name="ecarbs_start_format">%1$d min</string>
-    <string name="action_confirm_timeshift">Desplazamiento temporal: %1$s</string>
+    <string name="action_confirm_timeshift">Desplazamiento de hora: %1$s</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_insulin_units">Insulina [U]</string>
     <string name="action_preset_1">Botón 1</string>
@@ -114,7 +118,7 @@
     <string name="action_preset_3">Botón 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift_hours">Intervalo de tiempo\n[horas]</string>
+    <string name="action_timeshift_hours">Desplazamiento de hora\n[horas]</string>
     <string name="bolus_progress">Progreso del bolo</string>
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
@@ -204,6 +208,12 @@
     <string name="tile_action_2">Acción 2</string>
     <string name="tile_action_3">Acción 3</string>
     <string name="tile_action_4">Acción 4</string>
+    <string name="tile_scene_1">Escena 1</string>
+    <string name="tile_scene_2">Escena 2</string>
+    <string name="tile_scene_3">Escena 3</string>
+    <string name="tile_scene_4">Escena 4</string>
+    <string name="tile_scene_auto">Automático</string>
+    <string name="tile_scene_unavailable">No disponible</string>
     <string name="datalayer_notification_title">Servicio de primer plano de capa de datos</string>
     <string name="datalayer_notification_text">APS se está ejecutando en primer plano. Para ocultar la notificación, ve a Opciones de desarrollador > Notificaciones de la aplicación > Aplicaciones de reloj permitidas, selecciona AAPS y desactiva la notificación del canal \"Data Layer Foreground Service\"</string>
     <string name="on">ENCENDIDO</string>
@@ -214,6 +224,7 @@
     <string name="complication_blood_glucose_large">Glucemia (grande)</string>
     <string name="complication_blood_glucose_ext1">Glocosa en sangre Ext1</string>
     <string name="complication_blood_glucose_ext2">Glucosa en sangre Ext2</string>
+    <string name="complication_bg_graph">Gráfico BG</string>
     <string name="complication_br_cob_iob">BR, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Tasa Basal, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">Tasa Basal, CoB &amp; IoB Ext2</string>
@@ -237,12 +248,12 @@
     <string name="action_running_mode_selected">Modo de funcionamiento solicitado</string>
     <string name="title_activity_disconnect_pump">Desconectar bomba</string>
     <string name="title_activity_suspend_loop">Suspender lazo</string>
-    <string name="wizard_carbs_format">%1$d g carbs</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Enviado</string>
-    <string name="contacting_master">Contactando con el maestro…</string>
+    <string name="contacting_master">Contactando con el máster…</string>
     <string name="contacting_master_unknown">Estado desconocido — comprueba el teléfono</string>
     <string name="tile_settings">Ajustes de tarjetas</string>
     <string name="loop_status_error">Error al cargar el estado del lazo</string>
@@ -282,4 +293,21 @@
     <string name="confirm">Confirmar</string>
     <string name="request">Petición</string>
     <string name="constraint_applied">¡Restricción aplicada!</string>
+    <string name="wizard_total_insulin">Insulina total</string>
+    <string name="wizard_calculation">Cálculo</string>
+    <string name="wizard_settings_format">Ratio: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">Glucosa</string>
+    <string name="wizard_result_bg_tt">Glucosa (OT: %1$s)</string>
+    <string name="wizard_result_trend">Tendencia 15 min</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Nueva IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Carbos (%1$d g)</string>
+    <string name="wizard_result_subtotal">Subtotal</string>
+    <string name="wizard_result_correction">Corrección</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

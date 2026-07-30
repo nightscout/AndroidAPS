@@ -142,7 +142,7 @@ fun ImportSettingsScreen(
 }
 
 @Composable
-private fun ImportFilePickerContent(
+internal fun ImportFilePickerContent(
     state: ImportStep.FilePicker,
     prefFileList: FileListProvider,
     onFileClick: (ImportFileItem) -> Unit,
@@ -395,7 +395,7 @@ private fun SourceBadge(source: ImportSource) {
 }
 
 @Composable
-private fun ImportReviewContent(
+internal fun ImportReviewContent(
     state: ImportStep.Review,
     rxBus: RxBus,
     onMasterPasswordChanged: (String) -> Unit,

@@ -6,10 +6,11 @@ on:
       tagName:
         description: 'Select AAPS Version'
         required: true
-        default: '3.4.2.3'
+        default: '3.4.2.4'
         type: choice
         options:
           # ── 3.4.x (JDK 21) ──────────────────────────────
+          - 3.4.2.4
           - 3.4.2.3
           - 3.4.2.2
           - 3.4.2.1
@@ -361,6 +362,8 @@ jobs:
     name: Cleanup Old Workflow Runs
     needs: build
     if: always()
+    permissions:
+      actions: write
     uses: ./.github/workflows/cleanup-workflow-runs.yml
     with:
       workflow_name: 'AAPS CI'

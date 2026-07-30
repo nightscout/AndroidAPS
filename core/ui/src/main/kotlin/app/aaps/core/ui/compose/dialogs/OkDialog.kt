@@ -3,7 +3,6 @@ package app.aaps.core.ui.compose.dialogs
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -13,10 +12,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * A simple alert dialog with a title, message, and OK button.
@@ -25,6 +22,8 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * @param message The message to display (supports HTML)
  * @param onDismiss Called when dialog is dismissed
  * @param icon Optional icon displayed above the title
+ *
+ * @see OkDialogPreview
  */
 @Composable
 fun OkDialog(
@@ -85,17 +84,4 @@ fun OkDialog(
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun OkDialogPreview() {
-    MaterialTheme {
-        OkDialog(
-            title = "Information",
-            message = "Operation completed successfully.",
-            onDismiss = {}
-        )
-    }
 }

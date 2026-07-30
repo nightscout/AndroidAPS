@@ -1,14 +1,15 @@
 package app.aaps.ui.compose.overview.chips
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
+/**
+ * @see IobCobChipsRowPreview
+ * @see IobCobChipsRowCarbsReqPreview
+ */
 @Composable
 fun IobCobChipsRow(
     iobUiState: IobUiState,
@@ -73,31 +74,5 @@ fun IobCobChipsRow(
                 x += placeable.width + if (i < placeables.lastIndex) spacingPx else 0
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IobCobChipsRowPreview() {
-    MaterialTheme {
-        IobCobChipsRow(
-            iobUiState = IobUiState(text = "1.25 U", iobTotal = 1.25),
-            cobUiState = CobUiState(text = "24g", cobValue = 24.0),
-            onIobChipClick = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IobCobChipsRowCarbsReqPreview() {
-    MaterialTheme {
-        IobCobChipsRow(
-            iobUiState = IobUiState(text = "1.25 U", iobTotal = 1.25),
-            cobUiState = CobUiState(text = "12g\n45 required", carbsReq = 45, cobValue = 12.0),
-            onIobChipClick = {}
-        )
     }
 }

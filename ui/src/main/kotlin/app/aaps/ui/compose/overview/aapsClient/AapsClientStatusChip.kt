@@ -9,15 +9,17 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.overview.graph.AapsClientLevel
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusItem
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Compact chip showing "Label: Value" with color-coded value.
  * Used in the collapsed state of [AapsClientStatusCard].
+ *
+ * @see AapsClientStatusChipInfoPreview
+ * @see AapsClientStatusChipWarnPreview
+ * @see AapsClientStatusChipUrgentPreview
  */
 @Composable
 fun AapsClientStatusChip(
@@ -48,55 +50,4 @@ fun AapsClientStatusChip(
         textAlign = TextAlign.Center,
         modifier = modifier
     )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AapsClientStatusChipInfoPreview() {
-    MaterialTheme {
-        AapsClientStatusChip(
-            item = AapsClientStatusItem(
-                label = "Pump",
-                value = "2 min ago",
-                level = AapsClientLevel.INFO,
-                dialogTitle = "Pump status",
-                dialogText = "Last connection: 2 min ago"
-            )
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AapsClientStatusChipWarnPreview() {
-    MaterialTheme {
-        AapsClientStatusChip(
-            item = AapsClientStatusItem(
-                label = "Uploader",
-                value = "48%",
-                level = AapsClientLevel.WARN,
-                dialogTitle = "Uploader",
-                dialogText = "Battery: 48%"
-            )
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AapsClientStatusChipUrgentPreview() {
-    MaterialTheme {
-        AapsClientStatusChip(
-            item = AapsClientStatusItem(
-                label = "OpenAPS",
-                value = "16 min ago",
-                level = AapsClientLevel.URGENT,
-                dialogTitle = "OpenAPS",
-                dialogText = "Last enacted: 16 min ago"
-            )
-        )
-    }
 }

@@ -42,4 +42,5 @@
     <string name="doyouwantresetstart">Bạn có muốn đặt lại mục tiêu khởi động không? Tiến trình của bạn có thể sẽ bị mất.</string>
     <string name="objectives_button_unfinish">Đặt lại trạng thái đã hoàn thành</string>
     <string name="objectives_button_unstart">Đặt lại trạng thái đã bắt đầu</string>
+    <string name="bg_doubled_lgs">Chế độ LGS do nguồn dữ liệu đường huyết có giá trị bị trùng lặp</string>
 </resources>

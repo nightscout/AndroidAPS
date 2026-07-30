@@ -237,7 +237,6 @@
     <string name="action_running_mode_selected">Mode de fonctionnement demandé</string>
     <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
     <string name="title_activity_suspend_loop">Suspendre la boucle</string>
-    <string name="wizard_carbs_format">%1$d g de glucides</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -296,6 +295,4 @@
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="wizard_carbs_with_time">%1$d g glucides (%2$s min)</string>
-    <string name="wizard_result_ecarbs">eGlucides %1$d g / %2$d h (+%3$d min)</string>
 </resources>

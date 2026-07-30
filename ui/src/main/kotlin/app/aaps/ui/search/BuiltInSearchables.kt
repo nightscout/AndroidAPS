@@ -7,8 +7,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.outlined.Palette
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
@@ -46,12 +46,14 @@ import javax.inject.Singleton
 class BuiltInSearchables @Inject constructor(
     private val rh: ResourceHelper,
     private val insulinManager: InsulinManager,
-    private val insulin: Insulin,
+    private val profileFunction: ProfileFunction,
     private val config: Config
 ) : SearchableProvider {
 
+    // Decides whether concentration-related preferences are worth surfacing in search, so an unknown
+    // running insulin simply contributes nothing — the configured list still speaks for itself.
     private fun hasNonU100Insulin(): Boolean =
-        insulinManager.insulins.any { it.concentration != 1.0 } || insulin.iCfg.concentration != 1.0
+        insulinManager.insulins.any { it.concentration != 1.0 } || profileFunction.runningICfg.value?.concentration?.let { it != 1.0 } == true
 
     /**
      * General preferences (units, language, simple mode, patient name, skin, dark mode)

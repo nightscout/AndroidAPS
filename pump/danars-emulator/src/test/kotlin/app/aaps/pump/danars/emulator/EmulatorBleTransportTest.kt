@@ -3,6 +3,7 @@ package app.aaps.pump.danars.emulator
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import com.google.common.truth.Truth.assertThat
+import java.util.Collections
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -20,12 +21,20 @@ class EmulatorBleTransportTest {
     private lateinit var transport: EmulatorBleTransport
     private lateinit var appEncryption: BleEncryption
     private val deviceName = "UHH00002TI"
-    private val responses = mutableListOf<ByteArray>()
+    // onCharacteristicChanged can fire from a background thread (the deferred v1 pairing key) concurrently
+    // with a synchronous response on the test thread, so the sink must be thread-safe — a plain ArrayList
+    // could drop an element or throw during a racing add.
+    private val responses = Collections.synchronizedList(mutableListOf<ByteArray>())
+
+    private var descriptorWrittenCount = 0
 
     private val listener = object : BleTransportListener {
         override fun onConnectionStateChanged(connected: Boolean) {}
         override fun onServicesDiscovered(success: Boolean) {}
-        override fun onDescriptorWritten() {}
+        override fun onDescriptorWritten() {
+            descriptorWrittenCount++
+        }
+
         override fun onCharacteristicChanged(data: ByteArray) {
             responses.add(data)
         }
@@ -39,6 +48,51 @@ class EmulatorBleTransportTest {
         transport.setListener(listener)
         appEncryption = BleEncryption()
         responses.clear()
+        descriptorWrittenCount = 0
+    }
+
+    /**
+     * BLEComm enables notifications twice per connection — eagerly in `connect()`, then again after service
+     * discovery. On hardware only the second completes: before discovery `uartRead` is null, so BleTransportImpl
+     * fabricates a bare characteristic whose CCCD lookup returns null and no `writeDescriptor` is issued. The
+     * emulator must match that, or the extra callback drives the pair wizard off its PIN step and hangs RSv3 pairing.
+     */
+    @Test
+    fun enableNotificationsBeforeDiscovery_doesNotCallBack() {
+        transport.gatt.connect("00:00:00:00:00:00")
+
+        transport.gatt.enableNotifications()
+
+        assertThat(descriptorWrittenCount).isEqualTo(0)
+    }
+
+    @Test
+    fun oneConnection_yieldsExactlyOneDescriptorWritten() {
+        transport.gatt.connect("00:00:00:00:00:00")
+
+        transport.gatt.enableNotifications()          // BLEComm.connect(), pre-discovery — no-op on hardware
+        transport.gatt.discoverServices()
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()          // findCharacteristic(), post-discovery — the real one
+
+        assertThat(descriptorWrittenCount).isEqualTo(1)
+    }
+
+    @Test
+    fun reconnect_registersNotificationsAgain() {
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()
+        transport.gatt.disconnect()
+
+        // A new connection must discover again before notifications register, exactly like the first.
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.enableNotifications()
+        assertThat(descriptorWrittenCount).isEqualTo(1)
+
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()
+        assertThat(descriptorWrittenCount).isEqualTo(2)
     }
 
     @Test
@@ -142,11 +196,14 @@ class EmulatorBleTransportTest {
         requestPairing()
         transport.awaitPendingCallbacks()
 
-        // The acknowledgement, then the key.
+        // Both the acknowledgement and the deferred key arrive. With a zero pairing delay the key thread
+        // and the synchronous ack race to append, so their order in `responses` is not fixed — assert the
+        // key is present by opcode rather than by position (the flake was the key landing at [0] and the
+        // ack, opcode PASSKEY_REQUEST=0xD1, at [1]).
         assertThat(responses).hasSize(2)
-        val key = appEncryption.getDecryptedPacket(responses[1])
+        val key = responses.mapNotNull { appEncryption.getDecryptedPacket(it) }
+            .singleOrNull { it[1] == BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte() }
         assertThat(key).isNotNull()
-        assertThat(key!![1]).isEqualTo(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte())
     }
 
     /**

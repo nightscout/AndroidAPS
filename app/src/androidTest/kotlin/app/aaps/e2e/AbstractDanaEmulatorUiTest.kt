@@ -16,7 +16,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -72,7 +72,7 @@ abstract class AbstractDanaEmulatorUiTest {
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var insulin: Insulin
+    @Inject lateinit var insulinManager: InsulinManager
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
@@ -220,8 +220,9 @@ abstract class AbstractDanaEmulatorUiTest {
             }
         ) { "The profile store never published '$PROFILE_NAME'" }
 
-        // Mirrors ActionProfileSwitch: an indefinite 100% switch to the seeded profile, on the
-        // running insulin config (this test does not vary insulin).
+        // Mirrors ActionProfileSwitch: an indefinite 100% switch to the seeded profile. This is the FIRST
+        // switch on a fresh install, so nothing is in force yet and there is no "current insulin" to inherit
+        // — the seeded catalogue entry is picked explicitly, which is what the user does when filling.
         val switch = runBlocking {
             profileFunction.createProfileSwitch(
                 profileStore = store,
@@ -233,7 +234,7 @@ abstract class AbstractDanaEmulatorUiTest {
                 action = Action.PROFILE_SWITCH,
                 source = Sources.Aaps,
                 listValues = emptyList(),
-                iCfg = insulin.iCfg
+                iCfg = insulinManager.insulins.first()
             )
         }
         checkNotNull(switch) {

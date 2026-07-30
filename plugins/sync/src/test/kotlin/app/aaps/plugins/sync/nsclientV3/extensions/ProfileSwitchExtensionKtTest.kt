@@ -20,7 +20,6 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        whenever(insulin.iCfg).thenReturn(insulinConfiguration)
     }
 
     @Test
@@ -37,7 +36,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             timeshift = 0,
             percentage = 100,
             duration = 0,
-            iCfg = insulin.iCfg.also {
+            iCfg = insulinConfiguration.also {
                 it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
@@ -48,7 +47,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil, insulin)!!
+        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
 
@@ -64,7 +63,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             timeshift = -3600000,
             percentage = 150,
             duration = 3600000,
-            iCfg = insulin.iCfg.also {
+            iCfg = insulinConfiguration.also {
                 it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
@@ -75,7 +74,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil, insulin)!!
+        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
     }
@@ -109,7 +108,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
     fun inflatedLegacyDurationIsIgnoredInFavourOfOriginalDuration() {
         val nineHours = 9 * 3600000L
         val parsed = nsProfileSwitch(duration = nineHours * 60000 * 60000, originalDuration = nineHours)
-            .toProfileSwitch(profileRepository, dateUtil, insulin)!!
+            .toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
         assertThat(parsed.duration).isEqualTo(nineHours)
     }
 
@@ -118,7 +117,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
     fun durationIsUsedWhenOriginalDurationIsMissing() {
         val nineHours = 9 * 3600000L
         val parsed = nsProfileSwitch(duration = nineHours, originalDuration = null)
-            .toProfileSwitch(profileRepository, dateUtil, insulin)!!
+            .toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
         assertThat(parsed.duration).isEqualTo(nineHours)
     }
 }

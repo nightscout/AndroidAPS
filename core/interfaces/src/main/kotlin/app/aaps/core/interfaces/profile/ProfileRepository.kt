@@ -66,6 +66,34 @@ interface ProfileRepository {
     suspend fun add(profile: SingleProfile): Result<Unit>
 
     /**
+     * Rearrange the profile list. [order] is the new arrangement expressed as *current* indices:
+     * `order[newIndex] == oldIndex`. It must be a permutation of the current indices — no profile
+     * is added, removed or duplicated here.
+     *
+     * Takes the whole arrangement rather than a `move(from, to)` on purpose: every persist bumps
+     * `LongNonKey.LocalProfileLastChange`, which the NSClient and xDrip sync selectors observe and
+     * answer with a full profile-store upload. A reorder session therefore commits **once**, on
+     * completion, instead of once per step. An [order] that is already the identity is a no-op
+     * and does not touch storage at all, so leaving a reorder UI without moving anything costs
+     * nothing.
+     *
+     * Note the list order is user-visible well beyond the profile carousel: it is the key order of
+     * the serialised store, so it also drives every picker fed by
+     * [app.aaps.core.interfaces.profile.ProfileStore.getProfileList] and the profile numbering of
+     * the SMS `PROFILE` command.
+     *
+     * Note this validates only that [order] is a permutation of the current *indices* — it cannot
+     * tell that the profiles those indices refer to are still the ones the caller built the order
+     * from. A caller that holds an order across suspension points must check profile identity
+     * itself before committing.
+     *
+     * @return [Result.success] if the list was rearranged (or the order was already correct), or
+     *         [Result.failure] with [IllegalArgumentException] if [order] is not a permutation of
+     *         the current indices (e.g. profiles were added or removed mid-reorder).
+     */
+    suspend fun reorder(order: List<Int>): Result<Unit>
+
+    /**
      * Validate the given [profile]. Pure CPU function of the profile + pump/hard-limit DI deps.
      * Non-suspend so it can be called from synchronous validator lambdas (e.g. setup wizard).
      */

@@ -2566,13 +2566,29 @@ class PersistenceLayerImpl @Inject constructor(
 
     private val nonFiniteFieldRegex = Regex("(\\w+)=(NaN|Infinity|-Infinity)\\b")
 
+    // Diagnostic only — must never let a reporting failure block persistence of the APSResult, so the whole
+    // body is wrapped in a log-and-swallow try/catch.
     private fun reportNonFiniteRtFields(apsResult: APSResult) {
-        val tokens = nonFiniteFieldRegex.findAll(apsResult.rawData().toString()).map { it.value }.toList()
-        if (tokens.isEmpty()) return
-        val msg = "APSResult RT non-finite algorithm=${apsResult.algorithm} ts=${apsResult.date} fields=$tokens"
-        aapsLogger.warn(LTag.APS, msg)
-        fabricPrivacy.logMessage(msg)
-        fabricPrivacy.logException(IllegalStateException(msg))
+        try {
+            val raw = apsResult.rawData().toString()
+            val tokens = nonFiniteFieldRegex.findAll(raw).map { it.value }.toList()
+            if (tokens.isEmpty()) return
+            // The Crashlytics report is only useful via its exception message, so the diagnostic inputs are
+            // folded into the message itself (not breadcrumbs). They are pulled from the RT already in hand:
+            // RT data-class fields appear as `name=value`, and CSF/CR are logged by the algorithm into
+            // consoleError as `CSF: x` / `CR: x`. Missing values render as "?" (e.g. non-AUTO_ISF algorithms).
+            fun rtField(name: String) = Regex("\\b$name=([^,)\\s]+)").find(raw)?.groupValues?.get(1) ?: "?"
+            fun logged(label: String) = Regex("$label:\\s*([^,\\]]+)").find(raw)?.groupValues?.get(1)?.trim() ?: "?"
+            val inputs = "variable_sens=${rtField("variable_sens")} sensitivityRatio=${rtField("sensitivityRatio")} " +
+                "CSF=${logged("CSF")} CR=${logged("CR")} eventualBG=${rtField("eventualBG")} " +
+                "targetBG=${rtField("targetBG")} bg=${rtField("bg")}"
+            val msg = "APSResult RT non-finite algorithm=${apsResult.algorithm} ts=${apsResult.date} fields=$tokens inputs=[$inputs]"
+            aapsLogger.warn(LTag.APS, "$msg rawData=$raw")
+            fabricPrivacy.logMessage(msg)
+            fabricPrivacy.logException(IllegalStateException(msg))
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.APS, "reportNonFiniteRtFields failed", e)
+        }
     }
 
     override suspend fun insertOrUpdateApsResult(apsResult: APSResult): PersistenceLayer.TransactionResult<APSResult> = withContext(Dispatchers.IO) {

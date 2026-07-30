@@ -7,7 +7,6 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -37,15 +36,16 @@ class PumpWithConcentrationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val constraintsChecker: ConstraintsChecker,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
-    private val insulin: Insulin
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>
 ) : PumpWithConcentration {
 
     @VisibleForTesting val activePumpInternal
         get() = activePlugin.activePumpInternal
 
     override fun selectedActivePump(): Pump = activePumpInternal
-    private val concentration: Double get() = insulin.iCfg.concentration
+    // Same rule as ConcentrationHelperImpl: the running profile's insulin, read synchronously because none of
+    // these conversions can suspend, and 1.0 (the conversion identity) when nothing is in force.
+    private val concentration: Double get() = profileFunction.runningICfg.value?.concentration ?: 1.0
 
     override fun isConfigured(): Boolean = activePumpInternal.isConfigured()
     override fun isInitialized(): Boolean = activePumpInternal.isInitialized()

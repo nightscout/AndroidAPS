@@ -5,24 +5,18 @@
 package app.aaps.core.ui.compose.preference
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import java.text.DecimalFormat
 
 /**
@@ -30,6 +24,8 @@ import java.text.DecimalFormat
  *
  * @param titleResId Optional title resource ID. If 0 or not provided, uses intKey.titleResId
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
+ *
+ * @see AdaptiveIntPreferencePreview
  */
 @Composable
 fun AdaptiveIntPreferenceItem(
@@ -76,16 +72,14 @@ fun AdaptiveIntPreferenceItem(
                 .fillMaxWidth()
                 .padding(theme.padding)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(effectiveTitleResId),
-                    style = theme.titleTextStyle,
-                    // Mirror Preference's disabled styling (the switch row greys the same way) since this
-                    // slider branch builds its own row instead of going through Preference.
-                    color = theme.titleColor.let { if (visibility.enabled) it else it.copy(alpha = theme.disabledOpacity) }
-                )
-                SyncBadge(intKey, Modifier.padding(start = 6.dp))
-            }
+            TextWithSyncBadge(
+                text = stringResource(effectiveTitleResId),
+                key = intKey,
+                style = theme.titleTextStyle,
+                // Mirror Preference's disabled styling (the switch row greys the same way) since this
+                // slider branch builds its own row instead of going through Preference.
+                color = theme.titleColor.let { if (visibility.enabled) it else it.copy(alpha = theme.disabledOpacity) }
+            )
             if (summary != null) {
                 Text(
                     text = summary,
@@ -128,17 +122,6 @@ fun AdaptiveIntPreferenceItem(
             },
             enabled = visibility.enabled,
             summary = { Text(summaryText) }
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AdaptiveIntPreferencePreview() {
-    PreviewTheme {
-        AdaptiveIntPreferenceItem(
-            intKey = IntKey.OverviewCarbsButtonIncrement1
         )
     }
 }

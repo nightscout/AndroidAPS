@@ -1533,5 +1533,13 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         ads.autosensDataTable = LongSparseArray<AutosensData>()
         ads.autosensDataTable.append(now - T.mins(20).msecs(), AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - T.mins(20).msecs() })
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)?.time).isEqualTo(now - 1)
+
+        // stored fallback itself too old (> 11 min): must NOT be handed out, even though a (stale) table entry exists
+        ads.storedLastAutosensResult = AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - T.mins(20).msecs() }
+        assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)).isNull()
+
+        // empty table + stale stored fallback → null
+        ads.autosensDataTable = LongSparseArray<AutosensData>()
+        assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)).isNull()
     }
 }

@@ -7,16 +7,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.AapsClientLevel
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusItem
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Expanded detail row for a single AapsClient status item.
  * Shows the title in bold + detail text below.
+ *
+ * @see AapsClientDetailRowInfoPreview
+ * @see AapsClientDetailRowUrgentPreview
  */
 @Composable
 fun AapsClientDetailRow(
@@ -40,40 +41,6 @@ fun AapsClientDetailRow(
             text = item.dialogText,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AapsClientDetailRowInfoPreview() {
-    MaterialTheme {
-        AapsClientDetailRow(
-            item = AapsClientStatusItem(
-                label = "Pump",
-                value = "2 min ago",
-                level = AapsClientLevel.INFO,
-                dialogTitle = "Pump status",
-                dialogText = "Last connection: 2 min ago\nReservoir: 120 U\nBattery: 85%"
-            )
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AapsClientDetailRowUrgentPreview() {
-    MaterialTheme {
-        AapsClientDetailRow(
-            item = AapsClientStatusItem(
-                label = "OpenAPS",
-                value = "16 min ago",
-                level = AapsClientLevel.URGENT,
-                dialogTitle = "OpenAPS",
-                dialogText = "Last enacted: 16 min ago"
-            )
         )
     }
 }

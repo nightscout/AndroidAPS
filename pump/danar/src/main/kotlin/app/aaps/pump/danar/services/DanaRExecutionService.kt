@@ -212,6 +212,11 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
             } else {
                 return false
             }
+            // Arm the 15s comm watchdog from bolus start. It was never initialised here, so a stale
+            // bolusProgressLastTimeStamp (from a previous bolus / epoch) made the check below fire on
+            // the first iteration → false "Communication stopped" aborting the bolus. Newer drivers
+            // (DanaRSService, MedtrumService, DiaconnG8Service) already do this.
+            danaPump.bolusProgressLastTimeStamp = System.currentTimeMillis()
             while (!danaPump.bolusStopped && !start.failed) {
                 SystemClock.sleep(100)
                 if (System.currentTimeMillis() - danaPump.bolusProgressLastTimeStamp > 15 * 1000L) { // if I didn't receive status for more than 15 sec expecting broken comm

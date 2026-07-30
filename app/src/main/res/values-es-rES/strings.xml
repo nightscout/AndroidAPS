@@ -11,4 +11,5 @@
     <string name="migrating_profile_switches">Migrando cambios de perfil…</string>
     <string name="migrating_effective_profile_switches">Migrando cambios de perfil vigentes…</string>
     <string name="migrating_boluses">Migrando bolos…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Los registros anteriores no tenían configuración de insulina ni un perfil activo, por lo que se utilizó %1$s para ellos. Comprueba la configuración de tu insulina; los registros ya migrados no se actualizarán posteriormente</string>
 </resources>

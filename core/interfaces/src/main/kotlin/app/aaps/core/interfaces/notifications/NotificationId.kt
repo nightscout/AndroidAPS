@@ -162,6 +162,7 @@ enum class NotificationId(
     TIME_OR_TIMEZONE_CHANGE(NORMAL, SYSTEM),
     NEW_VERSION_DETECTED(NORMAL, SYSTEM),
     VERSION_EXPIRE(IMPORTANT, SYSTEM),
+    INSULIN_MIGRATION_DEFAULT_USED(IMPORTANT, SYSTEM),
     IDENTIFICATION_NOT_SET(NORMAL, SYSTEM),
     MASTER_PASSWORD_NOT_SET(IMPORTANT, SYSTEM),
     AAPS_DIR_NOT_SELECTED(NORMAL, SYSTEM),
@@ -177,7 +178,10 @@ enum class NotificationId(
     SCENE_ENDED(INFO, AUTOMATION, allowMultiple = true),
     SCENE_CHAINED(INFO, AUTOMATION, allowMultiple = true),
     SCENE_CHAIN_SKIPPED(NORMAL, AUTOMATION, allowMultiple = true),
-    SCENE_CHAIN_ERROR(IMPORTANT, AUTOMATION, allowMultiple = true);
+    SCENE_CHAIN_ERROR(IMPORTANT, AUTOMATION, allowMultiple = true),
+
+    /** Bolus succeeded but the accompanying carbs could not be persisted — the user must re-enter them. */
+    CARBS_STORE_FAILED(URGENT, PUMP);
 
     companion object {
 

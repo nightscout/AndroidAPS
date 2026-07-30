@@ -4,6 +4,7 @@
     <string name="automation_enabled">Activat</string>
     <string name="automation_read_only">Doar citire</string>
     <string name="automation_new_rule">Regulă nouă</string>
+    <string name="automation_empty_desc">Creați o regulă pentru a automatiza acțiunile pe baza declanșatorilor.</string>
     <string name="automation_edit_rule">Editați regula</string>
     <string name="automation_discard_title">Renunțați la modificări?</string>
     <string name="automation_discard_message">Regula este incompletă și nu poate fi salvată. Renunțați la modificări?</string>

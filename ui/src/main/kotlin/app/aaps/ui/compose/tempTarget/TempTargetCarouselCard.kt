@@ -131,10 +131,14 @@ fun TempTargetCarouselCard(
                 tint = badgeColor
             )
 
+            // Padding and spacing are deliberately tighter than the 16/8 defaults: name + target +
+            // duration + badge needs a few dp more than a 200dp card leaves, and a Column measures
+            // its children in order, so the shortfall lands entirely on the last one — the badge was
+            // being clamped to half height and its text cut through the middle.
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -154,7 +158,7 @@ fun TempTargetCarouselCard(
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
                 // Target value (handle range vs single target)
                 val targetValueMgdl = preset?.targetValue ?: activeTT?.lowTarget ?: 100.0
@@ -177,7 +181,7 @@ fun TempTargetCarouselCard(
                     color = contentColor
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
                 // TT Reason badge
                 val reasonResId = getTTReasonStringRes(reason)

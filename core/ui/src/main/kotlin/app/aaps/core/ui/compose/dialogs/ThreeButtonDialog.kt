@@ -22,11 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * A confirmation dialog with three stacked, full-width actions: primary, secondary, cancel.
@@ -51,6 +49,8 @@ import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
  * @param onSecondary Called when secondary button is clicked
  * @param cancelLabel Optional override for cancel label; defaults to R.string.cancel
  * @param onDismiss Called when cancel is clicked or dialog is dismissed
+ *
+ * @see ThreeButtonDialogPreview
  */
 @Composable
 fun ThreeButtonDialog(
@@ -139,21 +139,4 @@ fun ThreeButtonDialog(
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
     )
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun ThreeButtonDialogPreview() {
-    MaterialTheme {
-        ThreeButtonDialog(
-            title = "End scene",
-            message = "Are you sure you want to end Warmup?",
-            primaryLabel = "Skip to Cooldown",
-            onPrimary = {},
-            secondaryLabel = "End",
-            onSecondary = {},
-            onDismiss = {}
-        )
-    }
 }

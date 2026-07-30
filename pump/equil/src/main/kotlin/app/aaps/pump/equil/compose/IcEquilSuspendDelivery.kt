@@ -1,27 +1,23 @@
 package app.aaps.pump.equil.compose
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 private val SuspendInnerColor = Color(0xFFFFBF00)
+
 private val OutlineColor = Color(0xFF9E9E9E)
 
 /**
  * Equil pump icon — suspend delivery (amber play/pause symbol inside pump outline).
  *
  * Replaces ic_equil_overview_suspend_delivery.xml
+ *
+ * @see IcEquilSuspendDeliveryPreview
  */
 val IcEquilSuspendDelivery: ImageVector by lazy {
     ImageVector.Builder(
@@ -154,18 +150,4 @@ val IcEquilSuspendDelivery: ImageVector by lazy {
             close()
         }
     }.build()
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IcEquilSuspendDeliveryPreview() {
-    Icon(
-        imageVector = IcEquilSuspendDelivery,
-        contentDescription = null,
-        modifier = Modifier
-            .padding(0.dp)
-            .size(48.dp),
-        tint = Color.Unspecified
-    )
 }

@@ -1,24 +1,19 @@
 package app.aaps.core.ui.compose.icons
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
 /**
  * Icon for Tidepool Plugin.
  * Converted from ic_tidepool.xml vector drawable.
  *
  * Bounding box: viewport 24x24
+ *
+ * @see IcPluginTidepoolPreview
  */
 val IcPluginTidepool: ImageVector by lazy {
     ImageVector.Builder(
@@ -82,18 +77,4 @@ val IcPluginTidepool: ImageVector by lazy {
             close()
         }
     }.build()
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun IcPluginTidepoolPreview() {
-    Icon(
-        imageVector = IcPluginTidepool,
-        contentDescription = "Tidepool",
-        modifier = Modifier
-            .size(128.dp)
-            .padding(16.dp),
-        tint = Color.Black
-    )
 }

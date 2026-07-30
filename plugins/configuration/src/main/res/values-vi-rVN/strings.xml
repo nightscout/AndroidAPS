@@ -36,6 +36,16 @@
     <string name="setupwizard_profile_info">Tạo cấu hình với các tỷ lệ basal, IC, ISF và giá trị mục tiêu của bạn. Bạn có thể thêm nhiều cấu hình sau.</string>
     <string name="setupwizard_permissions_info">AAPS cần quyền truy cập bộ nhớ để hoạt động đúng cách. Vui lòng cấp các quyền cần thiết bên dưới.</string>
     <string name="setupwizard_pump_riley_link_status">Trạng thái RileyLink:</string>
+    <string name="setupwizard_client_control_title">Điều khiển từ thiết bị khách</string>
+    <string name="setupwizard_client_control_info">Ghép nối các thiết bị khách để chúng có thể gửi các lệnh đã được ký xác thực đến thiết bị chính này thông qua Nightscout. Đây là phương thức mới được khuyến nghị để điều khiển AAPS từ xa.</string>
+    <string name="setupwizard_ns_receive_info">Tính năng nhận điều trị và dữ liệu trực tiếp từ Nightscout (phương thức kém an toàn hơn) hiện được tắt theo mặc định. Chỉ mở các cài đặt bên dưới nếu bạn vẫn cần sử dụng. Tính năng này cần thiết nếu bạn muốn nhập dữ liệu thông qua Nightscout hoặc các ứng dụng của bên thứ ba.</string>
+    <string name="setupwizard_open_ns_receive_settings">Chấp nhận dữ liệu từ Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Ghép nối thiết bị khách này với AAPS trên thiết bị chính để có thể gửi lệnh qua kênh bảo mật.</string>
+    <string name="setupwizard_pairing_ws_warning">Cần có kết nối WebSocket với Nightscout để ghép nối. Hãy quay lại bước trước và bật kết nối này trước.</string>
+    <string name="setupwizard_pairing_status_master">Thiết bị khách đã ghép nối: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Chưa có thiết bị khách nào được ghép nối</string>
+    <string name="setupwizard_pairing_status_client_paired">Đã ghép nối với thiết bị chính</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Chưa được ghép nối</string>
     <string name="readstatus">Đọc trạng thái</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Thiết bị này dường như không hỗ trợ loại trừ khỏi tối ưu pin – bạn có thể gặp các vấn đề về hiệu suất.</string>

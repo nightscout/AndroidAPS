@@ -60,7 +60,7 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         whenever(profileRepository.newDraft()).thenReturn(profile("LocalProfile1"))
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         whenever(protectionCheck.isLocked(any())).thenReturn(false)
-        sut = ProfileEditorViewModel(aapsLogger, rh, profileRepository, profileFunction, activePlugin, insulin, hardLimits, dateUtil, protectionCheck)
+        sut = ProfileEditorViewModel(aapsLogger, rh, profileRepository, profileFunction, activePlugin, hardLimits, dateUtil, protectionCheck)
     }
 
     @AfterEach

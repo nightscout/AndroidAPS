@@ -210,7 +210,6 @@ fun TreatmentsScreen(
                     R.string.carbs_and_bolus                           ->
                         BolusCarbsScreen(
                             viewModel = viewModel.bolusCarbsViewModel,
-                            insulin = viewModel.insulin,
                             setToolbarConfig = setConfig,
                             onNavigateBack = onNavigateBack
                         )
@@ -219,7 +218,6 @@ fun TreatmentsScreen(
                         ExtendedBolusScreen(
                             viewModel = viewModel.extendedBolusViewModel,
                             profileFunction = viewModel.profileFunction,
-                            activeInsulin = viewModel.insulin,
                             setToolbarConfig = setConfig,
                             onNavigateBack = onNavigateBack
                         )

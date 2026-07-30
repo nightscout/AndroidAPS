@@ -36,7 +36,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -138,7 +137,6 @@ class DataHandlerMobile @Inject constructor(
     private val dateUtil: DateUtil,
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
     private val uiInteraction: UiInteraction,
@@ -1349,13 +1347,21 @@ class DataHandlerMobile @Inject constructor(
         } ?: ""
         // Reservoir Level
         val pump = activePlugin.activePump
-        val iCfg = insulin.iCfg
         val maxReading = pump.pumpDescription.maxReservoirReading.toDouble()
-        val reservoir = pump.reservoirLevel.value.iU(iCfg.concentration).let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
+        // Concentration comes from the running profile, which owns the authoritative iCfg. With no
+        // profile there is no IU conversion to make, so the reservoir is reported as unavailable
+        // rather than converted at a guessed concentration.
+        val concentration = profile?.iCfg?.concentration
+        val reservoir = concentration?.let { c ->
+            pump.reservoirLevel.value.iU(c).let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
+        } ?: 0.0
         val reservoirString = if (reservoir > 0) decimalFormatter.to0Decimal(reservoir, rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)) else ""
         val resUrgent = preferences.get(IntKey.OverviewResCritical)
         val resWarn = preferences.get(IntKey.OverviewResWarning)
         val reservoirLevel = when {
+            // Unknown must not fall through the thresholds: a 0.0 reservoir is <= resUrgent and would
+            // raise a false critical-reservoir alarm on the watch.
+            concentration == null  -> 0
             reservoir <= resUrgent -> 2
             reservoir <= resWarn   -> 1
             else                   -> 0

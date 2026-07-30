@@ -16,11 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.icons.IcArrowFlat
 import app.aaps.core.ui.compose.icons.IcArrowFortyfiveDown
 import app.aaps.core.ui.compose.icons.IcArrowFortyfiveUp
@@ -32,6 +30,11 @@ import app.aaps.core.ui.compose.icons.IcAsBelowX
 import app.aaps.core.ui.compose.icons.IcAsX
 import app.aaps.core.ui.compose.navigation.color
 
+/**
+ * @see SensitivityChipAbovePreview
+ * @see SensitivityChipBelowDisabledPreview
+ * @see SensitivityChipIsfDownPreview
+ */
 @Composable
 internal fun SensitivityChip(
     state: SensitivityUiState,
@@ -112,41 +115,5 @@ private fun selectIsfArrow(fromStr: String, toStr: String): ImageVector {
         to > from -> IcArrowFortyfiveUp
         to < from -> IcArrowFortyfiveDown
         else      -> IcArrowFlat
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SensitivityChipAbovePreview() {
-    MaterialTheme {
-        SensitivityChip(
-            state = SensitivityUiState(asText = "112%", isfFrom = "5.5", isfTo = "6.8", ratio = 1.12, isEnabled = true, hasData = true),
-            onClick = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SensitivityChipBelowDisabledPreview() {
-    MaterialTheme {
-        SensitivityChip(
-            state = SensitivityUiState(asText = "88%", ratio = 0.88, isEnabled = false, hasData = true),
-            onClick = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun SensitivityChipIsfDownPreview() {
-    MaterialTheme {
-        SensitivityChip(
-            state = SensitivityUiState(isfFrom = "6.0", isfTo = "4.2", ratio = 1.15, isEnabled = true, hasData = true),
-            onClick = {}
-        )
     }
 }

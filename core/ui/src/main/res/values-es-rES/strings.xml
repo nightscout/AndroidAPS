@@ -3,9 +3,9 @@
     <string name="error_field_must_not_be_empty">El campo no debe estar vacío</string>
     <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Clientes autorizados</string>
-    <string name="authorized_clients_manage_desc">Gestiona los dispositivos clientes emparejados que controlan este maestro</string>
-    <string name="pair_with_master_manage_label">Emparejar con el maestro</string>
-    <string name="pair_with_master_manage_desc">Introduce el PIN de emparejamiento del maestro para permitir que este cliente envíe comandos firmados</string>
+    <string name="authorized_clients_manage_desc">Gestiona los dispositivos clientes emparejados que controlan este máster</string>
+    <string name="pair_with_master_manage_label">Emparejar con el máster</string>
+    <string name="pair_with_master_manage_desc">Introduce el PIN de emparejamiento del máster para permitir que este cliente envíe comandos firmados</string>
     <!--    General-->
     <string name="treatments">Tratamientos</string>
     <string name="treatments_history">Historial de tratamientos</string>
@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Elija uno. Solo puede haber uno activo a la vez</string>
     <string name="configbuilder_pick_many_hint">Seleccione todas las opciones que correspondan</string>
     <string name="configbuilder_no_selection_warning">No se ha seleccionado ningún complemento en esta categoría</string>
+    <string name="configbuilder_switch_confirmation_title">¿Cambiar de plugin?</string>
+    <string name="configbuilder_switch_confirmation">Esto deshabilitará %1$s y habilitará \%2$s</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
     <string name="no_compose_preferences">No hay preferencias disponibles para este complemento</string>
@@ -117,6 +119,12 @@
     <string name="carbs">Carbohidratos</string>
     <string name="invalid_profile">Perfil inválido</string>
     <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
+    <string name="profile_switch_no_insulin">No se puede cambiar de perfil: no hay ninguna insulina en uso y no se ha seleccionado ninguna</string>
+    <string name="profile_switch_select_insulin_hint">Todavía no hay ninguna insulina en uso. Selecciona la insulina que estás utilizando para que este cambio de perfil pueda registrarla</string>
+    <string name="insulin_activation_failed">La insulina no se ha cambiado. Se sigue utilizando tu insulina anterior</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">La insulina no se ha cambiado: %1$s. Se sigue utilizando tu insulina anterior</string>
+    <string name="insulin_activation_unconfirmed">No se ha podido confirmar el cambio de insulina. Comprueba qué insulina está activa en tu perfil antes de administrar la dosis</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nTampoco se ha cambiado la insulina</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Fecha</string>
     <string name="units_label">Unidades</string>
@@ -197,6 +205,7 @@
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
     <string name="percentage_label">Porcentaje</string>
+    <string name="timeshift_label">Desplazamiento de hora</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
@@ -383,9 +392,12 @@
     <string name="scene_no_profile_store">No hay un almacén de perfiles disponible</string>
     <string name="scene_no_actions">La escena no tiene acciones</string>
     <string name="scene_profile_not_found">No se encontró el perfil \"%1$s\"</string>
-    <string name="scene_lock_banner_master_offline">Dispositivo maestro inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
-    <string name="master_offline_banner">Dispositivo maestro inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
-    <string name="scene_lock_reason_master_offline">Maestro desconectado</string>
+    <string name="scene_lock_banner_master_offline">Dispositivo máster inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
+    <string name="scene_lock_banner_control_disabled">El máster ha desactivado el control remoto. Los controles de escena se reanudarán cuando se vuelva a activar en el máster</string>
+    <string name="master_offline_banner">Dispositivo máster inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
+    <string name="master_control_disabled_banner">El máster ha desactivado el control remoto. La edición estará deshabilitada hasta que se vuelva a activar en el máster</string>
+    <string name="scene_lock_reason_master_offline">Máster desconectado</string>
+    <string name="scene_lock_reason_control_disabled">Control remoto desactivado</string>
     <string name="scene_lock_reason_scene_active">Detén primero la escena en ejecución</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Establecer objetivo temporal</string>
@@ -395,25 +407,27 @@
     <string name="clientcontrol_action_update_settings">Actualizar ajustes</string>
     <string name="clientcontrol_action_deliver_bolus">Administrar bolo</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
-    <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un maestro</string>
-    <string name="clientcontrol_fail_not_reachable">El maestro está fuera de línea</string>
-    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">La configuración de la bomba no está sincronizada con el maestro. Por favor, inténtalo de nuevo</string>
-    <string name="clientcontrol_fail_no_reply">No hay respuesta del maestro a tiempo</string>
-    <string name="clientcontrol_fail_expired">El comando caducó antes de que el maestro lo aplicara</string>
+    <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un máster</string>
+    <string name="clientcontrol_fail_not_reachable">El máster está fuera de línea</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">La configuración de la bomba no está sincronizada con el máster. Por favor, inténtalo de nuevo</string>
+    <string name="clientcontrol_fail_no_reply">No hay respuesta del máster a tiempo</string>
+    <string name="clientcontrol_fail_expired">El comando caducó antes de que el máster lo aplicara</string>
     <string name="clientcontrol_fail_busy">Ya hay otra acción en progreso</string>
     <string name="clientcontrol_fail_send_failed">No se pudo conectar con Nightscout</string>
-    <string name="clientcontrol_fail_no_active_profile">El maestro no tiene ningún perfil activo sobre el que aplicarlo</string>
+    <string name="clientcontrol_fail_no_active_profile">El máster no tiene ningún perfil activo sobre el que aplicarlo</string>
     <string name="clientcontrol_fail_scene_not_found">La escena ya no existe</string>
+    <string name="clientcontrol_fail_site_entry_not_found">No se ha encontrado la entrada del sitio</string>
     <string name="clientcontrol_fail_scene_disabled">La escena está desactivada</string>
     <string name="clientcontrol_fail_partial">No se han podido aplicar algunas acciones</string>
-    <string name="clientcontrol_fail_execution">El maestro no ha podido aplicarlo</string>
+    <string name="clientcontrol_fail_execution">El máster no ha podido aplicarlo</string>
+    <string name="clientcontrol_fail_control_disabled">El control remoto está desactivado en el máster</string>
     <string name="clientcontrol_fail_no_pending_bolus">El bolo preparado ha caducado o ha sido reemplazado. Toca el botón de nuevo</string>
-    <string name="clientcontrol_fail_bolus_compute">El maestro no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
+    <string name="clientcontrol_fail_bolus_compute">El máster no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
     <string name="clientcontrol_fail_internal">Algo ha salido mal</string>
     <string name="clientcontrol_fail_unknown">El comando ha fallado</string>
     <string name="clientcontrol_unconfirmed_wear">Estado desconocido — comprueba el teléfono/Nightscout antes de volver a administrar un bolo</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Conexión perdida — estado de entrega desconocido</string>
-    <string name="clientcontrol_bolus_progress_stalled_body">Este teléfono ha dejado de recibir actualizaciones del maestro. Es posible que el bolo se siga administrando o que ya haya terminado. Cerrar este aviso solo lo oculta aquí, no detiene la bomba. Comprueba en el teléfono maestro la cantidad que realmente se ha administrado</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Este teléfono ha dejado de recibir actualizaciones del máster. Es posible que el bolo se siga administrando o que ya haya terminado. Cerrar este aviso solo lo oculta aquí, no detiene la bomba. Comprueba en el teléfono máster la cantidad que realmente se ha administrado</string>
     <string name="scene_revert_tt">Cancelar objetivo temporal</string>
     <string name="scene_revert_profile">Revertir cambio de perfil</string>
     <string name="scene_revert_smb_on">Volver a habilitar SMB</string>
@@ -917,8 +931,15 @@
     <string name="add">Añadir</string>
     <string name="remove">Eliminar</string>
     <string name="reorder">Reordenar</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Elemento anterior</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Elemento siguiente</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Mostrar detalles</string>
+    <string name="presets_changed_reorder_aborted">Los ajustes preestablecidos han cambiado en otro lugar. No se guardó el nuevo orden</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posición %1$d de \%2$d</string>
     <string name="status">Estado</string>
     <string name="pump_actions">Acciones de la bomba</string>
+    <string name="tempbasal_button">Basal temporal</string>
     <string name="extended_bolus_button">Bolo extendido</string>
     <string name="device_maintenance">Mantenimiento del dispositivo</string>
     <string name="from_label">Desde</string>

@@ -3,7 +3,6 @@ package app.aaps.ui.compose.treatments.viewmodels
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -32,7 +31,6 @@ class TreatmentsViewModel @Inject constructor(
     val profileUtil: ProfileUtil,
     val profileFunction: ProfileFunction,
     val activePlugin: ActivePlugin,
-    val insulin: Insulin,
     val profileRepository: ProfileRepository,
     val rh: ResourceHelper,
     val translator: Translator,

@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Chọn thư mục cho cài đặt ứng dụng và tệp nhật ký</string>
     <string name="permission_notifications_title">Thông báo</string>
     <string name="permission_notifications_description">Cần để hiển thị cảnh báo, báo động và trạng thái bơm</string>
+    <string name="permission_fsi_title">Cảnh báo toàn màn hình</string>
+    <string name="permission_fsi_description">Cần thiết để báo động có thể bật sáng màn hình và hiển thị toàn màn hình khi điện thoại đang khóa</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

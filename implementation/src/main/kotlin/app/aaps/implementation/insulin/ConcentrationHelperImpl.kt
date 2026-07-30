@@ -2,9 +2,9 @@ package app.aaps.implementation.insulin
 
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
@@ -21,7 +21,7 @@ import kotlin.math.min
 class ConcentrationHelperImpl @Inject constructor(
     val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
+    private val profileFunction: ProfileFunction,
     private val rh: ResourceHelper,
     private val decimalFormatter: DecimalFormatter,
     private val dateUtil: DateUtil
@@ -122,7 +122,16 @@ override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int,
 
     override fun bolusProgressString(delivered: PumpInsulin, total: Double, isPriming: Boolean): String = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_so_far, fromPump(delivered, isPriming), total)
 
+    /**
+     * Concentration of the insulin the running profile is using. Every conversion in this class multiplies or
+     * divides by it, and none of them can suspend, so it reads the synchronous mirror.
+     *
+     * Falls back to 1.0 (U100) when nothing is in force. Unlike the sites that record an insulin onto a
+     * treatment, guessing here is safe: 1.0 is the identity for every conversion below, so the pump's own
+     * units pass through untouched rather than being scaled by an insulin the user never chose. It is only
+     * reachable before the first profile switch exists, when there is nothing to dose with anyway.
+     */
     override val concentration: Double
-        get() = insulin.iCfg.concentration
+        get() = profileFunction.runningICfg.value?.concentration ?: 1.0
 
 }

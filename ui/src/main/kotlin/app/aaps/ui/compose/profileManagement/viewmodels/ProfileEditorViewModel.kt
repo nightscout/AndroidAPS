@@ -5,7 +5,6 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -60,8 +59,8 @@ data class ProfileUiState(
     val isLocked: Boolean = false,
     val selectedTab: Int = 0,
     val units: String = GlucoseUnit.MGDL.displayLabel,
-    val supportsDynamicIsf: Boolean = false,
-    val supportsDynamicIc: Boolean = false,
+    val usingDynamicIsf: Boolean = false,
+    val usingDynamicIc: Boolean = false,
     val basalMin: Double = 0.01,
     val basalMax: Double = 10.0,
     val icMin: Double = 0.5,
@@ -92,7 +91,6 @@ class ProfileEditorViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val insulin: Insulin,
     private val hardLimits: HardLimits,
     val dateUtil: DateUtil,
     private val protectionCheck: ProtectionCheck
@@ -185,8 +183,8 @@ class ProfileEditorViewModel @Inject constructor(
                 isValid = profile != null && tabErrors.isEmpty(),
                 isLocked = isLocked,
                 units = currentUnits.displayLabel,
-                supportsDynamicIsf = aps?.supportsDynamicIsf() == true,
-                supportsDynamicIc = aps?.supportsDynamicIc() == true,
+                usingDynamicIsf = aps?.usingDynamicIsf() == true,
+                usingDynamicIc = aps?.supportsDynamicIc() == true,
                 basalMin = pumpDescription.basalMinimumRate,
                 basalMax = pumpDescription.basalMaximumRate.coerceAtMost(10.0),
                 icMin = hardLimits.minIC(),
@@ -452,8 +450,6 @@ class ProfileEditorViewModel @Inject constructor(
         // legacy "discard changes" semantics.
         viewModelScope.launch { profileRepository.reset() }
     }
-
-    fun getActiveInsulin() = insulin
 
     private fun SingleProfile.toState(): SingleProfileState {
         return SingleProfileState(

@@ -13,6 +13,7 @@ internal class TidepoolComposeContent(
     private val onLogout: () -> Unit,
     private val onUploadNow: () -> Unit,
     private val onFullSync: () -> Unit,
+    private val onPurge: () -> Unit,
     private val onClearLog: () -> Unit
 ) : ComposablePluginContent {
 
@@ -38,6 +39,7 @@ internal class TidepoolComposeContent(
             onLogout = onLogout,
             onUploadNow = onUploadNow,
             onFullSync = onFullSync,
+            onPurge = onPurge,
             onClearLog = onClearLog
         )
     }

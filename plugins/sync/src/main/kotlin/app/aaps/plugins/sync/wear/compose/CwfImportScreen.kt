@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.wear.compose
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,11 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 
+/**
+ * @see CwfImportContentPreview
+ */
 @Composable
 internal fun CwfImportContent(
     items: List<CwfImportItemState>,
@@ -126,43 +126,3 @@ private fun CwfImportItemCard(
         }
     }
 }
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun CwfImportContentPreview() {
-    MaterialTheme {
-        CwfImportContent(
-            items = listOf(
-                previewImportItem("AAPS V2", "AAPS_V2", true, 3, true),
-                previewImportItem("Digital Style", "digital_style", false, 0, false),
-                previewImportItem("Steampunk", "steampunk", true, 2, false)
-            ),
-            onItemClick = {}
-        )
-    }
-}
-
-@Suppress("SameParameterValue")
-private fun previewImportItem(
-    name: String,
-    fileName: String,
-    versionOk: Boolean,
-    prefCount: Int,
-    hasPrefAuth: Boolean
-) = CwfImportItemState(
-    cwfFile = app.aaps.core.interfaces.rx.weardata.CwfFile(
-        cwfData = app.aaps.core.interfaces.rx.weardata.CwfData("", mutableMapOf(), mutableMapOf()),
-        zipByteArray = ByteArray(0)
-    ),
-    name = name,
-    fileName = "Filename: $fileName.cwf",
-    author = "Author: Someone",
-    createdAt = "Created: 2025-01-15",
-    version = "Version: 1.0",
-    isVersionOk = versionOk,
-    prefCount = prefCount,
-    hasPrefAuthorization = hasPrefAuth,
-    watchfaceImage = null
-)

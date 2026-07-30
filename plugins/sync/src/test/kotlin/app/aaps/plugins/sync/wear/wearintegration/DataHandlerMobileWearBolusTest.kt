@@ -95,7 +95,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
             aapsSchedulers, context, rxBus, aapsLogger, rh, preferences, config,
             iobCobCalculator, processedTbrEbData, smbGlucoseStatusProvider, profileFunction, profileUtil,
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
-            constraintsChecker, activePlugin, insulin, commandQueue, fabricPrivacy, uiInteraction,
+            constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,
             persistenceLayer, importExportPrefs, decimalFormatter, pumpStatusProvider,
             ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor
         )

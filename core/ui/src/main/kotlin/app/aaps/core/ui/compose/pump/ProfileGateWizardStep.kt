@@ -14,13 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -42,6 +39,10 @@ interface ProfileGateStepHost {
     fun cancelGate()
 }
 
+/**
+ * @see ProfileGateHasStorePreview
+ * @see ProfileGateNoStorePreview
+ */
 @Composable
 fun ProfileGateWizardStep(host: ProfileGateStepHost) {
     val profiles by host.availableProfiles.collectAsStateWithLifecycle()
@@ -99,32 +100,4 @@ fun ProfileGateWizardStep(host: ProfileGateStepHost) {
             )
         }
     }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "ProfileGate - has profiles")
-@Composable
-private fun ProfileGateHasStorePreview() {
-    val host = object : ProfileGateStepHost {
-        override val availableProfiles = MutableStateFlow(listOf("Default", "Sport", "Sick"))
-        override val selectedProfile = MutableStateFlow<String?>("Default")
-        override fun selectProfile(name: String) {}
-        override fun activateSelectedProfile() {}
-        override fun cancelGate() {}
-    }
-    MaterialTheme { ProfileGateWizardStep(host) }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "ProfileGate - no store")
-@Composable
-private fun ProfileGateNoStorePreview() {
-    val host = object : ProfileGateStepHost {
-        override val availableProfiles = MutableStateFlow(emptyList<String>())
-        override val selectedProfile = MutableStateFlow<String?>(null)
-        override fun selectProfile(name: String) {}
-        override fun activateSelectedProfile() {}
-        override fun cancelGate() {}
-    }
-    MaterialTheme { ProfileGateWizardStep(host) }
 }

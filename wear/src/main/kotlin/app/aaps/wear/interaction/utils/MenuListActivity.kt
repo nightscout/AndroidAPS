@@ -60,6 +60,11 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
     protected abstract fun doAction(position: String)
     protected open fun provideTitleIcon(): Int? = null
 
+    /** Rebuilds the menu from [provideElements] — for items whose visibility is resolved asynchronously */
+    protected fun refreshElements() {
+        elements = provideElements()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disposable += rxBus

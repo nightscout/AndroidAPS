@@ -198,13 +198,13 @@
 \nBěžné značky jsou: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nTímto slibuji, že tyto léky neberu při používání AAPS nebo deaktivuji smyčku před užíváním těchto léků.</string>
     <string name="concentration_feature_label">Správa koncentrace inzulínu</string>
     <string name="u200_with_profile">Než AAPS začal podporovat koncentrace inzulínu, uživatelé používali U200 nastavením 50% profilu, aby rozpůlili všechny hodnoty. Které odpovědi jsou v tomto nastavení pravdivé?</string>
-    <string name="u200_with_profile_reports">Moje interní databáze AAPS a reporty z NS jsou chybné, všechny hodnoty (bolusy, dávky, TDD) musí být vynásobeny 2, aby ukazovaly skutečný stav, zejména pro lékaře a zdravotnický tým.</string>
+    <string name="u200_with_profile_reports">Moje interní databáze AAPS a reporty z NS jsou chybné, všechny hodnoty (bolusy, dávky, CDD) musí být vynásobeny 2, aby ukazovaly skutečný stav, zejména pro lékaře a zdravotnický tým.</string>
     <string name="u200_with_profile_pens">Nemusím řešit žádný přepočet mezi AAPS a perem, pokud použiji pero U200 k podání externího bolusu.</string>
     <string name="u200_with_profile_pens2">Ať už je pro externí bolus použito jakékoli pero (U100 nebo U200), musím pro každý externí bolus přepočítat mezi množstvím vypočítaným AAPS a množstvím, které si na peru zvolím.</string>
     <string name="switch_u200_profile">Používali jste provizorní řešení s 50% profilem a U200 a chcete přejít na novou funkci Koncentrace inzulínu. Které odpovědi jsou pravdivé?</string>
     <string name="switch_u200_profile_any_time">Mohu přepnout kdykoli, v pumpě již mám správný inzulín U200.</string>
     <string name="switch_u200_profile_ps">Musím si připravit dvakrát agresivnější profil (200 % oproti současnému výchozímu) a tento nový profil synchronizovat po další výměně Patche/zásobníku, když je vybrán inzulín U200.</string>
-    <string name="switch_u200_profile_dynisf">Musím vypnout funkci DynISF alespoň na týden, aby TDD bylo dokonale konzistentní se skutečnou hodnotou TDD vypočítanou v mezinárodních jednotkách.</string>
+    <string name="switch_u200_profile_dynisf">Musím vypnout funkci DynISF alespoň na týden, aby CDD byla dokonale konzistentní se skutečnou hodnotou CDD vypočítanou v mezinárodních jednotkách.</string>
     <string name="switch_u200_profile_mental">Po přepnutí budu muset být několik týdnů velmi opatrný, aby si můj mozek zvykl přemýšlet v mezinárodních jednotkách u bolusů, bazálních dávek a hodnot TDD.</string>
     <string name="switch_u100_u200">Aktuálně používáte U100 a plánujete přejít na jinou koncentraci pomocí nové funkce Koncentrace inzulínu. Co byste měli udělat?</string>
     <string name="switch_u100_u200_profile">Musím upravit svůj profil.</string>

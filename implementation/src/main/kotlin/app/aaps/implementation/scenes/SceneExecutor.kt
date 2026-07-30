@@ -21,10 +21,11 @@ import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -53,7 +54,6 @@ import app.aaps.core.ui.compose.formatMinutesAsDuration
 @Singleton
 class SceneExecutor @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val insulin: Insulin,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
@@ -68,7 +68,8 @@ class SceneExecutor @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileUtil: ProfileUtil,
     private val translator: Translator,
-    private val profileSwitchSilentGate: ProfileSwitchSilentGate
+    private val profileSwitchSilentGate: ProfileSwitchSilentGate,
+    private val notificationManager: NotificationManager
 ) {
 
     /** A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. */
@@ -350,9 +351,21 @@ class SceneExecutor @Inject constructor(
 
     /**
      * Dismiss the expired scene banner. No revert — everything already handled by onExpiry.
+     *
+     * Also clears the notifications this scene-end produced so confirming the banner tidies them
+     * away in one action: always the "Scene … ended" card ([NotificationId.SCENE_ENDED]), and — only
+     * when the scene actually performed a ProfileSwitch — the single-instance "Basal profile in pump
+     * updated" card ([NotificationId.PROFILE_SET_OK]) that its revert can raise. The profile card is
+     * meant to be silenced (#4959); the scoped dismiss here is a no-op when suppression works and a
+     * cleanup when it leaks. Reading the active state before [ActiveSceneManager.clearActive] is
+     * required — it is gone afterwards.
      */
     fun dismiss() {
+        val hadProfileSwitch = activeSceneManager.getActiveState()
+            ?.scene?.actions?.any { it is SceneAction.ProfileSwitch } == true
         activeSceneManager.clearActive()
+        notificationManager.dismiss(NotificationId.SCENE_ENDED)
+        if (hadProfileSwitch) notificationManager.dismiss(NotificationId.PROFILE_SET_OK)
     }
 
     private fun capturePriorSmb(scene: Scene): Boolean? {
@@ -418,7 +431,10 @@ class SceneExecutor @Inject constructor(
                     // Use the BASE profile name as fallback — getProfileName() returns the display name
                     // including temp-% suffix (e.g. "Test (60%)"), which doesn't exist in the profile store.
                     val profileName = action.profileName.ifEmpty { profileFunction.getOriginalProfileName() }
-                    if (store != null) {
+                    // The switch has to record an insulin. A scene runs unattended, so with nothing in force there is
+                    // nobody to ask — fail the action rather than stamp an arbitrary catalogue entry onto it.
+                    val iCfg = profileFunction.getRunningOrRequestedICfg()
+                    if (store != null && iCfg != null) {
                         // Scene-driven profile write: suppress the central "Basal profile in pump updated"
                         // notification for the pump write this insert triggers (issue #4959). createProfileSwitch
                         // wrote a PS row (and will emit) iff it returns non-null; silencedProfileWrite resets the
@@ -439,7 +455,7 @@ class SceneExecutor @Inject constructor(
                                     ValueWithUnit.Percent(action.percentage),
                                     ValueWithUnit.Minute(sceneDurationMinutes)
                                 ),
-                                iCfg = insulin.iCfg
+                                iCfg = iCfg
                             )
                         }
                         SceneExecutionResult.ActionResult(
@@ -448,8 +464,10 @@ class SceneExecutor @Inject constructor(
                             recordId = ps?.id,
                             errorMessage = if (ps == null) "createProfileSwitch returned null for '$profileName'" else null
                         )
-                    } else {
+                    } else if (store == null) {
                         SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiR.string.scene_no_profile_store))
+                    } else {
+                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiR.string.profile_switch_no_insulin))
                     }
                 }
 

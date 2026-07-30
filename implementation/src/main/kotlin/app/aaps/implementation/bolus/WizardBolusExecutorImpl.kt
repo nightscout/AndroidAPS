@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -55,6 +54,7 @@ import app.aaps.core.ui.compose.formatMinutesAsDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -75,7 +75,6 @@ class WizardBolusExecutorImpl @Inject constructor(
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
-    private val insulin: Insulin,
     private val iobCobCalculator: IobCobCalculator,
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
@@ -94,8 +93,8 @@ class WizardBolusExecutorImpl @Inject constructor(
 ) : WizardBolusExecutor {
 
     /**
-     * The consumed-once slot. [entry] is non-null only for a quick-wizard prepare (carb timing / super-bolus /
-     * eCarbs). [carbTimeMinutes]/[notes] are carried so a manual-wizard prepare (no entry) delivers identically.
+     * The consumed-once slot. `entry` is non-null only for a quick-wizard prepare (carb timing / super-bolus /
+     * eCarbs). `carbTimeMinutes`/`notes` are carried so a manual-wizard prepare (no entry) delivers identically.
      */
     private enum class BolusMode {
 
@@ -150,6 +149,31 @@ class WizardBolusExecutorImpl @Inject constructor(
     private fun evictStalePending() {
         val cutoff = dateUtil.now() - pendingTtlMs
         pending.keys.removeIf { it < cutoff }
+    }
+
+    private val lastPendingId = AtomicLong(0L)
+
+    /**
+     * Unique key for a parked batch.
+     *
+     * The key doubles as the park time ([evictStalePending] trims by it), so it stays a millisecond value — but
+     * `dateUtil.now()` alone is NOT unique under concurrency. The fill dialog, for one, fires its insulin activation,
+     * site change and cartridge change as three separate coroutines; two prepares landing in the same millisecond
+     * would share a key, so the second park overwrites the first. The first commit then applies the WRONG batch and
+     * the second is rejected as [WizardBolusExecutor.ConfirmResult.NoPending] — observed in the wild as a fill whose
+     * insulin switch silently didn't happen.
+     *
+     * Hand out a strictly increasing value instead. It still tracks the clock, running ahead only by the number of
+     * collisions inside one millisecond, so the TTL sweep is unaffected. The [pending] check additionally steps over
+     * keys parked by the callers that supply their own id (the wear wizard uses its `timeStamp`).
+     */
+    private fun nextPendingId(): Long {
+        while (true) {
+            val prev = lastPendingId.get()
+            var candidate = maxOf(dateUtil.now(), prev + 1)
+            while (pending.containsKey(candidate)) candidate++
+            if (lastPendingId.compareAndSet(prev, candidate)) return candidate
+        }
     }
 
     override fun setPending(insulin: Double, carbs: Int, bolusCalculatorResult: BCR?, bolusId: Long) {
@@ -343,6 +367,11 @@ class WizardBolusExecutorImpl @Inject constructor(
                 // Named switch: the target must exist in the MASTER's store (a client may relay a name the master resolves).
                 if (profileRepository.profile.value?.getSpecificProfile(psName) == null)
                     return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.scene_profile_not_found, psName))
+                // The switch has to record an insulin. Accept one the caller already asked the user for
+                // (fill/prime, activation), else the insulin in force. With neither, refuse rather than
+                // substitute — a named switch is reachable with nothing running (first activation, expired EPS).
+                if (ps.iCfg == null && profileFunction.getRunningOrRequestedICfg() == null)
+                    return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.profile_switch_no_insulin))
             } else if (profileFunction.getProfile() == null) {
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.no_profile_set))
             }
@@ -411,8 +440,8 @@ class WizardBolusExecutorImpl @Inject constructor(
         // Nothing to do after caps/clamps (e.g. negative carbs with no COB to remove): a no-op, NOT a delivery
         // error — the caller renders the neutral "no action selected" message, never the bolus-error title.
             return WizardBolusExecutor.PrepareResult.NoAction
-        val bolusId = dateUtil.now()
         evictStalePending()
+        val bolusId = nextPendingId()
         pending[bolusId] = PendingBolus(
             insulin = insulin, carbs = carbs, bcr = null, bolusId = bolusId, entry = entry,
             carbTimeMinutes = bolus?.carbsTimeOffsetMinutes ?: 0, notes = bolus?.notes, mode = BolusMode.FIXED,
@@ -721,13 +750,19 @@ class WizardBolusExecutorImpl @Inject constructor(
         buildTempTargetLines(localizeTtReason(tt.reason), tt.lowMgdl, tt.highMgdl, tt.durationMinutes, standalone)
 
     /**
-     * Apply a batch ProfileSwitch via the dialog-free domain path. [profileName] non-null → switch to that named
+     * Apply a batch ProfileSwitch via the dialog-free domain path. `profileName` non-null → switch to that named
      * profile from the master's store (a relayed/dialog switch); null → modify the currently active profile (wear / CPP).
      */
     private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources) {
         val psName = ps.profileName
         if (psName != null) {
             val store = profileRepository.profile.value ?: return
+            // Supplied by the caller that asked the user, else the insulin in force. prepare() refuses the
+            // batch when neither exists, so null here means the batch bypassed prepare — a bug, not a user state.
+            val iCfg = ps.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: run {
+                aapsLogger.error(LTag.CORE, "applyProfileSwitch: no insulin config available for '$psName' — prepare should have refused this batch")
+                return
+            }
             profileFunction.createProfileSwitch(
                 profileStore = store,
                 profileName = psName,
@@ -744,7 +779,7 @@ class WizardBolusExecutorImpl @Inject constructor(
                     ValueWithUnit.Hour(ps.timeShiftHours).takeIf { ps.timeShiftHours != 0 },
                     ValueWithUnit.Minute(ps.durationMinutes).takeIf { ps.durationMinutes != 0 }
                 ),
-                iCfg = profileFunction.getProfile()?.iCfg ?: insulin.iCfg
+                iCfg = iCfg
             )
         } else {
             profileFunction.createProfileSwitch(

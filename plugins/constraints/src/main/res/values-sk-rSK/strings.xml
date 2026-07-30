@@ -42,4 +42,5 @@
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="objectives_button_unfinish">Vymazanie dokončené</string>
     <string name="objectives_button_unstart">Vymazanie začaté</string>
+    <string name="bg_doubled_lgs">Režim LGS v dôsledku duplicitných hodnôt v zdroji glykémie</string>
 </resources>

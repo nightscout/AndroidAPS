@@ -1,9 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
@@ -12,11 +11,8 @@ import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import javax.inject.Inject
 
 class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
-
-    @Inject lateinit var insulin: Insulin
 
     var reservoirLevel: InputDouble = InputDouble(0.0, 0.0, 800.0, 1.0, DecimalFormat("1"))
     var comparator: Comparator = Comparator(rh)
@@ -37,7 +33,13 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override suspend fun shouldRun(): Boolean {
-        val iCfg = insulin.iCfg
+        // The reservoir reading is converted with the insulin's concentration, so the wrong insulin misreads it by
+        // the concentration ratio (U200 vs U100 = 2x) and fires — or fails to fire — at the wrong level. With nothing
+        // in force there is no correct conversion, so don't run rather than guess.
+        val iCfg = profileFunction.getRunningOrRequestedICfg() ?: run {
+            aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution, no insulin in use: " + friendlyDescription())
+            return false
+        }
         val actualReservoirLevel = activePlugin.activePump.reservoirLevel.value.iU(iCfg.concentration)
         if (comparator.value.check(actualReservoirLevel, reservoirLevel.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

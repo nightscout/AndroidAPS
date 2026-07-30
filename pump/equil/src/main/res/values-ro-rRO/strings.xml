@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">Rată bazală temporară %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Durata TBR trebuie să fie mai mare decât zero și un multiplu de %1$s minute.</string>
+    <string name="equil_basal_exceeds_max">Rata bazală a profilului %1$s U/h depășește valoarea maximă bazală a pompei %2$s U/h. Creșteți setarea valorii maxime a bazalei, apoi reconectați pompa.</string>
     <string name="equil_not_enough_insulin">Nu a rămas suficientă insulină în rezervor</string>
     <string name="equil_low_battery">Nivel scăzut al bateriei</string>
     <string name="equil_low_insulin">Nu a rămas suficientă insulină în rezervor</string>

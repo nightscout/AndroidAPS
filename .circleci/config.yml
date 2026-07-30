@@ -139,7 +139,22 @@ jobs:
             DEV=emulator-5554
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
-            for attempt in 1 2; do
+            for attempt in 1 2 3; do
+              # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
+              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
+              # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
+              # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
+              # immediate 2-attempt retry crashed twice into the same load spike, the settle is what makes the
+              # retry actually succeed. Bounded ~5 min so a genuinely stuck run still fails.
+              if [ "$attempt" -gt 1 ]; then
+                nc=$(nproc 2>/dev/null || echo 8)
+                for _ in $(seq 1 30); do
+                  la=$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)
+                  [ "${la:-99}" -lt "$((nc/2))" ] && break
+                  sleep 10
+                done
+              fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-A-$attempt.txt 2>&1 || true
@@ -165,7 +180,22 @@ jobs:
             DEV=emulator-5556
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
-            for attempt in 1 2; do
+            for attempt in 1 2 3; do
+              # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
+              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
+              # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
+              # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
+              # immediate 2-attempt retry crashed twice into the same load spike, the settle is what makes the
+              # retry actually succeed. Bounded ~5 min so a genuinely stuck run still fails.
+              if [ "$attempt" -gt 1 ]; then
+                nc=$(nproc 2>/dev/null || echo 8)
+                for _ in $(seq 1 30); do
+                  la=$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)
+                  [ "${la:-99}" -lt "$((nc/2))" ] && break
+                  sleep 10
+                done
+              fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-B-$attempt.txt 2>&1 || true
@@ -191,7 +221,22 @@ jobs:
             DEV=emulator-5558
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             RC=1
-            for attempt in 1 2; do
+            for attempt in 1 2 3; do
+              # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
+              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
+              # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
+              # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
+              # immediate 2-attempt retry crashed twice into the same load spike, the settle is what makes the
+              # retry actually succeed. Bounded ~5 min so a genuinely stuck run still fails.
+              if [ "$attempt" -gt 1 ]; then
+                nc=$(nproc 2>/dev/null || echo 8)
+                for _ in $(seq 1 30); do
+                  la=$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)
+                  [ "${la:-99}" -lt "$((nc/2))" ] && break
+                  sleep 10
+                done
+              fi
               adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true

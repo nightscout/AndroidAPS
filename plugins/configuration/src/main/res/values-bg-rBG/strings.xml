@@ -20,6 +20,7 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Използвай стойностите от вашето най-голямо хранене, което обикновено консумирате</string>
     <string name="syncinfotext">Синхронизирайте данни в облака. Можете да пропуснете тази част сега, но няма да можете да преминавате цели, докато не настроите Nightscout или Tidepool клиент.</string>
+    <string name="status_label">Статус:</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="profile">Профил</string>
     <string name="doprofileswitch">Смени профил</string>
@@ -35,6 +36,16 @@
     <string name="setupwizard_profile_info">Създайте профил с вашите базали, въгл. число, инсулинова чувствителност и цели. Можете да добавите други профили по-късно.</string>
     <string name="setupwizard_permissions_info">На AAPS му трябва разрешение да ползва паметта. Моля разрешете му всичко от изброените.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
+    <string name="setupwizard_client_control_title">Контрол от клиентско приложение</string>
+    <string name="setupwizard_client_control_info">Свързване на клиентско приложение, така че да може то да изпраща команди то главния телефон през Найтскаут. Това е най-новият и препърчан начин за отдалечен контрол.</string>
+    <string name="setupwizard_ns_receive_info">Приемане на лечения и данни от Nightscout (несигурен начин) е изключено по подразбиране. Отворете настройките долу само ако Ви трябва. Необходимо ако Ви трябва въвеждане на данни през Nightscout или друго приложение.</string>
+    <string name="setupwizard_open_ns_receive_settings">Приемане на данни от Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Свържете този клиент с главният ААПС, за да може да изпраща команди по сигурен начин.</string>
+    <string name="setupwizard_pairing_ws_warning">Нужна е Nightscout WebSocket връзка. Върнете се на предната стъпка и я разрешете.</string>
+    <string name="setupwizard_pairing_status_master">Свързани клиенти: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Няма свързани клиенти</string>
+    <string name="setupwizard_pairing_status_client_paired">Свързано с главния</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Още не е свързан</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>

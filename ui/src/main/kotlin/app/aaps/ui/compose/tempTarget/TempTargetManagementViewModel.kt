@@ -45,11 +45,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.abs
@@ -252,6 +254,147 @@ class TempTargetManagementViewModel @Inject constructor(
         _uiState.update { it.copy(currentCardIndex = index) }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Reorder ("sort") mode
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Working order while reorder mode is on, as `value[position] == originalPresetIndex`; null when
+     * the mode is off — which is also the flag the screen uses to decide it is sorting.
+     *
+     * Indices are into the **preset** list, not carousel pages: page 0 is the standalone active-TT
+     * card when there is one, and that card is not a preset at all.
+     */
+    private val _reorderOrder = MutableStateFlow<List<Int>?>(null)
+    val reorderOrder: StateFlow<List<Int>?> = _reorderOrder.asStateFlow()
+
+    /** Presets as they were when the mode was entered. See [commitReorder]. */
+    private var reorderPresets: List<TTPreset> = emptyList()
+
+    /**
+     * Original preset index of the card the carousel re-centres on when the mode is left: the last
+     * one moved, or the selected preset if nothing was moved.
+     */
+    private var reorderAnchor: Int = 0
+
+    /**
+     * True when reordering is possible at all: at least two presets, and at least two of them
+     * movable. With only the three built-ins there is nothing a user could rearrange.
+     */
+    fun canReorder(): Boolean = uiState.value.presets.count { it.isDeletable } > 1
+
+    fun enterReorderMode() {
+        val presets = uiState.value.presets
+        if (presets.size < 2) return
+        reorderPresets = presets
+        reorderAnchor = uiState.value.selectedPreset
+            ?.let { selected -> presets.indexOfFirst { it.id == selected.id } }
+            ?.takeIf { it >= 0 }
+            ?: presets.indexOfFirst { it.isDeletable }.coerceAtLeast(0)
+        _reorderOrder.value = List(presets.size) { it }
+    }
+
+    fun cancelReorder() {
+        _reorderOrder.value = null
+    }
+
+    /**
+     * Whether the preset currently sitting at [position] may change position.
+     *
+     * The built-in eating-soon / activity / hypo presets keep their places, so they are the ones
+     * that cannot move. Keyed on [TTPreset.isDeletable] rather than "the first three" because that
+     * is what actually distinguishes them — a fourth built-in would be covered automatically, and a
+     * custom preset that happens to share a reason would not be wrongly pinned.
+     *
+     * Read against the entry-time snapshot, so a preset list refreshed mid-session cannot un-pin
+     * anything half way through.
+     */
+    fun isReorderPositionMovable(position: Int): Boolean {
+        val order = _reorderOrder.value ?: return false
+        val original = order.getOrNull(position) ?: return false
+        return reorderPresets.getOrNull(original)?.isDeletable == true
+    }
+
+    /**
+     * Apply one move as remove-then-insert, not a swap, so a non-adjacent move shifts the items in
+     * between rather than scrambling them.
+     *
+     * Both ends must be movable: a pinned preset can neither be moved nor displaced. The carousel
+     * already hides those moves, but this is the source of truth.
+     *
+     * @return true if the order changed. The carousel follows the moved card only on true.
+     */
+    fun moveReorderItem(from: Int, to: Int): Boolean {
+        val current = _reorderOrder.value ?: return false
+        if (from == to || from !in current.indices || to !in current.indices) return false
+        if (!isReorderPositionMovable(from) || !isReorderPositionMovable(to)) return false
+        reorderAnchor = current[from]
+        _reorderOrder.value = current.toMutableList().apply { add(to, removeAt(from)) }
+        return true
+    }
+
+    /**
+     * Persist the working order and leave reorder mode.
+     *
+     * Commits once, here — not per move — because the preset list is stored as a single JSON blob on
+     * a bidirectionally synced preference, so every write is a full round trip to the other device.
+     *
+     * @return the **card index** to settle on (preset position plus the standalone active-TT card,
+     *         if present), or null if the commit was abandoned because the preset list changed
+     *         underneath us.
+     */
+    suspend fun commitReorder(): Int? {
+        val order = _reorderOrder.value ?: return null
+        // Resolved for both branches, so an undone move lands on the same card a committed one would.
+        val anchorPosition = order.indexOf(reorderAnchor).takeIf { it >= 0 } ?: 0
+        // Nothing moved — skip the write entirely so leaving the mode is free.
+        if (order.withIndex().all { (position, original) -> position == original }) {
+            _reorderOrder.value = null
+            return cardIndexOf(anchorPosition)
+        }
+        // The order is a list of indices, so it only means anything against the list it came from.
+        // A same-length replacement (presets synced in from the master) would otherwise be silently
+        // rearranged into an order the user never chose.
+        if (uiState.value.presets.map { it.id } != reorderPresets.map { it.id }) {
+            _reorderOrder.value = null
+            rxBus.send(
+                EventShowSnackbar(
+                    rh.gs(app.aaps.core.ui.R.string.presets_changed_reorder_aborted),
+                    EventShowSnackbar.Type.Error
+                )
+            )
+            return null
+        }
+        val reordered = order.map { reorderPresets[it] }
+        val expectedIds = reordered.map { it.id }
+        return try {
+            withContext(Dispatchers.IO) {
+                preferences.put(StringNonKey.TempTargetPresets, reordered.toJson())
+            }
+            // Hold the working order until the reloaded state carries the new arrangement — clearing
+            // immediately would render the pre-sort order at post-sort positions for a frame.
+            withTimeoutOrNull(PRESET_RELOAD_TIMEOUT_MS) {
+                uiState.first { state -> state.presets.map { it.id } == expectedIds }
+            }
+            _reorderOrder.value = null
+            val settleOn = cardIndexOf(anchorPosition)
+            updateCurrentCardIndex(settleOn)
+            settleOn
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.UI, "Failed to persist reordered temp target presets", e)
+            _reorderOrder.value = null
+            rxBus.send(EventShowSnackbar(e.message ?: "Failed to save presets", EventShowSnackbar.Type.Error))
+            null
+        }
+    }
+
+    /** Carousel page showing the preset at [presetPosition], accounting for the standalone active card. */
+    private fun cardIndexOf(presetPosition: Int): Int {
+        val state = uiState.value
+        val hasStandaloneActiveTT = state.activeTT != null && state.activePresetIndex == null
+        return if (hasStandaloneActiveTT) presetPosition + 1 else presetPosition
+    }
+
     /**
      * Select a preset by index and populate editor fields.
      * Skips if the same preset is already selected (e.g., after rotation).
@@ -429,14 +572,24 @@ class TempTargetManagementViewModel @Inject constructor(
         val defaults = getDefaultValuesForPreset(preset) ?: return false
         val (defaultTargetMgdl, defaultDurationMs) = defaults
 
-        // Convert current editor target (in user units) to mg/dL for comparison
-        val editorTargetMgdl = profileUtil.convertToMgdl(currentState.editorTarget, units)
-
-        // Compare with tolerance for floating point
-        val targetDiffers = abs(editorTargetMgdl - defaultTargetMgdl) > 0.01
+        val targetDiffers = editorTargetDiffers(defaultTargetMgdl, currentState.editorTarget)
         val durationDiffers = currentState.editorDuration != defaultDurationMs
 
         return targetDiffers || durationDiffers
+    }
+
+    /**
+     * Whether the editor's target differs from [storedMgdl] — compared at the precision the user can
+     * actually see.
+     *
+     * The editor holds a value that has already been rounded for display (0.1 mmol/L, or 1 mg/dL),
+     * so converting it back to mg/dL and comparing against full-precision storage reports a change
+     * nobody made: 90 mg/dL displays as 5.0 mmol/L, which converts back to 90.08 mg/dL. Round the
+     * stored value the same way instead, and compare in display units.
+     */
+    private fun editorTargetDiffers(storedMgdl: Double, editorTarget: Double): Boolean {
+        val storedForDisplay = roundForDisplay(profileUtil.fromMgdlToUnits(storedMgdl, units), units)
+        return abs(editorTarget - storedForDisplay) > DISPLAY_TARGET_EPSILON
     }
 
     /**
@@ -447,11 +600,7 @@ class TempTargetManagementViewModel @Inject constructor(
         val currentState = uiState.value
         val preset = currentState.selectedPreset ?: return false
 
-        // Convert current editor target (in user units) to mg/dL for comparison
-        val editorTargetMgdl = profileUtil.convertToMgdl(currentState.editorTarget, units)
-
-        // Compare with tolerance for floating point
-        val targetDiffers = abs(editorTargetMgdl - preset.targetValue) > 0.01
+        val targetDiffers = editorTargetDiffers(preset.targetValue, currentState.editorTarget)
         val durationDiffers = currentState.editorDuration != preset.duration
 
         // For custom presets, also check name changes
@@ -638,5 +787,22 @@ class TempTargetManagementViewModel @Inject constructor(
                 else                       -> Unit
             }
         }
+    }
+
+    companion object {
+
+        /**
+         * How long [commitReorder] waits for the reloaded preset list to carry the new order before
+         * leaving reorder mode anyway. A safety net only — the preference observer normally refreshes
+         * within a frame or two, and this exists so the mode cannot get stuck.
+         */
+        private const val PRESET_RELOAD_TIMEOUT_MS = 1_000L
+
+        /**
+         * Float-noise tolerance for comparing two targets already expressed in display units. Well
+         * below the smallest step the user can enter (0.1 mmol/L, 1 mg/dL), so it only absorbs
+         * conversion error — never a real edit.
+         */
+        private const val DISPLAY_TARGET_EPSILON = 0.001
     }
 }

@@ -80,9 +80,9 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
-import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
@@ -826,8 +826,19 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
     private suspend fun dataMigrations() {
         // Migrate to database 33 (ICfg)
+        //
+        // Goal: legacy rows predate ICfg, so they carry the `insulinEndTime = -1` sentinel and their IOB
+        // is computed from the clamped math floors in ICfg.iobCalcForTreatment — which under-counts IOB.
+        // Stamping them makes the insulin curve a property of the record, as v33 intends.
+        //
+        // The value must be the insulin those records were actually delivered with. Legacy preferences
+        // (below) reconstruct it; failing that the running profile owns the authoritative iCfg. Only when
+        // there is neither is a substitute used — declared to the user rather than guessed silently, and
+        // never taken from the insulin list, whose first entry is a positional accident, not "the current
+        // insulin". Note this is one-way: once stamped the sentinel is consumed and these records are not
+        // revisited, which is why the notification says so.
         val runningICfg = if (profileNameToDia.isEmpty())
-            profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
+            profileFunction.getRunningOrRequestedICfg() ?: substituteICfgForMigration()
         else {
             val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
                 profileNameToDia[profileName]
@@ -873,6 +884,33 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             )
         }
     }
+
+    /**
+     * Insulin config stamped onto legacy records when neither legacy preferences nor a running profile
+     * can tell us what was actually used: no active profile switch at first start, or — the case that
+     * matters — a running profile whose own row still carries the v33 sentinel.
+     *
+     * That second case is why this must not read the running profile unguarded. The SQL step of the
+     * migration stamps `insulinEndTime = -1` onto every pre-ICfg row *including the active one*, so
+     * reading it back yields a DIA of 0.0 and writes the sentinel straight back over itself. The rows stay
+     * unmigrated, the profile keeps reporting a zero DIA, and the APS hard-limit check aborts every loop
+     * cycle. [app.aaps.core.interfaces.profile.ProfileFunction.getRunningOrRequestedICfg] rejects an
+     * unusable [ICfg] so that path lands here instead — and because the repair re-runs on every start and
+     * still matches the sentinel rows, an install already broken this way heals on its next launch.
+     *
+     * Ultra-rapid: an 8h DIA is the same across every [InsulinType] template, so the only real choice is
+     * the peak. Concentration is 1.0 by construction, which is not a guess — these records predate
+     * concentration entirely, so 1.0 is the identity that leaves historical doses unscaled.
+     */
+    private fun substituteICfgForMigration(): ICfg =
+        InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg(rh.get()).also {
+            aapsLogger.warn(LTag.CORE, "Migration to DB 33: no profile and no legacy DIA, substituting ${it.insulinLabel}")
+            notificationManager.post(
+                id = NotificationId.INSULIN_MIGRATION_DEFAULT_USED,
+                rh.get().gs(R.string.insulin_migration_default_used, it.insulinLabel),
+                level = NotificationLevel.IMPORTANT
+            )
+        }
 
     private val timeDateReceiver = TimeDateOrTZChangeReceiver()
     private val networkReceiver = NetworkChangeReceiver()

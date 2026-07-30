@@ -35,18 +35,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
@@ -118,8 +116,11 @@ fun ExtendedBolusDialogScreen(
     )
 }
 
+/**
+ * @see ExtendedBolusDialogPreview
+ */
 @Composable
-private fun ExtendedBolusDialogContent(
+internal fun ExtendedBolusDialogContent(
     uiState: ExtendedBolusDialogUiState,
     onInsulinChange: (Double) -> Unit,
     onDurationChange: (Double) -> Unit,
@@ -214,28 +215,5 @@ private fun ExtendedBolusDialogContent(
 
             Spacer(modifier = Modifier.height(8.dp))
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun ExtendedBolusDialogPreview() {
-    MaterialTheme {
-        ExtendedBolusDialogContent(
-            uiState = ExtendedBolusDialogUiState(
-                insulin = 1.0,
-                durationMinutes = 30.0,
-                maxInsulin = 10.0,
-                minInsulin = 0.1,
-                extendedStep = 0.1,
-                extendedDurationStep = 30.0,
-                extendedMaxDuration = 720.0,
-            ),
-            onInsulinChange = {},
-            onDurationChange = {},
-            onNavigateBack = {},
-            onConfirmClick = {}
-        )
     }
 }

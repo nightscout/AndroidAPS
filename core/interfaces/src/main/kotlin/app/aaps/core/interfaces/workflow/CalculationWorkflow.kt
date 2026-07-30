@@ -32,6 +32,19 @@ interface CalculationWorkflow {
     fun stopCalculation(job: String, from: String)
 
     /**
+     * Block the caller until the data-producing (autosens/IOB/COB) stage of [job] has finished,
+     * bounded by an internal timeout so it can never hang the caller (e.g. the dosing path).
+     *
+     * Only the calculation stage is awaited, never the whole [job] chain: [MAIN_CALCULATION] also
+     * contains the loop-invoking post stage, so a loop-triggered caller waiting on the full chain
+     * would stall on the very worker running it. Returns immediately when nothing is calculating.
+     *
+     * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]
+     * @param reason for logging
+     */
+    fun waitForCalculationFinish(job: String, reason: String)
+
+    /**
      * Start calculation of data needed for displaying graphs
      *
      * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]

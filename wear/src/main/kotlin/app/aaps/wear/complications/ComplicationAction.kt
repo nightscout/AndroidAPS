@@ -47,6 +47,12 @@ enum class ComplicationAction {
     STATUS,
 
     /**
+     * Opens the loop status activity directly.
+     * Shows details of the most recent loop run.
+     */
+    LOOP_STATUS,
+
+    /**
      * Opens the temp target entry dialog.
      */
     TEMP_TARGET,

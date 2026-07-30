@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -47,7 +46,6 @@ internal class InsulinDialogViewModelTest {
     @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var activePlugin: ActivePlugin
-    @Mock private lateinit var activeInsulin: Insulin
     @Mock private lateinit var ch: ConcentrationHelper
     @Mock private lateinit var insulinManager: InsulinManager
     @Mock private lateinit var config: Config
@@ -84,7 +82,7 @@ internal class InsulinDialogViewModelTest {
         // ttTargetMgdl/ttDurationMinutes parse this preset string in init; "[]" -> empty -> use defaults.
         whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         sut = InsulinDialogViewModel(
-            constraintChecker, profileFunction, profileUtil, activePlugin, activeInsulin, ch, insulinManager,
+            constraintChecker, profileFunction, profileUtil, activePlugin, ch, insulinManager,
             config, automation, decimalFormatter, loop, preferences, rh, dateUtil, hardLimits, batchExecutor,
             rxBus, CoroutineScope(UnconfinedTestDispatcher())
         )

@@ -61,6 +61,10 @@
     <string name="pref_single_target">Single Target</string>
     <string name="pref_wizard_percentage">Calculator Percentage</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
+    <string name="pref_complication_bg_graph_hours">BG graph time range</string>
+    <string name="duration_1_hour">1 hour</string>
+    <string name="duration_3_hours">3 hours</string>
+    <string name="duration_6_hours">6 hours</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">More Watchface settings</string>
@@ -79,6 +83,11 @@
     <string name="menu_bg_graph">BG graph</string>
     <string name="menu_resync">Re-Sync</string>
     <string name="menu_prime_fill">Prime/Fill</string>
+    <string name="menu_install_watchface">Install watchface</string>
+    <string name="menu_installing_watchface">Installing watchface…</string>
+    <string name="watchface_installed_active">Watchface installed and set as active</string>
+    <string name="watchface_installed_select">Watchface installed, select it in the watch face picker</string>
+    <string name="watchface_install_failed">Watchface installation failed</string>
     <string name="menu_none">None</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
@@ -227,6 +236,7 @@
     <string name="key_simplify_ui" translatable="false">simplify_ui</string>
     <string name="key_dark" translatable="false">dark</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
+    <string name="key_complication_bg_graph_hours" translatable="false">complication_bg_graph_hours</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
@@ -277,6 +287,7 @@
     <string name="complication_blood_glucose_large">Blood Glucose (large)</string>
     <string name="complication_blood_glucose_ext1">Blood Glucose Ext1</string>
     <string name="complication_blood_glucose_ext2">Blood Glucose Ext2</string>
+    <string name="complication_bg_graph">BG Graph</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>

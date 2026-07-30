@@ -166,6 +166,22 @@ class UploadChunkBasalTest {
         assertThat(segments.last().start + segments.last().duration).isEqualTo(end)
     }
 
+    /** Segments abut with no gap or overlap (no assertion about the outer window edges). */
+    private fun assertTiled(segments: List<Seg>) {
+        for (i in 0 until segments.size - 1)
+            assertThat(segments[i].start + segments[i].duration).isEqualTo(segments[i + 1].start)
+    }
+
+    private fun assertNoOverlap(segments: List<Seg>) {
+        val sorted = segments.sortedBy { it.start }
+        for (i in 1 until sorted.size)
+            assertThat(sorted[i].start).isAtLeast(sorted[i - 1].start + sorted[i - 1].duration)
+    }
+
+    /** Model Tidepool's per-start-time dedup: a later upload replaces the same start. [chunks] are in upload order. */
+    private fun dedupByStartLastWins(vararg chunks: List<Seg>): List<Seg> =
+        chunks.flatMap { it }.associateBy { it.start }.values.sortedBy { it.start }
+
     // ---------------- tests ----------------
 
     @Test
@@ -272,14 +288,18 @@ class UploadChunkBasalTest {
     }
 
     @Test
-    fun `temp basal active at the window start is clamped to the window`() = runTest {
+    fun `temp basal active at the window start is emitted from its natural start`() = runTest {
         stub(tbrs = listOf(tb(at(-1.0), 3.0, 1.0)))                            // [-1h, +2h] -> active at start
         val segments = basals(sut.get(t0, at(8.0)))
+        // Data-anchored, not window-anchored: the straddling segment keeps the TBR's real start (< window
+        // start) and full duration, so re-uploading under a different window dedups instead of orphaning it.
         assertThat(segments.first().deliveryType).isEqualTo("automated")
-        assertThat(segments.first().start).isEqualTo(t0)
-        assertThat(segments.first().duration).isEqualTo(at(2.0) - t0)
+        assertThat(segments.first().start).isEqualTo(at(-1.0))
+        assertThat(segments.first().duration).isEqualTo(at(2.0) - at(-1.0))
         assertThat(segments[1].deliveryType).isEqualTo("scheduled")
-        assertContiguous(segments, t0, at(8.0))
+        assertThat(segments[1].start).isEqualTo(at(2.0))
+        assertTiled(segments)
+        assertThat(segments.last().start + segments.last().duration).isEqualTo(at(8.0))
     }
 
     @Test
@@ -366,5 +386,53 @@ class UploadChunkBasalTest {
         assertThat(segments[1].start).isEqualTo(at(5.0))
         assertThat(segments[1].rate).isEqualTo(0.5)
         assertContiguous(segments, t0, at(10.0))
+    }
+
+    // ---------------- chunk invariance (the resync basal-overlap regression) ----------------
+
+    @Test
+    fun `re-chunking across a straddling temp basal replaces the truncated seam instead of orphaning it`() = runTest {
+        stub(tbrs = listOf(tb(at(1.0), 3.0, 1.2)))                             // absolute TBR [1h, 4h]
+        val whole = basals(sut.get(t0, at(6.0)))
+        val first = basals(sut.get(t0, at(2.5)))                              // split falls inside the TBR
+        val second = basals(sut.get(at(2.5), at(6.0)))
+        // The seam segment is re-emitted at the SAME start by the second chunk (full length), so Tidepool's
+        // per-start dedup replaces the first chunk's truncated copy instead of leaving an overlapping orphan.
+        assertThat(first.last().start).isEqualTo(second.first().start)
+        val merged = dedupByStartLastWins(first, second)
+        assertThat(merged).isEqualTo(whole)
+        assertNoOverlap(merged)
+    }
+
+    @Test
+    fun `absolute temp basal crossing a profile block boundary is chunk-invariant`() = runTest {
+        // The regression a naive "snap back to the enclosing boundary" helper would reintroduce: an absolute
+        // TBR is NOT split at the 06:00 block boundary, so a chunk starting after 06:00 (inside the TBR) must
+        // still anchor its first segment at the TBR start, never at the block boundary - else it overlaps.
+        val profile = profileWith(0 to 0.5, 21_600 to 1.0)
+        stub(tbrs = listOf(tb(at(4.0), 4.0, 1.3)), profileAt = { profile })   // absolute TBR [4h, 8h] over the 06:00 block
+        val whole = basals(sut.get(t0, at(10.0)))
+        val first = basals(sut.get(t0, at(7.0)))                              // split at 07:00, inside the TBR, past 06:00
+        val second = basals(sut.get(at(7.0), at(10.0)))
+        assertThat(second.first().start).isEqualTo(at(4.0))                   // TBR start, NOT the 06:00 block boundary
+        val merged = dedupByStartLastWins(first, second)
+        assertThat(merged).isEqualTo(whole)
+        assertNoOverlap(merged)
+    }
+
+    @Test
+    fun `three-way re-chunking equals a single window`() = runTest {
+        val profile = profileWith(0 to 0.5, 21_600 to 1.0)
+        stub(
+            tbrs = listOf(tb(at(2.0), 2.0, 1.1), tb(at(5.5), 3.0, 80.0, absolute = false)),
+            profileAt = { profile }
+        )
+        val whole = basals(sut.get(t0, at(12.0)))
+        val a = basals(sut.get(t0, at(3.5)))
+        val b = basals(sut.get(at(3.5), at(8.0)))
+        val c = basals(sut.get(at(8.0), at(12.0)))
+        val merged = dedupByStartLastWins(a, b, c)
+        assertThat(merged).isEqualTo(whole)
+        assertNoOverlap(merged)
     }
 }

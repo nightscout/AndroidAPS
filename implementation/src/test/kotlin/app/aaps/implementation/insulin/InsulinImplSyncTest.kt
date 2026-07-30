@@ -59,7 +59,7 @@ class InsulinImplSyncTest : TestBase() {
     }
 
     private fun create() = InsulinImpl(
-        preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel,
+        preferences, rh, profileFunction, aapsLogger, config, hardLimits, uel,
         CoroutineScope(Dispatchers.Unconfined)
     )
 

@@ -1,9 +1,7 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -20,14 +18,11 @@ import javax.inject.Inject
 
 class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var insulin: Insulin
     @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
     var inputProfileName: InputProfileName = InputProfileName("")
-    val iCfg: ICfg
-        get() = insulin.iCfg         // use Current running iCfg, changing iCfg with Automation not allowed
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
@@ -49,6 +44,11 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
             return pumpEnactResultProvider.get().success(true).comment(R.string.alreadyset)
         }
+        // Keep whatever insulin is in force — automation must not change it. The guard above already refuses when
+        // no profile is running, so this is belt-and-braces: the two checks could drift, and substituting a
+        // catalogue entry would silently re-scale every later IOB calculation.
+        val iCfg = profileFunction.getRunningOrRequestedICfg()
+            ?: return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.profile_switch_no_insulin)
         val profileStore = profileRepository.profile.value
             ?: return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {

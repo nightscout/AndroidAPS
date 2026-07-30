@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpWithConcentration
@@ -36,7 +35,6 @@ internal class TreatmentDialogViewModelTest {
 
     @Mock private lateinit var constraintChecker: ConstraintsChecker
     @Mock private lateinit var activePlugin: ActivePlugin
-    @Mock private lateinit var activeInsulin: Insulin
     @Mock private lateinit var ch: ConcentrationHelper
     @Mock private lateinit var config: Config
     @Mock private lateinit var decimalFormatter: DecimalFormatter
@@ -66,7 +64,7 @@ internal class TreatmentDialogViewModelTest {
         whenever(maxCarbs.value()).thenReturn(100)
         whenever(constraintChecker.getMaxCarbsAllowed()).thenReturn(maxCarbs)
         sut = TreatmentDialogViewModel(
-            constraintChecker, activePlugin, activeInsulin, ch, config, decimalFormatter, rh,
+            constraintChecker, activePlugin, ch, config, decimalFormatter, rh,
             profileFunction, hardLimits, loop, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
         )
     }

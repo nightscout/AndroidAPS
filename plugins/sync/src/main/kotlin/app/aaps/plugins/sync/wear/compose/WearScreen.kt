@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.wear.compose
 
 import android.content.Intent
-import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
@@ -48,12 +47,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
@@ -173,8 +170,12 @@ internal fun WearScreen(
 
 private enum class SubScreen { MAIN, INFOS, IMPORT_LIST }
 
+/**
+ * @see WearMainContentPreview
+ * @see WearMainContentDisconnectedPreview
+ */
 @Composable
-private fun WearMainContent(
+internal fun WearMainContent(
     uiState: WearUiState,
     onResendData: () -> Unit,
     onOpenSettings: () -> Unit,
@@ -305,8 +306,11 @@ private fun ButtonRow(
     }
 }
 
+/**
+ * @see CwfInfosContentPreview
+ */
 @Composable
-private fun CwfInfosContent(
+internal fun CwfInfosContent(
     state: CwfInfosState,
     modifier: Modifier = Modifier
 ) {
@@ -393,79 +397,5 @@ private fun CwfInfosContent(
                 }
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun WearMainContentPreview() {
-    MaterialTheme {
-        WearMainContent(
-            uiState = WearUiState(
-                connectedDevice = "Galaxy Watch 5 (a1b2)",
-                isDeviceConnected = true,
-                hasCustomWatchface = true,
-                watchfaceName = "AAPS V2"
-            ),
-            onResendData = {},
-            onOpenSettings = {},
-            onLoadWatchface = {},
-            onInfosWatchface = {},
-            onExportTemplate = {},
-            onMoreWatchfaces = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun WearMainContentDisconnectedPreview() {
-    MaterialTheme {
-        WearMainContent(
-            uiState = WearUiState(
-                connectedDevice = "No watch connected",
-                isDeviceConnected = false
-            ),
-            onResendData = {},
-            onOpenSettings = {},
-            onLoadWatchface = {},
-            onInfosWatchface = {},
-            onExportTemplate = {},
-            onMoreWatchfaces = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun CwfInfosContentPreview() {
-    MaterialTheme {
-        CwfInfosContent(
-            state = CwfInfosState(
-                title = "AAPS V2 (1.0)",
-                fileName = "Filename: AAPS_V2.zip",
-                author = "Author: Someone",
-                createdAt = "Created: 2025-01-15",
-                version = "Version: 1.0",
-                isVersionOk = true,
-                comment = "Comment: Custom watchface for AAPS",
-                prefTitle = "Required preferences (locked by CWF)",
-                preferences = listOf(
-                    CwfPrefItem("Show IOB", true),
-                    CwfPrefItem("Show COB", true),
-                    CwfPrefItem("Show Delta", false)
-                ),
-                viewElements = listOf(
-                    CwfViewItem("\"status\":", "Loop status"),
-                    CwfViewItem("\"iob1\":", "IOB value"),
-                    CwfViewItem("\"cob1\":", "COB value")
-                )
-            )
-        )
     }
 }

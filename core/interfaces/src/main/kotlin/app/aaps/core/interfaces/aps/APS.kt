@@ -20,10 +20,18 @@ interface APS {
     val lastAPSRun: Long
 
     /**
-     * Is APS providing variable ISF calculation?
+     * Is APS actually using variable ISF calculation?
      * @return true if yes
      */
-    fun supportsDynamicIsf(): Boolean = false
+    fun usingDynamicIsf(): Boolean = false
+
+    /**
+     * Does this algorithm offer the "Use dynamic sensitivity" option at all
+     * (static capability, independent of the preference value)?
+     * Unlike [usingDynamicIsf] this does not depend on whether the user enabled it.
+     * @return true if yes
+     */
+    fun offersDynamicSensitivity(): Boolean = false
 
     /**
      * Is APS providing variable IC calculation?

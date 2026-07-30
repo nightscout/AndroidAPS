@@ -177,12 +177,14 @@ class PreferencesImpl @Inject constructor(
         sp.putString(key.key, value)
         stringFlows[key.key]?.value = value
         onLocalSyncedWrite(key)
+        if (key.key == StringKey.GeneralUnits.key) refreshUnitDoubleFlows()
     }
 
     override fun putRemote(key: StringNonPreferenceKey, value: String, version: Long) {
         sp.putString(key.key, value)
         stringFlows[key.key]?.value = value
         onRemoteSyncedWrite(key, version)
+        if (key.key == StringKey.GeneralUnits.key) refreshUnitDoubleFlows()
     }
 
     override fun observe(key: StringNonPreferenceKey): StateFlow<String> =
@@ -257,6 +259,12 @@ class PreferencesImpl @Inject constructor(
 
     override fun observe(key: UnitDoublePreferenceKey): StateFlow<Double> =
         unitDoubleFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
+
+    private fun refreshUnitDoubleFlows() {
+        unitDoubleFlows.forEach { (keyString, flow) ->
+            (get(keyString) as? UnitDoublePreferenceKey)?.let { flow.value = get(it) }
+        }
+    }
 
     override fun get(key: IntNonPreferenceKey): Int =
         sp.getInt(key.key, key.defaultValue)

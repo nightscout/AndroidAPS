@@ -35,17 +35,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.Scene
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
-import app.aaps.core.ui.compose.icons.IcAutomation
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.compose.actions.ActionEditor
 
+/**
+ * @see PreviewAutomationEditScreenNew
+ * @see PreviewAutomationEditScreenEdit
+ * @see PreviewAutomationEditScreenReadOnly
+ * @see PreviewAutomationEditScreenUserAction
+ */
 @Composable
 fun AutomationEditScreen(
     state: AutomationEditUiState,
@@ -335,116 +337,3 @@ private fun InlineActionCard(
 }
 
 // ---------- Previews ----------
-
-@ExcludeFromJacocoGeneratedReport
-private fun sampleEditState(
-    readOnly: Boolean = false,
-    hasTrigger: Boolean = true,
-    actions: Int = 2,
-    userAction: Boolean = false
-) = AutomationEditUiState(
-    title = if (readOnly) "System wakeup" else "Morning TT",
-    userAction = userAction,
-    enabled = true,
-    readOnly = readOnly,
-    triggerDescription = if (hasTrigger) "BG < 4 mmol/L AND Delta < -0.1 mmol/L" else "",
-    hasTrigger = hasTrigger,
-    preconditionsDescription = if (hasTrigger) "Loop running AND profile active" else "",
-    actions = (0 until actions).map { i ->
-        AutomationActionUi(
-            index = i,
-            title = if (i == 0) "Start temp target 8 mmol/L for 60 min" else "Send notification",
-            icon = IcAutomation,
-            valid = i != actions - 1 || actions == 1
-        )
-    },
-    titleError = false
-)
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 380, heightDp = 780)
-@Composable
-private fun PreviewAutomationEditScreenNew() {
-    MaterialTheme {
-        AutomationEditScreen(
-            state = AutomationEditUiState(),
-            onTitleChange = {},
-            onUserActionChange = {},
-            onEnabledChange = {},
-            onEditTrigger = {},
-            onAddAction = {},
-            onRemoveAction = {},
-            onActionChanged = {},
-            liveActions = emptyList(),
-            profileNames = emptyList(),
-            sceneOptions = emptyList(),
-            tick = 0
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 380, heightDp = 780)
-@Composable
-private fun PreviewAutomationEditScreenEdit() {
-    MaterialTheme {
-        AutomationEditScreen(
-            state = sampleEditState(),
-            onTitleChange = {},
-            onUserActionChange = {},
-            onEnabledChange = {},
-            onEditTrigger = {},
-            onAddAction = {},
-            onRemoveAction = {},
-            onActionChanged = {},
-            liveActions = emptyList(),
-            profileNames = emptyList(),
-            sceneOptions = emptyList(),
-            tick = 0
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 380, heightDp = 780)
-@Composable
-private fun PreviewAutomationEditScreenReadOnly() {
-    MaterialTheme {
-        AutomationEditScreen(
-            state = sampleEditState(readOnly = true, actions = 1),
-            onTitleChange = {},
-            onUserActionChange = {},
-            onEnabledChange = {},
-            onEditTrigger = {},
-            onAddAction = {},
-            onRemoveAction = {},
-            onActionChanged = {},
-            liveActions = emptyList(),
-            profileNames = emptyList(),
-            sceneOptions = emptyList(),
-            tick = 0
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, widthDp = 380, heightDp = 780)
-@Composable
-private fun PreviewAutomationEditScreenUserAction() {
-    MaterialTheme {
-        AutomationEditScreen(
-            state = sampleEditState(hasTrigger = false, userAction = true, actions = 1),
-            onTitleChange = {},
-            onUserActionChange = {},
-            onEnabledChange = {},
-            onEditTrigger = {},
-            onAddAction = {},
-            onRemoveAction = {},
-            onActionChanged = {},
-            liveActions = emptyList(),
-            profileNames = emptyList(),
-            sceneOptions = emptyList(),
-            tick = 0
-        )
-    }
-}

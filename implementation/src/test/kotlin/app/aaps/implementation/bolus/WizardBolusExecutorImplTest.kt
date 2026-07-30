@@ -1,5 +1,6 @@
 package app.aaps.implementation.bolus
 
+import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
@@ -7,7 +8,6 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
-import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -74,7 +74,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var bolusProgressData: BolusProgressData
 
     private fun create() = WizardBolusExecutorImpl(
-        aapsLogger, rh, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, insulin, iobCobCalculator, constraintsChecker, activePlugin,
+        aapsLogger, rh, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
         runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
         CoroutineScope(Dispatchers.Unconfined)
     )
@@ -471,12 +471,33 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun prepareBatch_twoBatchesInTheSameMillisecond_getDistinctIdsAndBothCommit() = runTest {
+        stubPassthroughConstraints()
+        // dateUtil.now() is frozen in the test base — which is exactly the production race. The fill dialog fires
+        // its insulin activation, site change and cartridge change as separate coroutines, so two prepares can land
+        // in the same millisecond. When the id was `dateUtil.now()` they shared a key: the second park overwrote the
+        // first, so one commit applied the WRONG batch and the other was rejected as NoPending.
+        val executor = create()
+        val cannula = BatchAction.TherapyEvent(teType = TE.Type.CANNULA_CHANGE, timestamp = 1_000L, source = Sources.FillDialog)
+        val cartridge = BatchAction.TherapyEvent(teType = TE.Type.INSULIN_CHANGE, timestamp = 2_000L, source = Sources.FillDialog)
+
+        val first = executor.prepareBatch(listOf(cannula)) as WizardBolusExecutor.PrepareResult.Preview
+        val second = executor.prepareBatch(listOf(cartridge)) as WizardBolusExecutor.PrepareResult.Preview
+
+        assertThat(first.bolusId).isNotEqualTo(second.bolusId)
+        // Both parked batches must survive independently — neither may consume or evict the other.
+        assertThat(executor.confirm(first.bolusId, Sources.FillDialog, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(executor.confirm(second.bolusId, Sources.FillDialog, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test
     fun prepareBatch_namedProfileSwitch_appliesViaNamedCreateProfileSwitchFromMasterStore() = runTest {
         stubPassthroughConstraints()
         val store = mock<ProfileStore>()
         whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
-        whenever(insulin.iCfg).thenReturn(mock())
+        // A named switch has to record an insulin; here it comes from the insulin in force.
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch"))) as WizardBolusExecutor.PrepareResult.Preview
@@ -484,8 +505,45 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
         // The named overload resolves the target from the MASTER's store (a client may relay a name the master owns).
-        verify(profileFunction).createProfileSwitch(eq(store), eq("Lunch"), eq(60), eq(110), eq(0), any(), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), any())
+        verify(profileFunction).createProfileSwitch(eq(store), eq("Lunch"), eq(60), eq(110), eq(0), any(), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), eq(someICfg))
     }
+
+    @Test
+    fun prepareBatch_namedProfileSwitch_carriesTheCallerSuppliedICfgEvenWithNothingRunning() = runTest {
+        stubPassthroughConstraints()
+        val store = mock<ProfileStore>()
+        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
+        // Nothing running and nothing pending — but the caller already asked the user (fill/prime, activation).
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
+        val chosen = ICfg(insulinLabel = "Chosen", insulinEndTime = 420, insulinPeakTime = 55, concentration = 1.0)
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch", iCfg = chosen))) as WizardBolusExecutor.PrepareResult.Preview
+        executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        // The user's choice wins over the (absent) in-force insulin and is what gets recorded.
+        verify(profileFunction).createProfileSwitch(eq(store), eq("Lunch"), eq(60), eq(110), eq(0), any(), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), eq(chosen))
+    }
+
+    @Test
+    fun prepareBatch_namedProfileSwitch_noICfgAndNothingRunningOrPending_returnsError() = runTest {
+        stubPassthroughConstraints()
+        val store = mock<ProfileStore>()
+        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
+        val executor = create()
+
+        val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch")))
+
+        // Refuse rather than substitute an arbitrary insulin from the catalogue.
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
+    }
+
+    // The running-vs-requested precedence itself belongs to ProfileFunction and is asserted in
+    // ProfileFunctionImplTest; here it is a stubbed collaborator, so re-testing it would prove nothing.
 
     @Test
     fun prepareBatch_namedProfileSwitch_notInMasterStore_returnsError() = runTest {

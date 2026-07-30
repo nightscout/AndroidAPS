@@ -61,6 +61,10 @@
     <string name="pref_single_target">單一目標</string>
     <string name="pref_wizard_percentage">計算機百分比</string>
     <string name="pref_complication_tap_action">複雜功能點擊動作</string>
+    <string name="pref_complication_bg_graph_hours">血糖圖表時間範圍</string>
+    <string name="duration_1_hour">1 小時</string>
+    <string name="duration_3_hours">3 小時</string>
+    <string name="duration_6_hours">6 小時</string>
     <string name="pref_unicode_in_complications">複雜功能中的 Unicode</string>
     <string name="pref_version">版本：</string>
     <string name="pref_moreWatchfaceSettings">更多錶盤設定</string>
@@ -204,6 +208,12 @@
     <string name="tile_action_2">動作 2</string>
     <string name="tile_action_3">動作 3</string>
     <string name="tile_action_4">動作 4</string>
+    <string name="tile_scene_1">情境 1</string>
+    <string name="tile_scene_2">情境 2</string>
+    <string name="tile_scene_3">情境 3</string>
+    <string name="tile_scene_4">情境 4</string>
+    <string name="tile_scene_auto">自動</string>
+    <string name="tile_scene_unavailable">無法使用</string>
     <string name="datalayer_notification_title">資料層前台服務</string>
     <string name="datalayer_notification_text">AAPS 正在前台運行。若要隱藏通知，請前往開發人員選項、應用通知、允許的手錶應用，選擇 AAPS，關閉資料層前台服務頻道通知。</string>
     <string name="on">開</string>
@@ -214,6 +224,7 @@
     <string name="complication_blood_glucose_large">血糖（大型）</string>
     <string name="complication_blood_glucose_ext1">血糖 Ext1</string>
     <string name="complication_blood_glucose_ext2">血糖  Ext2</string>
+    <string name="complication_bg_graph">血糖圖表</string>
     <string name="complication_br_cob_iob">BR、CoB及IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
@@ -237,7 +248,7 @@
     <string name="action_running_mode_selected">已請求執行模式</string>
     <string name="title_activity_disconnect_pump">中斷幫浦連線</string>
     <string name="title_activity_suspend_loop">暫停循環</string>
-    <string name="wizard_carbs_format">%1$d 克碳水化合物</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d 克</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -293,9 +304,10 @@
     <string name="wizard_result_cob">COB（%1$.1f g）</string>
     <string name="wizard_result_carbs">碳水（%1$d g）</string>
     <string name="wizard_result_subtotal">小計</string>
+    <string name="wizard_result_correction">修正</string>
     <string name="wizard_result_total">總計</string>
     <string name="wizard_insulin_format">%1$s 單位</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="wizard_carbs_with_time">%1$d 克碳水 (%2$s 分 )</string>
-    <string name="wizard_result_ecarbs">延長碳水：%1$d 克 / %2$d 小時(+%3$d 分鐘)</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d 克（%2$s 分鐘）</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d 克 / %2$d 小時（+%3$d 分鐘）</string>
 </resources>
