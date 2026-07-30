@@ -228,7 +228,7 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
             setUiState(UiState.Idle)
             if (!result.success) {
                 aapsLogger.error(LTag.PUMPCOMM, "additional priming failed")
-                triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardFailed)
+                triggerEvent(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
             }
         }
     }
