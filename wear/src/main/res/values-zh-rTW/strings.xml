@@ -83,6 +83,11 @@
     <string name="menu_bg_graph">血糖圖表</string>
     <string name="menu_resync">重新同步</string>
     <string name="menu_prime_fill">預填充</string>
+    <string name="menu_install_watchface">安裝錶面</string>
+    <string name="menu_installing_watchface">正在安裝錶面…</string>
+    <string name="watchface_installed_active">錶面已安裝並設為目前使用的錶面</string>
+    <string name="watchface_installed_select">錶面已安裝，請在錶面選擇器中選取</string>
+    <string name="watchface_install_failed">錶面安裝失敗</string>
     <string name="menu_none">無</string>
     <string name="menu_default">預設</string>
     <string name="menu_menu">選單</string>
