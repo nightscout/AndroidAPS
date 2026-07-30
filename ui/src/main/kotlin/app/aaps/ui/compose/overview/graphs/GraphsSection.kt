@@ -31,6 +31,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -101,30 +102,54 @@ fun GraphsSection(
     // In simple mode: fixed layout (BG, IOB+BAS, COB — no overlays, no editing)
     val graphConfig = if (isSimpleMode) SIMPLE_MODE_CONFIG else savedGraphConfig
 
-    // BG graph - primary interactive
-    val bgScrollState = rememberVicoScrollState(
-        scrollEnabled = true,
-        initialScroll = Scroll.Absolute.End
-    )
-    val bgZoomState = rememberVicoZoomState(
-        zoomEnabled = true,
-        initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES),
-        minZoom = Zoom.x(Constants.GRAPH_TIME_RANGE_HOURS * 60.0),
-        maxZoom = Zoom.x(MIN_GRAPH_ZOOM_MINUTES)
-    )
+    // Zoom.x(...) allocates a fresh (non-equal, unmemoized) lambda instance on every call.
+    // rememberVicoZoomState's underlying rememberSaveable is keyed on initialZoom/minZoom/maxZoom
+    // by reference, so passing a freshly-allocated Zoom on every recomposition of this composable
+    // tears down and recreates the VicoZoomState — resetting the zoom level back to initialZoom.
+    // Memoize these once so all zoom states below stay stable across recompositions.
+    val defaultZoom = remember { Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES) }
+    val bgMinZoom = remember { Zoom.x(Constants.GRAPH_TIME_RANGE_HOURS * 60.0) }
+    val bgMaxZoom = remember { Zoom.x(MIN_GRAPH_ZOOM_MINUTES) }
+
+    // BG graph - primary interactive.
+    // Wrapped in key(bgViewportResetTrigger) so bumping the trigger tears down and recreates both
+    // states from scratch, snapping them back to their initial values (Scroll.Absolute.End /
+    // defaultZoom = 6h). This is deliberate: VicoZoomState.zoom(Zoom) is pinch-gesture-oriented
+    // (it applies a ratio anchored on the current canvas center via an async pendingScroll flow)
+    // and produced a wrong end state when used to "reset to a fixed default" — recreating the
+    // state objects is simpler and matches the exact positioning Vico itself already uses on first
+    // composition. Only reset on real inactivity (rare, never mid-gesture), so this doesn't
+    // reintroduce the "churn during an active gesture" issues found elsewhere in this file.
+    // IMPORTANT: every effect below that reads bgScrollState/bgZoomState.value MUST be keyed on
+    // them (not just Unit) — otherwise it keeps a stale reference to the abandoned pre-reset
+    // objects forever, comparing live secondary-graph state against a frozen stale value and
+    // firing wrong corrections (this caused the secondary graphs to visibly "dance"/flash on the
+    // first attempt at this).
+    var bgViewportResetTrigger by remember { mutableIntStateOf(0) }
+    val (bgScrollState, bgZoomState) = key(bgViewportResetTrigger) {
+        rememberVicoScrollState(
+            scrollEnabled = true,
+            initialScroll = Scroll.Absolute.End
+        ) to rememberVicoZoomState(
+            zoomEnabled = true,
+            initialZoom = defaultZoom,
+            minZoom = bgMinZoom,
+            maxZoom = bgMaxZoom
+        )
+    }
 
     // Pre-allocate secondary graph scroll/zoom states (up to MAX_SECONDARY_GRAPHS)
     // These are always created to keep Compose's remember slots stable
     val sec0scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec0zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES))
+    val sec0zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
     val sec1scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec1zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES))
+    val sec1zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
     val sec2scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec2zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES))
+    val sec2zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
     val sec3scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec3zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES))
+    val sec3zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
     val sec4scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec4zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES))
+    val sec4zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
 
     // Collect nowTimestamp ONCE so all graphs use the same value (avoids separate recompositions every 30s)
     val nowTimestamp by graphViewModel.nowTimestamp.collectAsStateWithLifecycle()
@@ -136,6 +161,30 @@ fun GraphsSection(
     // maps to different time when x-axis ranges differ).
     val derivedTimeRange by graphViewModel.derivedTimeRange.collectAsStateWithLifecycle()
 
+    // BG's own visible window, sourced from the fixed IOB graph's already-computed visible range
+    // (its scroll/zoom are synced to BG's, see the sync LaunchedEffect below) — not from a
+    // decoration on BG's own chart, since that was tried and found to break BG's pinch-zoom
+    // gesture handling (BG is the only graph with live scrollEnabled/zoomEnabled = true).
+    var iobVisibleRange by remember { mutableStateOf<Pair<Double, Double>?>(null) }
+
+    // Settle further before feeding into BG specifically: unlike the secondary graphs (which are
+    // non-interactive and unaffected by frequent updates), BG has live pinch-zoom. Updating its
+    // axis range on every ~80ms tick during an active gesture kept changing the Y-axis label
+    // width/layerDimensions mid-gesture and broke pinch-zoom. Only update once the window has
+    // been stable for a bit, i.e. after the gesture ends.
+    var iobVisibleRangeSettled by remember { mutableStateOf<Pair<Double, Double>?>(null) }
+    LaunchedEffect(Unit) {
+        snapshotFlow { iobVisibleRange }
+            .debounce(400)
+            .collect { iobVisibleRangeSettled = it }
+    }
+
+    val bgVisibleTimeRange = derivedTimeRange?.first?.let { minTs ->
+        iobVisibleRangeSettled?.let { (minXv, maxXv) ->
+            (minTs + (minXv * 60_000).toLong()) to (minTs + (maxXv * 60_000).toLong())
+        }
+    }
+
     // Treatment belt graph - non-interactive, synced from BG
     val beltScrollState = rememberVicoScrollState(
         scrollEnabled = false,
@@ -143,12 +192,12 @@ fun GraphsSection(
     )
     val beltZoomState = rememberVicoZoomState(
         zoomEnabled = false,
-        initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES)
+        initialZoom = defaultZoom
     )
 
     // Fixed IOB graph - non-interactive, synced from BG
     val iobScrollState = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val iobZoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES))
+    val iobZoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
 
     // Active graph count — rememberUpdatedState so coroutines always read the latest value
     // without writing to state during composition. Unattached states are no-ops for
@@ -202,33 +251,45 @@ fun GraphsSection(
 
     LaunchedEffect(bgInfoState.bgInfo?.timestamp) {
         val newTimestamp = bgInfoState.bgInfo?.timestamp ?: return@LaunchedEffect
-        val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         if (lastBgTimestamp != 0L && newTimestamp > lastBgTimestamp) {
-            // Skip auto-scroll while user is interacting with the graph
+            // Skip auto-reset while user is interacting with the graph
             val sinceInteraction = System.currentTimeMillis() - graphViewModel.lastInteractionMs
             if (sinceInteraction < INTERACTION_GRACE_MS) {
                 lastBgTimestamp = newTimestamp
                 return@LaunchedEffect
             }
-            val timeRange = derivedTimeRange
-            if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
-                // Scroll so "now + 2h" is at the right edge of viewport
-                val (minTimestamp, _) = timeRange
-                val nowX = timestampToX(System.currentTimeMillis(), minTimestamp)
-                bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
-            } else {
-                // No predictions - scroll to end
-                bgScrollState.animateScroll(Scroll.Absolute.End)
-            }
+            // Reset scroll+zoom to their defaults by recreating the state objects (see
+            // bgViewportResetTrigger doc above) instead of driving VicoZoomState.zoom(Zoom) to an
+            // absolute target, which was found to land on the wrong zoom/scroll combination.
+            bgViewportResetTrigger++
         }
         lastBgTimestamp = newTimestamp
+    }
+
+    // After a reset, the recreated bgScrollState defaults to Scroll.Absolute.End. If predictions
+    // are visible, nudge it further so "now + 2h" sits at the right edge instead, leaving room to
+    // see the forecast — same positioning as before, reapplied once the fresh scrollState (a new
+    // instance, since it's keyed on bgViewportResetTrigger too) is composed and ready.
+    LaunchedEffect(bgViewportResetTrigger, bgScrollState) {
+        if (bgViewportResetTrigger == 0) return@LaunchedEffect
+        val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
+        val timeRange = derivedTimeRange
+        if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
+            val (minTimestamp, _) = timeRange
+            val nowX = timestampToX(System.currentTimeMillis(), minTimestamp)
+            bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
+        }
     }
 
     // Correct secondary graph scroll drift — Vico may internally adjust scroll
     // when model producers fire. Watch for any divergence and re-sync to BG.
     // No isSyncing guard needed: primary sync only reads BG state, so writing to
     // secondary states here cannot trigger primary sync (no feedback loop).
-    LaunchedEffect(Unit) {
+    // Keyed on bgScrollState/bgZoomState (not Unit) — MUST restart when they're recreated by a
+    // reset, otherwise this keeps comparing secondary graphs against a stale, abandoned pre-reset
+    // reference forever and fires wrong corrections (the actual cause of the "dancing" regression
+    // in the first attempt at this feature).
+    LaunchedEffect(bgScrollState, bgZoomState) {
         snapshotFlow {
             // Only read states that are attached to a chart (belt + IOB fixed + active secondary)
             val count = activeCount
@@ -286,6 +347,7 @@ fun GraphsSection(
                 zoomState = bgZoomState,
                 derivedTimeRange = derivedTimeRange,
                 nowTimestamp = nowTimestamp,
+                visibleTimeRange = bgVisibleTimeRange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(graphConfig.bgHeight.dp)
@@ -327,6 +389,7 @@ fun GraphsSection(
                 derivedTimeRange = derivedTimeRange,
                 nowTimestamp = nowTimestamp,
                 activityOverlay = SeriesType.ACTIVITY in graphConfig.iobOverlays,
+                onVisibleRangeChanged = { iobVisibleRange = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(graphConfig.iobHeight.dp)

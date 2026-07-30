@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.overview.graph.SeriesType
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
@@ -22,6 +23,11 @@ import kotlinx.datetime.toLocalDateTime
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -323,5 +329,186 @@ class NowLine(
 fun rememberNowLine(minTimestamp: Long, nowTimestamp: Long, color: Color): NowLine {
     return remember(minTimestamp, nowTimestamp, color) {
         NowLine(nowX = timestampToX(nowTimestamp, minTimestamp), color = color)
+    }
+}
+
+/**
+ * Plain (non-Compose-state) holder for the latest visible x-range, written from
+ * [VisibleRangeReporter.drawOverLayers] on every draw pass.
+ *
+ * Deliberately NOT a Compose `State`: writing Compose state synchronously from the draw phase
+ * fights with Vico's own gesture-driven scroll/zoom mutations — the resulting invalidate-during-draw
+ * starves pinch-zoom gesture recognition (observed: zoom became unresponsive). Callers must poll
+ * [value] from a coroutine (e.g. a `LaunchedEffect` with a periodic `delay`) and only then write it
+ * into real Compose state.
+ */
+class VisibleRangeHolder {
+    @Volatile
+    var value: Pair<Double, Double>? = null
+}
+
+/**
+ * Reports the currently visible x-range (same "minutes from minTimestamp" unit as [timestampToX])
+ * into [holder] on every draw pass. Purely observational — draws nothing, and never touches
+ * Compose state directly (see [VisibleRangeHolder]).
+ *
+ * Inverse of [NowLine]'s x-value-to-canvas transform: canvasX = layerBounds.left + startPadding +
+ * xSpacing * ((x - minX) / xStep) - scroll. Solving for x at the left/right edges of layerBounds
+ * gives the visible x-range.
+ */
+class VisibleRangeReporter(
+    private val holder: VisibleRangeHolder
+) : Decoration {
+
+    override fun drawOverLayers(context: CartesianDrawingContext) {
+        with(context) {
+            val xStep = ranges.xStep
+            val xSpacing = layerDimensions.xSpacing
+            if (xStep == 0.0 || xSpacing <= 0f) return
+
+            val visibleMinX = ranges.minX + xStep * (scroll - layerDimensions.startPadding) / xSpacing
+            val visibleWidth = xStep * layerBounds.width / xSpacing
+            holder.value = visibleMinX to (visibleMinX + visibleWidth)
+        }
+    }
+
+    override fun equals(other: Any?): Boolean = this === other
+    override fun hashCode(): Int = System.identityHashCode(this)
+}
+
+/**
+ * Remember a [VisibleRangeReporter] decoration that writes the visible x-range into [holder]
+ * on every draw pass.
+ */
+@Composable
+fun rememberVisibleRangeReporter(holder: VisibleRangeHolder): VisibleRangeReporter {
+    return remember(holder) { VisibleRangeReporter(holder) }
+}
+
+// =========================================================================
+// Nice-numbers axis scaling ("Nice Numbers for Graph Labels", Paul Heckbert)
+// =========================================================================
+//
+// Vico's default Y-axis item placer divides a fixed [minY, maxY] range into evenly-spaced
+// ticks with no rounding, so an arbitrary data-driven range (e.g. 12.39..57.39) produces ugly
+// tick labels (12.39, 27.39, 42.39...). These helpers snap axis bounds and tick spacing to
+// round numbers (1, 2, 5, 10, 20, 50... times a power of ten) instead.
+
+/** A "nice" axis range: bounds and tick spacing all rounded to 1/2/5/10 x 10^n. */
+data class NiceScale(val min: Double, val max: Double, val step: Double)
+
+/**
+ * Rounds [range] to a value of the form 1/2/2.5/5/10 x 10^n. [round] chooses the nearest such
+ * value (used for tick spacing) vs. always rounding up (used for axis bounds, so the bound never
+ * clips inside the data). [range] must be > 0.
+ *
+ * The round-up variant includes a 2.5 tier (a known variant of Heckbert's original {1,2,5,10}
+ * set) to avoid an overly coarse jump between the 2 and 5 tiers — e.g. without it, a BG max of
+ * 210 would round all the way up to 300 (skipping straight from a 50-step scale to a 100-step
+ * one); with it, 210 rounds to 250 first, only reaching 300 once the value exceeds 250.
+ */
+private fun niceNum(range: Double, round: Boolean): Double {
+    val exponent = floor(log10(range))
+    val fraction = range / 10.0.pow(exponent)
+    val niceFraction = if (round) {
+        when {
+            fraction < 1.5 -> 1.0
+            fraction < 3.0 -> 2.0
+            fraction < 7.0 -> 5.0
+            else           -> 10.0
+        }
+    } else {
+        when {
+            fraction <= 1.0 -> 1.0
+            fraction <= 2.0 -> 2.0
+            fraction <= 2.5 -> 2.5
+            fraction <= 5.0 -> 5.0
+            else            -> 10.0
+        }
+    }
+    return niceFraction * 10.0.pow(exponent)
+}
+
+/**
+ * Standard nice-ify: snaps [min, max] and the tick spacing to round numbers. Free-range, no
+ * zero or pivot anchoring — used for series like VAR_SENSITIVITY and HEART_RATE.
+ */
+fun niceScale(min: Double, max: Double, maxTickCount: Int = 5): NiceScale {
+    val safeMax = if (max > min) max else min + 1.0
+    val range = niceNum(safeMax - min, round = false)
+    val step = niceNum(range / (maxTickCount - 1), round = true)
+    return NiceScale(floor(min / step) * step, ceil(safeMax / step) * step, step)
+}
+
+/** Rounds [value] up to the nearest nice number (1/2/5/10 x 10^n). Used for a lone axis bound. */
+fun niceUp(value: Double): Double {
+    if (value <= 0.0) return 0.0
+    return niceNum(value, round = false)
+}
+
+/**
+ * Rounds [value] (expected negative) further negative to the nearest nice magnitude — e.g.
+ * -0.3 -> -0.5, -0.07 -> -0.1 (but -0.05 is already nice and is left unchanged). Used to give a
+ * small negative excursion its own clean bound, decoupled from a much larger positive-side scale
+ * (see [zeroFloorNiceRange]).
+ */
+fun niceNegativeSliver(value: Double): Double {
+    if (value >= 0.0) return 0.0
+    return -niceNum(-value, round = false)
+}
+
+/**
+ * Minimum half-width for SENSITIVITY's pivot scale (see [niceScaleAroundPivot]'s `minDeviation`
+ * param) — below this, snap to a fixed 95%/100%/105% scale instead of nice-ifying a near-zero
+ * deviation (e.g. a SENS ratio sitting flat around 100%).
+ */
+const val SENS_MIN_DEVIATION = 5.0
+
+/**
+ * Nice-ify a symmetric deviation around [pivot] (e.g. SENSITIVITY around 100%, DEV_SLOPE
+ * around 0), so [pivot] always lands exactly in the middle of the axis. Nice-ifying [min, max]
+ * directly (via [niceScale]) would not preserve that centering.
+ */
+fun niceScaleAroundPivot(min: Double, max: Double, pivot: Double, maxTickCount: Int = 5, minDeviation: Double = 0.0): NiceScale {
+    val rawDeviation = maxOf(abs(pivot - min), abs(max - pivot))
+    // Below the floor (e.g. SENS sitting flat around 100%): snap to a fixed 3-tick scale
+    // (pivot-minDeviation, pivot, pivot+minDeviation) instead of nice-ifying a near-zero range,
+    // which would otherwise produce an overly tight, non-round scale (e.g. 99/99.5/100/100.5/101).
+    if (minDeviation > 0.0 && rawDeviation <= minDeviation) return NiceScale(pivot - minDeviation, pivot + minDeviation, minDeviation)
+    val deviation = if (rawDeviation > 0.0) rawDeviation else 1.0
+    val niceDeviation = niceNum(deviation, round = false)
+    val step = niceNum(2 * niceDeviation / (maxTickCount - 1), round = true)
+    val steppedDeviation = ceil(niceDeviation / step) * step
+    return NiceScale(pivot - steppedDeviation, pivot + steppedDeviation, step)
+}
+
+/**
+ * Series that are 0-floored by default (see [zeroFloorNiceRange]): mostly-positive, allowing a
+ * disparity-aware negative excursion without ever centering zero. IOB follows the same rule but
+ * isn't included here — its basal-overlay combo graph has its own dedicated range computation
+ * (SecondaryGraphCompose's `primaryYMaxResult`) that calls [zeroFloorNiceRange] directly.
+ */
+val ZERO_FLOOR_SERIES_TYPES = setOf(SeriesType.BGI, SeriesType.DEVIATIONS, SeriesType.ACTIVITY, SeriesType.STEPS, SeriesType.ABS_IOB)
+
+/**
+ * Zero-floor axis range, disparity-aware: when the negative excursion is tiny relative to the
+ * positive side (ratio >= [disparityRatio]), one shared nice tick spacing across the whole
+ * range would make the small negative part look arbitrary — so the two sides are nice-ified
+ * independently instead (a small negative sliver just large enough to show the excursion, plus
+ * a normal positive-side scale). When the two sides are comparable in magnitude, a single
+ * unified nice scale spans the whole range, negative and positive sharing the same tick step.
+ * Used for IOB and [ZERO_FLOOR_SERIES_TYPES].
+ */
+fun zeroFloorNiceRange(dataMin: Double, dataMax: Double, maxTickCount: Int = 5, disparityRatio: Double = 10.0): NiceScale {
+    if (dataMin >= 0.0) return niceScale(0.0, dataMax, maxTickCount)
+    val absMin = -dataMin
+    val ratio = if (absMin > 0.0) dataMax / absMin else Double.MAX_VALUE
+    return if (ratio >= disparityRatio) {
+        val niceMax = niceUp(dataMax)
+        val niceMin = niceNegativeSliver(dataMin)
+        val step = niceNum(niceMax / (maxTickCount - 1), round = true)
+        NiceScale(niceMin, niceMax, step)
+    } else {
+        niceScale(dataMin, dataMax, maxTickCount)
     }
 }

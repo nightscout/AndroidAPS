@@ -10,8 +10,19 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <!-- Watch Face Push (Wear OS 6+): PUSH_WATCH_FACES gates binding to the system push service;
+         SET_PUSHED_WATCH_FACE_AS_ACTIVE allows re-activating the pushed AAPS watchface after the
+         one-shot activation on first install was used -->
+    <uses-permission android:name="com.google.wear.permission.PUSH_WATCH_FACES" />
+    <uses-permission android:name="com.google.wear.permission.SET_PUSHED_WATCH_FACE_AS_ACTIVE" />
 
-    <uses-sdk tools:overrideLibrary="androidx.wear.tiles" />
+    <!-- androidx.wear.watchfacepush requires minSdk 36; all usages are runtime-guarded by SDK checks -->
+    <uses-sdk tools:overrideLibrary="androidx.wear.tiles,androidx.wear.watchfacepush" />
+
+    <!-- Package visibility for the pushed watchface, so the install state can be verified -->
+    <queries>
+        <package android:name="${applicationId}.watchfacepush.aapsv4" />
+    </queries>
 
     <application
         android:name=".WearApp"
@@ -193,6 +204,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
         </service>
 
         <service
@@ -211,6 +225,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
         </service>
 
         <service
@@ -337,6 +354,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
         </service>
 
         <service
@@ -427,6 +447,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
         </service>
 
         <service
@@ -457,6 +480,9 @@
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />

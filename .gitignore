@@ -23,10 +23,16 @@ wear/.classpath
 wear/.settings/org.eclipse.buildship.core.prefs
 app/aapsclient/*
 app/aapsclient2/*
+app/aapsclient3/*
 app/pumpcontrol/*
 wear/aapsclient/*
 wear/aapsclient2/*
+wear/aapsclient3/*
 wear/pumpcontrol/*
+wear/watchfacepush/aapsclient/*
+wear/watchfacepush/aapsclient2/*
+wear/watchfacepush/aapsclient3/*
+wear/watchfacepush/pumpcontrol/*
 .kotlin/*
 /*.log
 *.preferences_pb
