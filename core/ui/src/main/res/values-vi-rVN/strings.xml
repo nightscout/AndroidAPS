@@ -104,6 +104,7 @@
     <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Dữ liệu cũ</string>
     <string name="goingtodeliver">Đang tiêm %1$.2f U Insulin</string>
+    <string name="carbs_not_saved_after_bolus">Đã tiêm bolus, nhưng không thể lưu lượng carb. Vui lòng nhập lại lượng carb.</string>
     <string name="androidaps_start">AAPS đã khởi động</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
