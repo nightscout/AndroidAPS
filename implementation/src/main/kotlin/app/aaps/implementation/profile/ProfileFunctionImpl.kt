@@ -119,6 +119,18 @@ class ProfileFunctionImpl @Inject constructor(
 
     override suspend fun isProfileValid(from: String): Boolean = getProfile() != null
 
+    override suspend fun invalidateCache() {
+        // Same invalidation the observeChanges(EPS) subscription performs, but driven explicitly: the v33
+        // repair rewrites the running EPS row via a path that does not re-emit here, so without this the
+        // stale canonical copy (DIA 0.0 sentinel) stays pinned for the whole session. Clear both maps, then
+        // rebuild the synchronous mirror from the now-healed DB (after the clear, so it can't re-read stale).
+        synchronized(cache) {
+            cache.clear()
+            canonicalEps.clear()
+        }
+        _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable }
+    }
+
     override suspend fun getProfile(): EffectiveProfile? =
         getProfile(dateUtil.now())
 

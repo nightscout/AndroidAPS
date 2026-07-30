@@ -869,6 +869,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
         val totalMigrated = migratedPs + migratedEps + migratedBoluses
         if (totalMigrated > 0) {
+            profileFunction.invalidateCache()
             aapsLogger.debug(LTag.CORE, "Migration to DB 33 complete: $totalMigrated records updated")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE(
