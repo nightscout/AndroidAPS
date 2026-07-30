@@ -97,6 +97,7 @@ internal fun PlusMinusInputScreen(
     format: DecimalFormat,
     label: String,
     displayText: String? = null,
+    hint: String? = null,
     allowZero: Boolean = false,
     isActive: Boolean = true,
     symmetricLargeSteps: Boolean = false,
@@ -200,6 +201,14 @@ internal fun PlusMinusInputScreen(
                         fontSize = labelFontSize,
                         textAlign = TextAlign.Center,
                     )
+                    if (hint != null) {
+                        Text(
+                            text = hint,
+                            color = WearWarningAmber,
+                            fontSize = 10.sp,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                 }
                 StepButton(step = stepValues[0], isIncrement = true, onStep = ::step, enabled = enabled)
             }
@@ -219,6 +228,14 @@ internal fun PlusMinusInputScreen(
                     fontSize = labelFontSize,
                     textAlign = TextAlign.Center,
                 )
+                if (hint != null) {
+                    Text(
+                        text = hint,
+                        color = WearWarningAmber,
+                        fontSize = 10.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
 
             // Bottom-left: decrement (fine step)

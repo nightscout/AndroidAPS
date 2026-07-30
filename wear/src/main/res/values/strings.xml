@@ -107,6 +107,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">High [%s]</string>
     <string name="action_carbs">Carbs</string>
     <string name="action_carbs_gram">Carbs [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Max removal: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
