@@ -54,12 +54,6 @@ class MainMenuActivity : MenuListActivity() {
 
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
-            // Top of the menu: only present on Wear OS 6+ (where CWF and the other code-based
-            // faces cannot run) and only while the pushed face is not installed. While an install
-            // runs the label switches to an inert "Installing…" so the tap is visibly acknowledged
-            // (install can take a few seconds and a silent wait provokes second taps)
-            if (watchFacePushHelper.isSupported() && !sp.getBoolean(WatchFacePushHelper.KEY_FACE_INSTALLED, false))
-                add(MenuItem(R.drawable.watchface_aapsv4, getString(if (installing) R.string.menu_installing_watchface else R.string.menu_install_watchface)))
             if (!preferences.get(BooleanKey.WearControl)) {
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
                 add(MenuItem(R.drawable.ic_sync, getString(R.string.menu_resync)))
@@ -77,6 +71,14 @@ class MainMenuActivity : MenuListActivity() {
                 if (sp.getBoolean(R.string.key_prime_fill, false))
                     add(MenuItem(R.drawable.ic_canula, getString(R.string.menu_prime_fill)))
             }
+            // Bottom of the menu: only present on Wear OS 6+ (where CWF and the other code-based
+            // faces cannot run) and only while the pushed face is not installed. Since each app
+            // install/update pushes the face automatically, this is the recovery action for a
+            // user who removed the face and wants it back before the next app update. While an
+            // install runs the label switches to an inert "Installing…" so the tap is visibly
+            // acknowledged (install can take a few seconds and a silent wait provokes second taps)
+            if (watchFacePushHelper.isSupported() && !sp.getBoolean(WatchFacePushHelper.KEY_FACE_INSTALLED, false))
+                add(MenuItem(R.drawable.watchface_aapsv4, getString(if (installing) R.string.menu_installing_watchface else R.string.menu_install_watchface)))
         }
 
     override fun doAction(position: String) {
