@@ -83,6 +83,11 @@
     <string name="menu_bg_graph">Biểu đồ BG</string>
     <string name="menu_resync">Đồng bộ lại</string>
     <string name="menu_prime_fill">Prime/Fill</string>
+    <string name="menu_install_watchface">Cài đặt mặt đồng hồ</string>
+    <string name="menu_installing_watchface">Đang cài đặt mặt đồng hồ…</string>
+    <string name="watchface_installed_active">Đã cài đặt và kích hoạt mặt đồng hồ</string>
+    <string name="watchface_installed_select">Mặt đồng hồ đã được cài đặt. Hãy chọn mặt đồng hồ này trong trình chọn mặt đồng hồ</string>
+    <string name="watchface_install_failed">Cài đặt mặt đồng hồ thất bại</string>
     <string name="menu_none">Không</string>
     <string name="menu_default">Mặc định</string>
     <string name="menu_menu">Danh Mục</string>
