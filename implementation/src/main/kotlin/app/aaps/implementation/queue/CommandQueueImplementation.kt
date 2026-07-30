@@ -1,13 +1,6 @@
 package app.aaps.implementation.queue
 
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.SystemClock
 import android.text.Spanned
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
@@ -106,13 +99,10 @@ class CommandQueueImplementation @Inject constructor(
     private val profileSwitchSilentGate: ProfileSwitchSilentGate,
     private val localAlertUtils: Provider<LocalAlertUtils>,
     private val smsCommunicator: Provider<SmsCommunicator>,
-    private val jobName: CommandQueueName,
-    private val workManager: WorkManager,
+    private val commandExecutor: Provider<CommandExecutor>,
     @ApplicationScope private val appScope: CoroutineScope,
     private val bolusProgressData: BolusProgressData
 ) : CommandQueue {
-
-    internal var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val queue = LinkedList<Command>()
 
@@ -145,10 +135,6 @@ class CommandQueueImplementation @Inject constructor(
             rxBus.toFlow(EventProfileChangeRequested::class.java).map { it.silent },
             persistenceLayer.observeChanges(PS::class.java).map { profileSwitchSilentGate.consumeSilent() }
         ).collectResilient(appScope, aapsLogger, LTag.PROFILE) { silent -> onProfileChanged(silent) }
-        /*
-         * Clear old WorkManager jobs, because they survive restart
-         */
-        workManager.cancelUniqueWork(jobName.name)
     }
 
     private suspend fun onProfileChanged(silent: Boolean = false) {
@@ -281,22 +267,20 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     /**
-     * Watchdog. I observed issue where work stuck in RUNNING state but nothing actually happens
-     * (last work completed successfully).
-     * Cancel scheduled work in this case
+     * READSTATUS dedup + stall telemetry. If a READSTATUS sits at the tail of the queue for more than
+     * 15 min the executor is stalled (a driver's execute() is blocking). Surface it for telemetry only.
      */
     private var readScheduledDetected: Long? = null
 
     @Synchronized
     fun isReadStatusScheduled(): Boolean {
-        /*
-         * Cancel all works if ReadStatus is scheduled for more than 15 min
-         */
         readScheduledDetected?.let {
             if (dateUtil.isOlderThan(it, minutes = 15)) {
-                workManager.cancelUniqueWork(jobName.name)
-                fabricPrivacy.logCustom("QueueWorkerStuck")
-                Thread.sleep(5000)
+                // The app-owned executor cannot be wedged in a WorkManager RUNNING state; a genuine
+                // stall means a driver's execute() is blocking. Nothing here can unblock a blocking
+                // driver, so only surface it (do NOT cancel — that would risk the exact mid-command
+                // teardown this migration removed).
+                fabricPrivacy.logCustom("CommandExecutorStuck")
             }
         }
 
@@ -356,34 +340,12 @@ class CommandQueueImplementation @Inject constructor(
         performing = null
     }
 
-    private fun workIsRunning(): Boolean {
-        for (workInfo in workManager.getWorkInfosForUniqueWork(jobName.name).get())
-            if (workInfo.state == WorkInfo.State.BLOCKED || workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.RUNNING)
-                return true
-        return false
-    }
-
-    // After new command added to the queue
-    // start thread again if not already running
-    @Synchronized fun notifyAboutNewCommand() = handler.post {
-        waitForFinishedThread()
-        if (!workIsRunning()) {
-            workManager.enqueueUniqueWork(
-                jobName.name, ExistingWorkPolicy.APPEND_OR_REPLACE,
-                OneTimeWorkRequest.Builder(QueueWorker::class.java)
-                    .build()
-            )
-            aapsLogger.debug(LTag.PUMPQUEUE, "Starting new work")
-        } else {
-            aapsLogger.debug(LTag.PUMPQUEUE, "Work is already running")
-        }
-    }
-
-    fun waitForFinishedThread() {
-        while (workIsRunning() && waitingForDisconnect) {
-            aapsLogger.debug(LTag.PUMPQUEUE, "Waiting for previous work finish")
-            SystemClock.sleep(500)
-        }
+    // After a new command is added to the queue, wake the single app-owned executor loop. The loop is
+    // started on demand (idempotent) and drains the queue to completion; a signal while it is busy is a
+    // conflated no-op. Returns Boolean so CommandQueueMocked can override this to a no-op in tests.
+    fun notifyAboutNewCommand(): Boolean {
+        commandExecutor.get().signal()
+        return true
     }
 
     @Synchronized
