@@ -178,7 +178,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
 
     private fun buildPluginGroups(selectedSet: Set<String>): List<PluginGroup> {
         val typeOrder = listOf(
-            PluginType.PUMP, PluginType.BGSOURCE, PluginType.APS,
+            PluginType.PUMP, PluginType.BGSOURCE, PluginType.APS, PluginType.LOOP,
             PluginType.SENSITIVITY, PluginType.SMOOTHING, PluginType.CALIBRATION,
             PluginType.CONSTRAINTS,
             PluginType.SYNC, PluginType.GENERAL
