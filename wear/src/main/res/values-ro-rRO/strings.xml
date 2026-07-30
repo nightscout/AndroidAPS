@@ -83,6 +83,11 @@
     <string name="menu_bg_graph">Grafic glicemie</string>
     <string name="menu_resync">Resincronizare</string>
     <string name="menu_prime_fill">Amorsare/Umplere</string>
+    <string name="menu_install_watchface">Instalați fața de ceas</string>
+    <string name="menu_installing_watchface">Se instalează fața de ceas…</string>
+    <string name="watchface_installed_active">Față de ceas instalată și setată ca activă</string>
+    <string name="watchface_installed_select">Față de ceas instalată, selectați-o în selectorul de fețe de ceas</string>
+    <string name="watchface_install_failed">Instalarea feței de ceas a eșuat</string>
     <string name="menu_none">Nimic</string>
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
