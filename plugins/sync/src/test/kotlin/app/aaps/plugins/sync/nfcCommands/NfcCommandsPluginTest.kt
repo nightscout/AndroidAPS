@@ -1,10 +1,12 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -17,7 +19,6 @@ import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.plugins.sync.R
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -43,7 +44,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var mockProfileStore: ProfileStore
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var bolusWizard: BolusWizard
+    @Mock lateinit var wizardBolusExecutor: WizardBolusExecutor
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var sceneAutomationApi: SceneAutomationApi
     @Mock lateinit var bolusProgressData: BolusProgressData
@@ -65,7 +66,6 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 profileFunction = profileFunction,
                 profileUtil = profileUtil,
                 profileRepository = profileRepository,
-                insulin = insulin,
                 activePlugin = activePlugin,
                 commandQueue = commandQueue,
                 loop = loop,
@@ -75,7 +75,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 configBuilder = configBuilder,
                 rxBus = rxBus,
                 uel = uel,
-                bolusWizard = bolusWizard,
+                wizardBolusExecutor = wizardBolusExecutor,
                 iobCobCalculator = iobCobCalculator,
                 bolusProgressData = bolusProgressData,
                 glucoseStatusProvider = glucoseStatusProvider,
@@ -542,15 +542,18 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             .put(NfcJsonKeys.AMOUNT, 20)
             .put(NfcJsonKeys.PERCENT, 100)
         
-        whenever(bolusWizard.insulinAfterConstraints).thenReturn(1.5)
-        plugin.setActionState(params.toString(), bolusWizard)
-        runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
+        val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
+        plugin.setActionState(params.toString(), prepared)
+        runTest { 
+            whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
+            whenever(wizardBolusExecutor.confirm(eq(123L), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        }
         whenever(rh.gs(eq(R.string.smscommunicator_bolus_delivered), any())).thenReturn("Bolus delivered")
 
         val result = execute(NfcCommandCode.BOLUS_WIZARD, params)
 
         assertThat(result.success).isTrue()
-        runTest { verify(bolusWizard).executeNormal(any(), anyOrNull(), any(), any(), any(), any()) }
+        runTest { verify(wizardBolusExecutor).confirm(eq(123L), eq(Sources.NfcCommands), any(), any(), any()) }
     }
 
     @Test
@@ -562,16 +565,16 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         action.params = params
 
         whenever(profileFunction.getOriginalProfileName()).thenReturn("Default")
-        val cobInfo = app.aaps.core.data.iob.CobInfo(0L, 0.0, 0.0)
-        whenever(iobCobCalculator.getCobInfo(any())).thenReturn(cobInfo)
-        whenever(rh.gs(any<Int>(), any<Double>())).thenReturn("Going to deliver 1.5U")
-        whenever(rh.gs(any<Int>(), any<Int>())).thenReturn("20g carbs")
+        val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
+        whenever(wizardBolusExecutor.prepareWizard(any())).thenReturn(prepared)
+        whenever(rh.gs(any<Int>(), eq(1.5))).thenReturn("Going to deliver 1.5U")
+        whenever(rh.gs(any<Int>(), eq(20))).thenReturn("20g carbs")
 
         val result = action.formatParams()
 
         assertThat(result).contains("Going to deliver")
-        verify(bolusWizard).doCalc(any(), eq("Default"), anyOrNull(), eq(20), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())
-        assertThat(plugin.getActionState(params.toString())).isEqualTo(bolusWizard)
+        verify(wizardBolusExecutor).prepareWizard(any())
+        assertThat(plugin.getActionState(params.toString())).isEqualTo(prepared)
     }
 
     // ── processProfile tests ───────────────────────────────────────────────────
@@ -579,6 +582,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand PROFILE_SWITCH should create profile switch`() {
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(mockProfileStore))
+        runBlocking { whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(ICfg("",55,8.0,1.0))}
         runTest {
             whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
                 .thenReturn(mock())

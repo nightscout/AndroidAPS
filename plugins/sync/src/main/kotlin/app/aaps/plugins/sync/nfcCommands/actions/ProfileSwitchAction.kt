@@ -45,6 +45,9 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         
         val profileStore = plugin.profileRepository.profile.value ?: return NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.notconfigured))
         
+        val iCfg = plugin.profileFunction.getRunningOrRequestedICfg()
+            ?: return NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.profile_switch_no_insulin))
+
         val created = plugin.profileFunction.createProfileSwitch(
             profileStore = profileStore,
             profileName = profileName,
@@ -56,7 +59,7 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             source = source,
             note = plugin.rh.gs(R.string.nfccommands_profile_switch_created),
             listValues = listOf(ValueWithUnit.SimpleString(plugin.rh.gsNotLocalised(R.string.nfccommands_profile_switch_created))),
-            iCfg = plugin.insulin.iCfg,
+            iCfg = iCfg,
         )
         return if (created != null) {
             val resultMessage = if (percentage == 100) profileName else "$profileName $percentage%"

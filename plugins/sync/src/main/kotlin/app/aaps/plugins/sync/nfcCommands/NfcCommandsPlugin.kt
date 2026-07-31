@@ -20,11 +20,9 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -85,7 +83,6 @@ class NfcCommandsPlugin @Inject constructor(
     val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
     val profileRepository: ProfileRepository,
-    val insulin: Insulin,
     val activePlugin: ActivePlugin,
     val commandQueue: CommandQueue,
     val loop: Loop,
