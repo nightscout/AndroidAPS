@@ -402,7 +402,8 @@ class DataHandlerMobile @Inject constructor(
         }
 
         // Map loop mode
-        val loopMode = when (loop.runningMode()) {
+        val runningModeRecord = loop.runningModeRecord()
+        val loopMode = when (runningModeRecord.mode) {
             RM.Mode.CLOSED_LOOP       -> LoopStatusData.LoopMode.CLOSED
             RM.Mode.OPEN_LOOP         -> LoopStatusData.LoopMode.OPEN
             RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
@@ -414,6 +415,8 @@ class DataHandlerMobile @Inject constructor(
             RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
             else                      -> LoopStatusData.LoopMode.UNKNOWN
         }
+        // End time of a temporary mode (suspend/disconnect/superbolus) so the watch can show remaining duration
+        val modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
 
         // Build temp target info
         val tempTargetInfo = tempTarget?.let {
@@ -530,14 +533,15 @@ class DataHandlerMobile @Inject constructor(
         return LoopStatusData(
             timestamp = System.currentTimeMillis(),
             loopMode = loopMode,
-            apsName = if (loop.runningMode().isLoopRunning())
+            apsName = if (runningModeRecord.mode.isLoopRunning())
                 (usedAPS as? PluginBase)?.name else null,
             lastRun = lastRunTimestamp,
             lastEnact = lastEnactTimestamp,
             tempTarget = tempTargetInfo,
             autosensTarget = autosensTarget,
             defaultRange = defaultRange,
-            oapsResult = oapsResultInfo
+            oapsResult = oapsResultInfo,
+            modeEndTime = modeEndTime
         )
     }
 

@@ -20,8 +20,14 @@ sealed class EventData : Event() {
 
     companion object {
 
+        /**
+         * Tolerates unknown keys so an app on an older build can still decode payloads from a
+         * newer peer that added fields (phone and wear are not always updated together).
+         */
+        private val lenientJson = Json { ignoreUnknownKeys = true }
+
         fun deserialize(json: String) = try {
-            Json.decodeFromString(serializer(), json)
+            lenientJson.decodeFromString(serializer(), json)
         } catch (_: Exception) {
             Error(System.currentTimeMillis())
         }
