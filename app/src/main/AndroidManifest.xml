@@ -73,6 +73,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Powers the screen on for a background alarm without USE_FULL_SCREEN_INTENT.
+             Fired by AlarmManager.setAlarmClock() from AlarmNotificationManager. -->
+        <receiver
+            android:name="app.aaps.implementation.androidNotification.AlarmScreenWakeReceiver"
+            android:exported="false" />
+
+        <!-- "Mute" action on the background alarm notification → silences the looping alarm. -->
+        <receiver
+            android:name="app.aaps.implementation.androidNotification.AlarmMuteReceiver"
+            android:exported="false" />
+
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name="app.aaps.receivers.DataReceiver"
