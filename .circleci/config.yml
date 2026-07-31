@@ -43,6 +43,28 @@ jobs:
           background: true
 
       - run:
+          name: Wait for emulator boot
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            # Boot gate: the emulator above is launched in the background, so without this the test task
+            # can start before the device is online and fail with the misleading
+            # "com.android.builder.testing.api.DeviceException: No online devices found".
+            # Block until adb sees the device AND the system has fully booted, with a hard timeout so a
+            # stuck emulator fails loudly HERE (clear message) instead of later.
+            adb wait-for-device
+            timeout 420 bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
+            adb shell getprop sys.boot_completed
+            # Settle, dismiss keyguard and disable animations so ComposeMainActivity launches cleanly:
+            # a heavy UI launch on an unsettled emulator can ANR system_server and drop the device offline
+            # mid-run (the failure mode this hardening targets).
+            adb shell input keyevent 82 || true
+            adb shell settings put global window_animation_scale 0 || true
+            adb shell settings put global transition_animation_scale 0 || true
+            adb shell settings put global animator_duration_scale 0 || true
+            adb devices
+
+      - run:
           name: Run connectedFullDebugAndroidTest
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
