@@ -32,6 +32,7 @@ import app.aaps.wear.data.statusDataArray
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import dagger.android.AndroidInjection
+import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
@@ -167,9 +168,41 @@ abstract class BaseWatchFace : WatchFace() {
     private var mLastSvg = ""
     private var mLastDirection = ""
 
+    // True only once injection has actually returned - either via onCreate below, or via
+    // ensureInjected() for instances that never get an onCreate at all. Reflects the exact
+    // invariant (injection done or not), unlike catching UninitializedPropertyAccessException
+    // which would also mask unrelated bugs.
+    protected var daggerInjectionComplete = false
+
+    /**
+     * Injects this instance if [onCreate] never ran, so `@Inject` fields are usable anyway.
+     *
+     * Editor sessions (and preview/screenshot generation) run the watch face as a *headless*
+     * instance, which `androidx.wear.watchface` builds by reflection - `getConstructor()
+     * .newInstance()` followed only by an internal `setContext()` that calls `attachBaseContext`.
+     * `Service.onCreate()` is never called on such an instance, so the [onCreate] injection below
+     * never runs and every `@Inject` field stays unset. Anything the framework then calls into -
+     * `createComplicationSlotsManager`, [onDestroy], a headless render - would throw
+     * `UninitializedPropertyAccessException`, and a throw during the headless release kills the
+     * binder, which makes the system drop the editing session and recover the watch face as a
+     * fresh instance (losing the complication configuration just chosen).
+     *
+     * `attachBaseContext` having been called is what makes this work: `applicationContext`
+     * resolves to `WearApp`, a `DaggerApplication` and therefore a [HasAndroidInjector]. Safe and
+     * cheap to call repeatedly - it no-ops once injection has happened by either route.
+     */
+    protected fun ensureInjected() {
+        if (daggerInjectionComplete) return
+        (applicationContext as? HasAndroidInjector)?.let {
+            it.androidInjector().inject(this)
+            daggerInjectionComplete = true
+        }
+    }
+
     override fun onCreate() {
         // Not derived from DaggerService, do injection here
         AndroidInjection.inject(this)
+        daggerInjectionComplete = true
         super.onCreate()
         simpleUi.onCreate(::forceUpdate)
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -321,6 +354,10 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onDestroy() {
+        // Headless instances reach this without ever having run onCreate, so inject first - see
+        // ensureInjected(). Watch faces that declare no complication slots (Digital, Circle) never
+        // call anything else that would have injected them, so this is their only entry point.
+        ensureInjected()
         disposable.clear()
         watchfaceScope.cancel()
         simpleUi.onDestroy()

@@ -113,10 +113,26 @@ class CustomWatchface : BaseWatchFace() {
         ComplicationType.PHOTO_IMAGE
     )
 
+    // This method is foundational engine setup and must never throw - confirmed via a real crash
+    // (UninitializedPropertyAccessException on complicationDataRepository, logged internally by
+    // WatchFaceService's own background-thread handler) that it can run before BaseWatchFace's
+    // Dagger injection has completed. It is also the first thing the framework calls on a headless
+    // instance, which never gets an onCreate at all, so ensureInjected() runs first: that both
+    // makes complicationDataRepository usable here and lets the editor's own headless instance
+    // build slots from the real CWF json instead of falling back to default bounds.
+    // daggerInjectionComplete is still checked rather than catching UninitializedPropertyAccessException,
+    // since a broad catch here would also mask unrelated lateinit bugs in this call chain as
+    // "not injected yet"; if injection genuinely could not happen, fall back to each slot's default
+    // bounds (same as a fresh install) - a valid manager with the right slot ids beats a crashed one.
     override fun createComplicationSlotsManager(currentUserStyleRepository: CurrentUserStyleRepository): ComplicationSlotsManager {
-        val storedJson = runBlocking {
-            complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
-        }?.json?.let { JSONObject(it) }
+        ensureInjected()
+        val storedJson = if (daggerInjectionComplete) {
+            runBlocking {
+                complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
+            }?.json?.let { JSONObject(it) }
+        } else {
+            null
+        }
         val slots = complicationSlotConfigs.map { config ->
             buildComplicationSlot(config, storedJson?.optJSONObject(config.viewKey))
         }
@@ -165,20 +181,26 @@ class CustomWatchface : BaseWatchFace() {
         applyComplicationStyle(slot, viewMap.viewJson)
     }
 
+    // ComplicationDrawable's own library defaults include an OPAQUE BLACK background
+    // (ComplicationStyle.BACKGROUND_COLOR_DEFAULT = Color.BLACK, confirmed against the real 1.2.1
+    // source) - a slot with no CWF styling would otherwise render as a solid black square. Apply
+    // our own sane defaults unconditionally (transparent background, white/light-gray text/icon),
+    // then let the CWF json's COLOR/FONTCOLOR/FONTTITLECOLOR keys override them when present.
     private fun applyComplicationStyle(slot: ComplicationSlot, viewJson: JSONObject?) {
         val renderer = slot.renderer as? CanvasComplicationDrawable ?: return
         val drawable = renderer.drawable
         val textColor = getColor(viewJson?.optString(JsonKeys.FONTCOLOR.key) ?: "", Color.WHITE)
-        val titleColor = getColor(viewJson?.optString(JsonKeys.FONTTITLECOLOR.key) ?: "", Color.WHITE)
+        val titleColor = getColor(viewJson?.optString(JsonKeys.FONTTITLECOLOR.key) ?: "", Color.LTGRAY)
         val textTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONT.key) ?: FontMap.DEFAULT.key)
         val titleTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONTTITLE.key) ?: FontMap.DEFAULT.key)
-        val backgroundColor = if (viewJson?.has(JsonKeys.COLOR.key) == true) getColor(viewJson.optString(JsonKeys.COLOR.key)) else null
+        val backgroundColor = if (viewJson?.has(JsonKeys.COLOR.key) == true) getColor(viewJson.optString(JsonKeys.COLOR.key)) else Color.TRANSPARENT
         for (style in listOf(drawable.activeStyle, drawable.ambientStyle)) {
+            style.backgroundColor = backgroundColor
             style.textColor = textColor
             style.titleColor = titleColor
+            style.iconColor = textColor
             style.setTextTypeface(textTypeface)
             style.setTitleTypeface(titleTypeface)
-            backgroundColor?.let { style.backgroundColor = it }
         }
     }
 

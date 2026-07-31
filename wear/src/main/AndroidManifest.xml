@@ -728,18 +728,6 @@
         <!-- taskAffinity="": activities launched from tiles/complications (NEW_TASK) get their own
              task, so back returns to the tile/watchface instead of a lingering main menu. Launches
              from within the app (no NEW_TASK) still stack in the caller's task as before. -->
-        <!-- Lets the AAPS Settings menu open the complication data source chooser for
-             CustomWatchface's slots directly, for devices where the system's long-press
-             "Customize" gesture isn't available (see ComplicationSlotEditorActivity). -->
-        <activity
-            android:name=".interaction.ComplicationSlotEditorActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".interaction.actions.WizardActivity"
             android:exported="true"

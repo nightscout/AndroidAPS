@@ -5,13 +5,19 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
+import androidx.wear.watchface.editor.EditorSession
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.preference.WearPreferenceActivity
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ConfigurationActivity : WearPreferenceActivity() {
@@ -19,6 +25,26 @@ class ConfigurationActivity : WearPreferenceActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
 
     private var watchfaceComponentName: ComponentName? = null
+
+    // Creation is kicked off unconditionally in onCreate() - NOT lazily on first "Complication N"
+    // tap - because EditorSession's constructor internally calls registerForActivityResult(),
+    // which throws IllegalStateException if called after the activity has moved past STARTED
+    // (confirmed via a real stack trace when this was created on-demand from onPreferenceTreeClick,
+    // i.e. long after the screen was already resumed). Kept alive and reused across multiple taps
+    // (e.g. configuring slot 1 then slot 2 without reopening this screen); closed automatically by
+    // its own lifecycle observer when this activity is destroyed - do not call .close() ourselves
+    // (that causes a separate double-close crash, see requestComplicationPicker).
+    private var editorSessionDeferred: Deferred<EditorSession>? = null
+    private var complicationPickerInProgress = false
+
+    companion object {
+
+        /** Set by ComplicationPickerSupport when relaunching this activity (from
+         *  WatchfaceConfigurationActivity's Settings-menu entry point) to open the picker for a
+         *  specific CustomWatchface complication slot. Preferences are shown as usual either way -
+         *  this only additionally triggers the picker for that one slot on entry. */
+        const val EXTRA_COMPLICATION_SLOT_ID = "app.aaps.wear.interaction.EXTRA_COMPLICATION_SLOT_ID"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -57,6 +83,44 @@ class ConfigurationActivity : WearPreferenceActivity() {
         // Add padding to the content view for spacing from top and bottom
         val contentView = findViewById<ViewGroup>(android.R.id.content)
         contentView?.setPadding(0, 50, 0, 50)
+
+        // Start the EditorSession now (see the field comment above for why this can't be deferred
+        // to the first "Complication N" tap). This is the sole activity in the app registered for
+        // ACTION_WATCH_FACE_EDITOR, so both the long-press and Settings-menu entry points end up
+        // here. If relaunched (by ComplicationPickerSupport) to open the picker for one specific
+        // slot, do that in addition to showing preferences as usual (below), not instead of - the
+        // user should land back on this same preferences screen afterward, able to configure
+        // another slot without reopening.
+        editorSessionDeferred = lifecycleScope.async { EditorSession.createOnWatchEditorSession(this@ConfigurationActivity) }
+
+        val complicationSlotId = intent.getIntExtra(EXTRA_COMPLICATION_SLOT_ID, -1)
+        if (complicationSlotId != -1) {
+            requestComplicationPicker(complicationSlotId)
+        }
+    }
+
+    /**
+     * Opens the system's complication data source chooser for [slotId], reusing the single
+     * [EditorSession] started in [onCreate] for as long as this activity is alive. Safe to call
+     * repeatedly for different slots without reopening this screen.
+     */
+    fun requestComplicationPicker(slotId: Int) {
+        if (complicationPickerInProgress) return
+        complicationPickerInProgress = true
+        lifecycleScope.launch {
+            try {
+                val session = editorSessionDeferred?.await() ?: return@launch
+                session.openComplicationDataSourceChooser(slotId)
+                // Don't call session.close() here: createOnWatchEditorSession() registers its own
+                // lifecycle observer that closes the session automatically when this activity is
+                // eventually destroyed. Closing it explicitly here too would cause that observer to
+                // close an already-closed session on destroy, throwing
+                // IllegalArgumentException("EditorSession method called after close()") and
+                // crashing the app during activity teardown (confirmed via a real stack trace).
+            } finally {
+                complicationPickerInProgress = false
+            }
+        }
     }
 
     override fun createPreferenceFragment(): PreferenceFragmentCompat {
@@ -81,11 +145,6 @@ class ConfigurationActivity : WearPreferenceActivity() {
         return ConfigurationFragment.newInstance(resXmlId)
     }
 
-    override fun onPause() {
-        super.onPause()
-        finish()
-    }
-
     private fun removeBackgroundRecursively(parent: View) {
         if (parent is ViewGroup)
             for (i in 0 until parent.childCount)
@@ -106,6 +165,15 @@ class ConfigurationActivity : WearPreferenceActivity() {
                 // Apply multiline layout to all preferences to prevent text truncation
                 applyMultilineLayoutToAllPreferences(preferenceScreen)
             }
+        }
+
+        // Already running as ConfigurationActivity (the only activity with a valid intent shape
+        // for EditorSession), so handle the tap directly - no need to relaunch via
+        // ComplicationPickerSupport the way WatchfaceConfigurationFragment does.
+        override fun onPreferenceTreeClick(preference: Preference): Boolean {
+            val slotId = ComplicationPickerSupport.slotIdFor(requireContext(), preference) ?: return super.onPreferenceTreeClick(preference)
+            (requireActivity() as ConfigurationActivity).requestComplicationPicker(slotId)
+            return true
         }
 
         /**

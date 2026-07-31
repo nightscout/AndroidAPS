@@ -2,8 +2,6 @@ package app.aaps.wear.interaction
 
 import android.Manifest
 import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -16,14 +14,11 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
-import androidx.wear.watchface.editor.EditorRequest
-import androidx.wear.watchface.editor.WatchFaceEditorContract
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.preference.WearPreferenceActivity
-import app.aaps.wear.watchfaces.CustomWatchface
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import javax.inject.Inject
 
@@ -134,18 +129,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     class WatchfaceConfigurationFragment : PreferenceFragmentCompat() {
 
         // ActivityResultContract registration must happen unconditionally, before STARTED - hence
-        // property initializers here rather than inside onCreatePreferences(). One launcher per
-        // slot so each carries its own EXTRA_SLOT_ID through to ComplicationSlotEditorActivity.
-        private class ComplicationPickerContract(private val slotId: Int) : WatchFaceEditorContract() {
-            override fun createIntent(context: Context, input: EditorRequest): Intent =
-                super.createIntent(context, input).putExtra(ComplicationSlotEditorActivity.EXTRA_SLOT_ID, slotId)
-        }
-
-        private val complicationSlotLaunchers = mapOf(
-            CustomWatchface.COMPLICATION_SLOT_ID_1 to registerForActivityResult(ComplicationPickerContract(CustomWatchface.COMPLICATION_SLOT_ID_1)) { },
-            CustomWatchface.COMPLICATION_SLOT_ID_2 to registerForActivityResult(ComplicationPickerContract(CustomWatchface.COMPLICATION_SLOT_ID_2)) { },
-            CustomWatchface.COMPLICATION_SLOT_ID_3 to registerForActivityResult(ComplicationPickerContract(CustomWatchface.COMPLICATION_SLOT_ID_3)) { }
-        )
+        // a property initializer here rather than inside onCreatePreferences().
+        private val complicationPickerSupport = ComplicationPickerSupport(this)
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             val resXmlId = arguments?.getInt(ARG_XML_RES_ID) ?: 0
@@ -156,18 +141,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
             }
         }
 
-        override fun onPreferenceTreeClick(preference: Preference): Boolean {
-            val slotId = when (preference.key) {
-                getString(R.string.key_complication_1) -> CustomWatchface.COMPLICATION_SLOT_ID_1
-                getString(R.string.key_complication_2) -> CustomWatchface.COMPLICATION_SLOT_ID_2
-                getString(R.string.key_complication_3) -> CustomWatchface.COMPLICATION_SLOT_ID_3
-                else                                   -> null
-            } ?: return super.onPreferenceTreeClick(preference)
-            complicationSlotLaunchers.getValue(slotId).launch(
-                EditorRequest(ComponentName(requireContext(), CustomWatchface::class.java), requireContext().packageName, null)
-            )
-            return true
-        }
+        override fun onPreferenceTreeClick(preference: Preference): Boolean =
+            complicationPickerSupport.handlePreferenceClick(preference) || super.onPreferenceTreeClick(preference)
 
         /**
          * Recursively apply multiline layout to all preferences to allow long text to wrap
