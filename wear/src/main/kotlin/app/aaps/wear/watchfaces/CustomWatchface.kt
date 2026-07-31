@@ -29,11 +29,14 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
+import androidx.wear.watchface.CanvasComplication
 import androidx.wear.watchface.CanvasComplicationFactory
 import androidx.wear.watchface.ComplicationSlot
 import androidx.wear.watchface.ComplicationSlotsManager
+import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.complications.ComplicationSlotBounds
 import androidx.wear.watchface.complications.DefaultComplicationDataSourcePolicy
+import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationDrawable
@@ -84,6 +87,13 @@ class CustomWatchface : BaseWatchFace() {
     private var jsonString = ""
     private var backgroundDrawable: Drawable? = null
 
+    // Complication styling state, kept per slot id so it survives the two independent orderings the
+    // framework can use: the CWF json can be parsed before the ComplicationDrawable exists (lazy
+    // renderer creation) or after it. Both applyComplicationStyle() call sites are cheap and
+    // idempotent, so whichever happens second completes the styling.
+    private val complicationDrawables = mutableMapOf<Int, ComplicationDrawable>()
+    private val complicationStyleJson = mutableMapOf<Int, JSONObject?>()
+
     companion object {
 
         // Stable slot IDs: the system persists the chosen provider per (watch face component, slot
@@ -92,6 +102,40 @@ class CustomWatchface : BaseWatchFace() {
         const val COMPLICATION_SLOT_ID_1 = 101
         const val COMPLICATION_SLOT_ID_2 = 102
         const val COMPLICATION_SLOT_ID_3 = 103
+    }
+
+    /**
+     * Renderer for CustomWatchface's complication slots. Exists to force the **synchronous** branch
+     * of `ComplicationDrawable.setComplicationData`.
+     *
+     * With `loadDrawablesAsync = true` (what the framework passes) the library does not put the new
+     * data into the renderer it is currently drawing with. It builds a *second* `ComplicationRenderer`
+     * and installs it only once the async drawable load completes - its own comment says this
+     * "causes it to render as blank until the async load has completed". On the engine-start /
+     * complication-cache-restore path that completion does not arrive here, so the live renderer keeps
+     * its empty data and paints nothing at all, while `ComplicationDrawable.complicationData` already
+     * reports the real type. That combination is exactly the observed symptom: a complication that
+     * responds to taps (tap handling reads the slot, not the renderer) and reports correct data at
+     * every layer, yet stays invisible until the provider is re-picked.
+     *
+     * Loading synchronously puts the data into the live renderer immediately. The cost is decoding
+     * two or three small complication icons on the calling thread instead of off it.
+     */
+    private class CwfCanvasComplication(
+        drawable: ComplicationDrawable,
+        watchState: WatchState,
+        invalidateCallback: CanvasComplication.InvalidateCallback
+    ) : CanvasComplicationDrawable(drawable, watchState, invalidateCallback) {
+
+        /**
+         * Ignores [loadDrawablesAsynchronous] and always loads synchronously. This is the fix for
+         * complications rendering as empty until the provider was re-picked - do not "simplify" it
+         * by passing the parameter through, that reintroduces the bug. See the class doc for the
+         * full mechanism.
+         */
+        override fun loadData(complicationData: ComplicationData, loadDrawablesAsynchronous: Boolean) {
+            super.loadData(complicationData, false)
+        }
     }
 
     private class ComplicationSlotConfig(val slotId: Int, @IdRes val viewId: Int, val viewKey: String, val defaultBounds: RectF)
@@ -141,7 +185,15 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun buildComplicationSlot(config: ComplicationSlotConfig, viewJson: JSONObject?): ComplicationSlot {
         val canvasComplicationFactory = CanvasComplicationFactory { watchState, invalidateCallback ->
-            CanvasComplicationDrawable(ComplicationDrawable(this), watchState, invalidateCallback)
+            // Keep the ComplicationDrawable so styling never depends on being able to reach it
+            // through complicationSlotsManager - see applyComplicationStyle. The library creates
+            // renderers lazily, so this can run either before or after the CWF json is parsed;
+            // applying here covers "drawable created last", and customizeComplicationView covers
+            // "json parsed last".
+            val drawable = ComplicationDrawable(this)
+            complicationDrawables[config.slotId] = drawable
+            applyComplicationStyle(config.slotId)
+            CwfCanvasComplication(drawable, watchState, invalidateCallback)
         }
         return ComplicationSlot.createRoundRectComplicationSlotBuilder(
             id = config.slotId,
@@ -177,8 +229,13 @@ class CustomWatchface : BaseWatchFace() {
     private fun customizeComplicationView(view: FrameLayout, viewMap: ViewMap) {
         viewMap.customizeViewCommon(view, this)
         val config = complicationSlotConfigs.firstOrNull { it.viewId == view.id } ?: return
-        val slot = complicationSlotsManager?.get(config.slotId) ?: return
-        applyComplicationStyle(slot, viewMap.viewJson)
+        // Record the style even if the drawable doesn't exist yet, then apply what we can. This
+        // pass runs from setWatchfaceStyle() <- setColorDark(), which BaseWatchFace.onCreate()
+        // triggers BEFORE the engine ever calls createWatchFace() - so previously the slot lookup
+        // returned null on a cold start, applyComplicationStyle never ran, and the drawable kept
+        // the library's OPAQUE BLACK default background until something forced a later CWF reload.
+        complicationStyleJson[config.slotId] = viewMap.viewJson
+        applyComplicationStyle(config.slotId)
     }
 
     // ComplicationDrawable's own library defaults include an OPAQUE BLACK background
@@ -186,9 +243,9 @@ class CustomWatchface : BaseWatchFace() {
     // source) - a slot with no CWF styling would otherwise render as a solid black square. Apply
     // our own sane defaults unconditionally (transparent background, white/light-gray text/icon),
     // then let the CWF json's COLOR/FONTCOLOR/FONTTITLECOLOR keys override them when present.
-    private fun applyComplicationStyle(slot: ComplicationSlot, viewJson: JSONObject?) {
-        val renderer = slot.renderer as? CanvasComplicationDrawable ?: return
-        val drawable = renderer.drawable
+    private fun applyComplicationStyle(slotId: Int) {
+        val drawable = complicationDrawables[slotId] ?: return
+        val viewJson = complicationStyleJson[slotId]
         val textColor = getColor(viewJson?.optString(JsonKeys.FONTCOLOR.key) ?: "", Color.WHITE)
         val titleColor = getColor(viewJson?.optString(JsonKeys.FONTTITLECOLOR.key) ?: "", Color.LTGRAY)
         val textTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONT.key) ?: FontMap.DEFAULT.key)

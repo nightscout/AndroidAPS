@@ -49,6 +49,14 @@ internal class ComplicationPickerSupport(private val fragment: Fragment) {
     fun handlePreferenceClick(preference: Preference): Boolean {
         val context = fragment.requireContext()
         val slotId = slotIdFor(context, preference) ?: return false
+        // NOTE: this launch cannot currently reach the system's complication picker. Wear Services
+        // only serves the provider chooser while SysUI's own WFEditingManagerImpl has registered an
+        // editing session (it does that just before launching ACTION_WATCH_FACE_EDITOR itself, from
+        // the long-press "Customize" flow). An app-initiated launch skips that registration, so the
+        // chooser opens and is cancelled ~400ms later ("Cancelling ProviderChooserActivity ... there
+        // is no editing session in progress"). Passing the real running instance id was verified NOT
+        // to help - a request carrying the correct id was cancelled identically. Reaching the picker
+        // from the AAPS menu therefore needs a different mechanism, not a richer EditorRequest.
         launchers.getValue(slotId).launch(
             EditorRequest(ComponentName(context, CustomWatchface::class.java), context.packageName, null)
         )
