@@ -718,19 +718,6 @@ class EquilManager @Inject constructor(
         equilHistoryPump.serialNumber = getSerialNumber()
         val id = equilHistoryPumpDao.insert(equilHistoryPump)
         aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id {}", id)
-        // Surface pump errors/alarms from the GATT history. loadEquilHistory only replays records past
-        // the stored cursor, so each call here is a fresh event - no extra dedup needed. This is the only
-        // alarm source now that connections go direct-to-MAC (no scan, so the advertisement decodeData()
-        // path that used to raise EventEquilAlarm no longer runs). See #5040.
-        val errorTips = getEquilError(port, type, level)
-        if (errorTips.isNotEmpty()) {
-            val alarmRecord = EquilHistoryRecord(EquilHistoryRecord.EventType.EQUIL_ALARM, System.currentTimeMillis(), getSerialNumber())
-            alarmRecord.resolvedAt = System.currentTimeMillis()
-            alarmRecord.resolvedStatus = ResolvedResult.SUCCESS
-            alarmRecord.note = errorTips
-            equilHistoryRecordDao.insert(alarmRecord)
-            rxBus.send(EventEquilAlarm(errorTips))
-        }
         rxBus.send(EventEquilDataChanged())
     }
 

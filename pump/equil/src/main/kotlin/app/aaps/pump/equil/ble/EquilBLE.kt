@@ -126,7 +126,7 @@ class EquilBLE @Inject constructor(
                     synchronized(notifyLock) {
                         // New link: notifications not yet enabled. Block command dispatch until onDescriptorWrite.
                         notificationEnabled = false
-                        pendingCmd = null
+                        dispatchedCmd = null
                     }
                     bluetoothGatt?.discoverServices()
                     updateCmdStatus(ResolvedResult.FAILURE)
@@ -182,11 +182,9 @@ class EquilBLE @Inject constructor(
                     aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite: Wrote GATT Descriptor successfully.")
                     synchronized(notifyLock) {
                         notificationEnabled = true
-                        // Flush a command that writeCmd deferred while notifications were coming up.
-                        if (pendingCmd != null) {
-                            pendingCmd = null
-                            ready()
-                        }
+                        // Notifications live: send the command (queue-opened, deferred, or issued while the
+                        // link was down). Send-once via dispatchedCmd so it can't collide/double with writeCmd.
+                        dispatchCmd()
                     }
                 }
             }
@@ -252,7 +250,7 @@ class EquilBLE @Inject constructor(
         preCmd = null
         synchronized(notifyLock) {
             notificationEnabled = false
-            pendingCmd = null
+            dispatchedCmd = null
         }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
     }
@@ -300,10 +298,23 @@ class EquilBLE @Inject constructor(
     // the command idle-times-out after ~9 s -> "Pump connection failure / manually check delivered
     // insulin" (bolus, tempBasal, and profile/CmdSettingSet all hit this via different writeCmd branches).
     // Fix: never send on a connected link until onDescriptorWrite confirms notifications are enabled;
-    // hold the command in `pendingCmd` and let onDescriptorWrite flush it. See #4910 (and its follow-up).
+    // dispatchedCmd makes that send-once (per link) so writeCmd and onDescriptorWrite can't double-send, and
+    // the command dispatches after connect regardless of which writeCmd branch opened the link - including a
+    // command issued while disconnected (the reservoir-change case, where the pump drops BLE between steps).
+    // Ported from the dev branch. See #4910 / #5040.
     private val notifyLock = Any()
     @Volatile private var notificationEnabled = false
-    private var pendingCmd: BaseCmd? = null
+    private var dispatchedCmd: BaseCmd? = null
+
+    // Send the current command's first packet exactly once per link, only after notifications are enabled.
+    // Null-safe (no-op during the pure connect handshake). Caller MUST hold notifyLock.
+    private fun dispatchCmd() {
+        val cmd = baseCmd
+        if (cmd != null && cmd !== dispatchedCmd) {
+            dispatchedCmd = cmd
+            ready()
+        }
+    }
 
     fun writeCmd(baseCmd: BaseCmd) {
         aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
@@ -316,17 +327,15 @@ class EquilBLE @Inject constructor(
         if (isConnected) {
             synchronized(notifyLock) {
                 if (!notificationEnabled) {
-                    // Fresh link, notifications not enabled yet: defer ALL send paths (pair step,
-                    // continuation, or first command) so the characteristic write does not collide with
-                    // the openNotification() descriptor write. onDescriptorWrite flushes pendingCmd.
-                    pendingCmd = baseCmd
+                    // Fresh link, notifications not enabled yet: defer ALL send paths. onDescriptorWrite ->
+                    // dispatchCmd() sends the command once notifications are up (no descriptor collision).
                     preCmd = baseCmd
                     return
                 }
             }
         }
         if (isConnected && baseCmd.isPairStep()) {
-            ready()
+            synchronized(notifyLock) { dispatchCmd() }
         } else if (isConnected) {
             val prevCmd = preCmd
             if (prevCmd != null) {
@@ -336,7 +345,7 @@ class EquilBLE @Inject constructor(
             } else {
                 // GATT link opened by the queue's connect() phase, notifications already up: send this
                 // command as the first one on the open link (else the pump idle-disconnects, status 19).
-                ready()
+                synchronized(notifyLock) { dispatchCmd() }
             }
         } else {
             findEquil(mac)
