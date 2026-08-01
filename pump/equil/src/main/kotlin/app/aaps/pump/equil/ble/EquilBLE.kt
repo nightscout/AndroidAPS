@@ -240,6 +240,7 @@ class EquilBLE @Inject constructor(
         isConnected = false
         connecting = false
         startTrue = false
+        connectInitiated = false
         autoScan = false
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
         aapsLogger.debug(LTag.PUMPBTCOMM, "Closing GATT connection")
@@ -420,12 +421,18 @@ class EquilBLE @Inject constructor(
         }
     }
     private var startTrue = false
+
+    // One-shot guard: set true when onScanResult fires the connect for the current scan session, re-armed at
+    // each startScan(). Prevents the rapid LOW_LATENCY result stream from opening multiple GATT clients.
+    private var connectInitiated = false
+
     private fun startScan() {
         macAddress = equilManager?.equilState?.address
         aapsLogger.debug(LTag.PUMPBTCOMM, "startScan====$startTrue====$macAddress===")
         if (macAddress.isNullOrEmpty()) return
         if (startTrue) return
         startTrue = true
+        connectInitiated = false
         connecting = true
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
@@ -469,6 +476,10 @@ class EquilBLE @Inject constructor(
 
     private fun buildScanSettings(): ScanSettings {
         val builder = ScanSettings.Builder()
+        // Command connects are latency-sensitive (a bolus/temp-basal is waiting on discovery). The default
+        // SCAN_MODE_LOW_POWER duty-cycles the radio and can take tens of seconds to surface a bonded pump on
+        // some phones, long enough for the command to time out. Use LOW_LATENCY so the pump is found in ~1 s.
+        builder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
         builder.setReportDelay(0)
         return builder.build()
     }
@@ -476,20 +487,25 @@ class EquilBLE @Inject constructor(
     private var scanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
-            val name: String? = result.device.name
-            if (name?.isNotEmpty() == true) {
-                try {
+            // The scan is filtered by MAC address (buildScanFilters), so every result IS the target pump.
+            // Do NOT gate on result.device.name: it is frequently null until the OS caches the device name,
+            // which silently drops valid matches and stalls discovery for tens of seconds. Guard with a
+            // one-shot flag so the rapid LOW_LATENCY result stream opens only a single GATT client.
+            if (connectInitiated) return
+            connectInitiated = true
+            try {
+                result.scanRecord?.bytes?.let { bytes ->
                     bleHandler.post {
-                        equilManager?.decodeData(result.scanRecord!!.bytes, autoScan)
+                        equilManager?.decodeData(bytes, autoScan)
                     }
-                    stopScan()
-                    if (autoScan) {
-                        updateCmdStatus(ResolvedResult.CONNECT_ERROR)
-                        connectEquil(result.device)
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
+                stopScan()
+                if (autoScan) {
+                    updateCmdStatus(ResolvedResult.CONNECT_ERROR)
+                    connectEquil(result.device)
+                }
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "onScanResult error", e)
             }
         }
     }
