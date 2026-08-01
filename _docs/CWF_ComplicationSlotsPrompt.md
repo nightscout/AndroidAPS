@@ -35,14 +35,16 @@ Core feature (this session):
 - [x] Black-screen-after-reinstall bug fixed (`loadData()` sync override) (Root Cause 5)
 - [x] Temporary debug instrumentation stripped, permanent fix documented
 - [x] Show currently-assigned provider name under "Complication N" in the preferences menu
-  *(work in Long Press menu, waiting for picker fix within AAPS Menu)*
+  *(works via the long-press path; AAPS-menu path blocked on the picker fix below, same
+  root cause — not a separate bug, see Root Cause 4)*
 - [ ] AAPS Settings-menu picker doesn't open — investigate real fix vs confirm no app-side fix
-  exists (Root Cause 4; a first fix attempt was tried, disproven, and reverted)
+  exists (Root Cause 4; a first fix attempt was tried, disproven, and reverted) —
+  **next up, with Opus**
+- [ ] Restrict Settings-menu complication entries to CustomWatchface + visible slots only
 - [ ] **Complications aren't integrated into the CWF's live per-tick refresh flow** — no
   bounds/position/background update on CWF reload, and no path at all for live `DynProvider`-
   style changes (e.g. BG-level-driven resize/reposition) within the same CWF (see "Open bugs"
-  below)
-- [ ] Restrict Settings-menu complication entries to CustomWatchface + visible slots only
+  below) — right after the picker fix
 - [ ] **Complication visible content (icon/text) renders far smaller than the declared CWF
   bounds box, by a large margin** — confirmed via device testing (see "Open bugs" below)
 
@@ -274,10 +276,10 @@ whether it's provider-driven, before assuming there's something to configure on 
 ## Open bugs — active, not yet fixed (found after initial "complete" status)
 
 **Priority order for the next work session, as explicitly set by the project owner:**
-1. Provider name shown under "Complication N" in the preferences menu *(in progress, Sonnet)*
-2. AAPS Settings-menu picker fix (Root Cause 4 follow-up)
-3. **Architecture item A below** — this is the next core architecture work, ahead of item B
-   and everything in "Deferred design items"
+1. Provider name shown under "Complication N" in the preferences menu — **done** for the
+   long-press path; AAPS-menu path blocked on item 2 below, not a separate bug
+2. AAPS Settings-menu picker fix (Root Cause 4 follow-up) — next up, with Opus
+3. **Architecture item A below** — right after the picker fix
 4. Item B below (content-fills-bounds sizing bug)
 
 **A. Core architecture principle violated: complications are not integrated into the CWF's
@@ -423,3 +425,37 @@ inset via a new CWF json key, or correcting a unit conversion).
 7. **AAPS Settings-menu picker still doesn't open at all.** See Root Cause 4 above — parked as
    a platform limitation, no app-side fix identified. Only revisit if a genuine SysUI-level
    entry point for the customize flow is found.
+
+## Potential major finding — watch face selection, not just complications (needs confirmation)
+
+While fixing Root Cause 4, discovered that Samsung SysUI's broadcast handler
+(`setActiveWatchfaceAndStartEditor`, triggered via `ACTION_EDIT_WATCH_FACE`) has a side effect:
+it makes the target watch face **active**, not just editable. This may matter far beyond
+complications: on newer "Factory Built" Wear OS 5+ Samsung watches, the legacy code-based watch
+face picker library was removed entirely, so users on that hardware likely cannot select/
+activate `CustomWatchface` (or `Digital`/`Circle`) via the normal on-watch picker at all — this
+broadcast mechanism could be **the only way** for them to select any of AAPS's watch faces, not
+just a UX nicety for the complications picker.
+
+**Not yet confirmed** — the test device used throughout this session still has the legacy
+library (long-press already worked there before any of this work), so nothing tested so far
+proves this solves the newer-watch problem. Needs confirmation on an actual Wear OS 5+ Samsung
+watch with the legacy library removed. Flag for community testing from an affected user before
+acting on the item below.
+
+**If confirmed, a larger follow-up architecture item** (not urgent, not started, only relevant
+once the above is confirmed): today there's a single AAPS Settings-menu entry that shows
+whichever watch face's preferences XML is currently active (Digital/Circle/CWF) — this
+implicitly assumes the user can already select any watch face via the normal picker, which is
+exactly what's broken on affected hardware. If the broadcast mechanism genuinely enables
+selection, the menu would need restructuring:
+- Three distinct, always-visible menu entries (one per watch face: Digital, Circle, Custom),
+  not one entry conditional on whichever is currently active.
+- Each entry should be able to both *select+activate* its watch face (via the same broadcast
+  mechanism, generalized beyond `CustomWatchface`-specific complication slot handling — this
+  points to extracting a small reusable "ask SysUI to activate+edit watch face X" helper rather
+  than keeping the logic complication-specific) and show/edit its preferences, even for watch
+  faces with no complications at all (Digital, Circle) which don't currently need any of this
+  machinery.
+- Likely needs a renamed/reworded menu entry point (something like "Select and Configure" rather
+  than the current framing) to reflect the new dual purpose.

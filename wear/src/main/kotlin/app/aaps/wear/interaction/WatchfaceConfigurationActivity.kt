@@ -50,6 +50,16 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         // display/graph/interface/complication/others screens (and the phone-triggered
         // OpenSettings default) must never activate a watch face as a side effect of being
         // opened, so the SysUI hand-off below only ever runs when one was explicitly requested.
+        // Activating the watch face is the point, not a side effect to work around: it is what
+        // makes the preference screen show a live editing session - see [SamsungWatchFaceEditor].
+        //
+        // Finished immediately so this screen is never drawn: the editor takes ~1s to appear, and
+        // without this the user watches one preference menu get replaced by a near-identical one.
+        // Finishing before the first frame makes this a trampoline - Android skips drawing it - and
+        // leaves back from the editor returning to the settings list rather than to a dead copy.
+        //
+        // Only when the broadcast was actually accepted. If there's no receiver (any non-Samsung
+        // watch) we must keep this screen, since it's then the only one the user gets.
         if (savedInstanceState == null && requestedWatchFace != null) {
             val watchFaceComponent = WatchFaceCatalog.componentNameFor(this, requestedWatchFace)
             if (watchFaceComponent != null && SamsungWatchFaceEditor.requestEditor(this, watchFaceComponent)) {
@@ -143,6 +153,25 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
 
         override fun onPreferenceTreeClick(preference: Preference): Boolean =
             complicationPickerSupport.handlePreferenceClick(preference) || super.onPreferenceTreeClick(preference)
+
+        /**
+         * Shows the assigned data source under each "Complication N" entry, from the copy
+         * [ConfigurationActivity] cached while it had a live editing session. This screen has no
+         * session and the system refuses the lookup without one, so a cache is the only way it can
+         * show anything at all - see `ComplicationPickerSupport.cacheAssignedDataSourceNames`.
+         *
+         * In `onResume` rather than `onViewCreated` so it also refreshes on return from the system
+         * editor, where the assignment may just have changed. Slots that have never been seen keep
+         * no summary instead of being labelled unassigned.
+         */
+        override fun onResume() {
+            super.onResume()
+            if (!ComplicationPickerSupport.hasComplicationPreferences(this)) return
+            ComplicationPickerSupport.applyComplicationSummaries(
+                this,
+                ComplicationPickerSupport.cachedAssignedDataSourceNames(requireContext())
+            )
+        }
 
         /**
          * Recursively apply multiline layout to all preferences to allow long text to wrap

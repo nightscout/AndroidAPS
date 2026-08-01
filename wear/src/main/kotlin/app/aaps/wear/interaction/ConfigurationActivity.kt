@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.preference.WearPreferenceActivity
-import app.aaps.wear.watchfaces.CustomWatchface
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -190,22 +189,17 @@ class ConfigurationActivity : WearPreferenceActivity() {
          * refresh call needed after the picker returns.
          */
         private fun observeComplicationProviderSummaries() {
-            val context = requireContext()
-            val slotKeys = mapOf(
-                CustomWatchface.COMPLICATION_SLOT_ID_1 to context.getString(R.string.key_complication_1),
-                CustomWatchface.COMPLICATION_SLOT_ID_2 to context.getString(R.string.key_complication_2),
-                CustomWatchface.COMPLICATION_SLOT_ID_3 to context.getString(R.string.key_complication_3)
-            )
             // Not CustomWatchface's preference screen (e.g. Circle/DigitalStyle) - nothing to do.
-            if (slotKeys.values.none { findPreference<Preference>(it) != null }) return
+            if (!ComplicationPickerSupport.hasComplicationPreferences(this)) return
 
             viewLifecycleOwner.lifecycleScope.launch {
                 val session = (requireActivity() as ConfigurationActivity).awaitEditorSession()
                 session.complicationsDataSourceInfo.collect { infoBySlot ->
-                    for ((slotId, key) in slotKeys) {
-                        findPreference<Preference>(key)?.summary =
-                            infoBySlot[slotId]?.name ?: getString(R.string.complication_summary_none)
-                    }
+                    val namesBySlot = infoBySlot.mapValues { (_, info) -> info?.name }
+                    ComplicationPickerSupport.applyComplicationSummaries(this@ConfigurationFragment, namesBySlot)
+                    // This screen is the only place assignments can change, so it is also the only
+                    // place that can keep the AAPS Settings menu's copy honest.
+                    ComplicationPickerSupport.cacheAssignedDataSourceNames(requireContext(), namesBySlot)
                 }
             }
         }
