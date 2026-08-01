@@ -18,7 +18,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
 import android.text.TextUtils
@@ -39,9 +38,7 @@ import app.aaps.pump.equil.manager.Utils
 import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdDevicesOldGet
 import app.aaps.pump.equil.manager.command.CmdHistoryGet
-import app.aaps.pump.equil.manager.command.CmdInsulinGet
 import app.aaps.pump.equil.manager.command.CmdPair
-import app.aaps.pump.equil.manager.command.CmdRunningModeGet
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -123,6 +120,9 @@ class EquilBLE @Inject constructor(
                     isConnected = true
                     equilManager.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
                     handler.removeMessages(TIME_OUT_CONNECT_WHAT)
+                    // Link is up: stop the parallel advert-harvest scan (the pump stops advertising once
+                    // connected anyway). If it already caught an advert it stopped itself in onScanResult.
+                    stopScan()
                     synchronized(notifyLock) {
                         // New link: notifications not yet enabled. Block command dispatch until onDescriptorWrite.
                         notificationEnabled = false
@@ -237,6 +237,7 @@ class EquilBLE @Inject constructor(
     }
 
     fun disconnect() {
+        stopScan() // stop any in-flight advert-harvest scan (hybrid connect)
         isConnected = false
         connecting = false
         startTrue = false
@@ -268,16 +269,21 @@ class EquilBLE @Inject constructor(
     private fun findEquil(mac: String) {
         if (mac.isEmpty()) return
         if (isConnected) return
-        val equilDevice: BluetoothDevice? = bluetoothAdapter?.getRemoteDevice(mac)
-        if (autoScan) startScan()
-        else connectEquil(equilDevice)
+        // Known pump: connect straight to the MAC (autoConnect), no scan. See connect() / #5040.
+        // Mirror connect()'s state handling so isConnecting() reflects the in-flight direct connect.
+        connecting = true
+        equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+        connectEquil(bluetoothAdapter?.getRemoteDevice(mac))
     }
 
     fun connectEquil(device: BluetoothDevice?) {
         handler.postDelayed({
             if (device != null) {
                 aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
-                bluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
+                // autoConnect = true: the Android stack completes the link as soon as the (known/bonded)
+                // pump is in range, with no app-level scan. This replaces flaky scan discovery, which took
+                // 60-90 s on many phones and caused command timeouts / "no insulin delivered" (#5040).
+                bluetoothGatt = device.connectGatt(context, true, mGattCallback, BluetoothDevice.TRANSPORT_LE)
             }
         }, 500)
     }
@@ -303,11 +309,10 @@ class EquilBLE @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
         this.baseCmd = baseCmd
         val mac: String = when (baseCmd) {
-            is CmdPair -> baseCmd.address
+            is CmdPair          -> baseCmd.address
             is CmdDevicesOldGet -> baseCmd.address
-            else -> equilManager?.equilState?.address ?: error("Unknown MAC address")
+            else                -> equilManager?.equilState?.address ?: error("Unknown MAC address")
         }
-        autoScan = baseCmd is CmdRunningModeGet || baseCmd is CmdInsulinGet
         if (isConnected) {
             synchronized(notifyLock) {
                 if (!notificationEnabled) {
@@ -349,7 +354,7 @@ class EquilBLE @Inject constructor(
             preCmd = baseCmd
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "readHistory error")
-            synchronized(baseCmd) { (baseCmd as Object).notifyAll() }
+            synchronized(baseCmd) { (baseCmd as Any).notifyAll() }
         }
     }
 
@@ -382,6 +387,7 @@ class EquilBLE @Inject constructor(
     }
 
     private var dataList: List<String> = ArrayList()
+
     @Synchronized
     fun decode(buffer: ByteArray) {
         val str = Utils.bytesToHex(buffer)
@@ -408,7 +414,7 @@ class EquilBLE @Inject constructor(
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
-                TIME_OUT_WHAT -> stopScan()
+                TIME_OUT_WHAT         -> stopScan()
 
                 TIME_OUT_CONNECT_WHAT -> {
                     stopScan()
@@ -458,9 +464,26 @@ class EquilBLE @Inject constructor(
         if (connecting || isConnected) {
             return
         }
-        autoScan = true
         baseCmd = null
-        startScan()
+        macAddress = equilManager?.equilState?.address
+        val device = macAddress?.takeIf { it.isNotEmpty() }?.let { bluetoothAdapter?.getRemoteDevice(it) }
+        if (device != null) {
+            // Known/bonded pump: connect straight to its MAC (see connectEquil, autoConnect=true) instead
+            // of scanning-to-connect. Scan-to-connect was the #5040 bottleneck (60-90 s on many phones).
+            connecting = true
+            equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+            connectEquil(device)
+            // Hybrid: run a best-effort advertisement harvest IN PARALLEL. It does NOT gate the connection
+            // (autoConnect above owns that), but the advert carries data the GATT path can't get: the pump's
+            // current history index (needed so loadEquilHistory reads new records), battery/reservoir, and the
+            // live alarm state. autoScan=false so onScanResult only decodes the advert - it does not open a
+            // second GATT client. The scan is stopped on CONNECTED / onScanResult / disconnect. See #5040.
+            autoScan = false
+            startScan()
+        } else {
+            autoScan = true
+            startScan()
+        }
     }
 
     private fun buildScanFilters(): List<ScanFilter> {

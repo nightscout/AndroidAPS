@@ -116,20 +116,19 @@ class EquilPumpPlugin @Inject constructor(
             .toObservable(EventEquilAlarm::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ eventEquilError ->
-                           commandQueue.performing()?.let {
-                               if (it.commandType == Command.CommandType.BOLUS) {
-                                   aapsLogger.info(
-                                       LTag.PUMPCOMM,
-                                       "eventEquilError.tips====${eventEquilError.tips}"
-                                   )
-                                   rxBus.send(EventDismissNotification(Notification.EQUIL_ALARM))
-                                   equilManager.showNotification(
-                                       Notification.EQUIL_ALARM,
-                                       eventEquilError.tips,
-                                       Notification.URGENT, app.aaps.core.ui.R.raw.alarm
-                                   )
-                                   stopBolusDelivering()
-                               }
+                           aapsLogger.info(LTag.PUMPCOMM, "eventEquilError.tips====${eventEquilError.tips}")
+                           // Always surface the pump alarm - it is no longer gated on a bolus being in
+                           // progress (alarms now come from the GATT history read on every connection, not
+                           // just from an advertisement scan caught mid-bolus). See #5040.
+                           rxBus.send(EventDismissNotification(Notification.EQUIL_ALARM))
+                           equilManager.showNotification(
+                               Notification.EQUIL_ALARM,
+                               eventEquilError.tips,
+                               Notification.URGENT, app.aaps.core.ui.R.raw.alarm
+                           )
+                           // But only halt bolus tracking if a bolus is actually delivering.
+                           if (commandQueue.performing()?.commandType == Command.CommandType.BOLUS) {
+                               stopBolusDelivering()
                            }
                        }, fabricPrivacy::logException)
 
