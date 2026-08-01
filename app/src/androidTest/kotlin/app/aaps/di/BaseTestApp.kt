@@ -9,6 +9,7 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -34,6 +35,13 @@ open class BaseTestApp : Application(), HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
+        // Instrumented tests run under the production applicationId with Firebase auto-initialized (via
+        // FirebaseInitProvider, before onCreate), so a crash on a CI emulator — e.g. an activity launched
+        // outside a HiltAndroidRule scope whose graph access then fails (RequestDexcomPermissionActivity /
+        // "The component was not created") — would be reported to the PRODUCTION Crashlytics dashboard.
+        // FabricPrivacyImpl normally gates collection, but it only runs once injected, which is too late
+        // for (and unrelated to) test crashes. Disable collection here so test noise never reaches the dashboard.
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = false
         // Production WorkManager init lives in MainApp (Configuration.Provider) + the default
         // androidx.startup initializer is removed from the manifest. Neither applies under the Hilt
         // test application, so initialize a test WorkManager here — otherwise building the Hilt graph
