@@ -21,6 +21,57 @@ correct behavior across a fresh install. Confirmed on device.
   cross-CWF persistence semantics, provider-name summary in the menu — all designed but not
   yet implemented (see "Deferred design items" below).
 
+## Checklist
+
+Core feature (this session):
+
+- [x] 3 real `ComplicationSlot`s declared, positioned/sized/visible from CWF json
+- [x] Rendering wired into the render loop, correct z-order for the tested CWF
+- [x] Taps routed by the framework (no manual hit-testing)
+- [x] Long-press "Customize" picker works end-to-end, providers persist correctly
+- [x] Legacy-API false start replaced with real androidx implementation (Root Cause 1)
+- [x] Dagger injection race in `createComplicationSlotsManager()` fixed (Root Cause 2)
+- [x] `EditorSession` headless-instance crash-on-close fixed (Root Cause 3)
+- [x] Black-screen-after-reinstall bug fixed (`loadData()` sync override) (Root Cause 5)
+- [x] Temporary debug instrumentation stripped, permanent fix documented
+- [x] Show currently-assigned provider name under "Complication N" in the preferences menu
+  *(work in Long Press menu, waiting for picker fix within AAPS Menu)*
+- [ ] AAPS Settings-menu picker doesn't open — investigate real fix vs confirm no app-side fix
+  exists (Root Cause 4; a first fix attempt was tried, disproven, and reverted)
+- [ ] **Complications aren't integrated into the CWF's live per-tick refresh flow** — no
+  bounds/position/background update on CWF reload, and no path at all for live `DynProvider`-
+  style changes (e.g. BG-level-driven resize/reposition) within the same CWF (see "Open bugs"
+  below)
+- [ ] Restrict Settings-menu complication entries to CustomWatchface + visible slots only
+- [ ] **Complication visible content (icon/text) renders far smaller than the declared CWF
+  bounds box, by a large margin** — confirmed via device testing (see "Open bugs" below)
+
+Visual/UX polish (from screenshot comparison against an OEM watch face):
+
+- [ ] Heart rate complication shows static label instead of live value
+- [ ] Complication bounds sizing guidance (square should contain the cutout circle, not the
+  other way around) — CWF-authoring guidance, not code
+- [ ] Sane default text style (bold/size) for complications without CWF-specified styling
+- [ ] Icon position (above/below text) — investigate whether framework- or provider-driven
+- [ ] Fewer providers in our picker than in OEM native settings — likely expected, confirm
+
+Design work, not yet started:
+
+- [ ] Provider catalog (`ComplicationProviderKeyValues` + `ComplicationProviderMap`) for
+  `DEFAULTPROVIDER`
+- [ ] `LOCKPROVIDER` (fixed complication data source)
+- [ ] `SUPPORTEDTYPES` per CWF, replacing the hardcoded list
+- [ ] Cross-CWF provider-assignment persistence semantics (design decision needed first)
+- [ ] `DynProvider` integration for numeric/rangeable complication values
+- [ ] Investigate whether any SysUI entry point can trigger the customize flow (only relevant
+  if the AAPS Settings-menu picker turns out unfixable)
+
+Not yet tested:
+
+- [ ] Z-order with a CWF that has an opaque `cover_plate` layered over visible complications
+  (only tested with a CWF that has none / a transparent `cover_chart` there)
+- [ ] Ambient-mode rendering, burn-in protection for complications specifically
+
 ## Final architecture (as built)
 
 - **Slot declaration lives in `CustomWatchface.kt`**, not in `WatchFace.kt`. It overrides
@@ -41,11 +92,13 @@ correct behavior across a fresh install. Confirmed on device.
   (unit-square, canvas-relative) — converted from the CWF json's `WIDTH`/`HEIGHT`/`TOPMARGIN`/
   `LEFTMARGIN` (expressed in the fixed 400×400 `templeResolution` space) by dividing by
   `templeResolution`; this conversion is resolution-independent, no screen-size lookup needed.
-- **Known accepted limitation**: `ComplicationSlot.bounds`/`.enabled` are not mutable at
-  runtime in androidx.wear.watchface 1.2.1 — they're fixed at slot-creation time
-  (`createComplicationSlotsManager()`, called once per `Engine` instance). Loading a different
-  CWF updates colors/fonts live, but position/size/visibility only refresh on the next `Engine`
-  restart (watch face reselection, reboot, app restart). Accepted tradeoff, not fixed further.
+- **Known accepted limitation, now reclassified as an active bug — see "Open bugs" below**:
+  `ComplicationSlot.bounds`/`.enabled` are not mutable at runtime in androidx.wear.watchface
+  1.2.1 — they're fixed at slot-creation time (`createComplicationSlotsManager()`, called once
+  per `Engine` instance). This was originally treated as an acceptable tradeoff (colors/fonts
+  update live, position/size/visibility only on next `Engine` restart), but direct testing
+  showed this breaks a core CWF design principle — see "Open bugs" item A, now the top
+  architecture priority.
 - **Styling** (`FONT`/`FONTTITLE`/`FONTCOLOR`/`FONTTITLECOLOR`/`COLOR` CWF json keys) is applied
   to each slot's `ComplicationDrawable` via its `...Active` setters
   (`setTextTypefaceActive`/`setTitleTypefaceActive`/`setTextColorActive`/`setTitleColorActive`/
@@ -175,7 +228,33 @@ logging could simply have failed to observe it, before trusting silence as evide
    this provider prefers to send, or whether our default styling always favors the title text
    over the data value for this complication type. The dataType logging used earlier this
    session should reveal directly which `ComplicationType`/fields the provider is actually
-   sending.
+   sending. **Confirmed visually** via a side-by-side screenshot comparison (same heart-rate
+   provider: our watch face shows "Cardio", a Samsung watch face shows "83") — see also item 1c
+   below, from the same comparison.
+
+1b. **Complication content fills the available space poorly compared to an OEM watch face,
+for both slot sizing and default text style.** From the same screenshot comparison:
+- Our complication square is currently inscribed *inside* `cover_chart`'s circular cutout
+(smaller than the circle), while the OEM reference has it the other way around — the
+circle inscribed inside a larger square, so content fills the visible circle much better.
+This is a per-CWF `WIDTH`/`HEIGHT`/margin tuning issue, not a code bug — worth writing up
+as sizing guidance for CWF authors (make the complication's declared bounds larger than
+the cutout circle, not smaller) rather than something to fix in code.
+- Our complication text renders visibly thinner/less readable than the OEM reference at the
+same physical size. Same root cause as the already-fixed default-background issue
+(library defaults apply whenever the CWF json doesn't specify `FONT`/`FONTSTYLE`) — the
+library's own default text weight/size is too thin for a complication's small area. Give
+complications a sane default style (e.g. bold, a size tuned for typical slot dimensions)
+independent of CWF-provided styling, symmetric to what was already done for the default
+background color.
+
+1c. **Icon position relative to the text/value differs between our rendering and an OEM watch
+face, and inconsistently so** — same screenshot comparison shows the OEM face placing the
+icon above the text for heart rate but below it for step count, while our rendering places
+it in the same position for both. Genuinely unresolved, don't guess: check whether
+`ComplicationDrawable`/`ComplicationStyle`'s icon layout is framework-decided based on
+bounds shape/aspect ratio (in which case matching it may just require different bounds), or
+whether it's provider-driven, before assuming there's something to configure on our side.
 
 2. **Fewer providers appear in our in-app complication picker than in the OEM's native watch
    face settings.** Likely not a bug: OEM settings screens often surface a proprietary catalog
@@ -188,7 +267,108 @@ logging could simply have failed to observe it, before trusting silence as evide
    (sliders, rotation, or other dynamic visual effects keyed off the complication's value),
    the same way BG/IOB/battery-level etc. already do. Needs design: how a complication's
    `RangedValueComplicationData` (or similar) maps onto `ValueMap`/`DynProvider`'s existing
-   min/max/step model.
+   min/max/step model. See also "Open bugs" item A above for the converse direction (other live
+   values driving a complication's own bounds/appearance) — the two together mean complications
+   need full two-way integration with the existing `DynProvider` mechanism, not just one-way.
+
+## Open bugs — active, not yet fixed (found after initial "complete" status)
+
+**Priority order for the next work session, as explicitly set by the project owner:**
+1. Provider name shown under "Complication N" in the preferences menu *(in progress, Sonnet)*
+2. AAPS Settings-menu picker fix (Root Cause 4 follow-up)
+3. **Architecture item A below** — this is the next core architecture work, ahead of item B
+   and everything in "Deferred design items"
+4. Item B below (content-fills-bounds sizing bug)
+
+**A. Core architecture principle violated: complications are not integrated into the CWF's
+live rendering flow, unlike every other view.** This is the central design rule of the whole CWF
+format: the user fixes *all* display parameters in the json — position, size, font (typeface +
+size), style, background (transparent/color/image) — and for every existing view type
+(`TextView`, `ImageView`, the chart, etc.) these are re-evaluated live, on **every refresh
+tick** — not just on CWF (re)load. This already happens today via `ViewMap`/`DynProvider`/
+`ValueMap`: a view's background image, size, position, or rotation can already change from one
+refresh to the next based on a live data value — the clearest example being BG level: a view's
+background image swaps (e.g. high/mid/low background) the moment glycemia crosses into
+hyperglycemia, with no CWF reload involved at all, just the normal per-tick refresh. Position/
+size offsets driven by `DynProvider` (`getTopOffset`/`getLeftOffset`/`getRotationOffset` etc.)
+work the same way — continuously re-evaluated, not fixed at load time.
+
+Complications currently violate this on two counts, not one:
+1. They don't refresh even on CWF *reload* (the originally-reported symptom: switching to a
+   CWF with a different complication layout shows no change until some unrelated event forces
+   an `Engine` restart).
+2. More fundamentally, they can't participate in the same **per-tick** dynamic adjustments that
+   other views already have via `DynProvider` — e.g. a complication's size, position, or
+   background could reasonably need to change live when BG crosses a threshold, exactly like an
+   `ImageView`'s background already does, and there's currently no path for that at all, not
+   even in principle. This connects directly to "Deferred observations" item 3 below
+   (complications driving `DynProvider`) — that item was framed as "complication value drives
+   other visual effects"; this is the converse and equally necessary: other live values (BG
+   level, etc.) must be able to drive a complication's own bounds/appearance, the same as they
+   already drive every other view type.
+
+The goal is not "find a way to occasionally refresh bounds on CWF switch" — it's
+**complications behaving like every other CWF-driven element, on every refresh tick**: read
+from `DynProvider`/the current CWF json state each time, exactly like background image
+swapping or position offsets already do for text and image views.
+
+Investigation needed (don't assume an answer, this session already confirmed one specific
+constraint that must be re-verified, not re-guessed):
+- Is there a supported androidx API to update an existing `ComplicationSlot`'s bounds/enabled
+  state at runtime? (Already checked once this session and found no such API in
+  androidx.wear.watchface 1.2.1 at the `ComplicationSlot`/`ComplicationSlotsManager` level —
+  re-verify this conclusion specifically, since it's the crux of everything below.)
+- **Also check a lower-level path before concluding engine recreation is required**: is there a
+  `CanvasComplication`-level rendering call that accepts a `Rect`/bounds parameter directly per
+  invocation (as opposed to `ComplicationSlot.render()`, which uses the slot's own cached
+  bounds internally)? If the underlying drawable/renderer can be driven with per-frame bounds
+  supplied by us — the same way `ViewMap.customizeViewCommon()` already computes fresh
+  layout params every tick — that would let complications join the existing per-tick refresh
+  flow directly, with no engine recreation needed at all. This is the outcome to aim for if it
+  exists, since it's strictly better regardless of refresh cadence.
+- **Only if that's genuinely not possible**, the remaining path is making the watch face
+  `Engine` recreate itself. Refresh cadence here is real CGM data (BG readings), roughly every
+  5 minutes — possibly a bit off-cadence for `EXT1`/`EXT2` follower data on dual/multi-user
+  screens, which isn't perfectly synced with the primary reading — **not** a per-second UI tick.
+  This makes periodic engine recreation considerably more plausible as an acceptable fallback
+  than it would be at second-level frequency, though still worth confirming it doesn't
+  re-trigger the Dagger-injection-race or `EditorSession`-crash bugs already fixed this session,
+  and doesn't produce a visibly jarring restart on every BG update.
+- Whichever path is real, the end state should be: a complication's position/size/visibility/
+  background can update with the same immediacy already true for every other CWF view, on CWF
+  reload *and* on live data changes within the same CWF.
+- **The refresh trigger itself is not something to design** — the CWF refresh loop is already
+  deterministic and driven by an external event (new data received from the phone), the same
+  event that already refreshes every other view's position/size/background. Whatever mechanism
+  is chosen for complications (per-frame bounds passed directly, or — only if unavoidable —
+  engine recreation) should hook into that same existing trigger point, not invent a separate
+  timer/polling mechanism of its own.
+
+**B. Complication visible content (icon/text) renders far smaller than the declared CWF bounds
+box.** Separate issue from A — this is about content-fits-within-bounds, not
+bounds-not-refreshing. Found via device testing, comparing against a Samsung native watch
+face's complications at equivalent visual size:
+- A box matching `cover_chart`'s cutout circle diameter (~103px in the 400×400 CWF coordinate
+  space) produces a "ridiculously small" result.
+- Even a 140px box — well larger than the 103px circle — still doesn't fill comparably to the
+  same provider on the Samsung watch face.
+- This means CWF authors would need to declare boxes far larger than the intended visual area to
+  compensate, which defeats the CWF format's core design goal: precise, reproducible pixel
+  positioning in a 400×400 space, independent of screen density/resolution.
+
+Hypothesis to verify against real source, don't assume it's correct: `ComplicationDrawable`/
+`ComplicationStyle` likely reserves internal padding/inset around the icon+text by default —
+possibly space for a ranged-value progress ring, applied even when the complication type isn't
+`RANGED_VALUE` — and if that inset is a fixed size (e.g. dp-based) rather than proportional to
+the bounds, it would explain the observation exactly: a small box is dominated by the fixed
+margin, a bigger box is less dominated but still short by the same fixed amount. Also re-check
+whether our bounds-to-fraction conversion (dividing CWF px by `templeResolution`=400 — see
+architecture section above) is itself correct, or whether there's a separate dp/px unit mismatch
+somewhere between what we pass to the drawable and what the CWF format's contract expects.
+
+Report the actual mechanism (ring/inset defaults found in source, and/or a confirmed unit
+mismatch) before proposing a fix (e.g. disabling the ring reservation, exposing a configurable
+inset via a new CWF json key, or correcting a unit conversion).
 
 ## Deferred design items — complication providers & persistence
 

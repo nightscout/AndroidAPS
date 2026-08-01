@@ -14,9 +14,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.preference.WearPreferenceActivity
+import app.aaps.wear.watchfaces.CustomWatchface
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -123,6 +125,12 @@ class ConfigurationActivity : WearPreferenceActivity() {
         }
     }
 
+    /**
+     * Awaits the [EditorSession] started in [onCreate], so [ConfigurationFragment] can read each
+     * slot's currently assigned complication data source from [EditorSession.complicationsDataSourceInfo].
+     */
+    suspend fun awaitEditorSession(): EditorSession = editorSessionDeferred!!.await()
+
     override fun createPreferenceFragment(): PreferenceFragmentCompat {
         val configFileName = intent.action
 
@@ -164,6 +172,41 @@ class ConfigurationActivity : WearPreferenceActivity() {
 
                 // Apply multiline layout to all preferences to prevent text truncation
                 applyMultilineLayoutToAllPreferences(preferenceScreen)
+            }
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            observeComplicationProviderSummaries()
+        }
+
+        /**
+         * Shows each "Complication N" preference's currently assigned data source name as its
+         * summary, e.g. "Heart Rate". [EditorSession.complicationsDataSourceInfo] is a StateFlow
+         * that the library itself populates asynchronously once per slot right after the session
+         * is created, and updates again for one slot after a successful pick via
+         * [ConfigurationActivity.requestComplicationPicker] - collecting it here covers both the
+         * initial display and the post-pick refresh with a single subscription, no separate
+         * refresh call needed after the picker returns.
+         */
+        private fun observeComplicationProviderSummaries() {
+            val context = requireContext()
+            val slotKeys = mapOf(
+                CustomWatchface.COMPLICATION_SLOT_ID_1 to context.getString(R.string.key_complication_1),
+                CustomWatchface.COMPLICATION_SLOT_ID_2 to context.getString(R.string.key_complication_2),
+                CustomWatchface.COMPLICATION_SLOT_ID_3 to context.getString(R.string.key_complication_3)
+            )
+            // Not CustomWatchface's preference screen (e.g. Circle/DigitalStyle) - nothing to do.
+            if (slotKeys.values.none { findPreference<Preference>(it) != null }) return
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val session = (requireActivity() as ConfigurationActivity).awaitEditorSession()
+                session.complicationsDataSourceInfo.collect { infoBySlot ->
+                    for ((slotId, key) in slotKeys) {
+                        findPreference<Preference>(key)?.summary =
+                            infoBySlot[slotId]?.name ?: getString(R.string.complication_summary_none)
+                    }
+                }
             }
         }
 
