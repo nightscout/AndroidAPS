@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
@@ -40,6 +41,7 @@ import kotlin.math.max
 
 class DetermineBasalResult @Inject constructor(
     private val aapsLogger: AAPSLogger,
+    private val fabricPrivacy: FabricPrivacy,
     private val constraintChecker: ConstraintsChecker,
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,
@@ -166,7 +168,51 @@ class DetermineBasalResult @Inject constructor(
     }
 
     override fun newAndClone(): APSResult = apsResultProvider.get().with(result)
-    override fun json(): JSONObject = JSONObject(result.serialize())
+    override fun json(): JSONObject {
+        reportNonFiniteResultFields()
+        return JSONObject(result.serialize())
+    }
+
+    /**
+     * Diagnostic for the recurring device-status crash (Crashlytics
+     * `RT.write$Self … Unexpected special floating-point value NaN`): kotlinx.serialization's default
+     * `Json` rejects non-finite [Double]s, so a single NaN/±Infinity in the APS result crashes
+     * `buildAndStoreDeviceStatus` every loop cycle. The framework stack names none of the fields, so
+     * we cannot tell WHICH value went bad or from WHICH algorithm.
+     *
+     * We deliberately do NOT sanitize/swallow here — the crash is the signal driving the ongoing
+     * DetermineBasal NaN hunt (see `DetermineBasalSMB` minPredBG pin, `OpenAPSSMBPlugin` invalidInputs
+     * guard). Instead, right before the (still-crashing) serialize, we report exactly which field is
+     * non-finite plus the ISF inputs that feed it, so the next occurrence pinpoints the field and
+     * algorithm instead of an opaque framework trace. `[result.serialize]` runs unchanged afterwards.
+     */
+    private fun reportNonFiniteResultFields() {
+        val offenders = buildList {
+            fun check(name: String, value: Double?) { if (value != null && !value.isFinite()) add("$name=$value") }
+            check("bg", result.bg)
+            check("eventualBG", result.eventualBG)
+            check("targetBG", result.targetBG)
+            check("snoozeBG", result.snoozeBG)
+            check("insulinReq", result.insulinReq)
+            check("units", result.units)
+            check("sensitivityRatio", result.sensitivityRatio)
+            check("rate", result.rate)
+            check("COB", result.COB)
+            check("IOB", result.IOB)
+            check("variable_sens", result.variable_sens)
+            check("isfMgdlForCarbs", result.isfMgdlForCarbs)
+        }
+        if (offenders.isEmpty()) return
+
+        val p = oapsProfile
+        val msg = "APS result has non-finite field(s) [${offenders.joinToString()}] " +
+            "algorithm=${result.algorithm} runningDynamicIsf=${result.runningDynamicIsf} " +
+            "glucose=${glucoseStatus?.glucose} autosensRatio=${autosensResult?.ratio} " +
+            "sens=${p?.sens} carb_ratio=${p?.carb_ratio} variable_sens=${p?.variable_sens} " +
+            "TDD=${p?.TDD} insulinDivisor=${p?.insulinDivisor}"
+        aapsLogger.error(LTag.APS, msg)
+        fabricPrivacy.logException(IllegalStateException(msg))
+    }
 
     override fun predictions(): Predictions? = result.predBGs
     override fun rawData(): RT = result
