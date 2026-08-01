@@ -701,10 +701,13 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <!-- singleTask: entry-point activity (launcher, tile tap, complication MENU action) — reuse
+             the alive instance Android 12+ keeps on back instead of stacking a duplicate on top -->
         <activity
             android:name=".interaction.menus.MainMenuActivity"
             android:exported="true"
             android:label="@string/label_actions_activity"
+            android:launchMode="singleTask"
             android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -714,19 +717,29 @@
         <activity
             android:name=".interaction.WatchfaceConfigurationActivity"
             android:exported="true"
-            android:label="@string/menu_settings" />
+            android:label="@string/menu_settings"
+            android:taskAffinity="" />
+        <!-- taskAffinity="": activities launched from tiles/complications (NEW_TASK) get their own
+             task, so back returns to the tile/watchface instead of a lingering main menu. Launches
+             from within the app (no NEW_TASK) still stack in the caller's task as before. -->
         <activity
             android:name=".interaction.actions.WizardActivity"
             android:exported="true"
             android:label="@string/menu_wizard"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
+        <!-- taskAffinity="" on the two service-launched overlays: without it their NEW_TASK launch
+             routes into the default app task, dragging a backgrounded main menu to the front —
+             which is then what remains on screen once the overlay finishes -->
         <activity
             android:name=".interaction.actions.ContactingMasterActivity"
             android:exported="false"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name="androidx.wear.activity.ConfirmationActivity"
             android:exported="false"
+            android:taskAffinity=""
             android:theme="@android:style/Theme.DeviceDefault" />
         <activity
             android:name=".interaction.menus.FillMenuActivity"
@@ -741,10 +754,12 @@
         <activity
             android:name=".interaction.activities.LoopStatusActivity"
             android:exported="true"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.BgGraphActivity"
             android:exported="true"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
@@ -759,16 +774,19 @@
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
             android:label="@string/menu_treatment"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:exported="true"
             android:label="@string/action_insulin"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ProfileSwitchActivity"
             android:exported="true"
             android:label="@string/status_profile_switch"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.AcceptActivity"
@@ -786,16 +804,19 @@
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
             android:label="@string/action_ecarbs"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.CarbActivity"
             android:exported="true"
             android:label="@string/action_carbs"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:exported="true"
             android:label="@string/menu_tempt"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
 
         <activity
