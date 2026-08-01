@@ -166,7 +166,10 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
         }
 
         if (intentOpen != null) {
-            intentOpen.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            // CLEAR_TASK: a complication tap is a fresh entry point from the watchface — replace
+            // whatever lingers in the app task (Android 12+ keeps the root launcher activity alive
+            // on back, which would otherwise resurface under the opened screen on back press)
+            intentOpen.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intentOpen)
         }
     }
