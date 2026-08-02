@@ -65,6 +65,23 @@ provider-selection flow entirely. This never worked, and under the current archi
 equivalent mistake would be simulating complication data without ever registering a real
 `ComplicationSlot` with the framework. Don't repeat either version of this shortcut.
 
+## Hard rule — CustomWatchface is the sole reader/interpreter of the CWF json
+
+**No class other than `CustomWatchface` may ever open, parse, or otherwise read the CWF json's
+content.** Managing and synchronizing the custom watch face's description must stay centralized
+in `CustomWatchface`, which already holds every mechanism and every piece of state needed to
+interpret it (`ViewMap`, `DynProvider`, styling, visibility, bounds).
+
+This is not a style preference — it was violated once already this session (a preference-menu
+screen parsed `CwfData.json` directly, via `complicationDataRepository.getCustomWatchface()`
+then `JSONObject(it)`, to derive per-slot visibility on its own) and had to be rolled back.
+
+Note: `ComplicationDataRepository` (`app.aaps.wear.data`) is a general-purpose sync/persistence
+repository (BG, status, graph, treatment data, and CWF storage) — its name is misleading, it
+predates and is unrelated to complication *slots*, and it's also the backing store `CustomWatchface`
+itself reads from. Its existence does not create an exception to this rule: reading `.json` off
+of what it returns, from outside `CustomWatchface`, is exactly the violation described above.
+
 ## Documentation
 
 If new CWF JSON keys are introduced or existing ones gain new meaning for complications, document
@@ -77,3 +94,12 @@ the Foundation's standing instructions for drafts.
 No real user health data (CGM traces, logs, screenshots containing patient data) should end up
 in code, comments, commit messages, or test fixtures. No hardcoded secrets. This should not come
 up in a task this scoped, but flag it immediately if it would.
+
+## Standing rule — check Complication_Libraries.md before reading androidx source
+
+Before reading any androidx.wear.watchface / watchface-complications-rendering source file for
+any investigation, first check whether _docs/Complication_Libraries.md already answers the
+question. Only read source when the doc doesn't cover it, or when there's a specific reason to
+distrust a prior entry (e.g. a real behavior mismatch observed on device). State explicitly,
+before starting a source-reading round, which doc sections were checked first and found
+insufficient — don't skip straight to source out of habit.

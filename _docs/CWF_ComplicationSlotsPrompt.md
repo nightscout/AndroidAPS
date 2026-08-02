@@ -1,131 +1,94 @@
 # CWF Complication Slots — Status & Reference
 
-Originally written as a task prompt for Claude Code. The core implementation is now **complete
-and confirmed working on device**. This file has been restructured into a reference document:
-what was built, why, the real root causes found along the way (worth keeping for future
-maintainers — this feature had several silent-failure modes that took real investigation to
-pin down), and the backlog of deferred items.
+Originally written as a task prompt for Claude Code. Restructured into a living status/reference
+document: what's done, what's in progress, what's deferred, and the real root causes found along
+the way (worth keeping for future maintainers — this feature had several silent-failure modes
+that took real investigation to pin down).
+
+**Division of labor with `_docs/Complication_Libraries.md`**: that file holds library facts —
+every claim sourced with a `file:line` reference against a specific androidx version. *This* file
+holds project decisions, status, and backlog. When in doubt about a library behavior, check that
+file first; when in doubt about what's done or why a decision was made, check this one.
 
 ---
 
 ## Status
 
-Complications work end-to-end on the Custom watch face: 3 slots, real system providers,
-long-press picker, CWF-json-driven position/size/visibility and styling, correct z-order,
-correct behavior across a fresh install. Confirmed on device.
+Complications work end-to-end on the Custom watch face: N slots (currently 5, architecture
+proven to scale from the original 3 with no code change beyond one `ViewMap`/`PrefMap` entry per
+slot), real system providers, long-press picker, CWF-json-driven position/size/visibility and
+styling (global + per-slot cascade), correct z-order, live per-tick geometry sync. Generic
+complication plumbing has been extracted out of `CustomWatchface.kt` into
+`watchfaces/utils/WatchFaceComplication.kt`, reusable in principle by other watch faces.
 
-**Not working / deferred** (not blocking, see full list at the end):
-- AAPS Settings-menu entry point for the picker (platform limitation, not an app bug — see
-  Root Cause 4 below).
-- Provider catalog for CWF-driven defaults, lock, per-slot supported-type restriction,
-  cross-CWF persistence semantics, provider-name summary in the menu — all designed but not
-  yet implemented (see "Deferred design items" below).
+**Currently in progress**: generalizing the complication picker from a hardcoded 3 slots to N,
+adding per-slot visibility preferences, and filtering the preference screen to what's actually
+relevant for the loaded CWF — see "In Progress" below.
+
+**Not working / structurally blocked** (not bugs, platform limits — see Root Causes and Closed
+Investigations):
+- AAPS Settings-menu entry point for the picker (Root Cause 4) — no app-side fix exists.
+- Live heart-rate value on Samsung Health's Cardio complication — confirmed platform trust-gating,
+  no app-side fix exists.
+- Full-color `MonochromaticImage`, and wide (non-square) `SmallImage`/`PhotoImage` fill — both
+  confirmed unconditional androidx renderer limitations. "Own the rendering" would fix both, and
+  the ring/GOAL_PROGRESS cases below — still an undecided scope/cost call, not started.
+
+---
 
 ## Checklist
 
-Core feature (this session):
+### Done
 
-- [x] 3 real `ComplicationSlot`s declared, positioned/sized/visible from CWF json
-- [x] Rendering wired into the render loop, correct z-order for the tested CWF
+**Core feature (original session)**
+- [x] Real `ComplicationSlot`s declared, positioned/sized/visible from CWF json
+- [x] Rendering wired into the render loop, correct z-order
 - [x] Taps routed by the framework (no manual hit-testing)
 - [x] Long-press "Customize" picker works end-to-end, providers persist correctly
-- [x] Legacy-API false start replaced with real androidx implementation (Root Cause 1)
-- [x] Dagger injection race in `createComplicationSlotsManager()` fixed (Root Cause 2)
-- [x] `EditorSession` headless-instance crash-on-close fixed (Root Cause 3)
-- [x] Black-screen-after-reinstall bug fixed (`loadData()` sync override) (Root Cause 5)
-- [x] Temporary debug instrumentation stripped, permanent fix documented
-- [x] Show currently-assigned provider name under "Complication N" in the preferences menu
-  *(works via the long-press path; AAPS-menu path blocked on the picker fix below, same
-  root cause — not a separate bug, see Root Cause 4)*
-- [ ] AAPS Settings-menu picker doesn't open — investigate real fix vs confirm no app-side fix
-  exists (Root Cause 4; a first fix attempt was tried, disproven, and reverted) —
-  **next up, with Opus**
-- [ ] Restrict Settings-menu complication entries to CustomWatchface + visible slots only
-- [ ] **Complications aren't integrated into the CWF's live per-tick refresh flow** — no
-  bounds/position/background update on CWF reload, and no path at all for live `DynProvider`-
-  style changes (e.g. BG-level-driven resize/reposition) within the same CWF (see "Open bugs"
-  below) — right after the picker fix
-- [ ] **Complication visible content (icon/text) renders far smaller than the declared CWF
-  bounds box, by a large margin** — confirmed via device testing (see "Open bugs" below)
+- [x] Root Causes 1–5 fixed (legacy-API false start, Dagger injection race, `EditorSession`
+  headless-instance crash, AAPS-menu picker cancellation — parked, black-screen-on-reinstall)
+- [x] Provider name shown under "Complication N" in the long-press preferences menu
 
-Visual/UX polish (from screenshot comparison against an OEM watch face):
+**Rebase onto `Nightscout/dev`**
+- [x] Branch rebased onto upstream (`f8f99e50` + `555ed133`, PR #5042 "Watchface Activation for
+  Samsung"/"...cleaning"). Adopted upstream's `key_selected_watchface` gating in
+  `PreferenceMenuActivity`/`WatchFaceCatalog`/`SamsungWatchFaceEditor` — this **resolved the
+  CustomWatchface half** of "restrict Settings-menu entries" (see below): the complication
+  entries can now only be reached via CWF's own preference screen, after CWF is actually
+  active. Also fixed a real defect this replaced: `watchFaceComponentFor()`'s always-non-null
+  `else` branch meant *every* Settings screen previously activated CWF as a side effect.
+- [x] All complication-specific local commits (picker plumbing, headless-instance Dagger fix,
+  `EditorSession` double-close fix) preserved through the rebase — no upstream equivalent.
+- [x] A leftover SysUI-editor-mode block, mistakenly living in `ComplicationPickerSupport.kt`,
+  identified and removed in favor of upstream's `SamsungWatchFaceEditor`.
 
-- [ ] Heart rate complication shows static label instead of live value
-- [ ] Complication bounds sizing guidance (square should contain the cutout circle, not the
-  other way around) — CWF-authoring guidance, not code
-- [ ] Sane default text style (bold/size) for complications without CWF-specified styling
-- [ ] Icon position (above/below text) — investigate whether framework- or provider-driven
-- [ ] Fewer providers in our picker than in OEM native settings — likely expected, confirm
+**Live per-tick refresh (Open bug A) — architecturally resolved**
+- [x] Complications now participate in the same refresh trigger as every other view.
+  `WatchFaceComplications.syncGeometry()` runs every `onDraw()`, pushing current
+  bounds/enabled via the `ComplicationSlotsUserStyleSetting` mechanism (the only supported way
+  to mutate a slot after creation) — so position/size/visibility now follow CWF reload *and*
+  live `DynProvider` offsets, not just Engine restart.
+- [x] Style similarly reapplies every refresh (`ViewMap.customizeComplicationView`) — but **only
+  3 of 12 style properties can currently vary dynamically** (font color, background color,
+  text size), because `DynProvider` only exposes per-step getters for those three. Title
+  color, icon color, ring width, border radius, title size stay static until `DynProvider`
+  itself gains the missing getters. Recorded as a real, scoped limitation, not a bug.
 
-Design work, not yet started:
-
-- [ ] Provider catalog (`ComplicationProviderKeyValues` + `ComplicationProviderMap`) for
-  `DEFAULTPROVIDER`
-- [ ] `LOCKPROVIDER` (fixed complication data source)
-- [ ] `SUPPORTEDTYPES` per CWF, replacing the hardcoded list
-- [ ] Cross-CWF provider-assignment persistence semantics (design decision needed first)
-- [ ] `DynProvider` integration for numeric/rangeable complication values
-- [ ] Investigate whether any SysUI entry point can trigger the customize flow (only relevant
-  if the AAPS Settings-menu picker turns out unfixable)
-
-Not yet tested:
-
-- [ ] Z-order with a CWF that has an opaque `cover_plate` layered over visible complications
-  (only tested with a CWF that has none / a transparent `cover_chart` there)
-- [ ] Ambient-mode rendering, burn-in protection for complications specifically
-
-## Final architecture (as built)
-
-- **Slot declaration lives in `CustomWatchface.kt`**, not in `WatchFace.kt`. It overrides
-  `createComplicationSlotsManager()` directly — `WatchFaceService.createComplicationSlotsManager()`
-  is available on the grandparent class, so no hook/abstract method was needed on `WatchFace.kt`
-  or `BaseWatchFace.kt` for this part. This was a deliberate correction during the session: an
-  earlier plan to add a `getComplicationSlots()` hook to `WatchFace.kt` was reverted because it
-  put Custom-specific logic into a file shared by every watch face.
-- **`WatchFace.kt` only gained generic, no-op-by-default plumbing**: it stores the
-  `ComplicationSlotsManager` reference handed to `createWatchFace()` (previously received and
-  discarded), and the render loop draws whatever slots exist (`slot.render(...)` per enabled
-  slot) plus the matching `renderHighlightLayer` pass for the system editor's selection
-  highlight. For any watch face that declares zero slots (the unchanged default), this loop is
-  a complete no-op — verified, not assumed.
-- **Slot position/size/visibility come from the CWF json**, through the same `ViewMap`
-  machinery used by every other view (`COMPLICATION1/2/3` are `ViewMap` entries, `FrameLayout`
-  placeholders in `activity_custom.xml`). `ComplicationSlotBounds` are fractional
-  (unit-square, canvas-relative) — converted from the CWF json's `WIDTH`/`HEIGHT`/`TOPMARGIN`/
-  `LEFTMARGIN` (expressed in the fixed 400×400 `templeResolution` space) by dividing by
-  `templeResolution`; this conversion is resolution-independent, no screen-size lookup needed.
-- **Known accepted limitation, now reclassified as an active bug — see "Open bugs" below**:
-  `ComplicationSlot.bounds`/`.enabled` are not mutable at runtime in androidx.wear.watchface
-  1.2.1 — they're fixed at slot-creation time (`createComplicationSlotsManager()`, called once
-  per `Engine` instance). This was originally treated as an acceptable tradeoff (colors/fonts
-  update live, position/size/visibility only on next `Engine` restart), but direct testing
-  showed this breaks a core CWF design principle — see "Open bugs" item A, now the top
-  architecture priority.
-- **Styling** (`FONT`/`FONTTITLE`/`FONTCOLOR`/`FONTTITLECOLOR`/`COLOR` CWF json keys) is applied
-  to each slot's `ComplicationDrawable` via its `...Active` setters
-  (`setTextTypefaceActive`/`setTitleTypefaceActive`/`setTextColorActive`/`setTitleColorActive`/
-  `setIconColorActive`), reusing the existing `FontMap` for typefaces. Applying styling is
-  idempotent and safe to re-run whenever the CWF (re)loads.
-- **Z-order**: `background` was pulled entirely out of the `activity_custom.xml` view hierarchy
-  and is drawn manually on the canvas, first, before anything else — because it's the one
-  fully-opaque, always-repainted layer needed to prevent visual ghosting (a real, previously-
-  encountered defect on this watch face, unrelated to complications but load-bearing for their
-  correct rendering too). Complications render next. The rest of `main_layout` (chart,
-  `cover_chart`, freetexts, etc., including `cover_plate`/hands where present) draws last,
-  unchanged internally — so `cover_chart`'s cutout holes correctly mask/finish complication
-  edges exactly as they already did for the chart. No separate `cover_plate`/hands split was
-  needed in the end for the specific test CWF used this session (it has no `cover_plate` and a
-  transparent `cover_chart` over the complication slots) — **re-verify z-order on a CWF that
-  does use an opaque `cover_plate` over complications**, that combination was never directly
-  tested.
-- **Taps** are routed entirely by the framework (`TapListener` in `WatchFace.kt` explicitly
-  ignores taps landing on a complication slot) — no manual hit-testing needed or implemented.
-- **Provider selection**: the system's native long-press → Customize flow works end-to-end
-  (`ConfigurationActivity`, `EditorSession.createOnWatchEditorSession`,
-  `openComplicationDataSourceChooser`). The AAPS Settings-menu path does not — see Root Cause 4.
-
-For the exact current file-by-file diff, cross-reference Claude Code's end-of-session summary
-(requested separately) rather than treating the above as a line-level spec.
+**Architecture refactor**
+- [x] Complication-specific plumbing fully externalized out of `CustomWatchface.kt` into a
+  dedicated file (`WatchFaceComplications`, `ComplicationSlotState`, `ComplicationStyleValues`,
+  `SyncLoadingCanvasComplication`) — reusable in principle by other watch faces. Only
+  CWF-specific json decoding stays in `CustomWatchface`/`ViewMap`; live per-slot state
+  deliberately stays off `ViewMap` (a live `ComplicationDrawable` can't safely be enum state —
+  the editor runs a second, concurrent headless instance).
+- [x] Complications now follow the same customize/refresh pattern as every other view type:
+  geometry and style both decoded in `ViewMap` (mirroring `customizeTextView`, not a separate
+  cascade class), applied every refresh tick, with preference-gated visibility
+  (`SHOW_COMPLICATION_N`) mirroring `SHOW_IOB`/`SHOW_COB` — confirmed genuinely inert when off
+  (no render, no taps, no data served), not just invisible.
+- [x] 3→5 slot manual stress test confirms the architecture scales with one new `ViewMap` + one
+  new `PrefMap` entry per slot, no other `CustomWatchface`-side change — **except** the
+  picker, still hardcoded to 3 (see "In Progress").
 
 **Background regression (introduced by the manual-canvas move, fixed)**
 - [x] Symptom: a CWF driving `background` through a `dynPref` colour step (e.g. `key_dark` →
@@ -169,11 +132,8 @@ For the exact current file-by-file diff, cross-reference Claude Code's end-of-se
   forcing `borderRadius = 0` unless a CWF sets one), not text weight. Once content stopped
   being shrunk, readability at the same declared size matched third-party watch faces — no
   separate bold-by-default styling needed.
-## Root causes found this session (keep for future maintainers)
 
-This feature had **five independent, unrelated bugs**, each producing symptoms that looked like
-— or masked — the others. Listed in the order they were found, because later ones were only
-reachable once earlier ones were fixed.
+### In Progress
 
 **Subject 1 — Step 1: generalize picker to N slots** — *code done, device test pending*
 - [x] `PrefMap.SHOW_COMPLICATION_1..5` verified end to end. Found and fixed a real defect:
@@ -204,15 +164,37 @@ reachable once earlier ones were fixed.
 - [ ] Device-confirm slots 4 and 5 (added by hand, never build-tested through the generic path)
   actually render, tap, and persist a provider correctly. Build is green; not yet run on device.
 
-**1. Legacy-API false start.** The first implementation draft targeted the pre-AndroidX
-complications API (`android.support.wearable.complications.*`, manual `ComplicationDrawable`
-+ `onComplicationDataUpdate`/`onTapCommand`/`setActiveComplications` overrides) because it was
-  written before `WatchFace.kt` had been reviewed. The real base class already runs on
-  `androidx.wear.watchface` (`WatchFaceService`, `ComplicationSlotsManager`,
-  `Renderer.CanvasRenderer2`) — confirmed by reading `WatchFace.kt` directly. None of that legacy
-  code was usable; the whole complications-specific implementation was rewritten against the real
-  API. Lesson: for this codebase, always verify the actual base-class API before writing
-  framework-integration code — don't infer it from an older sibling implementation.
+**Subject 1 — Step 2, Phase 1: dedicated, code-built settings screen** — *device-confirmed*
+- [x] `CustomWatchfaceConfigurationFragment` builds CWF's screen in code from
+  `CustomWatchface.settingRows`, a list of neutral `WatchFaceSettingRow`s (Toggle / Choice /
+  Action) declared in `watchfaces/utils/WatchFaceSettings.kt`. The watch face decides *which* rows
+  exist and in what order; the fragment only knows how to turn a row into a `Preference`. That is
+  what makes Phase 2 a change inside `CustomWatchface` alone.
+- [x] A **fragment**, not a dedicated activity: `ConfigurationActivity` is the only activity with
+  the `WATCH_FACE_EDITOR` intent-filter, and `EditorSession.createOnWatchEditorSession()` only
+  works in the activity the system launched with that intent. A separate activity could only be
+  reached by trampolining out of it, which loses the session — exactly the dead Settings-menu path
+  (Root Cause 4). Both entry points host the new fragment; it branches on which one, since only
+  `ConfigurationActivity` can open the picker directly.
+- [x] Side effect worth having: Digital/Circle's shared fragments no longer contain any
+  complication code, and `ComplicationPickerSupport.hasComplicationPreferences()` is gone —
+  "is this the right screen" is now answered by which fragment is running, not by looking for
+  known keys in it. That closes the shared-Activity scoping constraint permanently.
+- [x] `PrefMap` gained `title`, taken from `metadataKey.label` wherever a `CwfMetadataKey` names the
+  preference, so a row is labelled by the very string the phone already shows. Only `PREF_DARK` and
+  `PREF_MATCH_DIVIDER` carry their own label (no metadata key); `PREF_UNITS` has none at all — it is
+  pushed from the phone and has no row. Verified redundancy first: 16 of those labels were the same
+  text declared once in `core:interfaces` and again in `wear`.
+- [x] Device-confirmed: the code-built screen matches the xml one row for row, from both entry
+  points. First attempt crashed on entry - `Preference.setDependency()` resolves its key through
+  `PreferenceManager`, which does not know the screen until `preferenceScreen` has been assigned,
+  so dependencies must be applied in a second pass after that. A settings xml hides this: the
+  framework inflates the whole screen first and only then resolves dependencies.
+- [ ] Delete `watch_face_configuration_custom.xml` - dead since this phase, deliberately kept until
+  the end of the subject.
+- Noted for Phase 2: "include external views" and "simplify UI" are not about what the dial shows —
+  they drive template content and data presentation — so they are listed literally, not derived from
+  a `PrefMap`/`ViewMap` pair, and must never be filtered out.
 
 **Subject 1 — Step 2, Phase 2: filter preferences by view visibility** — *device-confirmed*
 - [x] `settingRows` takes the stored CWF (opaque text, fetched by the host activity, parsed only
@@ -225,28 +207,28 @@ complications API (`android.support.wearable.complications.*`, manual `Complicat
   the moment the user switched it off could never be switched back on.
 - [x] No json (nothing stored, or unparseable) keeps every row: a setting missing because a read
   failed is worse than one row too many.
-- [ ] Device-confirm with AAPS V2: expect `Show seconds` and `Show Week number` to disappear (both
-  `gone` in that zip), `Dark` and `Matching divider` to stay (dynPref), `Show Date` to stay
-  (day/month visible), and all 5 complication pairs to disappear (no complication block).
+- [x] "Switch external data" is filtered too, but keyed on the **views** rather than on a `PrefMap`:
+  kept only while some `ViewMap` entry with `external > 0` is visible, since no single preference
+  gates those views.
+- [x] Exactly two rows are never filtered, and they sit last by design — "Simplify UI", then
+  "Include external views in template". One decides how data is presented, the other what a template
+  exported from here contains, so no CWF can make either irrelevant.
+- [x] Device-confirmed with AAPS V2: `Show seconds` and `Show Week number` gone (both `gone` in that
+  zip), `Dark` and `Matching divider` kept (dynPref), `Show Date` kept (day/month visible), all 5
+  complication pairs gone (no complication block).
+- Known, undecided: the screen is built in `onCreatePreferences`, so it reflects the CWF loaded when
+  it opened. Loading a new zip while the screen is open does not re-filter until it is reopened — a
+  one-line move to `onResume` if that ever matters in practice.
 
-**Subject 1 — Step 2, Phase 2 (original scoping notes)**
-- [ ] Design and implement: a per-view `PrefMap` entry's row is shown only when at least one
-  `ViewMap` entry using it is currently visible in the loaded CWF json — derived from
-  `ViewMap.entries.filter { it.pref == … }` plus the same visibility state already computed
-  for rendering, never by the preference screen parsing json itself (hard rule).
-- [ ] **Constraint to respect throughout**: the preference-managing Activity/Fragment is *shared*
-  with Digital/Circle — only the xml resource differs. Any filtering logic must be scoped so
-  it only ever activates for CustomWatchface's screen.
-
-- **2. Dagger injection race in `createComplicationSlotsManager()`.** This method can run before
-`BaseWatchFace.onCreate()`'s `AndroidInjection.inject(this)` has completed, under an engine
-(re)creation path unrelated to normal app startup — it threw
-`UninitializedPropertyAccessException` on `complicationDataRepository`, silently caught by
-`WatchFaceService`'s own background-thread handler (no visible crash, just no complications).
-Fixed with an explicit `daggerInjectionComplete` flag on `BaseWatchFace`, set right after
-injection completes, checked before touching `complicationDataRepository` — deliberately **not**
-a `catch (UninitializedPropertyAccessException)`, which would also mask unrelated lateinit bugs
-elsewhere in the same call chain.
+**Subject 1 — Step 2, Phase 2 (original scoping notes, both now resolved)**
+- [x] Original goal: a per-view `PrefMap` entry's row is shown only when at least one `ViewMap`
+  entry using it is currently visible in the loaded CWF json, never by the preference screen parsing
+  json itself (hard rule) — met, and widened by the dynPref arm above.
+- [x] **The shared Activity/Fragment constraint is gone rather than worked around**: CustomWatchface
+  has its own fragment, so no filtering code can ever run for Digital/Circle. Worth remembering why
+  the once-planned "gate on which keys the screen contains" would have been wrong:
+  `watch_face_configuration_digitalstyle.xml` also declares `key_show_date` and
+  `key_show_week_number`, so key-presence duck typing would have hidden Digital's own rows.
 - Design reported, not yet approved or implemented. Scoping must gate on **watch face identity**,
   not on which keys a screen contains: `watch_face_configuration_digitalstyle.xml` also declares
   `key_show_date` and `key_show_week_number`, so key-presence duck typing would wrongly hide
@@ -259,6 +241,244 @@ elsewhere in the same call chain.
   the metadata→preferences loop and as `cacheAssignedDataSourceNames` — and the screen filters on
   it. Taken at load time from the json, never per frame: a `DynProvider`-driven row that appears
   and vanishes as BG moves would be worse than no filtering.
+
+### Backlog / Future
+
+**Provider assignment — re-scoped after this session's investigation, don't re-litigate the
+re-scoping without new evidence**
+- Exhaustively confirmed: no androidx API lets an app assign or reassign a slot's data source
+  without the user picking it via the system chooser (`EditorSession.openComplicationDataSourceChooser`
+  is the *only* mutation path in the whole artifact). The negotiated `ComplicationType` is fixed at
+  pick time and persists across reinstall/reload/Engine recreation — device-confirmed by
+  re-picking a Steps provider and watching its negotiated type actually change (`SHORT_TEXT` →
+  `GOAL_PROGRESS`), which nothing else (reordering our type list, a CWF reload, a watch-face
+  switch) achieved on its own.
+- `DEFAULTPROVIDER`: narrowed to **true first-run-only** semantics — it can only ever apply to a
+  slot the system has never bound. Must not be documented to CWF authors as "this zip will show
+  provider X," since after any prior binding it won't. One-line addition via
+  `DefaultComplicationDataSourcePolicy` when implemented.
+- `LOCKPROVIDER`: becomes **app-side policy**, not a pure library feature — refuse to open the
+  picker for a marked-locked slot in `ConfigurationActivity`/`ComplicationPickerSupport`.
+  `setFixedComplicationDataSource` stays a best-effort creation-time extra alongside it. Needs a
+  way for that (non-`CustomWatchface`) code to read "is this slot locked" without violating the
+  CWF-json hard rule — likely the same exposed-state pattern being built for Subject 1.
+- `SUPPORTEDTYPES` **mechanism already implemented and proven** — the ordered, data-bearing-first
+  type list (`WatchFaceComplications.supportedTypes`) demonstrably changes negotiation outcomes.
+  Remaining backlog item is narrower than originally scoped: expose it as a CWF json key, not
+  build the mechanism.
+- Cross-CWF persistence semantics for provider assignments — still needs a design decision
+  (dormant / prompt reselection / clear) before any code; unchanged from before.
+
+**`iconColor` now works for every complication type — implemented, device test pending**
+- Symptom: on `SHORT_TEXT` (Samsung heart rate) the icon stayed red whatever `iconColor` said, while
+  it worked on `RANGED_VALUE`. Not a tint failure — the icon was never drawn:
+  `ShortTextLayoutHelper.getIconBounds` empties the rect when the provider also sends a small image,
+  and `drawSmallImage` clears the colour filter for `IMAGE_STYLE_ICON`. `iconColor` only ever feeds
+  `drawIcon`. Mechanism with line references in `_docs/Complication_Libraries.md`.
+- Fix: the payload edit that already existed for the RANGED_VALUE layout bug now also runs when the
+  CWF **explicitly** asks for an `iconColor` — per slot or in the CWF-wide `complicationStyle`.
+  Dropping the small image lets the library's own `drawIcon` run and tint with the requested colour,
+  for any complication type. We choose the image; the library still does the colouring.
+- Asking for nothing keeps the provider's own colours (unchanged behaviour, and the better default).
+  `fontColor`, which `iconColor` falls back to for its *value*, deliberately does **not** count as
+  asking — a CWF that only set a text colour never asked to lose the provider's icon.
+- Reversible without new data from the system: `ComplicationSlotState.iconColorRequested` re-applies
+  the decision to the payload already received, since `loadData` only runs when the system has
+  something new and a CWF change is not that.
+- Hard limit: a provider sending *only* a small image has no tintable image to switch to, so
+  `iconColor` still does nothing there. Samsung's heart rate sends both, so that case is covered.
+- [ ] Device-confirm: `iconColor` changes the heart's colour on SHORT_TEXT, transparent hides it,
+  and removing the key restores the provider's red heart.
+
+**Image fit for `SMALL_IMAGE`/`PHOTO_IMAGE` — implemented, device test pending**
+- New per-slot key `imageFit`, also accepted in the CWF-wide `complicationStyle` block, with the
+  usual cascade (slot → global → library behaviour). Values are named after
+  `ImageView.ScaleType`: `fit_center` (default, unchanged), `center_crop`, `fit_xy`.
+- Values mean what `ImageView.ScaleType` means, computed from the image's **own intrinsic size** —
+  `fit_center` is a true letterbox showing the whole image.
+- **First attempt (canvas transform around the library) was implemented, tested on device and
+  discarded** — keep this, it is the reason the current code exists. It handed the drawable the
+  central square it would have computed anyway and scaled the canvas around that call. All three
+  values came out wrong, exactly as the arithmetic predicts for a 450×225 provider image in a
+  300×115 px slot: `fit_center` a small square, `center_crop` with most of the curve outside the
+  slot, `fit_xy` cropped *and* 2.6:1 distorted. The cause is that `RoundedDrawable` centre-crops the
+  image into that square **before** any caller-side transform, so the missing sides can never be
+  recovered afterwards.
+- Now `SyncLoadingCanvasComplication.render` draws the image itself for `SMALL_IMAGE`/`PHOTO_IMAGE`:
+  it takes the `Icon` from the complication data (cached until the icon changes), computes the
+  destination rect from the image's intrinsic size, and paints background plus rounded corners from
+  the same `ComplicationStyle` the library would have used, so `borderRadius` still shapes the slot
+  and clips the image. Ambient uses `SmallImage.ambientImage` when the provider supplies one. Every
+  other complication type is still drawn entirely by the library — those carry text, which is what
+  makes taking over only these two self-contained.
+- Mechanism and line references in `_docs/Complication_Libraries.md`, "How an image is scaled inside
+  its bounds".
+- [ ] Device-confirm on the 267×102 slot with `BgGraphComplication` (450×225 bitmap): `fit_center`
+  (the default) should now show the **whole** graph undistorted, ~230×115 px centred — the same
+  picture as the WFF face and as tapping through to the graph activity; `center_crop` should fill
+  the slot with top and bottom trimmed; `fit_xy` should fill it stretched.
+- **Behaviour change to watch for**: the default is no longer the library's centre-cropped square,
+  so a near-square slot that previously showed a cropped image now shows the whole one, letterboxed.
+  `center_crop` reproduces the old look for any CWF that wanted it.
+
+**Styling — remaining audit items**
+- ~~Image fit mode for `SMALL_IMAGE`/`PHOTO_IMAGE`~~ — done, see above. Original finding kept for
+  context: **confirmed bug, design proposed, implementation paused**. `SmallImageLayoutHelper`/`LargeImageLayoutHelper` unconditionally crop to the slot's
+  central square (`getCentralSquare`, identical code for both types) — no `ComplicationStyle`
+  property or type switch escapes it (device-confirmed: a 267×102 slot renders 102×102). Contrast
+  with this project's own WFF-pushed face (`watchfacepush/template/watchface.xml`), which fills a
+  non-square `PartImage` rect by author declaration — WFF has no layout helper at all, so nothing
+  computes bounds on the author's behalf there. Proposed: a new key + `JsonKeyValues` for
+  stretch / fit-min-letterbox / fill-max-crop (today's square-crop kept as an explicit fourth
+  named option). Paused pending Subject 1.
+- `DynProvider` integration for complications, Direction 1 (CWF data → complication style):
+  **partially done** — font color, background color, text size already flow through the exact
+  same per-step getters every other view uses, zero complication-specific code. Extending to the
+  other 9 style properties needs new `DynProvider` getters, not attempted this session.
+- `DynProvider` integration, Direction 2 (complication value → drives other views): **explicitly
+  out of scope**, deferred, not designed.
+- Confirm whether fewer providers appear in our picker than an OEM's native settings is expected
+  platform behavior (a proprietary catalog outside the standard chooser) — still just a
+  confirmation pass, unstarted, low priority.
+
+**"Own the rendering" — a real, live, undecided architecture option**
+Raised and deferred multiple times this session, now with four concrete motivating cases rather
+than one:
+1. Ring geometry (radius/inset/gap/start-angle) — currently only tunable via a proportional
+   `RINGWIDTH`, not owned.
+2. `GOAL_PROGRESS`'s non-stylable visuals — a hardcoded `Color.RED` "over-achievement" arc, a dot
+   instead of a filled arc, progress scaled against `target × 1.1` — none of it reachable via
+   `ComplicationStyle`.
+3. `MonochromaticImage` always flattened to one color — confirmed unconditional, no bounds shape
+   or type escapes it (`ComplicationRenderer.drawIcon`'s filter application has no null branch).
+4. Wide-slot image cropping (above).
+   The interface (`CanvasComplication`) is small; the rendering contract it replaces is not
+   (ambient/burn-in variants, async image loading, text-fitting/ellipsis/emoji, placeholder payloads,
+   tap highlight). A scoped version (e.g. only the `RANGED_VALUE` family, or only image-bearing
+   types, delegating everything else to `ComplicationDrawable`) was discussed as the realistic shape
+   if this is ever pursued — not started.
+
+**Settings-menu / SysUI (Root Cause 4)**
+- [ ] AAPS Settings-menu picker — confirmed no app-side fix exists (exhaustive investigation:
+  `WFUnderEditingResolver` requires system-level editing-session bookkeeping an app-initiated
+  launch can't satisfy). Parked permanently unless a genuine SysUI entry point is found.
+- [ ] "Potential major finding" about Wear OS 5+ Samsung "Factory Built" watches possibly needing
+  the `ACTION_EDIT_WATCH_FACE` broadcast as the *only* way to select any AAPS watch face —
+  **still unconfirmed**, needs a report from an affected user on that hardware. If confirmed,
+  revisit the larger menu-restructuring item (three always-visible watch-face entries, "Select
+  and Configure" framing) described in the original prompt.
+
+**Taps stopped working after loading a complication zip — hardened, root cause not fully proven**
+- Reported once: select CustomWatchface while a zip *without* complications is loaded, then load a
+  zip *with* them — they render, but no tap does anything. **Not reproducible afterwards**, so the
+  chain below is a mechanism proven from library source, not an observed sequence.
+- Slots are built once, at engine creation, from the zip loaded *at that moment*. Since the slot
+  identity consolidation their bounds fall back to `RectF(0,0,0,0)` when the zip declares no
+  complication (the removed per-slot `defaultBounds` had non-zero values, with a comment saying
+  "so slots never start zero-sized").
+- `ComplicationSlotsManager.applyComplicationSlotsStyleCategoryOption` (`:225-239`) restores each
+  slot's **initial** bounds and enabled flag whenever an applied `ComplicationSlotsOption` carries
+  no overlay for it — and this schema's own default option carries none. Rendering does not notice,
+  because it reads the placeholder views; only tap hit-testing reads the slot
+  (`getComplicationSlotAt` `:409-419` → `ComplicationSlot.computeBounds` `:1295-1320`), so the
+  symptom is exactly "draws fine, taps dead".
+- The old `syncGeometry` compared its own last-pushed signature, i.e. intent against intent, so an
+  external reset was invisible to it and never re-pushed. **Now it compares against the slots
+  themselves** (`slot.enabled` / `slot.complicationSlotBounds.perComplicationTypeBounds`) and
+  re-pushes whenever one is not where it should be — self-healing whatever caused the reset.
+- Deliberately *not* done: reintroducing per-slot non-zero initial bounds. With the self-heal the
+  first `onDraw` corrects a zero-sized slot anyway, and non-zero defaults would only move taps to
+  the wrong place instead of nowhere.
+- **What remains unproven**: which event applied an overlay-less option in the reported sequence
+  (candidates: an editor/headless instance from the settings screen or the preview request, a style
+  re-read on watch face selection). The reset behaviour itself is source-proven; the trigger is not.
+
+**Stale long-press preview after loading a new zip — mechanism found, fix implemented, device test
+pending**
+- Symptom: load a new CWF, long-press the watch face, and the preview still shows the *previous*
+  zip. Entering the settings screen and coming back refreshes it.
+- The system renders and caches that thumbnail itself, and only knows to redo it when the
+  `UserStyleSchema` changes — which says nothing about which CWF is loaded. Full mechanism, with
+  `file:line` refs, in `_docs/Complication_Libraries.md`, "The system's cached preview image".
+- **An app-side path does exist**, contrary to the first hypothesis in this session (that only an
+  editor session could refresh it): `Renderer.sendPreviewImageNeedsUpdateRequest()` is public, is
+  documented for exactly this case ("configuration outside of the `UserStyleSchema`"), and is
+  latched by the library if nothing is listening yet. Why the settings-screen round trip works is
+  a *different*, session-only mechanism: `EditorSession.close()` renders a bitmap and broadcasts it.
+- Implemented as `WatchFace.requestPreviewImageUpdate()`, called from `setWatchfaceStyle()` inside
+  the block that only runs when the json or resources actually changed — the system is documented
+  to rate limit these requests, so firing per refresh tick would be wrong.
+- [ ] **Device-confirm**: load a different zip, do *not* open settings, long-press, and check
+  whether the preview shows the new dial. The library explicitly allows a system to ignore the
+  request ("if the system is incompatible this does nothing"), so this is not proven until seen on
+  hardware. Watch `WatchFaceService` in logcat for "Ignoring sendPreviewImageNeedsUpdateRequest
+  because interactiveInstanceId not initialized", which would mean it was asked from a headless
+  instance instead of the interactive one.
+
+**Subject 2 — graphical picker (deliberately not started)**
+A future direction, kept in mind while designing Subject 1 Step 2 so nothing there forecloses it:
+a CWF-thumbnail-based screen where visibility toggles and provider-picker access happen by
+tapping regions of an actual rendering of the loaded zip, instead of a flat, growing preference
+list. Motivation: the preference list is getting long (2 rows per complication slot); exact
+spatial selection beats numbered slots; a live preview of what a `twinView` would show instead,
+if a complication is toggled off, would be a real usability win. Feasibility without
+over-engineering is genuinely unknown and **not to be investigated yet** — Subject 1's
+"is this slot/pref visible" query mechanism should be built so a future thumbnail UI could reuse
+it, not as preference-screen-specific plumbing.
+
+**Phone-side "Watch face info" summary — resolved, was never a code defect**
+- [x] The earlier entry here said complications were "simply absent from that summary, not
+  auto-detected", and wondered whether the screen reads the json itself or a watch-exported summary.
+  Both halves are now answered. It *does* parse the json phone-side
+  (`WearViewModel.listVisibleView`, `plugins/sync`), it *does* handle complications, and the
+  observation came from a **phone app older than the branch**: `ViewKeys` gained `COMPLICATION1..3`
+  in the branch's first commit and `4..5` on 13 Aug, while only the wear module was being rebuilt.
+- Proven rather than argued: `WearViewModelTest.showCwfInfos lists visible complication views and
+  hides the others` feeds a json with one visible complication, one `gone` and one wide one, and
+  asserts what comes back. It passes, and stays as a regression guard.
+- Note for the json-access rule: the phone parsing the CWF json here is **not** a violation. That
+  rule is about the *watch* side, where `CustomWatchface` owns the format; the phone has always read
+  the zip it imports (it builds the metadata and preference lists the same way).
+- [x] Two real defects found on that screen while checking, both fixed: the file name rendered as
+  `AAPSzip` (`CWF_EXTENSION` is `"zip"` with no separator, and one of the two places building the
+  name forgot the dot), and every preference/view row was far taller than the metadata lines above
+  it (`ListItem` enforces a 56dp minimum height — replaced with plain rows on the same spacing).
+
+**Not yet tested**
+- [ ] Z-order with a CWF using an opaque `cover_plate` over visible complications (only tested
+  with a transparent `cover_chart`/no `cover_plate`).
+- [ ] Ambient-mode rendering, burn-in protection, specifically for complications.
+- [ ] The reverse pref-transition (re-enable `SHOW_COMPLICATION_N` → slot resumes receiving data)
+  — follows from the same proven code path as disabling, but never isolated and device-tested
+  as its own direction.
+
+---
+
+## Root causes found this session (keep for future maintainers)
+
+This feature had **five independent, unrelated bugs**, each producing symptoms that looked like
+— or masked — the others. Listed in the order they were found, because later ones were only
+reachable once earlier ones were fixed.
+
+**1. Legacy-API false start.** The first implementation draft targeted the pre-AndroidX
+complications API (`android.support.wearable.complications.*`, manual `ComplicationDrawable`
++ `onComplicationDataUpdate`/`onTapCommand`/`setActiveComplications` overrides) because it was
+  written before `WatchFace.kt` had been reviewed. The real base class already runs on
+  `androidx.wear.watchface` (`WatchFaceService`, `ComplicationSlotsManager`,
+  `Renderer.CanvasRenderer2`) — confirmed by reading `WatchFace.kt` directly. None of that legacy
+  code was usable; the whole complications-specific implementation was rewritten against the real
+  API. Lesson: for this codebase, always verify the actual base-class API before writing
+  framework-integration code — don't infer it from an older sibling implementation.
+
+**2. Dagger injection race in `createComplicationSlotsManager()`.** This method can run before
+`BaseWatchFace.onCreate()`'s `AndroidInjection.inject(this)` has completed, under an engine
+(re)creation path unrelated to normal app startup — it threw
+`UninitializedPropertyAccessException` on `complicationDataRepository`, silently caught by
+`WatchFaceService`'s own background-thread handler (no visible crash, just no complications).
+Fixed with an explicit `daggerInjectionComplete` flag on `BaseWatchFace`, set right after
+injection completes, checked before touching `complicationDataRepository` — deliberately **not**
+a `catch (UninitializedPropertyAccessException)`, which would also mask unrelated lateinit bugs
+elsewhere in the same call chain.
 
 **3. `EditorSession` binding to a disconnected headless engine, crashing on close.** The
 long-press picker's `EditorSession` does not always attach to the live, on-screen engine
@@ -328,241 +548,63 @@ deduplication). Both were caught and retracted once challenged, not defended. Wh
 diagnostic claim in this codebase says something didn't happen, double check whether the
 logging could simply have failed to observe it, before trusting silence as evidence.
 
-## Deferred observations — not blocking, revisit later
+---
 
-1. **Heart rate complication shows a static "Cardio" label instead of live BPM**, unlike the
-   same provider on at least one OEM watch face (observed on what was likely a Samsung face),
-   which shows the live rate under the heart icon. Possible causes to check when picked up:
-   whether our declared `complicationSupportedTypes` (in `CustomWatchface.kt`) matches what
-   this provider prefers to send, or whether our default styling always favors the title text
-   over the data value for this complication type. The dataType logging used earlier this
-   session should reveal directly which `ComplicationType`/fields the provider is actually
-   sending. **Confirmed visually** via a side-by-side screenshot comparison (same heart-rate
-   provider: our watch face shows "Cardio", a Samsung watch face shows "83") — see also item 1c
-   below, from the same comparison.
+## Closed investigations (kept for future maintainers — real root causes, not guesses)
 
-1b. **Complication content fills the available space poorly compared to an OEM watch face,
-for both slot sizing and default text style.** From the same screenshot comparison:
-- Our complication square is currently inscribed *inside* `cover_chart`'s circular cutout
-(smaller than the circle), while the OEM reference has it the other way around — the
-circle inscribed inside a larger square, so content fills the visible circle much better.
-This is a per-CWF `WIDTH`/`HEIGHT`/margin tuning issue, not a code bug — worth writing up
-as sizing guidance for CWF authors (make the complication's declared bounds larger than
-the cutout circle, not smaller) rather than something to fix in code.
-- Our complication text renders visibly thinner/less readable than the OEM reference at the
-same physical size. Same root cause as the already-fixed default-background issue
-(library defaults apply whenever the CWF json doesn't specify `FONT`/`FONTSTYLE`) — the
-library's own default text weight/size is too thin for a complication's small area. Give
-complications a sane default style (e.g. bold, a size tuned for typical slot dimensions)
-independent of CWF-provided styling, symmetric to what was already done for the default
-background color.
+**Heart-rate/Cardio static label — platform limitation, confirmed, no app-side fix.** Samsung
+Health's `HeartrateComplicationProviderService` manifest declares only `ICON`/`SMALL_IMAGE`/
+`SHORT_TEXT` — no data-bearing type exists for it, at any trust level. Separately, but compounding
+it: `ComplicationRequest.isForSafeWatchFace` (`SAFE`/`UNSAFE`, device-confirmed via provider logs)
+lets Samsung Health serve materially different content — a static label under `UNSAFE`, a live
+value under `SAFE` — for an *identical* provider and negotiated type. Ruled out as the deciding
+factor: consumer-side permissions (structurally irrelevant — data flows provider→system→watch
+face), request cadence (we're polled *more* often than a "SAFE" face, still get static content),
+every other `ComplicationRequest`/builder field (only `isForSafeWatchFace` differs). What actually
+decides `SAFE`/`UNSAFE` is undocumented, closed platform logic inside Samsung's `WearServices` —
+install provenance correlates (sideloaded vs. Play-Store) but is unproven causal on a sample of
+two. Cross-checked against a genuine third-party (non-Samsung) watch face confirmed running the
+*same* androidx `ComplicationSlotsManager`/`CanvasRenderer` framework as us, which nonetheless
+shows the live value with a correctly colored icon and title — proving by direct contradiction
+that it does **not** use `ComplicationDrawable`; it owns its own `CanvasComplication`
+implementation. **This is exactly the "own the rendering" case above, demonstrated in the wild**,
+not evidence that our renderer has an unused capability. Separately noted, not an AAPS fix: a
+third-party complication-provider app reading the brand-agnostic Wear Health Services API
+(not Samsung Health) may sidestep this trust gate entirely — a user-facing workaround to document,
+not code to write.
 
-1c. **Icon position relative to the text/value differs between our rendering and an OEM watch
-face, and inconsistently so** — same screenshot comparison shows the OEM face placing the
-icon above the text for heart rate but below it for step count, while our rendering places
-it in the same position for both. Genuinely unresolved, don't guess: check whether
-`ComplicationDrawable`/`ComplicationStyle`'s icon layout is framework-decided based on
-bounds shape/aspect ratio (in which case matching it may just require different bounds), or
-whether it's provider-driven, before assuming there's something to configure on our side.
+**Icon color — confirmed unconditional, proven from source.** `ComplicationRenderer.drawIcon`
+applies its color filter (`PorterDuffColorFilter`/`ColorMatrixColorFilter` per ambient mode) with
+no null branch, for every bounds shape and every complication type that carries a
+`MonochromaticImage`. `iconColor` selects *which* single color, never whether one is applied. The
+only native path to a multi-color image is `SmallImage` with `IMAGE_STYLE_ICON`, which is exactly
+the image the both-images layout bug (`withoutRedundantSmallImage`) has to strip on a non-wide
+slot to avoid a worse bug (both icon and small image rendering empty). The real tradeoff on a
+square slot is single-tint icon vs. no icon at all — never single-tint vs. full color.
 
-2. **Fewer providers appear in our in-app complication picker than in the OEM's native watch
-   face settings.** Likely not a bug: OEM settings screens often surface a proprietary catalog
-   (including providers that don't register through the standard androidx
-   `openComplicationDataSourceChooser` API our picker uses), which a standards-based picker
-   can't see. Worth a brief confirmation pass later, but treat as expected platform behavior
-   unless proven otherwise.
+**Wide-image cropping — see backlog above** (kept open, not closed, since a design is proposed
+but not built).
 
-3. **Complications with a numeric/rangeable value should be able to drive `DynProvider`**
-   (sliders, rotation, or other dynamic visual effects keyed off the complication's value),
-   the same way BG/IOB/battery-level etc. already do. Needs design: how a complication's
-   `RangedValueComplicationData` (or similar) maps onto `ValueMap`/`DynProvider`'s existing
-   min/max/step model. See also "Open bugs" item A above for the converse direction (other live
-   values driving a complication's own bounds/appearance) — the two together mean complications
-   need full two-way integration with the existing `DynProvider` mechanism, not just one-way.
+**Watch Face Format (WFF) — considered and rejected as a wholesale replacement, not as a
+comparison tool.** Google made WFF mandatory for Play Store distribution/updates of legacy
+code-based watch faces as of January 2026 — confirmed a Play-Store-specific restriction, not a
+device-level block on sideloaded code-based watch faces. AAPS is not Play-Store-distributed, so
+this is believed not to affect it; re-confirm if AAPS's distribution model ever changes. WFF
+itself was ruled out as a target format for CWF: it is purely declarative (no executable code),
+so it cannot host `DynProvider`/`ValueMap`'s arbitrary AAPS-data-driven logic. It remains useful
+*only* as a comparison tool for what a different rendering approach can achieve (see "own the
+rendering" above) — explicitly **not** as evidence that our own renderer has some undiscovered
+capability, since the two share no rendering code.
 
-## Open bugs — active, not yet fixed (found after initial "complete" status)
+*(Root Causes 1–5 above were recovered verbatim from `6a0d903de26` after a rebase left the
+section structurally broken — heading emptied, 1 and 2 orphaned inside the checklist, 3–5 dropped
+entirely. The original architecture-as-built notes and the "not yet tested" list from the original
+session are unchanged except where superseded explicitly.)*
 
-**Priority order for the next work session, as explicitly set by the project owner:**
-1. Provider name shown under "Complication N" in the preferences menu — **done** for the
-   long-press path; AAPS-menu path blocked on item 2 below, not a separate bug
-2. AAPS Settings-menu picker fix (Root Cause 4 follow-up) — next up, with Opus
-3. **Architecture item A below** — right after the picker fix
-4. Item B below (content-fills-bounds sizing bug)
+---
 
-**A. Core architecture principle violated: complications are not integrated into the CWF's
-live rendering flow, unlike every other view.** This is the central design rule of the whole CWF
-format: the user fixes *all* display parameters in the json — position, size, font (typeface +
-size), style, background (transparent/color/image) — and for every existing view type
-(`TextView`, `ImageView`, the chart, etc.) these are re-evaluated live, on **every refresh
-tick** — not just on CWF (re)load. This already happens today via `ViewMap`/`DynProvider`/
-`ValueMap`: a view's background image, size, position, or rotation can already change from one
-refresh to the next based on a live data value — the clearest example being BG level: a view's
-background image swaps (e.g. high/mid/low background) the moment glycemia crosses into
-hyperglycemia, with no CWF reload involved at all, just the normal per-tick refresh. Position/
-size offsets driven by `DynProvider` (`getTopOffset`/`getLeftOffset`/`getRotationOffset` etc.)
-work the same way — continuously re-evaluated, not fixed at load time.
+## Data hygiene note
 
-Complications currently violate this on two counts, not one:
-1. They don't refresh even on CWF *reload* (the originally-reported symptom: switching to a
-   CWF with a different complication layout shows no change until some unrelated event forces
-   an `Engine` restart).
-2. More fundamentally, they can't participate in the same **per-tick** dynamic adjustments that
-   other views already have via `DynProvider` — e.g. a complication's size, position, or
-   background could reasonably need to change live when BG crosses a threshold, exactly like an
-   `ImageView`'s background already does, and there's currently no path for that at all, not
-   even in principle. This connects directly to "Deferred observations" item 3 below
-   (complications driving `DynProvider`) — that item was framed as "complication value drives
-   other visual effects"; this is the converse and equally necessary: other live values (BG
-   level, etc.) must be able to drive a complication's own bounds/appearance, the same as they
-   already drive every other view type.
-
-The goal is not "find a way to occasionally refresh bounds on CWF switch" — it's
-**complications behaving like every other CWF-driven element, on every refresh tick**: read
-from `DynProvider`/the current CWF json state each time, exactly like background image
-swapping or position offsets already do for text and image views.
-
-Investigation needed (don't assume an answer, this session already confirmed one specific
-constraint that must be re-verified, not re-guessed):
-- Is there a supported androidx API to update an existing `ComplicationSlot`'s bounds/enabled
-  state at runtime? (Already checked once this session and found no such API in
-  androidx.wear.watchface 1.2.1 at the `ComplicationSlot`/`ComplicationSlotsManager` level —
-  re-verify this conclusion specifically, since it's the crux of everything below.)
-- **Also check a lower-level path before concluding engine recreation is required**: is there a
-  `CanvasComplication`-level rendering call that accepts a `Rect`/bounds parameter directly per
-  invocation (as opposed to `ComplicationSlot.render()`, which uses the slot's own cached
-  bounds internally)? If the underlying drawable/renderer can be driven with per-frame bounds
-  supplied by us — the same way `ViewMap.customizeViewCommon()` already computes fresh
-  layout params every tick — that would let complications join the existing per-tick refresh
-  flow directly, with no engine recreation needed at all. This is the outcome to aim for if it
-  exists, since it's strictly better regardless of refresh cadence.
-- **Only if that's genuinely not possible**, the remaining path is making the watch face
-  `Engine` recreate itself. Refresh cadence here is real CGM data (BG readings), roughly every
-  5 minutes — possibly a bit off-cadence for `EXT1`/`EXT2` follower data on dual/multi-user
-  screens, which isn't perfectly synced with the primary reading — **not** a per-second UI tick.
-  This makes periodic engine recreation considerably more plausible as an acceptable fallback
-  than it would be at second-level frequency, though still worth confirming it doesn't
-  re-trigger the Dagger-injection-race or `EditorSession`-crash bugs already fixed this session,
-  and doesn't produce a visibly jarring restart on every BG update.
-- Whichever path is real, the end state should be: a complication's position/size/visibility/
-  background can update with the same immediacy already true for every other CWF view, on CWF
-  reload *and* on live data changes within the same CWF.
-- **The refresh trigger itself is not something to design** — the CWF refresh loop is already
-  deterministic and driven by an external event (new data received from the phone), the same
-  event that already refreshes every other view's position/size/background. Whatever mechanism
-  is chosen for complications (per-frame bounds passed directly, or — only if unavoidable —
-  engine recreation) should hook into that same existing trigger point, not invent a separate
-  timer/polling mechanism of its own.
-
-**B. Complication visible content (icon/text) renders far smaller than the declared CWF bounds
-box.** Separate issue from A — this is about content-fits-within-bounds, not
-bounds-not-refreshing. Found via device testing, comparing against a Samsung native watch
-face's complications at equivalent visual size:
-- A box matching `cover_chart`'s cutout circle diameter (~103px in the 400×400 CWF coordinate
-  space) produces a "ridiculously small" result.
-- Even a 140px box — well larger than the 103px circle — still doesn't fill comparably to the
-  same provider on the Samsung watch face.
-- This means CWF authors would need to declare boxes far larger than the intended visual area to
-  compensate, which defeats the CWF format's core design goal: precise, reproducible pixel
-  positioning in a 400×400 space, independent of screen density/resolution.
-
-Hypothesis to verify against real source, don't assume it's correct: `ComplicationDrawable`/
-`ComplicationStyle` likely reserves internal padding/inset around the icon+text by default —
-possibly space for a ranged-value progress ring, applied even when the complication type isn't
-`RANGED_VALUE` — and if that inset is a fixed size (e.g. dp-based) rather than proportional to
-the bounds, it would explain the observation exactly: a small box is dominated by the fixed
-margin, a bigger box is less dominated but still short by the same fixed amount. Also re-check
-whether our bounds-to-fraction conversion (dividing CWF px by `templeResolution`=400 — see
-architecture section above) is itself correct, or whether there's a separate dp/px unit mismatch
-somewhere between what we pass to the drawable and what the CWF format's contract expects.
-
-Report the actual mechanism (ring/inset defaults found in source, and/or a confirmed unit
-mismatch) before proposing a fix (e.g. disabling the ring reservation, exposing a configurable
-inset via a new CWF json key, or correcting a unit conversion).
-
-## Deferred design items — complication providers & persistence
-
-1. **System + AAPS provider catalog, for default-provider assignment via CWF json.**
-   Architecture already decided (don't re-litigate):
-    - A new small, stable, shareable vocabulary `ComplicationProviderKeyValues` (enum, in the
-      `shared` module next to `JsonKeyValues`) — the public dictionary of provider keywords a
-      CWF author can write (e.g. `"step_count"`, `"aaps_iob"`).
-    - A private enum `ComplicationProviderMap` in `CustomWatchface.kt` (like
-      `FontMap`/`GravityMap`) that maps each `ComplicationProviderKeyValues` key to either a
-      `SystemDataSources.DATA_SOURCE_*` constant or an AAPS `ComponentName`, plus its supported
-      `ComplicationType`.
-    - Get the exact, current `SystemDataSources` constant list by inspecting the real installed
-      SDK jar (same technique used all session for androidx internals) — don't trust a
-      hand-typed list.
-    - New CWF json key: `DEFAULTPROVIDER` (uses
-      `androidx.wear.watchface.complications.DefaultComplicationDataSourcePolicy`, set at
-      slot-creation time in `buildComplicationSlot()`).
-
-2. **Lock a slot's provider (prevent user from changing it).** Confirmed native API:
-   `ComplicationSlot.Builder.setFixedComplicationDataSource(Boolean)`. New CWF json key:
-   `LOCKPROVIDER` (boolean), read alongside `DEFAULTPROVIDER` at slot-creation time.
-
-3. **Restrict which `ComplicationType`s a slot accepts, per CWF.** `ComplicationType` list
-   (confirmed small & stable — ~11 values: `SHORT_TEXT`, `LONG_TEXT`, `RANGED_VALUE`,
-   `MONOCHROMATIC_IMAGE`, `SMALL_IMAGE`, `PHOTO_IMAGE`, `GOAL_PROGRESS`, `WEIGHTED_ELEMENTS`,
-   `EMPTY`, `NO_DATA`, `NOT_CONFIGURED`) belongs directly in the shared `JsonKeyValues` (unlike
-   the provider list — small+stable+reusable, not single-purpose). New CWF json key:
-   `SUPPORTEDTYPES` (list), replacing the current hardcoded `complicationSupportedTypes` in
-   `CustomWatchface.kt`.
-
-4. **Persistence of provider assignments across different CWF zips.** Needs design
-   clarification before implementation, not just coding. Known constraint (see architecture
-   section above): bounds/enabled aren't mutable at runtime, "fixed at creation, refreshed on
-   next Engine restart" is the accepted tradeoff. Open question to resolve: when a user loads a
-   *different* CWF with fewer/relocated visible slots, what should happen to a provider already
-   assigned to a slot ID that's no longer visible, or whose meaning changed? Decide the intended
-   behavior (keep assignment dormant vs prompt reselection vs clear it) before touching code.
-
-5. **Restrict Settings-menu complication entries to CustomWatchface + visible slots only.**
-   Menu should (a) only offer "Complication N" entries when the active watch face is
-   CustomWatchface, not Digital/Circle, and (b) only list slots that are
-   `visibility:"visible"` in the currently loaded CWF json.
-
-6. **Show the currently-assigned provider's name under each "Complication N" entry**, in both
-   the long-press preferences screen and the AAPS Settings-menu screen — same `setSummary()`
-   pattern already used elsewhere on that screen. Refresh on screen open (all 3 slots) and
-   immediately after a successful pick (that one slot). Needs the real `EditorSession` API for
-   a human-readable provider name per slot (don't assume a field name, check the extracted
-   androidx source first).
-
-7. **AAPS Settings-menu picker still doesn't open at all.** See Root Cause 4 above — parked as
-   a platform limitation, no app-side fix identified. Only revisit if a genuine SysUI-level
-   entry point for the customize flow is found.
-
-## Potential major finding — watch face selection, not just complications (needs confirmation)
-
-While fixing Root Cause 4, discovered that Samsung SysUI's broadcast handler
-(`setActiveWatchfaceAndStartEditor`, triggered via `ACTION_EDIT_WATCH_FACE`) has a side effect:
-it makes the target watch face **active**, not just editable. This may matter far beyond
-complications: on newer "Factory Built" Wear OS 5+ Samsung watches, the legacy code-based watch
-face picker library was removed entirely, so users on that hardware likely cannot select/
-activate `CustomWatchface` (or `Digital`/`Circle`) via the normal on-watch picker at all — this
-broadcast mechanism could be **the only way** for them to select any of AAPS's watch faces, not
-just a UX nicety for the complications picker.
-
-**Not yet confirmed** — the test device used throughout this session still has the legacy
-library (long-press already worked there before any of this work), so nothing tested so far
-proves this solves the newer-watch problem. Needs confirmation on an actual Wear OS 5+ Samsung
-watch with the legacy library removed. Flag for community testing from an affected user before
-acting on the item below.
-
-**If confirmed, a larger follow-up architecture item** (not urgent, not started, only relevant
-once the above is confirmed): today there's a single AAPS Settings-menu entry that shows
-whichever watch face's preferences XML is currently active (Digital/Circle/CWF) — this
-implicitly assumes the user can already select any watch face via the normal picker, which is
-exactly what's broken on affected hardware. If the broadcast mechanism genuinely enables
-selection, the menu would need restructuring:
-- Three distinct, always-visible menu entries (one per watch face: Digital, Circle, Custom),
-  not one entry conditional on whichever is currently active.
-- Each entry should be able to both *select+activate* its watch face (via the same broadcast
-  mechanism, generalized beyond `CustomWatchface`-specific complication slot handling — this
-  points to extracting a small reusable "ask SysUI to activate+edit watch face X" helper rather
-  than keeping the logic complication-specific) and show/edit its preferences, even for watch
-  faces with no complications at all (Digital, Circle) which don't currently need any of this
-  machinery.
-- Likely needs a renamed/reworded menu entry point (something like "Select and Configure" rather
-  than the current framing) to reflect the new dual purpose.
+Real BPM/step-count/other health values observed during device testing are never recorded in this
+file or in `_docs/Complication_Libraries.md` — only the mechanism/finding they illustrate. This is
+a standing practice for this project, not a one-off decision; keep it up in any future update.
