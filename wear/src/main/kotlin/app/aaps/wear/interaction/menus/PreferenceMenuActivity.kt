@@ -3,12 +3,12 @@ package app.aaps.wear.interaction.menus
 import android.content.Intent
 import android.os.Bundle
 import app.aaps.wear.R
+import app.aaps.wear.interaction.SamsungWatchFaceEditor
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 
 class PreferenceMenuActivity : MenuListActivity() {
-    private var lastWatchface = SelectedWatchFace.NONE
     override fun onCreate(savedInstanceState: Bundle?) {
         setTitle(R.string.menu_settings)
         super.onCreate(savedInstanceState)
@@ -22,9 +22,12 @@ class PreferenceMenuActivity : MenuListActivity() {
             add(MenuItem(R.drawable.ic_tile_settings, getString(R.string.pref_tile_settings)))
             add(MenuItem(R.drawable.ic_complication, getString(R.string.pref_complication_settings)))
             add(MenuItem(R.drawable.ic_others, getString(R.string.pref_others_settings)))
-            add(MenuItem(R.drawable.watchface_custom, getString(R.string.label_watchface_custom)))
-            add(MenuItem(R.drawable.watchface_digitalstyle, getString(R.string.label_watchface_digital_style)))
-            add(MenuItem(R.drawable.watchface_circle, getString(R.string.label_watchface_circle)))
+            // These 3 items only make sense where SysUI can hand off to a live editing session
+            if (SamsungWatchFaceEditor.isAvailable(this@PreferenceMenuActivity)) {
+                add(MenuItem(R.drawable.watchface_custom, getString(R.string.label_watchface_custom)))
+                add(MenuItem(R.drawable.watchface_digitalstyle, getString(R.string.label_watchface_digital_style)))
+                add(MenuItem(R.drawable.watchface_circle, getString(R.string.label_watchface_circle)))
+            }
         }
 
     override fun doAction(position: String) {
@@ -52,13 +55,13 @@ class PreferenceMenuActivity : MenuListActivity() {
             })
 
             getString(R.string.label_watchface_custom)     -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply {
-                putExtra(getString(R.string.key_preference_id), R.xml.watch_face_configuration_custom)
+                putExtra(getString(R.string.key_selected_watchface), SelectedWatchFace.CUSTOM.ordinal)
             })
             getString(R.string.label_watchface_digital_style) -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply {
-                putExtra(getString(R.string.key_preference_id), R.xml.watch_face_configuration_digitalstyle)
+                putExtra(getString(R.string.key_selected_watchface), SelectedWatchFace.DIGITAL.ordinal)
             })
             getString(R.string.label_watchface_circle)     -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply {
-                putExtra(getString(R.string.key_preference_id), R.xml.watch_face_configuration_circle)
+                putExtra(getString(R.string.key_selected_watchface), SelectedWatchFace.CIRCLE.ordinal)
             })
         }
     }

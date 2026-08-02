@@ -2,8 +2,6 @@ package app.aaps.wear.interaction
 
 import android.Manifest
 import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -20,9 +18,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.preference.WearPreferenceActivity
-import app.aaps.wear.watchfaces.CircleWatchface
-import app.aaps.wear.watchfaces.CustomWatchface
-import app.aaps.wear.watchfaces.DigitalStyleWatchface
+import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import javax.inject.Inject
 
 class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -39,28 +35,23 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         dagger.android.AndroidInjection.inject(this)
 
         // MUST set preferenceFile BEFORE calling super.onCreate() because super creates the fragment
-        preferenceFile = intent.getIntExtra(getString(R.string.key_preference_id), R.xml.display_preferences)
+        val requestedWatchFace = intent.getIntExtra(getString(R.string.key_selected_watchface), -1)
+            .takeIf { it >= 0 }
+            ?.let { SelectedWatchFace.fromId(it) }
+
+        preferenceFile = requestedWatchFace
+            ?.let { WatchFaceCatalog.preferenceXmlFor(it) }
+            ?: intent.getIntExtra(getString(R.string.key_preference_id), R.xml.display_preferences)
 
         super.onCreate(savedInstanceState)
 
-        // Opening one of the 3 watch faces' own settings (as opposed to the app-wide
-        // display/graph/interface/tile/others screens, which aren't tied to any single watch face)
-        // hands straight over to the system watch face editor. That both activates the watch face
-        // being configured and shows this same preference screen backed by a live editing session
-        // - the only state in which entries like CustomWatchface's "Complication N" actually work.
-        // See [requestSystemWatchFaceEditor] for why activation is the point, not a side effect to
-        // work around, and for what "hands over" concretely does.
-        //
-        // Finished immediately so this screen is never drawn: the editor takes ~1s to appear, and
-        // without this the user watches one preference menu get replaced by a near-identical one.
-        // Finishing before the first frame makes this a trampoline - Android skips drawing it - and
-        // leaves back from the editor returning to the settings list rather than to a dead copy.
-        //
-        // Only when the broadcast was actually accepted. If there's no receiver (any non-Samsung
-        // watch) we must keep this screen, since it's then the only one the user gets.
-        if (savedInstanceState == null) {
-            val watchFaceComponent = watchFaceComponentFor(preferenceFile)
-            if (watchFaceComponent != null && requestSystemWatchFaceEditor(watchFaceComponent)) {
+        // Only the 3 dedicated watch-face menu entries pass key_selected_watchface. The app-wide
+        // display/graph/interface/complication/others screens (and the phone-triggered
+        // OpenSettings default) must never activate a watch face as a side effect of being
+        // opened, so the SysUI hand-off below only ever runs when one was explicitly requested.
+        if (savedInstanceState == null && requestedWatchFace != null) {
+            val watchFaceComponent = WatchFaceCatalog.componentNameFor(this, requestedWatchFace)
+            if (watchFaceComponent != null && SamsungWatchFaceEditor.requestEditor(this, watchFaceComponent)) {
                 finish()
                 return
             }
@@ -87,15 +78,6 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
             for (i in 0 until parent.childCount)
                 removeBackgroundRecursively(parent.getChildAt(i))
         parent.background = null
-    }
-
-    /** The watch face [preferenceFile] configures, or null for the app-wide screens that aren't
-     *  tied to any single watch face (display/graph/interface/tile/complication/others). */
-    private fun watchFaceComponentFor(preferenceFile: Int): ComponentName? = when (preferenceFile) {
-        R.xml.watch_face_configuration_custom       -> ComponentName(this, CustomWatchface::class.java)
-        R.xml.watch_face_configuration_circle       -> ComponentName(this, CircleWatchface::class.java)
-        R.xml.watch_face_configuration_digitalstyle -> ComponentName(this, DigitalStyleWatchface::class.java)
-        else                                        -> ComponentName(this, CustomWatchface::class.java)
     }
 
     override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String?) {
@@ -188,45 +170,5 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
 
     companion object {
         private const val BODY_SENSOR_PERMISSION_REQUEST_CODE = 1
-
-        /** Samsung SysUI's exported (protectionLevel="normal") watch face editor entry point. */
-        private const val SYSUI_PACKAGE = "com.samsung.android.wearable.sysui"
-        private const val ACTION_EDIT_WATCH_FACE = "com.samsung.android.wearable.sysui.action.EDIT_WATCH_FACE"
-
-        /**
-         * The only extra SysUI's receiver reads: the watch face service's flattened [ComponentName].
-         * It bails out immediately (logging "no watchface") if this is absent, and again (logging
-         * "not installed watchface") if the component doesn't resolve to a known watch face.
-         */
-        private const val EXTRA_WATCH_FACE = "watchface"
-
-        /**
-         * Asks Samsung's SysUI to make [watchFace] the active watch face and open its editor.
-         *
-         * This is the only known way for the app to get the system to start a watch face *editing
-         * session*, which Wear Services requires before it will serve the complication chooser (see
-         * `ComplicationPickerSupport.handlePreferenceClick` for why nothing we can put in an intent
-         * substitutes for it). SysUI then launches [ConfigurationActivity] itself, exactly as the
-         * long-press "Customize" flow does, so from there everything - including the complication
-         * chooser, for CustomWatchface - works normally. Applies to every watch face, not just
-         * CustomWatchface: any of them benefits from actually being active while its settings are
-         * open, complications or not.
-         *
-         * SysUI's handler is internally named "setActiveWatchfaceAndStartEditor" and does just
-         * that: it adds the watch face to the user's favourites, **makes it active**, and only then
-         * opens the editor. Activating the watch face is intended here, not a side effect to work
-         * around - on Wear OS 5+ watches whose watch face picker no longer offers code-based faces,
-         * this may be the only way to activate one of ours at all (unconfirmed - see the project
-         * notes).
-         *
-         * Returns false when the receiver isn't present (any non-Samsung watch), so the caller can
-         * degrade rather than assume the editor is on its way.
-         */
-        private fun Context.requestSystemWatchFaceEditor(watchFace: ComponentName): Boolean {
-            val intent = Intent(ACTION_EDIT_WATCH_FACE).setPackage(SYSUI_PACKAGE)
-            if (packageManager.queryBroadcastReceivers(intent, 0).isEmpty()) return false
-            sendBroadcast(intent.putExtra(EXTRA_WATCH_FACE, watchFace.flattenToString()))
-            return true
-        }
     }
 }
