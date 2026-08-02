@@ -132,13 +132,15 @@ class EquilPumpPlugin @Inject constructor(
 
         rxBus.toFlow(EventEquilAlarm::class.java)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { eventEquilError ->
-                commandQueue.performing()?.let {
-                    if (it.commandType == Command.CommandType.BOLUS) {
-                        aapsLogger.info(LTag.PUMPCOMM, "eventEquilError.tips====${eventEquilError.tips}")
-                        notificationManager.dismiss(NotificationId.EQUIL_ALARM)
-                        notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, soundRes = app.aaps.core.ui.R.raw.alarm)
-                        stopBolusDelivering()
-                    }
+                aapsLogger.info(LTag.PUMPCOMM, "eventEquilError.tips====${eventEquilError.tips}")
+                // Always surface the pump alarm - it is no longer gated on a bolus being in progress
+                // (alarms now come from the GATT history read on every connection, not just from an
+                // advertisement scan caught mid-bolus). See #5040.
+                notificationManager.dismiss(NotificationId.EQUIL_ALARM)
+                notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, soundRes = app.aaps.core.ui.R.raw.alarm)
+                // But only halt bolus tracking if a bolus is actually delivering.
+                if (commandQueue.performing()?.commandType == Command.CommandType.BOLUS) {
+                    stopBolusDelivering()
                 }
             }
         preferences.observe(EquilIntPreferenceKey.EquilTone).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) {
