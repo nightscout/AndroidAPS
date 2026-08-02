@@ -61,6 +61,10 @@
     <string name="pref_single_target">Cible Unique</string>
     <string name="pref_wizard_percentage">Pourcentage de l\'Assistant</string>
     <string name="pref_complication_tap_action">Action Appui Complication</string>
+    <string name="pref_complication_bg_graph_hours">Intervalle de temps du graphique glycémie</string>
+    <string name="duration_1_hour">1 heure</string>
+    <string name="duration_3_hours">3 heures</string>
+    <string name="duration_6_hours">6 heures</string>
     <string name="pref_unicode_in_complications">Unicode dans Complications</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">Plus de paramètres</string>
@@ -79,6 +83,11 @@
     <string name="menu_bg_graph">Graphique Glycémie</string>
     <string name="menu_resync">Re-sync</string>
     <string name="menu_prime_fill">Amorcer/Remplir</string>
+    <string name="menu_install_watchface">Installer le cadran</string>
+    <string name="menu_installing_watchface">Installation du cadran…</string>
+    <string name="watchface_installed_active">Cadran installé et défini comme actif</string>
+    <string name="watchface_installed_select">Cadran installé, sélectionnez-le dans le sélecteur de cadran de montre</string>
+    <string name="watchface_install_failed">L\'installation du cadran a échoué</string>
     <string name="menu_none">Aucun</string>
     <string name="menu_default">Défaut</string>
     <string name="menu_menu">Menu</string>
@@ -204,6 +213,12 @@
     <string name="tile_action_2">Action 2</string>
     <string name="tile_action_3">Action 3</string>
     <string name="tile_action_4">Action 4</string>
+    <string name="tile_scene_1">Scénario 1</string>
+    <string name="tile_scene_2">Scénario 2</string>
+    <string name="tile_scene_3">Scénario 3</string>
+    <string name="tile_scene_4">Scénario 4</string>
+    <string name="tile_scene_auto">Automatique</string>
+    <string name="tile_scene_unavailable">Indisponible</string>
     <string name="datalayer_notification_title">Service de premier plan de la couche de données</string>
     <string name="datalayer_notification_text">AAPS est en cours d\'exécution au premier plan. Pour masquer les notifications, allez dans les options de développement, Notifications des applications, Apps montre autorisées, sélectionnez AAPS, Désactivez Service avant plan couche de données.</string>
     <string name="on">ACTIVEE</string>
@@ -214,6 +229,7 @@
     <string name="complication_blood_glucose_large">Glycémie (grande)</string>
     <string name="complication_blood_glucose_ext1">Glycémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glycémie Ext2</string>
+    <string name="complication_bg_graph">Graphique Gly</string>
     <string name="complication_br_cob_iob">DB, GA &amp; IA</string>
     <string name="complication_br_cob_iob_ext1">DB, GA &amp; IA Ext1</string>
     <string name="complication_br_cob_iob_ext2">DB, GA &amp; IA Ext2</string>
@@ -237,6 +253,7 @@
     <string name="action_running_mode_selected">Mode de fonctionnement demandé</string>
     <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
     <string name="title_activity_suspend_loop">Suspendre la boucle</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -292,7 +309,10 @@
     <string name="wizard_result_cob">GA (%1$.1f g)</string>
     <string name="wizard_result_carbs">Glucides (%1$d g)</string>
     <string name="wizard_result_subtotal">Sous-total</string>
+    <string name="wizard_result_correction">Correction</string>
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>
