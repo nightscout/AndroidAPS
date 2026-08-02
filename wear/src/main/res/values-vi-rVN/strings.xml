@@ -262,10 +262,7 @@
     <string name="contacting_master_unknown">Trạng thái không xác định — hãy kiểm tra điện thoại</string>
     <string name="tile_settings">Cài đặt Tile</string>
     <string name="loop_status_error">Không tải được trạng thái</string>
-    <string name="loop_status_tempt_duration">%1$d phút (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d phút</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">Còn %1$d phút</string>
     <string name="loop_status_tbr_continues">Tiếp tục liều nền tạm thời</string>
     <string name="loop_status_tbr_cancel">Đang thiết lập liều nền thường</string>
     <string name="loop_status_smb">%1$.2f U</string>
