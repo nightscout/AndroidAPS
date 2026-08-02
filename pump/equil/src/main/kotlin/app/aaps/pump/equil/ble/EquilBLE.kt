@@ -68,6 +68,9 @@ class EquilBLE @Inject constructor(
             isConnected = true
             equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
             handler.removeMessages(TIME_OUT_CONNECT_WHAT)
+            // Link up: stop the parallel advert-harvest scan (the pump stops advertising once connected; if it
+            // already caught an advert it stopped itself in the scan collector).
+            stopScan()
             synchronized(notifyLock) {
                 // New link: notifications not yet enabled. Block command dispatch until onDescriptorWritten.
                 notificationEnabled = false
@@ -159,7 +162,7 @@ class EquilBLE @Inject constructor(
         // Cancel any pending delayed connect so a stale runnable can't re-open a GATT after teardown.
         connectRunnable?.let { handler.removeCallbacks(it) }
         connectRunnable = null
-        startTrue = false
+        stopScan() // cancel any in-flight advert-harvest scan (hybrid connect); also clears startTrue
         autoScan = false
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
         aapsLogger.debug(LTag.PUMPBTCOMM, "Closing GATT connection")
@@ -366,9 +369,23 @@ class EquilBLE @Inject constructor(
         if (connecting || isConnected) {
             return
         }
-        autoScan = true
         baseCmd = null
-        startScan()
+        macAddress = equilManager?.equilState?.address
+        val mac = macAddress
+        if (!mac.isNullOrEmpty()) {
+            // Known/bonded pump: connect straight to its MAC (autoConnect, see EquilBleTransportImpl) instead of
+            // scan-to-connect. Scan discovery was the #5040 bottleneck (60-90 s on many phones). In parallel run
+            // a best-effort advert harvest that does NOT gate the connection - it refreshes the pump's current
+            // history index + battery/reservoir/alarm. Scanning stays as the fallback for an unknown MAC.
+            connecting = true
+            equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+            connectEquil(mac)
+            autoScan = false
+            startScan()
+        } else {
+            autoScan = true
+            startScan()
+        }
     }
 
     fun stopScan() {

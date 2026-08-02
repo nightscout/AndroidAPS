@@ -206,6 +206,9 @@ class EquilBleTransportImpl @Inject constructor(
                     )
                 }
                 val settings = ScanSettings.Builder()
+                    // Latency-sensitive (a command is waiting on discovery). Default LOW_POWER duty-cycles the
+                    // radio and can take tens of seconds to surface a bonded pump on some phones. See #5040.
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                     .setReportDelay(0)
                     .build()
                 bluetoothAdapter?.bluetoothLeScanner?.startScan(filters, settings, scanCallback)
@@ -235,7 +238,10 @@ class EquilBleTransportImpl @Inject constructor(
             // client interfaces; leaking them (connectGatt without close) leads to status 133 and
             // an eventual inability to connect at all.
             bluetoothGatt?.close()
-            bluetoothGatt = device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
+            // autoConnect = true: the Android stack completes the link as soon as the (known/bonded) pump is
+            // in range, with no app-level scan. Replaces flaky scan discovery that took 60-90 s on many phones
+            // and caused command timeouts / "no insulin delivered" (#5040).
+            bluetoothGatt = device.connectGatt(context, true, gattCallback, BluetoothDevice.TRANSPORT_LE)
             return bluetoothGatt != null
         }
 
