@@ -12,7 +12,9 @@ data class LoopStatusData(
     val tempTarget: TempTargetInfo?,
     val autosensTarget: String? = null,
     val defaultRange: TargetRange,
-    val oapsResult: OapsResultInfo?
+    val oapsResult: OapsResultInfo?,
+    /** End time (epoch ms) of a temporary running mode (suspend/disconnect/superbolus), null when the mode is permanent */
+    val modeEndTime: Long? = null
 ) {
     @Serializable
     enum class LoopMode {

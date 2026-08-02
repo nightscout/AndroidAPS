@@ -322,10 +322,9 @@
     <string name="contacting_master_unknown">State unknown — check phone</string>
     <string name="tile_settings">Tile settings</string>
     <string name="loop_status_error">Failed to load status</string>
-    <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d min</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">%1$d min remaining</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s remaining</string>
     <string name="loop_status_tbr_continues">Temp basal continues</string>
     <string name="loop_status_tbr_cancel">Setting regular basal</string>
     <string name="loop_status_smb">%1$.2f U</string>
