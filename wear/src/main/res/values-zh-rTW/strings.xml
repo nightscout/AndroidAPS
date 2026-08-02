@@ -262,10 +262,7 @@
     <string name="contacting_master_unknown">狀態未知 — 請檢查智慧型手機</string>
     <string name="tile_settings">資訊方塊設定</string>
     <string name="loop_status_error">狀態載入失敗</string>
-    <string name="loop_status_tempt_duration">%1$d 分鐘（%2$s）</string>
-    <string name="loop_status_tbr_duration">%1$d 分鐘</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">剩餘 %1$d 分鐘</string>
     <string name="loop_status_tbr_continues">臨時基礎率持續中</string>
     <string name="loop_status_tbr_cancel">設定正常基礎率</string>
     <string name="loop_status_smb">%1$.2f U</string>
