@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Sélectionnez un répertoire pour les paramètres de l\'application et les fichiers journaux</string>
     <string name="permission_notifications_title">Notifications</string>
     <string name="permission_notifications_description">Requis pour afficher les alertes, les alarmes et les mises à jour des états de la pompe</string>
+    <string name="permission_fsi_title">Alarmes plein écran</string>
+    <string name="permission_fsi_description">Requis pour que les alarmes puissent réveiller l\'écran et s\'afficher en plein écran lorsque le téléphone est verrouillé</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
