@@ -42,7 +42,7 @@
     <string name="profile_isf_units_mmol">ммол/л/E</string>
     <string name="bg_mgdl">%1$d мг/дл</string>
     <string name="bg_mmol">%1$.1f ммол/л</string>
-    <string name="save">Съхрани</string>
+    <string name="save">Запиши</string>
     <string name="skip">Прескочи</string>
     <string name="switch_to_edit">Редактирай</string>
     <string name="snooze">Отложи</string>
@@ -740,7 +740,7 @@
     <string name="carbs_type_pizza">Лазаня, пица, хамбургери, пържени и печени картофи, чипс и др снаксове</string>
     <string name="wizard_ecarbs">Уд въглехидрати %1$dгр / %2$dч (+%3$dмин)</string>
     <string name="wizard_total">Общо</string>
-    <string name="wizard_carb_time">Време на въгл</string>
+    <string name="wizard_carb_time">Започват от</string>
     <string name="carb_time_now">Сега</string>
     <string name="change">Промяна</string>
     <string name="grant">Разрешаване</string>
@@ -762,8 +762,8 @@
     <string name="wizard_trend_detail">15мин промяна (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Нарушение в ограничението на инсулин!\nНе може да бъде доставен %1$.2fЕ</string>
     <string name="wizard_pump_not_available">Помпата не е налична!</string>
-    <string name="quick_wizard_not_available">Избраният съветник е недостъпе, моля опреснете</string>
-    <string name="quickwizard_managemnt">Бърз съветник</string>
+    <string name="quick_wizard_not_available">Избраното действие е неоткриваемо, моля опреснете</string>
+    <string name="quickwizard_managemnt">Бързи действия</string>
     <!--    Preferences-->
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
