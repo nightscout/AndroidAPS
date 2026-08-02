@@ -372,7 +372,9 @@ sealed class EventData : Event() {
         val tempTargetDuration: Long = -1L,
         val reservoirString: String,
         val reservoir: Double,
-        val reservoirLevel: Int
+        val reservoirLevel: Int,
+        // Numeric COB in grams for input bounds on the watch; -1.0 = unknown (older sender or no data)
+        val cobValue: Double = -1.0
     ) : EventData(), EventDataSet
 
     @Serializable

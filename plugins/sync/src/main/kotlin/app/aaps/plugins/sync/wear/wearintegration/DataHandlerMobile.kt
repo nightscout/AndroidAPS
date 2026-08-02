@@ -1299,6 +1299,7 @@ class DataHandlerMobile @Inject constructor(
         var iobSum = ""
         var iobDetail = ""
         var cobString = ""
+        var cobValue = -1.0
         var currentBasal = ""
         var bgiString = ""
         if (config.appInitialized && profile != null) {
@@ -1306,7 +1307,9 @@ class DataHandlerMobile @Inject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             iobSum = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${decimalFormatter.to2Decimal(bolusIob.iob)}|${decimalFormatter.to2Decimal(basalIob.basaliob)})"
-            cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString(decimalFormatter)
+            val cobInfo = iobCobCalculator.getCobInfo("WatcherUpdaterService")
+            cobString = cobInfo.generateCOBString(decimalFormatter)
+            cobValue = cobInfo.displayCob ?: -1.0
             currentBasal =
                 processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh) ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
@@ -1374,6 +1377,7 @@ class DataHandlerMobile @Inject constructor(
                 iobSum = iobSum,
                 iobDetail = iobDetail,
                 cob = cobString,
+                cobValue = cobValue,
                 currentBasal = currentBasal,
                 battery = phoneBattery.toString(),
                 rigBattery = rigBattery,
