@@ -45,12 +45,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.interfaces.navigation.ElementCategory
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
-import app.aaps.core.interfaces.navigation.ElementCategory
-import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem

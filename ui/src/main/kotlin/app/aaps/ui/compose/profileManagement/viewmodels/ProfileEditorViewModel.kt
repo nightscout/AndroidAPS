@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.math.RoundingMode
+import java.util.Locale
 import javax.inject.Inject
 
 data class TimeValue(
@@ -155,7 +156,7 @@ class ProfileEditorViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    suspend fun loadState() {
+    fun loadState() {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val aps = activePlugin.activeAPS
 
@@ -355,7 +356,7 @@ class ProfileEditorViewModel @Inject constructor(
         if (index < array.length()) {
             val obj = array.getJSONObject(index)
             val hour = timeValue.timeSeconds / 3600
-            obj.put("time", String.format("%02d:00", hour))
+            obj.put("time", String.format(Locale.getDefault(), "%02d:00", hour))
             obj.put("timeAsSeconds", timeValue.timeSeconds)
             obj.put("value", timeValue.value)
         }
@@ -383,7 +384,7 @@ class ProfileEditorViewModel @Inject constructor(
 
         val newObj = JSONObject().apply {
             val hour = newTime / 3600
-            put("time", String.format("%02d:00", hour))
+            put("time", String.format(Locale.getDefault(), "%02d:00", hour))
             put("timeAsSeconds", newTime)
             put("value", inheritedValue)
         }
@@ -496,10 +497,4 @@ class ProfileEditorViewModel @Inject constructor(
         }
         return list
     }
-
-    fun formatTime(seconds: Int): String {
-        val hour = seconds / 3600
-        return String.format("%02d:00", hour)
-    }
-
 }

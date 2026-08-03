@@ -325,7 +325,7 @@ class DanaPump @Inject constructor(
             try {
                 json.put("defaultProfile", PROFILE_PREFIX + (activeProfile + 1))
                 json.put("store", store)
-                profile.put("dia", Constants.defaultDIA)
+                profile.put("dia", Constants.DEFAULT_DIA)
                 val carbRatios = JSONArray()
                 if (!profile24) {
                     carbRatios.put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCIR))

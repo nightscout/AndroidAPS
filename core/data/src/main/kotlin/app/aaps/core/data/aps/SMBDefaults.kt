@@ -1,6 +1,6 @@
 package app.aaps.core.data.aps
 
-@Suppress("SpellCheckingInspection")
+@Suppress("SpellCheckingInspection", "ConstPropertyName")
 object SMBDefaults {
 
     // CALCULATED OR FROM PREFS

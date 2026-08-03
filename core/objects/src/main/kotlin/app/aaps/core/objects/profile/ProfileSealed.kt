@@ -544,10 +544,6 @@ sealed class ProfileSealed(
                 elapsedSec += T.msecs(it.duration).secs().toInt()
             }
         }.toString()
-
-    fun isInProgress(dateUtil: DateUtil): Boolean =
-        dateUtil.now() in timestamp..timestamp + (duration ?: 0L)
-
     private fun toMgdl(value: Double, units: GlucoseUnit): Double =
         if (units == GlucoseUnit.MGDL) value else value * Constants.MMOLL_TO_MGDL
 }

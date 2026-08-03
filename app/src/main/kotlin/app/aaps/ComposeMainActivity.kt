@@ -77,7 +77,6 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -106,8 +105,8 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
@@ -202,7 +201,6 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var visibilityContext: VisibilityContext
     @Inject lateinit var dexcomBoyda: DexcomBoyda
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var prefFileList: FileListProvider
     @Inject lateinit var notificationManager: NotificationManager
@@ -628,7 +626,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     bgSourcePlugin.hasComposeContent()
                 val bgSetupPlugin = if (showBgSetup) bgSourcePlugin else null
                 val bgQualityBadgeIcon: ImageVector? = if (showBgSetup) when (bgQualityState) {
-                    BgQualityCheck.State.RECALCULATED -> Icons.Filled.Warning
+                    //BgQualityCheck.State.RECALCULATED -> Icons.Filled.Warning
                     BgQualityCheck.State.DOUBLED      -> Icons.Filled.Warning
                     BgQualityCheck.State.FLAT         -> Icons.AutoMirrored.Filled.TrendingFlat
                     else                              -> null

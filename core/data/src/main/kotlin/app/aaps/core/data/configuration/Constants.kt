@@ -7,14 +7,14 @@ object Constants {
 
     const val MMOLL_TO_MGDL = 18.01559
     const val MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL
-    const val defaultDIA = 5.0
-    const val notificationID = 556677
+    const val DEFAULT_DIA = 5.0
+    const val NOTIFICATION_ID = 556677
 
     // OpenAPS algorithm
     const val NORMAL_TARGET_MGDL = 99 // 5.5 mmol/l = 99.1 mg/dL; use 99 to ensure consistent behavior across mg/dL and mmol/l units
 
     // SMS COMMUNICATOR
-    const val remoteBolusMinDistance = 15 * 60 * 1000L
+    const val REMOTE_BOLUS_MIN_DISTANCE = 15 * 60 * 1000L
 
     // Circadian Percentage Profile
     // Ranges are Double because they are mostly used as slider ranges in the UI
@@ -31,7 +31,7 @@ object Constants {
     val SCENE_DURATION = 0.0..(3 * 24 * 60).toDouble() // [min] up to ~ 3 days
 
     //DanaR
-    const val dailyLimitWarning = 0.95
+    const val DAILY_RESERVOIR_LIMIT_WARNING = 0.95
 
     // Temp targets
     val TT_RANGE_MGDL = 72.0..180.0
@@ -44,13 +44,6 @@ object Constants {
     const val DEFAULT_TT_ACTIVITY_DURATION = 90
     const val DEFAULT_TT_HYPO_TARGET = 160.0
     const val DEFAULT_TT_HYPO_DURATION = 60
-
-    //NSClientInternal
-    const val MAX_LOG_LINES = 90
-
-    //Screen: Threshold for width/height to go into small width/height layout
-    const val SMALL_WIDTH = 320
-    const val SMALL_HEIGHT = 480
 
     //Autosens
     const val DEVIATION_TO_BE_EQUAL = 2.0
@@ -76,7 +69,6 @@ object Constants {
 
     // Local profile
     const val LOCAL_PROFILE = "LocalProfile"
-    const val DEFAULT_PROFILE_ARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
 
     // One Time Password
     /**

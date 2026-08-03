@@ -681,7 +681,7 @@ fun NavGraphBuilder.appNavGraph(
     ) { backStackEntry ->
         val siteTypeOrdinal = backStackEntry.arguments?.getInt("siteTypeOrdinal") ?: 0
         val siteType = TE.Type.entries[siteTypeOrdinal]
-        val entries by produceState(initialValue = emptyList<TE>()) {
+        val entries by produceState(initialValue = emptyList()) {
             value = persistenceLayer.getTherapyEventDataFromTime(
                 System.currentTimeMillis() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
@@ -837,7 +837,7 @@ private fun PluginContentRoute(
 
 /**
  * Fallback for routes whose navigation target cannot be resolved (unknown preference key, missing
- * plugin index, …). Replaces the previous behaviour where such routes rendered nothing, leaving the
+ * plugin index, …). Replaces the previous behavior where such routes rendered nothing, leaving the
  * user on a blank, stuck screen: posts an error snackbar via [rxBus] and immediately pops back so
  * the dead route never stays on screen.
  */

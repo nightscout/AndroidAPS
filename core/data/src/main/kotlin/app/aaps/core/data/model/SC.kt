@@ -2,7 +2,7 @@ package app.aaps.core.data.model
 
 import java.util.TimeZone
 
-/** Steps count values measured by a user smart watch or the like. */
+/** Steps count values measured by a user smartwatch or the like. */
 data class SC(
     override var id: Long = 0,
     /** Duration milliseconds */

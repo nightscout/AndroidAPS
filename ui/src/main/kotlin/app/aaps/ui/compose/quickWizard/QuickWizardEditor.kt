@@ -66,7 +66,6 @@ import app.aaps.core.ui.R as CoreR
  * @param showSuperBolusOption Whether superbolus feature is enabled
  * @param showWearOptions Whether wear control is enabled
  * @param maxCarbs Maximum allowed carbs
- * @param dateUtil For time formatting
  * @param rh Resource helper
  * @param onButtonTextChange Callback when button text changes
  * @param onCarbsChange Callback when carbs change

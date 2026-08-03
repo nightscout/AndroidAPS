@@ -124,7 +124,7 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
             }
             rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
-            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)

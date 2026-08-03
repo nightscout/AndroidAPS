@@ -609,7 +609,7 @@ class LoopPlugin @Inject constructor(
                                 val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
 
                                 // mId allows you to update the notification later on.
-                                mNotificationManager.notify(Constants.notificationID, builder.build())
+                                mNotificationManager.notify(Constants.NOTIFICATION_ID, builder.build())
                                 uel.log(
                                     action = Action.CAREPORTAL,
                                     source = Sources.Loop,
@@ -726,7 +726,7 @@ class LoopPlugin @Inject constructor(
         builder.setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(Constants.notificationID, builder.build())
+        mNotificationManager.notify(Constants.NOTIFICATION_ID, builder.build())
         rxBus.send(EventNewOpenLoopNotification())
 
         // Send to Wear
@@ -736,7 +736,7 @@ class LoopPlugin @Inject constructor(
     private fun dismissSuggestion() {
         // dismiss notifications
         val mSystemNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
-        mSystemNotificationManager.cancel(Constants.notificationID)
+        mSystemNotificationManager.cancel(Constants.NOTIFICATION_ID)
         rxBus.send(EventMobileToWear(EventData.CancelNotification(dateUtil.now())))
     }
 

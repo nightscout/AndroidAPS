@@ -307,10 +307,6 @@ class WizardDialogViewModel @Inject constructor(
         _uiState.update { it.copy(alarmChecked = checked) }
     }
 
-    fun toggleAdvancedExpanded() {
-        _uiState.update { it.copy(advancedExpanded = !it.advancedExpanded) }
-    }
-
     fun toggleCalculationExpanded() {
         _uiState.update { it.copy(calculationExpanded = !it.calculationExpanded) }
     }

@@ -2,7 +2,7 @@ package app.aaps.core.data.model
 
 import java.util.TimeZone
 
-/** Heart rate values measured by a user smart watch or the like. */
+/** Heart rate values measured by a user smartwatch or the like. */
 data class HR(
     var id: Long = 0,
     /** Duration milliseconds */

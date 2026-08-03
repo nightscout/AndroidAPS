@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.utils.extensions.connectGattCompat
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -241,7 +242,7 @@ class EquilBleTransportImpl @Inject constructor(
             // autoConnect = true: the Android stack completes the link as soon as the (known/bonded) pump is
             // in range, with no app-level scan. Replaces flaky scan discovery that took 60-90 s on many phones
             // and caused command timeouts / "no insulin delivered" (#5040).
-            bluetoothGatt = device.connectGatt(context, true, gattCallback, BluetoothDevice.TRANSPORT_LE)
+            bluetoothGatt = device.connectGattCompat(context, true, gattCallback, BluetoothDevice.TRANSPORT_LE)
             return bluetoothGatt != null
         }
 

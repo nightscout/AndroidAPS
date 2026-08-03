@@ -6,17 +6,13 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
@@ -33,7 +29,6 @@ class WizardDialogContentTest {
     val compose = createComposeRule()
 
     private val decimalFormatter: DecimalFormatter = mock()
-    private val profileUtil: ProfileUtil = mock()
 
     private lateinit var closeLabel: String
 
@@ -41,8 +36,6 @@ class WizardDialogContentTest {
     fun setUp() {
         val ctx: Context = RuntimeEnvironment.getApplication()
         closeLabel = ctx.getString(CoreUiR.string.close)
-        whenever(profileUtil.units).thenReturn(GlucoseUnit.MGDL)
-        whenever(profileUtil.fromMgdlToUnits(any(), any())).thenReturn(5.0)
     }
 
     @Test
@@ -53,7 +46,6 @@ class WizardDialogContentTest {
                 WizardDialogContent(
                     uiState = WizardDialogUiState(),
                     decimalFormatter = decimalFormatter,
-                    profileUtil = profileUtil,
                     unitsLabel = "mg/dl",
                     onBgChange = {},
                     onCarbsChange = {},
@@ -70,7 +62,6 @@ class WizardDialogContentTest {
                     onIOBToggle = {},
                     onCOBToggle = {},
                     onAlarmToggle = {},
-                    onAdvancedExpandToggle = {},
                     onCalculationExpandToggle = {},
                     onNavigateBack = { back = true },
                     onConfirmClick = {},

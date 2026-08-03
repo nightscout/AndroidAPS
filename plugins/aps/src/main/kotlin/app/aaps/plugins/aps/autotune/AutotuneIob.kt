@@ -46,7 +46,7 @@ open class AutotuneIob @Inject constructor(
 ) {
 
     private var nsTreatments = ArrayList<NsTreatment>()
-    private var dia: Double = Constants.defaultDIA
+    private var dia: Double = Constants.DEFAULT_DIA
     var boluses: ArrayList<BS> = ArrayList()
     var meals = ArrayList<CA>()
     lateinit var glucose: List<GV> // newest at index 0

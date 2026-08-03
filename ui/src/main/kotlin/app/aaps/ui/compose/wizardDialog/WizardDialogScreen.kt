@@ -73,7 +73,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
@@ -88,7 +88,6 @@ import app.aaps.core.ui.compose.icons.IcBread
 import app.aaps.core.ui.compose.icons.IcCake
 import app.aaps.core.ui.compose.icons.IcPizza
 import app.aaps.core.ui.compose.icons.IcTtManual
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
@@ -138,7 +137,6 @@ fun WizardDialogScreen(
     if (showSettings) {
         WizardSettingsSheet(
             settingsDef = wizardSettingsDef,
-            viewModel = viewModel,
             onDismiss = {
                 showSettings = false
                 viewModel.refreshAfterSettings()
@@ -188,7 +186,6 @@ fun WizardDialogScreen(
     WizardDialogContent(
         uiState = uiState,
         decimalFormatter = viewModel.decimalFormatter,
-        profileUtil = viewModel.profileUtil,
         unitsLabel = uiState.units.displayLabel,
         onBgChange = { viewModel.updateBg(it) },
         onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
@@ -205,7 +202,6 @@ fun WizardDialogScreen(
         onIOBToggle = viewModel::toggleIOB,
         onCOBToggle = viewModel::toggleCOB,
         onAlarmToggle = viewModel::toggleAlarm,
-        onAdvancedExpandToggle = viewModel::toggleAdvancedExpanded,
         onCalculationExpandToggle = viewModel::toggleCalculationExpanded,
         onNavigateBack = onNavigateBack,
         onConfirmClick = { showConfirmation = true },
@@ -218,7 +214,6 @@ fun WizardDialogScreen(
 internal fun WizardDialogContent(
     uiState: WizardDialogUiState,
     decimalFormatter: DecimalFormatter,
-    profileUtil: ProfileUtil,
     unitsLabel: String,
     onBgChange: (Double) -> Unit,
     onCarbsChange: (Double) -> Unit,
@@ -235,7 +230,6 @@ internal fun WizardDialogContent(
     onIOBToggle: (Boolean) -> Unit,
     onCOBToggle: (Boolean) -> Unit,
     onAlarmToggle: (Boolean) -> Unit,
-    onAdvancedExpandToggle: () -> Unit,
     onCalculationExpandToggle: () -> Unit,
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit,
@@ -927,7 +921,6 @@ private fun CalcRow(label: String, value: String) {
 @Composable
 private fun WizardSettingsSheet(
     settingsDef: PreferenceSubScreenDef,
-    viewModel: WizardDialogViewModel,
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

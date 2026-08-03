@@ -210,7 +210,7 @@ class DataHandlerMobile @Inject constructor(
         onEvent<EventData.OpenLoopRequestConfirmed> {
             if (!config.appInitialized) return@onEvent
             loop.acceptChangeRequest()
-            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
         onEvent<EventData.ActionResendData> { resendData(it.from) }
         onEvent<EventData.ActionPumpStatus> {
@@ -684,7 +684,7 @@ class DataHandlerMobile @Inject constructor(
         }
     }
 
-    private suspend fun handleSceneStopPreCheck() {
+    private fun handleSceneStopPreCheck() {
         // Build confirm locally — no master round-trip needed before showing "End active scene".
         // The watch waits for RemoteDelivered (deferConfirm) while the stop relays to master.
         if (!scenes.isAnySceneActive()) return sendError(rh.gs(app.aaps.core.ui.R.string.scene_ended))

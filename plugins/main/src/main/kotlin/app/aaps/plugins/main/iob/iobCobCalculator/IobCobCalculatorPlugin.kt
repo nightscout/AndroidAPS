@@ -258,7 +258,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 
     override suspend fun calculateDetectionStart(from: Long, limitDataToOldestAvailable: Boolean): Long {
         val profile = profileFunction.getProfile(from)
-        val dia = profile?.iCfg?.dia ?: Constants.defaultDIA
+        val dia = profile?.iCfg?.dia ?: Constants.DEFAULT_DIA
         val oldestDataAvailable = oldestDataAvailable()
         val getBGDataFrom: Long
         if (limitDataToOldestAvailable) {
@@ -527,7 +527,7 @@ class IobCobCalculatorPlugin @Inject constructor(
      *  Time range to the past for IOB calculation
      *  @return milliseconds
      */
-    private suspend fun range(): Long = ((profileFunction.getProfile()?.iCfg?.dia ?: Constants.defaultDIA) * 60 * 60 * 1000).toLong()
+    private suspend fun range(): Long = ((profileFunction.getProfile()?.iCfg?.dia ?: Constants.DEFAULT_DIA) * 60 * 60 * 1000).toLong()
 
     override suspend fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil.now())
 

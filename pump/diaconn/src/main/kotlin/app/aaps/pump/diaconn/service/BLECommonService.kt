@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.diaconn.DiaconnG8Pump
@@ -127,7 +128,7 @@ class BLECommonService @Inject internal constructor(
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = device.name
-        bluetoothGatt = device.connectGatt(context, false, mGattCallback)
+        bluetoothGatt = device.connectGattCompat(context, false, mGattCallback)
 
         isConnected = false
         isConnecting = true

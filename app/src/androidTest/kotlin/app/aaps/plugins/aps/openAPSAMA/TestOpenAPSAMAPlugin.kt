@@ -92,7 +92,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         return try {
             val pump = activePlugin.activePump
             pump.pumpDescription.isTempBasalCapable
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             // may fail during initialization
             true
         }

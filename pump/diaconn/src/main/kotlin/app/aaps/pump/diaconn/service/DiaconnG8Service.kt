@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -270,7 +269,7 @@ class DiaconnG8Service : DaggerService() {
             diaconnG8Pump.syncExtendedBolusFromPump()
             rxBus.send(EventDiaconnG8NewStatus())
             rxBus.send(EventInitializationChanged())
-            if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
