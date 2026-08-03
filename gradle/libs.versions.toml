@@ -162,7 +162,7 @@ org-osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version = "6
 io-kotlintest-runner-junit5 = { group = "io.kotlintest", name = "kotlintest-runner-junit5", version = "3.4.2" }
 com-polidea-rxandroidble3 = { group = "com.polidea.rxandroidble3", name = "rxandroidble", version = "1.19.1" }
 com-jakewharton-rx3-replaying-share = { group = "com.jakewharton.rx3", name = "replaying-share", version = "3.0.0" }
-commons-codec = { group = "commons-codec", name = "commons-codec", version = "1.22.0" }
+commons-codec = { group = "commons-codec", name = "commons-codec", version = "1.22.1" }
 com-thoughtworks-xstream = { group = "com.thoughtworks.xstream", name = "xstream", version = "1.4.21" }
 com-garmin-connectiq = { group = "com.garmin.connectiq", name = "ciq-companion-app-sdk", version = "2.4.0" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version = "1.3.0" }
