@@ -170,10 +170,10 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
                 var newRecord = false
                 if (detailedBolusInfo != null) {
-                    val syncOk = pumpSync.syncBolusWithTempId(
+                    val syncOk = pumpSync.syncBolusWithPumpId(
                         timestamp = bolusStartTime,
                         amount = bolusNormalDelivered,
-                        temporaryId = detailedBolusInfo.timestamp,
+                        // temporaryId = detailedBolusInfo.timestamp,
                         type = detailedBolusInfo.bolusType,
                         pumpId = bolusStartTime,
                         pumpType = medtrumPump.pumpType(),

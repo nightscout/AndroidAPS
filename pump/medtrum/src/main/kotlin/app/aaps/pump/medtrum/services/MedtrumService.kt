@@ -373,40 +373,40 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-        // Sync the initial bolus
-        val newRecord = pumpSync.addBolusWithTempId(
-            timestamp = detailedBolusInfo.timestamp,
-            amount = detailedBolusInfo.insulin,
-            temporaryId = detailedBolusInfo.timestamp,
-            type = detailedBolusInfo.bolusType,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
-        if (newRecord) {
-            aapsLogger.debug(
-                LTag.PUMPCOMM,
-                "set bolus: **NEW** EVENT BOLUS (tempId) ${dateUtil.dateAndTimeString(detailedBolusInfo.timestamp)} (${detailedBolusInfo.timestamp}) Bolus: ${detailedBolusInfo.insulin}U "
-            )
-        } else {
-            aapsLogger.error(LTag.PUMPCOMM, "Bolus with tempId ${detailedBolusInfo.timestamp} already exists")
-        }
+        // // Sync the initial bolus
+        // val newRecord = pumpSync.addBolusWithTempId(
+        //     timestamp = detailedBolusInfo.timestamp,
+        //     amount = detailedBolusInfo.insulin,
+        //     temporaryId = detailedBolusInfo.timestamp,
+        //     type = detailedBolusInfo.bolusType,
+        //     pumpType = medtrumPump.pumpType(),
+        //     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+        // )
+        // if (newRecord) {
+        //     aapsLogger.debug(
+        //         LTag.PUMPCOMM,
+        //         "set bolus: **NEW** EVENT BOLUS (tempId) ${dateUtil.dateAndTimeString(detailedBolusInfo.timestamp)} (${detailedBolusInfo.timestamp}) Bolus: ${detailedBolusInfo.insulin}U "
+        //     )
+        // } else {
+        //     aapsLogger.error(LTag.PUMPCOMM, "Bolus with tempId ${detailedBolusInfo.timestamp} already exists")
+        // }
 
         waitForBolusProgress()
 
         if (medtrumPump.bolusStopped && BolusProgressData.delivered == 0.0) {
             // In this case we don't get a bolus end event, so need to remove all the stuff added previously
-            val syncOk = pumpSync.syncBolusWithTempId(
-                timestamp = bolusStart,
-                amount = 0.0,
-                temporaryId = bolusStart,
-                type = detailedBolusInfo.bolusType,
-                pumpId = bolusStart,
-                pumpType = medtrumPump.pumpType(),
-                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-            )
+            // val syncOk = pumpSync.syncBolusWithTempId(
+            //     timestamp = bolusStart,
+            //     amount = 0.0,
+            //     temporaryId = bolusStart,
+            //     type = detailedBolusInfo.bolusType,
+            //     pumpId = bolusStart,
+            //     pumpType = medtrumPump.pumpType(),
+            //     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            // )
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "set bolus: **SYNC** EVENT BOLUS (tempId) ${dateUtil.dateAndTimeString(detailedBolusInfo.timestamp)} (${bolusStart}) Bolus: ${0.0}U SyncOK: $syncOk"
+                "set bolus: **SYNC** EVENT BOLUS (tempId) ${dateUtil.dateAndTimeString(detailedBolusInfo.timestamp)} (${bolusStart}) Bolus: ${0.0}U "
             )
             // remove detailed bolus info
             detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, detailedBolusInfo.insulin)
