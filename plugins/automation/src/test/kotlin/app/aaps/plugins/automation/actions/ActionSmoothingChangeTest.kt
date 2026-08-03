@@ -26,7 +26,7 @@ class ActionSmoothingChangeTest : ActionsTestBase() {
 
     @BeforeEach fun setUp() {
         whenever(rh.gs(R.string.change_smoothing)).thenReturn("Change smoothing")
-        whenever(rh.gs(R.string.change_smoothing_to, "Average smoothing")).thenReturn("Change smoothing to Average smoothing")
+        whenever(rh.gs(R.string.change_smoothing_to)).thenReturn("Change smoothing to %1\$s")
         whenever(rh.gs(R.string.alreadyset)).thenReturn("Already set")
 
         whenever(avgSmoothingPlugin.pluginId).thenReturn("AvgSmoothingPlugin")
