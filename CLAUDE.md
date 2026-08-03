@@ -64,6 +64,14 @@
   preference, propose the change first and wait for approval before editing code. Do NOT immediately
   edit files based on user feedback. The only exception is when the user explicitly says "do it",
   "fix it", "go ahead", or similar direct instruction.
+- **NEVER commit until the user explicitly asks** — Editing files is fine (subject to the rule above),
+  but do NOT run `git commit` (or `git push`) until the user directly asks for it. "Fix it" / "do it"
+  authorizes the code change, NOT a commit. Leave the work in the working tree and let the user review
+  it first; only commit when they say "commit", "push", or similar.
+- **Use simple "school english" everywhere** — In code (identifiers, comments, KDoc), commit messages,
+  PR text, UI strings and chat, write plain, simple English. Many readers and contributors are
+  non-native speakers. Prefer short common words and short sentences; avoid idioms, slang, rare
+  vocabulary, and needlessly complex phrasing. Clear over clever.
 - **Think critically, don't just agree** — Before implementing, evaluate whether the agreed approach
   is actually the best solution. Challenge assumptions, point out potential issues, suggest better
   alternatives. The user may miss something too. Ask "Is this the best way?" before writing code.
