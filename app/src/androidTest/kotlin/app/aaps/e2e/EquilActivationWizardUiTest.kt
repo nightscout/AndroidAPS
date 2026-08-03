@@ -126,6 +126,13 @@ class EquilActivationWizardUiTest {
         seedLocalProfile()
         activateSeededProfile()
 
+        // EquilManager is @Singleton: a pod activated by an earlier @Test in this shard's process leaves
+        // activationProgress = COMPLETED in memory, and a lingering storePodState() can re-persist it to
+        // prefs after clearAllSharedPrefs(). Reset write-through (clears the singleton AND writes an empty
+        // state to prefs) so the launched app's onStart -> loadPodState() reads clean and the overview still
+        // offers "Pair". Read-only loadPodState() would read the re-persisted COMPLETED back. See #5040.
+        equilManager.clearPodState()
+
         device.executeShellCommand("settings put global heads_up_notifications_enabled 0")
     }
 
