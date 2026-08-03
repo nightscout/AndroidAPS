@@ -168,10 +168,8 @@ class NsIncomingDataProcessor @Inject constructor(
                         if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.AAPSCLIENT || doFullSync) {
                             if (treatment.duration > 0L) {
                                 // not ending event
-                                if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
-                                    || treatment.targetBottomAsMgdl() > Constants.MAX_TT_MGDL
-                                    || treatment.targetTopAsMgdl() < Constants.MIN_TT_MGDL
-                                    || treatment.targetTopAsMgdl() > Constants.MAX_TT_MGDL
+                                if (treatment.targetBottomAsMgdl() !in Constants.TT_RANGE_MGDL
+                                    || treatment.targetTopAsMgdl() !in Constants.TT_RANGE_MGDL
                                     || treatment.targetBottomAsMgdl() > treatment.targetTopAsMgdl()
                                 ) {
                                     aapsLogger.debug(LTag.NSCLIENT, "Ignored TemporaryTarget $treatment")

@@ -41,8 +41,7 @@ fun TimeValueList(
     onEntryChange: (Int, TimeValue) -> Unit,
     onAddEntry: (Int) -> Unit,
     onRemoveEntry: (Int) -> Unit,
-    minValue: Double,
-    maxValue: Double,
+    valueRange: ClosedFloatingPointRange<Double>,
     step: Double = 0.1,
     valueFormat: DecimalFormat = DecimalFormat("0.0"),
     unitLabel: String = "",
@@ -83,8 +82,7 @@ fun TimeValueList(
                 canRemove = entries.size > 1 && index > 0,
                 canAdd = canAddAfter,
                 onAdd = { onAddEntry(index) },
-                minValue = minValue,
-                maxValue = maxValue,
+                valueRange = valueRange,
                 step = step,
                 valueFormat = valueFormat
             )
@@ -134,8 +132,7 @@ private fun TimeValueRow(
     canRemove: Boolean,
     canAdd: Boolean,
     onAdd: () -> Unit,
-    minValue: Double,
-    maxValue: Double,
+    valueRange: ClosedFloatingPointRange<Double>,
     step: Double,
     valueFormat: DecimalFormat
 ) {
@@ -167,7 +164,7 @@ private fun TimeValueRow(
             PlusMinusEdit(
                 value = value,
                 onValueChange = onValueChange,
-                valueRange = minValue..maxValue,
+                valueRange = valueRange,
                 step = step,
                 valueFormat = valueFormat,
                 modifier = Modifier.weight(1f)
@@ -215,8 +212,8 @@ fun TargetValueList(
     onEntryChange: (Int, TimeValue, TimeValue) -> Unit,
     onAddEntry: (Int) -> Unit,
     onRemoveEntry: (Int) -> Unit,
-    minValue: Double,
-    maxValue: Double,
+    lowRange: ClosedFloatingPointRange<Double>,
+    highRange: ClosedFloatingPointRange<Double>,
     step: Double = 1.0,
     valueFormat: DecimalFormat = DecimalFormat("0"),
     unitLabel: String = "",
@@ -249,19 +246,23 @@ fun TargetValueList(
                     showTimePicker = true
                 },
                 onLowValueChange = { newLow ->
-                    val adjustedHigh = if (newLow > high.value) newLow else high.value
+                    // Keep low <= high: raising low above high pushes high up too, but only inside
+                    // the range allowed for high.
+                    val adjustedHigh = if (newLow > high.value) newLow.coerceIn(highRange) else high.value
                     onEntryChange(index, low.copy(value = newLow), high.copy(value = adjustedHigh))
                 },
                 onHighValueChange = { newHigh ->
-                    val adjustedLow = if (newHigh < low.value) newHigh else low.value
+                    // Keep low <= high: lowering high below low pulls low down too, but only inside
+                    // the range allowed for low.
+                    val adjustedLow = if (newHigh < low.value) newHigh.coerceIn(lowRange) else low.value
                     onEntryChange(index, low.copy(value = adjustedLow), high.copy(value = newHigh))
                 },
                 onRemove = { onRemoveEntry(index) },
                 canRemove = lowEntries.size > 1 && index > 0,
                 canAdd = canAddAfter,
                 onAdd = { onAddEntry(index) },
-                minValue = minValue,
-                maxValue = maxValue,
+                lowRange = lowRange,
+                highRange = highRange,
                 step = step,
                 valueFormat = valueFormat
             )
@@ -318,8 +319,8 @@ private fun TargetValueRow(
     canRemove: Boolean,
     canAdd: Boolean,
     onAdd: () -> Unit,
-    minValue: Double,
-    maxValue: Double,
+    lowRange: ClosedFloatingPointRange<Double>,
+    highRange: ClosedFloatingPointRange<Double>,
     step: Double,
     valueFormat: DecimalFormat
 ) {
@@ -397,7 +398,7 @@ private fun TargetValueRow(
             PlusMinusEdit(
                 value = lowValue,
                 onValueChange = onLowValueChange,
-                valueRange = minValue..maxValue,
+                valueRange = lowRange,
                 step = step,
                 valueFormat = valueFormat,
                 modifier = Modifier.weight(1f)
@@ -420,7 +421,7 @@ private fun TargetValueRow(
             PlusMinusEdit(
                 value = highValue,
                 onValueChange = onHighValueChange,
-                valueRange = minValue..maxValue,
+                valueRange = highRange,
                 step = step,
                 valueFormat = valueFormat,
                 modifier = Modifier.weight(1f)

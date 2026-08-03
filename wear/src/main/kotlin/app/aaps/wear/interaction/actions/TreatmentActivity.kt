@@ -92,8 +92,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                             0 -> PlusMinusInputScreen(
                                 value = insulin,
                                 onValueChange = { insulin = it },
-                                min = 0.0,
-                                max = maxBolus,
+                                valueRange = 0.0..maxBolus,
                                 stepValues = stepValuesInsulin,
                                 format = DecimalFormat("#0.0"),
                                 label = stringResource(R.string.action_insulin_units),
@@ -106,8 +105,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                             1 -> PlusMinusInputScreen(
                                 value = carbs,
                                 onValueChange = { carbs = it },
-                                min = -cobLimit.toDouble(),
-                                max = maxCarbs,
+                                valueRange = -cobLimit.toDouble()..maxCarbs,
                                 stepValues = stepValuesCarbs,
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_carbs_gram),

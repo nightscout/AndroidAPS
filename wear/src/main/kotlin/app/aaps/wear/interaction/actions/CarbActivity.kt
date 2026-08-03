@@ -83,8 +83,7 @@ class CarbActivity : DaggerAppCompatActivity() {
                             0 -> PlusMinusInputScreen(
                                 value = carbs,
                                 onValueChange = { carbs = it },
-                                min = -cobLimit.toDouble(),
-                                max = maxCarbs,
+                                valueRange = -cobLimit.toDouble()..maxCarbs,
                                 stepValues = stepValues,
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_carbs_gram),

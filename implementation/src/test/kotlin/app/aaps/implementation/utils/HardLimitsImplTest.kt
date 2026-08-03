@@ -136,52 +136,35 @@ class HardLimitsImplTest : TestBase() {
     }
 
     @Test
-    fun `minDia returns correct values for all ages`() {
+    fun `diaRange returns correct values for all ages`() {
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.minDia()).isEqualTo(5.0)
+        assertThat(hardLimits.diaRange()).isEqualTo(5.0..9.0)
 
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.minDia()).isEqualTo(5.0)
+        assertThat(hardLimits.diaRange()).isEqualTo(5.0..10.0)
     }
 
     @Test
-    fun `maxDia returns correct values for all ages`() {
+    fun `icRange returns correct values for all ages`() {
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.maxDia()).isEqualTo(9.0)
+        assertThat(hardLimits.icRange()).isEqualTo(2.0..100.0)
 
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.maxDia()).isEqualTo(10.0)
+        assertThat(hardLimits.icRange()).isEqualTo(0.3..100.0)
     }
 
     @Test
-    fun `minIC returns correct values for all ages`() {
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.minIC()).isEqualTo(2.0)
-
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.minIC()).isEqualTo(0.3)
+    fun `an unknown age falls back to adult`() {
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("nonsense")
+        assertThat(hardLimits.maxBolus()).isEqualTo(HardLimits.MAX_BOLUS.getValue(HardLimits.AgeType.ADULT))
+        assertThat(hardLimits.diaRange()).isEqualTo(HardLimits.LIMIT_DIA.getValue(HardLimits.AgeType.ADULT))
     }
 
     @Test
-    fun `maxIC returns correct values for all ages`() {
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.maxIC()).isEqualTo(100.0)
-
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.maxIC()).isEqualTo(100.0)
-    }
-
-    @Test
-    fun `isInRange returns true when value is within range`() {
-        assertThat(hardLimits.isInRange(5.0, 0.0, 10.0)).isTrue()
-        assertThat(hardLimits.isInRange(0.0, 0.0, 10.0)).isTrue()
-        assertThat(hardLimits.isInRange(10.0, 0.0, 10.0)).isTrue()
-    }
-
-    @Test
-    fun `isInRange returns false when value is outside range`() {
-        assertThat(hardLimits.isInRange(-0.1, 0.0, 10.0)).isFalse()
-        assertThat(hardLimits.isInRange(10.1, 0.0, 10.0)).isFalse()
+    fun `verifyHardLimits with a range clamps the same way as with two bounds`() {
+        assertThat(hardLimits.verifyHardLimits(5.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(5.0)
+        assertThat(hardLimits.verifyHardLimits(-5.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(0.0)
+        assertThat(hardLimits.verifyHardLimits(15.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(10.0)
     }
 
     @Test

@@ -75,8 +75,7 @@ class BolusActivity : DaggerAppCompatActivity() {
                             0 -> PlusMinusInputScreen(
                                 value = insulin,
                                 onValueChange = { insulin = it },
-                                min = 0.0,
-                                max = maxBolus,
+                                valueRange = 0.0..maxBolus,
                                 stepValues = stepValues,
                                 format = DecimalFormat("#0.0"),
                                 label = stringResource(R.string.action_insulin_units),

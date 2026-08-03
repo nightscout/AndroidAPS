@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
@@ -429,7 +430,7 @@ private fun ProfilePresetDialog(
                     labelResId = app.aaps.core.ui.R.string.percent,
                     value = percentage.toDouble(),
                     onValueChange = { percentage = it.toInt() },
-                    valueRange = 50.0..200.0,
+                    valueRange = Constants.CPP_PERCENTAGE_RANGE,
                     step = 5.0,
                     unitLabelResId = app.aaps.core.keys.R.string.units_percent
                 )
@@ -438,7 +439,7 @@ private fun ProfilePresetDialog(
                     labelResId = app.aaps.core.ui.R.string.duration,
                     value = durationMinutes.toDouble(),
                     onValueChange = { durationMinutes = it.toInt() },
-                    valueRange = 0.0..600.0,
+                    valueRange = Constants.ACTION_DURATION,
                     step = 10.0,
                     unitLabelResId = app.aaps.core.keys.R.string.units_min
                 )

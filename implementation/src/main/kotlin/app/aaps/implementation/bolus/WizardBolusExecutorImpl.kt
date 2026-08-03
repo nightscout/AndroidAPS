@@ -375,11 +375,11 @@ class WizardBolusExecutorImpl @Inject constructor(
             } else if (profileFunction.getProfile() == null) {
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.no_profile_set))
             }
-            if (ps.percentage < Constants.CPP_MIN_PERCENTAGE || ps.percentage > Constants.CPP_MAX_PERCENTAGE)
+            if (ps.percentage.toDouble() !in Constants.CPP_PERCENTAGE_RANGE)
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.valueoutofrange, "Profile-Percentage"))
-            if (ps.timeShiftHours < Constants.CPP_MIN_TIMESHIFT || ps.timeShiftHours > Constants.CPP_MAX_TIMESHIFT)
+            if (ps.timeShiftHours.toDouble() !in Constants.CPP_TIMESHIFT_RANGE)
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.valueoutofrange, "Profile-Timeshift"))
-            if (ps.durationMinutes < 0 || ps.durationMinutes > Constants.MAX_PROFILE_SWITCH_DURATION)
+            if (ps.durationMinutes.toDouble() !in Constants.ACTION_DURATION)
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.valueoutofrange, "Profile-Duration"))
         }
         // Validate a running-mode change up-front: the master re-checks the mode is still a legal transition

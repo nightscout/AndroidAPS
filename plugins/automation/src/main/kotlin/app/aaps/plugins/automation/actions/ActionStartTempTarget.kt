@@ -96,12 +96,8 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun isValid(): Boolean =
         if (value.units == GlucoseUnit.MMOL) { // mmol
-            value.value >= Constants.MIN_TT_MMOL &&
-                value.value <= Constants.MAX_TT_MMOL &&
-                duration.value > 0
+            value.value in Constants.TT_RANGE_MMOL && duration.value > 0
         } else { // mg/dL
-            value.value >= Constants.MIN_TT_MGDL &&
-                value.value <= Constants.MAX_TT_MGDL &&
-                duration.value > 0
+            value.value in Constants.TT_RANGE_MGDL && duration.value > 0
         }
 }

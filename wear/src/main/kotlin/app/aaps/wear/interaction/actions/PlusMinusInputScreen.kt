@@ -91,8 +91,7 @@ private val BtnV = 57.dp
 internal fun PlusMinusInputScreen(
     value: Double,
     onValueChange: (Double) -> Unit,
-    min: Double,
-    max: Double,
+    valueRange: ClosedFloatingPointRange<Double>,
     stepValues: List<Double>,
     format: DecimalFormat,
     label: String,
@@ -129,7 +128,7 @@ internal fun PlusMinusInputScreen(
 
     fun step(delta: Double) {
         val v = currentValue.value
-        val newValue = (round((v + delta) * roundingFactor) / roundingFactor).coerceIn(min, max)
+        val newValue = (round((v + delta) * roundingFactor) / roundingFactor).coerceIn(valueRange)
         if (newValue != v) {
             currentValue.value = newValue   // update immediately for next step
             onValueChange(newValue)

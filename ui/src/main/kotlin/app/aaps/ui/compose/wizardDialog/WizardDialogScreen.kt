@@ -72,6 +72,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -826,7 +827,7 @@ internal fun WizardDialogContent(
                                 labelResId = CoreUiR.string.wizard_use_percentage,
                                 value = uiState.percentage.toDouble(),
                                 onValueChange = onPercentageChange,
-                                valueRange = 10.0..200.0,
+                                valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                                 step = 5.0,
                                 unitLabel = "%",
                                 decimalPlaces = 0

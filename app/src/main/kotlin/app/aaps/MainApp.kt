@@ -843,7 +843,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
                 profileNameToDia[profileName]
             }
-            val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
+            val insulinEndTime = ((dia ?: hardLimits.diaRange().endInclusive) * 3600 * 1000).toLong()
             ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
                 it.insulinNickname = insulinLabel
                 it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"

@@ -271,7 +271,7 @@ fun ProfileActivationScreen(
                         labelResId = R.string.percentage_label,
                         value = percentage,
                         onValueChange = { percentage = it },
-                        valueRange = Constants.CPP_MIN_PERCENTAGE.toDouble()..Constants.CPP_MAX_PERCENTAGE.toDouble(),
+                        valueRange = Constants.CPP_PERCENTAGE_RANGE,
                         step = 5.0,
                         unitLabelResId = app.aaps.core.keys.R.string.units_percent,
                         modifier = itemModifier
@@ -282,7 +282,7 @@ fun ProfileActivationScreen(
                         labelResId = app.aaps.core.ui.R.string.duration,
                         value = duration,
                         onValueChange = { duration = it },
-                        valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
+                        valueRange = Constants.ACTION_DURATION,
                         step = 10.0,
                         unitLabelResId = app.aaps.core.keys.R.string.units_min,
                         modifier = itemModifier
@@ -329,7 +329,7 @@ fun ProfileActivationScreen(
                                 labelResId = app.aaps.core.ui.R.string.timeshift_label,
                                 value = timeshift,
                                 onValueChange = { timeshift = it },
-                                valueRange = Constants.CPP_MIN_TIMESHIFT.toDouble()..Constants.CPP_MAX_TIMESHIFT.toDouble(),
+                                valueRange = Constants.CPP_TIMESHIFT_RANGE,
                                 step = 1.0,
                                 unitLabelResId = app.aaps.core.keys.R.string.units_hours
                             )

@@ -80,8 +80,7 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
                             0    -> PlusMinusInputScreen(
                                 value = duration,
                                 onValueChange = { duration = it },
-                                min = min,
-                                max = max,
+                                valueRange = min..max,
                                 stepValues = stepValues,
                                 format = DecimalFormat("0"),
                                 displayText = formatDurationMinutes(duration.toInt()),

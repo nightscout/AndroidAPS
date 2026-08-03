@@ -36,6 +36,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionTempTargetPreCheck
@@ -58,8 +59,7 @@ class TempTargetActivity : DaggerAppCompatActivity() {
 
         val targetSteps = if (isMGDL) listOf(1.0, 5.0, 10.0) else listOf(0.1, 0.5, 1.0)
         val targetFormat = if (isMGDL) DecimalFormat("0") else DecimalFormat("#0.0")
-        val targetMin = if (isMGDL) 72.0 else 4.0
-        val targetMax = if (isMGDL) 180.0 else 10.0
+        val targetRange = if (isMGDL) Constants.TT_RANGE_MGDL else Constants.TT_RANGE_MMOL
         val targetDefault = if (isMGDL) 101.0 else 5.6
         val unit = if (isMGDL) "mg/dL" else "mmol/L"
         val pageCount = if (isSingleTarget) 3 else 4
@@ -77,8 +77,7 @@ class TempTargetActivity : DaggerAppCompatActivity() {
                             page == 0                    -> PlusMinusInputScreen(
                                 value = duration,
                                 onValueChange = { duration = it },
-                                min = 0.0,
-                                max = 24.0 * 60.0,
+                                valueRange = Constants.ACTION_DURATION,
                                 stepValues = listOf(5.0, 30.0, 60.0),
                                 format = DecimalFormat("0"),
                                 displayText = formatDurationMinutes(duration.toInt()),
@@ -91,8 +90,7 @@ class TempTargetActivity : DaggerAppCompatActivity() {
                             page == 1                    -> PlusMinusInputScreen(
                                 value = low,
                                 onValueChange = { low = it },
-                                min = targetMin,
-                                max = targetMax,
+                                valueRange = targetRange,
                                 stepValues = targetSteps,
                                 format = targetFormat,
                                 label = stringResource(
@@ -108,8 +106,7 @@ class TempTargetActivity : DaggerAppCompatActivity() {
                             page == 2 && !isSingleTarget -> PlusMinusInputScreen(
                                 value = high,
                                 onValueChange = { high = it },
-                                min = targetMin,
-                                max = targetMax,
+                                valueRange = targetRange,
                                 stepValues = targetSteps,
                                 format = targetFormat,
                                 label = stringResource(R.string.action_high_unit, unit),

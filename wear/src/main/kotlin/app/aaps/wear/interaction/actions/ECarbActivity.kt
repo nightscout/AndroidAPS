@@ -76,8 +76,7 @@ class ECarbActivity : DaggerAppCompatActivity() {
                             0    -> PlusMinusInputScreen(
                                 value = carbs,
                                 onValueChange = { carbs = it },
-                                min = 0.0,
-                                max = maxCarbs,
+                                valueRange = 0.0..maxCarbs,
                                 stepValues = carbStepValues,
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_carbs_gram),
@@ -90,8 +89,7 @@ class ECarbActivity : DaggerAppCompatActivity() {
                             1    -> PlusMinusInputScreen(
                                 value = startMinutes,
                                 onValueChange = { startMinutes = it },
-                                min = -60.0,
-                                max = 300.0,
+                                valueRange = -60.0..300.0,
                                 stepValues = listOf(15.0, 15.0, 15.0),
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_start_minutes),
@@ -104,8 +102,7 @@ class ECarbActivity : DaggerAppCompatActivity() {
                             2    -> PlusMinusInputScreen(
                                 value = durationHours,
                                 onValueChange = { durationHours = it },
-                                min = 0.0,
-                                max = 8.0,
+                                valueRange = 0.0..8.0,
                                 stepValues = listOf(1.0, 1.0, 1.0),
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_duration_hours),

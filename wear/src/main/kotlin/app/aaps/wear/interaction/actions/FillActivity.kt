@@ -70,8 +70,7 @@ class FillActivity : DaggerAppCompatActivity() {
                             0    -> PlusMinusInputScreen(
                                 value = insulin,
                                 onValueChange = { insulin = it },
-                                min = 0.0,
-                                max = 30.0,
+                                valueRange = 0.0..30.0,
                                 stepValues = stepValues,
                                 format = DecimalFormat("#0.0"),
                                 label = stringResource(R.string.action_insulin_units),

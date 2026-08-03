@@ -72,8 +72,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                             0    -> PlusMinusInputScreen(
                                 value = currentTimeshift,
                                 onValueChange = { currentTimeshift = it },
-                                min = Constants.CPP_MIN_TIMESHIFT.toDouble(),
-                                max = Constants.CPP_MAX_TIMESHIFT.toDouble(),
+                                valueRange = Constants.CPP_TIMESHIFT_RANGE,
                                 stepValues = listOf(1.0, 1.0, 1.0),
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_timeshift_hours),
@@ -86,8 +85,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                             1    -> PlusMinusInputScreen(
                                 value = currentPercentage,
                                 onValueChange = { currentPercentage = it },
-                                min = Constants.CPP_MIN_PERCENTAGE.toDouble(),
-                                max = Constants.CPP_MAX_PERCENTAGE.toDouble(),
+                                valueRange = Constants.CPP_PERCENTAGE_RANGE,
                                 stepValues = listOf(5.0, 20.0, 20.0),
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_percentage),
@@ -101,8 +99,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                             2    -> PlusMinusInputScreen(
                                 value = currentDuration,
                                 onValueChange = { currentDuration = it },
-                                min = 0.0,
-                                max = Constants.MAX_PROFILE_SWITCH_DURATION,
+                                valueRange = Constants.ACTION_DURATION,
                                 stepValues = listOf(10.0, 60.0, 240.0),
                                 format = DecimalFormat("0"),
                                 displayText = if (currentDuration == 0.0) "\u221E" else formatDurationMinutes(currentDuration.toInt()),

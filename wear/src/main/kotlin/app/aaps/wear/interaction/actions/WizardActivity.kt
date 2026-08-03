@@ -36,6 +36,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionWizardPreCheck
@@ -78,8 +79,7 @@ class WizardActivity : DaggerAppCompatActivity() {
                             page == 0                  -> PlusMinusInputScreen(
                                 value = carbs,
                                 onValueChange = { carbs = it },
-                                min = 0.0,
-                                max = maxCarbs,
+                                valueRange = 0.0..maxCarbs,
                                 stepValues = carbStepValues,
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_carbs_gram),
@@ -92,8 +92,7 @@ class WizardActivity : DaggerAppCompatActivity() {
                             hasPercentage && page == 1 -> PlusMinusInputScreen(
                                 value = percentage,
                                 onValueChange = { percentage = it },
-                                min = 10.0,
-                                max = 200.0,
+                                valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                                 stepValues = listOf(5.0, 5.0, 5.0),
                                 format = DecimalFormat("0"),
                                 label = stringResource(R.string.action_percentage),

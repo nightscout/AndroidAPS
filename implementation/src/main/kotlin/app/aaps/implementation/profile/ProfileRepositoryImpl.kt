@@ -2,6 +2,7 @@ package app.aaps.implementation.profile
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -232,37 +233,32 @@ class ProfileRepositoryImpl @Inject constructor(
             if (name.isEmpty()) {
                 errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.missing_profile_name)))
             }
-            if (blockFromJsonArray(ic, dateUtil)?.all { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) {
-                errors.add(ProfileValidationError(ProfileErrorType.IC, rh.gs(R.string.error_in_ic_values)))
-            }
+            // A block list is invalid when it cannot be read, when it holds no block at all, or when
+            // *any* single block is out of range. Two traps this avoids: "all blocks out of range"
+            // lets one bad block hide between good ones, and a null list must not count as valid.
+            fun invalid(blocks: List<Block>?, inRange: (Double) -> Boolean): Boolean =
+                blocks.isNullOrEmpty() || blocks.any { !inRange(it.amount) }
+
+            // BG values are stored in the profile unit, the limits are always mg/dL.
+            fun asMgdl(value: Double): Double = if (mgdl) value else profileUtil.convertToMgdl(value, GlucoseUnit.MMOL)
+
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
-            if (mgdl) {
-                if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
-                }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < 0.01 || it.amount > hardLimits.maxBasal() } != false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
-                }
-                if (low?.all { hardLimits.isInRange(it.amount, HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
-                if (high?.all { hardLimits.isInRange(it.amount, HardLimits.LIMIT_MAX_BG[0], HardLimits.LIMIT_MAX_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
-            } else {
-                if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
-                }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < 0.01 || it.amount > hardLimits.maxBasal() } != false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
-                }
-                if (low?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
-                if (high?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.LIMIT_MAX_BG[0], HardLimits.LIMIT_MAX_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
+
+            if (invalid(blockFromJsonArray(ic, dateUtil)) { it in hardLimits.icRange() }) {
+                errors.add(ProfileValidationError(ProfileErrorType.IC, rh.gs(R.string.error_in_ic_values)))
+            }
+            if (invalid(blockFromJsonArray(isf, dateUtil)) { asMgdl(it) in HardLimits.LIMIT_ISF }) {
+                errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
+            }
+            if (invalid(blockFromJsonArray(basal, dateUtil)) { it in 0.01..hardLimits.maxBasal() }) {
+                errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
+            }
+            if (invalid(low) { asMgdl(it) in HardLimits.LIMIT_MIN_BG }) {
+                errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
+            }
+            if (invalid(high) { asMgdl(it) in HardLimits.LIMIT_MAX_BG }) {
+                errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
             }
             low?.let { lowList ->
                 high?.let { highList ->

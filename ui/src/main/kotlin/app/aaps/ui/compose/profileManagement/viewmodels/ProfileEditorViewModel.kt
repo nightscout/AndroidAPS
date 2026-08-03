@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.RoundingMode
 import javax.inject.Inject
 
 data class TimeValue(
@@ -61,14 +63,17 @@ data class ProfileUiState(
     val units: String = GlucoseUnit.MGDL.displayLabel,
     val usingDynamicIsf: Boolean = false,
     val usingDynamicIc: Boolean = false,
-    val basalMin: Double = 0.01,
-    val basalMax: Double = 10.0,
-    val icMin: Double = 0.5,
-    val icMax: Double = 100.0,
-    val isfMin: Double = 2.0,
-    val isfMax: Double = 1000.0,
-    val targetMin: Double = 72.0,
-    val targetMax: Double = 180.0,
+    /** Basal range comes from the active pump, so there is no constant to default to. */
+    val basalRange: ClosedFloatingPointRange<Double> = 0.01..10.0,
+    /** IC range is age dependent ([HardLimits.icRange]), so it has no fixed constant. */
+    val icRange: ClosedFloatingPointRange<Double> = 0.5..100.0,
+    val isfRange: ClosedFloatingPointRange<Double> = HardLimits.LIMIT_ISF,
+    /**
+     * Low and high target have different hard limits, so each picker gets its own range.
+     * Defaults are the mg/dL limits; [ProfileEditorViewModel.loadState] converts them for mmol/L.
+     */
+    val targetLowRange: ClosedFloatingPointRange<Double> = HardLimits.LIMIT_MIN_BG,
+    val targetHighRange: ClosedFloatingPointRange<Double> = HardLimits.LIMIT_MAX_BG,
     /** Map of error type to error message for tabs with validation errors */
     val tabErrors: Map<ProfileErrorType, String> = emptyMap(),
     /**
@@ -91,6 +96,7 @@ class ProfileEditorViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
+    private val profileUtil: ProfileUtil,
     private val hardLimits: HardLimits,
     val dateUtil: DateUtil,
     private val protectionCheck: ProtectionCheck
@@ -185,20 +191,34 @@ class ProfileEditorViewModel @Inject constructor(
                 units = currentUnits.displayLabel,
                 usingDynamicIsf = aps?.usingDynamicIsf() == true,
                 usingDynamicIc = aps?.supportsDynamicIc() == true,
-                basalMin = pumpDescription.basalMinimumRate,
-                basalMax = pumpDescription.basalMaximumRate.coerceAtMost(10.0),
-                icMin = hardLimits.minIC(),
-                icMax = hardLimits.maxIC(),
-                isfMin = if (isMgdl) HardLimits.MIN_ISF else HardLimits.MIN_ISF / 18.0,
-                isfMax = if (isMgdl) HardLimits.MAX_ISF else HardLimits.MAX_ISF / 18.0,
-                targetMin = if (isMgdl) HardLimits.LIMIT_MIN_BG[0] else HardLimits.LIMIT_MIN_BG[0] / 18.0,
-                targetMax = if (isMgdl) HardLimits.LIMIT_MAX_BG[1] else HardLimits.LIMIT_MAX_BG[1] / 18.0,
+                basalRange = pumpDescription.basalMinimumRate..pumpDescription.basalMaximumRate.coerceAtMost(10.0),
+                icRange = hardLimits.icRange(),
+                isfRange = HardLimits.LIMIT_ISF.inDisplayUnits(isMgdl),
+                targetLowRange = HardLimits.LIMIT_MIN_BG.inDisplayUnits(isMgdl),
+                targetHighRange = HardLimits.LIMIT_MAX_BG.inDisplayUnits(isMgdl),
                 tabErrors = tabErrors,
                 pumpIncompatible = pumpIncompatible,
                 editedProfile = editedPureProfile,
                 basalSum = basalSum
             )
         }
+    }
+
+    /**
+     * Take a hard limit range given in mg/dL and return it in the unit the editor shows.
+     *
+     * For mg/dL the range is used as is. For mmol/L both ends are converted and then rounded
+     * **inward** to one decimal place: the editor shows and steps mmol values with one decimal, so
+     * a plain conversion can give a bound like 11.1111 that displays as "11.1" but converts back to
+     * 200.17 mg/dL, above the limit. Rounding inward keeps every value the editor offers inside the
+     * mg/dL limit after it is converted back in
+     * [app.aaps.core.interfaces.profile.ProfileRepository.validateStructured].
+     */
+    private fun ClosedFloatingPointRange<Double>.inDisplayUnits(isMgdl: Boolean): ClosedFloatingPointRange<Double> {
+        if (isMgdl) return this
+        val low = profileUtil.fromMgdlToUnits(start, GlucoseUnit.MMOL).toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+        val high = profileUtil.fromMgdlToUnits(endInclusive, GlucoseUnit.MMOL).toBigDecimal().setScale(1, RoundingMode.DOWN).toDouble()
+        return low..high
     }
 
     fun selectTab(index: Int) {

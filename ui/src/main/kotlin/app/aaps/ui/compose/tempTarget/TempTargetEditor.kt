@@ -102,25 +102,16 @@ fun TempTargetEditor(
         }
 
         // Target value slider
-        val (minTarget, maxTarget, targetStep) = when (units) {
-            GlucoseUnit.MGDL -> Triple(
-                Constants.MIN_TT_MGDL,
-                Constants.MAX_TT_MGDL,
-                1.0
-            )
-
-            GlucoseUnit.MMOL -> Triple(
-                Constants.MIN_TT_MMOL,
-                Constants.MAX_TT_MMOL,
-                0.1
-            )
+        val (targetRange, targetStep) = when (units) {
+            GlucoseUnit.MGDL -> Constants.TT_RANGE_MGDL to 1.0
+            GlucoseUnit.MMOL -> Constants.TT_RANGE_MMOL to 0.1
         }
 
         NumberInputRow(
             labelResId = R.string.temporary_target,
             value = editorTarget,
             onValueChange = onTargetChange,
-            valueRange = minTarget..maxTarget,
+            valueRange = targetRange,
             step = targetStep,
             valueFormat = if (units == GlucoseUnit.MGDL) DecimalFormat("0") else DecimalFormat("0.0"),
             unitLabel = units.displayLabel,
@@ -132,7 +123,7 @@ fun TempTargetEditor(
             labelResId = R.string.duration,
             value = editorDuration.toDouble(),
             onValueChange = { onDurationChange((it * 60000L).toLong()) },
-            valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
+            valueRange = Constants.ACTION_DURATION,
             step = 5.0,
             unitLabelResId = KeysR.string.units_min,
             modifier = Modifier.fillMaxWidth()

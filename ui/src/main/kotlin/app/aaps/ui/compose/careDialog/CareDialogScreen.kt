@@ -372,7 +372,7 @@ private fun DurationSection(
         labelResId = CoreUiR.string.duration_label,
         value = duration,
         onValueChange = onDurationChange,
-        valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
+        valueRange = Constants.ACTION_DURATION,
         step = 10.0,
         unitLabelResId = KeysR.string.units_min,
         modifier = modifier

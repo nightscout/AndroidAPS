@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -343,7 +344,7 @@ fun QuickWizardEditor(
             labelResId = KeysR.string.pref_title_bolus_percentage,
             value = percentage.toDouble(),
             onValueChange = { onPercentageChange(it.toInt()) },
-            valueRange = 10.0..200.0,
+            valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
             step = 5.0,
             unitLabelResId = KeysR.string.units_percent,
             modifier = Modifier.fillMaxWidth()

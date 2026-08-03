@@ -948,11 +948,11 @@ class DataHandlerMobile @Inject constructor(
                 }
                 val lowMgdl = if (action.isMgdl) action.low else action.low * Constants.MMOLL_TO_MGDL
                 val highMgdl = if (action.isMgdl) action.high else action.high * Constants.MMOLL_TO_MGDL
-                if (lowMgdl < HardLimits.LIMIT_TEMP_MIN_BG[0] || lowMgdl > HardLimits.LIMIT_TEMP_MIN_BG[1]) {
+                if (lowMgdl !in HardLimits.LIMIT_TEMP_MIN_BG) {
                     sendError(rh.gs(R.string.wear_action_tempt_min_bg_error))
                     return
                 }
-                if (highMgdl < HardLimits.LIMIT_TEMP_MAX_BG[0] || highMgdl > HardLimits.LIMIT_TEMP_MAX_BG[1]) {
+                if (highMgdl !in HardLimits.LIMIT_TEMP_MAX_BG) {
                     sendError(rh.gs(R.string.wear_action_tempt_max_bg_error))
                     return
                 }

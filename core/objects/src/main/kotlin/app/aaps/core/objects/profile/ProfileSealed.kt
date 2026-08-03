@@ -177,7 +177,7 @@ sealed class ProfileSealed(
         val validityCheck = Profile.ValidityCheck()
         for (basal in basalBlocks) {
             val basalAmount = basal.amount * percentage / 100.0
-            if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
+            if (basalAmount !in 0.01..hardLimits.maxBasal()) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.basal_value), basalAmount))
                 break
@@ -185,13 +185,13 @@ sealed class ProfileSealed(
         }
         iCfg?.let {
             // Todo, add check for peak and concentration, (or delegate iCfg validity check to insulinPlugin which will have this function)
-            if (!hardLimits.isInRange(it.dia, hardLimits.minDia(), hardLimits.maxDia())) {
+            if (it.dia !in hardLimits.diaRange()) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), it.dia))
             }
         }
         for (ic in icBlocks)
-            if (!hardLimits.isInRange(ic.amount * 100.0 / percentage, hardLimits.minIC(), hardLimits.maxIC())) {
+            if (ic.amount * 100.0 / percentage !in hardLimits.icRange()) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
@@ -203,7 +203,7 @@ sealed class ProfileSealed(
                 break
             }
         for (isf in isfBlocks)
-            if (!hardLimits.isInRange(toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
+            if (toMgdl(isf.amount * 100.0 / percentage, units) !in HardLimits.LIMIT_ISF) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
@@ -215,22 +215,12 @@ sealed class ProfileSealed(
                 break
             }
         for (target in targetBlocks) {
-            if (!hardLimits.isInRange(
-                    toMgdl(target.lowTarget, units),
-                    HardLimits.LIMIT_MIN_BG[0],
-                    HardLimits.LIMIT_MIN_BG[1]
-                )
-            ) {
+            if (toMgdl(target.lowTarget, units) !in HardLimits.LIMIT_MIN_BG) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_low_target), target.lowTarget))
                 break
             }
-            if (!hardLimits.isInRange(
-                    toMgdl(target.highTarget, units),
-                    HardLimits.LIMIT_MAX_BG[0],
-                    HardLimits.LIMIT_MAX_BG[1]
-                )
-            ) {
+            if (toMgdl(target.highTarget, units) !in HardLimits.LIMIT_MAX_BG) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_high_target), target.highTarget))
                 break
