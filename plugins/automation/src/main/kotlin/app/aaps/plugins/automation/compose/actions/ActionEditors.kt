@@ -27,6 +27,7 @@ import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
+import app.aaps.plugins.automation.actions.ActionSmoothingChange
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.compose.elements.AutomationDropdown
 import app.aaps.plugins.automation.compose.elements.InputDropdownOnOffEditor
@@ -67,6 +68,7 @@ fun ActionEditor(
             is ActionSettingsExport       -> ActionSettingsExportEditor(action, onChange)
             is ActionCarePortalEvent      -> ActionCarePortalEventEditor(action, tick, onChange)
             is ActionSMBChange            -> ActionSMBChangeEditor(action, onChange)
+            is ActionSmoothingChange      -> ActionSmoothingChangeEditor(action, onChange)
             is ActionProfileSwitch        -> ActionProfileSwitchEditor(action, profileNames, onChange)
             is ActionProfileSwitchPercent -> ActionProfileSwitchPercentEditor(action, tick, onChange)
             is ActionRunAutotune          -> ActionRunAutotuneEditor(action, profileNames, tick, onChange)
@@ -165,6 +167,25 @@ fun ActionSMBChangeEditor(a: ActionSMBChange, onChange: () -> Unit) {
             onValueChange = { a.smbState.setValue(it); onChange() }
         )
     }
+}
+
+@Composable
+fun ActionSmoothingChangeEditor(a: ActionSmoothingChange, onChange: () -> Unit) {
+    val options = a.smoothingOptions()
+    // Show the stored plugin only if it is still installed; otherwise the field
+    // stays empty and the user must pick one.
+    val selectedName = options.firstOrNull { it.pluginId == a.smoothingPlugin.value }?.name ?: ""
+    AutomationDropdown(
+        value = selectedName,
+        options = options.map { it.name },
+        onValueChange = { picked ->
+            options.firstOrNull { it.name == picked }?.let {
+                a.smoothingPlugin.value = it.pluginId
+                onChange()
+            }
+        },
+        label = stringResource(R.string.smoothing_label)
+    )
 }
 
 @Composable

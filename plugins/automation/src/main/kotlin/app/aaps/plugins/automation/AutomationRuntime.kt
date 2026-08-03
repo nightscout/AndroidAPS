@@ -46,6 +46,7 @@ import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
+import app.aaps.plugins.automation.actions.ActionSmoothingChange
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
@@ -638,6 +639,7 @@ class AutomationRuntime @Inject constructor(
             ActionProfileSwitch(injector),
             ActionSendSMS(injector),
             ActionSMBChange(injector),
+            ActionSmoothingChange(injector),
             ActionRunScene(injector),
             ActionEnableScene(injector),
             ActionDisableScene(injector)

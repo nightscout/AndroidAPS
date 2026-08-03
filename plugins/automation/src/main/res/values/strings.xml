@@ -152,6 +152,11 @@
     <string name="changeSmbState">Enable/disable SMB</string>
     <string name="changeSmbTo">Change SMB to %1$s</string>
     <string name="newSmbMode">New SMB mode:</string>
+
+    <!--    Smoothing-->
+    <string name="change_smoothing">Change smoothing</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Change smoothing to %1$s</string>
+    <string name="smoothing_label">Smoothing</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
 
