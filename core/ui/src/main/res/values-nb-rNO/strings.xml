@@ -104,6 +104,7 @@
     <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Gammel data</string>
     <string name="goingtodeliver">Leverer %1$.2f enheter</string>
+    <string name="carbs_not_saved_after_bolus">Bolusen ble levert, men karbohydratene kunne ikke lagres. Registrer karbo på nytt.</string>
     <string name="androidaps_start">AAPS startet</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>

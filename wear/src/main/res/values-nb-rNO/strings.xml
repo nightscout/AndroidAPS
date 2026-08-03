@@ -83,6 +83,11 @@
     <string name="menu_bg_graph">BS-graf</string>
     <string name="menu_resync">Re-synk</string>
     <string name="menu_prime_fill">Prime/fylling</string>
+    <string name="menu_install_watchface">Installer urskive</string>
+    <string name="menu_installing_watchface">Installerer urskiven…</string>
+    <string name="watchface_installed_active">Urskiven er installert og satt som aktiv</string>
+    <string name="watchface_installed_select">Urskive installert, velg den i urskivevelgeren</string>
+    <string name="watchface_install_failed">Installasjon av urskive mislyktes</string>
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Meny</string>
@@ -102,6 +107,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Høy [%s]</string>
     <string name="action_carbs">Karbo</string>
     <string name="action_carbs_gram">Karbo [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Maks fjerning: %1$d g (COB)</string>
     <string name="action_ecarbs">eKarbo</string>
     <string name="action_percentage">Prosent\n[%]</string>
     <string name="action_start_minutes">Start\n[minutter]</string>
@@ -257,10 +263,9 @@
     <string name="contacting_master_unknown">Status ukjent — sjekk telefonen</string>
     <string name="tile_settings">Flisinnstillinger</string>
     <string name="loop_status_error">Kunne ikke laste inn loopstatus</string>
-    <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d min</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f E/t (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">%1$d min gjenstår</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s gjenstår</string>
     <string name="loop_status_tbr_continues">Midl. basal fortsetter</string>
     <string name="loop_status_tbr_cancel">Setter vanlig basal</string>
     <string name="loop_status_smb">%1$.2f E</string>

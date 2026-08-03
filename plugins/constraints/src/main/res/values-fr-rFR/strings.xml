@@ -42,4 +42,5 @@
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
     <string name="objectives_button_unfinish">Réinitialiser l\'état terminé</string>
     <string name="objectives_button_unstart">Réinitialiser l\'état de départ</string>
+    <string name="bg_doubled_lgs">Mode AGB en raison des valeurs en double dans la source de glycémie</string>
 </resources>

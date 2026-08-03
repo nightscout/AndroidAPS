@@ -32,8 +32,8 @@
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bơm chưa được khởi tạo, cấu hình chưa được thiết lập!</string>
     <string name="failed_update_basal_profile">Không thể cập nhật cấu hình liều nền</string>
-    <string name="no_valid_basal_rate">Không đọc được liều basal hợp lệ từ bơm</string>
-    <string name="limiting_iob">Giới hạn IOB: %1$.1f U – Lý do: %2$s.</string>
+    <string name="no_valid_basal_rate">Không đọc được liều nền hợp lệ từ bơm</string>
+    <string name="limiting_iob">Giới hạn IOB ở mức %1$.1f U do %2$s</string>
     <string name="loop_disabled_by_user">Vòng lặp đã bị người dùng tắt</string>
     <string name="event_type">Loại sự kiện</string>
     <string name="mgdl">mg/dl</string>
@@ -65,7 +65,7 @@
     <string name="configbuilder_switch_confirmation">Thao tác này sẽ tắt %1$s và bật %2$s.</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>
-    <string name="no_compose_preferences">Plugin này không có cài đặt Compose</string>
+    <string name="no_compose_preferences">Plugin này không có tùy chọn nào</string>
     <string name="confirm_password_hint">Xác nhận mật khẩu</string>
     <string name="confirm_pin_hint">Xác nhận mã PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -104,6 +104,7 @@
     <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Dữ liệu cũ</string>
     <string name="goingtodeliver">Đang tiêm %1$.2f U Insulin</string>
+    <string name="carbs_not_saved_after_bolus">Đã tiêm bolus, nhưng không thể lưu lượng carb. Vui lòng nhập lại lượng carb.</string>
     <string name="androidaps_start">AAPS đã khởi động</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -119,7 +120,13 @@
     <string name="carbs">Carbs</string>
     <string name="invalid_profile">Cấu hình không hợp lệ!</string>
     <string name="no_profile_set">KHÔNG CÓ CẤU HÌNH</string>
-    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="profile_switch_no_insulin">Không thể chuyển cấu hình điều trị: không có loại insulin nào đang được sử dụng và cũng chưa có loại nào được chọn.</string>
+    <string name="profile_switch_select_insulin_hint">Chưa có loại insulin nào được sử dụng. Hãy chọn loại insulin bạn đang sử dụng để lần chuyển cấu hình này có thể ghi nhận loại insulin đó.</string>
+    <string name="insulin_activation_failed">Loại insulin chưa được chuyển đổi. Loại insulin trước đó vẫn đang được sử dụng.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Không thể chuyển đổi loại insulin: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
+    <string name="insulin_activation_unconfirmed">Không thể xác nhận việc chuyển đổi loại insulin. Hãy kiểm tra loại insulin nào đang hoạt động trong cấu hình trước khi tiêm insulin.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
+    <string name="active"><![CDATA[<Đang hoạt động>]]></string>
     <string name="date">Ngày</string>
     <string name="units_label">Đơn vị</string>
     <string name="insulin_nickname_label">Tên gọi insulin</string>
@@ -145,7 +152,7 @@
     <string name="alarm">Báo thức</string>
     <string name="exportsettings">Xuất Cài đặt</string>
     <string name="disableloop">Tắt vòng lặp</string>
-    <string name="disabled_loop">Vô hiệu hóa vòng lặp</string>
+    <string name="disabled_loop">Đã tắt vòng lặp</string>
     <string name="resumeloop">Khởi động lại vòng lặp</string>
     <string name="suspendloop">Tạm dừng vòng lặp</string>
     <string name="notification">Thông báo</string>
@@ -175,7 +182,7 @@
     <string name="pump_running">Bơm đang chạy</string>
     <string name="notconfigured">Chưa được thiết lập</string>
     <string name="loopsuspended">Vòng lặp đã tạm dừng</string>
-    <string name="loop_suspended_by_dst">Vòng lặp bị tạm dừng do thay đổi múi giờ (DST)</string>
+    <string name="loop_suspended_by_dst">Vòng lặp bị tạm dừng do thay đổi múi giờ</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">giảm nhanh</string>
     <string name="a11y_arrow_single_down">giảm</string>
@@ -209,7 +216,7 @@
     <string name="invalid">KHÔNG HỢP LỆ</string>
     <string name="login">Đăng nhập</string>
     <string name="logout">Đăng xuất</string>
-    <string name="prime_fill">Prime/Fill</string>
+    <string name="prime_fill">Mồi/Nạp</string>
     <string name="site_rotation">Chuyển vị trí</string>
     <string name="edit_site">Sửa</string>
     <string name="select_arrow">Chọn Mũi tên</string>
@@ -249,7 +256,7 @@
     <string name="location_permission_not_granted">Chưa cấp quyền vị trí. Hãy cho phép trong cài đặt Android.</string>
     <string name="configbuilder_nightscoutversion_label">Phiên bản Nightscout:</string>
     <string name="not_available_full">Không khả dụng</string>
-    <string name="engineering_mode_enabled">Chế độ bảo trì đã được bật</string>
+    <string name="engineering_mode_enabled">Đã bật chế độ kỹ thuật</string>
     <string name="back">Quay lại</string>
     <string name="next">Tiếp theo</string>
     <string name="pref_syncs_with_main_phone">Đồng bộ với điện thoại chính</string>
@@ -275,7 +282,7 @@
     <string name="reason">Lý do</string>
     <string name="nochangerequested">Không có thay đổi nào được yêu cầu</string>
     <!--    Insulin / Concentration-->
-    <string name="ins_concentration_confirmed">Insulin %1$s đã được xác nhận</string>
+    <string name="ins_concentration_confirmed">Đã xác nhận insulin %1$s</string>
     <string name="current_insulin">Đang hoạt động</string>
     <string name="change_insulin">Thay đổi</string>
     <string name="select_insulin_description">Chọn loại insulin bạn đang nạp vào bơm. Cấu hình sẽ được chuyển đổi sau khi kích hoạt / làm đầy.</string>
@@ -286,20 +293,20 @@
     <!--       Stats -->
     <string name="average">Trung bình</string>
     <string name="tir">Thời gian trong phạm vi</string>
-    <string name="below" comment="below &quot;in range&quot;">Thấp</string>
+    <string name="below" comment="below &quot;in range&quot;">Hơi Thấp</string>
     <string name="in_range">Trong phạm vi</string>
     <string name="veryLow" comment="below 3.1">Quá thấp</string>
     <string name="low" comment="3.1-3.9">Thấp</string>
     <string name="high" comment="10.0-13.9">Cao</string>
     <string name="veryHigh" comment="above 13.9">Quá cao</string>
-    <string name="above" comment="above &quot;in range&quot;">Cao</string>
+    <string name="above" comment="above &quot;in range&quot;">Hơi Cao</string>
     <string name="detailed_14_days">Chi tiết 14 ngày</string>
     <string name="day_tir">Phạm vi mục tiêu ban ngày</string>
     <string name="night_tir">Phạm vi mục tiêu ban đêm</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">SD: %1$s</string>
-    <string name="seven_days_short">7ngày</string>
-    <string name="thirty_days_short">30 ngày</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d phút</string>
@@ -377,7 +384,7 @@
     <string name="scene_editor_note">Ghi chú</string>
     <string name="scene_icon">Biểu tượng</string>
     <string name="scene_editor_enabled">Đã bật</string>
-    <string name="scene_editor_disabled">Vô hiệu hoá</string>
+    <string name="scene_editor_disabled">Đã tắt</string>
     <string name="scene_summary">%1$d hành động, %2$s</string>
     <string name="scene_duration_indefinite">Không thời hạn (kết thúc thủ công)</string>
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
@@ -439,7 +446,7 @@
     <string name="careportal_waking_up">Thức dậy</string>
     <string name="careportal_temporarytargetvalue">Giá trị mục tiêu tạm thời</string>
     <string name="careportal_temporarytargetcancel">Huỷ mục tiêu tạm thời</string>
-    <string name="boluswizard">Tính toán Bolus</string>
+    <string name="boluswizard">Công cụ tính liều Bolus</string>
     <string name="treatment_desc">Ghi nhận insulin và carbs cùng lúc</string>
     <string name="treatment_insulin_desc">Tiêm liều bolus thủ công</string>
     <string name="treatment_carbs_desc">Ghi nhận carb không kèm insulin</string>
@@ -543,7 +550,7 @@
     <string name="timedetection">Nhận diện thời gian</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
-    <string name="uel_bolus_calculator">TÍNH TOÁN BOLUS</string>
+    <string name="uel_bolus_calculator">TÍNH TOÁN LIỀU BOLUS</string>
     <string name="uel_bolus_advisor">GỌI Ý BOLUS</string>
     <string name="uel_extended_bolus">LIỀU BOLUS KÉO DÀI</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
@@ -556,8 +563,8 @@
     <string name="uel_store_profile">LƯU TRỮ CẤU HÌNH</string>
     <string name="uel_profile_switch">CHUYỂN CẤU HÌNH</string>
     <string name="uel_profile_switch_cloned">ĐÃ NHÂN BẢN CHUYỂN HỒ SƠ</string>
-    <string name="uel_closed_loop_mode">CHẾ ĐỘ VÒNG KÍN</string>
-    <string name="uel_lgs_loop_mode">CHẾ ĐỘ VÒNG KÍN LGS</string>
+    <string name="uel_closed_loop_mode">CHẾ ĐỘ VÒNG LẶP KÍN</string>
+    <string name="uel_lgs_loop_mode">CHẾ ĐỘ VÒNG LẶP LGS</string>
     <string name="uel_open_loop_mode">VÒNG LẶP MỞ</string>
     <string name="uel_loop_disabled">VÒNG LẶP TẮT</string>
     <string name="uel_loop_resumed">BẬT LẠI VÒNG LẶP</string>
