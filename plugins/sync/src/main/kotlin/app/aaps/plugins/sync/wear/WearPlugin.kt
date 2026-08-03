@@ -112,6 +112,11 @@ class WearPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         deferredStart.start { dataLayerListenerServiceMobileHelper.startService(context) }
+        // Last percent actually sent to the watch. Starts at 100 = "nothing to clear": the empty-status
+        // clear frame on state-null is only needed when the watch was left mid-progress (< 100). If the
+        // driver already reported 100% ("Bolus delivered successfully"), sending the clear frame would
+        // overwrite that text with "100% - " for the notification's 5 s dismiss window.
+        var lastSentPercent = 100
         bolusProgressData.state
             .drop(1) // Skip initial null emission on collection start
             .collectResilient(newScope, aapsLogger, LTag.WEAR) { state ->
@@ -119,10 +124,12 @@ class WearPlugin @Inject constructor(
                     if (state != null) {
                         if (!state.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
                             rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.wearStatus)))
+                            lastSentPercent = state.percent
                         }
-                    } else {
-                        // Bolus ended — send 100% to clear wear display
+                    } else if (lastSentPercent < 100) {
+                        // Bolus ended without a 100% frame (cancelled/failed) — send 100% to clear wear display
                         rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 100, status = "")))
+                        lastSentPercent = 100
                     }
                 }
             }
