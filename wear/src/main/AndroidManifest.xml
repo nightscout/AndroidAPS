@@ -10,6 +10,12 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
+    <!-- Samsung-only, protectionLevel="normal" so it is granted automatically at install and is a
+         no-op on non-Samsung watches (the permission simply doesn't exist there). Lets us send
+         ACTION_EDIT_WATCH_FACE to Samsung SysUI's exported WatchFaceEditorBroadcastReceiver, which
+         is the only known way for an app to get the system to activate a watchface. -->
+    <uses-permission android:name="com.samsung.android.wearable.sysui.permission.EDIT_WATCH_FACE" />
     <!-- Watch Face Push (Wear OS 6+): PUSH_WATCH_FACES gates binding to the system push service;
          SET_PUSHED_WATCH_FACE_AS_ACTIVE allows re-activating the pushed AAPS watchface after the
          one-shot activation on first install was used -->
