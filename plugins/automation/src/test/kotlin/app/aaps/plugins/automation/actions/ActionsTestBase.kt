@@ -80,8 +80,10 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.sceneApi = sceneApi
             }
             if (it is Trigger) {
+                it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.profileFunction = profileFunction
+                it.activePlugin = activePlugin
             }
         }
     }

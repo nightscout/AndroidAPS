@@ -28,6 +28,7 @@ class ActionSmoothingChangeTest : ActionsTestBase() {
         whenever(rh.gs(R.string.change_smoothing)).thenReturn("Change smoothing")
         whenever(rh.gs(R.string.change_smoothing_to)).thenReturn("Change smoothing to %1\$s")
         whenever(rh.gs(R.string.alreadyset)).thenReturn("Already set")
+        whenever(rh.gs(R.string.precondition_smoothing_not_active)).thenReturn("Smoothing %1\$s is not active")
 
         whenever(avgSmoothingPlugin.pluginId).thenReturn("AvgSmoothingPlugin")
         whenever(avgSmoothingPlugin.name).thenReturn("Average smoothing")
@@ -70,6 +71,18 @@ class ActionSmoothingChangeTest : ActionsTestBase() {
         val result = sut.doAction()
         assertThat(result.success).isFalse()
         verify(configBuilder, never()).performPluginSwitch(anyOrNull(), any(), anyOrNull())
+    }
+
+    @Test fun preconditionTest() = runTest {
+        // Selected plugin not active -> automation may run
+        whenever(avgSmoothingPlugin.isEnabled(PluginType.SMOOTHING)).thenReturn(false)
+        assertThat(sut.precondition!!.shouldRun()).isTrue()
+        // Selected plugin already active -> whole automation is skipped
+        whenever(avgSmoothingPlugin.isEnabled(PluginType.SMOOTHING)).thenReturn(true)
+        assertThat(sut.precondition!!.shouldRun()).isFalse()
+        // Unknown plugin -> skipped
+        sut.smoothingPlugin.value = "RemovedPlugin"
+        assertThat(sut.precondition!!.shouldRun()).isFalse()
     }
 
     @Test fun isValidTest() = runTest {

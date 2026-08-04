@@ -11,6 +11,8 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDropdownMenu
+import app.aaps.plugins.automation.triggers.Trigger
+import app.aaps.plugins.automation.triggers.TriggerSelectedSmoothingNotActive
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
@@ -22,6 +24,10 @@ class ActionSmoothingChange(injector: HasAndroidInjector) : Action(injector) {
 
     // Holds the pluginId of the selected smoothing plugin
     var smoothingPlugin: InputDropdownMenu = InputDropdownMenu(rh)
+
+    // Skip the whole automation (no log entry) once the selected smoothing is
+    // already active — the trigger stays true and would re-fire every cycle.
+    override var precondition: Trigger? = TriggerSelectedSmoothingNotActive(injector) { smoothingPlugin.value }
 
     /** All installed smoothing plugins, same list as Configuration → Smoothing. */
     fun smoothingOptions(): List<PluginBase> = activePlugin.getSpecificPluginsList(PluginType.SMOOTHING)
