@@ -14,10 +14,12 @@ interface HardLimits {
 
         // Very Hard Limits Ranges [mg/dL]
         // The range says how low and how high the limit itself may be set
-        // MIN_BG top is 180.16 (= 10.0 mmol * 18.01559), not a flat 180.0: an imported profile with a
-        // low target of 10.0 mmol converts to 180.16 mg/dL, so a flat 180.0 would reject the whole
-        // profile. Same conversion overshoot handled by LIMIT_TEMP_MIN_BG.
-        val LIMIT_MIN_BG = 80.0..180.16
+        // MIN_BG top is 180.2, not a flat 180.0. A 10.0 mmol low target (the highest the editor offers)
+        // converts to 180.16 mg/dL, and the loop rounds the profile low target to 0.1 mg/dL BEFORE this
+        // check (OpenAPSSMBPlugin: Round.roundTo(getTargetLowMgdl(), 0.1) -> 180.2). A tighter top (180.0,
+        // or even the raw 180.16) makes the loop clamp a valid 10.0 mmol low target and warn every run.
+        // (The temp-target low path is checked UNROUNDED, so LIMIT_TEMP_MIN_BG only needs 180.16.)
+        val LIMIT_MIN_BG = 80.0..180.2
         val LIMIT_MAX_BG = 90.0..200.0
         val LIMIT_TARGET_BG = 80.0..200.0
 
