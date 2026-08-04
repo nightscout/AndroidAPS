@@ -7,7 +7,9 @@ object Percentile {
     // From https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
     // Returns the value at a given percentile in a sorted numeric array.
     // "Linear interpolation between closest ranks" method
-    fun percentile(arr: Array<Double>, p: Double): Double {
+    fun percentile(arr: Array<Double>, p: Double): Double = percentile(arr.toDoubleArray(), p)
+
+    fun percentile(arr: DoubleArray, p: Double): Double {
         if (arr.isEmpty()) return 0.0
         if (p <= 0) return arr[0]
         if (p >= 1) return arr[arr.size - 1]

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sensitivity
 
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
@@ -7,11 +8,10 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
@@ -22,8 +22,6 @@ import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import kotlinx.coroutines.runBlocking
-import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
@@ -33,9 +31,7 @@ class SensitivityOref1Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val profileFunction: ProfileFunction,
-    private val dateUtil: DateUtil,
-    private val persistenceLayer: PersistenceLayer
+    private val dateUtil: DateUtil
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
@@ -48,8 +44,14 @@ class SensitivityOref1Plugin @Inject constructor(
     aapsLogger, rh, preferences
 ), PluginConstraints {
 
-    override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
-        val profile = runBlocking { profileFunction.getProfile() }
+    override fun detectSensitivity(
+        ads: AutosensDataStore,
+        fromTime: Long,
+        toTime: Long,
+        profile: EffectiveProfile?,
+        siteChanges: List<TE>,
+        profileSwitches: List<PS>
+    ): AutosensResult {
         if (profile == null) {
             aapsLogger.error("No profile")
             return AutosensResult()
@@ -65,14 +67,11 @@ class SensitivityOref1Plugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val siteChanges = runBlocking { persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true) }
-        val profileSwitches = runBlocking { persistenceLayer.getProfileSwitchesFromTime(fromTime, true) }
-
         //[0] = 8 hour
         //[1] = 24 hour
         //deviationsHour has DeviationsArray
         val deviationsHour = mutableListOf(ArrayList(), ArrayList<Double>())
-        val pastSensitivityArray = mutableListOf("", "")
+        val pastSensitivityArray = listOf(StringBuilder(), StringBuilder())
         val sensResultArray = mutableListOf("", "")
         val ratioArray = mutableListOf(0.0, 0.0)
         val deviationCategory = listOf(96.0, 288.0)
@@ -94,18 +93,18 @@ class SensitivityOref1Plugin @Inject constructor(
             //hourSegment = 1 = 24 hour
             while (hourSegment < deviationsHour.size) {
                 val deviationsArray = deviationsHour[hourSegment]
-                var pastSensitivity = pastSensitivityArray[hourSegment]
+                val pastSensitivity = pastSensitivityArray[hourSegment]
 
                 // reset deviations after site change
                 if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
-                    pastSensitivity += "(SITECHANGE)"
+                    pastSensitivity.append("(SITECHANGE)")
                 }
 
                 // reset deviations after profile switch
                 if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
-                    pastSensitivity += "(PROFILESWITCH)"
+                    pastSensitivity.append("(PROFILESWITCH)")
                 }
                 var deviation = autosensData.deviation
 
@@ -116,15 +115,14 @@ class SensitivityOref1Plugin @Inject constructor(
                 if (deviationsArray.size > deviationCategory[hourSegment]) {
                     deviationsArray.removeAt(0)
                 }
-                pastSensitivity += autosensData.pastSensitivity
+                pastSensitivity.append(autosensData.pastSensitivity)
                 val secondsFromMidnight = MidnightUtils.secondsFromMidnight(autosensData.time)
                 if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
-                    pastSensitivity += "(" + (secondsFromMidnight / 3600.0).roundToInt() + ")"
+                    pastSensitivity.append("(").append((secondsFromMidnight / 3600.0).roundToInt()).append(")")
                 }
 
                 //Update the data back to the parent
                 deviationsHour[hourSegment] = deviationsArray
-                pastSensitivityArray[hourSegment] = pastSensitivity
                 hourSegment++
             }
             index++
@@ -146,7 +144,6 @@ class SensitivityOref1Plugin @Inject constructor(
             deviationsHour[i] = deviations
         }
         var hourUsed = 0
-        //val sens = profile.getIsfMgdl(toTime, current.bg, "SensitivityOref1Plugin")
         val sens = current.sens
         while (hourUsed < deviationsHour.size) {
             val deviationsArray: ArrayList<Double> = deviationsHour[hourUsed]
@@ -154,24 +151,24 @@ class SensitivityOref1Plugin @Inject constructor(
             var sensResult = "(8 hours) "
             if (hourUsed == 1) sensResult = "(24 hours) "
             val ratioLimit = ""
-            val deviations: Array<Double> = Array(deviationsArray.size) { i -> deviationsArray[i] }
+            val deviations = deviationsArray.toDoubleArray()
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
-            Arrays.sort(deviations)
-            val pSensitive = Percentile.percentile(deviations, 0.50)
-            val pResistant = Percentile.percentile(deviations, 0.50)
+            deviations.sort()
+            // the median is used for both the sensitive and resistant thresholds (as in oref0 autosens)
+            val median = Percentile.percentile(deviations, 0.50)
             var basalOff = 0.0
             when {
-                pSensitive < 0 -> { // sensitive
-                    basalOff = pSensitive * (60.0 / 5) / sens
+                median < 0 -> { // sensitive
+                    basalOff = median * (60.0 / 5) / sens
                     sensResult += "Excess insulin sensitivity detected"
                 }
 
-                pResistant > 0 -> { // resistant
-                    basalOff = pResistant * (60.0 / 5) / sens
+                median > 0 -> { // resistant
+                    basalOff = median * (60.0 / 5) / sens
                     sensResult += "Excess insulin resistance detected"
                 }
 
-                else           -> sensResult += "Sensitivity normal"
+                else       -> sensResult += "Sensitivity normal"
             }
             aapsLogger.debug(LTag.AUTOSENS, sensResult)
             val ratio = 1 + basalOff / profile.getMaxDailyBasal()
@@ -190,7 +187,7 @@ class SensitivityOref1Plugin @Inject constructor(
             key = 0
         }
         //String message = hoursDetection.get(key) + " of sensitivity used";
-        val output = fillResult(ratioArray[key], current.cob, pastSensitivityArray[key], ratioLimitArray[key], sensResultArray[key] + comparison, deviationsHour[key].size)
+        val output = fillResult(ratioArray[key], current.cob, pastSensitivityArray[key].toString(), ratioLimitArray[key], sensResultArray[key] + comparison, deviationsHour[key].size)
         aapsLogger.debug(
             LTag.AUTOSENS, "Sensitivity to: "
                 + dateUtil.dateAndTimeString(toTime) +
