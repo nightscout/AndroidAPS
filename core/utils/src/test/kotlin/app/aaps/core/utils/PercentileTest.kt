@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test
 /**
  * [Percentile.percentile] does NOT sort its input - callers pass an already-sorted array. All test
  * inputs here are sorted on purpose (one case documents the "must be pre-sorted" contract).
+ *
+ * The expected values follow oref0's rank convention `index = size * p` (see Percentile.kt), which is
+ * why, for example, the median of an even-size array is the upper-middle element and not the classic
+ * average of the two middle values. Do not "correct" these to the (n - 1) * p variant.
  */
 class PercentileTest {
 
