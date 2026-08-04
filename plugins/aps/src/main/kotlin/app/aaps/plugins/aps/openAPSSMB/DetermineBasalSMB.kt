@@ -128,6 +128,17 @@ class DetermineBasalSMB @Inject constructor(
 
         val maxSafeBasal = getMaxSafeBasal(profile)
         var rate = _rate
+        // A non-finite rate passes both clamps below untouched, because every comparison with NaN is
+        // false, and then lands in rT.rate - which DetermineBasalResult turns into a real pump command.
+        // Do not invent a dose out of a broken value: fall back to the profile basal, which the
+        // `suggestedRate == profile.current_basal` branch below turns into a neutral temp or cancels
+        // the running temp. Zero would be worse, because that actively withholds basal for 30 minutes.
+        // The interpolated value leaves a literal `setTempBasalRate=NaN` token in consoleError, which is
+        // what the reportNonFiniteRtFields tripwire (PersistenceLayerImpl) scans for.
+        if (!rate.isFinite()) {
+            consoleError.add("setTempBasal: setTempBasalRate=$_rate is not finite, using profile basal instead")
+            rate = profile.current_basal
+        }
         if (rate < 0) rate = 0.0
         else if (rate > maxSafeBasal) rate = maxSafeBasal
 
@@ -159,6 +170,36 @@ class DetermineBasalSMB @Inject constructor(
             rT.rate = suggestedRate
             return rT
         }
+    }
+
+    /**
+     * Give up on this run instead of turning a broken internal value into a dose.
+     *
+     * Same policy the invalid input check in [determine_basal] uses for bad CGM data: put a running
+     * high temp back to neutral, shorten a long zero temp, otherwise leave the pump alone. Never
+     * suspend, and never guess a rate.
+     *
+     * [token] must be written as `name=value` so the interpolated NaN / Infinity keeps the literal
+     * `name=NaN` form that the `PersistenceLayerImpl.reportNonFiniteRtFields` tripwire scans for -
+     * that is how the event reaches Crashlytics even though the returned result is finite.
+     */
+    private fun abortNonFinite(token: String, rT: RT, currenttemp: CurrentTemp, basal: Double, deliverAt: Long): RT {
+        consoleError.add("Aborting run: $token")
+        rT.reason.append("Aborting run: $token. ")
+        if (currenttemp.rate > basal) {
+            rT.reason.append("Replacing high temp basal of ${currenttemp.rate} with neutral temp of $basal. ")
+            rT.deliverAt = deliverAt
+            rT.duration = 30
+            rT.rate = basal
+        } else if (currenttemp.rate == 0.0 && currenttemp.duration > 30) {
+            rT.reason.append("Shortening ${currenttemp.duration}m long zero temp to 30m. ")
+            rT.deliverAt = deliverAt
+            rT.duration = 30
+            rT.rate = 0.0
+        } else {
+            rT.reason.append("Temp ${currenttemp.rate} <= current basal ${round(basal, 2)}U/hr; doing nothing. ")
+        }
+        return rT
     }
 
     fun determine_basal(
@@ -722,7 +763,12 @@ class DetermineBasalSMB @Inject constructor(
             }
         }
 
-        val fractionCarbsLeft = meal_data.mealCOB / meal_data.carbs
+        // meal_data.carbs counts only carb entries inside the absorption window, while mealCOB comes
+        // from autosens. So carbs can drop to 0 while mealCOB is still > 0 (slow or stalled absorption),
+        // and mealCOB / 0 is Infinity. That made avgPredBG below Infinity - Infinity = NaN, and the NaN
+        // spread to minPredBG -> insulinReq -> rate. Falling back to 0.0 keeps avgPredBG on the UAM
+        // prediction, the same choice the no-carb branch of minGuardBG makes below.
+        val fractionCarbsLeft = if (meal_data.carbs > 0.0) meal_data.mealCOB / meal_data.carbs else 0.0
         // if we have COB and UAM is enabled, average both
         if (minUAMPredBG < 999 && minCOBPredBG < 999) {
             // weight COBpredBG vs. UAMpredBG based on how many carbs remain as COB
@@ -754,6 +800,11 @@ class DetermineBasalSMB @Inject constructor(
             minGuardBG = minIOBGuardBG
         }
         minGuardBG = round(minGuardBG, 0)
+        // A non-finite minGuardBG is far worse than a wrong number. Every guard that reads it is a "<"
+        // comparison, and those are false for NaN, so it would silently switch off both the SMB
+        // suppression and the predictive low glucose suspend below - and the result would still look
+        // finite afterwards, so nothing would ever report it. Stop the run instead of dosing on it.
+        if (!minGuardBG.isFinite()) return abortNonFinite("minGuardBG=$minGuardBG", rT, currenttemp, basal, deliverAt)
         //console.error(minCOBGuardBG, minUAMGuardBG, minIOBGuardBG, minGuardBG);
 
         var minZTUAMPredBG = minUAMPredBG
