@@ -14,12 +14,19 @@ interface HardLimits {
 
         // Very Hard Limits Ranges [mg/dL]
         // The range says how low and how high the limit itself may be set
-        val LIMIT_MIN_BG = 80.0..180.0
+        // MIN_BG top is 180.16 (= 10.0 mmol * 18.01559), not a flat 180.0: an imported profile with a
+        // low target of 10.0 mmol converts to 180.16 mg/dL, so a flat 180.0 would reject the whole
+        // profile. Same conversion overshoot handled by LIMIT_TEMP_MIN_BG.
+        val LIMIT_MIN_BG = 80.0..180.16
         val LIMIT_MAX_BG = 90.0..200.0
         val LIMIT_TARGET_BG = 80.0..200.0
 
         // Very Hard Limits Ranges for Temp Targets [mg/dL]
-        val LIMIT_TEMP_MIN_BG = 72.0..180.0
+        // Top is 180.16 (= 10.0 mmol * 18.01559), not a flat 180.0. A user may pick 10.0 mmol as the
+        // temp target — the highest value the range allows — and it converts to 180.16 mg/dL. With a
+        // flat 180.0 the watch rejects that temp target and the loop clamps the bottom value to 180.00
+        // and warns on every run.
+        val LIMIT_TEMP_MIN_BG = 72.0..180.16
         val LIMIT_TEMP_MAX_BG = 72.0..270.0
         val LIMIT_TEMP_TARGET_BG = 72.0..200.0
         val LIMIT_DIA = mapOf(

@@ -34,7 +34,11 @@ object Constants {
     const val DAILY_RESERVOIR_LIMIT_WARNING = 0.95
 
     // Temp targets
-    val TT_RANGE_MGDL = 72.0..180.0
+    // Upper is 180.16 (= 10.0 mmol * 18.01559), not a flat 180.0. A 10.0 mmol temp target is stored
+    // as 180.16 mg/dL. This range gates the NS-sync import of temp targets (they are uploaded in
+    // mg/dL), so a flat 180.0 would silently drop a synced 10.0 mmol temp target. Mirrors the
+    // HardLimits.LIMIT_TEMP_MIN_BG top.
+    val TT_RANGE_MGDL = 72.0..180.16
     val TT_RANGE_MMOL = 4.0..10.0
 
     // Temp target preset defaults (target in mg/dL, duration in minutes)
