@@ -10,6 +10,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,6 +47,13 @@ class AuthorizedClientsRepository @Inject constructor(
     }
 
     private val json = Json { ignoreUnknownKeys = true }
+
+    // Explicit serializer on purpose. The reified decodeFromString<T> / encodeToString(T) overloads
+    // resolve the serializer through typeOf(), and because kotlin-reflect is on the classpath that
+    // loads the whole kotlin-reflect metadata machinery - seconds on a cold start. This repository is
+    // read from the NSClientV3Plugin constructor (main thread, Dagger graph in MainApp.onCreate) and
+    // on every incoming client command, so both paths must stay free of reflection.
+    private val listSerializer = ListSerializer(AuthorizedClient.serializer())
     private val lock = Any()
 
     /** Current list with expired pending entries pruned. Side-effects prefs if any were pruned. */
@@ -164,10 +172,10 @@ class AuthorizedClientsRepository @Inject constructor(
     }
 
     private fun decode(raw: String = preferences.get(StringNonKey.NsClientControlAuthorizedClients)): List<AuthorizedClient> =
-        runCatching { json.decodeFromString<List<AuthorizedClient>>(raw) }.getOrNull() ?: emptyList()
+        runCatching { json.decodeFromString(listSerializer, raw) }.getOrNull() ?: emptyList()
 
     private fun write(list: List<AuthorizedClient>) {
-        preferences.put(StringNonKey.NsClientControlAuthorizedClients, json.encodeToString(list))
+        preferences.put(StringNonKey.NsClientControlAuthorizedClients, json.encodeToString(listSerializer, list))
     }
 
     data class PendingResult(val entry: AuthorizedClient, val secretHex: String)
