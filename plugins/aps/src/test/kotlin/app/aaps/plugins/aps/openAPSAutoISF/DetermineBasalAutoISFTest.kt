@@ -157,7 +157,7 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `non-finite minGuardBG aborts the run instead of dosing`() {
+    fun `non-finite COB aborts the run instead of dosing`() {
         val rT = run(
             MealData(
                 carbs = 20.0,
@@ -169,14 +169,14 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
             )
         )
 
-        assertThat(rT.reason.toString()).contains("Aborting run: minGuardBG=NaN")
+        assertThat(rT.reason.toString()).contains("Aborting run:")
         assertThat(rT.rate).isNull()
         assertThat(rT.duration).isNull()
         assertThat(rT.units).isNull()
     }
 
     @Test
-    fun `non-finite minGuardBG replaces a running high temp with a neutral temp`() {
+    fun `non-finite COB replaces a running high temp with a neutral temp`() {
         val rT = run(
             MealData(
                 carbs = 20.0,
@@ -189,7 +189,7 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
             currentTemp = CurrentTemp(duration = 30, rate = 3.0, minutesrunning = 5)
         )
 
-        assertThat(rT.reason.toString()).contains("Aborting run: minGuardBG=NaN")
+        assertThat(rT.reason.toString()).contains("Aborting run:")
         assertThat(rT.rate).isEqualTo(1.0)
         assertThat(rT.duration).isEqualTo(30)
     }

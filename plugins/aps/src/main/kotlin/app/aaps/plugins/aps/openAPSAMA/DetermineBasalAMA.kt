@@ -34,12 +34,24 @@ class DetermineBasalAMA @Inject constructor(
     // Rounds value to 'digits' decimal places
     // different for negative numbers fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
     fun round(value: Double, digits: Int): Double {
+        // Pass NaN AND ±Infinity through untouched. Without this, round(value * scale) below resolves to
+        // the Int overload, whose roundToInt() THROWS on NaN - and nothing catches it, because
+        // OpenAPSAMAPlugin.invoke has no try/catch and LoopPlugin.invoke is try/finally. It also
+        // saturates ±Infinity at Int.MAX_VALUE, which would hide a broken value as a normal number.
+        if (!value.isFinite()) return value
         val scale = 10.0.pow(digits.toDouble())
-        return round(value * scale) / scale
+        return Math.round(value * scale) / scale
     }
 
     fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
-    fun round(value: Double): Int = value.roundToInt()
+    fun round(value: Double): Int =
+        // Crash backstop: roundToInt() throws on NaN and saturates at Int.MAX_VALUE on ±Infinity.
+        // Substitute 0, but record a token that the reportNonFiniteRtFields tripwire
+        // (PersistenceLayerImpl) surfaces to Crashlytics, so laundering here does not hide the real bug.
+        if (!value.isFinite()) {
+            consoleError.add("round(): non-finite value substituted with 0 (roundNonFinite=$value)")
+            0
+        } else value.roundToInt()
 
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /

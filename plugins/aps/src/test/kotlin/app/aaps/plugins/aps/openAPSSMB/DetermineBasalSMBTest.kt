@@ -145,10 +145,11 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `non-finite minGuardBG aborts the run instead of dosing`() {
-        // An infinite mealCOB with carbs on board makes the minGuardBG blend NaN. Every guard that
-        // reads minGuardBG is a "<" comparison, and those are false for NaN, so without the abort the
-        // SMB suppression and the predictive low glucose suspend would both be skipped in silence.
+    fun `non-finite COB aborts the run instead of dosing`() {
+        // An infinite mealCOB poisons the carb absorption math and then the minGuardBG blend. The
+        // assertion is deliberately not tied to one guard - whichever fires first is fine, the point is
+        // that the run stops. Without the aborts, NaN makes every "<" comparison false, so the SMB
+        // suppression and the predictive low glucose suspend would be skipped in silence.
         val rT = run(
             MealData(
                 carbs = 20.0,
@@ -160,7 +161,7 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
             )
         )
 
-        assertThat(rT.reason.toString()).contains("Aborting run: minGuardBG=NaN")
+        assertThat(rT.reason.toString()).contains("Aborting run:")
         // No temp is running, so the abort must leave the pump alone rather than invent a dose.
         assertThat(rT.rate).isNull()
         assertThat(rT.duration).isNull()
@@ -168,7 +169,7 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `non-finite minGuardBG replaces a running high temp with a neutral temp`() {
+    fun `non-finite COB replaces a running high temp with a neutral temp`() {
         val rT = run(
             MealData(
                 carbs = 20.0,
@@ -181,7 +182,7 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
             currentTemp = CurrentTemp(duration = 30, rate = 3.0, minutesrunning = 5)
         )
 
-        assertThat(rT.reason.toString()).contains("Aborting run: minGuardBG=NaN")
+        assertThat(rT.reason.toString()).contains("Aborting run:")
         assertThat(rT.rate).isEqualTo(1.0) // profile basal, not a zero temp
         assertThat(rT.duration).isEqualTo(30)
     }

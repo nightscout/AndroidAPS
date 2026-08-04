@@ -537,7 +537,9 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     // Rounds value to 'digits' decimal places
     // different for negative numbers fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
     fun round(value: Double, digits: Int): Double {
-        if (value.isNaN()) return Double.NaN
+        // Pass NaN AND ±Infinity through untouched - Math.round saturates at Long.MAX_VALUE, which would
+        // turn an infinite value into a normal looking number and hide it from the invalidInputs check.
+        if (!value.isFinite()) return value
         val scale = 10.0.pow(digits.toDouble())
         return Math.round(value * scale) / scale
     }

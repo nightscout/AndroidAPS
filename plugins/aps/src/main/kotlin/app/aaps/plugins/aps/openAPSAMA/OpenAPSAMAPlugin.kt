@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -74,7 +75,8 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val determineBasalAMA: DetermineBasalAMA,
     private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
     private val apsResultProvider: Provider<APSResult>,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    private val fabricPrivacy: FabricPrivacy
 ) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -232,6 +234,21 @@ class OpenAPSAMAPlugin @Inject constructor(
             insulinDivisor = 0, // not used
             TDD = 0.0 // not used
         )
+
+        // Refuse to run the algorithm with degenerate ISF inputs - dividing by these produces NaN or
+        // Infinity inside determine_basal. Same guard the SMB and AutoISF plugins have; AMA had none.
+        val invalidInputs = !oapsProfile.sens.isFinite() || oapsProfile.sens <= 0.0 ||
+            !oapsProfile.carb_ratio.isFinite() || oapsProfile.carb_ratio <= 0.0 ||
+            !autosensResult.ratio.isFinite() || autosensResult.ratio <= 0.0
+        if (invalidInputs) {
+            val msg = "OpenAPS AMA aborting: invalid ISF inputs " +
+                "sens=${oapsProfile.sens} carb_ratio=${oapsProfile.carb_ratio} autosensRatio=${autosensResult.ratio}"
+            aapsLogger.error(LTag.APS, msg)
+            fabricPrivacy.logException(IllegalStateException(msg))
+            rxBus.send(EventResetOpenAPSGui(msg))
+            rxBus.send(EventOpenAPSUpdateGui())
+            return@withContext
+        }
 
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal AMA <<<")
         aapsLogger.debug(LTag.APS, "Glucose status:     $glucoseStatus")
