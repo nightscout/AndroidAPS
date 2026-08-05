@@ -163,6 +163,9 @@
     <string name="pref_complication_2">Complication 2</string>
     <string name="pref_complication_3">Complication 3</string>
     <string name="complication_summary_none">Tap to select a data source</string>
+    <string name="cwf_complication_layout">Complication layout</string>
+    <string name="cwf_complication_layout_description">Position and size of the complications, taken from the loaded custom watch face.</string>
+    <string name="cwf_complication_layout_option">Custom watch face layout</string>
     <string name="pref_include_external">Include external views in template</string>
     <string name="pref_switch_external">Switch external datas in Watchface</string>
     <string name="custom_pref_show_seconds">Show seconds</string>

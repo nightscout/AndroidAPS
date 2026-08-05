@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -40,7 +41,14 @@ import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationDrawable
+import androidx.wear.watchface.complications.rendering.ComplicationStyle
 import androidx.wear.watchface.style.CurrentUserStyleRepository
+import androidx.wear.watchface.style.UserStyleSchema
+import androidx.wear.watchface.style.UserStyleSetting
+import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting
+import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting.ComplicationSlotOverlay
+import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting.ComplicationSlotsOption
+import androidx.wear.watchface.style.WatchFaceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
@@ -94,6 +102,16 @@ class CustomWatchface : BaseWatchFace() {
     private val complicationDrawables = mutableMapOf<Int, ComplicationDrawable>()
     private val complicationStyleJson = mutableMapOf<Int, JSONObject?>()
 
+    // Created on a background thread in createUserStyleSchema()/createComplicationSlotsManager(),
+    // read on the render thread in syncComplicationSlotStyle() - hence @Volatile.
+    @Volatile private var complicationSlotsSetting: ComplicationSlotsUserStyleSetting? = null
+    @Volatile private var userStyleRepository: CurrentUserStyleRepository? = null
+
+    // What syncComplicationSlotStyle() last pushed, so it only pushes on a real change, and the
+    // counter that keeps every pushed option's id distinct (see that method for why that matters).
+    private var pushedSlotStyleSignature: String? = null
+    private var slotStyleRevision = 0
+
     companion object {
 
         // Stable slot IDs: the system persists the chosen provider per (watch face component, slot
@@ -102,6 +120,118 @@ class CustomWatchface : BaseWatchFace() {
         const val COMPLICATION_SLOT_ID_1 = 101
         const val COMPLICATION_SLOT_ID_2 = 102
         const val COMPLICATION_SLOT_ID_3 = 103
+
+        private const val SLOT_STYLE_SETTING_ID = "cwf_slots"
+        private const val SLOT_STYLE_OPTION_ID_DEFAULT = "cwf_d"
+        private const val SLOT_STYLE_OPTION_ID_PREFIX = "cwf_"
+    }
+
+    /**
+     * Declares the one [ComplicationSlotsUserStyleSetting] that [syncComplicationSlotStyle] needs in
+     * order to move the slots at runtime.
+     *
+     * The single option carries **no** overlays, which the library documents as meaning "the net
+     * result is the initial complication configuration" - so by itself this schema changes nothing.
+     * It exists only because `CurrentUserStyleRepository.updateUserStyle` validates that the
+     * *setting* is part of the schema; the options actually applied are built later, at runtime.
+     */
+    override fun createUserStyleSchema(): UserStyleSchema {
+        val defaultOption = ComplicationSlotsOption(
+            UserStyleSetting.Option.Id(SLOT_STYLE_OPTION_ID_DEFAULT),
+            resources,
+            R.string.cwf_complication_layout_option,
+            R.string.cwf_complication_layout_option,
+            null,
+            emptyList()
+        )
+        val setting = ComplicationSlotsUserStyleSetting(
+            UserStyleSetting.Id(SLOT_STYLE_SETTING_ID),
+            resources,
+            R.string.cwf_complication_layout,
+            R.string.cwf_complication_layout_description,
+            null,
+            listOf(defaultOption),
+            // The library requires this setting to affect the complications layer.
+            listOf(WatchFaceLayer.COMPLICATIONS)
+        )
+        complicationSlotsSetting = setting
+        return UserStyleSchema(listOf(setting))
+    }
+
+    /**
+     * Brings each slot's **declared** bounds and enabled state into line with what is actually being
+     * drawn, which is what fixes complication *taps* after a CWF change.
+     *
+     * [complicationRender] only fixes what the user sees: tap hit-testing goes through
+     * `ComplicationSlotsManager.getComplicationSlotAt` -> `RoundRectComplicationTapFilter` ->
+     * `ComplicationSlot.computeBounds`, which reads the slot's own cached bounds and never the ones
+     * a render call was given. Left alone, the two diverge the moment a CWF moves a complication -
+     * confirmed on device: with two CWFs differing only by complication1/complication2 being
+     * swapped, each slot rendered in its new place but tapping it fired the *other* slot's provider,
+     * silently and wrongly.
+     *
+     * `ComplicationSlot.complicationSlotBounds` and `.enabled` have `internal` setters, so the only
+     * supported way to write them is a user-style change: the library's own
+     * `ComplicationSlotsManager.listenForStyleChanges` reacts to a new [ComplicationSlotsOption] by
+     * calling `applyComplicationSlotsStyleCategoryOption`, which writes both. That also keeps
+     * accessibility bounds and what an editor sees correct, which a render-side-only fix cannot.
+     *
+     * Two non-obvious constraints, both verified against the androidx sources:
+     * - **Every push needs a fresh option id.** `UserStyleSetting.Option.equals` compares *only*
+     *   the id, and `listenForStyleChanges` ignores an option it considers equal to the previous
+     *   one. Reusing an id means new bounds are accepted and then silently never applied.
+     * - `updateUserStyle` is `@RestrictTo(LIBRARY_GROUP)`, hence the suppression below. It is
+     *   lint-only - the call is ordinary type-checked Kotlin, so a future incompatible change breaks
+     *   the build rather than failing silently at runtime. `validateUserStyle` requires only that
+     *   the setting belongs to the schema and that the option's class matches it; it deliberately
+     *   does *not* require the option to be one the schema enumerated, which is what makes
+     *   runtime-computed bounds legal here.
+     *
+     * Called once per frame from [onDraw], but only pushes when the geometry actually changed, so in
+     * practice this runs on a CWF (re)load or when a DynProvider offset moves a slot - not per frame.
+     */
+    @Suppress("RestrictedApi")
+    private fun syncComplicationSlotStyle() {
+        val setting = complicationSlotsSetting ?: return
+        val repository = userStyleRepository ?: return
+        val width = getWidth().toFloat()
+        val height = getHeight().toFloat()
+        if (width <= 0f || height <= 0f) return
+
+        val overlays = mutableListOf<ComplicationSlotOverlay>()
+        val signature = StringBuilder()
+        for (config in complicationSlotConfigs) {
+            val view = complicationPlaceholder(config.slotId)
+            val visible = view != null && view.isVisible && view.width > 0 && view.height > 0
+            // ComplicationSlotBounds are fractional (unit-square, canvas-relative), same conversion
+            // as complicationSlotBoundsFromJson but starting from the laid-out placeholder so any
+            // DynProvider offset is already included. Empty for a hidden slot: nothing to hit-test.
+            val bounds = if (visible && view != null)
+                RectF(view.left / width, view.top / height, view.right / width, view.bottom / height)
+            else
+                RectF()
+            overlays += ComplicationSlotOverlay(
+                complicationSlotId = config.slotId,
+                enabled = visible,
+                complicationSlotBounds = ComplicationSlotBounds(bounds)
+            )
+            signature.append(config.slotId).append(visible).append(bounds).append('|')
+        }
+
+        if (signature.toString() == pushedSlotStyleSignature) return
+        pushedSlotStyleSignature = signature.toString()
+
+        val option = ComplicationSlotsOption(
+            UserStyleSetting.Option.Id("$SLOT_STYLE_OPTION_ID_PREFIX${++slotStyleRevision}"),
+            resources,
+            R.string.cwf_complication_layout_option,
+            R.string.cwf_complication_layout_option,
+            null,
+            overlays
+        )
+        repository.updateUserStyle(
+            repository.userStyle.value.toMutableUserStyle().apply { set(setting, option) }.toUserStyle()
+        )
     }
 
     /**
@@ -170,6 +300,8 @@ class CustomWatchface : BaseWatchFace() {
     // bounds (same as a fresh install) - a valid manager with the right slot ids beats a crashed one.
     override fun createComplicationSlotsManager(currentUserStyleRepository: CurrentUserStyleRepository): ComplicationSlotsManager {
         ensureInjected()
+        // Kept so syncComplicationSlotStyle() can push slot geometry changes back through it.
+        userStyleRepository = currentUserStyleRepository
         val storedJson = if (daggerInjectionComplete) {
             runBlocking {
                 complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
@@ -219,13 +351,45 @@ class CustomWatchface : BaseWatchFace() {
         return ComplicationSlotBounds(RectF(left, top, left + width, top + height))
     }
 
-    // NOTE: ComplicationSlot.complicationSlotBounds and .enabled both have an internal setter in
-    // androidx.wear.watchface (confirmed against the real 1.2.1 sources) - they cannot be mutated
-    // from app code at all, only by the library itself. So position/size/visibility are fixed at
-    // whatever the CWF json said when the watch face engine was created (createComplicationSlotsManager);
-    // they only refresh the next time the engine restarts (watch face reselected, reboot, etc.),
-    // not instantly when a new CWF zip is loaded while running. Styling (colors/fonts) has no such
-    // restriction and IS kept live here on every (re)load, same as every other view.
+    /**
+     * Bounds/visibility/rotation for [slot] as of *this* frame, so a complication behaves like every
+     * other CWF-driven view instead of being frozen at whatever the json said when the engine was
+     * created. See [complicationRender] for why rendering can do this while the slot's own bounds
+     * cannot be changed.
+     *
+     * There is nothing to recompute here: [customizeComplicationView] -> `customizeViewCommon`
+     * already re-derives the placeholder [FrameLayout]'s size, margins, rotation and visibility from
+     * the current json plus [DynProvider] on every refresh, and [BaseWatchFace.onDraw] re-measures
+     * and re-lays-out `mainLayout` on every frame before complications are drawn. So reading the
+     * laid-out placeholder is what makes a complication inherit *every* dynamic behaviour the other
+     * views have - including ones added later - rather than reimplementing a subset of them.
+     *
+     * Falls back to [ComplicationRender.Declared] whenever there is no usable layout to read (the
+     * editor's headless instance never inflates one), which is exactly the pre-hook behaviour.
+     */
+    override fun complicationRender(slot: ComplicationSlot): ComplicationRender {
+        val view = complicationPlaceholder(slot.id) ?: return ComplicationRender.Declared
+        if (view.width == 0 || view.height == 0) return ComplicationRender.Declared
+        if (!view.isVisible) return ComplicationRender.Skip
+        // simpleUi replaces the whole layout (BaseWatchFace.drawMainLayout skips it), so painting
+        // complications over it would leave them floating on a screen nothing else is drawn on.
+        if (simpleUi.isEnabled(currentWatchMode)) return ComplicationRender.Skip
+        return ComplicationRender.At(Rect(view.left, view.top, view.right, view.bottom), view.rotation)
+    }
+
+    private fun complicationPlaceholder(slotId: Int): FrameLayout? {
+        if (!::binding.isInitialized) return null
+        return when (slotId) {
+            COMPLICATION_SLOT_ID_1 -> binding.complication1
+            COMPLICATION_SLOT_ID_2 -> binding.complication2
+            COMPLICATION_SLOT_ID_3 -> binding.complication3
+            else                   -> null
+        }
+    }
+
+    // Position/size/visibility/rotation are no longer applied here - customizeViewCommon writes them
+    // onto the placeholder view and complicationRender() reads them back per frame. What is left is
+    // the styling that ComplicationDrawable does accept at any time.
     private fun customizeComplicationView(view: FrameLayout, viewMap: ViewMap) {
         viewMap.customizeViewCommon(view, this)
         val config = complicationSlotConfigs.firstOrNull { it.viewId == view.id } ?: return
@@ -252,6 +416,18 @@ class CustomWatchface : BaseWatchFace() {
         val titleTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONTTITLE.key) ?: FontMap.DEFAULT.key)
         val backgroundColor = if (viewJson?.has(JsonKeys.COLOR.key) == true) getColor(viewJson.optString(JsonKeys.COLOR.key)) else Color.TRANSPARENT
         for (style in listOf(drawable.activeStyle, drawable.ambientStyle)) {
+            // Two more library defaults that would otherwise show through, same class of problem as
+            // the opaque black background above:
+            // - borderStyle defaults to BORDER_STYLE_SOLID with a 1px white borderColor, drawing a
+            //   border no CWF ever asked for.
+            // - borderRadius defaults to Int.MAX_VALUE, which ComplicationRenderer clamps to half the
+            //   shorter edge and then insets the *content* area by ceil((sqrt(2)-1) * radius) on every
+            //   side (ComplicationRenderer.getBorderRadius + LayoutUtils.getInnerBounds). That throws
+            //   away ~41% of the declared box before any text or icon is placed, which is why
+            //   complication content rendered far smaller than its CWF bounds. 0 means the box the CWF
+            //   declared is the box the content gets.
+            style.borderStyle = ComplicationStyle.BORDER_STYLE_NONE
+            style.borderRadius = 0
             style.backgroundColor = backgroundColor
             style.textColor = textColor
             style.titleColor = titleColor
@@ -311,11 +487,22 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        // Nothing of the CWF is drawn in simpleUi mode - mainLayout is skipped by drawMainLayout()
+        // and complications by complicationRender(). background used to be inside mainLayout and so
+        // was covered by that too; since it was pulled out to be drawn manually here (for z-order,
+        // so it paints before complications) it needs the same check, or the CWF background image
+        // paints over the simple UI.
+        if (simpleUi.isEnabled(currentWatchMode)) return
         backgroundDrawable?.let {
             val size = (templeResolution * zoomFactor).toInt()
             it.setBounds(0, 0, size, size)
             it.draw(canvas)
         }
+        // super.onDraw() has just measured and laid out mainLayout, so the placeholders hold this
+        // frame's geometry - the point at which the slots' own bounds can be brought into line with
+        // it. Not in complicationRender(): that runs per slot, while one pushed option covers all
+        // three at once.
+        syncComplicationSlotStyle()
     }
 
     override fun onDrawOverlay(canvas: Canvas) {
