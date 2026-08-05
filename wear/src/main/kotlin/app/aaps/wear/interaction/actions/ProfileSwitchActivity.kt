@@ -37,12 +37,12 @@ import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionProfileSwitchPreCheck
 import app.aaps.wear.R
 import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 class ProfileSwitchActivity : DaggerAppCompatActivity() {
@@ -74,7 +74,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                                 onValueChange = { currentTimeshift = it },
                                 valueRange = Constants.CPP_TIMESHIFT_RANGE,
                                 stepValues = listOf(1.0, 1.0, 1.0),
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 label = stringResource(R.string.action_timeshift_hours),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
@@ -87,7 +87,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                                 onValueChange = { currentPercentage = it },
                                 valueRange = Constants.CPP_PERCENTAGE_RANGE,
                                 stepValues = listOf(5.0, 20.0, 20.0),
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 label = stringResource(R.string.action_percentage),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 1,
@@ -101,7 +101,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                                 onValueChange = { currentDuration = it },
                                 valueRange = Constants.ACTION_DURATION,
                                 stepValues = listOf(10.0, 60.0, 240.0),
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 displayText = if (currentDuration == 0.0) "\u221E" else formatDurationMinutes(currentDuration.toInt()),
                                 label = stringResource(R.string.loop_status_duration),
                                 allowZero = false,

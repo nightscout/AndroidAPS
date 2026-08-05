@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.triggers
 import android.location.Location
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
@@ -12,13 +13,12 @@ import app.aaps.plugins.automation.elements.InputLocationMode
 import app.aaps.plugins.automation.elements.InputString
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
 
 class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
-    var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
-    var distance = InputDouble(200.0, 0.0, 100000.0, 10.0, DecimalFormat("0"))
+    var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, NumberFormat.DECIMAL_6)
+    var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, NumberFormat.DECIMAL_6)
+    var distance = InputDouble(200.0, 0.0, 100000.0, 10.0, NumberFormat.INTEGER)
     var modeSelected = InputLocationMode(rh)
     var name: InputString = InputString()
 

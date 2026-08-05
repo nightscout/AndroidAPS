@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.elements
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileFunction
-import java.text.DecimalFormat
 
 class InputBg(profileFunction: ProfileFunction) {
 
@@ -11,7 +11,7 @@ class InputBg(profileFunction: ProfileFunction) {
     var minValue = 0.0
     private var maxValue = 0.0
     private var step = 0.0
-    private var decimalFormat: DecimalFormat? = null
+    private var decimalFormat: NumberFormat? = null
 
     constructor(profileFunction: ProfileFunction, value: Double, units: GlucoseUnit) : this(profileFunction) {
         setUnits(units)
@@ -32,12 +32,12 @@ class InputBg(profileFunction: ProfileFunction) {
             minValue = MMOL_MIN
             maxValue = MMOL_MAX
             step = 0.1
-            decimalFormat = DecimalFormat("0.0")
+            decimalFormat = NumberFormat.DECIMAL_1
         } else {
             minValue = MGDL_MIN
             maxValue = MGDL_MAX
             step = 1.0
-            decimalFormat = DecimalFormat("0")
+            decimalFormat = NumberFormat.INTEGER
         }
         this.units = units
         return this

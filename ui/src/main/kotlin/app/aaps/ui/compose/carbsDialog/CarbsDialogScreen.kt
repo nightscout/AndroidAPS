@@ -51,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -71,7 +72,6 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import java.text.DecimalFormat
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -328,7 +328,7 @@ internal fun CarbsDialogContent(
                             // Lower bound = -COB (can't remove more than is on board); at COB 0 the minimum is 0.
                             valueRange = (-uiState.cobLimit).toDouble()..uiState.maxCarbs.toDouble(),
                             step = 1.0,
-                            valueFormat = DecimalFormat("0"),
+                            valueFormat = NumberFormat.INTEGER,
                             unitLabel = stringResource(CoreUiR.string.shortgramm)
                         )
                         // Removing carbs (negative): show the COB-bounded limit so the user understands why it can't go lower.
@@ -354,7 +354,7 @@ internal fun CarbsDialogContent(
                         onValueChange = onDurationChange,
                         valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
                         step = 1.0,
-                        valueFormat = DecimalFormat("0"),
+                        valueFormat = NumberFormat.INTEGER,
                         unitLabel = stringResource(InterfacesR.string.shorthour),
                         modifier = itemModifier
                     )

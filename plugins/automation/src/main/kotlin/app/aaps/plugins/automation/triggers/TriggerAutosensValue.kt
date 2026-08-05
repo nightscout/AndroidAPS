@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.ui.compose.icons.IcAs
@@ -11,14 +12,13 @@ import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
 
 class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     private val minValue = (preferences.get(DoubleKey.AutosensMin) * 100).toInt()
     private val maxValue = (preferences.get(DoubleKey.AutosensMax) * 100).toInt()
     private val step = 1.0
-    private val decimalFormat = DecimalFormat("1")
+    private val decimalFormat = NumberFormat.INTEGER
     var autosens: InputDouble = InputDouble(100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
 
     var comparator: Comparator = Comparator(rh)

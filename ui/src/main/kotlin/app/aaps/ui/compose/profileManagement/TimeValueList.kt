@@ -27,12 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.PlusMinusEdit
 import app.aaps.core.ui.compose.pickers.HourWheelPicker
 import app.aaps.ui.compose.profileManagement.viewmodels.TimeValue
-import java.text.DecimalFormat
 
 @Composable
 fun TimeValueList(
@@ -43,7 +43,7 @@ fun TimeValueList(
     onRemoveEntry: (Int) -> Unit,
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double = 0.1,
-    valueFormat: DecimalFormat = DecimalFormat("0.0"),
+    valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: String = "",
     modifier: Modifier = Modifier
 ) {
@@ -134,7 +134,7 @@ private fun TimeValueRow(
     onAdd: () -> Unit,
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double,
-    valueFormat: DecimalFormat
+    valueFormat: NumberFormat
 ) {
     val dateUtil = LocalDateUtil.current
     timeSeconds / 3600
@@ -215,7 +215,7 @@ fun TargetValueList(
     lowRange: ClosedFloatingPointRange<Double>,
     highRange: ClosedFloatingPointRange<Double>,
     step: Double = 1.0,
-    valueFormat: DecimalFormat = DecimalFormat("0"),
+    valueFormat: NumberFormat = NumberFormat.INTEGER,
     unitLabel: String = "",
     modifier: Modifier = Modifier
 ) {
@@ -322,7 +322,7 @@ private fun TargetValueRow(
     lowRange: ClosedFloatingPointRange<Double>,
     highRange: ClosedFloatingPointRange<Double>,
     step: Double,
-    valueFormat: DecimalFormat
+    valueFormat: NumberFormat
 ) {
     val dateUtil = LocalDateUtil.current
     timeSeconds / 3600

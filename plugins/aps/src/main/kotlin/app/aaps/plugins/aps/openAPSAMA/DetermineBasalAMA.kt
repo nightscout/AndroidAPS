@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -10,7 +11,6 @@ import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.profile.ProfileUtil
-import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -26,8 +26,8 @@ class DetermineBasalAMA @Inject constructor(
     private var consoleError = mutableListOf<String>()
     private var consoleLog = mutableListOf<String>()
 
-    private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
-    private fun Double.toFixed3(): String = DecimalFormat("0.000#").format(round(this, 3))
+    private fun Double.toFixed2(): String = NumberFormat.DECIMAL_2_UP_TO_3.format(round(this, 2))
+    private fun Double.toFixed3(): String = NumberFormat.DECIMAL_3_UP_TO_4.format(round(this, 3))
 
     fun round_basal(value: Double): Double = value
 
@@ -43,7 +43,7 @@ class DetermineBasalAMA @Inject constructor(
         return Math.round(value * scale) / scale
     }
 
-    fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
+    fun Double.withoutZeros(): String = NumberFormat.UP_TO_2_DECIMALS.format(this)
     fun round(value: Double): Int =
         // Crash backstop: roundToInt() throws on NaN and saturates at Int.MAX_VALUE on ±Infinity.
         // Substitute 0, but record a token that the reportNonFiniteRtFields tripwire

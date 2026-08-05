@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -51,7 +52,6 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -138,7 +138,7 @@ internal fun TreatmentDialogContent(
     bgInfo: BgInfoUiState,
     iob: IobUiState,
     cob: CobUiState,
-    bolusFormat: DecimalFormat,
+    bolusFormat: NumberFormat,
     onInsulinChange: (Double) -> Unit,
     onCarbsChange: (Double) -> Unit,
     onNavigateBack: () -> Unit,
@@ -239,7 +239,7 @@ internal fun TreatmentDialogContent(
                         onValueChange = onCarbsChange,
                         valueRange = 0.0..uiState.maxCarbs.toDouble(),
                         step = 1.0,
-                        valueFormat = DecimalFormat("0"),
+                        valueFormat = NumberFormat.INTEGER,
                         unitLabel = stringResource(CoreUiR.string.shortgramm),
                         modifier = itemModifier
                     )

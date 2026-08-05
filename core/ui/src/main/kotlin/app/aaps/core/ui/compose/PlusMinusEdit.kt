@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import java.text.DecimalFormat
+import app.aaps.core.data.format.NumberFormat
 import kotlin.math.roundToInt
 
 /**
@@ -56,7 +56,7 @@ fun PlusMinusEdit(
     onValueChange: (Double) -> Unit,
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double,
-    valueFormat: DecimalFormat = DecimalFormat("0.0"),
+    valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: String = "",
     unitLabelResId: Int = 0,
     enabled: Boolean = true,

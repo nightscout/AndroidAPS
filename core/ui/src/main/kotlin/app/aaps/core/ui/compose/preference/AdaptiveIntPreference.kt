@@ -11,13 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
 import app.aaps.core.ui.R
-import java.text.DecimalFormat
 
 /**
  * Composable int preference for use inside card sections.
@@ -99,7 +99,7 @@ fun AdaptiveIntPreferenceItem(
                 showValue = true,
                 valueFormatResId = valueFormatResId,
                 formatAsInt = true,
-                valueFormat = DecimalFormat("0"),
+                valueFormat = NumberFormat.INTEGER,
                 unitLabel = unitLabel,
                 dialogLabel = stringResource(effectiveTitleResId),
                 dialogSummary = summary,

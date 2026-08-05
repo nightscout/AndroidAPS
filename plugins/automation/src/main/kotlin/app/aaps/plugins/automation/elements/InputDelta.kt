@@ -1,9 +1,9 @@
 package app.aaps.plugins.automation.elements
 
 import androidx.annotation.StringRes
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.R
-import java.text.DecimalFormat
 
 class InputDelta(private val rh: ResourceHelper) {
 
@@ -33,10 +33,10 @@ class InputDelta(private val rh: ResourceHelper) {
     private var minValue = 0.0
     private var maxValue = 0.0
     private var step = 0.0
-    private var decimalFormat: DecimalFormat? = null
+    private var decimalFormat: NumberFormat? = null
     var deltaType: DeltaType = DeltaType.DELTA
 
-    constructor(rh: ResourceHelper, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat, deltaType: DeltaType) : this(rh) {
+    constructor(rh: ResourceHelper, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: NumberFormat, deltaType: DeltaType) : this(rh) {
         this.value = value
         this.minValue = minValue
         this.maxValue = maxValue

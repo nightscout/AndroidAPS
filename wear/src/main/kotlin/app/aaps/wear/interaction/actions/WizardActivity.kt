@@ -37,6 +37,7 @@ import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionWizardPreCheck
@@ -45,7 +46,6 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 class WizardActivity : DaggerAppCompatActivity() {
@@ -81,7 +81,7 @@ class WizardActivity : DaggerAppCompatActivity() {
                                 onValueChange = { carbs = it },
                                 valueRange = 0.0..maxCarbs,
                                 stepValues = carbStepValues,
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 label = stringResource(R.string.action_carbs_gram),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
@@ -94,7 +94,7 @@ class WizardActivity : DaggerAppCompatActivity() {
                                 onValueChange = { percentage = it },
                                 valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                                 stepValues = listOf(5.0, 5.0, 5.0),
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 label = stringResource(R.string.action_percentage),
                                 allowZero = true,
                                 isActive = pagerState.currentPage == 1,

@@ -1,6 +1,7 @@
 package app.aaps.core.objects.profile
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
@@ -33,7 +34,6 @@ import app.aaps.core.ui.R
 import app.aaps.core.utils.MidnightUtils
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.DecimalFormat
 import java.util.TimeZone
 
 sealed class ProfileSealed(
@@ -355,15 +355,15 @@ sealed class ProfileSealed(
     override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
 
     override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(R.string.profile_carbs_per_unit), dateUtil)
+        getValuesList(icBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(R.string.profile_carbs_per_unit), dateUtil)
 
     override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(if (units == GlucoseUnit.MGDL) R.string.profile_isf_units_mgdl else R.string.profile_isf_units_mmol), dateUtil)
+        getValuesList(isfBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(if (units == GlucoseUnit.MGDL) R.string.profile_isf_units_mgdl else R.string.profile_isf_units_mmol), dateUtil)
 
     override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
+        getValuesList(basalBlocks, percentage / 100.0, NumberFormat.DECIMAL_2, rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
 
-    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.displayLabel, dateUtil)
+    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, NumberFormat.DECIMAL_1, units.displayLabel, dateUtil)
 
     override fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile =
         PureProfile(
@@ -388,7 +388,7 @@ sealed class ProfileSealed(
         isfBlocks.forEach {
             sens.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getIsfTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -400,7 +400,7 @@ sealed class ProfileSealed(
         icBlocks.forEach {
             carbratio.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getIcTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -412,7 +412,7 @@ sealed class ProfileSealed(
         basalBlocks.forEach {
             basal.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getBasalTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -425,13 +425,13 @@ sealed class ProfileSealed(
         targetBlocks.forEach {
             targetLow.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getTargetLowTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
             targetHigh.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getTargetHighTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -517,7 +517,7 @@ sealed class ProfileSealed(
             )
         else error("Conversion allowed only from EffectiveProfile")
 
-    private fun getValuesList(array: List<Block>, multiplier: Double, format: DecimalFormat, units: String, dateUtil: DateUtil): String =
+    private fun getValuesList(array: List<Block>, multiplier: Double, format: NumberFormat, units: String, dateUtil: DateUtil): String =
         StringBuilder().also { sb ->
             var elapsedSec = 0
             array.shiftBlock(multiplier, timeshift).forEach {
@@ -530,7 +530,7 @@ sealed class ProfileSealed(
             }
         }.toString()
 
-    private fun getTargetValuesList(array: List<TargetBlock>, format: DecimalFormat, units: String, dateUtil: DateUtil): String =
+    private fun getTargetValuesList(array: List<TargetBlock>, format: NumberFormat, units: String, dateUtil: DateUtil): String =
         StringBuilder().also { sb ->
             var elapsedSec = 0
             array.shiftTargetBlock(timeshift).forEach {

@@ -1,6 +1,7 @@
 package app.aaps.pump.dana
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
@@ -24,7 +25,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
-import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
@@ -367,7 +367,7 @@ class DanaPump @Inject constructor(
                 val basalIncrement = if (basal48Enable) 30 * 60 else 60 * 60
                 for (h in 0 until basalValues) {
                     var time: String
-                    val df = DecimalFormat("00")
+                    val df = NumberFormat.INTEGER_2_DIGITS
                     time = if (basal48Enable) {
                         df.format(h.toLong() / 2) + ":" + df.format(30 * (h % 2).toLong())
                     } else {

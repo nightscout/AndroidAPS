@@ -37,6 +37,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionBolusPreCheck
@@ -48,7 +49,6 @@ import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
 import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -94,7 +94,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                                 onValueChange = { insulin = it },
                                 valueRange = 0.0..maxBolus,
                                 stepValues = stepValuesInsulin,
-                                format = DecimalFormat("#0.0"),
+                                format = NumberFormat.DECIMAL_1,
                                 label = stringResource(R.string.action_insulin_units),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
@@ -107,7 +107,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                                 onValueChange = { carbs = it },
                                 valueRange = -cobLimit.toDouble()..maxCarbs,
                                 stepValues = stepValuesCarbs,
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 label = stringResource(R.string.action_carbs_gram),
                                 hint = if (carbs < 0) stringResource(R.string.carbs_removal_cob_limit, cobLimit) else null,
                                 allowZero = false,
@@ -146,7 +146,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
 
 @Composable
 private fun TreatmentConfirmScreen(insulin: Double, carbs: Int, onConfirm: () -> Unit) {
-    val fmt = remember { DecimalFormat("#0.0") }
+    val fmt = remember { NumberFormat.DECIMAL_1 }
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
 

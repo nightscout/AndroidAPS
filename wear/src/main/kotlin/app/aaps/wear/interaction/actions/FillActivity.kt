@@ -36,6 +36,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionFillPreCheck
@@ -43,7 +44,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -72,7 +72,7 @@ class FillActivity : DaggerAppCompatActivity() {
                                 onValueChange = { insulin = it },
                                 valueRange = 0.0..30.0,
                                 stepValues = stepValues,
-                                format = DecimalFormat("#0.0"),
+                                format = NumberFormat.DECIMAL_1,
                                 label = stringResource(R.string.action_insulin_units),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
@@ -109,7 +109,7 @@ class FillActivity : DaggerAppCompatActivity() {
 
 @Composable
 private fun FillConfirmScreen(insulin: Double, onConfirm: () -> Unit) {
-    val fmt = remember { DecimalFormat("#0.0") }
+    val fmt = remember { NumberFormat.DECIMAL_1 }
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
 

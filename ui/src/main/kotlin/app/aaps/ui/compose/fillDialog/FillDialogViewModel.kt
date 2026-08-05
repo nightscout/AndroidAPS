@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Sources
@@ -50,7 +51,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.abs
 import app.aaps.core.ui.R as CoreUiR
@@ -447,7 +447,7 @@ class FillDialogViewModel @Inject constructor(
         }
     }
 
-    fun decimalFormat(): DecimalFormat =
+    fun decimalFormat(): NumberFormat =
         decimalFormatter.pumpSupportedBolusFormat(uiState.value.bolusStep)
 
 }

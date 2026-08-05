@@ -23,13 +23,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
-import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 
 /**
@@ -113,7 +113,7 @@ fun TempTargetEditor(
             onValueChange = onTargetChange,
             valueRange = targetRange,
             step = targetStep,
-            valueFormat = if (units == GlucoseUnit.MGDL) DecimalFormat("0") else DecimalFormat("0.0"),
+            valueFormat = if (units == GlucoseUnit.MGDL) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
             unitLabel = units.displayLabel,
             modifier = Modifier.fillMaxWidth()
         )

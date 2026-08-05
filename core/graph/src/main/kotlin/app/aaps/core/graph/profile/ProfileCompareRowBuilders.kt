@@ -1,5 +1,6 @@
 package app.aaps.core.graph.profile
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -7,7 +8,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
-import java.text.DecimalFormat
 
 /**
  * Pre-computed data for profile comparison (base vs effective, or any two profiles).
@@ -65,7 +65,7 @@ fun buildBasalRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil): Li
     var prev1 = -1.0
     var prev2 = -1.0
     val rows = mutableListOf<ProfileCompareRow>()
-    val formatter = DecimalFormat("0.00")
+    val formatter = NumberFormat.DECIMAL_2
     for (hour in 0..23) {
         val val1 = profile1.getBasalTimeFromMidnight(hour * 60 * 60)
         val val2 = profile2.getBasalTimeFromMidnight(hour * 60 * 60)
@@ -80,7 +80,7 @@ fun buildIcRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil): List<
     var prev1 = -1.0
     var prev2 = -1.0
     val rows = mutableListOf<ProfileCompareRow>()
-    val formatter = DecimalFormat("0.0")
+    val formatter = NumberFormat.DECIMAL_1
     for (hour in 0..23) {
         val val1 = profile1.getIcTimeFromMidnight(hour * 60 * 60)
         val val2 = profile2.getIcTimeFromMidnight(hour * 60 * 60)
@@ -94,7 +94,7 @@ fun buildIsfRows(profile1: Profile, profile2: Profile, profileUtil: ProfileUtil,
     var prev1 = -1.0
     var prev2 = -1.0
     val rows = mutableListOf<ProfileCompareRow>()
-    val formatter = DecimalFormat("0.0")
+    val formatter = NumberFormat.DECIMAL_1
     val units = profile1.units
     for (hour in 0..23) {
         val val1 = profileUtil.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
@@ -112,7 +112,7 @@ fun buildTargetRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil, pr
     var prev2h = -1.0
     val rows = mutableListOf<ProfileCompareRow>()
     val units = profile1.units
-    val formatter = if (units == GlucoseUnit.MMOL) DecimalFormat("0.0") else DecimalFormat("0")
+    val formatter = if (units == GlucoseUnit.MMOL) NumberFormat.DECIMAL_1 else NumberFormat.INTEGER
     for (hour in 0..23) {
         val val1l = profileUtil.fromMgdlToUnits(profile1.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60), units)
         val val1h = profileUtil.fromMgdlToUnits(profile1.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60), units)

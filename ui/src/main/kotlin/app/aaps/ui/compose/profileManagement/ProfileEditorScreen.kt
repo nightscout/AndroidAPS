@@ -50,6 +50,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.graph.BasalProfileGraphCompose
 import app.aaps.core.graph.IcProfileGraphCompose
 import app.aaps.core.graph.IsfProfileGraphCompose
@@ -62,7 +63,6 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileUiState
 import app.aaps.ui.compose.profileManagement.viewmodels.SingleProfileState
-import java.text.DecimalFormat
 
 @Composable
 fun ProfileEditorScreen(
@@ -447,7 +447,7 @@ private fun IcContent(
                 onRemoveEntry = { index -> viewModel.removeIcEntry(index) },
                 valueRange = state.icRange,
                 step = 0.1,
-                valueFormat = DecimalFormat("0.0"),
+                valueFormat = NumberFormat.DECIMAL_1,
                 unitLabel = stringResource(R.string.profile_carbs_per_unit),
                 modifier = Modifier.padding(16.dp)
             )
@@ -503,7 +503,7 @@ private fun IsfContent(
                 onRemoveEntry = { index -> viewModel.removeIsfEntry(index) },
                 valueRange = state.isfRange,
                 step = if (profile.mgdl) 1.0 else 0.1,
-                valueFormat = if (profile.mgdl) DecimalFormat("0") else DecimalFormat("0.0"),
+                valueFormat = if (profile.mgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
                 unitLabel = "${state.units}/${stringResource(R.string.insulin_unit_shortname)}",
                 modifier = Modifier.padding(16.dp)
             )
@@ -568,7 +568,7 @@ private fun BasalContent(
                     onRemoveEntry = { index -> viewModel.removeBasalEntry(index) },
                     valueRange = state.basalRange,
                     step = 0.01,
-                    valueFormat = DecimalFormat("0.00"),
+                    valueFormat = NumberFormat.DECIMAL_2,
                     unitLabel = ""
                 )
             }
@@ -618,7 +618,7 @@ private fun TargetContent(
                 lowRange = state.targetLowRange,
                 highRange = state.targetHighRange,
                 step = if (profile.mgdl) 1.0 else 0.1,
-                valueFormat = if (profile.mgdl) DecimalFormat("0") else DecimalFormat("0.0"),
+                valueFormat = if (profile.mgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
                 unitLabel = state.units,
                 modifier = Modifier.padding(16.dp)
             )

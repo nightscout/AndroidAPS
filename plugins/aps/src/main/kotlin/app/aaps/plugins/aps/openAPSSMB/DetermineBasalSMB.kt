@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -12,7 +13,6 @@ import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
@@ -32,7 +32,7 @@ class DetermineBasalSMB @Inject constructor(
     private var consoleError = mutableListOf<String>()
     private var consoleLog = mutableListOf<String>()
 
-    private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
+    private fun Double.toFixed2(): String = NumberFormat.DECIMAL_2_UP_TO_3.format(round(this, 2))
 
     fun round_basal(value: Double): Double = value
 
@@ -47,7 +47,7 @@ class DetermineBasalSMB @Inject constructor(
         return Math.round(value * scale) / scale
     }
 
-    fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
+    fun Double.withoutZeros(): String = NumberFormat.UP_TO_2_DECIMALS.format(this)
     fun round(value: Double): Int =
         // Crash backstop: roundToInt() throws on NaN and saturates at Int.MAX_VALUE on ±Infinity.
         // Substitute 0, but record a token that the reportNonFiniteRtFields tripwire

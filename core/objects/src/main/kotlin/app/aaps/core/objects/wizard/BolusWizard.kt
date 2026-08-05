@@ -1,5 +1,6 @@
 package app.aaps.core.objects.wizard
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BolusWizardData
 import app.aaps.core.data.model.RM
@@ -46,7 +47,6 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.utils.JsonHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.abs
@@ -452,7 +452,7 @@ class BolusWizard @Inject constructor(
 
     fun buildWizardDetail(): EventData.WizardDetail {
         val ttLabel = if (useTT && tempTarget != null) {
-            val fmt = DecimalFormat("0.0#")
+            val fmt = NumberFormat.DECIMAL_1_UP_TO_2
             val low = fmt.format(profileUtil.fromMgdlToUnits(tempTarget!!.lowTarget))
             val high = fmt.format(profileUtil.fromMgdlToUnits(tempTarget!!.highTarget))
             if (low == high) low else "$low-$high"

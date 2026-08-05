@@ -3,16 +3,16 @@ package app.aaps.ui.compose.treatments
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.BCR
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import java.text.DecimalFormat
 
 private val previewDecimalFormatter = object : DecimalFormatter {
-    private val f0 = DecimalFormat("0")
-    private val f1 = DecimalFormat("0.0")
-    private val f2 = DecimalFormat("0.00")
-    private val f3 = DecimalFormat("0.000")
+    private val f0 = NumberFormat.INTEGER
+    private val f1 = NumberFormat.DECIMAL_1
+    private val f2 = NumberFormat.DECIMAL_2
+    private val f3 = NumberFormat.DECIMAL_3
     override fun to0Decimal(value: Double) = f0.format(value)
     override fun to0Decimal(value: Double, unit: String) = "${f0.format(value)} $unit"
     override fun to1Decimal(value: Double) = f1.format(value)

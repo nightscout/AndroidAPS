@@ -34,9 +34,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import kotlinx.coroutines.delay
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 import app.aaps.core.keys.R as KeysR
 
@@ -74,7 +74,7 @@ fun SliderWithButtons(
     showValue: Boolean = false,
     valueFormatResId: Int? = null,
     formatAsInt: Boolean = false,
-    valueFormat: DecimalFormat = DecimalFormat("0.0"),
+    valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: String = "",
     unitLabelResId: Int = 0,
     dialogLabel: String? = null,

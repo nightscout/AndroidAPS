@@ -37,6 +37,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionECarbsPreCheck
@@ -47,7 +48,6 @@ import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
 import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 class CarbActivity : DaggerAppCompatActivity() {
@@ -85,7 +85,7 @@ class CarbActivity : DaggerAppCompatActivity() {
                                 onValueChange = { carbs = it },
                                 valueRange = -cobLimit.toDouble()..maxCarbs,
                                 stepValues = stepValues,
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 label = stringResource(R.string.action_carbs_gram),
                                 hint = if (carbs < 0) stringResource(R.string.carbs_removal_cob_limit, cobLimit) else null,
                                 allowZero = false,

@@ -2,9 +2,9 @@ package app.aaps.core.ui.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.R
-import java.text.DecimalFormat
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import app.aaps.core.keys.R as KeysR
@@ -60,7 +60,7 @@ fun formatSliderDisplayValue(
     unitLabelResId: Int = 0,
     valueFormatResId: Int? = null,
     formatAsInt: Boolean = false,
-    valueFormat: DecimalFormat,
+    valueFormat: NumberFormat,
     unitLabel: String = ""
 ): String {
     val isMinutesUnit = unitLabelResId == KeysR.string.units_min

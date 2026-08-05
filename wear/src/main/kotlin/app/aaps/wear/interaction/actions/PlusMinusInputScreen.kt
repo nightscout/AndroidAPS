@@ -41,10 +41,10 @@ import androidx.wear.compose.foundation.CurvedLayout
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.curvedText
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.wear.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import kotlin.math.round
 import kotlin.math.roundToInt
 
@@ -93,7 +93,7 @@ internal fun PlusMinusInputScreen(
     onValueChange: (Double) -> Unit,
     valueRange: ClosedFloatingPointRange<Double>,
     stepValues: List<Double>,
-    format: DecimalFormat,
+    format: NumberFormat,
     label: String,
     displayText: String? = null,
     hint: String? = null,
@@ -325,7 +325,7 @@ private fun StepButton(
     ) {
         if (useTextLabel) {
             val label = labelOverride ?: remember(step, isIncrement) {
-                val fmt = DecimalFormat("#.#")
+                val fmt = NumberFormat.UP_TO_1_DECIMAL
                 val prefix = if (isIncrement) "+" else "-"
                 "$prefix${fmt.format(step).replaceFirst("^0+(?!$)".toRegex(), "")}"
             }

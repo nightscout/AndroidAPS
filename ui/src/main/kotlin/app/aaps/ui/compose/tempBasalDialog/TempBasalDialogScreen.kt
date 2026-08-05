@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -45,7 +46,6 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.navigation.labelResId
-import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -155,9 +155,9 @@ internal fun TempBasalDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
-                    Text("${DecimalFormat("0").format(uiState.basalPercent)}%")
+                    Text("${NumberFormat.INTEGER.format(uiState.basalPercent)}%")
                 } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                    Text("${DecimalFormat("0.00").format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.profile_ins_units_per_hour)}")
+                    Text("${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.profile_ins_units_per_hour)}")
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -192,7 +192,7 @@ internal fun TempBasalDialogContent(
                             onValueChange = onBasalPercentChange,
                             valueRange = 0.0..uiState.maxTempPercent,
                             step = uiState.tempPercentStep,
-                            valueFormat = DecimalFormat("0"),
+                            valueFormat = NumberFormat.INTEGER,
                             unitLabel = "%",
                             modifier = itemModifier
                         )
@@ -203,7 +203,7 @@ internal fun TempBasalDialogContent(
                             onValueChange = onBasalAbsoluteChange,
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
-                            valueFormat = DecimalFormat("0.00"),
+                            valueFormat = NumberFormat.DECIMAL_2,
                             unitLabel = stringResource(CoreUiR.string.profile_ins_units_per_hour),
                             modifier = itemModifier
                         )
@@ -216,7 +216,7 @@ internal fun TempBasalDialogContent(
                         onValueChange = onDurationChange,
                         valueRange = uiState.tempDurationStep..uiState.tempMaxDuration,
                         step = uiState.tempDurationStep,
-                        valueFormat = DecimalFormat("0"),
+                        valueFormat = NumberFormat.INTEGER,
                         unitLabelResId = KeysR.string.units_min,
                         modifier = itemModifier
                     )

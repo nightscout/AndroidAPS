@@ -73,6 +73,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -96,7 +97,6 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -739,7 +739,7 @@ internal fun WizardDialogContent(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 if (uiState.hasBgData) {
-                                    val bgFormat = if (uiState.isMgdl) DecimalFormat("0") else DecimalFormat("0.0")
+                                    val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
                                     Text(
                                         text = "${bgFormat.format(uiState.bg)} $unitsLabel",
                                         style = MaterialTheme.typography.titleMedium,

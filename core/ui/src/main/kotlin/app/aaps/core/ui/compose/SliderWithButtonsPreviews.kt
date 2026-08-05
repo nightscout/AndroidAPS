@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import java.text.DecimalFormat
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.R as KeysR
 
 @Preview(showBackground = true)
@@ -30,7 +30,7 @@ internal fun SliderWithButtonsValuePreview() {
             valueRange = 0.0..10.0,
             step = 0.1,
             showValue = true,
-            valueFormat = DecimalFormat("0.0"),
+            valueFormat = NumberFormat.DECIMAL_1,
             unitLabel = "U"
         )
     }
@@ -46,7 +46,7 @@ internal fun SliderWithButtonsIntPreview() {
             valueRange = 0.0..120.0,
             step = 5.0,
             showValue = true,
-            valueFormat = DecimalFormat("0"),
+            valueFormat = NumberFormat.INTEGER,
             unitLabelResId = KeysR.string.units_min
         )
     }
@@ -68,7 +68,7 @@ internal fun SliderWithButtonsNonLinearPreview() {
                     1.0 to 500.0
                 ),
                 showValue = true,
-                valueFormat = DecimalFormat("0")
+                valueFormat = NumberFormat.INTEGER
             )
             SliderWithButtons(
                 value = 250.0,
@@ -81,7 +81,7 @@ internal fun SliderWithButtonsNonLinearPreview() {
                     1.0 to 500.0
                 ),
                 showValue = true,
-                valueFormat = DecimalFormat("0")
+                valueFormat = NumberFormat.INTEGER
             )
         }
     }

@@ -3,6 +3,7 @@ package app.aaps.plugins.aps.autotune.compose
 import android.view.View
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
@@ -43,7 +44,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.text.DecimalFormat
 import java.util.Locale
 import javax.inject.Provider
 
@@ -460,7 +460,7 @@ class AutotuneViewModel(
         params += formatRow(rh.gs(app.aaps.core.ui.R.string.ic_short), Round.roundTo(pumpProfile.ic, 0.001), Round.roundTo(tunedProfile.ic, 0.001), "%.2f")
 
         val basals = mutableListOf<ResultRow>()
-        val df = DecimalFormat("00")
+        val df = NumberFormat.INTEGER_2_DIGITS
         var totalPump = 0.0
         var totalTuned = 0.0
         for (h in 0 until tunedProfile.basal.size) {

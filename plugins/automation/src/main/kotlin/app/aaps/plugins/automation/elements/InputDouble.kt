@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.elements
 
-import java.text.DecimalFormat
+import app.aaps.core.data.format.NumberFormat
 
 class InputDouble() {
 
@@ -8,9 +8,9 @@ class InputDouble() {
     private var minValue = 0.0
     private var maxValue = 0.0
     private var step = 0.0
-    private var decimalFormat: DecimalFormat? = null
+    private var decimalFormat: NumberFormat? = null
 
-    constructor(value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat) : this() {
+    constructor(value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: NumberFormat) : this() {
         this.value = value
         this.minValue = minValue
         this.maxValue = maxValue

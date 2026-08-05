@@ -1,6 +1,7 @@
 package app.aaps.pump.medtronic.data.dto
 
 import app.aaps.core.utils.StringUtil
+import app.aaps.core.utils.formatUS
 import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.defs.PumpBolusType
 
@@ -78,7 +79,7 @@ class BolusDTO(
         }
 
     override fun getFormattedDecimal(value: Double): String {
-        return StringUtil.getFormattedValueUS(value, 2)
+        return value.formatUS(2)
     }
 
     val bolusKey: String

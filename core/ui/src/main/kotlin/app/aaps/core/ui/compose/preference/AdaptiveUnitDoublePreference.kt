@@ -11,13 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.text.DecimalFormat
 import kotlin.math.abs
 import app.aaps.core.ui.R as UiR
 
@@ -61,7 +61,7 @@ fun AdaptiveUnitDoublePreferenceItem(
     // Adaptive step: 1.0 for mg/dL, 0.1 for mmol/L
     val step = if (isMgdl) 1.0 else 0.1
     val decimalPlaces = if (isMgdl) 0 else 1
-    val valueFormat = if (isMgdl) DecimalFormat("0") else DecimalFormat("0.0")
+    val valueFormat = if (isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
 
     // Get unit label from resources - short form for slider
     val unitLabel = stringResource(if (isMgdl) UiR.string.mgdl else UiR.string.mmol)

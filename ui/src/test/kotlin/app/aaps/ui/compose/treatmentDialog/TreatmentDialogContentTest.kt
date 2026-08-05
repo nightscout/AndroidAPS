@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
@@ -18,7 +19,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 /** Robolectric composable test for [TreatmentDialogContent]: renders the insulin/carbs treatment
@@ -49,7 +49,7 @@ class TreatmentDialogContentTest {
                     bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
                     iob = IobUiState(),
                     cob = CobUiState(),
-                    bolusFormat = DecimalFormat("0.0"),
+                    bolusFormat = NumberFormat.DECIMAL_1,
                     onInsulinChange = {},
                     onCarbsChange = {},
                     onNavigateBack = { back = true },

@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
@@ -69,7 +70,6 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
-import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 /**
@@ -218,7 +218,7 @@ internal fun FillDialogContent(
     uiState: FillDialogUiState,
     dateString: String,
     timeString: String,
-    bolusFormat: DecimalFormat,
+    bolusFormat: NumberFormat,
     onSiteChangeClick: () -> Unit,
     onCartridgeChangeClick: () -> Unit,
     onInsulinChange: (Double) -> Unit,

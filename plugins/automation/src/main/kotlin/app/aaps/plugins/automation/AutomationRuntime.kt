@@ -3,6 +3,7 @@ package app.aaps.plugins.automation
 import android.Manifest
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.aps.Loop
@@ -105,7 +106,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.text.DecimalFormat
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -714,11 +714,11 @@ class AutomationRuntime @Inject constructor(
                 // Bg under 180 mgdl and dropping by 15 mgdl
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
                     list.add(TriggerBg(injector, 180.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(rh, -15.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -15.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                     list.add(
                         TriggerDelta(
                             injector,
-                            InputDelta(rh, -8.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE),
+                            InputDelta(rh, -8.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
                             GlucoseUnit.MGDL,
                             Comparator.Compare.IS_EQUAL_OR_LESSER
                         )
@@ -727,11 +727,11 @@ class AutomationRuntime @Inject constructor(
                 // Bg under 160 mgdl and dropping by 9 mgdl
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
                     list.add(TriggerBg(injector, 160.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(rh, -9.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -9.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                     list.add(
                         TriggerDelta(
                             injector,
-                            InputDelta(rh, -5.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE),
+                            InputDelta(rh, -5.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
                             GlucoseUnit.MGDL,
                             Comparator.Compare.IS_EQUAL_OR_LESSER
                         )
@@ -740,11 +740,11 @@ class AutomationRuntime @Inject constructor(
                 // Bg under 145 mgdl and dropping
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
                     list.add(TriggerBg(injector, 145.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                     list.add(
                         TriggerDelta(
                             injector,
-                            InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE),
+                            InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
                             GlucoseUnit.MGDL,
                             Comparator.Compare.IS_EQUAL_OR_LESSER
                         )
@@ -779,7 +779,7 @@ class AutomationRuntime @Inject constructor(
                 list.add(TriggerBg(injector, 70.0, GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_GREATER))
                 list.add(
                     TriggerDelta(
-                        injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare
+                        injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare
                             .IS_GREATER
                     )
                 )
