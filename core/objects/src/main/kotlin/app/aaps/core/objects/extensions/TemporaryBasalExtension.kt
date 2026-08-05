@@ -18,6 +18,17 @@ import kotlin.math.min
 import kotlin.math.round
 import kotlin.math.roundToInt
 
+/**
+ * True while the temporary basal is running.
+ *
+ * An extension taking [DateUtil], not a property on [TB], for the same reason as
+ * [app.aaps.core.objects.extensions.isInProgress] on `EB`: the answer depends on the current time,
+ * so the model itself stays a plain value that does not read the clock, and a test can control
+ * "now" instead of waiting for it.
+ */
+fun TB.isInProgress(dateUtil: DateUtil): Boolean =
+    dateUtil.now() in timestamp..timestamp + duration
+
 fun TB.getPassedDurationToTimeInMinutes(time: Long): Int =
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
 

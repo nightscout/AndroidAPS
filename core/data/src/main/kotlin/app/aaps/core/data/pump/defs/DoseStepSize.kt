@@ -1,6 +1,7 @@
 package app.aaps.core.data.pump.defs
 
-import java.util.Locale
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 
 enum class DoseStepSize(private val entries: Array<DoseStepSizeEntry>) {
 
@@ -55,14 +56,17 @@ enum class DoseStepSize(private val entries: Array<DoseStepSizeEntry>) {
             for (entry in entries) {
                 if (first) first = false else sb.append(", ")
 
-                sb.append(String.format(Locale.ENGLISH, "%.3f", entry.value))
+                sb.append(entry.value.dotted())
                     .append(" {")
-                    .append(String.format(Locale.ENGLISH, "%.3f", entry.from))
+                    .append(entry.from.dotted())
                     .append("-")
                 if (entry.to == Double.MAX_VALUE) sb.append("~}")
-                else sb.append(String.format(Locale.ENGLISH, "%.3f", entry.to)).append("}")
+                else sb.append(entry.to.dotted()).append("}")
             }
         }.toString()
+
+    /** Three decimals with a dot, whatever the device locale is. This text goes into logs. */
+    private fun Double.dotted(): String = NumberFormat.DECIMAL_3.format(this, NumberFormatPlatform.SEPARATOR_DOT)
 
     // to = this value is not included, but would actually mean <, so for rates between 0.025-0.975 u/h, we would have [from=0, to=10]
     internal class DoseStepSizeEntry(var from: Double, var to: Double, var value: Double)
