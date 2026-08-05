@@ -51,9 +51,6 @@ data class TB(
         }
     }
 
-    val isInProgress: Boolean
-        get() = System.currentTimeMillis() in timestamp..timestamp + duration
-
     val end
         get() = timestamp + duration
 
