@@ -14,6 +14,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.ble.UnsolicitedMessage
+import app.aaps.pump.carelevo.ble.commands.InfusionInfoCommand
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.DeviceModuleState
 import app.aaps.pump.carelevo.ble.data.isAvailable
@@ -414,6 +415,24 @@ class CarelevoPatch @Inject constructor(
      */
     fun onUnsolicited(msg: UnsolicitedMessage) {
         when (msg.opcode) {
+            RPT_INFUSION_INFO                 -> {
+                val info = InfusionInfoCommand().decode(msg.payload)
+                aapsLogger.info(
+                    LTag.PUMPCOMM,
+                    "unsolicited infusion info subId=${info.subId} remains=${info.insulinRemaining} " +
+                        "basal=${info.infusedTotalBasalAmount} bolus=${info.infusedTotalBolusAmount} " +
+                        "pumpState=${info.pumpStateRaw} mode=${info.modeRaw} running=${info.runningMinutes}"
+                )
+                applyInfusionInfoReport(
+                    runningMinutes = info.runningMinutes,
+                    remains = info.insulinRemaining,
+                    infusedTotalBasalAmount = info.infusedTotalBasalAmount,
+                    infusedTotalBolusAmount = info.infusedTotalBolusAmount,
+                    pumpStateRaw = info.pumpStateRaw,
+                    modeRaw = info.modeRaw
+                )
+            }
+
             RPT_PUMP_STOP, RPT_BASAL_RESTART -> {
                 aapsLogger.info(LTag.PUMPCOMM, "unsolicited resume report ${hex(msg.opcode)} -> reconcile")
                 reconcileAutoResumed()
@@ -528,6 +547,7 @@ class CarelevoPatch @Inject constructor(
         // 0xA1/0xA2/0xA3 message reports are the pushed alarms (severity tier via AlarmType).
         private const val RPT_BASAL_RESTART: Byte = 0x88.toByte() // CMD_BASAL_RESTART_RPT
         private const val RPT_PUMP_STOP: Byte = 0x8A.toByte()     // CMD_PUMP_STOP_RPT (stop window ended)
+        private const val RPT_INFUSION_INFO: Byte = 0x91.toByte() // CMD_INFUSION_INFO_RPT (auto/reconnect push)
         private const val RPT_WARNING: Byte = 0xA1.toByte()       // CMD_WARNING_MSG_RPT
         private const val RPT_ALERT: Byte = 0xA2.toByte()         // CMD_ALERT_MSG_RPT
         private const val RPT_NOTICE: Byte = 0xA3.toByte()        // CMD_NOTICE_MSG_RPT
