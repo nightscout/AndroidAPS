@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
@@ -59,6 +60,7 @@ internal class ProfileManagementViewModelTest {
     @Mock private lateinit var insulinManager: InsulinManager
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var config: Config
+    @Mock private lateinit var nsClient: NsClient
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var rxBus: RxBus
 
@@ -96,10 +98,13 @@ internal class ProfileManagementViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         whenever(profileRepository.profiles).thenReturn(profilesFlow)
         whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        // Pairing and reachability are inputs of uiState, so the combine needs real flows here.
+        whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(true))
+        whenever(nsClient.masterReachable).thenReturn(MutableStateFlow(true))
         sut = ProfileManagementViewModel(
             profileRepository, profileFunction, rh, dateUtil, aapsLogger, activePlugin,
             profileUtil, decimalFormatter, persistenceLayer, insulinManager, preferences, config,
-            batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
+            nsClient, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
         )
     }
 

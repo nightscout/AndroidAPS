@@ -123,6 +123,7 @@ import java.security.InvalidParameterException
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class NSClientV3Plugin @Inject constructor(
@@ -287,7 +288,7 @@ class NSClientV3Plugin @Inject constructor(
                             runCatching { clientControlReceiver.processPending() }
                                 .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl poll failed: ${it.message}", it) }
                         }
-                        delay(CLIENT_CONTROL_POLL_MS)
+                        delay(CLIENT_CONTROL_POLL_MS.milliseconds)
                     }
                 }
         }

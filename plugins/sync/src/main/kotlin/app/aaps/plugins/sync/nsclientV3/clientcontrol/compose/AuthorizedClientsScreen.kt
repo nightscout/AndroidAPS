@@ -67,6 +67,7 @@ fun AuthorizedClientsScreen(
     val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
     val pairingOffer by viewModel.pairingOffer.collectAsStateWithLifecycle()
     val featureEnabled by viewModel.clientControlEnabled.collectAsStateWithLifecycle()
+    val blockedByWebsocket by viewModel.clientControlBlockedByWebsocket.collectAsStateWithLifecycle()
 
     // Re-prune expired pending entries every second while any are pending,
     // so the countdown ticks down and expired ones drop without a manual refresh.
@@ -128,6 +129,16 @@ fun AuthorizedClientsScreen(
             // The stop/allow-communication switch lives here (moved off the NSCv3 prefs screen). Off keeps the
             // paired clients listed but stops the master accepting anything (and blocks new pairing).
             ClientControlSwitchRow(enabled = featureEnabled, onToggle = viewModel::setClientControlEnabled)
+            // Allowed, but the transport it needs is off — clients are told "not accepting" and their
+            // editing stays disabled, so say why instead of leaving a switch that reads ON do nothing.
+            if (blockedByWebsocket) {
+                Text(
+                    text = stringResource(R.string.authorized_clients_needs_websocket),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
+                )
+            }
             if (clients.isEmpty()) {
                 EmptyState(modifier = Modifier.fillMaxSize())
             } else {

@@ -963,6 +963,10 @@ class DataSyncSelectorV3 @Inject constructor(
     @OpenForTesting
     suspend fun processChangedProfileStore() {
         if (isPaused) return
+        // The master owns the profile store in Nightscout. A client only ever mirrors a list it got
+        // from somewhere else, so uploading it would push the master's own data back at it — or, worse,
+        // publish a client-side edit to Nightscout behind the master's back.
+        if (config.AAPSCLIENT) return
         val lastSync = preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)
         val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return

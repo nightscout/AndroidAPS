@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -94,6 +95,7 @@ class ProfileManagementViewModel @Inject constructor(
     private val insulinManager: InsulinManager,
     private val preferences: Preferences,
     private val config: Config,
+    private val nsClient: NsClient,
     private val batchExecutor: BatchExecutor,
     private val rxBus: RxBus,
     @ApplicationScope private val appScope: CoroutineScope
@@ -110,6 +112,25 @@ class ProfileManagementViewModel @Inject constructor(
     // the user retries the same failing action twice in a row.
     private val _snackbarEvent = MutableSharedFlow<String>(extraBufferCapacity = 4)
     val snackbarEvent: SharedFlow<String> = _snackbarEvent.asSharedFlow()
+
+    /**
+     * Whether this device can actually deliver a profile edit: it is the master, or it is a client that
+     * is paired AND whose master is reachable and accepting commands. Anything else means the screen is
+     * read-only rather than hidden — the profiles received from Nightscout are still worth showing.
+     *
+     * Both terms matter and they are different axes: pairing is the stable one (an unpaired client can
+     * never send), reachability the transient one (master offline, or its remote control / websocket
+     * off). The Manage sheet already gates its editors this way; this screen follows the same rule.
+     *
+     * Fail closed until the flows settle, and read it where the state is built rather than where the
+     * mode is requested, so a change while the screen is open takes effect at once.
+     */
+    private val editingAllowed: Boolean get() = editingAllowedFlow.value
+
+    private val editingAllowedFlow: StateFlow<Boolean> =
+        combine(nsClient.masterOrPairedClientFlow, nsClient.masterReachable) { paired, reachable ->
+            !config.AAPSCLIENT || (paired && reachable)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), !config.AAPSCLIENT)
 
     fun setScreenMode(mode: ScreenMode) {
         _screenMode.value = mode
@@ -168,13 +189,20 @@ class ProfileManagementViewModel @Inject constructor(
         profileRepository.profiles,
         _selectedIndex,
         persistenceLayer.observeChanges(EPS::class.java).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
-        _screenMode
-    ) { profiles, requestedIdx, _, screenMode ->
+        _screenMode,
+        // An input, not a snapshot: pairing/unpairing or the master going away while this screen is
+        // open has to move it between editable and read-only right away.
+        editingAllowedFlow
+    ) { profiles, requestedIdx, _, screenMode, _ ->
         UiInputs(profiles, requestedIdx, screenMode)
     }.mapLatest { inputs ->
         runCatching { buildUiState(inputs) }.getOrElse { e ->
             aapsLogger.error(LTag.UI, "Failed to compute uiState", e)
-            ProfileManagementUiState(isLoading = false, screenMode = inputs.screenMode)
+            ProfileManagementUiState(
+                isLoading = false,
+                screenMode = if (editingAllowed) inputs.screenMode else ScreenMode.PLAY,
+                commandsAllowed = editingAllowed
+            )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileManagementUiState())
 
@@ -244,7 +272,9 @@ class ProfileManagementViewModel @Inject constructor(
             pumpWarnings = pumpWarnings,
             selectedProfile = selectedProfile,
             compareData = compareData,
-            screenMode = screenMode,
+            // An unpaired client cannot leave PLAY, whatever mode was requested.
+            screenMode = if (editingAllowed) screenMode else ScreenMode.PLAY,
+            commandsAllowed = editingAllowed,
             isLoading = false
         )
     }
@@ -682,5 +712,11 @@ data class ProfileManagementUiState(
     val selectedProfile: Profile? = null,
     val compareData: ProfileCompareData? = null,
     val screenMode: ScreenMode = ScreenMode.EDIT,
+    /**
+     * False on an unpaired client: editing and activating are both commands for the master, and there
+     * is no master to send them to. The profile list itself stays visible — only the affordances go
+     * away. Same axis as `commandsAllowed` on the overview chips.
+     */
+    val commandsAllowed: Boolean = true,
     val isLoading: Boolean = true
 )

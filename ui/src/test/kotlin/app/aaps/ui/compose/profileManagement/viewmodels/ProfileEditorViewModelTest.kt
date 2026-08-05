@@ -120,4 +120,39 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         sut.saveProfile()
         verify(profileRepository).add(any())
     }
+
+    @Test
+    fun ownSaveEchoedTwiceDoesNotWipeEditsTypedMeanwhile() = runTest {
+        // On a paired client one save produces TWO emits: the local write, and the master's
+        // authoritative copy coming back through the sync channel a moment later. Only a foreign
+        // change may re-clone the editor.
+        whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
+        val saved = profile("Existing")
+        profilesFlow.value = listOf(saved)
+        sut.selectProfile(0)
+        sut.saveProfile()
+
+        // First emit: the local write. Fresh instances each time — SingleProfile has no structural
+        // equals, so distinct objects are what make the StateFlow emit at all.
+        profilesFlow.value = listOf(saved.deepClone())
+        // The user keeps typing while the round-trip is in flight.
+        sut.updateProfileName("RenamedWhileInFlight")
+        // Second emit: the same content echoed back after the master applied it.
+        profilesFlow.value = listOf(saved.deepClone())
+
+        assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("RenamedWhileInFlight")
+    }
+
+    @Test
+    fun aForeignProfileChangeStillReloadsTheEditor() = runTest {
+        whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
+        profilesFlow.value = listOf(profile("Existing"))
+        sut.selectProfile(0)
+        sut.saveProfile()
+
+        // Different content at our index — somebody else edited this profile.
+        profilesFlow.value = listOf(profile("ChangedByMaster"))
+
+        assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("ChangedByMaster")
+    }
 }

@@ -180,7 +180,8 @@ private fun NarrowChips(
             onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT)) },
             sceneManaged = profileSceneManaged,
             isNoProfile = profileName.isEmpty(),
-            enabled = commandsAllowed,
+            // Stays clickable even on an unpaired client: profile management opens read-only there,
+            // so this is a view affordance, not a command one (unlike the running-mode / TT chips).
             modifier = Modifier.weight(1f)
         )
     }

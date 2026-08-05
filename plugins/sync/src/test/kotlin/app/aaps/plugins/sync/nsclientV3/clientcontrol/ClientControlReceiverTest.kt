@@ -130,7 +130,10 @@ internal class ClientControlReceiverTest {
         storage[StringNonKey.SceneDefinitions.key] = "[]"
         whenever(preferences.get(StringNonKey.NsClientControlAuthorizedClients)).thenAnswer { stored }
         // Client control ON by default — the receiver now gates on this (rejects commands when off); see controlDisabled test.
+        // The WebSocket is part of that gate (a master without it cannot answer inside a command's validity),
+        // so it has to be on for the normal cases too.
         whenever(preferences.get(BooleanKey.NsClientAllowClientControl)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
         whenever(preferences.get(StringNonKey.SceneDefinitions)).thenAnswer {
             storage[StringNonKey.SceneDefinitions.key] ?: "[]"
         }
@@ -707,6 +710,39 @@ internal class ClientControlReceiverTest {
         assertThat(done.status.name).isEqualTo("Failed")
         assertThat(done.reason).isEqualTo(FailureReason.ControlDisabled.name)
         verify(wizardBolusExecutor, never()).confirm(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun websocketOffRejectsCommandTheSameWayAsControlOff() = runTest {
+        val (clientId, secret) = pair()
+        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
+        // Control is allowed, but the transport it rides is off: this master would only see the command on
+        // its 5-minute poll, long past the ~8 s validity. Reject it now with a reason instead of letting it
+        // expire — an expiry looks like "master offline" to the client.
+        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
+        val acks = captureAcks(clientId)
+        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
+
+        sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
+
+        val done = acks.last()
+        assertThat(done.status.name).isEqualTo("Failed")
+        assertThat(done.reason).isEqualTo(FailureReason.ControlDisabled.name)
+        verify(wizardBolusExecutor, never()).confirm(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun websocketOffStillAcceptsPairingAndLiveness() = runTest {
+        val (clientId, secret) = pair()
+        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
+        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
+        val acks = captureAcks(clientId)
+        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}ping_$clientId"
+
+        sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.Ping, counter = 5L, wantsAck = true)))
+
+        // A probe is not a command: answering it keeps the client's liveness view honest.
+        assertThat(acks.last().status.name).isEqualTo("Ok")
     }
 
     @Test

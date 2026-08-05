@@ -208,11 +208,17 @@ fun ProfileManagementScreen(
                         },
                         actions = {
                             if (isPlayMode) {
-                                IconButton(onClick = onRequestEditMode) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Edit,
-                                        contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
-                                    )
+                                // The switch-to-edit action belongs to the auth-gated PLAY mode. An
+                                // unpaired client is read-only for a different reason (no master to send
+                                // edits to) and the view model refuses the switch, so it gets no action
+                                // here at all.
+                                if (uiState.commandsAllowed) {
+                                    IconButton(onClick = onRequestEditMode) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Edit,
+                                            contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
+                                        )
+                                    }
                                 }
                             } else {
                                 // Menu entry as well as the long-press: the long-press is undiscoverable
@@ -480,14 +486,17 @@ fun ProfileManagementScreen(
                         }
                     }
 
-                    // FAB for primary action (Activate) — always visible
-                    AapsFab(
-                        onClick = { onActivateProfile(currentPage) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.PlayArrow,
-                            contentDescription = stringResource(R.string.activate_label)
-                        )
+                    // FAB for primary action (Activate). Hidden on an unpaired client — activating is a
+                    // command the master has to run, and there is no master to send it to.
+                    if (uiState.commandsAllowed) {
+                        AapsFab(
+                            onClick = { onActivateProfile(currentPage) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.PlayArrow,
+                                contentDescription = stringResource(R.string.activate_label)
+                            )
+                        }
                     }
                 }
 

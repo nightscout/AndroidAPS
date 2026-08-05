@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.scenes.ActiveSceneSnapshot
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
@@ -111,7 +112,10 @@ class RunningConfigurationImpl @Inject constructor(
     // All cold-synced values (plugin selection, plugin settings, scene/quick-wizard/automation/insulin
     // definitions) are declared via SyncSpec — a change to any republishes the cold doc. Their domain
     // objects self-reload from the key, so there's no reloadInternalState hook.
-    override fun observableKeys(): List<NonPreferenceKey> = coldSyncKeys()
+    // NsClient3UseWs carries no SyncSpec of its own, but the published value of
+    // NsClientAllowClientControl is masked by it (a master with the WebSocket off cannot serve
+    // commands in time), so flipping it has to trigger a republish like any other cold change.
+    override fun observableKeys(): List<NonPreferenceKey> = coldSyncKeys() + BooleanKey.NsClient3UseWs
 
     /** Plain preference keys declared to ride the cold running-config doc via [SyncChannel.Cold]. */
     private fun coldSyncKeys(): List<NonPreferenceKey> =

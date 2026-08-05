@@ -737,6 +737,21 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         verify(nsClientV3Plugin, Times(1)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
     }
 
+    @Test
+    fun processChangedProfileStoreNotUploadedByClientTest() = runTest {
+        // The master owns the profile store in Nightscout. A client only mirrors a list it received,
+        // so uploading would either echo the master's own data back or publish a client-side edit
+        // behind its back.
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)).thenReturn(0L)
+        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(1000L)
+
+        sut.processChangedProfileStore()
+
+        verify(nsClientV3Plugin, Times(0)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
+    }
+
     // Tests for processChangedBoluses with getNextSyncElement returning data
 
     @Test

@@ -230,6 +230,12 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
 
+                // ProfileRepository is a @Singleton, so it already loaded during field injection —
+                // before doMigrations() converted the ancient raw SharedPreferences profile keys into
+                // the numbered ones. Re-read now, otherwise that upgrade would be picked up only on
+                // the next start (and the profile-to-JSON conversion with it).
+                profileRepository.reset()
+
                 // Defragment the DB while it is quiescent: plugins, loop, sync and UI all start
                 // later, so the (memory heavy) VACUUM has the DB to itself. Runs at most monthly.
                 vacuumDatabaseIfDue()

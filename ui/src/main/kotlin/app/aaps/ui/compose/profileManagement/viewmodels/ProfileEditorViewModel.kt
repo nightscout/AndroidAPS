@@ -117,12 +117,12 @@ class ProfileEditorViewModel @Inject constructor(
     // add() and the external-change subscriber must never re-clone from the (nonexistent) index.
     private var isNewDraft: Boolean = false
 
-    // Set while [saveProfile] is in flight so the [profileRepository.profiles] subscriber
-    // doesn't drop the user's in-flight edits when the save triggers a StateFlow emit.
-    // External changes (NS push, editor reset) still trigger a re-clone. Both writer
-    // (saveProfile coroutine) and reader (StateFlow collector) run on viewModelScope
-    // (Main.immediate by default), so no cross-thread access — plain Boolean is sufficient.
-    private var savePending: Boolean = false
+    // Content of the last profile this editor saved, used to recognise the echo of our own save in
+    // the [profileRepository.profiles] stream. It is NOT a one-shot flag on purpose: one save can
+    // produce two emits — the local write, and then (on a paired client) the master's authoritative
+    // copy coming back through the sync channel a moment later. A flag would be consumed by the first
+    // and let the second wipe edits the user typed meanwhile; comparing content survives both.
+    private var lastSavedContent: String? = null
 
     init {
         viewModelScope.launch { loadState() }
@@ -140,17 +140,18 @@ class ProfileEditorViewModel @Inject constructor(
                     loadState()
                     return@onEach
                 }
-                if (savePending) {
-                    // Our own save triggered the emit. The repo just persisted the snapshot we
-                    // gave it (a deep clone of `editingProfile`); the live `editingProfile`
-                    // reference is correct as-is. Skip the re-clone, just refresh the UI.
-                    savePending = false
+                val stored = profileRepository.profiles.value.getOrNull(editingIndex)
+                if (lastSavedContent != null && stored?.contentKey() == lastSavedContent) {
+                    // The emit carries exactly what we saved — our own write, or the master echoing
+                    // it back after applying it. The live `editingProfile` reference is correct as-is
+                    // (and may already hold newer typing). Skip the re-clone, just refresh the UI.
                     loadState()
                 } else {
-                    // External profile change (e.g. NS push, editor reset). Reload the clone
-                    // — discards in-flight edits.
-                    editingProfile = profileRepository.profiles.value.getOrNull(editingIndex)?.deepClone()
+                    // Somebody else changed this profile (NS push, master edit, editor reset).
+                    // Reload the clone — discards in-flight edits.
+                    editingProfile = stored?.deepClone()
                     locallyEdited = false
+                    lastSavedContent = null
                     loadState()
                 }
             }.launchIn(viewModelScope)
@@ -407,6 +408,12 @@ class ProfileEditorViewModel @Inject constructor(
         viewModelScope.launch { loadState() }
     }
 
+    /**
+     * Stable content fingerprint of a profile. [SingleProfile] holds `JSONArray` fields, which have no
+     * structural `equals`, so the serialised form is what can be compared.
+     */
+    private fun SingleProfile.contentKey(): String = "$name|$mgdl|$ic|$isf|$basal|$targetLow|$targetHigh"
+
     fun saveProfile() {
         viewModelScope.launch {
             val profile = editingProfile ?: return@launch
@@ -417,6 +424,8 @@ class ProfileEditorViewModel @Inject constructor(
                 aapsLogger.debug(LTag.PROFILE, "saveProfile ignored: profile is invalid")
                 return@launch
             }
+            // Remember what we are about to persist so the resulting emit(s) are recognised as ours.
+            lastSavedContent = profile.contentKey()
             if (isNewDraft) {
                 // Commit the draft as a new profile. deepClone so the stored copy is independent of
                 // the editor's working reference (mirrors replace()'s defensive clone).
@@ -433,24 +442,22 @@ class ProfileEditorViewModel @Inject constructor(
                         aapsLogger.error(LTag.PROFILE, "saveProfile (new draft) failed", error)
                     }
             } else {
-                // Flag set BEFORE the replace so the event the replace fires is recognised as ours.
-                savePending = true
                 profileRepository.replace(editingIndex, profile)
                     .onSuccess {
                         // replace() already emitted on profileRepository.profiles (via snapshot())
-                        // BEFORE returning; on Main.immediate that synchronously ran the savePending
-                        // subscriber's loadState() while locallyEdited was still true, latching
-                        // isEdited=true. Clear the flag and re-run loadState() here so isEdited
-                        // reflects the saved state and the Save/Reset actions disappear on the FIRST
-                        // save — mirrors the isNewDraft branch above.
+                        // BEFORE returning; on Main.immediate that synchronously ran the subscriber's
+                        // loadState() while locallyEdited was still true, latching isEdited=true.
+                        // Clear it and re-run loadState() here so isEdited reflects the saved state
+                        // and the Save/Reset actions disappear on the FIRST save — mirrors the
+                        // isNewDraft branch above.
                         locallyEdited = false
                         loadState()
                     }
                     .onFailure { error ->
-                        // Clear the flag so the NEXT external event isn't mis-attributed to this
-                        // failed save. Surface the error in the log; the user keeps their unsaved
+                        // Forget the expected echo so the NEXT external event isn't mis-attributed to
+                        // this failed save. Surface the error in the log; the user keeps their unsaved
                         // edits visible in the editor (locallyEdited stays true).
-                        savePending = false
+                        lastSavedContent = null
                         aapsLogger.error(LTag.PROFILE, "saveProfile failed at index $editingIndex", error)
                     }
             }
