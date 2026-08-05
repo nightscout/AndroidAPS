@@ -663,6 +663,9 @@ class CarelevoPumpPlugin @Inject constructor(
             detailedBolusInfo = detailedBolusInfo,
             serialNumber = serialNumber(),
             onLastDataUpdated = { _lastDataTime.value = System.currentTimeMillis() },
+            onStatusRefreshRequested = {
+                scope?.launch { commandQueue.readStatus("Carelevo bolus completion") }
+            },
             pluginDisposable = pluginDisposable
         )
     }
@@ -671,7 +674,10 @@ class CarelevoPumpPlugin @Inject constructor(
     override fun stopBolusDelivering() {
         bolusCoordinator.cancelImmediateBolus(
             serialNumber = serialNumber(),
-            onLastDataUpdated = { _lastDataTime.value = System.currentTimeMillis() }
+            onLastDataUpdated = { _lastDataTime.value = System.currentTimeMillis() },
+            onStatusRefreshRequested = {
+                scope?.launch { commandQueue.readStatus("Carelevo bolus cancel") }
+            }
         )
     }
 
