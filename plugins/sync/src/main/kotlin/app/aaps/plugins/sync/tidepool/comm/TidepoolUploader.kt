@@ -20,6 +20,7 @@ import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.DatasetReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.OpenDatasetRequestMessage
 import app.aaps.plugins.sync.tidepool.messages.UploadReplyMessage
+import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -48,7 +49,8 @@ class TidepoolUploader @Inject constructor(
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val l: L,
-    private val authFlowOut: AuthFlowOut
+    private val authFlowOut: AuthFlowOut,
+    private val rateLimit: RateLimit
 ) {
 
     private val isAllowed get() = receiverDelegate.allowed
@@ -61,6 +63,9 @@ class TidepoolUploader @Inject constructor(
         private const val PRODUCTION_BASE_URL = "https://api.tidepool.org"
         internal const val VERSION = "0.0.1"
         const val PUMP_TYPE = "Tandem"
+
+        // Shortest time between two automatic openings of the login page
+        internal val RETRY_LOGIN_INTERVAL_SECONDS = T.mins(10).secs().toInt()
     }
 
     private var retrofit: Retrofit? = null
@@ -157,30 +162,56 @@ class TidepoolUploader @Inject constructor(
     fun handleTokenLoginAndStartSession(doUpload: Boolean, from: String?) {
         //aapsLogger.debug(LTag.TIDEPOOL, "handleTokenLoginAndStartSession")
         authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN, "Connecting")
-        authFlowOut.authState.performActionWithFreshTokens(authFlowOut.authService) { accessToken, idToken, tokenException ->
-            if (tokenException != null) {
-                rxBus.send(EventTidepoolStatus(("Got exception token: $tokenException")))
-                authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN, "Token exception")
-                authFlowOut.doTidePoolInitialLogin("handleTokenLoginAndStartSession Token exception")
-            } else if (accessToken != null) {
-                authFlowOut.authState.lastTokenResponse?.let { lastResponse ->
+        authFlowOut.authState.performActionWithFreshTokens(authFlowOut.authService) { accessToken, _, tokenException ->
+            val lastTokenResponse = authFlowOut.authState.lastTokenResponse
+            when {
+                // Only the network or the server failed. Keep the saved credentials and try the silent
+                // refresh again on the next upload instead of opening the login page in the browser.
+                accessToken == null && AuthFlowOut.isTransientTokenError(tokenException) -> {
+                    aapsLogger.debug(LTag.TIDEPOOL, "Token refresh failed for now, keeping login: $tokenException")
+                    // NO_SESSION makes the next doUpload() call doLogin() again.
+                    authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NO_SESSION, "Network problem, will try again later")
+                    cancelPendingPurge()
+                }
+
+                accessToken == null                                                      -> {
+                    aapsLogger.error(LTag.TIDEPOOL, "Failing to use access token - trying initial login again: $tokenException")
+                    rxBus.send(EventTidepoolStatus(("Got exception token: $tokenException")))
+                    authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN, "Failed to use token")
+                    cancelPendingPurge()
+                    retryInitialLogin("handleTokenLoginAndStartSession accessToken == null")
+                }
+
+                lastTokenResponse == null                                                -> {
+                    aapsLogger.error(LTag.TIDEPOOL, "Failing to get response / token type - trying initial login again")
+                    authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN, "Failed to get token")
+                    cancelPendingPurge()
+                    retryInitialLogin("handleTokenLoginAndStartSession lastTokenResponse == null")
+                }
+
+                else                                                                     -> {
                     val session = createSession().also {
                         it.authReply = AuthReplyMessage().apply { userid = preferences.get(TidepoolStringNonKey.SubscriptionId) }
                         it.token = accessToken
                     }
                     authFlowOut.saveAuthState()
                     startSession(session, doUpload, from)
-                } ?: {
-                    aapsLogger.error(LTag.TIDEPOOL, "Failing to get response / token type - trying initial login again")
-                    authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN, "Failed to get token")
-                    authFlowOut.doTidePoolInitialLogin("handleTokenLoginAndStartSession lastTokenResponse == null")
                 }
-            } else {
-                aapsLogger.error(LTag.TIDEPOOL, "Failing to use access token - trying initial login again")
-                authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN, "Failed to use token")
-                authFlowOut.doTidePoolInitialLogin("handleTokenLoginAndStartSession accessToken == null")
             }
         }
+    }
+
+    /**
+     * Open the login page in the browser, but not more often than once per [RETRY_LOGIN_INTERVAL_SECONDS].
+     * Uploads are triggered from many places, so without this limit a broken login could open the browser
+     * again and again. The Login button in the plugin screen calls [AuthFlowOut.doTidePoolInitialLogin]
+     * directly and is never limited.
+     */
+    private fun retryInitialLogin(from: String) {
+        if (rateLimit.rateLimit("tidepool-retry-login", RETRY_LOGIN_INTERVAL_SECONDS))
+            authFlowOut.doTidePoolInitialLogin(from)
+        else
+            aapsLogger.debug(LTag.TIDEPOOL, "Not opening login page again so soon: $from")
     }
 
     fun startSession(newSession: Session, doUpload: Boolean = false, @Suppress("unused") from: String?) {
@@ -224,6 +255,7 @@ class TidepoolUploader @Inject constructor(
                                             }
                                         }, {
                                             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "New dataset FAILED")
+                                            cancelPendingPurge()
                                             releaseWakeLock()
                                         })
                                 )
@@ -240,12 +272,14 @@ class TidepoolUploader @Inject constructor(
                             }
                         }, onFail = {
                             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "Open dataset FAILED")
+                            cancelPendingPurge()
                             releaseWakeLock()
                         })
                 )
             } else {
                 aapsLogger.error("Got login response but cannot determine userId - cannot proceed")
                 authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "Error userId")
+                cancelPendingPurge()
                 releaseWakeLock()
             }
         }
@@ -345,6 +379,20 @@ class TidepoolUploader @Inject constructor(
         else {
             rxBus.send(EventTidepoolStatus("Purge: connecting…"))
             doLogin(doUpload = false, from = "purge")
+        }
+    }
+
+    /**
+     * Drop a purge that waits for an open dataset ([pendingPurge]) because connecting failed. Without this
+     * the request would stay armed and a later upload could open a session hours afterwards and delete all
+     * data at a moment the user is not looking. The user can start the purge again when the connection works.
+     */
+    private fun cancelPendingPurge() {
+        if (pendingPurge) {
+            pendingPurge = false
+            aapsLogger.warn(LTag.TIDEPOOL, "Purge dropped, could not connect")
+            rxBus.send(EventTidepoolStatus("Purge failed - not connected"))
+            releaseWakeLock()
         }
     }
 
