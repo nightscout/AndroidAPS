@@ -158,6 +158,8 @@ class ClientControlUplinkIntegrationTest {
         // Client control ON — the receiver now gates ALL client→master traffic (commands AND the preferences-update
         // settings sync) on this, matching the old WS-path drop. Off → the uplink is rejected (see ClientControlReceiverTest).
         whenever(masterPrefs.get(BooleanKey.NsClientAllowClientControl)).thenReturn(true)
+        // Remote control rides the WebSocket, so the gate needs this too (see clientControlOperational).
+        whenever(masterPrefs.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
         whenever(masterPrefs.get(StringNonKey.NsClientControlAuthorizedClients)).thenAnswer { masterAuthorizedClients }
         doAnswer { masterAuthorizedClients = it.getArgument(1); null }
             .whenever(masterPrefs).put(eq(StringNonKey.NsClientControlAuthorizedClients), any<String>())
