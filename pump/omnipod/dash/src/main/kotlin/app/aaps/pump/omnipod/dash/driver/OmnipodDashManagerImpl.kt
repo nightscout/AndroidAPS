@@ -51,6 +51,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.hours
 
 @Singleton
 class OmnipodDashManagerImpl @Inject constructor(
@@ -434,9 +435,9 @@ class OmnipodDashManagerImpl @Inject constructor(
                 AlertConfiguration(
                     AlertType.EXPIRATION,
                     enabled = expirationAlarmEnabled,
-                    durationInMinutes = (TimeUnit.HOURS.toMinutes(
+                    durationInMinutes = ((
                         userConfiguredExpirationAlarmHours ?: POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT
-                    ) - 60).toShort(),
+                        ).hours.inWholeMinutes - 60).toShort(),
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
                         expirationAlarmDelay.toMinutes().toShort()

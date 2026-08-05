@@ -1,6 +1,5 @@
 package app.aaps.implementation.protection
 
-import androidx.annotation.UiThread
 import app.aaps.core.interfaces.protection.AuthMethod
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.HierarchicalProtectionRequest
@@ -17,9 +16,9 @@ import dagger.Reusable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @Reusable
 class ProtectionCheckImpl @Inject constructor(
@@ -78,7 +77,7 @@ class ProtectionCheckImpl @Inject constructor(
     // --- Session management ---
 
     private fun activeSession(minimumLevel: ProtectionCheck.Protection): ProtectionCheck.Protection? {
-        val timeout = TimeUnit.SECONDS.toMillis(preferences.get(IntKey.ProtectionTimeout).toLong())
+        val timeout = preferences.get(IntKey.ProtectionTimeout).toLong().seconds.inWholeMilliseconds
         if (timeout <= 0) return null // 0 = always ask
         val diff = dateUtil.now() - sessionTimestamp
         if (diff >= timeout) return null

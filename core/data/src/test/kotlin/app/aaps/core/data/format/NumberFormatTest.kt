@@ -103,6 +103,34 @@ class NumberFormatTest {
         assertThat(NumberFormat.DECIMAL_1.format(1.5)).isEqualTo("1.5")
     }
 
+    /**
+     * The app can change the language while it runs, so a cached formatter must not keep the
+     * symbols of the language it was built with.
+     *
+     * Swedish and German both use a comma as the decimal separator, but Swedish uses a real
+     * MINUS SIGN (U+2212) and German an ordinary hyphen. Formatting in one and then the other has
+     * to give the right sign both times, in both directions.
+     */
+    @Test
+    fun `symbols follow the locale after it changes`() {
+        val swedish = Locale.forLanguageTag("sv-SE")
+
+        Locale.setDefault(Locale.GERMAN)
+        assertThat(NumberFormat.DECIMAL_1.format(-1.5)).isEqualTo("-1,5")
+        Locale.setDefault(swedish)
+        assertThat(NumberFormat.DECIMAL_1.format(-1.5)).isEqualTo("−1,5")
+
+        // and back again, to catch a cache that only warms once
+        Locale.setDefault(Locale.GERMAN)
+        assertThat(NumberFormat.DECIMAL_1.format(-1.5)).isEqualTo("-1,5")
+
+        // digit shapes must follow too
+        Locale.setDefault(Locale.ENGLISH)
+        assertThat(NumberFormat.INTEGER.format(42.0)).isEqualTo("42")
+        Locale.setDefault(Locale.forLanguageTag("ne-NP"))
+        assertThat(NumberFormat.INTEGER.format(42.0)).isEqualTo("४२")
+    }
+
     @Test
     fun `no grouping separator for large numbers`() {
         Locale.setDefault(Locale.ENGLISH)

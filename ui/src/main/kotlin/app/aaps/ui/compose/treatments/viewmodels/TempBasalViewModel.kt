@@ -36,8 +36,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for TempBasalScreen managing temporary basal state and business logic.
@@ -220,7 +220,7 @@ class TempBasalViewModel @Inject constructor(
                                     ValueWithUnit.Timestamp(extendedBolus.timestamp),
                                     ValueWithUnit.Insulin(extendedBolus.amount),
                                     ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                                    ValueWithUnit.Minute(extendedBolus.duration.milliseconds.inWholeMinutes.toInt())
                                 )
                             )
                         }

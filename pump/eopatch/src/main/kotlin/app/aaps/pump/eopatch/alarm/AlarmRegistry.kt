@@ -24,9 +24,9 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.hours
 
 @Singleton
 class AlarmRegistry @Inject constructor() : IAlarmRegistry {
@@ -52,7 +52,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
             .subscribe {
                 when (it) {
                     PatchLifecycle.REMOVE_NEEDLE_CAP -> {
-                        val triggerAfter = patchConfig.patchWakeupTimestamp + TimeUnit.HOURS.toMillis(1) - System.currentTimeMillis()
+                        val triggerAfter = patchConfig.patchWakeupTimestamp + 1.hours.inWholeMilliseconds - System.currentTimeMillis()
                         compositeDisposable.add(add(AlarmCode.A020, triggerAfter).subscribe())
                     }
 

@@ -64,6 +64,9 @@ import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
 @Stable
@@ -250,7 +253,7 @@ class EopatchPatchViewModel @Inject constructor(
             .filter { isSubStepRunning }
             .observeOn(aapsSchedulers.main)
             .flatMapMaybe { alarmRegistry.remove(AlarmCode.B012) }
-            .flatMapMaybe { alarmRegistry.add(AlarmCode.B012, TimeUnit.MINUTES.toMillis(3)) }
+            .flatMapMaybe { alarmRegistry.add(AlarmCode.B012, 3.minutes.inWholeMilliseconds) }
             .subscribe()
     }
 
@@ -428,14 +431,14 @@ class EopatchPatchViewModel @Inject constructor(
                     PatchStep.COMPLETE, PatchStep.BASAL_SCHEDULE                                    -> {
                         val now = System.currentTimeMillis()
                         val expireTimeStamp = patchConfig.expireTimestamp
-                        val millisBeforeExpiration = TimeUnit.HOURS.toMillis(preferences.get(EopatchIntKey.ExpirationReminder).toLong())
+                        val millisBeforeExpiration = preferences.get(EopatchIntKey.ExpirationReminder).toLong().hours.inWholeMilliseconds
 
                         Maybe.just(AlarmCode.B012)
                             .flatMap { alarmRegistry.remove(it) }
                             .flatMap { alarmRegistry.remove(AlarmCode.A020) }
                             .flatMap { alarmRegistry.add(AlarmCode.B000, expireTimeStamp - now - millisBeforeExpiration) }
                             .flatMap { alarmRegistry.add(AlarmCode.B005, expireTimeStamp - now) }
-                            .flatMap { alarmRegistry.add(AlarmCode.B006, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI - TimeUnit.HOURS.toMillis(1)) }
+                            .flatMap { alarmRegistry.add(AlarmCode.B006, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI - 1.hours.inWholeMilliseconds) }
                             .flatMap { alarmRegistry.add(AlarmCode.A003, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI) }
                             .subscribe()
                     }
@@ -854,9 +857,9 @@ class EopatchPatchViewModel @Inject constructor(
     private fun Long.diffTime(maxElapsed: Long): String {
         val current = System.currentTimeMillis()
         return abs((this - current).let { (it > maxElapsed).takeOne(it, maxElapsed) }).let { millis ->
-            val hours = TimeUnit.MILLISECONDS.toHours(millis)
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(millis - TimeUnit.HOURS.toMillis(hours))
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(millis - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+            val hours = millis.milliseconds.inWholeHours
+            val minutes = (millis - hours.hours.inWholeMilliseconds).milliseconds.inWholeMinutes
+            val seconds = (millis - hours.hours.inWholeMilliseconds - minutes.minutes.inWholeMilliseconds).milliseconds.inWholeSeconds
             (this < current).takeOne("- ", "") + String.format(Locale.getDefault(), "%02d:%02d:%02d", hours % 24, minutes, seconds)
         }
     }

@@ -5,7 +5,7 @@ import app.aaps.pump.eopatch.core.code.PatchBleResultCode
 import app.aaps.pump.eopatch.core.scan.PatchSelfTestResult
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 class ResponseClassesTest {
 
@@ -256,7 +256,7 @@ class ResponseClassesTest {
     @Test
     fun `WakeUpTimeResponse should convert to millis`() {
         val r = WakeUpTimeResponse(true, 3600)
-        assertThat(r.timeInMillis).isEqualTo(TimeUnit.SECONDS.toMillis(3600))
+        assertThat(r.timeInMillis).isEqualTo(3600.seconds.inWholeMilliseconds)
     }
 
     // PatchInternalSuspendTimeResponse

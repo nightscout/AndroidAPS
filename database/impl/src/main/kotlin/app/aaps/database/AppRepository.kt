@@ -42,10 +42,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.Closeable
 import java.io.File
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.days
 
 /** Module-local carrier for [AppRepository.databaseMaintenanceInfo]; mapped to `DatabaseMaintenanceInfo`. */
 data class DatabaseMaintenanceRaw(
@@ -139,10 +139,10 @@ class AppRepository @Inject internal constructor(
      * Emits to BOTH RxJava (existing) AND Flow (new)
      */
     suspend fun <T : Any> runTransactionForResultSuspend(transaction: Transaction<T>): T =
-        // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
-        // caller (e.g. a WorkManager worker being stopped by Doze/standby/resource pressure) is
-        // cancelled in the window between the SQLite COMMIT and the emit below, the row would be
-        // durably persisted while observers (loop/overview/sync via observeChanges) never fire —
+    // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
+    // caller (e.g. a WorkManager worker being stopped by Doze/standby/resource pressure) is
+    // cancelled in the window between the SQLite COMMIT and the emit below, the row would be
+    // durably persisted while observers (loop/overview/sync via observeChanges) never fire —
         // a silently dropped reading with no loop run. NonCancellable closes that window.
         withContext(NonCancellable) {
             val changes = mutableListOf<DBEntry>()
@@ -171,7 +171,7 @@ class AppRepository @Inject internal constructor(
 
     suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
         database.useWriterConnection { connection -> connection.usePrepared("PRAGMA optimize") { it.step() } }
-        val than = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(keepDays)
+        val than = System.currentTimeMillis() - keepDays.days.inWholeMilliseconds
         val removed = mutableListOf<Pair<String, Int>>()
         removed.add(Pair("APSResult", database.apsResultDao.deleteOlderThan(than)))
         removed.add(Pair("GlucoseValue", database.glucoseValueDao.deleteOlderThan(than)))
@@ -254,7 +254,7 @@ class AppRepository @Inject internal constructor(
      * `core:interfaces`; [app.aaps.database.persistence] maps it to `DatabaseMaintenanceInfo`.
      */
     suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceRaw {
-        val cutoff = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(retentionDays)
+        val cutoff = System.currentTimeMillis() - retentionDays.days.inWholeMilliseconds
         return database.useWriterConnection { connection ->
             suspend fun count(sql: String): Long =
                 try {

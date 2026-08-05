@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 /** Executes a remote bolus delivery: BOLUS <insulin> [MEAL]. */
 class BolusAction(
@@ -69,7 +69,7 @@ class BolusAction(
                     persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         temporaryTarget = TT(
                             timestamp = dateUtil.now(),
-                            duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
+                            duration = eatingSoonTTDuration.toLong().minutes.inWholeMilliseconds,
                             reason = TT.Reason.EATING_SOON,
                             lowTarget = eatingSoonTTMgdl,
                             highTarget = eatingSoonTTMgdl

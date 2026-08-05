@@ -27,6 +27,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -443,7 +444,10 @@ class DateUtilImpl @Inject constructor(
         // DecimalFormat() which groups by default, and since only the decimal separator was
         // overridden the grouping separator stayed locale dependent. On a German device that
         // turned 1234.5 into "1.234.5", and on a Czech one into "1<nbsp>234.5".
-        return NumberFormat(minFractionDigits = 0, maxFractionDigits = digits)
+        // max(0, ...) keeps the old behaviour for a numDigits below -1: DecimalFormat clamped
+        // a negative maximumFractionDigits to 0, so the value was printed as a whole number.
+        // Without it NumberFormat would throw, because maxFractionDigits may not be negative.
+        return NumberFormat(minFractionDigits = 0, maxFractionDigits = max(0, digits))
             .format(x, NumberFormatPlatform.SEPARATOR_DOT)
     }
 

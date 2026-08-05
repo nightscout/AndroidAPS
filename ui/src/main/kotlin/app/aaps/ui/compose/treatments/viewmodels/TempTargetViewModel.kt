@@ -33,8 +33,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for TempTargetScreen managing temporary target state and business logic.
@@ -192,7 +192,7 @@ class TempTargetViewModel @Inject constructor(
                             ValueWithUnit.TETTReason(tt.reason),
                             ValueWithUnit.Mgdl(tt.lowTarget),
                             ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
+                            ValueWithUnit.Minute(tt.duration.milliseconds.inWholeMinutes.toInt())
                         )
                     )
                 }

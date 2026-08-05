@@ -1,11 +1,11 @@
 package app.aaps.pump.eopatch.extension
 
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 fun Long.getDiffDays(isRelative: Boolean = false): Long {
     val inputTimeMillis = this
     val currentTimeMillis = System.currentTimeMillis()
     val diffTimeMillis = if (inputTimeMillis > currentTimeMillis) inputTimeMillis - currentTimeMillis else isRelative.takeOne(currentTimeMillis - inputTimeMillis, 0)
 
-    return TimeUnit.MILLISECONDS.toDays(diffTimeMillis)
+    return diffTimeMillis.milliseconds.inWholeDays
 }

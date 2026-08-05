@@ -25,7 +25,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -33,6 +32,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class DanaPump @Inject constructor(
@@ -88,7 +88,7 @@ class DanaPump @Inject constructor(
         val tz = DateTimeZone.getDefault()
         val instant = DateTime.now().millis
         val offsetInMilliseconds = tz.getOffset(instant).toLong()
-        val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds)
+        val offset = offsetInMilliseconds.milliseconds.inWholeHours
         pumpTime = value + T.hours(offset).msecs()
         // but save zone in pump
         this.zoneOffset = zoneOffset
@@ -296,6 +296,7 @@ class DanaPump @Inject constructor(
     // Bolus settings
     var bolusCalculationOption = 0
     var missedBolusConfig = 0
+
     // NOTE: named `unitsString` (not `getUnits()`) on purpose — a `fun getUnits(): String` collides at the JVM
     // level with the `var units: Int` property's generated `getUnits()` accessor, which breaks mocking.
     val unitsString: String
@@ -304,6 +305,7 @@ class DanaPump @Inject constructor(
     var bolusStartErrorCode: Int = 0 // last start bolus errorCode
     var bolusingDetailedBolusInfo: DetailedBolusInfo? = null // actually delivered treatment
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
+
     // The bolus poll loop (DanaR*ExecutionService.bolus) spins on bolusStopped while the reader thread
     // (bolus progress/stop messages) and the user's stop action set these - @Volatile for visibility.
     @Volatile var bolusStopped = false // bolus finished

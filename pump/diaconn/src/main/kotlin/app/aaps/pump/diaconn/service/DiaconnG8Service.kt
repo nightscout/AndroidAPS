@@ -87,13 +87,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 class DiaconnG8Service : DaggerService() {
 
@@ -236,7 +236,7 @@ class DiaconnG8Service : DaggerService() {
             val tz = DateTimeZone.getDefault()
             val instant = DateTime.now().millis
             val offsetInMilliseconds = tz.getOffset(instant).toLong()
-            val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
+            val offset = offsetInMilliseconds.milliseconds.inWholeHours.toInt()
             if (timeDiff > 0 || abs(timeDiff) > 60) {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")

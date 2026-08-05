@@ -14,7 +14,6 @@ class T(val time: Long = 0L) {
 
     companion object {
 
-        fun now(): T = T(System.currentTimeMillis())
         fun msecs(msec: Long): T = T(msec)
         fun secs(sec: Long): T = T(sec * 1000L)
         fun mins(min: Long): T = T(min * 60 * 1000L)

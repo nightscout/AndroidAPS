@@ -31,8 +31,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for RunningModeScreen managing running mode state and business logic.
@@ -187,7 +187,7 @@ class RunningModeViewModel @Inject constructor(
                         listValues = listOfNotNull(
                             ValueWithUnit.Timestamp(rm.timestamp),
                             ValueWithUnit.RMMode(rm.mode),
-                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(rm.duration).toInt())
+                            ValueWithUnit.Minute(rm.duration.milliseconds.inWholeMinutes.toInt())
                         )
                     )
                 }

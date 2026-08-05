@@ -22,7 +22,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 
 @HiltWorker
 class InstaraStaleCheckWorker @AssistedInject constructor(
@@ -100,7 +100,9 @@ class InstaraStaleCheckWorker @AssistedInject constructor(
 
             // (2) Search for first missing in bounded range using ONE DB call
             var expected = scanStart
-            for (id in deviceValues.asSequence().mapNotNull { it.ids.pumpId }.filter { it in scanStart..scanEnd }) { if (id > expected) break; if (id == expected) expected++ }
+            for (id in deviceValues.asSequence().mapNotNull { it.ids.pumpId }.filter { it in scanStart..scanEnd }) {
+                if (id > expected) break; if (id == expected) expected++
+            }
             val missing: Long? = if (expected <= scanEnd) expected else null
 
             if (missing != null) {
@@ -215,7 +217,7 @@ class InstaraStaleCheckWorker @AssistedInject constructor(
             req
         )
 
-        val nextAt = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(REPEAT_INTERVAL_MINUTES)
+        val nextAt = System.currentTimeMillis() + REPEAT_INTERVAL_MINUTES.minutes.inWholeMilliseconds
         // NOTE: if injection failed, aapsLogger may not exist; but scheduleNext() is only called after injectedOk check
         aapsLogger.debug(LTag.CORE, "Instara check RESCHEDULE -> unique=$UNIQUE_NAME delayMin=$REPEAT_INTERVAL_MINUTES nextAt=$nextAt")
     }

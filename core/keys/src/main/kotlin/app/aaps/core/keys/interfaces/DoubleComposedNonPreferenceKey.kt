@@ -1,7 +1,5 @@
 package app.aaps.core.keys.interfaces
 
-import java.util.Locale
-
 /**
  * Preference key where key is a format string see [String::format]
  *
