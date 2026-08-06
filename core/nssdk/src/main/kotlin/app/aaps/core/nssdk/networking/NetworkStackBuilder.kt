@@ -12,6 +12,23 @@ import java.util.concurrent.TimeUnit
 
 internal object NetworkStackBuilder {
 
+    /**
+     * Turns what the caller supplies into the Retrofit base URL.
+     *
+     * Production callers pass a bare host with an optional sub-path - `NSClientV3Plugin.setClient`
+     * strips the scheme first - so `host.com` and `host.com/ns` behave exactly as before.
+     *
+     * An input that already carries a scheme is used as it stands. That is what lets a unit test
+     * point the client at `http://localhost:<port>`, and it also stops a stored `http://host` from
+     * turning into `https://http://host/api/`, which is what the old string concatenation produced
+     * (the caller only strips `https://`).
+     */
+    internal fun toBaseUrl(hostOrUrl: String): String {
+        val trimmed = hostOrUrl.trimEnd('/')
+        val withScheme = if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) trimmed else "https://$trimmed"
+        return "$withScheme/api/"
+    }
+
     @JvmSynthetic
     internal fun getApi(
         baseUrl: String,
@@ -35,7 +52,7 @@ internal object NetworkStackBuilder {
         logger: HttpLoggingInterceptor.Logger
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl("https://$baseUrl/api/")
+            .baseUrl(toBaseUrl(baseUrl))
             .client(
                 getOkHttpClient(
                     context = context,
@@ -55,7 +72,7 @@ internal object NetworkStackBuilder {
         logger: HttpLoggingInterceptor.Logger
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl("https://$baseUrl/api/")
+            .baseUrl(toBaseUrl(baseUrl))
             .client(getAuthRefreshOkHttpClient(context = context, logging = logging, logger = logger))
             .addConverterFactory(converterFactory)
             .build()

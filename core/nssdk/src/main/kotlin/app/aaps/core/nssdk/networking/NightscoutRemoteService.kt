@@ -87,6 +87,20 @@ internal interface NightscoutRemoteService {
     @POST("v3/food")
     suspend fun createFood(@Body remoteFood: RemoteFood): Response<RemoteCreateUpdateResponse>
 
+    /**
+     * Update and delete for food are **left as they are on purpose. Do not "fix" the path.**
+     *
+     * The `{identifier}` placeholder is missing from the path, so Retrofit rejects these methods
+     * when it builds the request factory and **no request is ever sent** - the throw is swallowed by
+     * the broad catch in `NSClientV3Plugin`. Food edits therefore do not sync, and that is the
+     * current, accepted state: the matching endpoint is broken on the Nightscout side, so making
+     * AAPS send the request would not help.
+     *
+     * This matters for the move to Ktor. A hand-written URL would silently turn "never sends"
+     * into `PATCH /api/v3/food` and `DELETE /api/v3/food` with no identifier - a request against the
+     * whole collection on a live Nightscout. Keep these failing locally until Nightscout supports
+     * them, then change both sides together.
+     */
     @PATCH("v3/food")
     suspend fun updateFood(@Body remoteFood: RemoteFood, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 

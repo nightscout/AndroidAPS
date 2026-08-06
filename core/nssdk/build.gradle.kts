@@ -19,6 +19,11 @@ dependencies {
     api(libs.com.squareup.okhttp3.logging.interceptor)
     api(libs.kotlinx.datetime)
 
+    // Test only: a real HTTP server on localhost, so the same characterization tests run against
+    // Retrofit today and Ktor after the port. Ktor MockEngine could not do that - it only exists
+    // after the swap, so it could never pin the OLD behaviour.
+    testImplementation(libs.com.squareup.okhttp3.mockwebserver)
+
     api(libs.kotlin.stdlib.jdk8)
 
     api(platform(libs.kotlinx.coroutines.bom))

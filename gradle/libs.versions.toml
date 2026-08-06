@@ -129,6 +129,7 @@ com-uber-rxdogtag2-rxdogtag = { group = "com.uber.rxdogtag2", name = "rxdogtag",
 com-squareup-leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version = "2.14" }
 com-squareup-okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 com-squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+com-squareup-okhttp3-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver3-junit5", version.ref = "okhttp" }
 com-squareup-retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 com-squareup-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 com-squareup-retrofit2-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
