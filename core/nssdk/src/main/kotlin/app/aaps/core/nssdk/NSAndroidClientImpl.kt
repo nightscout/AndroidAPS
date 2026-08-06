@@ -43,7 +43,6 @@ import org.json.JSONObject
 /**
  *
  * This client uses suspend functions and therefore is only visible in Kotlin (@JvmSynthetic).
- * An RxJava version can be found here [NSAndroidRxClientImpl]
  *
  * @param baseUrl the baseURL of the NightScout Instance
  * @param accessToken the access token of a role found in the admin panel of the NightScout instance

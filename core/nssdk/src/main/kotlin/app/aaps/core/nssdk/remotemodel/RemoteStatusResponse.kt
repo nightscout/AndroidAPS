@@ -18,10 +18,10 @@ internal data class RemoteStorage(
 )
 
 internal data class RemoteCreateUpdateResponse(
-    @SerializedName("identifier") val identifier: String?,
-    @SerializedName("isDeduplication") val isDeduplication: Boolean?,
-    @SerializedName("deduplicatedIdentifier") val deduplicatedIdentifier: String?,
-    @SerializedName("lastModified") val lastModified: Long?
+    @SerializedName("identifier") val identifier: String? = null,
+    @SerializedName("isDeduplication") val isDeduplication: Boolean? = null,
+    @SerializedName("deduplicatedIdentifier") val deduplicatedIdentifier: String? = null,
+    @SerializedName("lastModified") val lastModified: Long? = null
 )
 
 internal data class RemoteApiPermissions(

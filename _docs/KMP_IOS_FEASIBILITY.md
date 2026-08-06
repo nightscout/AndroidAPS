@@ -31,7 +31,7 @@ Multiplatform for the UI**, done step by step, starting with a small working sli
 | Room                           | 46 DAOs, **0** RxJava return types, 22 `suspend`, already on `BundledSQLiteDriver` | This is exactly the Room KMP setup |
 | Compose                        | **0** XML layouts in `:core:ui`, 2 left in `:ui`                                   | Compose Multiplatform can use this |
 | `LocalContext.current`         | 7 in `:core:ui`, 8 in `:ui`                                                        | Very small coupling to Android     |
-| Network code                   | 6 files touch Retrofit / OkHttp / socket.io                                        | Small enough to rewrite on Ktor    |
+| Network code                   | 5 files touch Retrofit / OkHttp, 1 touches socket.io                                | REST part is small enough for Ktor |
 | kotlinx.serialization          | 64 files (Gson: 34)                                                                | Already the main choice            |
 | kotlinx-datetime               | Declared in `libs.versions.toml`                                                   | Ready to use                       |
 | `androidx.lifecycle` ViewModel | Multiplatform since 2.8                                                            | Most of the 129 uses are fine      |
@@ -58,7 +58,7 @@ So most of the Compose work of the last year can be reused.
 | Dagger / Hilt                                          | ~300                                                   | kotlin-inject, Metro, or Koin          |
 | RxJava 3                                               | RxBus in 35 `:ui`, 19 config, 18 sync, 13 impl, 12 aps | SharedFlow                             |
 | Retrofit + OkHttp                                      | 6                                                      | Ktor client                            |
-| socket.io-client                                       | 1 (`NSClientV3Service`)                                | See warning below                      |
+| socket.io-client                                       | 1 (`NSClientV3Service`)                                | **Do not replace** - see section 3a    |
 | Gson                                                   | 34                                                     | kotlinx.serialization                  |
 | WorkManager                                            | 44                                                     | See warning below                      |
 | joda-time                                              | 5                                                      | kotlinx-datetime                       |
@@ -85,8 +85,8 @@ Fragment / AppCompatActivity (12), and `R.string` (~136 `:ui`, 61 `:core:ui`, 60
 
 ### Two that are not only porting cost
 
-- **socket.io** - Ktor gives WebSockets but not the Socket.IO / Engine.IO protocol on top. Either
-  reimplement the handshake, or use polling.
+- **socket.io** - not a library choice, a protocol the server dictates. See section 3a; it is the
+  one entry in the table above that must be **kept and abstracted**, not replaced.
 - **WorkManager** - iOS has no equivalent. `BGTaskScheduler` only gives wake ups that the system may
   delay for hours. A follower that expects to run every 5 minutes cannot work that way. The real
   answer is push (APNs) from a server, which changes the design, not only the code.
@@ -104,6 +104,104 @@ Fragment / AppCompatActivity (12), and `R.string` (~136 `:ui`, 61 `:core:ui`, 60
 5. **RxBus as a global untyped bus** - the main reason logic classes cannot move.
 6. **Reflection based serialization** - Gson plus kotlin-reflect.
 7. **Assuming background execution is always possible** - the deepest assumption of all.
+
+---
+
+## 3a. socket.io - keep it, do not replace it
+
+**Nightscout runs a Socket.IO server.** That is the reason AAPS uses a Socket.IO client, and it is
+not a choice this project gets to revisit.
+
+Socket.IO is not "WebSocket with a helper library". It is its own protocol on top: Engine.IO
+framing, a handshake, namespaces, acks and its own reconnect rules. **A plain Ktor WebSocket client
+cannot talk to a Socket.IO server at all.** Polling is not a fallback either - dropping the socket
+means giving up push updates, which is the whole point of NSClientV3.
+
+So this dependency is **abstracted, not removed**:
+
+| Where | What |
+| --- | --- |
+| Android | keep `io.socket:socket.io-client:2.1.2` **unchanged** |
+| iOS | `socket.io-client-swift` |
+| shared | a small `expect interface` over the calls actually used |
+
+Both clients are written by the Socket.IO project itself, so protocol compatibility follows the
+server rather than a third party's reimplementation. That matters more here than saving a
+dependency.
+
+**The API surface is tiny.** `NSClientV3Service` uses only:
+
+```
+IO.socket(url) · .on(event, listener) · .off(event, listener)
+.connect() · .disconnect() · .emit(..., Ack)
+Socket.EVENT_CONNECT / EVENT_DISCONNECT
+```
+
+with the events `create`, `update`, `delete`, `announcement`, `alarm`, `urgent_alarm`,
+`clear_alarm`. About 30 lines of `expect` / `actual` covers it.
+
+Kotlin Multiplatform Socket.IO libraries do exist - [moko-socket-io], [KotSock] (both wrap the same
+two native clients), and pure Kotlin ports such as [dyte-io/socketio-kotlin] and [kmp-socketio]. For
+this API surface a third party wrapper buys about 30 lines while adding a dependency on the sync
+path. A pure Kotlin port is worse: it would **replace the working Android client** with a
+reimplementation, which is the wrong direction of risk for a medical app.
+
+### Where to look first
+
+Since the plan is to write our own small wrapper rather than depend on one, the useful reading is
+the existing wrappers' source, because they already are the `expect` / `actual` we would write:
+
+| Link | Why |
+| --- | --- |
+| [moko-socket-io] | Cleanest reference. Small, `expect class Socket` over the two native clients. |
+| [KotSock] | Same approach, a second opinion on the API shape. |
+| [moko-socket-io-sample] | A working KMP app using it, by the moko maintainer. Shows the CocoaPods wiring for `socket.io-client-swift`. |
+| [KMP Socket.IO deep dive] | Walks through building exactly this kind of wrapper. Closest thing to the POC we would be reproducing. |
+
+**Check the dates before trusting any of them as a dependency.** moko-socket-io states Gradle 6.8+,
+Android API 16+, iOS 11.0+ - those baselines are from around 2021, while this project is on Gradle
+9.6.1 and Kotlin 2.4.10. That is a warning sign for a live dependency on the sync path, and no
+problem at all for reading it as a pattern.
+
+[moko-socket-io]: https://github.com/icerockdev/moko-socket-io
+[moko-socket-io-sample]: https://github.com/Alex009/moko-socket-io-sample
+[KotSock]: https://github.com/whiterabb17/KotSock
+[dyte-io/socketio-kotlin]: https://github.com/dyte-io/socketio-kotlin
+[kmp-socketio]: https://klibs.io/project/HackWebRTC/kmp-socketio
+[KMP Socket.IO deep dive]: https://rahuljindaltech.medium.com/building-cross-platform-libraries-with-kotlin-multiplatform-kmp-kmm-a-deep-dive-into-socket-io-89e58c3b221c
+
+### Protocol versions - checked
+
+Socket.IO major versions are **not** wire compatible, so the server and both clients have to agree.
+Checked on 2026-08-05:
+
+| Part | Version | Protocol |
+| --- | --- | --- |
+| Nightscout `cgm-remote-monitor` 15.0.7 | `socket.io ~4.5.4` | **v4** |
+| AAPS today, Android | `io.socket:socket.io-client:2.1.2` | v3 / v4 - correct |
+| iOS should use | `Socket.IO-Client-Swift` **16.x** | v3 / v4 |
+| moko-socket-io 0.6.0, iOS half | `Socket.IO-Client-Swift ~> 15.2.0` | **v2 - will not talk to Nightscout** |
+
+`socket.io-client-java` 2.x speaks Socket.IO 3 / 4. On the Swift side that generation only arrives
+in **16.0.0** (February 2024, "now supports Socket.IO 3 servers"); 15.x is Socket.IO 2 only.
+
+So **moko-socket-io cannot be used against Nightscout as it is**, and simply bumping its pod to 16.x
+is not a fix either - v15 to v16 had breaking API changes (there is an official `15to16` migration
+guide), so moko's own wrapper code would not compile against it.
+
+Writing our own wrapper avoids the whole question, because we pick both versions ourselves:
+`socket.io-client:2.1.2` unchanged on Android, `Socket.IO-Client-Swift` 16.x on iOS.
+
+Useful escape hatch: the Swift 16.x client can still reach a Socket.IO 2 server by passing
+`.version(.two)` to the manager. So 16.x is the right choice even for someone running an old
+Nightscout.
+
+### One more thing to check before writing it
+
+**The two clients may not behave the same.** `NSClientV3Service` already carries a comment that
+*"java io.client doesn't support multiplexing, create 2 sockets"*, and a leak note about
+`Manager.nsps` being a process-static, never-pruned cache. Whether the Swift client shares those
+quirks is exactly what an `expect` / `actual` boundary hides until it bites.
 
 ---
 

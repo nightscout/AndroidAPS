@@ -16,8 +16,8 @@ data class RemoteProfileStore(
     @SerializedName("srvCreated") val srvCreated: Long? = null,   // integer($int64) example: 1525383610088 The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
     @SerializedName("srvModified") val srvModified: Long? = null, // integer($int64) example: 1525383610088 The server's timestamp of the last document modification in the database (Unix epoch in ms). This field appears only for documents which were somehow modified by API v3 (inserted, updated or deleted).
     @SerializedName("created_at") val createdAt: String? = null,  // string or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
-    @SerializedName("date") val date: Long?,                      // date as milliseconds
-    @SerializedName("startDate") val startDate: Long?,            // record valid from
+    @SerializedName("date") val date: Long? = null,                      // date as milliseconds
+    @SerializedName("startDate") val startDate: Long? = null,            // record valid from
     @SerializedName("defaultProfile") val defaultProfile: String,// default profile in store
 
     //@Serializable(with = JSONSerializer::class)
@@ -42,7 +42,7 @@ data class RemoteProfileStore(
 
     @Serializable data class ProfileEntry(
         @SerializedName("time") val time: String,
-        @SerializedName("timeAsSeconds") val timeAsSeconds: Long?,
+        @SerializedName("timeAsSeconds") val timeAsSeconds: Long? = null,
         @SerializedName("value") val value: Double
     )
 */

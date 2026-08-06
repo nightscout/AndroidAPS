@@ -22,7 +22,6 @@ dependencies {
     api(platform(libs.kotlinx.coroutines.bom))
     api(libs.kotlinx.coroutines.core)
     runtimeOnly(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.rx3)
     api(platform(libs.kotlinx.serialization.bom))
     api(libs.kotlinx.serialization.json)
 }

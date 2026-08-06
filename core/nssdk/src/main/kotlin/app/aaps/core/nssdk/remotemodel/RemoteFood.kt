@@ -11,17 +11,17 @@ import com.google.gson.annotations.SerializedName
  **/
 internal data class RemoteFood(
     @SerializedName("type") val type: String, // we are interesting in type "food"
-    @SerializedName("date") val date: Long?,
+    @SerializedName("date") val date: Long? = null,
     @SerializedName("name") val name: String,
-    @SerializedName("category") val category: String?,
-    @SerializedName("subcategory") val subcategory: String?,
-    @SerializedName("unit") val unit: String?,
+    @SerializedName("category") val category: String? = null,
+    @SerializedName("subcategory") val subcategory: String? = null,
+    @SerializedName("unit") val unit: String? = null,
     @SerializedName("portion") val portion: Double,
     @SerializedName("carbs") val carbs: Int,
-    @SerializedName("gi") val gi: Int?,
-    @SerializedName("energy") val energy: Int?,
-    @SerializedName("protein") val protein: Int?,
-    @SerializedName("fat") val fat: Int?,
+    @SerializedName("gi") val gi: Int? = null,
+    @SerializedName("energy") val energy: Int? = null,
+    @SerializedName("protein") val protein: Int? = null,
+    @SerializedName("fat") val fat: Int? = null,
     @SerializedName("identifier")
     val identifier: String?,       // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
     @SerializedName("isValid")
