@@ -45,18 +45,53 @@ class WireTypeCoercionTest {
     }
 
     /**
-     * And it still produces a usable timestamp, because `timestamp()` falls back to parsing
-     * `created_at` when `date` / `mills` are absent.
+     * An epoch written as a number now survives into the timestamp.
      *
-     * Note what this shows: the epoch-number form does NOT round-trip into a timestamp. joda's ISO
-     * parser cannot read "1785992179555", so `fromISODateString` swallows the failure and returns 0.
-     * Pinned as-is - it is pre-existing, and fixing it is not part of a converter swap.
+     * This used to give `0L` - joda's ISO parser cannot read "1785992179555", and the catch turned
+     * that into the epoch, so the treatment landed in 1970 with no error anywhere. It was pinned as
+     * broken while the converter was being swapped, then fixed separately.
+     *
+     * Only reachable when `date`, `mills` and `timestamp` are all absent, which AAPS never produces
+     * but older API v1 documents and other uploaders do.
      */
     @Test
-    fun `a numeric created_at does not survive into the timestamp`() {
+    fun `a numeric created_at now survives into the timestamp`() {
         val treatment = parse("""{"eventType":"Correction Bolus","created_at":1785992179555}""")
 
-        assertThat(treatment.timestamp()).isEqualTo(0L)
+        assertThat(treatment.timestamp()).isEqualTo(1785992179555L)
+    }
+
+    /** The other three fields still win, in order - the fallback must not change that. */
+    @Test
+    fun `date mills and timestamp still take precedence over created_at`() {
+        val allFour = """{"eventType":"Correction Bolus","date":111,"mills":222,"timestamp":333,"created_at":444}"""
+        assertThat(parse(allFour).timestamp()).isEqualTo(111L)
+
+        val noDate = """{"eventType":"Correction Bolus","mills":222,"timestamp":333,"created_at":444}"""
+        assertThat(parse(noDate).timestamp()).isEqualTo(222L)
+
+        val onlyTimestamp = """{"eventType":"Correction Bolus","timestamp":333,"created_at":444}"""
+        assertThat(parse(onlyTimestamp).timestamp()).isEqualTo(333L)
+    }
+
+    /** A quoted epoch is the same value as a bare one - the coercion happens before we see it. */
+    @Test
+    fun `a quoted epoch created_at also works`() {
+        val treatment = parse("""{"eventType":"Correction Bolus","created_at":"1785992179555"}""")
+
+        assertThat(treatment.timestamp()).isEqualTo(1785992179555L)
+    }
+
+    /**
+     * Seconds are deliberately NOT converted. `1525383610` is a plausible epoch in seconds and also a
+     * real millisecond epoch (17 January 1970), and the document does not say which. Guessing would
+     * swap a visible 1970 date for an invisible wrong one.
+     */
+    @Test
+    fun `an epoch in seconds is taken literally, not multiplied`() {
+        val treatment = parse("""{"eventType":"Correction Bolus","created_at":1525383610}""")
+
+        assertThat(treatment.timestamp()).isEqualTo(1525383610L)
     }
 
     /** The ISO string form, which does work. */

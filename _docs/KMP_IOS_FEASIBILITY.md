@@ -57,10 +57,10 @@ So most of the Compose work of the last year can be reused.
 |--------------------------------------------------------|--------------------------------------------------------|----------------------------------------|
 | Dagger / Hilt                                          | ~300                                                   | kotlin-inject, Metro, or Koin          |
 | RxJava 3                                               | RxBus in 35 `:ui`, 19 config, 18 sync, 13 impl, 12 aps | SharedFlow                             |
-| Retrofit + OkHttp                                      | 6                                                      | Ktor client                            |
+| Retrofit + OkHttp                                      | 12 / 14, of which 4 / 3 in `:core:nssdk`               | Ktor client                            |
 | socket.io-client                                       | 1 (`NSClientV3Service`)                                | **Do not replace** - see section 3a    |
-| Gson                                                   | 34                                                     | kotlinx.serialization                  |
-| `org.json` (`JSONObject`)                              | 243                                                    | kotlinx `JsonObject` - see section 8   |
+| Gson                                                   | 46, **0 in `:core:nssdk`**                             | kotlinx.serialization - see section 8  |
+| `org.json` (`JSONObject`)                              | 227, **0 in `:core:nssdk`**                            | kotlinx `JsonObject` - see section 8   |
 | WorkManager                                            | 44                                                     | See warning below                      |
 | joda-time                                              | 5                                                      | kotlinx-datetime                       |
 | `java.text.DecimalFormat`                              | 74                                                     | Done, see section 8                    |
@@ -374,11 +374,22 @@ iOS, and makes every later step demand driven: a blocker is removed because it s
 and the next screen, not because it is on a list.
 
 **Where this stands.** Step 1 is done. Half of step 0 is done too, and out of order: `:core:data`
-already builds for Kotlin/Native (wave 5), and part of step 5 has been pulled forward because
-`:core:nssdk` turned out to be sliceable after all (wave 6). What is still missing from step 0 is the
-half that needs a Mac - a real device, and an honest look at Compose Multiplatform on iOS. No amount
-of further blocker removal answers that question, which is the argument for doing it soon rather than
-continuing down the list.
+already builds for Kotlin/Native (wave 5), and most of step 5 has been pulled forward because
+`:core:nssdk` turned out to be sliceable after all - `org.json` in wave 6, Gson in wave 7. What is
+left of that module is the HTTP client itself:
+
+| Left in `:core:nssdk` | Files |
+| --- | --- |
+| Retrofit / OkHttp | 4 / 3 |
+| `java.io.IOException` (the exception hierarchy) | 1 |
+| `android.*` (mainly `Context` for the OkHttp cache) | 2 |
+| joda-time (a post-decode helper, not the wire contract) | 1 |
+
+All four go together with Ktor, which makes the rest of step 5 one piece of work rather than four.
+
+What is still missing from step 0 is the half that needs a Mac - a real device, and an honest look at
+Compose Multiplatform on iOS. No amount of further blocker removal answers that question, which is
+the argument for doing it soon rather than continuing down the list.
 
 ---
 
@@ -402,6 +413,7 @@ worth keeping (see waves 5 and 6):
 | `67ecb1e696` | Going KMP - `:core:data` is a real multiplatform module |
 | `e24476237b` | Prepare `:core:nssdk` - dead code out, defaults in, characterization tests |
 | `f6a4e85e8a` | `:core:nssdk` `org.json` -> kotlinx |
+| `350f486be4` | `:core:nssdk` Gson -> kotlinx.serialization |
 
 ### Wave 1 - `DecimalFormat` removed
 
@@ -741,6 +753,112 @@ reads both go through the changed Gson type adapter, and kotlinx `JsonObject` al
 `Map<String, JsonElement>`, so Gson picking its built-in map adapter instead of the registered one
 was a real possibility that would have failed quietly rather than thrown.
 
+### Wave 7 - `:core:nssdk` off Gson (done)
+
+190 `@SerializedName` -> `@SerialName`, `@Serializable` on 19 classes, and the Retrofit converter
+swapped for `converter-kotlinx-serialization`. That artifact is **official and ships with Retrofit
+3.0.0**, same group and version as the Gson converter it replaces, so it needed no third party
+dependency - and it goes away with Retrofit itself when the client moves to Ktor.
+
+Two things got smaller rather than bigger:
+
+- The Gson `JsonDeserializer` that built `JsonObject` is **gone**. kotlinx reads `JsonObject`
+  natively, so the adapter, the `GsonBuilder` and the `Gson` instance all went with it.
+- `DeviceStatusMapper` used to rebuild all four schema-less subtrees (`pump.extended`,
+  `openaps.suggested` / `enacted` / `iob`) by printing each to text and parsing it back, because one
+  side was a Gson tree and the other a kotlinx tree. Both sides are kotlinx now, so those seven
+  conversions became a straight assignment.
+
+#### The configuration is the whole decision
+
+`NsSdkJson.kt` holds one `Json` instance shared by Retrofit and the string mappers. Every flag is
+there to match Gson, not because it is a good default in the abstract:
+
+| Flag | Why |
+| --- | --- |
+| `ignoreUnknownKeys` | documents carry fields this version has never seen |
+| `explicitNulls = false` | Gson omits nulls; NS rejects some explicit nulls |
+| `isLenient` | one measured case: a bare **number** arriving in a `String` field (`created_at`) |
+| `encodeDefaults` | **backward compatibility** - see below |
+| `coerceInputValues` | **forward compatibility** - see below |
+
+Two of those five were added only because a test failed, and both are the difference between working
+and quietly breaking somebody else's device:
+
+- **`encodeDefaults`** - kotlinx's default is the **opposite** of Gson's. Gson writes every non-null
+  field; kotlinx omits any field equal to its default. Without this, `isReadOnly = false`,
+  `duration = 0`, `utcOffset = 0` and every `LastModified.Collections` counter simply stop being
+  written. Absent is not the same as false to a reader that has not been updated.
+- **`coerceInputValues`** - an **unknown enum value** throws in kotlinx but was mapped to `null` by
+  Gson. `eventType` is an enum. A *newer* AAPS adding one event type would otherwise make every older
+  client throw on that record, inside a socket.io listener with no try/catch.
+
+Only one case needed `isLenient`. Strict kotlinx already accepts a quoted number in a `Long` /
+`Double` / `Int` field and `"true"` in a `Boolean` field, which was a pleasant surprise - the gap
+between the two libraries is much narrower than it looks.
+
+#### The trap that nearly shipped
+
+**A non-null field with no default is optional under Gson and mandatory under kotlinx.** Gson builds
+objects with `Unsafe.allocateInstance`, never calls the constructor, and leaves such a field as
+`null` / `0` / `0.0`. kotlinx treats the identical declaration as required and throws.
+
+Neither `coerceInputValues` nor `explicitNulls` rescues it - **both only apply to properties that
+already have a default.** And a page is decoded in one pass, so one bad document loses the whole
+page, not one record.
+
+`RemoteFood` had four such fields. Nightscout's `food` collection also stores **quickpick**
+documents written by the NS food editor, which have no `portion` and no `carbs` - `FoodMapper`
+already has an `else -> return null` branch for exactly those, but the parse now died before the
+mapper ran. Measured: a list of `[good food, quickpick]` returned **zero** items. `LoadFoodsWorker`
+then fails, and it sits mid-chain, so it also cancels the profile, settings and devicestatus workers
+every fifth loop.
+
+`RemoteEntry.type` was the same shape on the glucose feed, where `LoadBgWorker` only advances its
+cursor after a successful decode - so one typeless record would have stopped all glucose and
+re-requested the same page forever.
+
+Fixed by giving those fields the values Gson used to leave behind (`""`, `0`, `0.0`), which restores
+the old tolerant behaviour exactly. `encodeDefaults = true` means the upload format does not change.
+
+**This was found by an adversarial audit, not by the tests.** The characterization tests were
+written specifically to catch behaviour changes and they missed it, because there was **no food
+decode test at all** - `FoodExtensionKtTest` is object-to-object and `LoadFoodsWorkerTest` mocks
+`getFoods()`. A test suite only pins the paths somebody thought to write a test for.
+
+#### Verified on a device, both versions at once
+
+A Pixel emulator ran a **new master against a pre-KMP client** on a live Nightscout instance. Every
+record type that can be created by hand was created and followed end to end:
+
+| Record | Old client result |
+| --- | --- |
+| Carbs | `◄ INSERT`, visible in Treatments history |
+| Bolus (with nested `icfg`) | `◄ INSERT Bolus`, visible in Treatments history |
+| Profile switch | `◄ INSERT ProfileSwitch` + `EffectiveProfileSwitch` |
+| Temporary target (new **and** PATCH update) | `◄ INSERT TemporaryTarget` |
+| Therapy event | `◄ INSERT TherapyEvent` |
+| Glucose, devicestatus, settings | received and applied |
+
+The actual bytes are the best evidence. This is what the new master uploaded for a 20 g carb entry:
+
+```json
+{"date":1786012366166,"utcOffset":0,"app":"AAPS","isValid":true,
+ "isReadOnly":false,"eventType":"Meal Bolus","carbs":20.0,"notes":""}
+```
+
+`utcOffset:0`, `isValid:true` and `isReadOnly:false` are all present - that is `encodeDefaults`
+working. Without it those three vanish. Nulls are omitted, as Gson did.
+
+The strongest single result is the **signed client-control round trip**: the old client sent an
+HMAC-signed envelope, the new master verified it and acked, and the old client verified the ack back.
+A signature only verifies if the serialized bytes match, so that is close to proof rather than
+inference.
+
+Not covered on the device: temp basal and extended bolus (need real pump or loop activity), and the
+**food upload path does not exist** - `QueueCounter` has no food counter, AAPS syncs food
+download-only. The food fix rests on unit tests.
+
 ### Was behaviour preserved?
 
 An audit ran five parallel agents against the migrated code, each trying to find an input where old
@@ -798,27 +916,36 @@ keeps the old contract on a public interface method.
 6. **Still open: `wear/SmallestDoubleString.kt`** - the last `DecimalFormat` in a non-test file that
    is not the deliberate platform seam. It builds patterns from a runtime string, so it needs real
    logic rather than a mapping.
-7. **Still open: the `:core:nssdk` converter switch.** Gson to kotlinx is atomic - 210
-   `@SerializedName`, the joda date parsing and the `IOException` hierarchy move together. Two things
-   need deciding first: the `Json { }` configuration (`ignoreUnknownKeys = true`, `explicitNulls =
-   false`), and what to do about the ~8 **non-null** fields that were deliberately left without
-   defaults. Gson currently leaves those null through `Unsafe.allocateInstance`; kotlinx would throw.
-   For `RemoteStatusResponse` throwing is arguably correct, since `v3/status` always sends them.
-   `RemoteFood` from a foreign uploader is the real question.
-8. **Still open: Retrofit converter, or straight to Ktor?** Adding
-   `retrofit2-kotlinx-serialization-converter` is the smaller step but adds a dependency that gets
-   thrown away when Ktor lands. Going straight to Ktor avoids that and is the actual destination, and
-   its failure mode ("no network") is louder than a serialization-only swap ("quietly wrong data").
-   Leaning Ktor.
+7. ~~The `:core:nssdk` converter switch.~~ **Done - see wave 7.** The joda parsing turned out **not**
+   to be part of the contract: it is a plain helper on `RemoteTreatment`, called after decoding, so it
+   moves on its own schedule. The ~8 non-null fields were the real answer to this question, and the
+   answer was "give them defaults" - see the trap in wave 7. `RemoteStatusResponse` was left strict on
+   purpose: `v3/status` is AAPS's own call to a server it just authenticated against, and a reply
+   missing those fields is not something to carry on from.
+8. ~~Retrofit converter, or straight to Ktor?~~ **Decided: the converter first, and the reasoning in
+   the earlier version of this note was wrong.** It argued that Ktor's failure mode is louder, but
+   going straight to Ktor does not *replace* the serialization change, it *bundles* it - you get the
+   quiet-wrong-data risk anyway, plus transport risk, in one commit. Separating them meant the
+   characterization tests could actually do their job on the serialization half. The throwaway
+   dependency cost nothing in the end: Retrofit 3.0.0 ships an official
+   `converter-kotlinx-serialization`, so it was one catalog line and no third party code.
 9. **Still open: the OkHttp disk cache needs a `Context`.** One of the two remaining `android.*`
    imports in `:core:nssdk`. Ktor on iOS needs either a different cache story or none.
-10. **Still open: R8 has never run against the KMP module.** Both device checks were debug builds, so
-    minification against multiplatform metadata and the `expect` / `actual` pairs is untested. This is
-    the only real remaining risk on the branch.
+10. ~~R8 has never run.~~ **Not a risk: AAPS does not minify.** Both convention plugins
+    (`android-app-dependencies` and `android-module-dependencies`) set `isMinifyEnabled = false` for
+    the `release` build type, so R8 never shrinks or obfuscates and the usual
+    "kotlinx.serialization needs keep rules" problem cannot occur here. A release build was run
+    anyway: it succeeds, and all five generated `$$serializer` classes plus the Retrofit kotlinx
+    converter are present in the release dex. The `benchmark` variant (`initWith(release)` plus debug
+    signing) installs and starts clean; its runtime sync check is still outstanding because the
+    emulator lost DNS, which starved both apps equally.
+11. **Still open: merge `kmp/core-data-experiment` into `dev`.** Waves 5 to 7 all live there. Nothing
+    argues against it any more - the branch was device-verified in mixed-version pairs - but it is a
+    real merge of a wire format change and deserves its own decision.
 
-Waves 1 to 4 are committed on `dev`. Waves 5 and 6 are committed on `kmp/core-data-experiment`, both
-verified on WSA against a live Nightscout. The `FoodManagement` comma defect in section 10 is found
-but not fixed.
+Waves 1 to 4 are committed on `dev`. Waves 5 to 7 are committed on `kmp/core-data-experiment`, all
+verified against a live Nightscout - waves 5 and 6 on WSA, wave 7 on an emulator running a new master
+against a pre-KMP client. The `FoodManagement` comma defect in section 10 is found but not fixed.
 
 ---
 

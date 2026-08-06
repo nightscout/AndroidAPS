@@ -1,10 +1,14 @@
 package app.aaps.core.nssdk.remotemodel
 
 import app.aaps.core.nssdk.localmodel.treatment.EventType
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.joda.time.DateTime
-import org.joda.time.format.ISODateTimeFormat
 
 /*
 * Depending on the type, different other fields are present.
@@ -90,16 +94,95 @@ internal data class RemoteTreatment(
     @SerialName("isBasalInsulin") val isBasalInsulin: Boolean? = null      // boolean "Bolus"
 ) {
 
-    fun timestamp(): Long {
-        return date ?: mills ?: timestamp ?: created_at?. let { fromISODateString(created_at) } ?: 0L
+    /**
+     * Best timestamp this record can offer, in milliseconds.
+     *
+     * `date` is what AAPS and every API v3 writer send, so it is almost always the answer. The rest
+     * of the chain is for older API v1 documents and other uploaders, which often carry only
+     * `created_at` - as the comment on that field says, "some of them with string others with long".
+     */
+    fun timestamp(): Long =
+        date ?: mills ?: timestamp ?: created_at?.let { parseCreatedAt(it) } ?: 0L
+
+    /**
+     * `created_at` arrives in two shapes and both have to work.
+     *
+     * It is declared `String?`, but a number in that position is coerced to its text form, so an
+     * epoch written as `1525383610088` reaches here as the **digits** `"1525383610088"`. joda's ISO
+     * parser cannot read that and used to throw, which the catch turned into `0L` - putting the
+     * treatment at the epoch, in 1970, with no error anywhere. The epoch form is tried first now.
+     *
+     * Seconds are not accepted on purpose. `1525383610` is a valid epoch in seconds and also a valid
+     * epoch in milliseconds (17 January 1970), and nothing in the document says which is meant, so
+     * guessing would trade a visible 1970 date for an invisible wrong one.
+     */
+    private fun parseCreatedAt(createdAt: String): Long {
+        val trimmed = createdAt.trim()
+        // Digits only (optionally signed) means an epoch, not an ISO date.
+        if (trimmed.isNotEmpty() && trimmed.all { it.isDigit() || it == '-' })
+            trimmed.toLongOrNull()?.let { return it }
+        return fromISODateString(trimmed)
     }
 
-    private fun fromISODateString(isoDateString: String): Long =
-        try {
-            val parser = ISODateTimeFormat.dateTimeParser()
-            val dateTime = DateTime.parse(isoDateString, parser)
-            dateTime.toDate().time
-        } catch (_: Exception) {
-            0L
+    /**
+     * Lenient ISO 8601 parsing, matching what joda's `ISODateTimeFormat.dateTimeParser()` used to
+     * accept here. joda is a JVM library, so it cannot go to iOS; kotlinx-datetime is multiplatform
+     * but strict, and a strict parser would return `0L` for shapes that work today - putting the
+     * treatment in 1970 with no error anywhere.
+     *
+     * The trick is to take any explicit offset off the end **first**, then parse what is left as a
+     * plain local value. That way one small parser covers every shape rather than needing a format
+     * per variant:
+     *
+     * - `2026-08-06T04:56:19.555Z`, `...+02:00`, `...+0200`, `...-04:00` -> that exact instant
+     * - `2026-08-06T04:56:19.555`, `2026-08-06T04:56` -> **local** time, as joda read it
+     * - `2026-08-06` -> **local** midnight
+     * - lower case `t` / `z` -> accepted
+     * - anything else -> `0L`, never a throw
+     *
+     * `CreatedAtParsingTest` pins all of it against the values joda produced.
+     */
+    private fun fromISODateString(isoDateString: String): Long {
+        val text = isoDateString.trim().uppercase()
+        if (text.isEmpty()) return 0L
+
+        // Peel off a trailing zone designator, so the rest is a plain local date-time.
+        var local = text
+        var offset: UtcOffset? = null
+        if (text.endsWith("Z")) {
+            local = text.dropLast(1)
+            offset = UtcOffset.ZERO
+        } else {
+            OFFSET_AT_END.find(text)?.let { match ->
+                val parsed = runCatching { UtcOffset.parse(withOffsetColon(match.value)) }.getOrNull()
+                if (parsed != null) {
+                    local = text.substring(0, match.range.first)
+                    offset = parsed
+                }
+            }
         }
+
+        val zone = TimeZone.currentSystemDefault()
+
+        runCatching { LocalDateTime.parse(local) }.getOrNull()?.let { dateTime ->
+            val instant = offset?.let { dateTime.toInstant(it) } ?: dateTime.toInstant(zone)
+            return instant.toEpochMilliseconds()
+        }
+        // Date only. joda gave local midnight, and a date without a time never carries an offset.
+        runCatching { LocalDate.parse(local) }.getOrNull()?.let { date ->
+            return date.atStartOfDayIn(zone).toEpochMilliseconds()
+        }
+        return 0L
+    }
+
 }
+
+// File scope, not a companion: `@Serializable` generates its own companion to carry `serializer()`,
+// and declaring a private one here would make that private too.
+
+/** A trailing `+HH:MM` / `+HHMM` offset. Anchored so it cannot match the date's own dashes. */
+private val OFFSET_AT_END = Regex("""[+-]\d{2}:?\d{2}$""")
+
+/** `+0200` -> `+02:00`; already-correct input is returned unchanged. */
+private fun withOffsetColon(offset: String): String =
+    if (offset.contains(':')) offset else offset.substring(0, 3) + ":" + offset.substring(3)

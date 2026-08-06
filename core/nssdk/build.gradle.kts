@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.com.squareup.retrofit2.converter.kotlinx.serialization)
     api(libs.com.squareup.okhttp3.okhttp)
     api(libs.com.squareup.okhttp3.logging.interceptor)
-    api(libs.net.danlew.android.joda)
+    api(libs.kotlinx.datetime)
 
     api(libs.kotlin.stdlib.jdk8)
 
