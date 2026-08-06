@@ -1,36 +1,64 @@
 plugins {
-    alias(libs.plugins.android.library)
+    kotlin("multiplatform")
     id("kotlinx-serialization")
-    id("android-module-dependencies")
-    id("test-module-dependencies")
-    id("jacoco-module-dependencies")
 }
 
-android {
-    namespace = "app.aaps.core.nssdk"
+kotlin {
+    jvm {
+        // Every consumer of :core:nssdk is still an Android module, and they resolve this variant.
+        // Nothing about them changes.
+        compilerOptions {
+            jvmTarget.set(Versions.jvmTarget)
+        }
+    }
+
+    // Stand-in for a real Kotlin/Native target, same as :core:data. iOS needs macOS and Xcode, but
+    // mingwX64 compiles the same common code through Kotlin/Native, which is what proves there is no
+    // JVM API left in commonMain. Replace or extend with iosArm64() / iosSimulatorArm64() on a Mac.
+    mingwX64()
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(libs.io.ktor.client.core)
+                implementation(libs.io.ktor.client.content.negotiation)
+                implementation(libs.io.ktor.serialization.kotlinx.json)
+                api(libs.kotlinx.datetime)
+                api(libs.kotlinx.coroutines.core)
+                api(libs.kotlinx.serialization.json)
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                // OkHttp is both the Ktor engine and, on the JVM side, what the rest of the app
+                // already uses. The client-control crypto in this source set is javax.crypto.
+                api(libs.com.squareup.okhttp3.okhttp)
+                implementation(libs.io.ktor.client.okhttp)
+            }
+        }
+        val mingwX64Main by getting {
+            dependencies {
+                // CIO is Ktor's own multiplatform engine, enough for the compile proof. An Apple
+                // target would use ktor-client-darwin instead.
+                implementation(libs.io.ktor.client.cio)
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                runtimeOnly(libs.org.junit.platform.launcher)
+                implementation(libs.com.google.truth)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.kotlinx.coroutines.test)
+                // A real HTTP server on localhost, so the contract tests exercise the whole stack.
+                implementation(libs.com.squareup.okhttp3.mockwebserver)
+            }
+        }
+    }
 }
 
-dependencies {
-    api(libs.com.squareup.okhttp3.okhttp)
-
-    // Ktor on the OkHttp engine: reuses the OkHttp already in the app rather than adding a second
-    // HTTP stack. The engine becomes Darwin when this module builds for iOS.
-    api(libs.io.ktor.client.core)
-    implementation(libs.io.ktor.client.okhttp)
-    implementation(libs.io.ktor.client.content.negotiation)
-    implementation(libs.io.ktor.serialization.kotlinx.json)
-    api(libs.kotlinx.datetime)
-
-    // Test only: a real HTTP server on localhost, so the same characterization tests run against
-    // Retrofit today and Ktor after the port. Ktor MockEngine could not do that - it only exists
-    // after the swap, so it could never pin the OLD behaviour.
-    testImplementation(libs.com.squareup.okhttp3.mockwebserver)
-
-    api(libs.kotlin.stdlib.jdk8)
-
-    api(platform(libs.kotlinx.coroutines.bom))
-    api(libs.kotlinx.coroutines.core)
-    runtimeOnly(libs.kotlinx.coroutines.android)
-    api(platform(libs.kotlinx.serialization.bom))
-    api(libs.kotlinx.serialization.json)
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

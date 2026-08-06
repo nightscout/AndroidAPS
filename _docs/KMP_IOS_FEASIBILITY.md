@@ -57,7 +57,7 @@ So most of the Compose work of the last year can be reused.
 |--------------------------------------------------------|--------------------------------------------------------|----------------------------------------|
 | Dagger / Hilt                                          | ~300                                                   | kotlin-inject, Metro, or Koin          |
 | RxJava 3                                               | RxBus in 35 `:ui`, 19 config, 18 sync, 13 impl, 12 aps | SharedFlow                             |
-| Retrofit + OkHttp                                      | 12 / 14, of which 4 / 3 in `:core:nssdk`               | Ktor client                            |
+| Retrofit + OkHttp                                      | 9 / 11, **0 in `:core:nssdk`**                         | Ktor client - done there, see section 8 |
 | socket.io-client                                       | 1 (`NSClientV3Service`)                                | **Do not replace** - see section 3a    |
 | Gson                                                   | 46, **0 in `:core:nssdk`**                             | kotlinx.serialization - see section 8  |
 | `org.json` (`JSONObject`)                              | 227, **0 in `:core:nssdk`**                            | kotlinx `JsonObject` - see section 8   |
@@ -373,23 +373,20 @@ Step 0 proves the toolchain works, gives an honest answer about how Compose Mult
 iOS, and makes every later step demand driven: a blocker is removed because it stands between you
 and the next screen, not because it is on a list.
 
-**Where this stands.** Step 1 is done. Half of step 0 is done too, and out of order: `:core:data`
-already builds for Kotlin/Native (wave 5), and most of step 5 has been pulled forward because
-`:core:nssdk` turned out to be sliceable after all - `org.json` in wave 6, Gson in wave 7. What is
-left of that module is the HTTP client itself:
+**Where this stands.** Steps 1 and 5 are **done**, and step 0 is half done - out of order, because
+`:core:nssdk` turned out to be sliceable after all. Two modules now build for Kotlin/Native:
 
-| Left in `:core:nssdk` | Files |
+| Module | State |
 | --- | --- |
-| Retrofit / OkHttp | 4 / 3 |
-| `java.io.IOException` (the exception hierarchy) | 1 |
-| `android.*` (mainly `Context` for the OkHttp cache) | 2 |
-| joda-time (a post-decode helper, not the wire contract) | 1 |
+| `:core:data` | multiplatform, 2 `expect` / `actual` seams (wave 5) |
+| `:core:nssdk` | multiplatform, 72 files in `commonMain` (waves 6-9) |
 
-All four go together with Ktor, which makes the rest of step 5 one piece of work rather than four.
+Nothing is left of the original blocker list inside `:core:nssdk` - `org.json`, Gson, joda, Retrofit,
+OkHttp, `android.*` and `java.io` are all gone from it.
 
-What is still missing from step 0 is the half that needs a Mac - a real device, and an honest look at
-Compose Multiplatform on iOS. No amount of further blocker removal answers that question, which is
-the argument for doing it soon rather than continuing down the list.
+That leaves steps 2, 3, 4 and 6, and the half of step 0 that **needs a Mac**: a real device, and an
+honest look at how Compose Multiplatform feels on iOS. No amount of further blocker removal answers
+that question, which is the argument for doing it soon rather than continuing down the list.
 
 ---
 
@@ -414,6 +411,10 @@ worth keeping (see waves 5 and 6):
 | `e24476237b` | Prepare `:core:nssdk` - dead code out, defaults in, characterization tests |
 | `f6a4e85e8a` | `:core:nssdk` `org.json` -> kotlinx |
 | `350f486be4` | `:core:nssdk` Gson -> kotlinx.serialization |
+| `cb7b8fa924` | `:core:nssdk` date parsing, eliminate joda |
+| `e92ec082d3` | `:core:nssdk` tests - the contract suite, written against Retrofit before the port |
+| `ed9c87599f` | `:core:nssdk` Ktor migration |
+| `37e146861f` | version `4.0.0-dev-b-kmp` |
 
 ### Wave 1 - `DecimalFormat` removed
 
@@ -859,6 +860,152 @@ Not covered on the device: temp basal and extended bolus (need real pump or loop
 **food upload path does not exist** - `QueueCounter` has no food counter, AAPS syncs food
 download-only. The food fix rests on unit tests.
 
+### Wave 8 - `:core:nssdk` off Retrofit and OkHttp (done)
+
+The HTTP client moved to **Ktor on the OkHttp engine**, so the app reuses the OkHttp it already ships
+rather than carrying two HTTP stacks. On iOS the engine becomes Darwin and nothing else changes,
+which is the whole reason for the move.
+
+#### The map came first, and it was worth it
+
+Before any code changed, five parallel readers mapped what the Retrofit stack actually guaranteed,
+and each finding was then attacked by an agent trying to refute it. That produced a written contract
+and **30 silent-failure risks**. Three were serious enough to have shipped:
+
+- **The 304 signal only existed because of the OkHttp disk cache.** `response.raw().networkResponse
+  ?.code` can only be 304 when the cache revalidates a GET and merges the result into a 200. Ktor has
+  no equivalent, so `code` would have become a constant 200 - and `LoadBgWorker`'s
+  `response.code != 304 && processSgvs(...)` would have become an unconditional process. The paging
+  loop never exits, `storeGlucoseValuesToDb()` is never reached, and **BG never lands in the
+  database** while the worker looks busy.
+- **Static query pairs are hidden inside the `@GET` strings**, not in `@Query` parameters -
+  `v3/profile?sort$desc=date&limit=1`. Rebuild the URL from the method parameters and they vanish.
+  Losing `limit=1` there makes `LoadProfileStoreWorker` take `profiles[profiles.size - 1]` from an
+  unsorted list, silently applying the **wrong profile**: different basal, ISF and IC.
+- **The `utcOffset` auto-retry reads the raw 400 body text.** Ktor has no separate `errorBody()`, and
+  a body read lazily or only on success loses that string. The record is then dropped permanently
+  while the sync cursor advances.
+
+#### Tests before code, against the old stack
+
+49 characterization tests were written **while Retrofit was still in place**, using **MockWebServer**
+- a real HTTP server on localhost - rather than Ktor's `MockEngine`. That choice is the point:
+`MockEngine` only exists after the swap, so tests written with it could never have proved anything
+about the behaviour before it. The same files ran unchanged against both stacks.
+
+They pin: every endpoint URL as a literal string; the read/write status asymmetry and its **request
+counts**; the `utcOffset` fallback verified by inspecting both request bodies; the auth headers,
+refresh and clock-skew paths; ETag parsing; and the `{"result": ...}` envelope, which is applied
+inconsistently per endpoint.
+
+Two divergences were caught this way rather than in the field:
+
+| | |
+| --- | --- |
+| `$` in query keys | survived on the first try - Ktor's `encodedParameters` leaves it literal |
+| `/` inside a path segment | Ktor does **not** encode it, Retrofit does (`a%2Fb`). Fixed with `encodeSlash = true` |
+
+#### Decisions worth recording
+
+- **`expectSuccess = false`.** Ktor's default throws on any non-2xx, which would make the whole 4xx
+  ladder dead code - and because `ClientRequestException` is not in the retry exclusion list, every
+  such call would also be retried four times before surfacing.
+- **No `HttpRequestRetry`.** It would multiply with the existing `retry()`, and the `utcOffset`
+  fallback re-enters a public method, so one reading could produce over ten POSTs in a single sync.
+- **Auth is hand written, not Ktor's `bearer` provider.** The provider differs in four ways, two of
+  which lose data quietly: it omits the header when it has no token (Nightscout then answers **200
+  with the anonymous role**, and uploads stop with nothing logged), and it refreshes on 401 only,
+  while Nightscout also answers 403. It also never sees the response body, so the clock-skew error
+  could not exist.
+- **The 304 brake was replaced, not reproduced.** The workers now stop when the cursor cannot advance
+  (`lastServerModified <= lastLoaded`), which is what the 304 always meant. Only the modified-since
+  path can stall that way; the first load pages by date and carries no server timestamp.
+- **`close()` was added** to `NSAndroidClient` and is called from `restartOnChange`. The Retrofit
+  client leaked quietly on every URL or token change; a Ktor engine holds real connections.
+
+Also fixed on the way, deliberately and separately: `getVersion` / `getStatus` threw
+`retrofit2.HttpException` and `NullPointerException`, neither a `NightscoutException`; they now throw
+`UnsuccessfulNightscoutException`. And a 10 s connect timeout is now explicit - OkHttp applied one by
+default and Ktor does not, so a dead host would otherwise hang for the full 60 s socket timeout.
+
+**Left broken on purpose:** `updateFood` and `deleteFood` declare an `{identifier}` the path does not
+contain, so Retrofit refused to build them and **no request was ever sent** - food edits have never
+synced, because the endpoint is broken on the Nightscout side. A hand-written Ktor URL would have
+turned "never sends" into `PATCH /api/v3/food` and `DELETE /api/v3/food` **with no identifier**, a
+request against the whole collection on a live server. They reproduce the local failure instead,
+verified by a test asserting zero requests.
+
+#### Verified on a device
+
+A new Ktor master against a **pre-KMP client** on a live Nightscout: writes accepted (201), reads
+across status / lastModified / settings / devicestatus / treatments, socket.io push received, and the
+old Gson/Retrofit client stored what Ktor wrote. The auth flow ran for real - a 401 triggered
+`GET /api/v2/authorization/request/<token>` and a 200 - which exercised the hand-written interceptor
+and the leading-slash refresh URL together.
+
+Turning the WebSocket **off** was needed to see any of the REST paging at all: with push enabled the
+load workers barely run. With it off, `◄ RCV TR END` on the modified-since path confirmed the new
+cursor brake terminates instead of spinning.
+
+Not observed on the wire: the `$` operators, because `date$gt` / `created_at$gt` / `sort$desc` only
+appear on **first-load** paths and every collection was already synced. They are covered by two test
+files asserting the same literal URLs against Retrofit and against Ktor, so the bytes are identical
+and Nightscout cannot tell them apart.
+
+### Wave 9 - `:core:nssdk` is multiplatform (done)
+
+Same shape as `:core:data`: `jvm()` plus `mingwX64()` as the Kotlin/Native compile proof. **72 files
+in `commonMain`**, and all four consumer modules build unchanged.
+
+Only four things blocked `commonMain`, and none needed design work:
+
+| Blocker | Fix |
+| --- | --- |
+| `@JvmSynthetic` on an `internal` helper | dropped - it was hiding an already-internal function from Java |
+| `KClass<out java.lang.Exception>` in `retry` | `KClass<out Throwable>`. Exact-class matching and the `catch (Exception)` are unchanged, so which exceptions are excluded and how many attempts happen stay identical |
+| `Dispatchers.IO`, 2 sites | `expect val nsIoDispatcher`; the JVM actual is the same `Dispatchers.IO` as before |
+| the Ktor engine and its logging interceptor | `expect fun nsHttpClient(...)` - OkHttp on JVM, CIO on Native |
+
+#### The crypto did not need solving
+
+`ClientControlCrypto` and `ClientControlPairingCrypto` are `javax.crypto` and `java.security`, and
+they looked like the blocker. They are not: **nothing inside the module calls them** - the only
+internal reference is a KDoc link - so they simply live in `jvmMain`. No `expect` / `actual`, no
+stub, no crypto library, and the Native target compiles without them.
+
+The code stays in `:core:nssdk`, declared as its JVM part. When client-control is wanted on another
+platform it is a source-set move **within this module** plus actuals, not a redesign.
+
+Golden vectors were extracted first, in `ClientControlCryptoVectorsTest`: fixed inputs with their
+exact outputs, so a second implementation can be checked byte for byte rather than by "it is also
+HMAC-SHA256". The algorithms are standards and interoperate by definition; the **packaging** is what
+differs and what fails silently:
+
+- **GCM tag placement** - JCE returns `ciphertext ‖ tag` from one `doFinal`; Apple's CryptoKit keeps
+  the tag separate. The vectors pin `wrapped.size == plaintext.size + 16`.
+- **Hex case** - signatures are compared as text, so lower case is part of the wire format.
+- **PIN encoding** - ASCII digits today, which is why any encoding agrees. Worth knowing before
+  anyone widens the alphabet.
+
+Those values cannot change without breaking every deployed AAPS, so a failure there is a real
+incompatibility, not a stale test.
+
+#### What a desktop JVM target would cost
+
+Nothing, for the crypto. The pattern here is a plain `jvm()` target, not `androidTarget()`, so the
+single `jvmMain` already serves Android - and `javax.crypto` is Java SE, so Windows, Linux and macOS
+desktop builds use the same code untouched. Only Kotlin/Native targets need a second implementation.
+
+**Web would be different**, and it is a decision to take early rather than late: WebCrypto is
+async-only, so `sign()` and `wrap()` would have to become `suspend`, and retrofitting that ripples
+through every caller.
+
+#### Honest limits of the proof
+
+`mingwX64` is a **compile proof, not a shipping target**: request logging is not wired up there, and
+CIO stands in for what an iOS build would use (Darwin). What it does prove is real - 72 files of wire
+layer, models, mappers and HTTP client with no JVM API anywhere in them.
+
 ### Was behaviour preserved?
 
 An audit ran five parallel agents against the migrated code, each trying to find an input where old
@@ -929,8 +1076,10 @@ keeps the old contract on a public interface method.
    characterization tests could actually do their job on the serialization half. The throwaway
    dependency cost nothing in the end: Retrofit 3.0.0 ships an official
    `converter-kotlinx-serialization`, so it was one catalog line and no third party code.
-9. **Still open: the OkHttp disk cache needs a `Context`.** One of the two remaining `android.*`
-   imports in `:core:nssdk`. Ktor on iOS needs either a different cache story or none.
+9. ~~The OkHttp disk cache needs a `Context`.~~ **Resolved: there is no cache.** It existed only so a
+   revalidated GET could surface as a 304, which the paging workers used as their stop condition.
+   That is now expressed directly - stop when the cursor cannot advance - so the cache, the `Context`
+   and the two `Cache` instances that shared one directory are all gone. See wave 8.
 10. ~~R8 has never run.~~ **Not a risk: AAPS does not minify.** Both convention plugins
     (`android-app-dependencies` and `android-module-dependencies`) set `isMinifyEnabled = false` for
     the `release` build type, so R8 never shrinks or obfuscates and the usual
@@ -939,13 +1088,24 @@ keeps the old contract on a public interface method.
     converter are present in the release dex. The `benchmark` variant (`initWith(release)` plus debug
     signing) installs and starts clean; its runtime sync check is still outstanding because the
     emulator lost DNS, which starved both apps equally.
-11. **Still open: merge `kmp/core-data-experiment` into `dev`.** Waves 5 to 7 all live there. Nothing
-    argues against it any more - the branch was device-verified in mixed-version pairs - but it is a
-    real merge of a wire format change and deserves its own decision.
+11. **Still open: merge `kmp/core-data-experiment` into `dev`.** Waves 5 to 9 all live there. Nothing
+    argues against it any more - the branch was device-verified in mixed-version pairs at each step -
+    but it is a real merge of a wire format change and deserves its own decision. It gets riskier the
+    longer it waits: `dev` has not moved yet, so the merge is still a fast-forward.
+12. **Still open: client-control crypto on a non-JVM platform.** It sits in `jvmMain` and nothing in
+    `commonMain` calls it, so no target needs it today. A **follower** never signs commands or
+    unwraps pairing offers, so this only becomes real when another platform should *send* commands.
+    Golden vectors are ready; the choice is then `expect` / `actual` with a hand written Apple
+    implementation, or cryptography-kotlin. Prefer deciding it when the platform exists, not before.
+13. **Still open: does web ever matter?** It is the one target that changes the **API shape** rather
+    than just the implementation - WebCrypto is async-only, so `sign()` and `wrap()` would have to
+    become `suspend`. Cheap to decide now, expensive to retrofit.
 
-Waves 1 to 4 are committed on `dev`. Waves 5 to 7 are committed on `kmp/core-data-experiment`, all
-verified against a live Nightscout - waves 5 and 6 on WSA, wave 7 on an emulator running a new master
-against a pre-KMP client. The `FoodManagement` comma defect in section 10 is found but not fixed.
+Waves 1 to 4 are committed on `dev`. Waves 5 to 9 are committed on `kmp/core-data-experiment`, each
+verified against a live Nightscout before the next one started - waves 5 and 6 on WSA, waves 7 to 9
+on an emulator running a new master against a **pre-KMP client**, so every step was checked in a
+mixed-version pair rather than only against itself. The `FoodManagement` comma defect in section 10
+is found but not fixed.
 
 ---
 
