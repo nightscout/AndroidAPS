@@ -3,6 +3,7 @@ package app.aaps.wear.interaction.actions
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.StringRes
+import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode.RunningMode
@@ -64,7 +65,11 @@ class RunningModePickerActivity : MenuListActivity() {
         rows = actions.mapIndexed { index, action ->
             PickerRow(getString(list.states[index].state.labelRes()), action)
         }
-        return rows.map { MenuItem(it.action.iconRes, it.label) }
+        // Explicit tint: the ic_loop_* drawables carry a theme tint that would otherwise
+        // paint every icon in the same theme color instead of the mode colors the tile shows
+        return rows.mapIndexed { index, row ->
+            MenuItem(row.action.iconRes, row.label, iconTint = list.states[index].state.colorArgb())
+        }
     }
 
     override fun doAction(position: String) {
@@ -74,6 +79,19 @@ class RunningModePickerActivity : MenuListActivity() {
         row.action.message?.let { intent.putExtra(DataLayerListenerServiceWear.KEY_MESSAGE, it) }
         startActivity(intent)
         finish()
+    }
+
+    /** Same colors as the tile icons (suspend icon is red; LoopSuspendedColor yellow is only for text). */
+    private fun RunningMode.colorArgb(): Int = when (this) {
+        RunningMode.LOOP_CLOSED       -> LoopClosedColor.toArgb()
+        RunningMode.LOOP_LGS          -> LoopLgsColor.toArgb()
+        RunningMode.LOOP_OPEN         -> LoopOpenColor.toArgb()
+        RunningMode.LOOP_DISABLE      -> LoopDisabledColor.toArgb()
+        RunningMode.LOOP_USER_SUSPEND -> LoopDisabledColor.toArgb()
+        RunningMode.PUMP_DISCONNECT   -> LoopDisconnectedColor.toArgb()
+        RunningMode.LOOP_RESUME,
+        RunningMode.PUMP_RECONNECT    -> LoopClosedColor.toArgb()
+        else                          -> LoopUnknownColor.toArgb()
     }
 
     @StringRes

@@ -62,6 +62,9 @@ internal val TempTargetYellow       = Color(0xFFF4D700)
 internal val LoopClosedColor        = Color(0xFF00C03E)
 internal val LoopOpenColor          = Color(0xFF4983D7)
 internal val LoopLgsColor           = Color(0xFF800080)
+// Suspend TEXT color (status header, confirm lines, belt graph) — yellow keeps suspended
+// distinguishable from disabled red in text. Suspend ICONS are red like ic_loop_paused;
+// icon surfaces (tile, complication, picker) must NOT use this constant.
 internal val LoopSuspendedColor     = Color(0xFFFFFF13)
 internal val LoopDisabledColor      = Color(0xFFFF1313)
 internal val LoopDisconnectedColor  = Color(0xFF939393)

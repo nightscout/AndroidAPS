@@ -22,7 +22,6 @@ import app.aaps.wear.interaction.actions.LoopDisconnectedColor
 import app.aaps.wear.interaction.actions.LoopLgsColor
 import app.aaps.wear.interaction.actions.LoopOpenColor
 import app.aaps.wear.interaction.actions.LoopSuperbolusColor
-import app.aaps.wear.interaction.actions.LoopSuspendedColor
 import app.aaps.wear.interaction.actions.LoopUnknownColor
 import app.aaps.wear.data.ComplicationData as ComplicationStore
 
@@ -53,8 +52,8 @@ class RunningModeComplication : ModernBaseComplicationProviderService() {
         LoopStatusData.LoopMode.OPEN           -> ModeAppearance(R.drawable.ic_loop_open, LoopOpenColor.toArgb(), R.string.loop_status_open)
         LoopStatusData.LoopMode.LGS            -> ModeAppearance(R.drawable.ic_loop_lgs, LoopLgsColor.toArgb(), R.string.loop_status_lgs)
         LoopStatusData.LoopMode.DISABLED       -> ModeAppearance(R.drawable.ic_loop_disabled, LoopDisabledColor.toArgb(), R.string.loop_status_disabled)
-        LoopStatusData.LoopMode.SUSPENDED      -> ModeAppearance(R.drawable.ic_loop_paused, LoopSuspendedColor.toArgb(), R.string.loop_status_suspended)
-        // Same icon and color mapping as the loop status screen: pump/DST suspends render like DISABLED red
+        // Icon red like ic_loop_paused (LoopSuspendedColor yellow is the suspend TEXT color, not the icon color)
+        LoopStatusData.LoopMode.SUSPENDED      -> ModeAppearance(R.drawable.ic_loop_paused, LoopDisabledColor.toArgb(), R.string.loop_status_suspended)
         LoopStatusData.LoopMode.PUMP_SUSPENDED -> ModeAppearance(R.drawable.ic_loop_paused, LoopDisabledColor.toArgb(), R.string.loop_status_pump_suspended)
         LoopStatusData.LoopMode.DST_SUSPENDED  -> ModeAppearance(R.drawable.ic_loop_paused, LoopDisabledColor.toArgb(), R.string.loop_status_dst_suspended)
         LoopStatusData.LoopMode.DISCONNECTED   -> ModeAppearance(R.drawable.ic_loop_disconnected, LoopDisconnectedColor.toArgb(), R.string.loop_status_disconnected)

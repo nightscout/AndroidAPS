@@ -91,7 +91,8 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
         super.onDestroy()
     }
 
-    class MenuItem(val actionIcon: Int, val actionItem: String)
+    /** [iconTint] (ARGB) overrides the drawable's own colors; null draws the icon as-is. */
+    class MenuItem(val actionIcon: Int, val actionItem: String, val iconTint: Int? = null)
 }
 
 private val MenuItemBg = Color.White.copy(alpha = 0.15f)
@@ -138,7 +139,8 @@ private fun MenuListScreen(
                     icon = {
                         MenuIcon(
                             iconRes = item.actionIcon,
-                            contentDescription = item.actionItem
+                            contentDescription = item.actionItem,
+                            tintArgb = item.iconTint
                         )
                     }
                 )
@@ -152,12 +154,13 @@ private fun MenuListScreen(
 }
 
 @Composable
-private fun MenuIcon(iconRes: Int, contentDescription: String) {
+private fun MenuIcon(iconRes: Int, contentDescription: String, tintArgb: Int? = null) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val sizePx = with(density) { 35.dp.toPx() }.toInt()
-    val painter = remember(iconRes, sizePx) {
-        val drawable = ContextCompat.getDrawable(context, iconRes)!!
+    val painter = remember(iconRes, sizePx, tintArgb) {
+        val drawable = ContextCompat.getDrawable(context, iconRes)!!.mutate()
+        if (tintArgb != null) drawable.setTint(tintArgb)
         val bitmap = createBitmap(sizePx, sizePx)
         drawable.setBounds(0, 0, sizePx, sizePx)
         drawable.draw(Canvas(bitmap))
