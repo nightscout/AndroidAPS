@@ -11,12 +11,14 @@ android {
 }
 
 dependencies {
-    implementation(libs.com.squareup.retrofit2.retrofit)
-    // Official Retrofit 3 artifact, same group and version as the Gson converter it replaces.
-    // Goes away with Retrofit itself when the client moves to Ktor.
-    implementation(libs.com.squareup.retrofit2.converter.kotlinx.serialization)
     api(libs.com.squareup.okhttp3.okhttp)
-    api(libs.com.squareup.okhttp3.logging.interceptor)
+
+    // Ktor on the OkHttp engine: reuses the OkHttp already in the app rather than adding a second
+    // HTTP stack. The engine becomes Darwin when this module builds for iOS.
+    api(libs.io.ktor.client.core)
+    implementation(libs.io.ktor.client.okhttp)
+    implementation(libs.io.ktor.client.content.negotiation)
+    implementation(libs.io.ktor.serialization.kotlinx.json)
     api(libs.kotlinx.datetime)
 
     // Test only: a real HTTP server on localhost, so the same characterization tests run against

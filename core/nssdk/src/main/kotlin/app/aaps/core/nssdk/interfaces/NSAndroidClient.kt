@@ -66,6 +66,9 @@ interface NSAndroidClient {
     suspend fun updateSettings(identifier: String, settings: JsonObject): CreateUpdateResponse
     suspend fun deleteSettings(identifier: String): CreateUpdateResponse
 
+    /** Releases the HTTP engine. Call when the client is replaced or no longer needed. */
+    fun close()
+
     /** Hard delete via NS `?permanent=true` — removes the doc instead of soft-deleting (tombstoning) it. */
     suspend fun deleteSettingsPermanent(identifier: String): CreateUpdateResponse
 }

@@ -54,10 +54,21 @@ class LoadBgWorker @AssistedInject constructor(
                 if ((nsClientV3Plugin.newestDataOnServer?.collections?.entries ?: Long.MAX_VALUE) > lastLoaded) {
                     val sgvs: List<NSSgvV3>
                     val response: NSAndroidClient.ReadResponse<List<NSSgvV3>>?
+                    // Replaces the old `response.code != 304` brake.
+                    //
+                    // A 304 could only ever appear because OkHttp's disk cache revalidated a GET, and
+                    // that cache is gone with Retrofit. What the 304 actually meant is tested directly
+                    // now: the server has nothing newer, so the cursor cannot move and another page
+                    // would return the same rows for ever.
+                    //
+                    // Only the modified-since path can stall like this. The first load pages by date
+                    // and always moves forward, and its response carries no server timestamp at all.
+                    var cursorStalled = false
                     if (isFirstLoad) response = nsAndroidClient.getSgvsNewerThan(lastLoaded, NSClientV3Plugin.RECORDS_TO_LOAD)
                     else {
                         response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, NSClientV3Plugin.RECORDS_TO_LOAD)
                         aapsLogger.debug(LTag.NSCLIENT, "lastLoadedSrvModified: ${response.lastServerModified}")
+                        cursorStalled = response.lastServerModified?.let { it <= lastLoaded } == true
                         response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                         nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG
@@ -74,7 +85,7 @@ class LoadBgWorker @AssistedInject constructor(
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         nsClientRepository.addLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         // Schedule processing of fetched data and continue of loading
-                        continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync)
+                        continueLoading = !cursorStalled && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync)
                     } else {
                         // End first load
                         if (isFirstLoad) {

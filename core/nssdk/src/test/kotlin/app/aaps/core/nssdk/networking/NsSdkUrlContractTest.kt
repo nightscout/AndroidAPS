@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.networking
 
-import android.content.Context
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -10,10 +9,6 @@ import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import java.io.File
-import java.nio.file.Files
 
 /**
  * Pins the exact URL every endpoint puts on the wire.
@@ -42,7 +37,6 @@ class NsSdkUrlContractTest {
 
     private lateinit var server: MockWebServer
     private lateinit var client: NSAndroidClientImpl
-    private lateinit var cacheDir: File
 
     /**
      * A plain temp directory, not JUnit's `@TempDir`.
@@ -54,15 +48,12 @@ class NsSdkUrlContractTest {
      */
     @BeforeEach
     fun setUp() {
-        cacheDir = Files.createTempDirectory("nssdk-test-cache").toFile()
         server = MockWebServer()
         server.start()
-        val context = mock<Context> { on { getCacheDir() } doReturn cacheDir }
         client = NSAndroidClientImpl(
             // Carries a scheme, so it is used as it stands and points at the local server.
             baseUrl = server.url("/").toString().trimEnd('/'),
             accessToken = "token",
-            context = context,
             logging = false,
             logger = { },
             dispatcher = Dispatchers.Unconfined
@@ -72,7 +63,6 @@ class NsSdkUrlContractTest {
     @AfterEach
     fun tearDown() {
         server.close()
-        cacheDir.deleteRecursively()   // best effort, see setUp
     }
 
     /** Runs [call], ignores how it ends, and returns the request line the server saw. */
@@ -164,20 +154,33 @@ class NsSdkUrlContractTest {
             .isEqualTo("/api/v3/settings/aaps_x?permanent=true")
     }
 
+    /**
+     * How a path parameter is encoded. Identifiers come from Nightscout and are normally ids with no
+     * special characters, so this is a latent edge rather than a live case - but it decides whether a
+     * odd identifier addresses one document or a different path entirely, so the port has to match it.
+     */
+    @Test
+    fun `an identifier is encoded into the path`() = runTest {
+        val path = pathOf(body = """{"result":{}}""") { client.getSettings("a/b c") }
+
+        assertThat(path).startsWith("/api/v3/settings/")
+        assertThat(path.removePrefix("/api/v3/settings/")).isEqualTo("a%2Fb%20c")
+    }
+
     // ---------------------------------------------------------------- base url shapes
 
     /** A sub-path install must keep its sub-path on the data endpoints. */
     @Test
     fun `a sub-path install keeps the sub-path`() {
-        assertThat(NetworkStackBuilder.toBaseUrl("host.com/ns")).isEqualTo("https://host.com/ns/api/")
-        assertThat(NetworkStackBuilder.toBaseUrl("host.com")).isEqualTo("https://host.com/api/")
-        assertThat(NetworkStackBuilder.toBaseUrl("host.com/")).isEqualTo("https://host.com/api/")
+        assertThat(NsUrl.toBaseUrl("host.com/ns")).isEqualTo("https://host.com/ns/api/")
+        assertThat(NsUrl.toBaseUrl("host.com")).isEqualTo("https://host.com/api/")
+        assertThat(NsUrl.toBaseUrl("host.com/")).isEqualTo("https://host.com/api/")
     }
 
     /** An explicit scheme is honoured - this is what lets the tests above reach localhost. */
     @Test
     fun `an explicit scheme is kept`() {
-        assertThat(NetworkStackBuilder.toBaseUrl("http://localhost:8080")).isEqualTo("http://localhost:8080/api/")
-        assertThat(NetworkStackBuilder.toBaseUrl("https://host.com")).isEqualTo("https://host.com/api/")
+        assertThat(NsUrl.toBaseUrl("http://localhost:8080")).isEqualTo("http://localhost:8080/api/")
+        assertThat(NsUrl.toBaseUrl("https://host.com")).isEqualTo("https://host.com/api/")
     }
 }

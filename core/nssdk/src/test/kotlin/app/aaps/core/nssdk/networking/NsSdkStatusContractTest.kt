@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.networking
 
-import android.content.Context
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.exceptions.InvalidParameterNightscoutException
 import app.aaps.core.nssdk.exceptions.UnsuccessfulNightscoutException
@@ -15,10 +14,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import java.io.File
-import java.nio.file.Files
 
 /**
  * Pins how each HTTP status is turned into a result, and **how many requests that costs**.
@@ -46,18 +41,14 @@ class NsSdkStatusContractTest {
 
     private lateinit var server: MockWebServer
     private lateinit var client: NSAndroidClientImpl
-    private lateinit var cacheDir: File
 
     @BeforeEach
     fun setUp() {
-        cacheDir = Files.createTempDirectory("nssdk-status-cache").toFile()
         server = MockWebServer()
         server.start()
-        val context = mock<Context> { on { getCacheDir() } doReturn cacheDir }
         client = NSAndroidClientImpl(
             baseUrl = server.url("/").toString().trimEnd('/'),
             accessToken = "token",
-            context = context,
             logging = false,
             logger = { },
             dispatcher = Dispatchers.Unconfined
@@ -67,7 +58,6 @@ class NsSdkStatusContractTest {
     @AfterEach
     fun tearDown() {
         server.close()
-        cacheDir.deleteRecursively()
     }
 
     /** Answer every request with the same status and body - enough for the retry cases. */
@@ -102,6 +92,25 @@ class NsSdkStatusContractTest {
 
         assertThat(response.values).isEmpty()
         assertThat(server.requestCount).isEqualTo(1)
+    }
+
+    /**
+     * A bare 304 is an error, and always was.
+     *
+     * Nightscout only answers 304 to a **conditional** request. OkHttp sent those because it had a
+     * disk cache entry with an ETag, and it then merged the 304 with the cached body and handed
+     * Retrofit a **200** whose `raw().networkResponse.code` was 304 - which is the only way
+     * `ReadResponse.code` could ever hold 304, and what the paging workers used as their stop signal.
+     *
+     * There is no cache now, so no conditional request is sent and no 304 comes back. If one ever did
+     * arrive it would fail `isSuccessful` (200..299) and throw, exactly as it would have before when
+     * there was no cached entry to merge with. Pinned so that stays true.
+     */
+    @Test
+    fun `a bare 304 throws, as it did without a cache entry`() = runTest {
+        alwaysRespond(304)
+
+        assertThrows<UnsuccessfulNightscoutException> { client.getSgvsModifiedSince(1700000000000, 100) }
     }
 
     // ---------------------------------------------------------------- 404 as a normal answer

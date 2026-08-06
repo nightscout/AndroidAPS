@@ -327,6 +327,9 @@ class NSClientV3Plugin @Inject constructor(
             }
         val restartOnChange: suspend (Any) -> Unit = {
             stopService()
+            // Release the HTTP engine before dropping the reference. The Retrofit client leaked
+            // quietly here; a Ktor engine holds real connections, so it is closed explicitly.
+            nsAndroidClient?.close()
             nsAndroidClient = null
             setClient()
             nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
@@ -618,7 +621,6 @@ class NSClientV3Plugin @Inject constructor(
             nsAndroidClient = NSAndroidClientImpl(
                 baseUrl = preferences.get(StringKey.NsClientUrl).lowercase().replace("https://", "").replace(Regex("/$"), ""),
                 accessToken = preferences.get(StringKey.NsClientAccessToken),
-                context = context,
                 logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )

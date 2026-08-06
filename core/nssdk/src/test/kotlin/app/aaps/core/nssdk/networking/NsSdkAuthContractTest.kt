@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.networking
 
-import android.content.Context
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.exceptions.DateHeaderOutOfToleranceException
 import app.aaps.core.nssdk.exceptions.InvalidAccessTokenException
@@ -15,10 +14,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import java.io.File
-import java.nio.file.Files
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -44,7 +39,6 @@ class NsSdkAuthContractTest {
 
     private lateinit var server: MockWebServer
     private lateinit var client: NSAndroidClientImpl
-    private lateinit var cacheDir: File
 
     private val refreshCalls = AtomicInteger(0)
     private var lastRefreshTarget: String? = null
@@ -52,14 +46,11 @@ class NsSdkAuthContractTest {
 
     @BeforeEach
     fun setUp() {
-        cacheDir = Files.createTempDirectory("nssdk-auth-cache").toFile()
         server = MockWebServer()
         server.start()
-        val context = mock<Context> { on { getCacheDir() } doReturn cacheDir }
         client = NSAndroidClientImpl(
             baseUrl = server.url("/").toString().trimEnd('/'),
             accessToken = "REFRESH_TOKEN",
-            context = context,
             logging = false,
             logger = { },
             dispatcher = Dispatchers.Unconfined
@@ -69,7 +60,6 @@ class NsSdkAuthContractTest {
     @AfterEach
     fun tearDown() {
         server.close()
-        cacheDir.deleteRecursively()
     }
 
     /**

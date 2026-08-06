@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.networking
 
-import android.content.Context
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
@@ -16,10 +15,6 @@ import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import java.io.File
-import java.nio.file.Files
 
 /**
  * Pins the behaviour that depends on reading the **raw text of an error body**.
@@ -42,18 +37,14 @@ class NsSdkErrorBodyContractTest {
 
     private lateinit var server: MockWebServer
     private lateinit var client: NSAndroidClientImpl
-    private lateinit var cacheDir: File
 
     @BeforeEach
     fun setUp() {
-        cacheDir = Files.createTempDirectory("nssdk-errorbody-cache").toFile()
         server = MockWebServer()
         server.start()
-        val context = mock<Context> { on { getCacheDir() } doReturn cacheDir }
         client = NSAndroidClientImpl(
             baseUrl = server.url("/").toString().trimEnd('/'),
             accessToken = "token",
-            context = context,
             logging = false,
             logger = { },
             dispatcher = Dispatchers.Unconfined
@@ -63,7 +54,6 @@ class NsSdkErrorBodyContractTest {
     @AfterEach
     fun tearDown() {
         server.close()
-        cacheDir.deleteRecursively()
     }
 
     private fun sgv(utcOffset: Long) = NSSgvV3(

@@ -47,12 +47,18 @@ class LoadTreatmentsWorker @AssistedInject constructor(
                 if ((nsClientV3Plugin.newestDataOnServer?.collections?.treatments ?: Long.MAX_VALUE) > lastLoaded) {
                     val treatments: List<NSTreatment>
                     val response: NSAndroidClient.ReadResponse<List<NSTreatment>>?
+                    // Replaces the old `response.code != 304` brake - see the same change in
+                    // LoadBgWorker. The 304 came from OkHttp's disk cache revalidating a GET; what it
+                    // meant is checked directly now, namely that the server has nothing newer so the
+                    // cursor cannot move and the next page would repeat this one.
+                    var cursorStalled = false
                     if (isFirstLoad) {
                         val lastLoadedIso = dateUtil.toISOString(lastLoaded)
                         response = nsAndroidClient.getTreatmentsNewerThan(lastLoadedIso, NSClientV3Plugin.RECORDS_TO_LOAD)
                     } else {
                         response = nsAndroidClient.getTreatmentsModifiedSince(lastLoaded, NSClientV3Plugin.RECORDS_TO_LOAD)
                         aapsLogger.debug(LTag.NSCLIENT, "lastLoadedSrvModified: ${response.lastServerModified}")
+                        cursorStalled = response.lastServerModified?.let { it <= lastLoaded } == true
                         response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = it }
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
@@ -63,7 +69,7 @@ class LoadTreatmentsWorker @AssistedInject constructor(
                         nsClientRepository.addLog("◄ $action", "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         // Schedule processing of fetched data and continue of loading
                         continueLoading =
-                            response.code != 304 && nsIncomingDataProcessor.processTreatments(response.values, nsClientV3Plugin.doingFullSync)
+                            !cursorStalled && nsIncomingDataProcessor.processTreatments(response.values, nsClientV3Plugin.doingFullSync)
                     } else {
                         // End first load
                         if (isFirstLoad) {

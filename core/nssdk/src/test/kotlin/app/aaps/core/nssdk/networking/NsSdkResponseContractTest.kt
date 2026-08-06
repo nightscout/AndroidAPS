@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.networking
 
-import android.content.Context
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.exceptions.InvalidFormatNightscoutException
 import app.aaps.core.nssdk.localmodel.entry.Direction
@@ -17,10 +16,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import java.io.File
-import java.nio.file.Files
 
 /**
  * Pins how a response is turned into values: the **ETag**, which drives the sync cursor, and the
@@ -40,18 +35,14 @@ class NsSdkResponseContractTest {
 
     private lateinit var server: MockWebServer
     private lateinit var client: NSAndroidClientImpl
-    private lateinit var cacheDir: File
 
     @BeforeEach
     fun setUp() {
-        cacheDir = Files.createTempDirectory("nssdk-response-cache").toFile()
         server = MockWebServer()
         server.start()
-        val context = mock<Context> { on { getCacheDir() } doReturn cacheDir }
         client = NSAndroidClientImpl(
             baseUrl = server.url("/").toString().trimEnd('/'),
             accessToken = "token",
-            context = context,
             logging = false,
             logger = { },
             dispatcher = Dispatchers.Unconfined
@@ -61,7 +52,6 @@ class NsSdkResponseContractTest {
     @AfterEach
     fun tearDown() {
         server.close()
-        cacheDir.deleteRecursively()
     }
 
     private fun sgv() = NSSgvV3(
