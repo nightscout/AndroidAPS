@@ -168,10 +168,8 @@ class NsIncomingDataProcessor @Inject constructor(
                         if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.AAPSCLIENT || doFullSync) {
                             if (treatment.duration > 0L) {
                                 // not ending event
-                                if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
-                                    || treatment.targetBottomAsMgdl() > Constants.MAX_TT_MGDL
-                                    || treatment.targetTopAsMgdl() < Constants.MIN_TT_MGDL
-                                    || treatment.targetTopAsMgdl() > Constants.MAX_TT_MGDL
+                                if (treatment.targetBottomAsMgdl() !in Constants.TT_RANGE_MGDL
+                                    || treatment.targetTopAsMgdl() !in Constants.TT_RANGE_MGDL
                                     || treatment.targetBottomAsMgdl() > treatment.targetTopAsMgdl()
                                 ) {
                                     aapsLogger.debug(LTag.NSCLIENT, "Ignored TemporaryTarget $treatment")
@@ -260,8 +258,20 @@ class NsIncomingDataProcessor @Inject constructor(
         }
     }
 
+    /**
+     * Take over a profile store from Nightscout.
+     *
+     * A **paired client** does not: its profiles come from the master over the client-control sync
+     * channel, and accepting the Nightscout copy as well would give two writers for one list, fighting
+     * through [LongNonKey.LocalProfileLastChange]. An **unpaired client** has no other source and needs
+     * profiles to display and calculate with, so it keeps accepting them (read-only — it cannot edit).
+     * A **master** is unchanged: the user's `ns_receive_profile_store` setting decides.
+     */
     suspend fun processProfile(profileJson: JSONObject, doFullSync: Boolean) {
-        if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.AAPSCLIENT || doFullSync) {
+        val accept =
+            if (config.AAPSCLIENT) !nsClient.masterOrPairedClientFlow.value
+            else preferences.get(BooleanKey.NsClientAcceptProfileStore) || doFullSync
+        if (accept) {
             val store = profileStoreProvider.get().with(profileJson)
             val createdAt = store.getStartDate()
             val lastLocalChange = preferences.get(LongNonKey.LocalProfileLastChange)

@@ -68,6 +68,14 @@ class EquilBLE @Inject constructor(
             isConnected = true
             equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
             handler.removeMessages(TIME_OUT_CONNECT_WHAT)
+            // Link up: stop the parallel advert-harvest scan (the pump stops advertising once connected; if it
+            // already caught an advert it stopped itself in the scan collector).
+            stopScan()
+            synchronized(notifyLock) {
+                // New link: notifications not yet enabled. Block command dispatch until onDescriptorWritten.
+                notificationEnabled = false
+                dispatchedCmd = null
+            }
             bleTransport.gatt.discoverServices()
             updateCmdStatus(ResolvedResult.FAILURE)
         } else {
@@ -88,7 +96,13 @@ class EquilBLE @Inject constructor(
 
     override fun onDescriptorWritten() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWritten: Wrote GATT Descriptor successfully.")
-        ready()
+        synchronized(notifyLock) {
+            notificationEnabled = true
+            // Notifications are now live: send the pending command (queue-opened or the one that opened
+            // this link). Null-safe + send-once via dispatchedCmd, so it can't collide with the descriptor
+            // write and can't double-send with writeCmd().
+            dispatchCmd()
+        }
     }
 
     override fun onCharacteristicChanged(data: ByteArray) {
@@ -148,7 +162,7 @@ class EquilBLE @Inject constructor(
         // Cancel any pending delayed connect so a stale runnable can't re-open a GATT after teardown.
         connectRunnable?.let { handler.removeCallbacks(it) }
         connectRunnable = null
-        startTrue = false
+        stopScan() // cancel any in-flight advert-harvest scan (hybrid connect); also clears startTrue
         autoScan = false
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
         aapsLogger.debug(LTag.PUMPBTCOMM, "Closing GATT connection")
@@ -156,6 +170,10 @@ class EquilBLE @Inject constructor(
         bleTransport.gatt.close()
         baseCmd = null
         preCmd = null
+        synchronized(notifyLock) {
+            notificationEnabled = false
+            dispatchedCmd = null
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
     }
 
@@ -191,6 +209,30 @@ class EquilBLE @Inject constructor(
 
     private var baseCmd: BaseCmd? = null
     private var preCmd: BaseCmd? = null
+
+    // Notification-readiness gate for the current GATT link. Android allows only ONE outstanding GATT
+    // operation at a time. `isConnected` flips true at onConnectionStateChanged BEFORE onServicesDiscovered
+    // has enabled notifications (the notify-descriptor write). If a command's first characteristic write
+    // goes out in that window it collides with the descriptor write: writeDescriptor returns false,
+    // notifications never turn on, the pump's replies never arrive, and the command idle-times-out ->
+    // "Pump connection failure / manually check delivered insulin" (bolus, tempBasal and profile/CmdSettingSet
+    // all hit this through different writeCmd branches). Fix: never send the FIRST command on a link until
+    // onDescriptorWritten confirms notifications; dispatchedCmd makes that send-once so it can't double with
+    // writeCmd(). See #4910 (this is its follow-up).
+    private val notifyLock = Any()
+    @Volatile private var notificationEnabled = false
+    private var dispatchedCmd: BaseCmd? = null
+
+    // Send the current command's first packet exactly once per link, only after notifications are enabled.
+    // Null-safe (no-op during the pure connect handshake). Caller MUST hold notifyLock.
+    private fun dispatchCmd() {
+        val cmd = baseCmd
+        if (cmd != null && cmd !== dispatchedCmd) {
+            dispatchedCmd = cmd
+            ready()
+        }
+    }
+
     fun writeCmd(baseCmd: BaseCmd) {
         aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
         this.baseCmd = baseCmd
@@ -200,8 +242,19 @@ class EquilBLE @Inject constructor(
             else -> equilManager?.equilState?.address ?: error("Unknown MAC address")
         }
         autoScan = baseCmd is CmdRunningModeGet || baseCmd is CmdInsulinGet
+        if (isConnected) {
+            synchronized(notifyLock) {
+                if (!notificationEnabled) {
+                    // Fresh link, notifications not enabled yet: defer EVERY send path (pair step,
+                    // continuation, first command). onDescriptorWritten -> dispatchCmd() sends it once
+                    // notifications are up, avoiding the descriptor-write collision.
+                    preCmd = baseCmd
+                    return
+                }
+            }
+        }
         if (isConnected && baseCmd.isPairStep()) {
-            ready()
+            synchronized(notifyLock) { dispatchCmd() }
         } else if (isConnected) {
             val prevCmd = preCmd
             if (prevCmd != null) {
@@ -209,12 +262,10 @@ class EquilBLE @Inject constructor(
                 baseCmd.runPwd = prevCmd.runPwd
                 nextCmd2()
             } else {
-                // The GATT link was opened by the queue's connect() phase, which leaves no prior
-                // command context (baseCmd/preCmd are null, so the connect-time ready() was a no-op).
-                // Send this command as the first one on the open connection instead of silently
-                // dropping it - otherwise the pump receives nothing and idle-disconnects (status 19),
-                // surfacing as a bolus/command timeout. See issue #4910.
-                ready()
+                // GATT link opened by the queue's connect() phase, notifications already up: send this
+                // command as the first one on the open link (else the pump idle-disconnects, status 19).
+                // See issue #4910.
+                synchronized(notifyLock) { dispatchCmd() }
             }
         } else {
             findEquil(mac)
@@ -318,9 +369,23 @@ class EquilBLE @Inject constructor(
         if (connecting || isConnected) {
             return
         }
-        autoScan = true
         baseCmd = null
-        startScan()
+        macAddress = equilManager?.equilState?.address
+        val mac = macAddress
+        if (!mac.isNullOrEmpty()) {
+            // Known/bonded pump: connect straight to its MAC (autoConnect, see EquilBleTransportImpl) instead of
+            // scan-to-connect. Scan discovery was the #5040 bottleneck (60-90 s on many phones). In parallel run
+            // a best-effort advert harvest that does NOT gate the connection - it refreshes the pump's current
+            // history index + battery/reservoir/alarm. Scanning stays as the fallback for an unknown MAC.
+            connecting = true
+            equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+            connectEquil(mac)
+            autoScan = false
+            startScan()
+        } else {
+            autoScan = true
+            startScan()
+        }
     }
 
     fun stopScan() {

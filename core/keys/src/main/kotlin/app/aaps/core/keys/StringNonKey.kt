@@ -27,6 +27,13 @@ enum class StringNonKey(
     SceneDefinitions(key = "scene_definitions", defaultValue = "[]", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ActiveScene(key = "active_scene", defaultValue = ""),
 
+    // Whole local profile list as one JSON document: {"lastChange": <ms>, "profiles": [ … ]}.
+    // One key means one atomic apply and one last-writer-wins unit, which is what makes the profile
+    // list safe to sync. The older per-profile keys (ProfileComposedStringKey / ProfileComposedBooleanKey /
+    // ProfileIntKey.AmountOfProfiles) are still read as a fallback and are deliberately NOT deleted, so a
+    // downgrade to an older build still finds its profiles. See ProfileRepositoryImpl.
+    LocalProfileData(key = "local_profile_data", defaultValue = "", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+
     // Standalone Automation runtime. In core/keys (not the automation module) so the client→master
     // sync publisher/receiver in :plugins:sync can observe it without an inter-module dependency.
     AutomationEvents(key = "AUTOMATION_EVENTS", defaultValue = "", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),

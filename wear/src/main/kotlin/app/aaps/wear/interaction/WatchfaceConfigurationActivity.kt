@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.preference.WearPreferenceActivity
+import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import javax.inject.Inject
 
 class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -34,9 +35,27 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         dagger.android.AndroidInjection.inject(this)
 
         // MUST set preferenceFile BEFORE calling super.onCreate() because super creates the fragment
-        preferenceFile = intent.getIntExtra(getString(R.string.key_preference_id), R.xml.display_preferences)
+        val requestedWatchFace = intent.getIntExtra(getString(R.string.key_selected_watchface), -1)
+            .takeIf { it >= 0 }
+            ?.let { SelectedWatchFace.fromId(it) }
+
+        preferenceFile = requestedWatchFace
+            ?.let { WatchFaceCatalog.preferenceXmlFor(it) }
+            ?: intent.getIntExtra(getString(R.string.key_preference_id), R.xml.display_preferences)
 
         super.onCreate(savedInstanceState)
+
+        // Only the 3 dedicated watch-face menu entries pass key_selected_watchface. The app-wide
+        // display/graph/interface/complication/others screens (and the phone-triggered
+        // OpenSettings default) must never activate a watch face as a side effect of being
+        // opened, so the SysUI hand-off below only ever runs when one was explicitly requested.
+        if (savedInstanceState == null && requestedWatchFace != null) {
+            val watchFaceComponent = WatchFaceCatalog.componentNameFor(this, requestedWatchFace)
+            if (watchFaceComponent != null && SamsungWatchFaceEditor.requestEditor(this, watchFaceComponent)) {
+                finish()
+                return
+            }
+        }
 
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
 

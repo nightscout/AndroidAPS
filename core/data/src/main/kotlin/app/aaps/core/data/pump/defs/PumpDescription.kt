@@ -68,7 +68,7 @@ class PumpDescription {
     }
 
     fun clone(): PumpDescription =
-        PumpDescription().also { it ->
+        PumpDescription().also {
             it.pumpType = this.pumpType
             it.isBolusCapable = this.isBolusCapable
             it.bolusStep = this.bolusStep

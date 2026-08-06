@@ -956,7 +956,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote bolus not available. Try again later.")
         whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(0.0, aapsLogger))
-        whenever(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
+        whenever(dateUtilMocked.now()).thenReturn(Constants.REMOTE_BOLUS_MIN_DISTANCE + 1002L)
 
         //BOLUS 0
         whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
@@ -1034,7 +1034,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
         whenever(constraintChecker.applyExtendedBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
         whenever(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
-        whenever(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
+        whenever(dateUtilMocked.now()).thenReturn(Constants.REMOTE_BOLUS_MIN_DISTANCE + 1002L)
         whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
         whenever(rh.gs(app.aaps.core.ui.R.string.stop_pressed)).thenReturn("STOP PRESSED")
         whenever(bolusProgressData.isStopPressed).thenReturn(true)

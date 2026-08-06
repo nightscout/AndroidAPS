@@ -210,7 +210,7 @@ class DataHandlerMobile @Inject constructor(
         onEvent<EventData.OpenLoopRequestConfirmed> {
             if (!config.appInitialized) return@onEvent
             loop.acceptChangeRequest()
-            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
         onEvent<EventData.ActionResendData> { resendData(it.from) }
         onEvent<EventData.ActionPumpStatus> {
@@ -402,7 +402,8 @@ class DataHandlerMobile @Inject constructor(
         }
 
         // Map loop mode
-        val loopMode = when (loop.runningMode()) {
+        val runningModeRecord = loop.runningModeRecord()
+        val loopMode = when (runningModeRecord.mode) {
             RM.Mode.CLOSED_LOOP       -> LoopStatusData.LoopMode.CLOSED
             RM.Mode.OPEN_LOOP         -> LoopStatusData.LoopMode.OPEN
             RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
@@ -414,6 +415,8 @@ class DataHandlerMobile @Inject constructor(
             RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
             else                      -> LoopStatusData.LoopMode.UNKNOWN
         }
+        // End time of a temporary mode (suspend/disconnect/superbolus) so the watch can show remaining duration
+        val modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
 
         // Build temp target info
         val tempTargetInfo = tempTarget?.let {
@@ -530,14 +533,15 @@ class DataHandlerMobile @Inject constructor(
         return LoopStatusData(
             timestamp = System.currentTimeMillis(),
             loopMode = loopMode,
-            apsName = if (loop.runningMode().isLoopRunning())
+            apsName = if (runningModeRecord.mode.isLoopRunning())
                 (usedAPS as? PluginBase)?.name else null,
             lastRun = lastRunTimestamp,
             lastEnact = lastEnactTimestamp,
             tempTarget = tempTargetInfo,
             autosensTarget = autosensTarget,
             defaultRange = defaultRange,
-            oapsResult = oapsResultInfo
+            oapsResult = oapsResultInfo,
+            modeEndTime = modeEndTime
         )
     }
 
@@ -680,10 +684,12 @@ class DataHandlerMobile @Inject constructor(
         }
     }
 
-    private suspend fun handleSceneStopPreCheck() {
+    private fun handleSceneStopPreCheck() {
         // Build confirm locally — no master round-trip needed before showing "End active scene".
         // The watch waits for RemoteDelivered (deferConfirm) while the stop relays to master.
-        if (!scenes.isAnySceneActive()) return sendError(rh.gs(app.aaps.core.ui.R.string.scene_ended))
+        // Wider than "a scene is running": ending an expired-but-undismissed scene from the watch is a
+        // valid stop (stopActiveScene dismisses it), and it is the only remote way to clear that banner.
+        if (!scenes.hasSceneToStop()) return sendError(rh.gs(app.aaps.core.ui.R.string.scene_ended))
         sendToWear(
             EventData.ConfirmAction(
                 title = rh.gs(app.aaps.core.ui.R.string.scenes),
@@ -944,11 +950,11 @@ class DataHandlerMobile @Inject constructor(
                 }
                 val lowMgdl = if (action.isMgdl) action.low else action.low * Constants.MMOLL_TO_MGDL
                 val highMgdl = if (action.isMgdl) action.high else action.high * Constants.MMOLL_TO_MGDL
-                if (lowMgdl < HardLimits.LIMIT_TEMP_MIN_BG[0] || lowMgdl > HardLimits.LIMIT_TEMP_MIN_BG[1]) {
+                if (lowMgdl !in HardLimits.LIMIT_TEMP_MIN_BG) {
                     sendError(rh.gs(R.string.wear_action_tempt_min_bg_error))
                     return
                 }
-                if (highMgdl < HardLimits.LIMIT_TEMP_MAX_BG[0] || highMgdl > HardLimits.LIMIT_TEMP_MAX_BG[1]) {
+                if (highMgdl !in HardLimits.LIMIT_TEMP_MAX_BG) {
                     sendError(rh.gs(R.string.wear_action_tempt_max_bg_error))
                     return
                 }
@@ -1097,7 +1103,9 @@ class DataHandlerMobile @Inject constructor(
         sendUserActions()
         // Scenes
         sendScenes()
-        sendActiveSceneState(scenes.isAnySceneActive())
+        // Same condition as the live push in WearPlugin (scenes.activeFlow) — the tile is fed by both,
+        // so a resend must not disagree with the flow about whether the STOP button belongs there.
+        sendActiveSceneState(scenes.hasSceneToStop())
         // GraphData
         iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
             // Hoist out of the per-bucket map: getGlucoseStatusData copies the bucketed table and runs a polynomial fit on every call.
@@ -1299,6 +1307,7 @@ class DataHandlerMobile @Inject constructor(
         var iobSum = ""
         var iobDetail = ""
         var cobString = ""
+        var cobValue = -1.0
         var currentBasal = ""
         var bgiString = ""
         if (config.appInitialized && profile != null) {
@@ -1306,7 +1315,9 @@ class DataHandlerMobile @Inject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             iobSum = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${decimalFormatter.to2Decimal(bolusIob.iob)}|${decimalFormatter.to2Decimal(basalIob.basaliob)})"
-            cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString(decimalFormatter)
+            val cobInfo = iobCobCalculator.getCobInfo("WatcherUpdaterService")
+            cobString = cobInfo.generateCOBString(decimalFormatter)
+            cobValue = cobInfo.displayCob ?: -1.0
             currentBasal =
                 processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh) ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
@@ -1374,6 +1385,7 @@ class DataHandlerMobile @Inject constructor(
                 iobSum = iobSum,
                 iobDetail = iobDetail,
                 cob = cobString,
+                cobValue = cobValue,
                 currentBasal = currentBasal,
                 battery = phoneBattery.toString(),
                 rigBattery = rigBattery,

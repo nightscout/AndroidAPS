@@ -59,6 +59,12 @@ class AlarmSoundPlayerImpl @Inject constructor(
     }
 
     private fun doPlay(@RawRes soundRes: Int, ownerTag: String, postedAtElapsedRealtime: Long) {
+        // Idempotent: a re-request of the exact same sound by the same owner while it's already
+        // playing is a no-op. This lets ErrorActivity call play() when it foregrounds on top of an
+        // alarm that AlarmNotificationManager already started (same OWNER_FULLSCREEN) without a
+        // stop/restart audio glitch.
+        if (player != null && currentOwner == ownerTag && currentSound == soundRes) return
+
         doStop()
         currentSound = soundRes
         currentOwner = ownerTag

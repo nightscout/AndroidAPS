@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 /** Activates a preset temp target: TARGET MEAL/ACTIVITY/HYPO. */
 class TempTargetSetAction(
@@ -40,7 +40,7 @@ class TempTargetSetAction(
         persistenceLayer.insertAndCancelCurrentTemporaryTarget(
             temporaryTarget = TT(
                 timestamp = dateUtil.now(),
-                duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
+                duration = ttDuration.toLong().minutes.inWholeMilliseconds,
                 reason = reason,
                 lowTarget = ttMgdl,
                 highTarget = ttMgdl

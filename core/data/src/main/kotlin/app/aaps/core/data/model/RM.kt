@@ -58,7 +58,7 @@ data class RM(
 
         /**
          * Not a real mode but only option to cancel temporary mode
-         * (ie. RECONNECT_PUMP, RESUME_LOOP, CANCEL_SUPERBOLUS)
+         * (i.e. RECONNECT_PUMP, RESUME_LOOP, CANCEL_SUPERBOLUS)
          */
         RESUME
         ;
@@ -70,7 +70,7 @@ data class RM(
          * True when the loop algorithm should not run / not dispatch new dosing decisions.
          * Includes SUPER_BOLUS (the bolus is delivered by the wizard, basal is forced to 0)
          * and all explicit suspends. **Does not** mean "manual bolus blocked" — for that
-         * use [PumpCommandGate.check] with [PumpCommandGate.CommandKind.BOLUS].
+         * use `PumpCommandGate.check` with `PumpCommandGate.CommandKind.BOLUS`.
          */
         fun pausesLoopExecution() = this == DISCONNECTED_PUMP || this == SUSPENDED_BY_PUMP || this == SUSPENDED_BY_USER || this == SUSPENDED_BY_DST || this == SUPER_BOLUS
         fun mustBeTemporary() = this == DISCONNECTED_PUMP || this == SUSPENDED_BY_PUMP || this == SUSPENDED_BY_USER || this == SUSPENDED_BY_DST || this == SUPER_BOLUS

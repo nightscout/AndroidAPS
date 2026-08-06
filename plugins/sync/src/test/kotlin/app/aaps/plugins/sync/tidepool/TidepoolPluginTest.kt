@@ -11,6 +11,7 @@ import app.aaps.plugins.sync.tidepool.comm.UploadChunk
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
@@ -51,6 +52,36 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun statusShowsConnectivityBeforeAuthState() {
+        whenever(receiverDelegate.allowed).thenReturn(false)
+        whenever(authFlowOut.connectionStatus).thenReturn(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED)
+
+        assertThat(tidepoolPlugin.status).isEqualTo("BLOCKED (connectivity)")
+        assertThat(tidepoolPlugin.connected).isFalse()
+        assertThat(tidepoolPlugin.hasWritePermission).isFalse()
+    }
+
+    @Test
+    fun statusShowsAuthStateWhenConnectivityAllows() {
+        whenever(receiverDelegate.allowed).thenReturn(true)
+        whenever(authFlowOut.connectionStatus).thenReturn(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN)
+
+        assertThat(tidepoolPlugin.status).isEqualTo("NOT_LOGGED_IN")
+        assertThat(tidepoolPlugin.connected).isFalse()
+        assertThat(tidepoolPlugin.hasWritePermission).isFalse()
+    }
+
+    @Test
+    fun connectedOnlyWithConnectivityAndSession() {
+        whenever(receiverDelegate.allowed).thenReturn(true)
+        whenever(authFlowOut.connectionStatus).thenReturn(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED)
+
+        assertThat(tidepoolPlugin.status).isEqualTo("SESSION_ESTABLISHED")
+        assertThat(tidepoolPlugin.connected).isTrue()
+        assertThat(tidepoolPlugin.hasWritePermission).isTrue()
+    }
+
+    @Test
     fun notLoggedInStateTriggersLoginWhenConnectivityRestored() {
         whenever(authFlowOut.authState).thenReturn(authState)
         whenever(receiverDelegate.allowed).thenReturn(true)
@@ -58,7 +89,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
 
         val realUploader = TidepoolUploader(
             aapsLogger, rxBus, context, preferences, uploadChunk,
-            dateUtil, receiverDelegate, config, l, authFlowOut
+            dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus,
@@ -82,7 +113,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
 
         val realUploader = TidepoolUploader(
             aapsLogger, rxBus, context, preferences, uploadChunk,
-            dateUtil, receiverDelegate, config, l, authFlowOut
+            dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus,

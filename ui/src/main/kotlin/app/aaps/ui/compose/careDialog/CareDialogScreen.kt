@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
@@ -59,7 +60,6 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
-import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -339,8 +339,8 @@ private fun BgSection(
         }
 
         val (minBg, maxBg, step, format) = when (glucoseUnits) {
-            GlucoseUnit.MMOL -> BgParams(2.0, 30.0, 0.1, DecimalFormat("0.0"))
-            GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, DecimalFormat("0"))
+            GlucoseUnit.MMOL -> BgParams(2.0, 30.0, 0.1, NumberFormat.DECIMAL_1)
+            GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, NumberFormat.INTEGER)
         }
 
         NumberInputRow(
@@ -359,7 +359,7 @@ private data class BgParams(
     val min: Double,
     val max: Double,
     val step: Double,
-    val format: DecimalFormat
+    val format: NumberFormat
 )
 
 @Composable
@@ -372,7 +372,7 @@ private fun DurationSection(
         labelResId = CoreUiR.string.duration_label,
         value = duration,
         onValueChange = onDurationChange,
-        valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
+        valueRange = Constants.ACTION_DURATION,
         step = 10.0,
         unitLabelResId = KeysR.string.units_min,
         modifier = modifier

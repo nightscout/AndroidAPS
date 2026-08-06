@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -12,7 +13,6 @@ import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
@@ -32,25 +32,28 @@ class DetermineBasalSMB @Inject constructor(
     private var consoleError = mutableListOf<String>()
     private var consoleLog = mutableListOf<String>()
 
-    private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
+    private fun Double.toFixed2(): String = NumberFormat.DECIMAL_2_UP_TO_3.format(round(this, 2))
 
     fun round_basal(value: Double): Double = value
 
     // Rounds value to 'digits' decimal places
     // different for negative numbers fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
     fun round(value: Double, digits: Int): Double {
-        if (value.isNaN()) return Double.NaN
+        // Pass NaN AND ±Infinity through untouched. Math.round saturates at Long.MAX_VALUE, so without
+        // this an infinite value would come back as a normal looking ~9.2e18/scale and every isFinite()
+        // guard downstream would be blind to it - the guards all read values that went through here.
+        if (!value.isFinite()) return value
         val scale = 10.0.pow(digits.toDouble())
         return Math.round(value * scale) / scale
     }
 
-    fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
+    fun Double.withoutZeros(): String = NumberFormat.UP_TO_2_DECIMALS.format(this)
     fun round(value: Double): Int =
-        // Crash backstop: roundToInt() throws on NaN. Substitute 0, but record a token that the
-        // reportNonFiniteRtFields tripwire (PersistenceLayerImpl) surfaces to Crashlytics, so laundering
-        // NaN→0 here does not silently hide the underlying bug.
-        if (value.isNaN()) {
-            consoleError.add("round(): non-finite value substituted with 0 (roundNaN=NaN)")
+        // Crash backstop: roundToInt() throws on NaN and saturates at Int.MAX_VALUE on ±Infinity.
+        // Substitute 0, but record a token that the reportNonFiniteRtFields tripwire
+        // (PersistenceLayerImpl) surfaces to Crashlytics, so laundering here does not hide the real bug.
+        if (!value.isFinite()) {
+            consoleError.add("round(): non-finite value substituted with 0 (roundNonFinite=$value)")
             0
         } else value.roundToInt()
 
@@ -128,6 +131,17 @@ class DetermineBasalSMB @Inject constructor(
 
         val maxSafeBasal = getMaxSafeBasal(profile)
         var rate = _rate
+        // A non-finite rate passes both clamps below untouched, because every comparison with NaN is
+        // false, and then lands in rT.rate - which DetermineBasalResult turns into a real pump command.
+        // Do not invent a dose out of a broken value: fall back to the profile basal, which the
+        // `suggestedRate == profile.current_basal` branch below turns into a neutral temp or cancels
+        // the running temp. Zero would be worse, because that actively withholds basal for 30 minutes.
+        // The interpolated value leaves a literal `setTempBasalRate=NaN` token in consoleError, which is
+        // what the reportNonFiniteRtFields tripwire (PersistenceLayerImpl) scans for.
+        if (!rate.isFinite()) {
+            consoleError.add("setTempBasal: setTempBasalRate=$_rate is not finite, using profile basal instead")
+            rate = profile.current_basal
+        }
         if (rate < 0) rate = 0.0
         else if (rate > maxSafeBasal) rate = maxSafeBasal
 
@@ -159,6 +173,36 @@ class DetermineBasalSMB @Inject constructor(
             rT.rate = suggestedRate
             return rT
         }
+    }
+
+    /**
+     * Give up on this run instead of turning a broken internal value into a dose.
+     *
+     * Same policy the invalid input check in [determine_basal] uses for bad CGM data: put a running
+     * high temp back to neutral, shorten a long zero temp, otherwise leave the pump alone. Never
+     * suspend, and never guess a rate.
+     *
+     * [token] must be written as `name=value` so the interpolated NaN / Infinity keeps the literal
+     * `name=NaN` form that the `PersistenceLayerImpl.reportNonFiniteRtFields` tripwire scans for -
+     * that is how the event reaches Crashlytics even though the returned result is finite.
+     */
+    private fun abortNonFinite(token: String, rT: RT, currenttemp: CurrentTemp, basal: Double, deliverAt: Long): RT {
+        consoleError.add("Aborting run: $token")
+        rT.reason.append("Aborting run: $token. ")
+        if (currenttemp.rate > basal) {
+            rT.reason.append("Replacing high temp basal of ${currenttemp.rate} with neutral temp of $basal. ")
+            rT.deliverAt = deliverAt
+            rT.duration = 30
+            rT.rate = basal
+        } else if (currenttemp.rate == 0.0 && currenttemp.duration > 30) {
+            rT.reason.append("Shortening ${currenttemp.duration}m long zero temp to 30m. ")
+            rT.deliverAt = deliverAt
+            rT.duration = 30
+            rT.rate = 0.0
+        } else {
+            rT.reason.append("Temp ${currenttemp.rate} <= current basal ${round(basal, 2)}U/hr; doing nothing. ")
+        }
+        return rT
     }
 
     fun determine_basal(
@@ -484,8 +528,12 @@ class DetermineBasalSMB @Inject constructor(
         // area of the /\ triangle is the same as a remainingCIpeak-height rectangle out to remainingCATime/2
         // remainingCIpeak (mg/dL/5m) = remainingCarbs (g) * CSF (mg/dL/g) * 5 (m/5m) * 1h/60m / (remainingCATime/2) (h)
         val remainingCIpeak = remainingCarbs * csf * 5 / 60 / (remainingCATime / 2)
-        if (remainingCIpeak.isNaN()) {
-            throw Exception("remainingCarbs=$remainingCarbs remainingCATime=$remainingCATime profile.remainingCarbsCap=${profile.remainingCarbsCap} csf=$csf")
+        // This used to throw. Nothing catches it - OpenAPSSMBPlugin does not, and LoopPlugin.invoke is
+        // try/finally - so the whole loop run was lost with no dose, no result and nothing shown to the
+        // user. Stop the run in a defined state instead, and let the tripwire report it.
+        if (!remainingCIpeak.isFinite()) {
+            consoleError.add("remainingCarbs=$remainingCarbs remainingCATime=$remainingCATime profile.remainingCarbsCap=${profile.remainingCarbsCap} csf=$csf")
+            return abortNonFinite("remainingCIpeak=$remainingCIpeak", rT, currenttemp, basal, deliverAt)
         }
         //console.error(profile.min_5m_carbimpact,ci,totalCI,totalCA,remainingCarbs,remainingCI,remainingCATime);
 
@@ -584,8 +632,10 @@ class DetermineBasalSMB @Inject constructor(
             // and ending at remainingCATime h (remainingCATime*12 * 5m intervals)
             val intervals = Math.min(COBpredBGs.size.toDouble(), ((remainingCATime * 12) - COBpredBGs.size))
             val remainingCI = Math.max(0.0, intervals / (remainingCATime / 2 * 12) * remainingCIpeak)
-            if (remainingCI.isNaN()) {
-                throw Exception("remainingCI=$remainingCI intervals=$intervals remainingCIpeak=$remainingCIpeak")
+            // Was a throw, same problem as remainingCIpeak above: uncaught, so the loop run vanished.
+            if (!remainingCI.isFinite()) {
+                consoleError.add("intervals=$intervals remainingCIpeak=$remainingCIpeak")
+                return abortNonFinite("remainingCI=$remainingCI", rT, currenttemp, basal, deliverAt)
             }
             remainingCItotal += predCI + remainingCI
             remainingCIs.add(round(remainingCI))
@@ -643,14 +693,14 @@ class DetermineBasalSMB @Inject constructor(
             consoleError.add("remainingCIs:      " + remainingCIs.joinToString(separator = " "))
         }
         rT.predBGs = Predictions()
-        IOBpredBGs = IOBpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
+        IOBpredBGs = IOBpredBGs.map { round(min(401.0, it.coerceAtLeastFinite(39.0)), 0) }.toMutableList()
         for (i in IOBpredBGs.size - 1 downTo 13) {
             if (IOBpredBGs[i - 1] != IOBpredBGs[i]) break
             else IOBpredBGs.removeAt(IOBpredBGs.lastIndex)
         }
         rT.predBGs?.IOB = IOBpredBGs.map { it.toInt() }
         lastIOBpredBG = round(IOBpredBGs[IOBpredBGs.size - 1]).toDouble()
-        ZTpredBGs = ZTpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
+        ZTpredBGs = ZTpredBGs.map { round(min(401.0, it.coerceAtLeastFinite(39.0)), 0) }.toMutableList()
         for (i in ZTpredBGs.size - 1 downTo 7) {
             // stop displaying ZTpredBGs once they're rising and above target
             if (ZTpredBGs[i - 1] >= ZTpredBGs[i] || ZTpredBGs[i] <= target_bg) break
@@ -658,14 +708,14 @@ class DetermineBasalSMB @Inject constructor(
         }
         rT.predBGs?.ZT = ZTpredBGs.map { it.toInt() }
         if (meal_data.mealCOB > 0) {
-            aCOBpredBGs = aCOBpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
+            aCOBpredBGs = aCOBpredBGs.map { round(min(401.0, it.coerceAtLeastFinite(39.0)), 0) }.toMutableList()
             for (i in aCOBpredBGs.size - 1 downTo 13) {
                 if (aCOBpredBGs[i - 1] != aCOBpredBGs[i]) break
                 else aCOBpredBGs.removeAt(aCOBpredBGs.lastIndex)
             }
         }
         if (meal_data.mealCOB > 0 && (ci > 0 || remainingCIpeak > 0)) {
-            COBpredBGs = COBpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
+            COBpredBGs = COBpredBGs.map { round(min(401.0, it.coerceAtLeastFinite(39.0)), 0) }.toMutableList()
             for (i in COBpredBGs.size - 1 downTo 13) {
                 if (COBpredBGs[i - 1] != COBpredBGs[i]) break
                 else COBpredBGs.removeAt(COBpredBGs.lastIndex)
@@ -676,7 +726,7 @@ class DetermineBasalSMB @Inject constructor(
         }
         if (ci > 0 || remainingCIpeak > 0) {
             if (enableUAM) {
-                UAMpredBGs = UAMpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
+                UAMpredBGs = UAMpredBGs.map { round(min(401.0, it.coerceAtLeastFinite(39.0)), 0) }.toMutableList()
                 for (i in UAMpredBGs.size - 1 downTo 13) {
                     if (UAMpredBGs[i - 1] != UAMpredBGs[i]) break
                     else UAMpredBGs.removeAt(UAMpredBGs.lastIndex)
@@ -692,6 +742,11 @@ class DetermineBasalSMB @Inject constructor(
 
         consoleError.add("UAM Impact: $uci mg/dL per 5m; UAM Duration: $UAMduration hours")
         consoleLog.add("EventualBG is $eventualBG ;")
+
+        // The predictions above are clamped to [39, 401], but a non-finite tick escapes that clamp and
+        // ends up here. It must not go further: rT.eventualBG is stored and uploaded, and predBGs are
+        // written with toInt(), where NaN becomes 0 - a 0 mg/dL predicted BG in the graph and in NS.
+        if (!eventualBG.isFinite()) return abortNonFinite("eventualBG=$eventualBG", rT, currenttemp, basal, deliverAt)
 
         minIOBPredBG = minIOBPredBG.coerceAtLeastFinite(39.0)
         minCOBPredBG = minCOBPredBG.coerceAtLeastFinite(39.0)
@@ -722,7 +777,12 @@ class DetermineBasalSMB @Inject constructor(
             }
         }
 
-        val fractionCarbsLeft = meal_data.mealCOB / meal_data.carbs
+        // meal_data.carbs counts only carb entries inside the absorption window, while mealCOB comes
+        // from autosens. So carbs can drop to 0 while mealCOB is still > 0 (slow or stalled absorption),
+        // and mealCOB / 0 is Infinity. That made avgPredBG below Infinity - Infinity = NaN, and the NaN
+        // spread to minPredBG -> insulinReq -> rate. Falling back to 0.0 keeps avgPredBG on the UAM
+        // prediction, the same choice the no-carb branch of minGuardBG makes below.
+        val fractionCarbsLeft = if (meal_data.carbs > 0.0) meal_data.mealCOB / meal_data.carbs else 0.0
         // if we have COB and UAM is enabled, average both
         if (minUAMPredBG < 999 && minCOBPredBG < 999) {
             // weight COBpredBG vs. UAMpredBG based on how many carbs remain as COB
@@ -754,6 +814,11 @@ class DetermineBasalSMB @Inject constructor(
             minGuardBG = minIOBGuardBG
         }
         minGuardBG = round(minGuardBG, 0)
+        // A non-finite minGuardBG is far worse than a wrong number. Every guard that reads it is a "<"
+        // comparison, and those are false for NaN, so it would silently switch off both the SMB
+        // suppression and the predictive low glucose suspend below - and the result would still look
+        // finite afterwards, so nothing would ever report it. Stop the run instead of dosing on it.
+        if (!minGuardBG.isFinite()) return abortNonFinite("minGuardBG=$minGuardBG", rT, currenttemp, basal, deliverAt)
         //console.error(minCOBGuardBG, minUAMGuardBG, minIOBGuardBG, minGuardBG);
 
         var minZTUAMPredBG = minUAMPredBG

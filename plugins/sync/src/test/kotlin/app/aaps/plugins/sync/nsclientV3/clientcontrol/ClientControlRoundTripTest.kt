@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.scenes.ClientControlSendResult
@@ -30,6 +29,7 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -50,13 +50,13 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 /**
  * Tests the client-side round-trip coordinator: the channelFlow that turns a published command into a
  * Sending → MasterExecuting → terminal stream by matching the master's signed ACK on `commandCounter`,
  * with timeout, masterReachable early-abort, poll fallback, and single-in-flight.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class ClientControlRoundTripTest {
 
     @Mock private lateinit var publisher: ClientControlPublisher
@@ -104,9 +104,9 @@ internal class ClientControlRoundTripTest {
         whenever(nsClientV3Plugin.nsAndroidClient).thenReturn(nsAndroidClient)
         whenever(config.AAPSCLIENT).thenReturn(true)
         whenever(notificationManager.notifications).thenReturn(notifications)
-        whenever(bolusProgressData.state).thenReturn(MutableStateFlow<BolusProgressState?>(null))
+        whenever(bolusProgressData.state).thenReturn(MutableStateFlow(null))
         appScope = CoroutineScope(Dispatchers.Unconfined)
-        sut = ClientControlRoundTrip(publisher, pairingRepository, Provider { nsClientV3Plugin }, nsClientRepository, config, dateUtil, notificationManager, rh, bolusProgressData, aapsLogger, appScope)
+        sut = ClientControlRoundTrip(publisher, pairingRepository, { nsClientV3Plugin }, nsClientRepository, config, dateUtil, notificationManager, rh, bolusProgressData, aapsLogger, appScope)
     }
 
     @Test

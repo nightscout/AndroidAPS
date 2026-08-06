@@ -12,7 +12,7 @@ import dagger.multibindings.Multibinds
 import javax.inject.Qualifier
 
 /**
- * Declares the plugin multibinding maps consumed by [AppModule.Provide.providesPlugins].
+ * Declares the plugin multi binding maps consumed by [AppModule.Provide.providesPlugins].
  *
  * Plugins are no longer listed here: each feature module self-registers its own plugins into these
  * maps from its `*PluginsListModule` (e.g. :plugins:source [app.aaps.plugins.source.di.SourcePluginsListModule],

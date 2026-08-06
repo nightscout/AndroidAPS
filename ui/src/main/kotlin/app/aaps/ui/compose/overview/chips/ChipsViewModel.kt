@@ -157,7 +157,10 @@ class ChipsViewModel @AssistedInject constructor(
             if (config.APS) request?.variableSens ?: 0.0
             else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
             else 0.0
-        val ratioUsed = request?.autosensResult?.ratio ?: 1.0
+        val ratioUsed =
+            if (config.APS) request?.autosensResult?.ratio ?: 1.0
+            else if (config.AAPSCLIENT) processedDeviceStatusData.openAPSData.suggested?.sensitivityRatio ?: 1.0
+            else 1.0
         val units = profileFunction.getUnits()
 
         var asText = ""

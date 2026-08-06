@@ -87,15 +87,4 @@ internal class WizardDialogViewModelTest {
         assertThat(sut.uiState.value.notes).isEqualTo("wizard note")
         assertThat(sut.uiState.value.alarmChecked).isTrue()
     }
-
-    @Test
-    fun `advanced and calculation sections toggle open and closed`() {
-        val advanced0 = sut.uiState.value.advancedExpanded
-        sut.toggleAdvancedExpanded()
-        assertThat(sut.uiState.value.advancedExpanded).isEqualTo(!advanced0)
-
-        val calc0 = sut.uiState.value.calculationExpanded
-        sut.toggleCalculationExpanded()
-        assertThat(sut.uiState.value.calculationExpanded).isEqualTo(!calc0)
-    }
 }

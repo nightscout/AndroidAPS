@@ -22,6 +22,7 @@ import java.time.ZonedDateTime
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.hours
 
 /**
  * Unit tests for [DateUtilImpl].
@@ -362,8 +363,8 @@ class DateUtilImplTest {
         val clockAtNoon = Clock.fixed(noonToday, fixedZone)
         val util = DateUtilImpl(mockContext, clockAtNoon)
         val nowMillis = noonToday.toEpochMilli()
-        val oneHourAgo = nowMillis - TimeUnit.HOURS.toMillis(1)
-        val twentyFiveHoursAgo = nowMillis - TimeUnit.HOURS.toMillis(25)
+        val oneHourAgo = nowMillis - 1.hours.inWholeMilliseconds
+        val twentyFiveHoursAgo = nowMillis - 25.hours.inWholeMilliseconds
 
         assertThat(util.dateStringRelative(oneHourAgo, rh)).startsWith("Today - ")
         assertThat(util.dateStringRelative(twentyFiveHoursAgo, rh)).startsWith("Yesterday - ")
@@ -1424,6 +1425,40 @@ class DateUtilImplTest {
         assertThat(dateUtilImpl.qs(12.0, -1)).isEqualTo(dateUtilOldImpl.qs(12.0, -1))
         assertThat(dateUtilImpl.qs(12.3, -1)).isEqualTo(dateUtilOldImpl.qs(12.3, -1))
         assertThat(dateUtilImpl.qs(12.34, -1)).isEqualTo(dateUtilOldImpl.qs(12.34, -1))
+    }
+
+    /**
+     * A numDigits below -1 has no meaning, but the old code did not complain about it:
+     * DecimalFormat clamped a negative maximumFractionDigits to 0 and printed a whole number.
+     * Keep that, so an unusual caller cannot make the app crash.
+     */
+    @Test
+    fun `qs clamps a negative digit count instead of throwing`() {
+        for (digits in listOf(-2, -3, -100, Int.MIN_VALUE)) {
+            assertThat(dateUtilImpl.qs(12.345, digits)).isEqualTo("12")
+            assertThat(dateUtilImpl.qs(12.345, digits)).isEqualTo(dateUtilOldImpl.qs(12.345, digits))
+        }
+    }
+
+    /**
+     * qs() always uses a dot and never a grouping separator, so the text does not depend on the
+     * device locale. The old code used DecimalFormat() with no pattern, which groups by default,
+     * and only overrode the decimal separator - so on a German device 1234.5 came out as
+     * "1.234.5" and on a Czech one as "1<nbsp>234.5".
+     */
+    @Test
+    fun `qs does not group and always uses a dot`() {
+        val original = Locale.getDefault()
+        try {
+            for (tag in listOf("en", "de-DE", "cs-CZ", "fr-FR")) {
+                Locale.setDefault(Locale.forLanguageTag(tag))
+                assertThat(dateUtilImpl.qs(1234.5, 1)).isEqualTo("1234.5")
+                assertThat(dateUtilImpl.qs(1234567.0, 0)).isEqualTo("1234567")
+                assertThat(dateUtilImpl.qs(12.345, 2)).isEqualTo("12.35")
+            }
+        } finally {
+            Locale.setDefault(original)
+        }
     }
 //endregion
 

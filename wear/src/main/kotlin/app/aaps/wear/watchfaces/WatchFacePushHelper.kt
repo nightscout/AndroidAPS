@@ -76,17 +76,21 @@ class WatchFacePushHelper @Inject constructor(
     }
 
     /**
-     * Called on app start: keeps an already installed face in sync with the app version by
-     * pushing the embedded APK again after an app update. Never installs uninvited — the initial
-     * install is user-triggered from the main menu.
+     * Called on app start: makes sure the embedded face is available in the watch face picker.
+     * Each app install/update pushes the face once — the same contract as the code-based
+     * watchfaces, which always ship with the app. A face the user removed stays removed until a
+     * reinstall from the main menu or the next app update. Never activates the face: selecting it
+     * is always the user's choice (picker, or the main menu entry).
      */
     suspend fun syncOnStartup() {
-        // Both callees catch all their failures internally — this path runs on every app start
-        // and must never take the app down
-        if (isFaceInstalled() && sp.getString(KEY_SYNCED_VERSION, "") != BuildConfig.BUILDVERSION) {
-            aapsLogger.debug(LTag.WEAR, "WatchFacePush: app updated, refreshing installed face")
-            installOrUpdate()
-        }
+        if (!isSupported()) return
+        // KEY_SYNCED_VERSION matching means this exact app build already put the face in place
+        // once — if the face is missing now, the user removed it: respect that
+        if (sp.getString(KEY_SYNCED_VERSION, "") == BuildConfig.BUILDVERSION) return
+        aapsLogger.debug(LTag.WEAR, "WatchFacePush: syncing face for app version ${BuildConfig.BUILDVERSION}")
+        // Catches all its failures internally — this path runs on app start and must never take
+        // the app down; on failure the version is not marked synced, so the next start retries
+        installOrUpdate()
     }
 
     /**

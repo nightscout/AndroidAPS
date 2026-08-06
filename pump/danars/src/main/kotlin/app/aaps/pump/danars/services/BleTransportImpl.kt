@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.extensions.safeEnable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -208,7 +209,7 @@ class BleTransportImpl @Inject constructor(
                     aapsLogger.error(LTag.PUMPBTCOMM, "Error closing existing connection: ${e.message}")
                 }
             }
-            bluetoothGatt = device.connectGatt(context, false, gattCallback)
+            bluetoothGatt = device.connectGattCompat(context, false, gattCallback)
             return bluetoothGatt != null
         }
 

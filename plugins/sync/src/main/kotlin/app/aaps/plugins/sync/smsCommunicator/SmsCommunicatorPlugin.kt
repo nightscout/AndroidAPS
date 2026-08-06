@@ -300,7 +300,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val minDistance =
             if (areMoreNumbers(preferences.get(StringKey.SmsAllowedNumbers)))
                 T.mins(preferences.get(IntKey.SmsRemoteBolusDistance).toLong()).msecs()
-            else Constants.remoteBolusMinDistance
+            else Constants.REMOTE_BOLUS_MIN_DISTANCE
 
         if (divided.isNotEmpty() && isCommand(divided[0].uppercase(Locale.getDefault()), receivedSms.phoneNumber)) {
             when (divided[0].uppercase(Locale.getDefault())) {

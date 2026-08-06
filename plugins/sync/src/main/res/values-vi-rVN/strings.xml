@@ -77,6 +77,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Tải dữ liệu lên Tidepool</string>
     <string name="upload_now">Tải bây giờ</string>
+    <string name="tidepool_purge_data">Xóa toàn bộ dữ liệu</string>
+    <string name="tidepool_purge_data_confirm">Xóa TOÀN BỘ dữ liệu mà AAPS đã tải lên Tidepool? Hành động này không thể hoàn tác. Hãy dùng tính năng này để xóa dữ liệu bị lỗi do phiên bản cũ tạo ra, sau đó chạy \"Đồng bộ hóa toàn bộ\" để tải dữ liệu lên lại.</string>
     <string name="not_connected">Chưa kết nối</string>
     <string name="read_only">Chỉ đọc</string>
     <string name="working">Đang làm việc</string>

@@ -2,13 +2,13 @@ package app.aaps.shared.impl.utils
 
 import android.content.Context
 import androidx.collection.LongSparseArray
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import java.security.SecureRandom
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -27,6 +27,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -426,7 +427,6 @@ class DateUtilImpl @Inject constructor(
     }
 
     override fun qs(x: Double, numDigits: Int): String {
-        val formatter = decimalFormatter.get()
         var digits = numDigits
         if (digits == -1) {
             digits = 0
@@ -438,12 +438,17 @@ class DateUtilImpl @Inject constructor(
                 }
             }
         }
-        // Use maximumFractionDigits to replicate the original behavior
-        // of not showing trailing zeros (e.g., 12.0 -> "12").
-        formatter!!.maximumFractionDigits = digits
-        // We must also set the minimum to 0 to allow for truncation.
-        formatter.minimumFractionDigits = 0
-        return formatter.format(x)
+        // maxFractionDigits with minFractionDigits = 0 keeps the original behaviour of
+        // not showing trailing zeros (12.0 -> "12").
+        // The separator is always a dot, as it was before. Grouping is off: the old code used
+        // DecimalFormat() which groups by default, and since only the decimal separator was
+        // overridden the grouping separator stayed locale dependent. On a German device that
+        // turned 1234.5 into "1.234.5", and on a Czech one into "1<nbsp>234.5".
+        // max(0, ...) keeps the old behaviour for a numDigits below -1: DecimalFormat clamped
+        // a negative maximumFractionDigits to 0, so the value was printed as a whole number.
+        // Without it NumberFormat would throw, because maxFractionDigits may not be negative.
+        return NumberFormat(minFractionDigits = 0, maxFractionDigits = max(0, digits))
+            .format(x, NumberFormatPlatform.SEPARATOR_DOT)
     }
 
     override fun formatHHMM(timeAsSeconds: Int): String {
@@ -506,15 +511,5 @@ class DateUtilImpl @Inject constructor(
         private val timeStrings = LongSparseArray<String>()
         private var seconds: Int = (SecureRandom().nextDouble() * 59.0).toInt()
 
-        val decimalFormatter = object : ThreadLocal<DecimalFormat>() {
-            override fun initialValue(): DecimalFormat {
-                // Each thread gets its own DecimalFormat instance, configured once.
-                return DecimalFormat().apply {
-                    decimalFormatSymbols = DecimalFormatSymbols().apply {
-                        decimalSeparator = '.'
-                    }
-                }
-            }
-        }
     }
 }

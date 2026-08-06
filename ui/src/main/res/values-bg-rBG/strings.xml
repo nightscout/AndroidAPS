@@ -235,7 +235,7 @@
     <string name="show_on_watch">Покажи на часовник</string>
     <string name="ecarbs_additional">Допълнително въглехидрати</string>
     <string name="valid_from_to">Валиден диапазон</string>
-    <string name="carb_time">Време на въгл</string>
+    <string name="carb_time">Започват от</string>
     <string name="save_changes_question">Запазване на промените тук?</string>
     <string name="wizard_no_insulin_required">Няма нужда от инсулин</string>
     <string name="carbs_constraint_violation">Въгл са лимитирани в настройките</string>

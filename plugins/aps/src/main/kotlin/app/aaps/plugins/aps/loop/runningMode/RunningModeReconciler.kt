@@ -54,8 +54,11 @@ class RunningModeReconciler @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope
 ) {
 
-    private var lastReconciledMode: RM.Mode? = null
-    private var lastReconciledRowId: Long? = null
+    // The first two are @Volatile because [reconciledMode] / [reconciledRowId] expose them to
+    // instrumented tests that poll from a different thread than the appScope coroutine writing them;
+    // without it there is no happens-before edge and a poll may never observe the write.
+    @Volatile private var lastReconciledMode: RM.Mode? = null
+    @Volatile private var lastReconciledRowId: Long? = null
     private var lastReconciledDuration: Long = -1L
     @Volatile private var started = false
     private var observerJob: Job? = null
@@ -95,6 +98,29 @@ class RunningModeReconciler @Inject constructor(
         lastReconciledRowId = null
         lastReconciledDuration = -1L
     }
+
+    /**
+     * The mode the reconciler has most recently acted on — `null` until the first reconcile. Test-only.
+     *
+     * Non-null means [reconcileStartup] has completed, which is the last statement before the change
+     * observer subscribes. Instrumented tests poll this instead of sleeping a fixed interval after
+     * [start].
+     */
+    @VisibleForTesting
+    fun reconciledMode(): RM.Mode? = lastReconciledMode
+
+    /**
+     * The id of the RM row the reconciler has most recently acted on — `null` until the first
+     * reconcile. Test-only.
+     *
+     * A test that writes a baseline mode and then the mode under test must know the baseline was
+     * actually *observed* first, otherwise both writes collapse into one [onAnyChange] and the
+     * transition under test never happens. Because [start] subscribes to a replay-less change flow only
+     * after [reconcileStartup] returns, a write landing in that window is silently never delivered.
+     * Polling this against the id returned by the insert is the deterministic replacement for a sleep.
+     */
+    @VisibleForTesting
+    fun reconciledRowId(): Long? = lastReconciledRowId
 
     private suspend fun reconcileStartup() {
         val now = dateUtil.now()

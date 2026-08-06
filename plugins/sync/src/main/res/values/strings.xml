@@ -18,6 +18,7 @@
     <string name="authorized_clients_add">Add client</string>
     <string name="authorized_clients_comm_switch_title">Allow client control</string>
     <string name="authorized_clients_comm_switch_summary">Let paired clients send signed commands over Nightscout. Turn off to stop communication without removing them.</string>
+    <string name="authorized_clients_needs_websocket">Websockets are turned off, so commands from clients cannot be received. Clients see this master as not accepting commands until you turn websockets on.</string>
     <string name="authorized_clients_state_active">Active</string>
     <string name="authorized_clients_state_pending">Pending</string>
     <string name="authorized_clients_last_seen">Last seen %1$s</string>

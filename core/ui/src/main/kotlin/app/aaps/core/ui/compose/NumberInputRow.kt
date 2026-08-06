@@ -32,8 +32,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.ui.R
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 /**
@@ -56,7 +56,7 @@ import kotlin.math.roundToInt
  * @param unitLabel Resolved unit label string (used when unitLabelResId is 0)
  * @param valueFormatResId Resource ID for formatting value with unit (e.g., "%1$.1f U")
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
- * @param valueFormat Custom DecimalFormat (overrides auto-created from decimalPlaces)
+ * @param valueFormat Custom NumberFormat (overrides auto-created from decimalPlaces)
  * @param decimalPlaces Number of decimal places for value display (0 = integer, default). Ignored if valueFormat is set.
  * @param enabled Whether the input is interactive
  * @param modifier Modifier for the root Column container
@@ -79,15 +79,14 @@ fun NumberInputRow(
     unitLabel: String = "",
     valueFormatResId: Int? = null,
     formatAsInt: Boolean = false,
-    valueFormat: DecimalFormat? = null,
+    valueFormat: NumberFormat? = null,
     decimalPlaces: Int = 0,
     enabled: Boolean = true,
     compact: Boolean = false,
     displayValue: String? = null,
 ) {
     val effectiveValueFormat = valueFormat ?: remember(decimalPlaces) {
-        if (decimalPlaces == 0) DecimalFormat("0")
-        else DecimalFormat("0.${"0".repeat(decimalPlaces)}")
+        NumberFormat.withDecimals(decimalPlaces)
     }
     val focusManager = LocalFocusManager.current
     val label = if (labelResId != 0) stringResource(labelResId) else ""

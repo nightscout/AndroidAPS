@@ -15,7 +15,8 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
 import com.google.gson.Gson
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * Convert to [RemoteTreatment] and back to [NSTreatment]
@@ -57,7 +58,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             )
 
         carbs != null && carbs != 0.0                                      -> {
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { TimeUnit.MINUTES.toMillis(this.duration) } ?: 0L
+            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
             return NSCarbs(
                 date = treatmentTimestamp,
                 device = this.device,
@@ -83,7 +84,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
         eventType == EventType.TEMPORARY_TARGET                            -> {
             if (treatmentTimestamp == 0L) return null
 
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { TimeUnit.MINUTES.toMillis(this.duration) } ?: return null
+            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: return null
 
             if (durationInMilliseconds == 0L)
                 return NSTemporaryTarget(
@@ -157,7 +158,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpType = extendedEmulated?.pumpType,
                 pumpSerial = extendedEmulated?.pumpSerial,
                 enteredinsulin = extendedEmulated?.enteredinsulin ?: 0.0,
-                duration = extendedEmulated?.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(extendedEmulated?.duration ?: 0L),
+                duration = extendedEmulated?.durationInMilliseconds ?: (extendedEmulated?.duration ?: 0L).minutes.inWholeMilliseconds,
                 isEmulatingTempBasal = extendedEmulated?.isEmulatingTempBasal,
                 rate = rate
             )
@@ -167,7 +168,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             if (treatmentTimestamp == 0L) return null
 
             this.absolute ?: this.percent ?: return null
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { TimeUnit.MINUTES.toMillis(this.duration) } ?: return null
+            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: return null
             if (this.durationInMilliseconds == 0L) return null
 
             return NSTemporaryBasal(
@@ -234,7 +235,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
         eventType == EventType.PROFILE_SWITCH                              -> {
             if (treatmentTimestamp == 0L) return null
             this.profile ?: return null
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { TimeUnit.MINUTES.toMillis(this.duration) } ?: 0L
+            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
 
             return NSProfileSwitch(
                 date = treatmentTimestamp,
@@ -301,7 +302,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             eventType == EventType.NOTE ||
             eventType == EventType.PUMP_BATTERY_CHANGE                     -> {
             if (treatmentTimestamp == 0L) return null
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { TimeUnit.MINUTES.toMillis(this.duration) } ?: 0L
+            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
 
             return NSTherapyEvent(
                 date = treatmentTimestamp,
@@ -331,7 +332,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
 
         eventType == EventType.APS_OFFLINE                                 -> {
             if (treatmentTimestamp == 0L) return null
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { TimeUnit.MINUTES.toMillis(this.duration) } ?: 0L
+            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
 
             return NSOfflineEvent(
                 date = treatmentTimestamp,
@@ -363,7 +364,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
         eventType == EventType.COMBO_BOLUS                                 -> {
             if (treatmentTimestamp == 0L) return null
             this.enteredinsulin ?: return null
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { TimeUnit.MINUTES.toMillis(this.duration) } ?: 0L
+            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
 
             return NSExtendedBolus(
                 date = treatmentTimestamp,
@@ -432,7 +433,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             pumpType = pumpType,
             pumpSerial = pumpSerial,
             carbs = carbs,
-            duration = duration?.let { TimeUnit.MILLISECONDS.toMinutes(it) },
+            duration = duration?.let { it.milliseconds.inWholeMinutes },
             durationInMilliseconds = duration
         )
 
@@ -453,7 +454,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             endId = endId,
             pumpType = pumpType,
             pumpSerial = pumpSerial,
-            duration = TimeUnit.MILLISECONDS.toMinutes(duration),
+            duration = duration.milliseconds.inWholeMinutes,
             durationInMilliseconds = duration,
             targetBottom = targetBottom,
             targetTop = targetTop,
@@ -477,7 +478,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             endId = endId,
             pumpType = pumpType,
             pumpSerial = pumpSerial,
-            duration = TimeUnit.MILLISECONDS.toMinutes(duration),
+            duration = duration.milliseconds.inWholeMinutes,
             durationInMilliseconds = duration,
             absolute = absolute,
             percent = percent,
@@ -534,7 +535,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             profile = profile,
             originalProfileName = originalProfileName,
             originalDuration = originalDuration,
-            duration = duration?.let { TimeUnit.MILLISECONDS.toMinutes(it) },
+            duration = duration?.let { it.milliseconds.inWholeMinutes },
             durationInMilliseconds = duration,
             timeshift = timeShift,
             percentage = percentage,
@@ -581,7 +582,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             endId = endId,
             pumpType = pumpType,
             pumpSerial = pumpSerial,
-            duration = TimeUnit.MILLISECONDS.toMinutes(duration),
+            duration = duration.milliseconds.inWholeMinutes,
             durationInMilliseconds = duration,
             glucose = glucose,
             enteredBy = enteredBy,
@@ -605,7 +606,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             endId = endId,
             pumpType = pumpType,
             pumpSerial = pumpSerial,
-            duration = TimeUnit.MILLISECONDS.toMinutes(duration),
+            duration = duration.milliseconds.inWholeMinutes,
             durationInMilliseconds = duration,
             reason = reason.name,
             // RunningMode
@@ -628,7 +629,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
                 isReadOnly = isReadOnly,
                 isValid = isValid,
                 eventType = eventType,
-                duration = TimeUnit.MILLISECONDS.toMinutes(duration),
+                duration = duration.milliseconds.inWholeMinutes,
                 durationInMilliseconds = duration,
                 notes = notes,
                 splitNow = 0,

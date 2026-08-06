@@ -72,7 +72,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
@@ -87,7 +89,6 @@ import app.aaps.core.ui.compose.icons.IcBread
 import app.aaps.core.ui.compose.icons.IcCake
 import app.aaps.core.ui.compose.icons.IcPizza
 import app.aaps.core.ui.compose.icons.IcTtManual
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
@@ -96,7 +97,6 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -137,7 +137,6 @@ fun WizardDialogScreen(
     if (showSettings) {
         WizardSettingsSheet(
             settingsDef = wizardSettingsDef,
-            viewModel = viewModel,
             onDismiss = {
                 showSettings = false
                 viewModel.refreshAfterSettings()
@@ -187,7 +186,6 @@ fun WizardDialogScreen(
     WizardDialogContent(
         uiState = uiState,
         decimalFormatter = viewModel.decimalFormatter,
-        profileUtil = viewModel.profileUtil,
         unitsLabel = uiState.units.displayLabel,
         onBgChange = { viewModel.updateBg(it) },
         onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
@@ -204,7 +202,6 @@ fun WizardDialogScreen(
         onIOBToggle = viewModel::toggleIOB,
         onCOBToggle = viewModel::toggleCOB,
         onAlarmToggle = viewModel::toggleAlarm,
-        onAdvancedExpandToggle = viewModel::toggleAdvancedExpanded,
         onCalculationExpandToggle = viewModel::toggleCalculationExpanded,
         onNavigateBack = onNavigateBack,
         onConfirmClick = { showConfirmation = true },
@@ -217,7 +214,6 @@ fun WizardDialogScreen(
 internal fun WizardDialogContent(
     uiState: WizardDialogUiState,
     decimalFormatter: DecimalFormatter,
-    profileUtil: ProfileUtil,
     unitsLabel: String,
     onBgChange: (Double) -> Unit,
     onCarbsChange: (Double) -> Unit,
@@ -234,7 +230,6 @@ internal fun WizardDialogContent(
     onIOBToggle: (Boolean) -> Unit,
     onCOBToggle: (Boolean) -> Unit,
     onAlarmToggle: (Boolean) -> Unit,
-    onAdvancedExpandToggle: () -> Unit,
     onCalculationExpandToggle: () -> Unit,
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit,
@@ -744,7 +739,7 @@ internal fun WizardDialogContent(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 if (uiState.hasBgData) {
-                                    val bgFormat = if (uiState.isMgdl) DecimalFormat("0") else DecimalFormat("0.0")
+                                    val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
                                     Text(
                                         text = "${bgFormat.format(uiState.bg)} $unitsLabel",
                                         style = MaterialTheme.typography.titleMedium,
@@ -826,7 +821,7 @@ internal fun WizardDialogContent(
                                 labelResId = CoreUiR.string.wizard_use_percentage,
                                 value = uiState.percentage.toDouble(),
                                 onValueChange = onPercentageChange,
-                                valueRange = 10.0..200.0,
+                                valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                                 step = 5.0,
                                 unitLabel = "%",
                                 decimalPlaces = 0
@@ -926,7 +921,6 @@ private fun CalcRow(label: String, value: String) {
 @Composable
 private fun WizardSettingsSheet(
     settingsDef: PreferenceSubScreenDef,
-    viewModel: WizardDialogViewModel,
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

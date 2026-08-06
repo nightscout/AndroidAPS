@@ -1,15 +1,7 @@
 package app.aaps.implementation.queue
 
 import android.content.Context
-import android.os.Handler
 import android.os.PowerManager
-import androidx.work.ListenableWorker
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.WorkerFactory
-import androidx.work.WorkerParameters
-import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -40,7 +32,6 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
@@ -51,10 +42,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -74,9 +63,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     private val localAlertUtilsProvider: Provider<LocalAlertUtils> by lazy { Provider { localAlertUtils } }
     @Mock lateinit var smsCommunicator: SmsCommunicator
     private val smsCommunicatorProvider: Provider<SmsCommunicator> by lazy { Provider { smsCommunicator } }
-    @Mock lateinit var jobName: CommandQueueName
-    @Mock lateinit var workManager: WorkManager
-    @Mock lateinit var infos: ListenableFuture<List<WorkInfo>>
+    @Mock lateinit var commandExecutor: CommandExecutor
+    private val commandExecutorProvider: Provider<CommandExecutor> by lazy { Provider { commandExecutor } }
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private val bolusProgressData by lazy { BolusProgressData(ch, rh, testScope) }
@@ -101,14 +89,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         profileSwitchSilentGate: ProfileSwitchSilentGate,
         localAlertUtils: Provider<LocalAlertUtils>,
         smsCommunicator: Provider<SmsCommunicator>,
-        jobName: CommandQueueName,
-        workManager: WorkManager,
+        commandExecutor: Provider<CommandExecutor>,
         appScope: CoroutineScope,
         bolusProgressData: BolusProgressData
     ) : CommandQueueImplementation(
         aapsLogger, rxBus, rh, constraintChecker, profileFunction,
         activePlugin, config, dateUtil, fabricPrivacy,
-        notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtils, smsCommunicator, jobName, workManager, appScope, bolusProgressData
+        notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtils, smsCommunicator, commandExecutor, appScope, bolusProgressData
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -140,8 +127,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 profileSwitchSilentGate,
                 localAlertUtilsProvider,
                 smsCommunicatorProvider,
-                jobName,
-                workManager,
+                commandExecutorProvider,
                 testScope,
                 bolusProgressData
             )
@@ -175,58 +161,22 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("Replaced by newer command")
             whenever(rh.gs(eq(app.aaps.core.ui.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
             whenever(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
-            whenever(workManager.getWorkInfosForUniqueWork(anyOrNull())).thenReturn(infos)
-            doAnswer { _: InvocationOnMock ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    val work = TestListenableWorkerBuilder<QueueWorker>(context)
-                        .setWorkerFactory(object : WorkerFactory() {
-                            override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker =
-                                QueueWorker(
-                                    appContext, workerParameters, aapsLogger, fabricPrivacy, commandQueue,
-                                    rxBus, activePlugin, rh, preferences, config, bolusProgressData
-                                )
-                        })
-                        .build()
-                    work.doWorkAndLog()
-                }
-                null
-            }.whenever(workManager).enqueueUniqueWork(anyOrNull(), anyOrNull(), any<OneTimeWorkRequest>())
-            whenever(infos.get()).thenReturn(emptyList())
         }
     }
 
     @Test
     fun commandIsPickedUp() = runTest {
+        lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
-            aapsLogger,
-            rxBus,
-            rh,
-            constraintChecker,
-            profileFunction,
-            activePlugin,
-            config,
-            dateUtil,
-            fabricPrivacy,
-            notificationManager,
-            persistenceLayer,
-            decimalFormatter,
-            pumpEnactResultProvider,
-            pumpSync,
-            preferences,
-            profileSwitchSilentGate,
-            localAlertUtilsProvider,
-            smsCommunicatorProvider,
-            jobName,
-            workManager,
-            testScope,
-            bolusProgressData
+            aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider,
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            Provider { executor }, testScope, bolusProgressData
         )
-        val handler: Handler = mock()
-        whenever(handler.post(anyOrNull())).thenAnswer { invocation: InvocationOnMock ->
-            (invocation.arguments[0] as Runnable).run()
-            true
-        }
-        commandQueue.handler = handler
+        // Real executor sharing this queue: notifyAboutNewCommand() signals it and it drains on its own thread.
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, rh, preferences, config, bolusProgressData, context
+        )
 
         // start with empty queue
         assertThat(commandQueue.size()).isEqualTo(0)
@@ -236,7 +186,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         yield()
         assertThat(commandQueue.size()).isEqualTo(1)
 
-        commandQueue.waitForFinishedThread()
+        // the executor picks up and drains the command off the test scheduler
         Thread.sleep(3000)
 
         assertThat(commandQueue.size()).isEqualTo(0)
@@ -247,18 +197,16 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // Regression: bolus delivered, but persisting the accompanying carbs threw. This used to be
         // swallowed log-only, leaving COB/IOB silently wrong. The failure must now surface a notification
         // so the user knows to re-enter the carbs. See CommandQueueImplementation.bolus() post-bolus catch.
+        lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
             aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider,
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            jobName, workManager, testScope, bolusProgressData
+            Provider { executor }, testScope, bolusProgressData
         )
-        val handler: Handler = mock()
-        whenever(handler.post(anyOrNull())).thenAnswer { invocation: InvocationOnMock ->
-            (invocation.arguments[0] as Runnable).run()
-            true
-        }
-        commandQueue.handler = handler
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, rh, preferences, config, bolusProgressData, context
+        )
         whenever(rh.gs(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus)).thenReturn("Carbs could not be saved")
         // The pump delivers successfully (TestPumpPlugin), but storing carbs blows up.
         whenever(persistenceLayer.insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))

@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
@@ -24,7 +25,6 @@ import app.aaps.plugins.aps.R
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.text.DecimalFormat
 import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Provider
@@ -141,7 +141,7 @@ class ATProfile @Inject constructor(
             val basals = JSONArray()
             for (h in 0..23) {
                 val secondFromMidnight = h * 60 * 60
-                val time: String = DecimalFormat("00").format(h) + ":00:00"
+                val time: String = NumberFormat.INTEGER_2_DIGITS.format(h) + ":00:00"
                 basals.put(
                     JSONObject()
                         .put("start", time)
@@ -213,7 +213,7 @@ class ATProfile @Inject constructor(
         val json = JSONArray()
         for (h in 0..23) {
             val secondFromMidnight = h * 60 * 60
-            val df = DecimalFormat("00")
+            val df = NumberFormat.INTEGER_2_DIGITS
             val time = df.format(h.toLong()) + ":00"
             json.put(
                 JSONObject()
@@ -240,7 +240,7 @@ class ATProfile @Inject constructor(
             val value = values.blockValueBySeconds(T.hours(elapsedHours).secs().toInt(), multiplier, 0)
             json.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", value)
             )

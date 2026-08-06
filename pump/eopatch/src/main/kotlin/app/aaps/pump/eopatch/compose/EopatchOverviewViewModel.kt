@@ -55,10 +55,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class EopatchOverviewEvent {
@@ -283,8 +284,8 @@ class EopatchOverviewViewModel @Inject constructor(
                 val statusText = if (isPaused) {
                     val finishTimeMillis = config.basalPauseFinishTimestamp
                     val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
-                    val h = TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
-                    val m = TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
+                    val h = remainTimeMillis.milliseconds.inWholeHours
+                    val m = (remainTimeMillis - h.hours.inWholeMilliseconds).milliseconds.inWholeMinutes
                     "${rh.gs(CoreUiR.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 } else {
                     rh.gs(R.string.string_running)

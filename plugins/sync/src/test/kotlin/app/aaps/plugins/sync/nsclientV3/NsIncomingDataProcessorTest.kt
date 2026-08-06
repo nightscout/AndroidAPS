@@ -279,6 +279,31 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `an unpaired client takes the profile store from Nightscout`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(false))
+        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(now - T.days(1).msecs())
+
+        processor.processProfile(JSONObject(), doFullSync = false)
+
+        // It has no master to receive profiles from, and it still needs them to display and calculate.
+        verifyBlocking(profileRepository) { loadFromNs(any()) }
+    }
+
+    @Test
+    fun `a paired client ignores the profile store from Nightscout`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(true))
+        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(now - T.days(1).msecs())
+
+        processor.processProfile(JSONObject(), doFullSync = false)
+
+        // Profiles arrive from the master over the sync channel; taking the Nightscout copy as well
+        // would give one list two writers, fighting through LocalProfileLastChange.
+        verifyBlocking(profileRepository, never()) { loadFromNs(any()) }
+    }
+
+    @Test
     fun `processTreatments with valid temp target stores it`() {
         whenever(preferences.get(BooleanKey.NsClientAcceptTempTarget)).thenReturn(true)
         val ttTime = now - T.mins(30).msecs()

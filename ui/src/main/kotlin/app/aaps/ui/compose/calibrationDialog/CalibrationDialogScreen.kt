@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -53,7 +54,6 @@ import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
-import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -166,7 +166,7 @@ internal fun CalibrationDialogContent(
                 )
                 Spacer(modifier = Modifier.width(AapsSpacing.medium))
                 if (uiState.hasValidBg) {
-                    val bgFormat = remember(uiState.isMgdl) { if (uiState.isMgdl) DecimalFormat("0") else DecimalFormat("0.0") }
+                    val bgFormat = remember(uiState.isMgdl) { if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1 }
                     Text("${bgFormat.format(uiState.bg)} ${uiState.unitLabel}")
                 } else {
                     Text(stringResource(CoreUiR.string.ok))

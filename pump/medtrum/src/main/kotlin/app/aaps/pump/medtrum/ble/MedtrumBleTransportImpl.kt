@@ -277,6 +277,10 @@ class MedtrumBleTransportImpl @Inject constructor(
         }
     }
 
+    // connectGatt(Context, ...) is deprecated from API 37 in favour of an overload taking
+    // BluetoothGattConnectionSettings, a class that does not exist below API 37 while our minSdk is 31.
+    // This module does not depend on :core:utils, so it cannot use connectGattCompat from there.
+    @Suppress("DEPRECATION")
     @Synchronized
     private fun connectGatt(device: BluetoothDevice) {
         writeSequenceNumber = 0

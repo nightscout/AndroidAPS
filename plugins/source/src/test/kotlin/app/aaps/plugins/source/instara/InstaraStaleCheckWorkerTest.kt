@@ -8,6 +8,8 @@ import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import androidx.work.testing.WorkManagerTestInitHelper
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
@@ -96,5 +98,44 @@ class InstaraStaleCheckWorkerTest {
         val intents = shadowOf(application).broadcastIntents
         assertEquals(1, intents.size)
         assertEquals(instaraRequestAction, intents[0].action)
+    }
+
+    private fun gv(pumpId: Long, timestamp: Long = System.currentTimeMillis()) =
+        GV(timestamp = timestamp, value = 100.0, raw = null, noise = null, trendArrow = TrendArrow.NONE, sourceSensor = SourceSensor.INSTARA)
+            .also { it.ids = it.ids.copy(pumpId = pumpId) }
+
+    @Test
+    fun `enabled with a gap in stored values requests the first missing sgvId`() {
+        whenever(preferences.get(InstaraBooleanKey.HistoryRequestEnabled)).thenReturn(true)
+        whenever(preferences.get(InstaraStringKey.DeviceMetaJson)).thenReturn("""{"5":{"sgvStart":500001,"sgvMark":100}}""")
+        runBlocking {
+            // deviceStart=500000, maxAllowed=500100; stored ids have a gap at 500003
+            whenever(persistenceLayer.getGlucoseValuesByPumpIdRange(any(), any(), any()))
+                .thenReturn(listOf(gv(500001L), gv(500002L), gv(500004L)))
+        }
+
+        val result = runWorker()
+
+        assertEquals(ListenableWorker.Result.success(), result)
+        val intents = shadowOf(application).broadcastIntents
+        assertEquals(1, intents.size)
+        assertEquals(instaraRequestAction, intents[0].action)
+        assertTrue(intents[0].getStringExtra("data")!!.contains("0000000500003"))
+    }
+
+    @Test
+    fun `enabled and complete range sends no request`() {
+        whenever(preferences.get(InstaraBooleanKey.HistoryRequestEnabled)).thenReturn(true)
+        whenever(preferences.get(InstaraStringKey.DeviceMetaJson)).thenReturn("""{"5":{"sgvStart":500001,"sgvMark":2}}""")
+        runBlocking {
+            // deviceStart=500000, maxAllowed=500002; contiguous up to maxAllowed -> COMPLETE, no request
+            whenever(persistenceLayer.getGlucoseValuesByPumpIdRange(any(), any(), any()))
+                .thenReturn(listOf(gv(500001L), gv(500002L)))
+        }
+
+        val result = runWorker()
+
+        assertEquals(ListenableWorker.Result.success(), result)
+        assertTrue(shadowOf(application).broadcastIntents.isEmpty())
     }
 }

@@ -262,8 +262,7 @@ fun ActionStartTempTargetEditor(a: ActionStartTempTarget, tick: Int = 0, onChang
         labelResId = app.aaps.core.ui.R.string.temporary_target,
         value = a.value.value,
         onValueChange = { a.value.value = it; onChange() },
-        valueRange = if (isMmol) Constants.MIN_TT_MMOL..Constants.MAX_TT_MMOL
-        else Constants.MIN_TT_MGDL..Constants.MAX_TT_MGDL,
+        valueRange = if (isMmol) Constants.TT_RANGE_MMOL else Constants.TT_RANGE_MGDL,
         step = if (isMmol) 0.1 else 1.0,
         decimalPlaces = if (isMmol) 1 else 0,
         unitLabelResId = if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl

@@ -2,7 +2,9 @@ package app.aaps.implementation.profile
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -24,16 +26,20 @@ import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.ProfileComposedBooleanKey
 import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.ProfileIntKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import dagger.Lazy
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -73,7 +79,10 @@ class ProfileRepositoryImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val profileStoreProvider: Provider<ProfileStore>,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    // Hosts the [StringNonKey.LocalProfileData] collector: the repository is a @Singleton that lives
+    // as long as the process, so the collector must live that long too.
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ProfileRepository {
 
     private val mutex = Mutex()
@@ -83,6 +92,11 @@ class ProfileRepositoryImpl @Inject constructor(
     // StateFlows below.
     private var profilesList: ArrayList<SingleProfile> = ArrayList()
     private var rawProfile: ProfileStore? = null
+
+    // Last payload this instance wrote to (or adopted from) [StringNonKey.LocalProfileData].
+    // The preference observer fires for our OWN writes too, so it compares against this to tell
+    // "somebody else changed the profiles" from "this is the echo of what I just stored".
+    @Volatile private var lastKnownPayload: String? = null
 
     private val _profiles = MutableStateFlow<List<SingleProfile>>(emptyList())
     override val profiles: StateFlow<List<SingleProfile>> = _profiles.asStateFlow()
@@ -100,6 +114,38 @@ class ProfileRepositoryImpl @Inject constructor(
         // the empty defaults before the persisted state appears.
         loadSettingsInternal()
         snapshot()
+        observeSyncedProfileData()
+    }
+
+    /**
+     * Adopt profile lists that arrive from outside this instance.
+     *
+     * [StringNonKey.LocalProfileData] is `SyncSpec(Cold, Bidirectional)`, so on a paired client the
+     * master's republished value lands via `putRemote`, and on a master a client's accepted edit lands
+     * the same way. Neither goes through [storeSettingsInternal], so without this collector the
+     * in-memory list and the StateFlows would keep serving the old profiles until the next restart.
+     *
+     * Own writes are filtered by content ([lastKnownPayload]) rather than by a flag: one save can
+     * produce two emits (the local write, then the master's authoritative echo), so a one-shot flag
+     * would be consumed by the first and let the second through as a foreign change.
+     */
+    private fun observeSyncedProfileData() {
+        appScope.launch {
+            preferences.observe(StringNonKey.LocalProfileData).drop(1).collect { payload ->
+                if (payload.isEmpty() || payload == lastKnownPayload) return@collect
+                mutex.withLock {
+                    val parsed = parsePayload(payload) ?: return@withLock
+                    aapsLogger.debug(LTag.PROFILE, "Adopting synced profile data, ${parsed.profiles.size} profiles")
+                    profilesList = parsed.profiles
+                    lastKnownPayload = payload
+                    // Keep the NS gates in step: LocalProfileLastChange drives both the profile-store
+                    // import check and the upload check, so an adopted list must move it too.
+                    preferences.put(LongNonKey.LocalProfileLastChange, parsed.lastChange)
+                    createAndStoreConvertedProfile()
+                    snapshot()
+                }
+            }
+        }
     }
 
     /**
@@ -232,37 +278,32 @@ class ProfileRepositoryImpl @Inject constructor(
             if (name.isEmpty()) {
                 errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.missing_profile_name)))
             }
-            if (blockFromJsonArray(ic, dateUtil)?.all { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) {
-                errors.add(ProfileValidationError(ProfileErrorType.IC, rh.gs(R.string.error_in_ic_values)))
-            }
+            // A block list is invalid when it cannot be read, when it holds no block at all, or when
+            // *any* single block is out of range. Two traps this avoids: "all blocks out of range"
+            // lets one bad block hide between good ones, and a null list must not count as valid.
+            fun invalid(blocks: List<Block>?, inRange: (Double) -> Boolean): Boolean =
+                blocks.isNullOrEmpty() || blocks.any { !inRange(it.amount) }
+
+            // BG values are stored in the profile unit, the limits are always mg/dL.
+            fun asMgdl(value: Double): Double = if (mgdl) value else profileUtil.convertToMgdl(value, GlucoseUnit.MMOL)
+
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
-            if (mgdl) {
-                if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
-                }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < 0.01 || it.amount > hardLimits.maxBasal() } != false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
-                }
-                if (low?.all { hardLimits.isInRange(it.amount, HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
-                if (high?.all { hardLimits.isInRange(it.amount, HardLimits.LIMIT_MAX_BG[0], HardLimits.LIMIT_MAX_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
-            } else {
-                if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
-                }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < 0.01 || it.amount > hardLimits.maxBasal() } != false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
-                }
-                if (low?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
-                if (high?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.LIMIT_MAX_BG[0], HardLimits.LIMIT_MAX_BG[1]) } == false) {
-                    errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                }
+
+            if (invalid(blockFromJsonArray(ic, dateUtil)) { it in hardLimits.icRange() }) {
+                errors.add(ProfileValidationError(ProfileErrorType.IC, rh.gs(R.string.error_in_ic_values)))
+            }
+            if (invalid(blockFromJsonArray(isf, dateUtil)) { asMgdl(it) in HardLimits.LIMIT_ISF }) {
+                errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
+            }
+            if (invalid(blockFromJsonArray(basal, dateUtil)) { it in 0.01..hardLimits.maxBasal() }) {
+                errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
+            }
+            if (invalid(low) { asMgdl(it) in HardLimits.LIMIT_MIN_BG }) {
+                errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
+            }
+            if (invalid(high) { asMgdl(it) in HardLimits.LIMIT_MAX_BG }) {
+                errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
             }
             low?.let { lowList ->
                 high?.let { highList ->
@@ -334,9 +375,47 @@ class ProfileRepositoryImpl @Inject constructor(
     // Internal helpers — assume the mutex is already held (or that this is [init]).
     // ---------------------------------------------------------------------------------------------
 
+    /**
+     * Load the profile list, newest format first.
+     *
+     * 1. [StringNonKey.LocalProfileData] (the single JSON document) — used when its own `lastChange`
+     *    is at least as new as [LongNonKey.LocalProfileLastChange];
+     * 2. otherwise the legacy per-profile keys. They are also what a build older than this one writes,
+     *    so a newer `LocalProfileLastChange` than the JSON carries means "an older build edited the
+     *    profiles after we last wrote the JSON" (downgrade → edit → upgrade) and they win.
+     *
+     * The legacy keys are only ever read and re-converted, never deleted, so going back to an older
+     * build keeps working.
+     */
     private fun loadSettingsInternal() {
-        val n = preferences.get(ProfileIntKey.AmountOfProfiles)
         profilesList.clear()
+        val payload = preferences.get(StringNonKey.LocalProfileData)
+        val parsed = parsePayload(payload)
+        if (parsed != null && parsed.lastChange >= preferences.get(LongNonKey.LocalProfileLastChange)) {
+            profilesList = parsed.profiles
+            lastKnownPayload = payload
+        }
+        if (profilesList.isEmpty()) {
+            loadFromLegacyKeysInternal()
+            // Convert on the master only. A client never authors its profile list — it adopts the
+            // master's over the sync channel or Nightscout's while unpaired — so converting there
+            // would publish a stale local list back to the master.
+            if (profilesList.isNotEmpty() && config.APS)
+                storeSettingsInternal(preferences.get(LongNonKey.LocalProfileLastChange).takeIf { it > 0L } ?: dateUtil.now())
+        }
+        // Last resort: a document the stamp check rejected still beats showing no profiles at all.
+        // A client that only ever received its list over the sync channel has no legacy keys to fall
+        // back on, so without this a stamp that got ahead of the document would empty the screen.
+        if (profilesList.isEmpty() && parsed != null) {
+            profilesList = parsed.profiles
+            lastKnownPayload = payload
+        }
+        createAndStoreConvertedProfile()
+    }
+
+    /** Read the pre-JSON per-profile keys. Kept for upgrade and for downgrade compatibility. */
+    private fun loadFromLegacyKeysInternal() {
+        val n = preferences.get(ProfileIntKey.AmountOfProfiles)
         for (i in 0 until n) {
             val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)
             if (profilesList.any { it.name == name }) continue
@@ -356,27 +435,96 @@ class ProfileRepositoryImpl @Inject constructor(
                 aapsLogger.error("Exception", e)
             }
         }
-        createAndStoreConvertedProfile()
     }
 
-    private fun storeSettingsInternal(timestamp: Long) {
-        val n = profilesList.size
-        for (i in 0 until n) {
-            profilesList[i].run {
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, value = name)
-                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i, value = mgdl)
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, i, value = ic.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, i, value = isf.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, i, value = basal.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i, value = targetLow.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i, value = targetHigh.toString())
-            }
+    /**
+     * Where a stored profile list came from. It decides whether the write is announced to the sync
+     * channel: [WriteOrigin.LOCAL] is this device's own edit and must travel, [WriteOrigin.ADOPTED] is
+     * a list this device merely took over (Nightscout import) and must not be pushed back out.
+     */
+    private enum class WriteOrigin { LOCAL, ADOPTED }
+
+    private fun storeSettingsInternal(timestamp: Long, origin: WriteOrigin = WriteOrigin.LOCAL) {
+        // The legacy per-profile keys are intentionally NOT written any more. They stay behind,
+        // frozen at their last value, purely so an older build can still read profiles after a
+        // downgrade. LocalProfileLastChange is the tie-breaker between the two formats on load.
+        val payload = profilesToJson(timestamp).toString()
+        lastKnownPayload = payload
+        when (origin) {
+            // put() emits on syncedLocalChanges → the client publishes the edit to the master, and
+            // on a master it triggers the cold republish that fans the list out to every client.
+            WriteOrigin.LOCAL   -> preferences.put(StringNonKey.LocalProfileData, payload)
+            // putRemote() stores without emitting — no echo back to where the list came from.
+            WriteOrigin.ADOPTED -> preferences.putRemote(StringNonKey.LocalProfileData, payload, timestamp)
         }
-        preferences.put(ProfileIntKey.AmountOfProfiles, n)
+        // Stamp last. If the process dies between the two writes, the document carries the newer
+        // lastChange and still wins on load; stamping first would make the freshest document look like
+        // the one an older build had overwritten.
         preferences.put(LongNonKey.LocalProfileLastChange, timestamp)
         createAndStoreConvertedProfile()
-        aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.getData().toString())
+        aapsLogger.debug(LTag.PROFILE, "Storing settings ($origin): " + rawProfile?.getData().toString())
     }
+
+    /** The stored form: one document carrying its own edit stamp plus the profile list. */
+    private fun profilesToJson(timestamp: Long): JSONObject {
+        val array = JSONArray()
+        for (profile in profilesList) {
+            array.put(
+                JSONObject()
+                    .put(KEY_NAME, profile.name)
+                    .put(KEY_MGDL, profile.mgdl)
+                    .put(KEY_IC, profile.ic)
+                    .put(KEY_ISF, profile.isf)
+                    .put(KEY_BASAL, profile.basal)
+                    .put(KEY_TARGET_LOW, profile.targetLow)
+                    .put(KEY_TARGET_HIGH, profile.targetHigh)
+            )
+        }
+        return JSONObject().put(KEY_LAST_CHANGE, timestamp).put(KEY_PROFILES, array)
+    }
+
+    private class ParsedProfiles(val lastChange: Long, val profiles: ArrayList<SingleProfile>)
+
+    /**
+     * Parse a stored/received document. Returns null only when the document itself is unusable
+     * (not JSON, no profile array, no profiles left after parsing) — a single damaged FIELD falls back
+     * to that field's default instead of dropping the whole profile, and a damaged ENTRY is skipped
+     * rather than failing the document. Losing one profile must never look like "the user has none".
+     */
+    private fun parsePayload(payload: String): ParsedProfiles? {
+        if (payload.isEmpty()) return null
+        return try {
+            val json = JSONObject(payload)
+            val array = json.optJSONArray(KEY_PROFILES) ?: return null
+            val parsed = ArrayList<SingleProfile>(array.length())
+            for (i in 0 until array.length()) {
+                val entry = array.optJSONObject(i) ?: continue
+                val name = entry.optString(KEY_NAME)
+                if (name.isEmpty() || parsed.any { it.name == name }) continue
+                parsed.add(
+                    SingleProfile(
+                        name = name,
+                        // Same fallback as the pre-JSON key. It must NOT ask ProfileFunction for the
+                        // current units: this runs from init(), and resolving that Lazy there closes a
+                        // dependency cycle back into this repository (crash at startup).
+                        mgdl = entry.optBoolean(KEY_MGDL, ProfileComposedBooleanKey.LocalProfileNumberedMgdl.defaultValue),
+                        ic = entry.optJSONArray(KEY_IC) ?: emptyBlockArray(),
+                        isf = entry.optJSONArray(KEY_ISF) ?: emptyBlockArray(),
+                        basal = entry.optJSONArray(KEY_BASAL) ?: emptyBlockArray(),
+                        targetLow = entry.optJSONArray(KEY_TARGET_LOW) ?: emptyBlockArray(),
+                        targetHigh = entry.optJSONArray(KEY_TARGET_HIGH) ?: emptyBlockArray()
+                    )
+                )
+            }
+            if (parsed.isEmpty()) null else ParsedProfiles(json.optLong(KEY_LAST_CHANGE, 0L), parsed)
+        } catch (e: JSONException) {
+            aapsLogger.error(LTag.PROFILE, "Cannot parse stored profile data", e)
+            null
+        }
+    }
+
+    /** The same placeholder the legacy per-profile keys used, so a missing block reads as "unset", not as valid. */
+    private fun emptyBlockArray(): JSONArray = singleBlockProfileArray(0.0)
 
     private fun loadFromStoreInternal(store: ProfileStore) {
         try {
@@ -406,7 +554,8 @@ class ProfileRepositoryImpl @Inject constructor(
             if (newProfiles.isNotEmpty()) {
                 profilesList = newProfiles
                 aapsLogger.debug(LTag.PROFILE, "Accepted ${profilesList.size} profiles")
-                storeSettingsInternal(timestamp = store.getStartDate())
+                // Adopted, not authored: a Nightscout store must not be pushed back to the master.
+                storeSettingsInternal(timestamp = store.getStartDate(), origin = WriteOrigin.ADOPTED)
             } else {
                 aapsLogger.debug(LTag.PROFILE, "ProfileStore not accepted")
             }
@@ -475,5 +624,20 @@ class ProfileRepositoryImpl @Inject constructor(
             aapsLogger.error("Unhandled exception", e)
         }
         rawProfile = profileStoreProvider.get().with(json)
+    }
+
+    companion object {
+
+        // Field names of the stored document. They are part of the sync wire format between master
+        // and client, so they must not be renamed once shipped.
+        private const val KEY_LAST_CHANGE = "lastChange"
+        private const val KEY_PROFILES = "profiles"
+        private const val KEY_NAME = "name"
+        private const val KEY_MGDL = "mgdl"
+        private const val KEY_IC = "ic"
+        private const val KEY_ISF = "isf"
+        private const val KEY_BASAL = "basal"
+        private const val KEY_TARGET_LOW = "targetLow"
+        private const val KEY_TARGET_HIGH = "targetHigh"
     }
 }

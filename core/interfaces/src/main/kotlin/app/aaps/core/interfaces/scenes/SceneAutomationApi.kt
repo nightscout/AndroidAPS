@@ -40,11 +40,29 @@ interface SceneAutomationApi {
     /** Set the enabled flag on a scene by id. Fails only if the scene is missing. */
     fun setEnabled(id: String, enabled: Boolean): SceneAutomationResult
 
-    /** Whether a scene is currently active (running, not yet expired). */
+    /**
+     * Whether a scene is currently active (running, not yet expired).
+     *
+     * Asks "is a scene in force right now", so an expired scene whose effects are already reverted
+     * does NOT count, even while its "ended" banner is still on screen. This is the question the
+     * automation gates ask (`TriggerSceneActive`, and through it `ActionRunScene`'s precondition);
+     * counting the banner there would block them until the user happens to dismiss it.
+     *
+     * For "is there a scene the user can act on", use [hasSceneToStop] instead.
+     */
     fun isAnySceneActive(): Boolean
 
+    /**
+     * Whether [stopActiveScene] has something to act on: a scene that is running, or one that has
+     * expired but whose banner has not been dismissed yet (dismissing it is a valid stop).
+     *
+     * Deliberately wider than [isAnySceneActive], and the same condition [activeFlow] emits — the
+     * wear tile is driven by both, so they must agree.
+     */
+    fun hasSceneToStop(): Boolean
+
     /** Emits true when there's a stoppable scene state — running OR expired-with-banner.
-     *  Used by wear-sync to drive the tile's stop button visibility. */
+     *  Used by wear-sync to drive the tile's stop button visibility. Matches [hasSceneToStop]. */
     val activeFlow: Flow<Boolean>
 
     /** End the active scene (deactivate) or dismiss the expired banner. No-op if nothing active. */

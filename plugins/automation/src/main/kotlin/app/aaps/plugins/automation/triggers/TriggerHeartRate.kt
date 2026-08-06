@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.triggers
 import androidx.annotation.VisibleForTesting
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MonitorHeart
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
@@ -11,14 +12,13 @@ import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
 
 class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
 
     @VisibleForTesting val averageHeartRateDurationMillis = 330 * 1000L
     private val minValue = 30
     private val maxValue = 250
-    var heartRate: InputDouble = InputDouble(80.0, minValue.toDouble(), maxValue.toDouble(), 10.0, DecimalFormat("1"))
+    var heartRate: InputDouble = InputDouble(80.0, minValue.toDouble(), maxValue.toDouble(), 10.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh).apply {
         value = Comparator.Compare.IS_EQUAL_OR_GREATER
     }

@@ -16,6 +16,7 @@ import app.aaps.core.objects.extensions.observeChange
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientControlOperational
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.COLD_DEBOUNCE_MS
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.HOT_DEBOUNCE_MS
 import kotlinx.coroutines.CoroutineScope
@@ -166,6 +167,13 @@ class RunningConfigurationPublisher @Inject constructor(
             .filter { it.state == ClientState.Active }
             .map { it.clientId }
         payload.put("authorizedClients", JSONObject().put("clientIds", JSONArray(activeClientIds)))
+        // Advertise whether commands can actually be served, not just whether the user allows them.
+        // With the WebSocket off this master sees a command minutes late, past its validity, so it must
+        // not tell clients it is accepting: they fold this value into masterReachable and would keep
+        // offering edit UI for commands that can only expire. Only the PUBLISHED value is masked — the
+        // user's stored switch is untouched, and turning the WebSocket back on republishes it as true.
+        payload.optJSONObject(SYNCED_PREFS)
+            ?.put(BooleanKey.NsClientAllowClientControl.key, preferences.clientControlOperational().toString())
         putSettings(SettingsIdentifiers.COLD, payload)
         return true
     }
@@ -217,5 +225,9 @@ class RunningConfigurationPublisher @Inject constructor(
         // 1 ms past NS APIv3 MIN_TIMESTAMP (946684800000 = 2000-01-01 UTC). Required by
         // validateCommon and immutable after create — kept constant so every update matches.
         private const val DOC_DATE = 946684800001L
+
+        // Flat block of cold-synced preference values inside the running-config doc, written by
+        // RunningConfigurationImpl.configuration(). Part of the wire format — do not rename.
+        private const val SYNCED_PREFS = "syncedPrefs"
     }
 }

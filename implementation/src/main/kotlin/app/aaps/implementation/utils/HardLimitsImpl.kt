@@ -36,32 +36,26 @@ class HardLimitsImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope
 ) : HardLimits {
 
-    private fun loadAge(): Int = when (preferences.get(StringKey.SafetyAge)) {
-        ageEntryValues()[HardLimits.AgeType.CHILD.ordinal]           -> HardLimits.AgeType.CHILD.ordinal
-        ageEntryValues()[HardLimits.AgeType.TEENAGE.ordinal]         -> HardLimits.AgeType.TEENAGE.ordinal
-        ageEntryValues()[HardLimits.AgeType.ADULT.ordinal]           -> HardLimits.AgeType.ADULT.ordinal
-        ageEntryValues()[HardLimits.AgeType.RESISTANT_ADULT.ordinal] -> HardLimits.AgeType.RESISTANT_ADULT.ordinal
-        ageEntryValues()[HardLimits.AgeType.PREGNANT.ordinal]        -> HardLimits.AgeType.PREGNANT.ordinal
-        else                                                         -> HardLimits.AgeType.ADULT.ordinal
+    private fun loadAge(): HardLimits.AgeType {
+        // Read the preference and build the value list once. This runs on every limit lookup, so it
+        // must not do the work per candidate age.
+        val stored = preferences.get(StringKey.SafetyAge)
+        val values = ageEntryValues()
+        return HardLimits.AgeType.entries.firstOrNull { values[it.ordinal] == stored } ?: HardLimits.AgeType.ADULT
     }
 
-    override fun maxBolus(): Double = HardLimits.MAX_BOLUS[loadAge()]
-    override fun maxIobAMA(): Double = HardLimits.MAX_IOB_AMA[loadAge()]
-    override fun maxIobSMB(): Double = HardLimits.MAX_IOB_SMB[loadAge()]
-    override fun maxBasal(): Double = HardLimits.MAX_BASAL[loadAge()]
-    override fun minDia(): Double = HardLimits.MIN_DIA[loadAge()]
-    override fun maxDia(): Double = HardLimits.MAX_DIA[loadAge()]
-    override fun minPeak(): Int = HardLimits.MIN_PEAK
-    override fun maxPeak(): Int = HardLimits.MAX_PEAK
-    override fun minIC(): Double = HardLimits.MIN_IC[loadAge()]
-    override fun maxIC(): Double = HardLimits.MAX_IC[loadAge()]
+    // The maps below hold an entry for every AgeType and loadAge() always returns one, so getValue cannot fail.
+    override fun maxBolus(): Double = HardLimits.MAX_BOLUS.getValue(loadAge())
+    override fun maxIobAMA(): Double = HardLimits.MAX_IOB_AMA.getValue(loadAge())
+    override fun maxIobSMB(): Double = HardLimits.MAX_IOB_SMB.getValue(loadAge())
+    override fun maxBasal(): Double = HardLimits.MAX_BASAL.getValue(loadAge())
+    override fun diaRange(): ClosedFloatingPointRange<Double> = HardLimits.LIMIT_DIA.getValue(loadAge())
+    override fun peakRange(): IntRange = HardLimits.LIMIT_PEAK
+    override fun icRange(): ClosedFloatingPointRange<Double> = HardLimits.LIMIT_IC.getValue(loadAge())
 
     // safety checks
     override fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
         value == verifyHardLimits(value, valueName, lowLimit, highLimit)
-
-    override fun isInRange(value: Double, lowLimit: Double, highLimit: Double): Boolean =
-        value in lowLimit..highLimit
 
     override fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double {
         var newValue = value

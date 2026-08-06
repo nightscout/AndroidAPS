@@ -31,8 +31,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for ExtendedBolusScreen managing extended bolus state and business logic.
@@ -180,7 +180,7 @@ class ExtendedBolusViewModel @Inject constructor(
                             ValueWithUnit.Timestamp(eb.timestamp),
                             ValueWithUnit.Insulin(eb.amount),
                             ValueWithUnit.UnitPerHour(eb.rate),
-                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(eb.duration).toInt())
+                            ValueWithUnit.Minute(eb.duration.milliseconds.inWholeMinutes.toInt())
                         )
                     )
                 }

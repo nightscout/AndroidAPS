@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcPumpBattery
@@ -11,11 +12,10 @@ import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
 
 class TriggerPumpBatteryLevel(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var pumpBatteryLevel: InputDouble = InputDouble(0.0, 0.0, 100.0, 1.0, DecimalFormat("1"))
+    var pumpBatteryLevel: InputDouble = InputDouble(0.0, 0.0, 100.0, 1.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh)
 
     private constructor(injector: HasAndroidInjector, triggerPumpBatteryLevel: TriggerPumpBatteryLevel) : this(injector) {

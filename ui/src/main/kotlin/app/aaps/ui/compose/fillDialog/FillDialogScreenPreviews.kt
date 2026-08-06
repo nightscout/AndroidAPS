@@ -3,9 +3,9 @@ package app.aaps.ui.compose.fillDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.ui.compose.insulin.SelectInsulin
-import java.text.DecimalFormat
 
 private val previewInsulins = listOf(
     ICfg("Fiasp U100", peak = 55, dia = 5.0, concentration = 1.0),
@@ -20,7 +20,7 @@ private fun PreviewFillDialog(uiState: FillDialogUiState, dateString: String = "
             uiState = uiState,
             dateString = dateString,
             timeString = timeString,
-            bolusFormat = DecimalFormat("0.0"),
+            bolusFormat = NumberFormat.DECIMAL_1,
             onSiteChangeClick = {},
             onCartridgeChangeClick = {},
             onInsulinChange = {},

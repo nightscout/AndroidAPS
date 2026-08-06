@@ -42,7 +42,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
-        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, profileRepository, persistenceLayer, storeDataForDb, config, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
+        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, profileRepository, persistenceLayer, storeDataForDb, config, nsClientRepository) { nsClientV3Plugin }
     }
 
     @Test
@@ -218,7 +218,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Should not call getNextSyncElementBolus when paused
         verify(persistenceLayer, Times(0)).getNextSyncElementBolus(any())
-        Unit
     }
 
     @Test
@@ -233,7 +232,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Should call getNextSyncElementBolus once and then stop
         verify(persistenceLayer, Times(1)).getNextSyncElementBolus(5L)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -252,7 +250,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Should not calculate queue counters when paused
         verify(persistenceLayer, Times(0)).getLastBolusId()
         verify(persistenceLayer, Times(0)).getLastCarbsId()
-        Unit
     }
 
     @Test
@@ -265,7 +262,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Should not process when upload is disabled
         verify(persistenceLayer, Times(0)).getLastBolusId()
-        Unit
     }
 
     @Test
@@ -432,7 +428,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedCarbs()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementCarbs(any())
-        Unit
     }
 
     @Test
@@ -445,7 +440,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.CarbsLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedBolusCalculatorResults
@@ -458,7 +452,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedBolusCalculatorResults()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementBolusCalculatorResult(any())
-        Unit
     }
 
     @Test
@@ -471,7 +464,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.BolusCalculatorLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedTempTargets
@@ -484,7 +476,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedTempTargets()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementTemporaryTarget(any())
-        Unit
     }
 
     @Test
@@ -497,7 +488,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.TemporaryTargetLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedFoods
@@ -551,7 +541,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.GlucoseValueLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedTherapyEvents
@@ -564,7 +553,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedTherapyEvents()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementTherapyEvent(any())
-        Unit
     }
 
     @Test
@@ -577,7 +565,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.TherapyEventLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedDeviceStatuses
@@ -590,7 +577,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedDeviceStatuses()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementDeviceStatus(any())
-        Unit
     }
 
     @Test
@@ -603,7 +589,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.DeviceStatusLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedTemporaryBasals
@@ -616,7 +601,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedTemporaryBasals()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementTemporaryBasal(any())
-        Unit
     }
 
     @Test
@@ -629,7 +613,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.TemporaryBasalLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedExtendedBoluses
@@ -642,7 +625,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedExtendedBoluses()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementExtendedBolus(any())
-        Unit
     }
 
     @Test
@@ -655,7 +637,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.ExtendedBolusLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedProfileSwitches
@@ -668,7 +649,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedProfileSwitches()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementProfileSwitch(any())
-        Unit
     }
 
     @Test
@@ -681,7 +661,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.ProfileSwitchLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedEffectiveProfileSwitches
@@ -694,7 +673,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedEffectiveProfileSwitches()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementEffectiveProfileSwitch(any())
-        Unit
     }
 
     @Test
@@ -707,7 +685,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.EffectiveProfileSwitchLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedRunningModes
@@ -720,7 +697,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedRunningModes()
 
         verify(persistenceLayer, Times(0)).getNextSyncElementRunningMode(any())
-        Unit
     }
 
     @Test
@@ -733,7 +709,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.RunningModeLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     // Test for processChangedProfileStore
@@ -744,7 +719,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedProfileStore()
 
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -761,7 +735,21 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.processChangedProfileStore()
 
         verify(nsClientV3Plugin, Times(1)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
-        Unit
+    }
+
+    @Test
+    fun processChangedProfileStoreNotUploadedByClientTest() = runTest {
+        // The master owns the profile store in Nightscout. A client only mirrors a list it received,
+        // so uploading would either echo the master's own data back or publish a client-side edit
+        // behind its back.
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)).thenReturn(0L)
+        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(1000L)
+
+        sut.processChangedProfileStore()
+
+        verify(nsClientV3Plugin, Times(0)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
     }
 
     // Tests for processChangedBoluses with getNextSyncElement returning data
@@ -793,7 +781,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Verify nsAdd was called
         verify(nsClientV3Plugin, Times(1)).nsAdd(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -832,7 +819,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Verify nsUpdate was called
         verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -861,7 +847,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Verify no nsAdd or nsUpdate was called (ignored)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
         verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -898,7 +883,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         // Verify no nsAdd or nsUpdate was called (only NS id changed)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
         verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -947,7 +931,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Verify both boluses were synced
         verify(nsClientV3Plugin, Times(2)).nsAdd(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
-        Unit
     }
 
     // Tests for processChangedCarbs with getNextSyncElement returning data
@@ -976,7 +959,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Verify nsAdd was called
         verify(nsClientV3Plugin, Times(1)).nsAdd(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -1011,7 +993,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Verify nsUpdate was called
         verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
-        Unit
     }
 
     @Test

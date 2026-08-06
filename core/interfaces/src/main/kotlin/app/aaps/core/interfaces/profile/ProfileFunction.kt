@@ -140,6 +140,18 @@ interface ProfileFunction {
         getProfile()?.iCfg?.takeIf { it.isUsable } ?: getRequestedProfile()?.iCfg?.takeIf { it.isUsable }
 
     /**
+     * Drop every cached effective profile and rebuild the synchronous [runningICfg] mirror from the DB.
+     *
+     * Needed after a bulk DB rewrite that does not flow through the normal per-row [observeChanges] path —
+     * specifically the v33 insulin-configuration repair, which UPDATEs the running effectiveProfileSwitch
+     * row in place. getProfile() canonicalizes each EPS by id, so the pre-repair copy (carrying the
+     * `insulinEndTime = -1` sentinel, DIA 0.0) stays pinned for the whole session and the APS aborts every
+     * cycle on the DIA hard limit. Calling this right after the repair makes the *current* session re-read
+     * the healed rows instead of only self-healing on the next app start or profile switch.
+     */
+    suspend fun invalidateCache()
+
+    /**
      * Synchronous mirror of the running profile's insulin, for the few callers that cannot suspend —
      * non-suspend property getters and Compose composition. Kept current by the same effective-profile
      * subscription that invalidates the profile cache, so it can never lag behind [getProfile].

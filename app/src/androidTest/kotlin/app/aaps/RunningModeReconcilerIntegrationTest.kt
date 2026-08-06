@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.helpers.IntegrationWaits
 import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
@@ -39,6 +40,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import app.aaps.testcategories.ShardB
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * End-to-end integration scenarios for the running-mode reconciliation pipeline.
@@ -51,6 +53,14 @@ import javax.inject.Inject
  *
  * The pure logic (transition table, gate predicate, duration rounding) is exhaustively covered
  * by the JVM unit tests in core:objects and plugins:aps.
+ *
+ * ### Waiting
+ * Every wait here goes through [IntegrationWaits], never `Thread.sleep` or `RxHelper.waitUntil`: both
+ * of those block the very thread `runTest` drives, and `waitUntil` reports a timeout by returning
+ * `false` into an `isTrue()` assertion whose whole message is "expected to be true" — useless in a CI
+ * log. Each test also carries an explicit `timeout`, because `runTest` defaults to 60s while the wait
+ * budgets below legitimately exceed that on a loaded box (CI build 40565 turned the whole job red this
+ * way, on a commons-codec version bump, and the identical SHA passed in 40566).
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -63,6 +73,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     @Inject lateinit var runningModeExpiryScheduler: RunningModeExpiryScheduler
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxHelper: RxHelper
+    @Inject lateinit var integrationWaits: IntegrationWaits
     @Inject lateinit var loop: Loop
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileRepository: ProfileRepository
@@ -70,6 +81,16 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     @Inject lateinit var pumpSync: PumpSync
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
+
+    /**
+     * Wall-clock budget for a whole test method.
+     *
+     * `runTest`'s default is 60s, but the waits inside a single test legitimately add up past that:
+     * [ensureProfile] alone budgets 40s + 60s, and a zero-TBR round trip budgets another 60s. Exceeding
+     * the default aborts the test from the coroutine machinery, producing a stack of nothing but
+     * `kotlinx.coroutines.test` frames — which is what made the original CI failure so hard to read.
+     */
+    private val testTimeout = 5.minutes
 
     @Before
     fun setUp() {
@@ -84,11 +105,23 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         // The test application does not start the reconciler / scheduler on its own — start them here.
         runningModeReconciler.start()
         runningModeExpiryScheduler.start()
-        // Drain late-arriving commands from the previous test's appScope coroutines (e.g. the
-        // reconciler is still inside commandQueue.tempBasalPercent when tearDown clears the queue,
-        // and the `add()` lands after the clear). Sleep briefly to let those coroutines reach
-        // their `add()` call site, then clear the queue once more.
-        Thread.sleep(200)
+        runBlocking {
+            // start() only *launches* the reconcile; the change observer subscribes after the startup
+            // reconcile completes. Wait for that instead of guessing, so a mode written by the test
+            // body cannot land in the window where nothing is subscribed and be dropped (the change
+            // flow has no replay, so a missed emission is gone for good).
+            integrationWaits.awaitCondition("reconciler startup reconcile", timeoutMs = 30_000) {
+                runningModeReconciler.reconciledMode() != null
+            }
+            // Drain late-arriving commands from the previous test's appScope coroutines (e.g. the
+            // reconciler is still inside commandQueue.tempBasalPercent when tearDown clears the queue,
+            // and the `add()` lands after the clear). Wait for the queue to be *sustainably* empty —
+            // a single empty sample proves nothing, since the late add may simply not have happened
+            // yet — then clear once more.
+            integrationWaits.awaitQuiet("command queue after previous test", quietMs = 300, timeoutMs = 10_000) {
+                commandQueue.size() > 0
+            }
+        }
         commandQueue.clear()
     }
 
@@ -106,7 +139,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     // --- Queue gate: bolus / extendedBolus / cancelTempBasal ---
 
     @Test
-    fun `queue gate rejects bolus when mode is DISCONNECTED_PUMP`() = runTest {
+    fun `queue gate rejects bolus when mode is DISCONNECTED_PUMP`() = runTest(timeout = testTimeout) {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
         val info = DetailedBolusInfo().apply { insulin = 1.0 }
         val result = commandQueue.bolus(info)
@@ -115,14 +148,14 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     }
 
     @Test
-    fun `queue gate rejects extended bolus when mode is DISCONNECTED_PUMP`() = runTest {
+    fun `queue gate rejects extended bolus when mode is DISCONNECTED_PUMP`() = runTest(timeout = testTimeout) {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
         val result = commandQueue.extendedBolus(2.0, 30)
         assertThat(result.success).isFalse()
     }
 
     @Test
-    fun `queue gate allows cancelTempBasal during DISCONNECTED_PUMP`() = runTest {
+    fun `queue gate allows cancelTempBasal during DISCONNECTED_PUMP`() = runTest(timeout = testTimeout) {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
         backgroundScope.launch { commandQueue.cancelTempBasal(enforceNew = true, autoForced = false) }
         yield()
@@ -130,7 +163,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     }
 
     @Test
-    fun `queue gate allows bolus when mode is working`() = runTest {
+    fun `queue gate allows bolus when mode is working`() = runTest(timeout = testTimeout) {
         ensureProfile()
         insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
         // bolus() is a suspend function that blocks until pump delivery completes.
@@ -140,7 +173,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     }
 
     @Test
-    fun `queue gate reflects the mode active at call time not at startup`() = runTest {
+    fun `queue gate reflects the mode active at call time not at startup`() = runTest(timeout = testTimeout) {
         ensureProfile()
         // Startup in working mode.
         insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
@@ -158,43 +191,33 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     // --- Expiry scheduler: schedules + cancels work ---
 
     @Test
-    fun `expiry scheduler enqueues unique work when a temporary RM is written`() = runTest {
+    fun `expiry scheduler enqueues unique work when a temporary RM is written`() = runTest(timeout = testTimeout) {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        val workScheduled = rxHelper.waitUntil("expiry work scheduled", maxSeconds = 30) {
-            val infos = WorkManager.getInstance(context)
-                .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
-            infos.any { it.state == WorkInfo.State.ENQUEUED }
-        }
-        assertThat(workScheduled).isTrue()
+        integrationWaits.awaitCondition("expiry work scheduled", timeoutMs = 30_000) { expiryWorkEnqueued() }
     }
 
     @Test
-    fun `expiry scheduler cancels work when active mode becomes permanent`() = runTest {
+    fun `expiry scheduler cancels work when active mode becomes permanent`() = runTest(timeout = testTimeout) {
         // Schedule work by entering a temporary mode.
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        rxHelper.waitUntil("expiry work present", maxSeconds = 30) {
-            val infos = WorkManager.getInstance(context)
-                .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
-            infos.any { it.state == WorkInfo.State.ENQUEUED }
-        }
+        integrationWaits.awaitCondition("expiry work present", timeoutMs = 30_000) { expiryWorkEnqueued() }
         // Exit by writing a permanent mode.
         insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
-        val workCancelled = rxHelper.waitUntil("expiry work cancelled", maxSeconds = 30) {
-            val infos = WorkManager.getInstance(context)
-                .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
+        integrationWaits.awaitCondition("expiry work cancelled", timeoutMs = 30_000) {
             // Cancelled work may be absent or in a terminal state.
+            val infos = expiryWorkInfos()
             infos.isEmpty() || infos.all { it.state.isFinished }
         }
-        assertThat(workCancelled).isTrue()
     }
 
     // --- Source invariance / DB write triggers observer reaction ---
 
     @Test
-    fun `DB write bypassing LoopPlugin still triggers reconciler observer`() = runTest {
-        // Start in a working mode.
-        insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
-        Thread.sleep(500)
+    fun `DB write bypassing LoopPlugin still triggers reconciler observer`() = runTest(timeout = testTimeout) {
+        // Start in a working mode, and wait until the reconciler has actually consumed it — the
+        // transition under test is working→SUSPENDED_BY_USER, so the baseline must be reconciled
+        // first or the two writes collapse into a single observed change.
+        awaitBaseline(RM.Mode.CLOSED_LOOP)
 
         // Write SUSPENDED_BY_USER via persistenceLayer directly (simulating a scene or NS import).
         // The reconciler's decision for working→SUSPENDED_BY_USER is CancelTbr; commandQueue
@@ -203,18 +226,15 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         // schedules the expiry worker.
         insertActiveMode(RM.Mode.SUSPENDED_BY_USER, durationMs = T.mins(15).msecs())
 
-        val scheduled = rxHelper.waitUntil("expiry work scheduled for SUSPENDED_BY_USER", maxSeconds = 30) {
-            val infos = WorkManager.getInstance(context)
-                .getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
-            infos.any { it.state == WorkInfo.State.ENQUEUED }
+        integrationWaits.awaitCondition("expiry work scheduled for SUSPENDED_BY_USER", timeoutMs = 30_000) {
+            expiryWorkEnqueued()
         }
-        assertThat(scheduled).isTrue()
     }
 
     // --- Helpers ---
 
-    private suspend fun insertActiveMode(mode: RM.Mode, durationMs: Long) {
-        @Suppress("CheckResult")
+    /** Insert [mode] as the active running mode and return the id of the written row. */
+    private suspend fun insertActiveMode(mode: RM.Mode, durationMs: Long): Long? =
         persistenceLayer.insertOrUpdateRunningMode(
             runningMode = RM(
                 timestamp = dateUtil.now(),
@@ -225,8 +245,33 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             action = Action.CLOSED_LOOP_MODE,
             source = Sources.Aaps,
             listValues = listOf(ValueWithUnit.SimpleString("IntegrationTest"))
-        )
+        ).all().firstOrNull()?.id
+
+    /**
+     * Write [mode] as the baseline and suspend until the reconciler has reconciled *that row*.
+     *
+     * Deterministic replacement for "insert, then sleep and hope the observer got there": the wait ends
+     * exactly when the reconciler's own bookkeeping names the inserted row, which proves both that the
+     * collector is subscribed and that this change — not a later one — was the one it acted on.
+     */
+    private suspend fun awaitBaseline(mode: RM.Mode) {
+        val baselineId = insertActiveMode(mode, durationMs = 0L)
+        integrationWaits.awaitCondition("reconciler baselined on $mode", timeoutMs = 30_000) {
+            runningModeReconciler.reconciledRowId() == baselineId && runningModeReconciler.reconciledMode() == mode
+        }
     }
+
+    private fun expiryWorkInfos(): List<WorkInfo> =
+        WorkManager.getInstance(context).getWorkInfosForUniqueWork(RunningModeExpiryWorker.WORK_NAME).get()
+
+    private fun expiryWorkEnqueued(): Boolean = expiryWorkInfos().any { it.state == WorkInfo.State.ENQUEUED }
+
+    private suspend fun zeroTbrOnPump(): Boolean {
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        return tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
+    }
+
+    private suspend fun noTbrOnPump(): Boolean = pumpSync.expectedPumpState().temporaryBasal == null
 
     // ==========================================================================================
     // End-to-end scenarios with full profile setup
@@ -237,7 +282,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     // ==========================================================================================
 
     @Test
-    fun `gate rejects non-zero TBR during DISCONNECTED_PUMP even via commandQueue with real profile`() = runTest {
+    fun `gate rejects non-zero TBR during DISCONNECTED_PUMP even via commandQueue with real profile`() = runTest(timeout = testTimeout) {
         ensureProfile()
         val profile = profileFunction.getProfile() ?: error("profile not available")
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
@@ -253,21 +298,17 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
     }
 
     @Test
-    fun `reconciler issues zero-TBR on entry to DISCONNECTED_PUMP and cancels on exit`() = runTest {
+    fun `reconciler issues zero-TBR on entry to DISCONNECTED_PUMP and cancels on exit`() = runTest(timeout = testTimeout) {
         ensureProfile()
-        // Baseline: working mode, no zero-TBR.
-        insertActiveMode(RM.Mode.CLOSED_LOOP, durationMs = 0L)
-        Thread.sleep(500)
+        // Baseline: working mode, no zero-TBR. Wait for the reconciler to consume it, so the
+        // DISCONNECTED_PUMP write below is seen as a *transition* out of a working mode.
+        awaitBaseline(RM.Mode.CLOSED_LOOP)
 
         // Enter DISCONNECTED_PUMP.
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
 
         // Reconciler observes, issues zero-TBR, queue executes, pump state reflects it.
-        val tbrArrived = rxHelper.waitUntil("zero TBR on pump", maxSeconds = 60) {
-            val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
-            tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
-        }
-        assertThat(tbrArrived).isTrue()
+        integrationWaits.awaitCondition("zero TBR on pump", timeoutMs = 60_000) { zeroTbrOnPump() }
 
         // Exit: cancel the running mode (simulates user RESUME).
         persistenceLayer.cancelCurrentRunningMode(
@@ -279,14 +320,11 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         )
 
         // Reconciler observes transition zero-delivery → working and cancels TBR.
-        val tbrCleared = rxHelper.waitUntil("TBR cleared on pump", maxSeconds = 60) {
-            runBlocking { pumpSync.expectedPumpState() }.temporaryBasal == null
-        }
-        assertThat(tbrCleared).isTrue()
+        integrationWaits.awaitCondition("TBR cleared on pump", timeoutMs = 60_000) { noTbrOnPump() }
     }
 
     @Test
-    fun `source invariance - handleRunningModeChange and direct persistenceLayer produce the same pump state`() = runTest {
+    fun `source invariance - handleRunningModeChange and direct persistenceLayer produce the same pump state`() = runTest(timeout = testTimeout) {
         ensureProfile()
         val profile = profileFunction.getProfile() ?: error("profile not available")
 
@@ -299,10 +337,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             source = Sources.Aaps,
             listValues = emptyList()
         )
-        assertThat(rxHelper.waitUntil("path A: zero TBR on pump", maxSeconds = 60) {
-            val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
-            tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
-        }).isTrue()
+        integrationWaits.awaitCondition("path A: zero TBR on pump", timeoutMs = 60_000) { zeroTbrOnPump() }
         val pathAState = pumpSync.expectedPumpState()
         val pathATbrRate = pathAState.temporaryBasal?.rate
 
@@ -314,16 +349,11 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             note = null,
             listValues = emptyList()
         )
-        assertThat(rxHelper.waitUntil("reset between paths", maxSeconds = 60) {
-            runBlocking { pumpSync.expectedPumpState() }.temporaryBasal == null
-        }).isTrue()
+        integrationWaits.awaitCondition("reset between paths", timeoutMs = 60_000) { noTbrOnPump() }
 
         // Path B: direct persistenceLayer.insertOrUpdateRunningMode (scene / NS / future writers).
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = T.mins(30).msecs())
-        assertThat(rxHelper.waitUntil("path B: zero TBR on pump", maxSeconds = 60) {
-            val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
-            tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
-        }).isTrue()
+        integrationWaits.awaitCondition("path B: zero TBR on pump", timeoutMs = 60_000) { zeroTbrOnPump() }
         val pathBState = pumpSync.expectedPumpState()
         val pathBTbrRate = pathBState.temporaryBasal?.rate
 
@@ -346,7 +376,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
      */
     @Test
     @Ignore("Slow (65s+): real-time wait for WorkManager expiry. Verified manually; keep out of CI.")
-    fun `expiry worker cancels zero-TBR at natural RM end`() = runTest {
+    fun `expiry worker cancels zero-TBR at natural RM end`() = runTest(timeout = testTimeout) {
         ensureProfile()
         // Duration must round to at least 1 minute of remaining for the reconciler to issue
         // a zero-TBR (sub-minute remaining is treated as expired, and the test would see no TBR
@@ -355,16 +385,11 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
         insertActiveMode(RM.Mode.DISCONNECTED_PUMP, durationMs = durationMs)
 
         // Phase 1: reconciler issues zero-TBR.
-        assertThat(rxHelper.waitUntil("zero TBR active before expiry", maxSeconds = 60) {
-            val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
-            tbr != null && tbr.rate == 0.0 && tbr.type == PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
-        }).isTrue()
+        integrationWaits.awaitCondition("zero TBR active before expiry", timeoutMs = 60_000) { zeroTbrOnPump() }
 
         // Phase 2: at RM end, the expiry worker fires and cancels the zero-TBR.
         // Budget: RM duration (65s) + 30s slack for worker latency and queue drain.
-        assertThat(rxHelper.waitUntil("expiry worker cleared TBR", maxSeconds = 95) {
-            runBlocking { pumpSync.expectedPumpState() }.temporaryBasal == null
-        }).isTrue()
+        integrationWaits.awaitCondition("expiry worker cleared TBR", timeoutMs = 95_000) { noTbrOnPump() }
     }
 
     // --- Profile setup helper ---
@@ -394,12 +419,8 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             iCfg = ICfg("Test", insulinEndTime = 5 * 3600 * 1000L, insulinPeakTime = 75 * 60 * 1000L)
         ) ?: error("createProfileSwitch returned null")
 
-        assertThat(rxHelper.waitUntil("profile ready", maxSeconds = 40) {
-            runBlocking { profileFunction.getProfile() } != null
-        }).isTrue()
-        assertThat(rxHelper.waitUntil("pump has profile", maxSeconds = 60) {
-            runBlocking { pumpSync.expectedPumpState() }.profile != null
-        }).isTrue()
+        integrationWaits.awaitCondition("profile ready", timeoutMs = 40_000) { profileFunction.getProfile() != null }
+        integrationWaits.awaitCondition("pump has profile", timeoutMs = 60_000) { pumpSync.expectedPumpState().profile != null }
     }
 
     companion object {

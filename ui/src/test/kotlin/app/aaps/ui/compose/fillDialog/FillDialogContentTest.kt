@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.ui.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -16,7 +17,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import java.text.DecimalFormat
 
 /**
  * First screen-composable test in `:ui`. Renders the state-hoisted [FillDialogContent] headlessly on
@@ -54,7 +54,7 @@ class FillDialogContentTest {
                     uiState = FillDialogUiState(siteChange = true, insulin = 0.3),
                     dateString = "2024-01-01",
                     timeString = "12:00",
-                    bolusFormat = DecimalFormat("0.0"),
+                    bolusFormat = NumberFormat.DECIMAL_1,
                     onSiteChangeClick = { siteChangeClicked = true },
                     onCartridgeChangeClick = {},
                     onInsulinChange = {},

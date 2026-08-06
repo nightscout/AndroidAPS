@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
@@ -111,6 +112,11 @@ class WearPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         deferredStart.start { dataLayerListenerServiceMobileHelper.startService(context) }
+        // Last percent actually sent to the watch. Starts at 100 = "nothing to clear": the empty-status
+        // clear frame on state-null is only needed when the watch was left mid-progress (< 100). If the
+        // driver already reported 100% ("Bolus delivered successfully"), sending the clear frame would
+        // overwrite that text with "100% - " for the notification's 5 s dismiss window.
+        var lastSentPercent = 100
         bolusProgressData.state
             .drop(1) // Skip initial null emission on collection start
             .collectResilient(newScope, aapsLogger, LTag.WEAR) { state ->
@@ -118,10 +124,12 @@ class WearPlugin @Inject constructor(
                     if (state != null) {
                         if (!state.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
                             rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.wearStatus)))
+                            lastSentPercent = state.percent
                         }
-                    } else {
-                        // Bolus ended — send 100% to clear wear display
+                    } else if (lastSentPercent < 100) {
+                        // Bolus ended without a 100% frame (cancelled/failed) — send 100% to clear wear display
                         rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 100, status = "")))
+                        lastSentPercent = 100
                     }
                 }
             }
@@ -158,6 +166,19 @@ class WearPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .concatMapCompletable {
                 rxCompletable { dataHandlerMobile.resendData("EventLoopUpdateGui") }
+                    .doOnError(fabricPrivacy::logException)
+                    .onErrorComplete()
+            }
+            .subscribe()
+        // AAPSCLIENT: fresh predictions arrive via NS devicestatus, not a local loop run — without this the
+        // watch graph trails the phone by one loop cycle (the BG-triggered autosens resend fires BEFORE the
+        // master's new devicestatus lands). Event is only sent on AAPSCLIENT; processedDeviceStatusData is
+        // updated synchronously before it fires, so the resend reads the new predictions.
+        disposable += rxBus
+            .toObservable(EventNsClientStatusUpdated::class.java)
+            .observeOn(aapsSchedulers.io)
+            .concatMapCompletable {
+                rxCompletable { dataHandlerMobile.resendData("EventNsClientStatusUpdated") }
                     .doOnError(fabricPrivacy::logException)
                     .onErrorComplete()
             }

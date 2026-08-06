@@ -166,18 +166,21 @@ internal fun ManageBottomSheetContent(
         SectionHeader(stringResource(CoreUiR.string.manage))
 
         GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
+            // Profiles are the exception: an unpaired client still needs to SEE them (it receives them
+            // from Nightscout and calculates with them), so the entry stays and the screen opens
+            // read-only there. Every other editor here can only write, so it is hidden instead.
+            add { modifier ->
+                ManageGridItem(
+                    elementType = ElementType.PROFILE_MANAGEMENT,
+                    onDismiss = onDismiss,
+                    onNavigate = onNavigate,
+                    modifier = modifier
+                )
+            }
             // Mutating editors ride the signed Client-Control channel — hidden on an unpaired client
             // (showMutatingActions=false), always shown on a master. SITE_ROTATION now rides it too (its record +
             // edit write path is Client-Control-migrated), so it is gated alongside the others.
             if (showMutatingActions) {
-                add { modifier ->
-                    ManageGridItem(
-                        elementType = ElementType.PROFILE_MANAGEMENT,
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate,
-                        modifier = modifier
-                    )
-                }
                 add { modifier ->
                     ManageGridItem(
                         elementType = ElementType.INSULIN_MANAGEMENT,

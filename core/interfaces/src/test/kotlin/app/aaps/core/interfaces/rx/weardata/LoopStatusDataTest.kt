@@ -23,7 +23,8 @@ class LoopStatusDataTest {
             oapsResult = OapsResultInfo(
                 changeRequested = true, isLetTempRun = false, rate = 1.2, ratePercent = 120,
                 duration = 30, reason = "test", smbAmount = 0.5
-            )
+            ),
+            modeEndTime = 9000L
         )
         val encoded = json.encodeToString(LoopStatusData.serializer(), data)
         val restored = json.decodeFromString(LoopStatusData.serializer(), encoded)
@@ -31,6 +32,15 @@ class LoopStatusDataTest {
         assertThat(restored.tempTarget?.durationMinutes).isEqualTo(30)
         assertThat(restored.defaultRange.highDisplay).isEqualTo("120")
         assertThat(restored.oapsResult?.rate).isEqualTo(1.2)
+        assertThat(restored.modeEndTime).isEqualTo(9000L)
+    }
+
+    @Test
+    fun missingModeEndTimeDecodesAsNull() {
+        // payload shape from a phone older than the modeEndTime field
+        val legacy = """{"timestamp":0,"loopMode":"SUSPENDED","apsName":null,"lastRun":null,"lastEnact":null,"tempTarget":null,""" +
+            """"defaultRange":{"lowDisplay":"a","highDisplay":"b","targetDisplay":"c","units":"u"},"oapsResult":null}"""
+        assertThat(json.decodeFromString(LoopStatusData.serializer(), legacy).modeEndTime).isNull()
     }
 
     @Test

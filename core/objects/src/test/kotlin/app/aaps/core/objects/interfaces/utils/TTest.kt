@@ -3,7 +3,6 @@ package app.aaps.core.objects.interfaces.utils
 import app.aaps.core.data.time.T
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
 class TTest {
@@ -15,10 +14,6 @@ class TTest {
         assertThat(T.hours(24).days()).isEqualTo(1)
         assertThat(T.days(1).hours()).isEqualTo(24)
         assertThat(T.mins(1).msecs()).isEqualTo(60000)
-    }
-
-    @Test fun now() {
-        assertThat(abs(T.now().msecs() - System.currentTimeMillis())).isLessThan(5_000L)
     }
 
     @Test fun additions() {

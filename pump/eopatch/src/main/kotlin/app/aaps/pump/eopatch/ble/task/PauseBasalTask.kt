@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.minutes
 
 @Singleton
 class PauseBasalTask @Inject constructor(
@@ -123,7 +124,7 @@ class PauseBasalTask @Inject constructor(
             pm.flushNormalBasalManager()
             pm.flushPatchConfig()
 
-            if ((alarmCode == null || alarmCode.type == AlarmCode.TYPE_ALERT) && pauseDurationHour != 0f) alarmRegistry.add(AlarmCode.B001, TimeUnit.MINUTES.toMillis((pauseDurationHour * 60).toLong()), false).subscribe()
+            if ((alarmCode == null || alarmCode.type == AlarmCode.TYPE_ALERT) && pauseDurationHour != 0f) alarmRegistry.add(AlarmCode.B001, (pauseDurationHour * 60).toLong().minutes.inWholeMilliseconds, false).subscribe()
         }
 
         enqueue(TaskFunc.UPDATE_CONNECTION)

@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
@@ -141,7 +142,7 @@ internal fun ProfileSwitchEditor(
         labelResId = R.string.scene_editor_percentage,
         value = action.percentage.toDouble(),
         onValueChange = { onUpdate(action.copy(percentage = it.toInt())) },
-        valueRange = 50.0..200.0,
+        valueRange = Constants.CPP_PERCENTAGE_RANGE,
         step = 5.0,
         unitLabelResId = app.aaps.core.keys.R.string.units_percent
     )

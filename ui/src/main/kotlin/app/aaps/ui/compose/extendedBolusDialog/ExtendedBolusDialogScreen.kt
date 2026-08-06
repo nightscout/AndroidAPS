@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -46,7 +47,6 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.labelResId
-import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -195,7 +195,7 @@ internal fun ExtendedBolusDialogContent(
                         onValueChange = onInsulinChange,
                         valueRange = uiState.minInsulin..uiState.maxInsulin,
                         step = uiState.extendedStep,
-                        valueFormat = DecimalFormat("0.00"),
+                        valueFormat = NumberFormat.DECIMAL_2,
                         unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
                         modifier = itemModifier
                     )
@@ -206,7 +206,7 @@ internal fun ExtendedBolusDialogContent(
                         onValueChange = onDurationChange,
                         valueRange = uiState.extendedDurationStep..uiState.extendedMaxDuration,
                         step = uiState.extendedDurationStep,
-                        valueFormat = DecimalFormat("0"),
+                        valueFormat = NumberFormat.INTEGER,
                         unitLabelResId = KeysR.string.units_min,
                         modifier = itemModifier
                     )

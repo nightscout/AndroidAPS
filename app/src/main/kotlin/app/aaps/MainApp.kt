@@ -118,6 +118,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltAndroidApp
 class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
@@ -228,6 +229,12 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             try {
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
+
+                // ProfileRepository is a @Singleton, so it already loaded during field injection —
+                // before doMigrations() converted the ancient raw SharedPreferences profile keys into
+                // the numbered ones. Re-read now, otherwise that upgrade would be picked up only on
+                // the next start (and the profile-to-JSON conversion with it).
+                profileRepository.reset()
 
                 // Defragment the DB while it is quiescent: plugins, loop, sync and UI all start
                 // later, so the (memory heavy) VACUUM has the DB to itself. Runs at most monthly.
@@ -431,9 +438,9 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("PasswordReset")
         if (fh?.exists() == true) {
             config.updateInitProgress(getString(app.aaps.core.ui.R.string.waiting_for_pump))
-            val serialNumber = withTimeoutOrNull(30_000L) {
+            val serialNumber = withTimeoutOrNull(30_000.milliseconds) {
                 while (activePlugin.activePump.serialNumber().isEmpty()) {
-                    delay(100)
+                    delay(100.milliseconds)
                 }
                 activePlugin.activePump.serialNumber()
             }
@@ -843,7 +850,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
                 profileNameToDia[profileName]
             }
-            val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
+            val insulinEndTime = ((dia ?: hardLimits.diaRange().endInclusive) * 3600 * 1000).toLong()
             ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
                 it.insulinNickname = insulinLabel
                 it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"
@@ -869,6 +876,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
         val totalMigrated = migratedPs + migratedEps + migratedBoluses
         if (totalMigrated > 0) {
+            profileFunction.invalidateCache()
             aapsLogger.debug(LTag.CORE, "Migration to DB 33 complete: $totalMigrated records updated")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE(

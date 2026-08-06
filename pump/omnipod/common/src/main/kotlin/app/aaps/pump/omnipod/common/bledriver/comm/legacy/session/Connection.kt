@@ -10,6 +10,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.common.bledriver.comm.Ids
 import app.aaps.pump.omnipod.common.bledriver.comm.endecrypt.EnDecrypt
@@ -67,7 +68,7 @@ class Connection(
         val autoConnect = false
         var gatt = gattConnection
         if (gatt == null) {
-            gatt = podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
+            gatt = podDevice.connectGattCompat(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
             if (gatt == null) {
                 Thread.sleep(SLEEP_WHEN_FAILING_TO_CONNECT_GATT) // Do not retry too often
                 throw FailedToConnectException("connectGatt() returned null")

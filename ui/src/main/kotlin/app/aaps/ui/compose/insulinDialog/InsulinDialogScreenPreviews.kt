@@ -3,10 +3,10 @@ package app.aaps.ui.compose.insulinDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
-import java.text.DecimalFormat
 
 @Preview(showBackground = true)
 @Composable
@@ -29,8 +29,8 @@ internal fun InsulinDialogScreenPreview() {
             cob = CobUiState(),
             dateString = "25/02/2026",
             timeString = "14:30",
-            bolusFormat = DecimalFormat("0.0"),
-            formatAmount = { DecimalFormat("0.0").format(it) },
+            bolusFormat = NumberFormat.DECIMAL_1,
+            formatAmount = { NumberFormat.DECIMAL_1.format(it) },
             onEatingSoonChange = {},
             onRecordOnlyChange = {},
             onInsulinChange = {},

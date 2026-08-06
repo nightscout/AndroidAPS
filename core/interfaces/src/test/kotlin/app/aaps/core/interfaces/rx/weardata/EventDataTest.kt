@@ -233,4 +233,20 @@ class EventDataTest {
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
     }
+
+    @Test
+    fun deserializeToleratesUnknownKeysFromNewerPeer() {
+        // A newer peer may add fields this build doesn't know (phone and wear are not always
+        // updated together) — decoding must not fall back to Error, or screens waiting for the
+        // event spin forever
+        val event = EventData.LoopStatusResponse(
+            timeStamp = 1L,
+            data = LoopStatusData(0L, LoopStatusData.LoopMode.DISCONNECTED, null, null, null, null, null, TargetRange("a", "b", "c", "u"), null)
+        )
+        val topLevelUnknown = event.serialize().replaceFirst("\"timeStamp\"", "\"futureField\":42,\"timeStamp\"")
+        assertThat(EventData.deserialize(topLevelUnknown)).isEqualTo(event)
+
+        val nestedUnknown = event.serialize().replaceFirst("\"loopMode\"", "\"futureField\":42,\"loopMode\"")
+        assertThat(EventData.deserialize(nestedUnknown)).isEqualTo(event)
+    }
 }

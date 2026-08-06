@@ -36,10 +36,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.minutes
 import android.app.NotificationManager as AndroidNotificationManager
 
 @Singleton
@@ -113,7 +113,7 @@ class NotificationManagerImpl @Inject constructor(
         validityCheck: (() -> Boolean)?
     ): NotificationHandle {
         val now = System.currentTimeMillis()
-        val validTo = if (validMinutes > 0) now + TimeUnit.MINUTES.toMillis(validMinutes.toLong()) else 0L
+        val validTo = if (validMinutes > 0) now + validMinutes.toLong().minutes.inWholeMilliseconds else 0L
         return postInternal(
             id = id, text = text, level = level,
             date = now, validTo = validTo,
@@ -217,7 +217,7 @@ class NotificationManagerImpl @Inject constructor(
         validityCheck: (() -> Boolean)?
     ): NotificationHandle {
         val text = if (formatArgs.isEmpty()) rh.gs(textRes) else rh.gs(textRes, *formatArgs)
-        val effectiveValidTo = if (validMinutes > 0) date + TimeUnit.MINUTES.toMillis(validMinutes.toLong()) else validTo
+        val effectiveValidTo = if (validMinutes > 0) date + validMinutes.toLong().minutes.inWholeMilliseconds else validTo
         return postInternal(
             id = id, text = text, level = level,
             date = date, validTo = effectiveValidTo,

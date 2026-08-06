@@ -23,13 +23,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
-import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 
 /**
@@ -102,27 +102,18 @@ fun TempTargetEditor(
         }
 
         // Target value slider
-        val (minTarget, maxTarget, targetStep) = when (units) {
-            GlucoseUnit.MGDL -> Triple(
-                Constants.MIN_TT_MGDL,
-                Constants.MAX_TT_MGDL,
-                1.0
-            )
-
-            GlucoseUnit.MMOL -> Triple(
-                Constants.MIN_TT_MMOL,
-                Constants.MAX_TT_MMOL,
-                0.1
-            )
+        val (targetRange, targetStep) = when (units) {
+            GlucoseUnit.MGDL -> Constants.TT_RANGE_MGDL to 1.0
+            GlucoseUnit.MMOL -> Constants.TT_RANGE_MMOL to 0.1
         }
 
         NumberInputRow(
             labelResId = R.string.temporary_target,
             value = editorTarget,
             onValueChange = onTargetChange,
-            valueRange = minTarget..maxTarget,
+            valueRange = targetRange,
             step = targetStep,
-            valueFormat = if (units == GlucoseUnit.MGDL) DecimalFormat("0") else DecimalFormat("0.0"),
+            valueFormat = if (units == GlucoseUnit.MGDL) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
             unitLabel = units.displayLabel,
             modifier = Modifier.fillMaxWidth()
         )
@@ -132,7 +123,7 @@ fun TempTargetEditor(
             labelResId = R.string.duration,
             value = editorDuration.toDouble(),
             onValueChange = { onDurationChange((it * 60000L).toLong()) },
-            valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
+            valueRange = Constants.ACTION_DURATION,
             step = 5.0,
             unitLabelResId = KeysR.string.units_min,
             modifier = Modifier.fillMaxWidth()

@@ -59,6 +59,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.hours
 import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
@@ -604,7 +605,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
     private suspend fun refreshAccessTokenIfNeeded() {
         val state = openHumansState!!
-        if (state.expiresAt <= System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)) {
+        if (state.expiresAt <= System.currentTimeMillis() - 1.hours.inWholeMilliseconds) {
             val newTokens = openHumansAPI.refreshAccessToken(state.refreshToken)
             withContext(Dispatchers.Main) {
                 openHumansState = state.copy(

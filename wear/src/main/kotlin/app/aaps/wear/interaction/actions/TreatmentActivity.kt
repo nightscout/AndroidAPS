@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionBolusPreCheck
@@ -44,8 +46,9 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
+import app.aaps.wear.data.ComplicationData
+import app.aaps.wear.data.ComplicationDataRepository
 import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -54,6 +57,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var sp: SP
+    @Inject lateinit var complicationDataRepository: ComplicationDataRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +78,11 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                 var insulin by remember { mutableStateOf(0.0) }
                 var carbs by remember { mutableStateOf(0.0) }
                 val pagerState = rememberPagerState(pageCount = { 3 })
+                // Mirror the phone Carbs dialog (issue #4637): a negative entry may remove at most the carbs
+                // currently on board, taken from the last Status pushed by the phone (unknown → 0, no removal).
+                // The master re-clamps on prepare, so a stale value here is only cosmetic.
+                val data by complicationDataRepository.complicationData.collectAsState(initial = ComplicationData())
+                val cobLimit = data.statusData.cobValue.toInt().coerceAtLeast(0)
 
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
@@ -83,10 +92,9 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                             0 -> PlusMinusInputScreen(
                                 value = insulin,
                                 onValueChange = { insulin = it },
-                                min = 0.0,
-                                max = maxBolus,
+                                valueRange = 0.0..maxBolus,
                                 stepValues = stepValuesInsulin,
-                                format = DecimalFormat("#0.0"),
+                                format = NumberFormat.DECIMAL_1,
                                 label = stringResource(R.string.action_insulin_units),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
@@ -97,11 +105,11 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                             1 -> PlusMinusInputScreen(
                                 value = carbs,
                                 onValueChange = { carbs = it },
-                                min = -maxCarbs,
-                                max = maxCarbs,
+                                valueRange = -cobLimit.toDouble()..maxCarbs,
                                 stepValues = stepValuesCarbs,
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 label = stringResource(R.string.action_carbs_gram),
+                                hint = if (carbs < 0) stringResource(R.string.carbs_removal_cob_limit, cobLimit) else null,
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 1,
                                 enabled = !pagerState.isScrollInProgress,
@@ -138,7 +146,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
 
 @Composable
 private fun TreatmentConfirmScreen(insulin: Double, carbs: Int, onConfirm: () -> Unit) {
-    val fmt = remember { DecimalFormat("#0.0") }
+    val fmt = remember { NumberFormat.DECIMAL_1 }
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
 

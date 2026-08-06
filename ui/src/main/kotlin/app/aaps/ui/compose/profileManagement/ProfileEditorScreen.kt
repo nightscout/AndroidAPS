@@ -50,6 +50,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.graph.BasalProfileGraphCompose
 import app.aaps.core.graph.IcProfileGraphCompose
 import app.aaps.core.graph.IsfProfileGraphCompose
@@ -58,12 +59,10 @@ import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.PlusMinusEdit
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileUiState
 import app.aaps.ui.compose.profileManagement.viewmodels.SingleProfileState
-import java.text.DecimalFormat
 
 @Composable
 fun ProfileEditorScreen(
@@ -249,7 +248,7 @@ fun ProfileEditorScreen(
                     // current pump until the basal fits the pump's limits.
                     if (state.pumpIncompatible && state.selectedTab == 2) {
                         Text(
-                            text = stringResource(app.aaps.core.ui.R.string.profile_basal_not_compatible_with_pump),
+                            text = stringResource(R.string.profile_basal_not_compatible_with_pump),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -420,52 +419,6 @@ private fun UnsavedChangesDialog(
 }
 
 @Composable
-private fun DiaContent(
-    dia: Double,
-    onDiaChange: (Double) -> Unit,
-    minDia: Double,
-    maxDia: Double
-) {
-    val valueFormat = remember { DecimalFormat("0.0") }
-
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = stringResource(R.string.dia_long_label),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.dia),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                PlusMinusEdit(
-                    value = dia,
-                    onValueChange = onDiaChange,
-                    valueRange = minDia..maxDia,
-                    step = 0.1,
-                    valueFormat = valueFormat,
-                    unitLabel = "h",
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun IcContent(
     viewModel: ProfileEditorViewModel,
     profile: SingleProfileState,
@@ -492,10 +445,9 @@ private fun IcContent(
                 onEntryChange = { index, entry -> viewModel.updateIcEntry(index, entry) },
                 onAddEntry = { index -> viewModel.addIcEntry(index) },
                 onRemoveEntry = { index -> viewModel.removeIcEntry(index) },
-                minValue = state.icMin,
-                maxValue = state.icMax,
+                valueRange = state.icRange,
                 step = 0.1,
-                valueFormat = DecimalFormat("0.0"),
+                valueFormat = NumberFormat.DECIMAL_1,
                 unitLabel = stringResource(R.string.profile_carbs_per_unit),
                 modifier = Modifier.padding(16.dp)
             )
@@ -549,10 +501,9 @@ private fun IsfContent(
                 onEntryChange = { index, entry -> viewModel.updateIsfEntry(index, entry) },
                 onAddEntry = { index -> viewModel.addIsfEntry(index) },
                 onRemoveEntry = { index -> viewModel.removeIsfEntry(index) },
-                minValue = state.isfMin,
-                maxValue = state.isfMax,
+                valueRange = state.isfRange,
                 step = if (profile.mgdl) 1.0 else 0.1,
-                valueFormat = if (profile.mgdl) DecimalFormat("0") else DecimalFormat("0.0"),
+                valueFormat = if (profile.mgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
                 unitLabel = "${state.units}/${stringResource(R.string.insulin_unit_shortname)}",
                 modifier = Modifier.padding(16.dp)
             )
@@ -615,10 +566,9 @@ private fun BasalContent(
                     onEntryChange = { index, entry -> viewModel.updateBasalEntry(index, entry) },
                     onAddEntry = { index -> viewModel.addBasalEntry(index) },
                     onRemoveEntry = { index -> viewModel.removeBasalEntry(index) },
-                    minValue = state.basalMin,
-                    maxValue = state.basalMax,
+                    valueRange = state.basalRange,
                     step = 0.01,
-                    valueFormat = DecimalFormat("0.00"),
+                    valueFormat = NumberFormat.DECIMAL_2,
                     unitLabel = ""
                 )
             }
@@ -665,10 +615,10 @@ private fun TargetContent(
                 },
                 onAddEntry = { index -> viewModel.addTargetEntry(index) },
                 onRemoveEntry = { index -> viewModel.removeTargetEntry(index) },
-                minValue = state.targetMin,
-                maxValue = state.targetMax,
+                lowRange = state.targetLowRange,
+                highRange = state.targetHighRange,
                 step = if (profile.mgdl) 1.0 else 0.1,
-                valueFormat = if (profile.mgdl) DecimalFormat("0") else DecimalFormat("0.0"),
+                valueFormat = if (profile.mgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
                 unitLabel = state.units,
                 modifier = Modifier.padding(16.dp)
             )

@@ -1,17 +1,17 @@
 package app.aaps.plugins.sensitivity
 
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
@@ -23,8 +23,6 @@ import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import kotlinx.coroutines.runBlocking
-import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
@@ -34,9 +32,7 @@ class SensitivityAAPSPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val persistenceLayer: PersistenceLayer,
     private val activePlugin: ActivePlugin
 ) : AbstractSensitivityPlugin(
     PluginDescription()
@@ -53,9 +49,15 @@ class SensitivityAAPSPlugin @Inject constructor(
         return aps.algorithm == APSResult.Algorithm.AMA
     }
 
-    override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
+    override fun detectSensitivity(
+        ads: AutosensDataStore,
+        fromTime: Long,
+        toTime: Long,
+        profile: EffectiveProfile?,
+        siteChanges: List<TE>,
+        profileSwitches: List<PS>
+    ): AutosensResult {
         val hoursForDetection = preferences.get(IntKey.AutosensPeriod)
-        val profile = runBlocking { profileFunction.getProfile() }
         if (profile == null) {
             aapsLogger.error("No profile")
             return AutosensResult()
@@ -69,11 +71,10 @@ class SensitivityAAPSPlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val siteChanges = runBlocking { persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true) }
-        val profileSwitches = runBlocking { persistenceLayer.getProfileSwitchesFromTime(fromTime, true) }
         val deviationsArray: MutableList<Double> = ArrayList()
-        var pastSensitivity = ""
-        var index = 0
+        val pastSensitivity = StringBuilder()
+        // start the scan at the detection window instead of walking the whole table on every call
+        var index = firstIndexAtOrAfter(ads.autosensDataTable, toTime - hoursForDetection * 60 * 60 * 1000L)
         while (index < ads.autosensDataTable.size()) {
             val autosensData = ads.autosensDataTable.valueAt(index)
             if (autosensData.time < fromTime) {
@@ -88,13 +89,13 @@ class SensitivityAAPSPlugin @Inject constructor(
             // reset deviations after site change
             if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                 deviationsArray.clear()
-                pastSensitivity += "(SITECHANGE)"
+                pastSensitivity.append("(SITECHANGE)")
             }
 
             // reset deviations after profile switch
             if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                 deviationsArray.clear()
-                pastSensitivity += "(PROFILESWITCH)"
+                pastSensitivity.append("(PROFILESWITCH)")
             }
             var deviation = autosensData.deviation
 
@@ -102,20 +103,19 @@ class SensitivityAAPSPlugin @Inject constructor(
             if (autosensData.bg < 80 && deviation > 0) deviation = 0.0
             if (autosensData.validDeviation) if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L) deviationsArray.add(deviation)
             if (deviationsArray.size > hoursForDetection * 60 / 5) deviationsArray.removeAt(0)
-            pastSensitivity += autosensData.pastSensitivity
+            pastSensitivity.append(autosensData.pastSensitivity)
             val secondsFromMidnight = MidnightUtils.secondsFromMidnight(autosensData.time)
             if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
-                pastSensitivity += "(" + (secondsFromMidnight / 3600.0).roundToInt() + ")"
+                pastSensitivity.append("(").append((secondsFromMidnight / 3600.0).roundToInt()).append(")")
             }
             index++
         }
-        val deviations = Array(deviationsArray.size) { i -> deviationsArray[i] }
-        //val sens = profile.getIsfMgdl(toTime, current.bg, "SensitivityAAPSPlugin")
+        val deviations = deviationsArray.toDoubleArray()
         val sens = current.sens
         val ratioLimit = ""
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
-        Arrays.sort(deviations)
+        deviations.sort()
         val percentile = Percentile.percentile(deviations, 0.50)
         val basalOff = percentile * (60.0 / 5.0) / sens
         val ratio = 1 + basalOff / profile.getMaxDailyBasal()
@@ -127,7 +127,7 @@ class SensitivityAAPSPlugin @Inject constructor(
         }
         aapsLogger.debug(LTag.AUTOSENS, sensResult)
         val output = fillResult(
-            ratio, current.cob, pastSensitivity, ratioLimit,
+            ratio, current.cob, pastSensitivity.toString(), ratioLimit,
             sensResult, deviationsArray.size
         )
         aapsLogger.debug(

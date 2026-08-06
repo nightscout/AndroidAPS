@@ -8,7 +8,7 @@
     <string name="pref_title_keep_screen_on">Винаги включен екран</string>
     <string name="pref_summary_keep_screen_on">Андроид няма да изключва екрана. Ще консумира много батерия когато телефона не е включен на зарядно.</string>
     <string name="pref_title_show_treatment_button">Покажи бутона Лечения</string>
-    <string name="pref_title_show_wizard_button">Покажи бутона Съветник</string>
+    <string name="pref_title_show_wizard_button">Покажи бутона Калкулатор</string>
     <string name="pref_title_show_insulin_button">Покажи бутона Инсулин</string>
     <string name="pref_title_show_carbs_button">Покажи бутона Въглехидрати</string>
     <string name="pref_title_show_cgm_button">Покажи бутона CGM</string>

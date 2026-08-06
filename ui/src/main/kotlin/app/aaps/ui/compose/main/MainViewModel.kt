@@ -415,6 +415,10 @@ class MainViewModel @Inject constructor(
         val guid = entry.guid()
 
         val globalReason = when {
+            // Before app init completes, activePlugin.activeAPS is still null, so the profile's `aps` is
+            // null and doCalc() would hit ProfileSealed's "APS not defined" guard (early-boot crash).
+            // Mirror the appInitialized gate the bolus path already has (WizardBolusExecutorImpl).
+            !config.appInitialized                   -> rh.gs(app.aaps.core.ui.R.string.initializing)
             lastBG == null                           -> rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg)
             profile == null                          -> rh.gs(app.aaps.core.ui.R.string.noprofile)
             !pump.isInitialized()                    -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)

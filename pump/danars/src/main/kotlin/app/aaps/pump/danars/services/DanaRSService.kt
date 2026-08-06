@@ -86,11 +86,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 class DanaRSService : DaggerService() {
 
@@ -238,7 +238,7 @@ class DanaRSService : DaggerService() {
             val tz = DateTimeZone.getDefault()
             val instant = DateTime.now().millis
             val offsetInMilliseconds = tz.getOffset(instant).toLong()
-            val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
+            val offset = offsetInMilliseconds.milliseconds.inWholeHours.toInt()
             if (bleComm.isConnected && (abs(timeDiff) > 3 || danaPump.usingUTC && offset != danaPump.zoneOffset)) {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
@@ -282,7 +282,7 @@ class DanaRSService : DaggerService() {
             danaPump.fromTemporaryBasal(tbr)
             rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
-            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)

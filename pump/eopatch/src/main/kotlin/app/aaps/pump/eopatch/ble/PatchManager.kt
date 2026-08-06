@@ -44,6 +44,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.hours
 
 @Singleton
 class PatchManager @Inject constructor(
@@ -219,7 +220,7 @@ class PatchManager @Inject constructor(
                             if (pc.patchExpireAlertTime != hours) {
                                 Maybe.just(AlarmCode.B000)
                                     .flatMap(Function { alarmCode: AlarmCode -> alarmRegistry.remove(alarmCode) })
-                                    .flatMap(Function { alarmCode: AlarmCode -> alarmRegistry.add(alarmCode, (pc.expireTimestamp - System.currentTimeMillis() - TimeUnit.HOURS.toMillis(hours.toLong())), false) })
+                                    .flatMap(Function { alarmCode: AlarmCode -> alarmRegistry.add(alarmCode, (pc.expireTimestamp - System.currentTimeMillis() - hours.toLong().hours.inWholeMilliseconds), false) })
                                     .subscribe()
                             }
                         })

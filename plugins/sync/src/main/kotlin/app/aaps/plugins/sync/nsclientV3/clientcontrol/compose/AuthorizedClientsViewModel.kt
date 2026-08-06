@@ -66,6 +66,19 @@ class AuthorizedClientsViewModel @Inject constructor(
         ) { _, _ -> preferences.get(BooleanKey.NsClientAllowClientControl) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), preferences.get(BooleanKey.NsClientAllowClientControl))
 
+    /**
+     * True when the switch above says "allowed" but the WebSocket it rides is off, so nothing can
+     * actually be served: a command reaches this master only on the 5-minute poll, long past its
+     * validity. The switch keeps showing what the user chose — this drives the warning next to it, and
+     * clients are told the truth separately (the published value is masked; see clientControlOperational).
+     */
+    val clientControlBlockedByWebsocket: StateFlow<Boolean> =
+        combine(
+            clientControlEnabled,
+            preferences.observe(BooleanKey.NsClient3UseWs)
+        ) { enabled, useWs -> enabled && !useWs }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
     /** Flip the stop/allow-communication switch. OFF keeps paired clients listed but stops the master accepting anything. */
     fun setClientControlEnabled(enabled: Boolean) = preferences.put(BooleanKey.NsClientAllowClientControl, enabled)
 

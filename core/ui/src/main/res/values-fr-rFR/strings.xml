@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Choisissez-en un. Un seul peut être actif à la fois.</string>
     <string name="configbuilder_pick_many_hint">Choisissez toutes les options qui s\'appliquent.</string>
     <string name="configbuilder_no_selection_warning">Aucun plugin n\'est sélectionné dans cette catégorie.</string>
+    <string name="configbuilder_switch_confirmation_title">Changer de plugin?</string>
+    <string name="configbuilder_switch_confirmation">Ceci désactivera %1$s et activera %2$s.</string>
     <string name="expand">Développer</string>
     <string name="collapse">Replier</string>
     <string name="no_compose_preferences">Pas de préférence disponibles pour ce plugin</string>
@@ -102,6 +104,7 @@
     <string name="tdd_total">DTQ Total</string>
     <string name="tdd_old_data">Données anciennes</string>
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
+    <string name="carbs_not_saved_after_bolus">Bolus injecté, mais les glucides n\'ont pas pu être enregistrés. Veuillez entrer les glucides à nouveau.</string>
     <string name="androidaps_start">AAPS démarré</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -117,6 +120,12 @@
     <string name="carbs">Glucides</string>
     <string name="invalid_profile">Profil incorrect!</string>
     <string name="no_profile_set">PAS DE PROFIL SELECTIONNÉ</string>
+    <string name="profile_switch_no_insulin">Impossible de changer de profil : aucune insuline n\'est utilisée, et aucune insuline n\'a été sélectionnée.</string>
+    <string name="profile_switch_select_insulin_hint">Aucune insuline n\'est encore utilisée. Sélectionnez l\'insuline que vous utilisez, afin que le changement de profil puisse l\'enregistrer.</string>
+    <string name="insulin_activation_failed">L\'insuline n\'a pas été changée. Votre insuline précédente est toujours utilisée.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">L\'insuline n\'a pas été changée: %1$s. Votre insuline précédente est toujours utilisée.</string>
+    <string name="insulin_activation_unconfirmed">Le changement d\'insuline n\'a pas pu être confirmé. Vérifiez quelle insuline est active dans votre profil avant d\'injecter.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nL\'insuline n\'a pas non plus été changée.</string>
     <string name="active"><![CDATA[<Actif>]]></string>
     <string name="date"> Date</string>
     <string name="units_label">Unités</string>
@@ -923,6 +932,12 @@
     <string name="add">Ajouter</string>
     <string name="remove">Supprimer</string>
     <string name="reorder">Réordonner</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Déplacer avant</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Déplacer après</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Afficher les détails</string>
+    <string name="presets_changed_reorder_aborted">Les présélections ont été modifiées ailleurs. La nouvelle commande n\'a pas été enregistrée.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d de %2$d</string>
     <string name="status">État</string>
     <string name="pump_actions">Actions pompe</string>
     <string name="tempbasal_button">Basal Temp</string>

@@ -158,7 +158,7 @@ jobs:
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-A-$attempt.txt 2>&1 || true
-              tail -n 20 shard-A-$attempt.txt
+              tail -n 200 shard-A-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
               echo "shard A attempt $attempt coverage: ${sz:-0} bytes"
@@ -199,7 +199,7 @@ jobs:
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-B-$attempt.txt 2>&1 || true
-              tail -n 20 shard-B-$attempt.txt
+              tail -n 200 shard-B-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
               echo "shard B attempt $attempt coverage: ${sz:-0} bytes"
@@ -240,7 +240,7 @@ jobs:
               adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
                 $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true
-              tail -n 20 shard-C-$attempt.txt
+              tail -n 200 shard-C-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
               echo "shard C attempt $attempt coverage: ${sz:-0} bytes"

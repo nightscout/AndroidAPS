@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -30,6 +31,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.RoundingMode
+import java.util.Locale
 import javax.inject.Inject
 
 data class TimeValue(
@@ -61,14 +64,17 @@ data class ProfileUiState(
     val units: String = GlucoseUnit.MGDL.displayLabel,
     val usingDynamicIsf: Boolean = false,
     val usingDynamicIc: Boolean = false,
-    val basalMin: Double = 0.01,
-    val basalMax: Double = 10.0,
-    val icMin: Double = 0.5,
-    val icMax: Double = 100.0,
-    val isfMin: Double = 2.0,
-    val isfMax: Double = 1000.0,
-    val targetMin: Double = 72.0,
-    val targetMax: Double = 180.0,
+    /** Basal range comes from the active pump, so there is no constant to default to. */
+    val basalRange: ClosedFloatingPointRange<Double> = 0.01..10.0,
+    /** IC range is age dependent ([HardLimits.icRange]), so it has no fixed constant. */
+    val icRange: ClosedFloatingPointRange<Double> = 0.5..100.0,
+    val isfRange: ClosedFloatingPointRange<Double> = HardLimits.LIMIT_ISF,
+    /**
+     * Low and high target have different hard limits, so each picker gets its own range.
+     * Defaults are the mg/dL limits; [ProfileEditorViewModel.loadState] converts them for mmol/L.
+     */
+    val targetLowRange: ClosedFloatingPointRange<Double> = HardLimits.LIMIT_MIN_BG,
+    val targetHighRange: ClosedFloatingPointRange<Double> = HardLimits.LIMIT_MAX_BG,
     /** Map of error type to error message for tabs with validation errors */
     val tabErrors: Map<ProfileErrorType, String> = emptyMap(),
     /**
@@ -91,6 +97,7 @@ class ProfileEditorViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
+    private val profileUtil: ProfileUtil,
     private val hardLimits: HardLimits,
     val dateUtil: DateUtil,
     private val protectionCheck: ProtectionCheck
@@ -110,12 +117,12 @@ class ProfileEditorViewModel @Inject constructor(
     // add() and the external-change subscriber must never re-clone from the (nonexistent) index.
     private var isNewDraft: Boolean = false
 
-    // Set while [saveProfile] is in flight so the [profileRepository.profiles] subscriber
-    // doesn't drop the user's in-flight edits when the save triggers a StateFlow emit.
-    // External changes (NS push, editor reset) still trigger a re-clone. Both writer
-    // (saveProfile coroutine) and reader (StateFlow collector) run on viewModelScope
-    // (Main.immediate by default), so no cross-thread access — plain Boolean is sufficient.
-    private var savePending: Boolean = false
+    // Content of the last profile this editor saved, used to recognise the echo of our own save in
+    // the [profileRepository.profiles] stream. It is NOT a one-shot flag on purpose: one save can
+    // produce two emits — the local write, and then (on a paired client) the master's authoritative
+    // copy coming back through the sync channel a moment later. A flag would be consumed by the first
+    // and let the second wipe edits the user typed meanwhile; comparing content survives both.
+    private var lastSavedContent: String? = null
 
     init {
         viewModelScope.launch { loadState() }
@@ -133,23 +140,24 @@ class ProfileEditorViewModel @Inject constructor(
                     loadState()
                     return@onEach
                 }
-                if (savePending) {
-                    // Our own save triggered the emit. The repo just persisted the snapshot we
-                    // gave it (a deep clone of `editingProfile`); the live `editingProfile`
-                    // reference is correct as-is. Skip the re-clone, just refresh the UI.
-                    savePending = false
+                val stored = profileRepository.profiles.value.getOrNull(editingIndex)
+                if (lastSavedContent != null && stored?.contentKey() == lastSavedContent) {
+                    // The emit carries exactly what we saved — our own write, or the master echoing
+                    // it back after applying it. The live `editingProfile` reference is correct as-is
+                    // (and may already hold newer typing). Skip the re-clone, just refresh the UI.
                     loadState()
                 } else {
-                    // External profile change (e.g. NS push, editor reset). Reload the clone
-                    // — discards in-flight edits.
-                    editingProfile = profileRepository.profiles.value.getOrNull(editingIndex)?.deepClone()
+                    // Somebody else changed this profile (NS push, master edit, editor reset).
+                    // Reload the clone — discards in-flight edits.
+                    editingProfile = stored?.deepClone()
                     locallyEdited = false
+                    lastSavedContent = null
                     loadState()
                 }
             }.launchIn(viewModelScope)
     }
 
-    suspend fun loadState() {
+    fun loadState() {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val aps = activePlugin.activeAPS
 
@@ -185,20 +193,34 @@ class ProfileEditorViewModel @Inject constructor(
                 units = currentUnits.displayLabel,
                 usingDynamicIsf = aps?.usingDynamicIsf() == true,
                 usingDynamicIc = aps?.supportsDynamicIc() == true,
-                basalMin = pumpDescription.basalMinimumRate,
-                basalMax = pumpDescription.basalMaximumRate.coerceAtMost(10.0),
-                icMin = hardLimits.minIC(),
-                icMax = hardLimits.maxIC(),
-                isfMin = if (isMgdl) HardLimits.MIN_ISF else HardLimits.MIN_ISF / 18.0,
-                isfMax = if (isMgdl) HardLimits.MAX_ISF else HardLimits.MAX_ISF / 18.0,
-                targetMin = if (isMgdl) HardLimits.LIMIT_MIN_BG[0] else HardLimits.LIMIT_MIN_BG[0] / 18.0,
-                targetMax = if (isMgdl) HardLimits.LIMIT_MAX_BG[1] else HardLimits.LIMIT_MAX_BG[1] / 18.0,
+                basalRange = pumpDescription.basalMinimumRate..pumpDescription.basalMaximumRate.coerceAtMost(10.0),
+                icRange = hardLimits.icRange(),
+                isfRange = HardLimits.LIMIT_ISF.inDisplayUnits(isMgdl),
+                targetLowRange = HardLimits.LIMIT_MIN_BG.inDisplayUnits(isMgdl),
+                targetHighRange = HardLimits.LIMIT_MAX_BG.inDisplayUnits(isMgdl),
                 tabErrors = tabErrors,
                 pumpIncompatible = pumpIncompatible,
                 editedProfile = editedPureProfile,
                 basalSum = basalSum
             )
         }
+    }
+
+    /**
+     * Take a hard limit range given in mg/dL and return it in the unit the editor shows.
+     *
+     * For mg/dL the range is used as is. For mmol/L both ends are converted and then rounded
+     * **inward** to one decimal place: the editor shows and steps mmol values with one decimal, so
+     * a plain conversion can give a bound like 11.1111 that displays as "11.1" but converts back to
+     * 200.17 mg/dL, above the limit. Rounding inward keeps every value the editor offers inside the
+     * mg/dL limit after it is converted back in
+     * [app.aaps.core.interfaces.profile.ProfileRepository.validateStructured].
+     */
+    private fun ClosedFloatingPointRange<Double>.inDisplayUnits(isMgdl: Boolean): ClosedFloatingPointRange<Double> {
+        if (isMgdl) return this
+        val low = profileUtil.fromMgdlToUnits(start, GlucoseUnit.MMOL).toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+        val high = profileUtil.fromMgdlToUnits(endInclusive, GlucoseUnit.MMOL).toBigDecimal().setScale(1, RoundingMode.DOWN).toDouble()
+        return low..high
     }
 
     fun selectTab(index: Int) {
@@ -335,7 +357,7 @@ class ProfileEditorViewModel @Inject constructor(
         if (index < array.length()) {
             val obj = array.getJSONObject(index)
             val hour = timeValue.timeSeconds / 3600
-            obj.put("time", String.format("%02d:00", hour))
+            obj.put("time", String.format(Locale.getDefault(), "%02d:00", hour))
             obj.put("timeAsSeconds", timeValue.timeSeconds)
             obj.put("value", timeValue.value)
         }
@@ -363,7 +385,7 @@ class ProfileEditorViewModel @Inject constructor(
 
         val newObj = JSONObject().apply {
             val hour = newTime / 3600
-            put("time", String.format("%02d:00", hour))
+            put("time", String.format(Locale.getDefault(), "%02d:00", hour))
             put("timeAsSeconds", newTime)
             put("value", inheritedValue)
         }
@@ -386,6 +408,12 @@ class ProfileEditorViewModel @Inject constructor(
         viewModelScope.launch { loadState() }
     }
 
+    /**
+     * Stable content fingerprint of a profile. [SingleProfile] holds `JSONArray` fields, which have no
+     * structural `equals`, so the serialised form is what can be compared.
+     */
+    private fun SingleProfile.contentKey(): String = "$name|$mgdl|$ic|$isf|$basal|$targetLow|$targetHigh"
+
     fun saveProfile() {
         viewModelScope.launch {
             val profile = editingProfile ?: return@launch
@@ -396,6 +424,8 @@ class ProfileEditorViewModel @Inject constructor(
                 aapsLogger.debug(LTag.PROFILE, "saveProfile ignored: profile is invalid")
                 return@launch
             }
+            // Remember what we are about to persist so the resulting emit(s) are recognised as ours.
+            lastSavedContent = profile.contentKey()
             if (isNewDraft) {
                 // Commit the draft as a new profile. deepClone so the stored copy is independent of
                 // the editor's working reference (mirrors replace()'s defensive clone).
@@ -412,24 +442,22 @@ class ProfileEditorViewModel @Inject constructor(
                         aapsLogger.error(LTag.PROFILE, "saveProfile (new draft) failed", error)
                     }
             } else {
-                // Flag set BEFORE the replace so the event the replace fires is recognised as ours.
-                savePending = true
                 profileRepository.replace(editingIndex, profile)
                     .onSuccess {
                         // replace() already emitted on profileRepository.profiles (via snapshot())
-                        // BEFORE returning; on Main.immediate that synchronously ran the savePending
-                        // subscriber's loadState() while locallyEdited was still true, latching
-                        // isEdited=true. Clear the flag and re-run loadState() here so isEdited
-                        // reflects the saved state and the Save/Reset actions disappear on the FIRST
-                        // save — mirrors the isNewDraft branch above.
+                        // BEFORE returning; on Main.immediate that synchronously ran the subscriber's
+                        // loadState() while locallyEdited was still true, latching isEdited=true.
+                        // Clear it and re-run loadState() here so isEdited reflects the saved state
+                        // and the Save/Reset actions disappear on the FIRST save — mirrors the
+                        // isNewDraft branch above.
                         locallyEdited = false
                         loadState()
                     }
                     .onFailure { error ->
-                        // Clear the flag so the NEXT external event isn't mis-attributed to this
-                        // failed save. Surface the error in the log; the user keeps their unsaved
+                        // Forget the expected echo so the NEXT external event isn't mis-attributed to
+                        // this failed save. Surface the error in the log; the user keeps their unsaved
                         // edits visible in the editor (locallyEdited stays true).
-                        savePending = false
+                        lastSavedContent = null
                         aapsLogger.error(LTag.PROFILE, "saveProfile failed at index $editingIndex", error)
                     }
             }
@@ -476,10 +504,4 @@ class ProfileEditorViewModel @Inject constructor(
         }
         return list
     }
-
-    fun formatTime(seconds: Int): String {
-        val hour = seconds / 3600
-        return String.format("%02d:00", hour)
-    }
-
 }

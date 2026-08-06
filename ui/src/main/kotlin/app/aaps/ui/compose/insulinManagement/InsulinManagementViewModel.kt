@@ -421,11 +421,11 @@ class InsulinManagementViewModel @Inject constructor(
         editedICfg.setPeak(state.editorPeakMinutes)
 
         // Validation
-        if (editedICfg.dia < hardLimits.minDia() || editedICfg.dia > hardLimits.maxDia()) {
+        if (editedICfg.dia !in hardLimits.diaRange()) {
             showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
             return false
         }
-        if (editedICfg.peak < hardLimits.minPeak() || editedICfg.peak > hardLimits.maxPeak()) {
+        if (editedICfg.peak !in hardLimits.peakRange()) {
             showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_peak), editedICfg.peak.toDouble()))
             return false
         }
@@ -564,6 +564,7 @@ class InsulinManagementViewModel @Inject constructor(
     val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
 
-    fun diaRange(): ClosedFloatingPointRange<Double> = hardLimits.minDia()..hardLimits.maxDia()
-    fun peakRange(): ClosedFloatingPointRange<Double> = hardLimits.minPeak().toDouble()..hardLimits.maxPeak().toDouble()
+    fun diaRange(): ClosedFloatingPointRange<Double> = hardLimits.diaRange()
+    /** Peak limits as a Double range, because the sliders work with Double. */
+    fun peakRange(): ClosedFloatingPointRange<Double> = hardLimits.peakRange().let { it.first.toDouble()..it.last.toDouble() }
 }

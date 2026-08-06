@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -10,7 +11,6 @@ import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.profile.ProfileUtil
-import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -26,20 +26,32 @@ class DetermineBasalAMA @Inject constructor(
     private var consoleError = mutableListOf<String>()
     private var consoleLog = mutableListOf<String>()
 
-    private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
-    private fun Double.toFixed3(): String = DecimalFormat("0.000#").format(round(this, 3))
+    private fun Double.toFixed2(): String = NumberFormat.DECIMAL_2_UP_TO_3.format(round(this, 2))
+    private fun Double.toFixed3(): String = NumberFormat.DECIMAL_3_UP_TO_4.format(round(this, 3))
 
     fun round_basal(value: Double): Double = value
 
     // Rounds value to 'digits' decimal places
     // different for negative numbers fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
     fun round(value: Double, digits: Int): Double {
+        // Pass NaN AND ±Infinity through untouched. Without this, round(value * scale) below resolves to
+        // the Int overload, whose roundToInt() THROWS on NaN - and nothing catches it, because
+        // OpenAPSAMAPlugin.invoke has no try/catch and LoopPlugin.invoke is try/finally. It also
+        // saturates ±Infinity at Int.MAX_VALUE, which would hide a broken value as a normal number.
+        if (!value.isFinite()) return value
         val scale = 10.0.pow(digits.toDouble())
-        return round(value * scale) / scale
+        return Math.round(value * scale) / scale
     }
 
-    fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
-    fun round(value: Double): Int = value.roundToInt()
+    fun Double.withoutZeros(): String = NumberFormat.UP_TO_2_DECIMALS.format(this)
+    fun round(value: Double): Int =
+        // Crash backstop: roundToInt() throws on NaN and saturates at Int.MAX_VALUE on ±Infinity.
+        // Substitute 0, but record a token that the reportNonFiniteRtFields tripwire
+        // (PersistenceLayerImpl) surfaces to Crashlytics, so laundering here does not hide the real bug.
+        if (!value.isFinite()) {
+            consoleError.add("round(): non-finite value substituted with 0 (roundNonFinite=$value)")
+            0
+        } else value.roundToInt()
 
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /

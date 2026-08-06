@@ -124,7 +124,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
             try {
                 val comboctlBtAddress = androidBtAddressString.toBluetoothAddress()
                 pairedDeviceAddresses.add(comboctlBtAddress)
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 logger(LogLevel.ERROR) {
                     "Could not convert Android bluetooth device address " +
                             "\"$androidBtAddressString\" to a valid BluetoothAddress instance; skipping device"
@@ -217,7 +217,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
                         }
                     }
                 }
-            } catch (t: Throwable) {
+            } catch (_: Throwable) {
                 // This happens when rfcommServerSocket.close() is called.
                 logger(LogLevel.DEBUG) { "RFCOMM listener accept() call aborted" }
             }
@@ -380,7 +380,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
 
         val comboctlBtAddress = try {
             androidBtAddressString.toBluetoothAddress()
-        } catch (t: Throwable) {
+        } catch (_: Throwable) {
             logger(LogLevel.ERROR) {
                 "Could not convert Android bluetooth device address " +
                         "\"$androidBtAddressString\" to a valid BluetoothAddress instance; skipping device"
@@ -466,7 +466,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
 
         val comboctlBtAddress = try {
             androidBtAddressString.toBluetoothAddress()
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             logger(LogLevel.ERROR) {
                 "Could not convert Android bluetooth device address " +
                         "\"$androidBtAddressString\" to a valid BluetoothAddress instance; ignoring device"
@@ -522,7 +522,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
 
         val comboctlBtAddress = try {
             androidBtAddressString.toBluetoothAddress()
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             logger(LogLevel.ERROR) {
                 "Could not convert Android bluetooth device address " +
                         "\"$androidBtAddressString\" to a valid BluetoothAddress instance; ignoring device"
@@ -561,6 +561,9 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
         // SecurityException, but still seems to do _something_.
 
         try {
+            // setPin(ByteArray) is deprecated, but its suggested replacement setPin(String) is a
+            // system API that is not in android.jar for any platform, so there is nothing to move to.
+            @Suppress("DEPRECATION")
             @SuppressLint("MissingPermission")
             if (!androidBtDevice.setPin(btPairingPin.encodeToByteArray())) {
                 logger(LogLevel.WARN) { "Could not set Bluetooth pairing PIN" }

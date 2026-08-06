@@ -48,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
@@ -69,7 +70,6 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -205,7 +205,7 @@ internal fun InsulinDialogContent(
     cob: CobUiState,
     dateString: String,
     timeString: String,
-    bolusFormat: DecimalFormat,
+    bolusFormat: NumberFormat,
     formatAmount: (Double) -> String,
     onEatingSoonChange: (Boolean) -> Unit,
     onRecordOnlyChange: (Boolean) -> Unit,

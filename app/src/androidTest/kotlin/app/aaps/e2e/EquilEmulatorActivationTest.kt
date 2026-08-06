@@ -164,9 +164,22 @@ class EquilEmulatorActivationTest {
         configBuilder.initialize()
         config.initCompleted()
 
-        // setPluginEnabledBlocking (@TestOnly) runs onStart synchronously — for Equil that starts the
-        // in-process BLE handler threads the manager talks to (no bound service, unlike Dana).
+        // setPluginEnabledBlocking (@TestOnly) is meant to run onStart synchronously (for Equil that starts
+        // the in-process BLE handler threads the manager talks to — no bound service, unlike Dana). But
+        // configBuilder.initialize() above has already async-enabled the seeded active pump, so the state is
+        // ENABLED and this blocking call is a no-op that SKIPS onStart; the real onStart runs on a background
+        // coroutine.
         equilPumpPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+
+        // EquilManager is @Singleton, so its in-memory equilState survives across @Test methods: a pod
+        // activated by a prior method leaves activationProgress = COMPLETED behind. Reset it explicitly and
+        // synchronously here. Use clearPodState() (write-through) NOT loadPodState() (read-only): the plugin's
+        // real onStart runs loadPodState() on a background worker, and a lingering storePodState() from the
+        // prior test can re-persist the still-COMPLETED singleton to prefs AFTER clearAllSharedPrefs() — a
+        // read-only reset then reads that COMPLETED back, and so does the racing background onStart, flaking
+        // activatePod()'s isActivationCompleted()==false precondition under CI load (shard C, #5040). Writing
+        // an empty state to prefs makes every subsequent (racing) loadPodState() read clean.
+        equilManager.clearPodState()
 
         // A profile must be active before activation: setProfile() programs the basal schedule from it,
         // and an active profile also makes the wizard skip its PROFILE_GATE step.

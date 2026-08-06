@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.compose.icons.IcCarbs
@@ -11,13 +12,12 @@ import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
 
 class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
 
     private val minValue = 0
     private val maxValue = preferences.get(IntKey.SafetyMaxCarbs)
-    var cob: InputDouble = InputDouble(0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
+    var cob: InputDouble = InputDouble(0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh)
 
     private constructor(injector: HasAndroidInjector, triggerCOB: TriggerCOB) : this(injector) {

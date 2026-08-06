@@ -51,6 +51,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
@@ -63,7 +64,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import java.text.DecimalFormat
 
 /**
  * Two-page confirmation screen for an action authored on (or relayed by) the master.
@@ -308,7 +308,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
 @Composable
 private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: Int?, onConfirm: () -> Unit) {
     val haptic = LocalHapticFeedback.current
-    val fmt = remember { DecimalFormat("0.00") }
+    val fmt = remember { NumberFormat.DECIMAL_2 }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -361,8 +361,8 @@ private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: In
 
 @Composable
 private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: Int, onCorrectionStepsChange: (Int) -> Unit) {
-    val fmt2 = remember { DecimalFormat("0.00") }
-    val fmt1 = remember { DecimalFormat("0.0") }
+    val fmt2 = remember { NumberFormat.DECIMAL_2 }
+    val fmt1 = remember { NumberFormat.DECIMAL_1 }
     val haptic = LocalHapticFeedback.current
 
     // correctionSteps == 0 → exactly 0.0 (no FP drift); otherwise multiply once for display
@@ -641,7 +641,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
 }
 
 @Composable
-private fun WizardDetailRow(label: String, value: Double, fmt: DecimalFormat) {
+private fun WizardDetailRow(label: String, value: Double, fmt: NumberFormat) {
     val sign = if (value >= 0) "+" else ""
     val valueColor = when {
         value > 0  -> WearInsulinPositive

@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -88,13 +87,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 class DiaconnG8Service : DaggerService() {
 
@@ -237,7 +236,7 @@ class DiaconnG8Service : DaggerService() {
             val tz = DateTimeZone.getDefault()
             val instant = DateTime.now().millis
             val offsetInMilliseconds = tz.getOffset(instant).toLong()
-            val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
+            val offset = offsetInMilliseconds.milliseconds.inWholeHours.toInt()
             if (timeDiff > 0 || abs(timeDiff) > 60) {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
@@ -270,7 +269,7 @@ class DiaconnG8Service : DaggerService() {
             diaconnG8Pump.syncExtendedBolusFromPump()
             rxBus.send(EventDiaconnG8NewStatus())
             rxBus.send(EventInitializationChanged())
-            if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)

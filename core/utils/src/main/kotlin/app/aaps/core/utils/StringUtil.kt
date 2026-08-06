@@ -2,12 +2,30 @@ package app.aaps.core.utils
 
 import java.nio.charset.StandardCharsets
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
+
+private val US_SYMBOLS = DecimalFormatSymbols(Locale.US)
+
+private fun usPattern(decimals: Int): String =
+    if (decimals <= 0) "#0" else "#0." + "0".repeat(decimals)
+
+/**
+ * Format the number with a dot as the decimal separator, whatever the device locale is.
+ *
+ * Use it for text that must not depend on the locale, like pump history and log lines.
+ * The separator comes from [Locale.US] symbols, so nothing has to be repaired afterwards.
+ * The old version formatted with the default locale and then replaced a comma with a dot, which
+ * did nothing on locales that use another separator, for example Arabic.
+ *
+ * @param decimals how many digits after the dot, always shown. 0 means no decimals.
+ */
+fun Number.formatUS(decimals: Int): String =
+    // A new DecimalFormat for every call on purpose. DecimalFormat is not thread safe, and the
+    // old shared array could give wrong text when two threads formatted at the same time.
+    DecimalFormat(usPattern(decimals), US_SYMBOLS).format(this)
 
 object StringUtil {
-
-    private var DecimalFormatters = arrayOf(
-        DecimalFormat("#0"), DecimalFormat("#0.0"), DecimalFormat("#0.00"), DecimalFormat("#0.000")
-    )
 
     fun fromBytes(ra: ByteArray?): String =
         if (ra == null) "null array"
@@ -24,9 +42,6 @@ object StringUtil {
     fun appendToStringBuilder(stringBuilder: StringBuilder, stringToAdd: String, delimiter: String): StringBuilder =
         if (stringBuilder.isNotEmpty()) stringBuilder.append(delimiter + stringToAdd)
         else stringBuilder.append(stringToAdd)
-
-    fun getFormattedValueUS(value: Number?, decimals: Int): String =
-        DecimalFormatters[decimals].format(value).replace(",", ".")
 
     fun getLeadingZero(number: Int, places: Int): String {
         var nn = "" + number

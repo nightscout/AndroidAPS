@@ -36,6 +36,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -43,7 +44,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 class RunningModeTimedActivity : DaggerAppCompatActivity() {
@@ -80,10 +80,9 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
                             0    -> PlusMinusInputScreen(
                                 value = duration,
                                 onValueChange = { duration = it },
-                                min = min,
-                                max = max,
+                                valueRange = min..max,
                                 stepValues = stepValues,
-                                format = DecimalFormat("0"),
+                                format = NumberFormat.INTEGER,
                                 displayText = formatDurationMinutes(duration.toInt()),
                                 label = stringResource(R.string.loop_status_duration),
                                 allowZero = false,

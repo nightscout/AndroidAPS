@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -48,6 +49,7 @@ class TreatmentViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,
+    private val config: Config,
     private val profileFunction: ProfileFunction,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
@@ -182,6 +184,10 @@ class TreatmentViewModel @Inject constructor(
         val guid = entry.guid()
 
         val globalReason = when {
+            // Before app init completes, activePlugin.activeAPS is still null, so the profile's `aps` is
+            // null and doCalc() would hit ProfileSealed's "APS not defined" guard (early-boot crash).
+            // Mirror the appInitialized gate the bolus path already has (WizardBolusExecutorImpl).
+            !config.appInitialized                   -> rh.gs(R.string.initializing)
             lastBG == null                           -> rh.gs(R.string.wizard_no_actual_bg)
             profile == null                          -> rh.gs(R.string.noprofile)
             !pump.isInitialized()                    -> rh.gs(R.string.pump_not_initialized_profile_not_set)

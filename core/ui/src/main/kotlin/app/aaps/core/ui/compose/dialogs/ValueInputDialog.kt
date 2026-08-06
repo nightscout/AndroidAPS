@@ -27,8 +27,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.ui.compose.formatMinutesAsDuration
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 import app.aaps.core.keys.R as KeysR
 
@@ -57,7 +57,7 @@ fun ValueInputDialog(
     summary: String? = null,
     unitLabel: String = "",
     unitLabelResId: Int = 0,
-    valueFormat: DecimalFormat = DecimalFormat("0.0"),
+    valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     onValueConfirm: (Double) -> Unit,
     onDismiss: () -> Unit
 ) {

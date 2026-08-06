@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -65,7 +66,6 @@ import app.aaps.core.ui.R as CoreR
  * @param showSuperBolusOption Whether superbolus feature is enabled
  * @param showWearOptions Whether wear control is enabled
  * @param maxCarbs Maximum allowed carbs
- * @param dateUtil For time formatting
  * @param rh Resource helper
  * @param onButtonTextChange Callback when button text changes
  * @param onCarbsChange Callback when carbs change
@@ -343,7 +343,7 @@ fun QuickWizardEditor(
             labelResId = KeysR.string.pref_title_bolus_percentage,
             value = percentage.toDouble(),
             onValueChange = { onPercentageChange(it.toInt()) },
-            valueRange = 10.0..200.0,
+            valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
             step = 5.0,
             unitLabelResId = KeysR.string.units_percent,
             modifier = Modifier.fillMaxWidth()

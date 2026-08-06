@@ -17,10 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.ui.compose.SliderWithButtons
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import app.aaps.core.ui.compose.formatSliderDisplayValue
-import java.text.DecimalFormat
 
 private const val MAX_SLIDER_STEPS = 200.0
 
@@ -41,7 +41,7 @@ fun PreferenceSliderWithButtons(
     showValue: Boolean = false,
     valueFormatResId: Int? = null,
     formatAsInt: Boolean = false,
-    valueFormat: DecimalFormat = DecimalFormat("0.0"),
+    valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: String = "",
     unitLabelResId: Int = 0,
     dialogLabel: String? = null,

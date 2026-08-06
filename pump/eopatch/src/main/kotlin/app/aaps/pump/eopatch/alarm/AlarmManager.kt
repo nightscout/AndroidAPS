@@ -37,10 +37,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
+import kotlin.time.Duration.Companion.hours
 
 @Singleton
 class AlarmManager @Inject constructor() : IAlarmManager {
@@ -138,7 +138,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     private fun showNotification(alarmCode: AlarmCode, isCritical: Boolean = false) {
         var alarmMsg = resourceHelper.gs(alarmCode.resId)
         if (alarmCode == B000) {
-            val expireTimeValue = pm.getPatchWakeupTimestamp() + TimeUnit.HOURS.toMillis(84)
+            val expireTimeValue = pm.getPatchWakeupTimestamp() + 84.hours.inWholeMilliseconds
             alarmMsg = resourceHelper.gs(alarmCode.resId, dateUtil.dateAndTimeString(expireTimeValue))
         }
 
@@ -153,50 +153,51 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             level = if (isCritical) NotificationLevel.IMPORTANT else NotificationLevel.INFO,
             date = alarms.getOccuredAlarmTimestamp(alarmCode),
             soundRes = if (!isCritical) app.aaps.core.ui.R.raw.error else null,
-            actions = listOf(NotificationAction(
-                when (alarmCode) {
-                    B001            -> app.aaps.core.ui.R.string.pump_resume
-                    AlarmCode.A007  -> app.aaps.core.ui.R.string.retry
-                    else            -> app.aaps.core.ui.R.string.confirm
-                }
-            ) {
-                compositeDisposable.add(
-                    Single.just(isValid(alarmCode))
-                        .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.io)
-                        .flatMap { isValid ->
-                            return@flatMap if (isValid) mAlarmProcess.doAction(alarmCode)
-                            else Single.just(IAlarmProcess.ALARM_HANDLED)
-                        }
-                        .subscribe { ret ->
-                            when (ret) {
-                                IAlarmProcess.ALARM_HANDLED                    -> {
-                                    if (alarmCode == B001) {
-                                        scope.launch {
-                                            pumpSync.syncStopTemporaryBasalWithPumpId(
-                                                timestamp = dateUtil.now(),
-                                                endPumpId = dateUtil.now(),
-                                                pumpType = PumpType.EOFLOW_EOPATCH2,
-                                                pumpSerial = patchConfig.patchSerialNumber
-                                            )
-                                        }
-                                    }
-                                    if (alarmCode.alarmCategory == AlarmCategory.ALARM) {
-                                        pm.flushPatchConfig()
-                                    }
-                                    updateState(alarmCode, AlarmState.HANDLE)
-                                }
-
-                                IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP -> {
-                                    alarms.needToStopBeep.add(alarmCode)
-                                    updateState(alarmCode, AlarmState.HANDLE)
-                                }
-
-                                else                                           -> showNotification(alarmCode)
+            actions = listOf(
+                NotificationAction(
+                    when (alarmCode) {
+                        B001           -> app.aaps.core.ui.R.string.pump_resume
+                        AlarmCode.A007 -> app.aaps.core.ui.R.string.retry
+                        else           -> app.aaps.core.ui.R.string.confirm
+                    }
+                ) {
+                    compositeDisposable.add(
+                        Single.just(isValid(alarmCode))
+                            .subscribeOn(aapsSchedulers.io)
+                            .observeOn(aapsSchedulers.io)
+                            .flatMap { isValid ->
+                                return@flatMap if (isValid) mAlarmProcess.doAction(alarmCode)
+                                else Single.just(IAlarmProcess.ALARM_HANDLED)
                             }
-                        }
-                )
-            })
+                            .subscribe { ret ->
+                                when (ret) {
+                                    IAlarmProcess.ALARM_HANDLED                    -> {
+                                        if (alarmCode == B001) {
+                                            scope.launch {
+                                                pumpSync.syncStopTemporaryBasalWithPumpId(
+                                                    timestamp = dateUtil.now(),
+                                                    endPumpId = dateUtil.now(),
+                                                    pumpType = PumpType.EOFLOW_EOPATCH2,
+                                                    pumpSerial = patchConfig.patchSerialNumber
+                                                )
+                                            }
+                                        }
+                                        if (alarmCode.alarmCategory == AlarmCategory.ALARM) {
+                                            pm.flushPatchConfig()
+                                        }
+                                        updateState(alarmCode, AlarmState.HANDLE)
+                                    }
+
+                                    IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP -> {
+                                        alarms.needToStopBeep.add(alarmCode)
+                                        updateState(alarmCode, AlarmState.HANDLE)
+                                    }
+
+                                    else                                           -> showNotification(alarmCode)
+                                }
+                            }
+                    )
+                })
         )
     }
 

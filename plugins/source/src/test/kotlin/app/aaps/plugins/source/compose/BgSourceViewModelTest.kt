@@ -130,4 +130,22 @@ internal class BgSourceViewModelTest {
 
         assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Remove 2 items")
     }
+
+    @Test
+    fun `formatGlucoseValue delegates to profileUtil`() {
+        whenever(profileUtil.fromMgdlToStringInUnits(120.0)).thenReturn("6.7")
+        assertThat(sut.formatGlucoseValue(120.0)).isEqualTo("6.7")
+    }
+
+    @Test
+    fun `getDeleteConfirmationMessage for a single item shows its time and value`() {
+        whenever(dateUtil.dateAndTimeString(1_000L)).thenReturn("2024-01-01 00:00")
+        whenever(profileUtil.fromMgdlToUnits(100.0)).thenReturn(5.5)
+        sut.enterSelectionMode(gv(id = 1L, timestamp = 1_000L))
+
+        val message = sut.getDeleteConfirmationMessage()
+
+        assertThat(message).contains("2024-01-01 00:00")
+        assertThat(message).contains("5.5")
+    }
 }

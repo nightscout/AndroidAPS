@@ -93,12 +93,12 @@ import kotlinx.coroutines.rx3.rxCompletable
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 import kotlin.math.ceil
+import kotlin.time.Duration.Companion.hours
 import app.aaps.core.interfaces.R as CoreInterfacesR
 
 @Singleton
@@ -1244,7 +1244,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             AlertConfiguration(
                 AlertType.EXPIRATION,
                 enabled = expirationAlarmEnabled,
-                durationInMinutes = TimeUnit.HOURS.toMinutes((expirationAlarmHours - 1).toLong()).toShort(),
+                durationInMinutes = (expirationAlarmHours - 1).toLong().hours.inWholeMinutes.toShort(),
                 autoOff = false,
                 AlertTrigger.TimerTrigger(
                     expiryAlarmDelay.toMinutes().toShort()

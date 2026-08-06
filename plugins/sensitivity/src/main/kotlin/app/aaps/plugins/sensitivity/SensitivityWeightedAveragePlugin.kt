@@ -1,18 +1,18 @@
 package app.aaps.plugins.sensitivity
 
 import androidx.collection.LongSparseArray
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
@@ -23,7 +23,6 @@ import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
@@ -33,9 +32,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val persistenceLayer: PersistenceLayer,
     private val activePlugin: ActivePlugin
 ) : AbstractSensitivityPlugin(
     PluginDescription()
@@ -52,7 +49,14 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         return aps.algorithm == APSResult.Algorithm.AMA
     }
 
-    override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
+    override fun detectSensitivity(
+        ads: AutosensDataStore,
+        fromTime: Long,
+        toTime: Long,
+        profile: EffectiveProfile?,
+        siteChanges: List<TE>,
+        profileSwitches: List<PS>
+    ): AutosensResult {
         val hoursForDetection = preferences.get(IntKey.AutosensPeriod)
         if (ads.autosensDataTable.size() < 4) {
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + ads.lastDataTime(dateUtil))
@@ -63,15 +67,13 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val profile = runBlocking { profileFunction.getProfile() }
         if (profile == null) {
             aapsLogger.debug(LTag.AUTOSENS, "No profile available")
             return AutosensResult()
         }
-        val siteChanges = runBlocking { persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true) }
-        val profileSwitches = runBlocking { persistenceLayer.getProfileSwitchesFromTime(fromTime, true) }
-        var pastSensitivity = ""
-        var index = 0
+        val pastSensitivity = StringBuilder()
+        // start the scan at the detection window instead of walking the whole table on every call
+        var index = firstIndexAtOrAfter(ads.autosensDataTable, toTime - hoursForDetection * 60 * 60 * 1000L)
         val data = LongSparseArray<Double>()
         while (index < ads.autosensDataTable.size()) {
             val autosensData = ads.autosensDataTable.valueAt(index)
@@ -91,13 +93,13 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             // reset deviations after site change
             if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                 data.clear()
-                pastSensitivity += "(SITECHANGE)"
+                pastSensitivity.append("(SITECHANGE)")
             }
 
             // reset deviations after profile switch
             if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                 data.clear()
-                pastSensitivity += "(PROFILESWITCH)"
+                pastSensitivity.append("(PROFILESWITCH)")
             }
             var deviation = autosensData.deviation
 
@@ -107,10 +109,10 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             //data.append(autosensData.time);
             val reverseWeight = (toTime - autosensData.time) / (5 * 60 * 1000L)
             if (autosensData.validDeviation) data.append(reverseWeight, deviation)
-            pastSensitivity += autosensData.pastSensitivity
+            pastSensitivity.append(autosensData.pastSensitivity)
             val secondsFromMidnight = MidnightUtils.secondsFromMidnight(autosensData.time)
             if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
-                pastSensitivity += "(" + (secondsFromMidnight / 3600.0).roundToInt() + ")"
+                pastSensitivity.append("(").append((secondsFromMidnight / 3600.0).roundToInt()).append(")")
             }
             index++
         }
@@ -133,7 +135,6 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         if (weights == 0.0) {
             return AutosensResult()
         }
-        //val sens = profile.getIsfMgdl(toTime, current.bg, "SensitivityWeightedAveragePlugin")
         val sens = current.sens
         val ratioLimit = ""
         val sensResult: String
@@ -148,7 +149,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         }
         aapsLogger.debug(LTag.AUTOSENS, sensResult)
         val output = fillResult(
-            ratio, current.cob, pastSensitivity, ratioLimit,
+            ratio, current.cob, pastSensitivity.toString(), ratioLimit,
             sensResult, data.size()
         )
         aapsLogger.debug(

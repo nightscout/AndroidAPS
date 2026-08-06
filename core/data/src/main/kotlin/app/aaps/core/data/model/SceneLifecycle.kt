@@ -11,7 +11,7 @@ enum class SceneLifecycle {
     ACTIVE,
 
     /**
-     * Scene's duration has elapsed and the master has run its expiry side-effects
+     * Scene's duration has elapsed and the master has run its expiry side effects
      * (revert SMB, schedule chain, etc.). Banner shows the "Close" affordance.
      */
     EXPIRED

@@ -104,6 +104,7 @@
     <string name="tdd_total">Total TDD</string>
     <string name="tdd_old_data">Date vechi</string>
     <string name="goingtodeliver">Se vor administra %1$.2fU</string>
+    <string name="carbs_not_saved_after_bolus">Bolus administrat, dar carbohidrații nu au putut fi salvați. Vă rugăm să introduceți carbohidrații din nou.</string>
     <string name="androidaps_start">AAPS pornit</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -119,6 +120,9 @@
     <string name="carbs">Carbohidrați</string>
     <string name="invalid_profile">Profil invalid!</string>
     <string name="no_profile_set">NICIUN PROFIL SETAT</string>
+    <string name="profile_switch_no_insulin">Nu se poate schimba profilul: nicio insulină nu este în uz și nu a fost selectată niciuna.</string>
+    <string name="profile_switch_select_insulin_hint">Nicio insulină nu este încă utilizată. Selectați insulina pe care o utilizați, astfel încât această modificare de profil să o poată înregistra.</string>
+    <string name="insulin_activation_failed">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Insulina nu a fost schimbată: %1$s. Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_unconfirmed">Schimbarea insulinei nu a putut fi confirmată. Verificați care insulină este activă în profilul dumneavoastră înainte de administrare.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina nu a fost de asemenea schimbată.</string>

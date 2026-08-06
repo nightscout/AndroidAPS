@@ -60,7 +60,7 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         whenever(profileRepository.newDraft()).thenReturn(profile("LocalProfile1"))
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         whenever(protectionCheck.isLocked(any())).thenReturn(false)
-        sut = ProfileEditorViewModel(aapsLogger, rh, profileRepository, profileFunction, activePlugin, hardLimits, dateUtil, protectionCheck)
+        sut = ProfileEditorViewModel(aapsLogger, rh, profileRepository, profileFunction, activePlugin, profileUtil, hardLimits, dateUtil, protectionCheck)
     }
 
     @AfterEach
@@ -119,5 +119,40 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         // ...and still commits as a new profile.
         sut.saveProfile()
         verify(profileRepository).add(any())
+    }
+
+    @Test
+    fun ownSaveEchoedTwiceDoesNotWipeEditsTypedMeanwhile() = runTest {
+        // On a paired client one save produces TWO emits: the local write, and the master's
+        // authoritative copy coming back through the sync channel a moment later. Only a foreign
+        // change may re-clone the editor.
+        whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
+        val saved = profile("Existing")
+        profilesFlow.value = listOf(saved)
+        sut.selectProfile(0)
+        sut.saveProfile()
+
+        // First emit: the local write. Fresh instances each time — SingleProfile has no structural
+        // equals, so distinct objects are what make the StateFlow emit at all.
+        profilesFlow.value = listOf(saved.deepClone())
+        // The user keeps typing while the round-trip is in flight.
+        sut.updateProfileName("RenamedWhileInFlight")
+        // Second emit: the same content echoed back after the master applied it.
+        profilesFlow.value = listOf(saved.deepClone())
+
+        assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("RenamedWhileInFlight")
+    }
+
+    @Test
+    fun aForeignProfileChangeStillReloadsTheEditor() = runTest {
+        whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
+        profilesFlow.value = listOf(profile("Existing"))
+        sut.selectProfile(0)
+        sut.saveProfile()
+
+        // Different content at our index — somebody else edited this profile.
+        profilesFlow.value = listOf(profile("ChangedByMaster"))
+
+        assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("ChangedByMaster")
     }
 }
