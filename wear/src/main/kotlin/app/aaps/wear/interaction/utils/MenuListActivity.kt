@@ -146,10 +146,13 @@ private fun MenuListScreen(
                 )
             }
         }
-        ScrollIndicator(
-            state = listState,
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
+        // Only show the indicator when there is something to scroll (short lists fit the screen)
+        if (listState.canScrollForward || listState.canScrollBackward) {
+            ScrollIndicator(
+                state = listState,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
     }
 }
 
