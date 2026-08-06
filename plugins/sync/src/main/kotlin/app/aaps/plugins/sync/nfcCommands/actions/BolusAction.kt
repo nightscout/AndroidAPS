@@ -60,7 +60,7 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         if (plugin.commandQueue.bolusInQueue()) {
             return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_another_bolus_in_queue))
         }
-        if (plugin.dateUtil.now() - plugin.lastRemoteBolusTime < Constants.remoteBolusMinDistance) {
+        if (plugin.dateUtil.now() - plugin.lastRemoteBolusTime < Constants.REMOTE_BOLUS_MIN_DISTANCE) {
             return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
         }
         if (plugin.loop.runningMode().pausesLoopExecution()) {

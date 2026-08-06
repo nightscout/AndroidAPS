@@ -626,7 +626,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(R.string.nfccommands_remote_bolus_not_allowed)).thenReturn("Remote bolus not allowed")
-        val now = Constants.remoteBolusMinDistance * 2
+        val now = Constants.REMOTE_BOLUS_MIN_DISTANCE * 2
         whenever(dateUtil.now()).thenReturn(now)
         plugin.setLastRemoteBolusTime(now)
 

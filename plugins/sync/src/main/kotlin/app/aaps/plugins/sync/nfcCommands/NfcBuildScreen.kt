@@ -87,6 +87,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -104,7 +105,6 @@ import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -1060,7 +1060,7 @@ private fun AmountGramsInputRow(plugin: NfcCommandsPlugin, value: Int, onValueCh
         onValueChange = { onValueChange(it.toInt()) },
         valueRange = 0.0..200.0,
         step = 1.0,
-        valueFormat = DecimalFormat("0"),
+        valueFormat = NumberFormat.INTEGER,
         unitLabel = stringResource(CoreUiR.string.shortgramm)
     )
     QuickAddButtons(
@@ -1079,7 +1079,7 @@ private fun DurationInputRow(value: Double, range: ClosedFloatingPointRange<Doub
         onValueChange = onValueChange,
         valueRange = range,
         step = step,
-        valueFormat = DecimalFormat("0"),
+        valueFormat = NumberFormat.INTEGER,
         unitLabel = stringResource(KeysR.string.units_min)
     )
 }
@@ -1105,7 +1105,7 @@ private fun PercentInputRow(value: Double, range: ClosedFloatingPointRange<Doubl
         onValueChange = onValueChange,
         valueRange = range,
         step = step,
-        valueFormat = DecimalFormat("0"),
+        valueFormat = NumberFormat.INTEGER,
         unitLabel = "%"
     )
 }
@@ -1195,7 +1195,7 @@ private fun GlucoseInputRow(plugin: NfcCommandsPlugin, value: Double, onValueCha
     val range = if (isMmol) 3.9..13.9 else 70.0..250.0
     val step = if (isMmol) 0.1 else 5.0
     val decimals = if (isMmol) 1 else 0
-    val format = if (isMmol) DecimalFormat("0.0") else DecimalFormat("0")
+    val format = if (isMmol) NumberFormat.DECIMAL_1 else NumberFormat.INTEGER
     
     NumberInputRow(
         labelResId = CoreUiR.string.target_label,
