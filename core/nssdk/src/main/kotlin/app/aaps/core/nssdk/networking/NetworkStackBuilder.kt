@@ -4,10 +4,12 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -95,12 +97,21 @@ internal object NetworkStackBuilder {
         return build()
     }
 
-    private val deserializer: JsonDeserializer<JSONObject?> =
-        JsonDeserializer<JSONObject?> { json, _, _ ->
-            JSONObject(json.asJsonObject.toString())
+    /**
+     * Schema-less documents (profiles, settings) are carried as kotlinx [JsonObject] rather than
+     * being modelled, because AAPS does not own their shape.
+     *
+     * This used to build `org.json.JSONObject`, which is a JVM and Android API and cannot go to
+     * iOS. The bridge is the same as before - Gson tree to text, text to the target type - so the
+     * parsed result is unchanged. `asJsonObject` still throws for a non object, as it always did.
+     */
+    private val deserializer: JsonDeserializer<JsonObject?> =
+        JsonDeserializer<JsonObject?> { json, _, _ ->
+            Json.parseToJsonElement(json.asJsonObject.toString()).jsonObject
         }
+
     private fun provideGson(): Gson = GsonBuilder().also {
-        it.registerTypeAdapter(JSONObject::class.java, deserializer)
+        it.registerTypeAdapter(JsonObject::class.java, deserializer)
     }.create()
 
     private const val OK_HTTP_CACHE_SIZE = 10L * 1024 * 1024

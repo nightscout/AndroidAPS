@@ -37,8 +37,9 @@ import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 
 /**
  *
@@ -500,9 +501,11 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
-    override suspend fun createProfileStore(remoteProfileStore: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
-        remoteProfileStore.put("app", "AAPS")
-        val response = api.createProfile(JsonParser.parseString(remoteProfileStore.toString()).asJsonObject)
+    override suspend fun createProfileStore(remoteProfileStore: JsonObject): CreateUpdateResponse = callWrapper(dispatcher) {
+        // kotlinx JsonObject is immutable, so the app name goes into a copy instead of being put in
+        // place. Same result on the wire: an existing "app" key is replaced, a new one is added.
+        val stamped = JsonObject(remoteProfileStore + ("app" to JsonPrimitive("AAPS")))
+        val response = api.createProfile(JsonParser.parseString(stamped.toString()).asJsonObject)
         if (response.isSuccessful) {
             if (response.code() == 200 || response.code() == 201) {
                 return@callWrapper CreateUpdateResponse(
@@ -523,7 +526,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
-    override suspend fun getLastProfileStore(): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+    override suspend fun getLastProfileStore(): NSAndroidClient.ReadResponse<List<JsonObject>> = callWrapper(dispatcher) {
 
         val response = api.getLastProfile()
         if (response.isSuccessful) {
@@ -536,7 +539,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException("Unsuccessful")
     }
 
-    override suspend fun getProfileModifiedSince(from: Long): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+    override suspend fun getProfileModifiedSince(from: Long): NSAndroidClient.ReadResponse<List<JsonObject>> = callWrapper(dispatcher) {
 
         val response = api.getProfileModifiedSince(from)
         if (response.isSuccessful) {
@@ -549,7 +552,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException("Unsuccessful")
     }
 
-    override suspend fun getSettings(identifier: String): NSAndroidClient.ReadResponse<JSONObject?> = callWrapper(dispatcher) {
+    override suspend fun getSettings(identifier: String): NSAndroidClient.ReadResponse<JsonObject?> = callWrapper(dispatcher) {
 
         val response = api.getSetting(identifier)
         if (response.isSuccessful) {
@@ -568,7 +571,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException("Unsuccessful")
     }
 
-    override suspend fun getSettingsModifiedSince(from: Long, limit: Int): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+    override suspend fun getSettingsModifiedSince(from: Long, limit: Int): NSAndroidClient.ReadResponse<List<JsonObject>> = callWrapper(dispatcher) {
 
         val response = api.getSettingsModifiedSince(from, limit)
         if (response.isSuccessful) {
@@ -585,7 +588,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException("Unsuccessful")
     }
 
-    override suspend fun searchSettings(limit: Int): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+    override suspend fun searchSettings(limit: Int): NSAndroidClient.ReadResponse<List<JsonObject>> = callWrapper(dispatcher) {
 
         val response = api.searchSettings(limit)
         if (response.isSuccessful) {
@@ -602,10 +605,11 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException("Unsuccessful")
     }
 
-    override suspend fun createSettings(settings: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
+    override suspend fun createSettings(settings: JsonObject): CreateUpdateResponse = callWrapper(dispatcher) {
 
-        settings.put("app", "AAPS")
-        val response = api.createSetting(JsonParser.parseString(settings.toString()).asJsonObject)
+        // See createProfileStore: kotlinx JsonObject is immutable, so stamp a copy.
+        val stamped = JsonObject(settings + ("app" to JsonPrimitive("AAPS")))
+        val response = api.createSetting(JsonParser.parseString(stamped.toString()).asJsonObject)
         if (response.isSuccessful) {
             if (response.code() == 200 || response.code() == 201) {
                 return@callWrapper CreateUpdateResponse(
@@ -626,7 +630,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
-    override suspend fun patchSettings(identifier: String, settings: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
+    override suspend fun patchSettings(identifier: String, settings: JsonObject): CreateUpdateResponse = callWrapper(dispatcher) {
 
         val response = api.patchSetting(JsonParser.parseString(settings.toString()).asJsonObject, identifier)
         if (response.code() == 404) {
@@ -655,7 +659,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
-    override suspend fun updateSettings(identifier: String, settings: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
+    override suspend fun updateSettings(identifier: String, settings: JsonObject): CreateUpdateResponse = callWrapper(dispatcher) {
 
         val response = api.updateSetting(JsonParser.parseString(settings.toString()).asJsonObject, identifier)
         if (response.isSuccessful) {

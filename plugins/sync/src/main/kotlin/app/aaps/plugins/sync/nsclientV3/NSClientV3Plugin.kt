@@ -78,6 +78,7 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
+import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
@@ -117,8 +118,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
-import org.json.JSONObject
 import java.security.InvalidParameterException
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -395,7 +396,7 @@ class NSClientV3Plugin @Inject constructor(
      * rejects cleanly with a signed ACK (one place, also covering the poll fallback) rather than silently
      * dropping it, which would time a client out into a false "master offline" alarm in the toggle race window.
      */
-    fun handleClientControlSettingsEvent(identifier: String, doc: JSONObject) {
+    fun handleClientControlSettingsEvent(identifier: String, doc: JsonObject) {
         scope.launch {
             runCatching { clientControlReceiver.onSettingsDocChanged(identifier, doc) }
                 .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl WS dispatch failed for $identifier: ${it.message}", it) }
@@ -407,7 +408,7 @@ class NSClientV3Plugin @Inject constructor(
      * `aaps_clientcontrol_ack_<clientId>` settings events here. Synchronous parse/verify/emit — the
      * round-trip coordinator only re-publishes to an in-process flow, no IO.
      */
-    fun handleClientControlAckEvent(doc: JSONObject) {
+    fun handleClientControlAckEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onAckDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ACK dispatch failed: ${it.message}", it) }
     }
@@ -416,7 +417,7 @@ class NSClientV3Plugin @Inject constructor(
      * WS-push entry for a master→client bolus-progress frame (client side). NSClientV3Service routes
      * `aaps_clientcontrol_progress_<clientId>` settings events here; feeds the client's own BolusProgressData.
      */
-    fun handleClientControlProgressEvent(doc: JSONObject) {
+    fun handleClientControlProgressEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onProgressDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl progress dispatch failed: ${it.message}", it) }
     }
@@ -757,7 +758,7 @@ class NSClientV3Plugin @Inject constructor(
         val data = (dataPair as DataSyncSelector.PairProfileStore).value
         try {
             nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", data)
-            nsAndroidClient?.createProfileStore(data)?.let { result ->
+            nsAndroidClient?.createProfileStore(data.toKotlinxJson())?.let { result ->
                 when (result.response) {
                     200  -> nsClientRepository.addLog("◄ UPDATED", "OK ProfileStore")
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ProfileStore")
@@ -836,6 +837,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                     400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                     404  -> {
                         nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
@@ -890,6 +892,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                     400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                     404  -> {
                         nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
@@ -944,6 +947,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                     400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                     404  -> {
                         nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
@@ -1019,6 +1023,7 @@ class NSClientV3Plugin @Inject constructor(
 
                         201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                         400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                         404  -> {
                             nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                             if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&

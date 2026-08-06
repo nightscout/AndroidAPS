@@ -168,7 +168,7 @@ internal class RunningConfigurationImplTest {
     fun configurationBeforeAppInitializedReturnsEmptyWithoutTouchingPump() {
         whenever(config.appInitialized).thenReturn(false)
         val result = sut.configuration()
-        assertEquals(0, result.length())
+        assertEquals(0, result.size)
         verify(activePlugin, never()).activePump
     }
 }

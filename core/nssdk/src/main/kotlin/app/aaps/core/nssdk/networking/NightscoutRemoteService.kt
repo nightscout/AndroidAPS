@@ -1,5 +1,8 @@
 package app.aaps.core.nssdk.networking
 
+// Gson still builds the request bodies (the converter switch is a separate step), while responses
+// already come back as kotlinx JsonObject. Both simple names are `JsonObject`, so the Gson one is
+// aliased - when the converter goes, the alias and its uses go with it.
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.nssdk.remotemodel.NSResponse
 import app.aaps.core.nssdk.remotemodel.RemoteCreateUpdateResponse
@@ -8,8 +11,7 @@ import app.aaps.core.nssdk.remotemodel.RemoteEntry
 import app.aaps.core.nssdk.remotemodel.RemoteFood
 import app.aaps.core.nssdk.remotemodel.RemoteStatusResponse
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
-import com.google.gson.JsonObject
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -19,6 +21,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.google.gson.JsonObject as GsonJsonObject
 
 /**
  * Created by adrian on 2019-12-23.
@@ -95,32 +98,32 @@ internal interface NightscoutRemoteService {
     suspend fun deleteFood(@Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 
     @GET("v3/profile/history/{from}")
-    suspend fun getProfileModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 10): Response<NSResponse<List<JSONObject>>>
+    suspend fun getProfileModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 10): Response<NSResponse<List<JsonObject>>>
 
     @GET("v3/profile?sort\$desc=date&limit=1")
-    suspend fun getLastProfile(): Response<NSResponse<List<JSONObject>>>
+    suspend fun getLastProfile(): Response<NSResponse<List<JsonObject>>>
 
     @POST("v3/profile")
-    suspend fun createProfile(@Body profile: JsonObject): Response<RemoteCreateUpdateResponse>
+    suspend fun createProfile(@Body profile: GsonJsonObject): Response<RemoteCreateUpdateResponse>
 
     @GET("v3/settings/{identifier}")
-    suspend fun getSetting(@Path("identifier") identifier: String): Response<NSResponse<JSONObject>>
+    suspend fun getSetting(@Path("identifier") identifier: String): Response<NSResponse<JsonObject>>
 
     @GET("v3/settings/history/{from}")
-    suspend fun getSettingsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 100): Response<NSResponse<List<JSONObject>>>
+    suspend fun getSettingsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 100): Response<NSResponse<List<JsonObject>>>
 
     @GET("v3/settings")
-    suspend fun searchSettings(@Query("limit") limit: Int = 100): Response<NSResponse<List<JSONObject>>>
+    suspend fun searchSettings(@Query("limit") limit: Int = 100): Response<NSResponse<List<JsonObject>>>
 
     @POST("v3/settings")
-    suspend fun createSetting(@Body settings: JsonObject): Response<RemoteCreateUpdateResponse>
+    suspend fun createSetting(@Body settings: GsonJsonObject): Response<RemoteCreateUpdateResponse>
 
     @PATCH("v3/settings/{identifier}")
-    suspend fun patchSetting(@Body settings: JsonObject, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
+    suspend fun patchSetting(@Body settings: GsonJsonObject, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 
     /** PUT (NS3 "UPDATE") = upsert. Replaces existing doc, or inserts if absent. */
     @PUT("v3/settings/{identifier}")
-    suspend fun updateSetting(@Body settings: JsonObject, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
+    suspend fun updateSetting(@Body settings: GsonJsonObject, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 
     /** [permanent] = `null` → soft delete (tombstone); `true` → NS `?permanent=true` hard delete. */
     @DELETE("v3/settings/{identifier}")

@@ -22,8 +22,8 @@ import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.C
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
@@ -31,8 +31,11 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -157,23 +160,35 @@ class RunningConfigurationPublisher @Inject constructor(
     // Cold doc: full plugin/overview/definition config + the authorized-clients roster.
     // Returns true if a doc was published, false if skipped because the pump is not initialized yet.
     private suspend fun publishCold(): Boolean {
-        val payload = runningConfiguration.configuration()
-        if (payload.length() == 0) return false // pump not initialized yet
-        // Append the authorized-clients roster directly on the runningConfig JSONObject — the
+        val base = runningConfiguration.configuration()
+        if (base.isEmpty()) return false // pump not initialized yet
+        // Append the authorized-clients roster directly on the runningConfig doc — the
         // canonical RunningConfiguration plugin (in :plugins:configuration) cannot reach
         // AuthorizedClientsRepository without a new inter-module dependency, so we attach
         // this master-local block here instead. Only Active entries are exposed.
         val activeClientIds = authorizedRepository.current(dateUtil.now())
             .filter { it.state == ClientState.Active }
             .map { it.clientId }
-        payload.put("authorizedClients", JSONObject().put("clientIds", JSONArray(activeClientIds)))
-        // Advertise whether commands can actually be served, not just whether the user allows them.
-        // With the WebSocket off this master sees a command minutes late, past its validity, so it must
-        // not tell clients it is accepting: they fold this value into masterReachable and would keep
-        // offering edit UI for commands that can only expire. Only the PUBLISHED value is masked — the
-        // user's stored switch is untouched, and turning the WebSocket back on republishes it as true.
-        payload.optJSONObject(SYNCED_PREFS)
-            ?.put(BooleanKey.NsClientAllowClientControl.key, preferences.clientControlOperational().toString())
+        // kotlinx JsonObject is immutable, so the doc is rebuilt instead of edited in place. Same
+        // result: the original keys in their original order, syncedPrefs carrying the masked value,
+        // and authorizedClients appended last.
+        val payload = buildJsonObject {
+            base.forEach { (key, value) ->
+                // Advertise whether commands can actually be served, not just whether the user allows them.
+                // With the WebSocket off this master sees a command minutes late, past its validity, so it must
+                // not tell clients it is accepting: they fold this value into masterReachable and would keep
+                // offering edit UI for commands that can only expire. Only the PUBLISHED value is masked — the
+                // user's stored switch is untouched, and turning the WebSocket back on republishes it as true.
+                if (key == SYNCED_PREFS && value is JsonObject)
+                    put(
+                        key,
+                        JsonObject(value + (BooleanKey.NsClientAllowClientControl.key to JsonPrimitive(preferences.clientControlOperational().toString())))
+                    )
+                else
+                    put(key, value)
+            }
+            put("authorizedClients", buildJsonObject { put("clientIds", JsonArray(activeClientIds.map { JsonPrimitive(it) })) })
+        }
         putSettings(SettingsIdentifiers.COLD, payload)
         return true
     }
@@ -183,9 +198,9 @@ class RunningConfigurationPublisher @Inject constructor(
         putSettings(SettingsIdentifiers.STATE, runningConfiguration.activeSceneConfiguration())
     }
 
-    private suspend fun putSettings(identifier: String, runningConfig: JSONObject) {
+    private suspend fun putSettings(identifier: String, runningConfig: JsonObject) {
         val client = nsClientV3Plugin.get().nsAndroidClient ?: return
-        val doc = JSONObject().apply {
+        val doc = buildJsonObject {
             // NS APIv3 validateCommon requires date / utcOffset / app on UPDATE; all three are
             // immutable after first create, so pick stable constants — the doc represents a
             // configuration snapshot, not an event in time.

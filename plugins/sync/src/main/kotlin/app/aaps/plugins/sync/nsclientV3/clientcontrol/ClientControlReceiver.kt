@@ -4,7 +4,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.FailureReason
-import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
@@ -17,10 +16,10 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
@@ -38,12 +37,14 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.BolusPreview
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.localmodel.clientcontrol.ConfirmationLineDto
-import app.aaps.core.nssdk.localmodel.clientcontrol.WizardDetailDto
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
+import app.aaps.core.nssdk.localmodel.clientcontrol.WizardDetailDto
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optJsonObjectCompat
+import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optStringCompat
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -52,7 +53,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -132,12 +135,14 @@ class ClientControlReceiver @Inject constructor(
     private val progressClientId = AtomicReference<String?>(null)
     @Volatile private var progressArmedAt = 0L
     @Volatile private var progressDelivering = false
+
     // Generation of bolusProgressData captured at arm time. Only a bolus that start()s a NEWER generation (the
     // client's own, queued AFTER this commit) is mirrored — so a bolus already running on the master when the
     // client commits (the client's was queue-rejected) is never mis-attributed to the client's progress dialog.
     @Volatile private var progressArmedGeneration = 0L
     private val progressSampleMs = 1_000L
     private val progressArmTtlMs = 60_000L
+
     // Liveness heartbeat: some pump drivers (Medtronic, Omnipod Eros) deliver a bolus as one blocking call and
     // emit NO intermediate progress. Re-publishing the current frame on this cadence keeps the client's stall
     // watchdog from false-firing on a healthy long bolus; only a real relay/connection outage produces silence.
@@ -239,7 +244,7 @@ class ClientControlReceiver @Inject constructor(
         val now = dateUtil.now()
         val resp = runCatching { client.searchSettings(limit = 100) }.getOrNull() ?: return
         for (doc in resp.values) {
-            val identifier = doc.optString("identifier")
+            val identifier = doc.optStringCompat("identifier")
             if (!identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)) continue
             // Skip our own pairing offers — they share the prefix but are not signed envelopes,
             // so verifyAndAck would (harmlessly) log them as "malformed envelope, ignoring". We
@@ -257,7 +262,7 @@ class ClientControlReceiver @Inject constructor(
      * WS-push entry. NSClientV3Service routes settings-collection create/update events
      * to here for any identifier with the [ClientControlPublisher.IDENTIFIER_PREFIX].
      */
-    suspend fun onSettingsDocChanged(identifier: String, doc: JSONObject) {
+    suspend fun onSettingsDocChanged(identifier: String, doc: JsonObject) {
         if (!identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)) return
         if (identifier.startsWith(ClientControlPublisher.IDENTIFIER_OFFER_PREFIX)) return
         // Command ACKs are master-written, consumed by clients — never an inbound command here.
@@ -267,7 +272,7 @@ class ClientControlReceiver @Inject constructor(
         verifyAndAck(identifier, doc, dateUtil.now())
     }
 
-    private suspend fun verifyAndAck(identifier: String, doc: JSONObject, now: Long): Unit = commandMutex.withLock {
+    private suspend fun verifyAndAck(identifier: String, doc: JsonObject, now: Long): Unit = commandMutex.withLock {
         val client = nsClientV3Plugin.get().nsAndroidClient ?: return
         // Unrecognized / unverifiable docs are IGNORED, never deleted. A delete soft-deletes
         // (tombstones) the identifier on NS, so the next legitimate PUT to that same per-type slot
@@ -275,11 +280,13 @@ class ClientControlReceiver @Inject constructor(
         // master that doesn't have this client paired) the WS echo makes one instance delete a
         // command another instance legitimately owns. Replay is already prevented by the per-client
         // counter; stray/garbage docs simply linger until NS auto-prunes them.
-        val envelopeObj = doc.optJSONObject("envelope") ?: run {
+        val envelopeObj = doc.optJsonObjectCompat("envelope") ?: run {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: $identifier has no envelope field, ignoring")
             return
         }
-        val envelope = runCatching { json.decodeFromString<SignedEnvelope>(envelopeObj.toString()) }.getOrNull()
+        // Decoded straight from the tree - the text round trip only existed because org.json and
+        // kotlinx could not share one.
+        val envelope = runCatching { json.decodeFromJsonElement(SignedEnvelope.serializer(), envelopeObj) }.getOrNull()
         if (envelope == null) {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: $identifier malformed envelope, ignoring")
             return
@@ -788,12 +795,12 @@ class ClientControlReceiver @Inject constructor(
             AckEnvelope(clientId = clientId, commandCounter = commandCounter, phase = phase, status = status, reason = reason, payload = payload, timestamp = now, signature = "")
         )
         val identifier = ClientControlPublisher.IDENTIFIER_ACK_PREFIX + clientId
-        val doc = JSONObject().apply {
+        val doc = buildJsonObject {
             put("date", ClientControlPublisher.DOC_DATE)
             put("utcOffset", 0)
             put("app", "AAPS")
             put("schemaVersion", ClientControlPublisher.SCHEMA_VERSION)
-            put("ack", JSONObject(json.encodeToString(AckEnvelope.serializer(), ack)))
+            put("ack", json.encodeToJsonElement(AckEnvelope.serializer(), ack))
         }
         runCatching { client.updateSettings(identifier, doc) }
             .onSuccess { nsClientRepository.addLog("► CLIENTCTL", "ack $phase/$status counter=$commandCounter" + (reason?.let { " ($it)" } ?: "")) }
@@ -828,12 +835,12 @@ class ClientControlReceiver @Inject constructor(
             )
         )
         val identifier = ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX + clientId
-        val doc = JSONObject().apply {
+        val doc = buildJsonObject {
             put("date", ClientControlPublisher.DOC_DATE)
             put("utcOffset", 0)
             put("app", "AAPS")
             put("schemaVersion", ClientControlPublisher.SCHEMA_VERSION)
-            put("progress", JSONObject(json.encodeToString(ProgressEnvelope.serializer(), env)))
+            put("progress", json.encodeToJsonElement(ProgressEnvelope.serializer(), env))
         }
         runCatching { client.updateSettings(identifier, doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl: progress write failed for $identifier: ${it.message}") }

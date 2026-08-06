@@ -18,6 +18,7 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
+import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optLongCompat
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -89,7 +90,7 @@ class LoadSettingsWorker @AssistedInject constructor(
             return
         }
         // ETag isn't set for settings GETs, but srvModified is in the doc body
-        val srvModified = doc.optLong("srvModified", 0L).takeIf { it > 0 } ?: response.lastServerModified
+        val srvModified = doc.optLongCompat("srvModified", 0L).takeIf { it > 0 } ?: response.lastServerModified
         doc.toString().toRunningConfiguration()?.let { configuration ->
             apply(configuration, srvModified)
             val ts = srvModified?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "?"

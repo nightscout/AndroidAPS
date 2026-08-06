@@ -9,9 +9,10 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import org.json.JSONObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -151,8 +152,7 @@ class ClientControlPublisher @Inject constructor(
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: NS client not initialized")
             return ClientControlSendResult.PublishFailed("NS client not initialized")
         }
-        val envelopeJson = json.encodeToString(SignedEnvelope.serializer(), envelope)
-        val doc = JSONObject().apply {
+        val doc = buildJsonObject {
             // validateCommon requires date/utcOffset/app, but `date` is immutable after first
             // create — sending the live envelope timestamp here fails the second PUT to the same
             // identifier with HTTP 400. The authoritative timestamp is envelope.timestamp (signed);
@@ -161,7 +161,7 @@ class ClientControlPublisher @Inject constructor(
             put("utcOffset", 0)
             put("app", "AAPS")
             put("schemaVersion", SCHEMA_VERSION)
-            put("envelope", JSONObject(envelopeJson))
+            put("envelope", json.encodeToJsonElement(SignedEnvelope.serializer(), envelope))
         }
         return runCatching { client.updateSettings(identifier, doc) }
             .fold(

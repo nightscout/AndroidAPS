@@ -12,7 +12,9 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -71,7 +73,7 @@ internal class PairingOfferFetcherTest {
         payload: PairingPayload = payload(),
         identifier: String = "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}${payload.clientId}",
         expiresAt: Long = now + 120_000L
-    ): JSONObject {
+    ): JsonObject {
         val salt = ClientControlPairingCrypto.newSalt()
         val iv = ClientControlPairingCrypto.newIv()
         val plaintext = Json.encodeToString(PairingPayload.serializer(), payload).toByteArray()
@@ -83,13 +85,13 @@ internal class PairingOfferFetcherTest {
             ivB64 = b64(iv),
             wrappedB64 = b64(wrapped)
         )
-        return JSONObject().apply {
+        return buildJsonObject {
             put("identifier", identifier)
-            put("offer", JSONObject(Json.encodeToString(PairingOffer.serializer(), offer)))
+            put("offer", Json.encodeToJsonElement(PairingOffer.serializer(), offer))
         }
     }
 
-    private suspend fun respond(vararg docs: JSONObject) {
+    private suspend fun respond(vararg docs: JsonObject) {
         whenever(nsAndroidClient.searchSettings(limit = 500)).thenReturn(
             NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = docs.toList())
         )
@@ -146,7 +148,7 @@ internal class PairingOfferFetcherTest {
 
     @Test
     fun foreignDocsDoNotBlockAValidOffer() = runTest {
-        val unrelated = JSONObject().apply { put("identifier", "aaps"); put("date", now) }
+        val unrelated = buildJsonObject { put("identifier", "aaps"); put("date", now) }
         val valid = payload(clientId = "client-A")
         respond(unrelated, offerDoc(pin = "12345678", payload = valid))
         val result = sut.findOfferForPin("12345678")
@@ -156,9 +158,9 @@ internal class PairingOfferFetcherTest {
 
     @Test
     fun skipsMalformedOffer() = runTest {
-        val malformed = JSONObject().apply {
+        val malformed = buildJsonObject {
             put("identifier", "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}broken")
-            put("offer", JSONObject().apply { put("clientId", "broken") }) // missing required wrapped/iv/salt
+            put("offer", buildJsonObject { put("clientId", "broken") }) // missing required wrapped/iv/salt
         }
         respond(malformed)
         assertThat(sut.findOfferForPin("12345678")).isEqualTo(PairingOfferFetcher.Result.NoMatch)
@@ -166,7 +168,7 @@ internal class PairingOfferFetcherTest {
 
     @Test
     fun skipsDocWithoutOfferObject() = runTest {
-        val noOffer = JSONObject().apply { put("identifier", "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}x") }
+        val noOffer = buildJsonObject { put("identifier", "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}x") }
         respond(noOffer)
         assertThat(sut.findOfferForPin("12345678")).isEqualTo(PairingOfferFetcher.Result.NoMatch)
     }

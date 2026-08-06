@@ -8,7 +8,7 @@ import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.nssdk.remotemodel.LastModified
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 interface NSAndroidClient {
 
@@ -40,9 +40,9 @@ interface NSAndroidClient {
     suspend fun createDeviceStatus(nsDeviceStatus: NSDeviceStatus): CreateUpdateResponse
     suspend fun getDeviceStatusModifiedSince(from: Long): List<NSDeviceStatus>
 
-    suspend fun createProfileStore(remoteProfileStore: JSONObject): CreateUpdateResponse
-    suspend fun getProfileModifiedSince(from: Long): ReadResponse<List<JSONObject>>
-    suspend fun getLastProfileStore(): ReadResponse<List<JSONObject>>
+    suspend fun createProfileStore(remoteProfileStore: JsonObject): CreateUpdateResponse
+    suspend fun getProfileModifiedSince(from: Long): ReadResponse<List<JsonObject>>
+    suspend fun getLastProfileStore(): ReadResponse<List<JsonObject>>
 
     suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
     suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
@@ -52,18 +52,18 @@ interface NSAndroidClient {
     suspend fun createFood(nsFood: NSFood): CreateUpdateResponse
     suspend fun updateFood(nsFood: NSFood): CreateUpdateResponse
 
-    suspend fun getSettings(identifier: String): ReadResponse<JSONObject?>
+    suspend fun getSettings(identifier: String): ReadResponse<JsonObject?>
 
     /** History pull. Server requires `api:settings:admin` permission. */
-    suspend fun getSettingsModifiedSince(from: Long, limit: Int = 100): ReadResponse<List<JSONObject>>
+    suspend fun getSettingsModifiedSince(from: Long, limit: Int = 100): ReadResponse<List<JsonObject>>
 
     /** List all settings docs. Server requires `api:settings:admin` permission. */
-    suspend fun searchSettings(limit: Int = 100): ReadResponse<List<JSONObject>>
-    suspend fun createSettings(settings: JSONObject): CreateUpdateResponse
-    suspend fun patchSettings(identifier: String, settings: JSONObject): CreateUpdateResponse
+    suspend fun searchSettings(limit: Int = 100): ReadResponse<List<JsonObject>>
+    suspend fun createSettings(settings: JsonObject): CreateUpdateResponse
+    suspend fun patchSettings(identifier: String, settings: JsonObject): CreateUpdateResponse
 
     /** Upsert: replaces existing doc with [identifier], or inserts if absent. NS3 "UPDATE" semantics. */
-    suspend fun updateSettings(identifier: String, settings: JSONObject): CreateUpdateResponse
+    suspend fun updateSettings(identifier: String, settings: JsonObject): CreateUpdateResponse
     suspend fun deleteSettings(identifier: String): CreateUpdateResponse
 
     /** Hard delete via NS `?permanent=true` — removes the doc instead of soft-deleting (tombstoning) it. */

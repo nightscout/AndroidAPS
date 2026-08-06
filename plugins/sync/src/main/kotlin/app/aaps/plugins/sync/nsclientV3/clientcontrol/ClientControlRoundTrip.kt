@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.clientcontrol.PendingAction
-import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -17,6 +16,7 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.scenes.ClientControlSendResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckEnvelope
@@ -25,13 +25,15 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.AckStatus
 import app.aaps.core.nssdk.localmodel.clientcontrol.BolusPreview
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.PrefEntry
-import app.aaps.core.nssdk.localmodel.clientcontrol.WizardDetailDto
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
+import app.aaps.core.nssdk.localmodel.clientcontrol.WizardDetailDto
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip.Companion.PROGRESS_WATCHDOG_MS
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip.Companion.PROPAGATION_MARGIN_MS
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip.Companion.ROUND_TRIP_TTL_MS
+import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optJsonObjectCompat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -49,7 +51,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -150,9 +152,9 @@ class ClientControlRoundTrip @Inject constructor(
      * addressed to this client, verifies the signature against the paired master secret (a forged
      * "Ok" must not surface as Applied), and republishes to the in-process [ackEvents].
      */
-    fun onAckDoc(doc: JSONObject) {
-        val ackObj = doc.optJSONObject("ack") ?: return
-        val ack = runCatching { json.decodeFromString<AckEnvelope>(ackObj.toString()) }.getOrNull() ?: run {
+    fun onAckDoc(doc: JsonObject) {
+        val ackObj = doc.optJsonObjectCompat("ack") ?: return
+        val ack = runCatching { json.decodeFromJsonElement(AckEnvelope.serializer(), ackObj) }.getOrNull() ?: run {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: malformed ACK doc")
             return
         }
@@ -189,9 +191,9 @@ class ClientControlRoundTrip @Inject constructor(
      * must not be believable), drops a late/out-of-order frame, then drives the client's OWN [BolusProgressData]
      * so the existing (un-gated) progress dialog lights up — no client-specific UI.
      */
-    fun onProgressDoc(doc: JSONObject) {
-        val obj = doc.optJSONObject("progress") ?: return
-        val env = runCatching { json.decodeFromString<ProgressEnvelope>(obj.toString()) }.getOrNull() ?: run {
+    fun onProgressDoc(doc: JsonObject) {
+        val obj = doc.optJsonObjectCompat("progress") ?: return
+        val env = runCatching { json.decodeFromJsonElement(ProgressEnvelope.serializer(), obj) }.getOrNull() ?: run {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: malformed progress doc")
             return
         }
@@ -213,8 +215,13 @@ class ClientControlRoundTrip @Inject constructor(
                 armProgressWatchdog()
             }
 
-            ProgressPhase.Complete -> { cancelProgressWatchdog(); bolusProgressData.completeAndAutoClear() }
-            ProgressPhase.Cleared  -> { cancelProgressWatchdog(); bolusProgressData.clear() }
+            ProgressPhase.Complete -> {
+                cancelProgressWatchdog(); bolusProgressData.completeAndAutoClear()
+            }
+
+            ProgressPhase.Cleared  -> {
+                cancelProgressWatchdog(); bolusProgressData.clear()
+            }
         }
     }
 
@@ -425,8 +432,8 @@ class ClientControlRoundTrip @Inject constructor(
         val clientId = pairingRepository.currentPairing()?.clientId ?: return null
         val identifier = ClientControlPublisher.IDENTIFIER_ACK_PREFIX + clientId
         val doc = runCatching { client.getSettings(identifier) }.getOrNull()?.values ?: return null
-        val ackObj = doc.optJSONObject("ack") ?: return null
-        val ack = runCatching { json.decodeFromString<AckEnvelope>(ackObj.toString()) }.getOrNull() ?: return null
+        val ackObj = doc.optJsonObjectCompat("ack") ?: return null
+        val ack = runCatching { json.decodeFromJsonElement(AckEnvelope.serializer(), ackObj) }.getOrNull() ?: return null
         if (ack.clientId != clientId || ack.commandCounter != counter || ack.phase != AckPhase.Done) return null
         val secret = pairingRepository.secretBytesOrNull() ?: return null
         if (!ClientControlCrypto.verifyAck(secret, ack)) return null

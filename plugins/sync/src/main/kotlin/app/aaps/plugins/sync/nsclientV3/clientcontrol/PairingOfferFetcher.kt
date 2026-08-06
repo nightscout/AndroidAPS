@@ -9,6 +9,8 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingOffer
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optJsonObjectCompat
+import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optStringCompat
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -77,12 +79,12 @@ class PairingOfferFetcher @Inject constructor(
             var candidates = 0
             val matches = mutableListOf<PairingPayload>()
             for (doc in resp.values) {
-                val identifier = doc.optString("identifier")
+                val identifier = doc.optStringCompat("identifier")
                 if (!identifier.startsWith(ClientControlPublisher.IDENTIFIER_OFFER_PREFIX)) continue
                 scanned++
-                val offerObj = doc.optJSONObject("offer") ?: continue
+                val offerObj = doc.optJsonObjectCompat("offer") ?: continue
                 val offer = try {
-                    json.decodeFromString<PairingOffer>(offerObj.toString())
+                    json.decodeFromJsonElement(PairingOffer.serializer(), offerObj)
                 } catch (_: SerializationException) {
                     aapsLogger.warn(LTag.NSCLIENT, "PairingOfferFetcher: offer $identifier malformed, skipping")
                     continue

@@ -34,8 +34,9 @@ import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.configuration.R
 import dagger.Reusable
 import kotlinx.serialization.json.Json
-import org.json.JSONException
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 @Reusable
@@ -55,58 +56,51 @@ class RunningConfigurationImpl @Inject constructor(
     private val wireJson = Json { explicitNulls = false }
 
     // called in AAPS mode only
-    override fun configuration(): JSONObject {
-        val json = JSONObject()
+    override fun configuration(): JsonObject {
         // Before init completes no pump is selected yet, and activePump.isInitialized() would throw
         // "No pump selected" (PluginStore.activePumpInternal) instead of returning false. Treat
         // "app not initialized" as an earlier "pump not ready" state and return the empty doc —
         // RunningConfigurationPublisher skips an empty payload and retries once init completes.
-        if (!config.appInitialized) return json
+        if (!config.appInitialized) return JsonObject(emptyMap())
         val pumpInterface = activePlugin.activePump
 
-        if (!pumpInterface.isInitialized()) return json
-        try {
-            // Plugin selection + settings + scene definitions all ride the generic key-sync path now
-            // (ActivePlugin* keys + the flat syncedPrefs cold block).
-            json.put("syncedPrefs", buildSyncedPrefs())
-            json.put("pump", pumpInterface.model().description)
+        if (!pumpInterface.isInitialized()) return JsonObject(emptyMap())
+        // Plugin selection + settings + scene definitions all ride the generic key-sync path now
+        // (ActivePlugin* keys + the flat syncedPrefs cold block).
+        return buildJsonObject {
+            put("syncedPrefs", buildSyncedPrefs())
+            put("pump", pumpInterface.model().description)
             // Mirror the master's active-pump faking flag READ-ONLY to clients (so a follower's VirtualPump shows the
             // right EB capability + interprets emulated-temp EBs correctly) — computed here on the master, never on the client.
             // Reads activePump (the wrapper, which delegates to the real pump on the master); applyCold instead casts
             // activePumpInternal because a client only has VirtualPump (not the PumpWithConcentration wrapper).
-            json.put("isFakingTempsByExtendedBoluses", pumpInterface.isFakingTempsByExtendedBoluses)
-            json.put("version", config.VERSION_NAME)
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
+            // Stays a real JSON boolean, as it was with org.json - everything under syncedPrefs is a string, this is not.
+            put("isFakingTempsByExtendedBoluses", pumpInterface.isFakingTempsByExtendedBoluses)
+            put("version", config.VERSION_NAME)
         }
-        return json
     }
 
     // called in AAPS mode only — the small "hot" doc: active scene (if any) + computed runtime flags.
-    override fun activeSceneConfiguration(): JSONObject {
-        val json = JSONObject()
-        try {
-            activeSceneSync.activeSceneSnapshot()?.let { snapshot ->
-                // Serialize from the wire DTO so the field set stays in lockstep with
-                // [NSActiveScene] (no hand-maintained put() list to drift). explicitNulls=false
-                // keeps the doc small by omitting not-yet-resolved NS ids.
-                val wire = NSActiveScene(
-                    sceneId = snapshot.sceneId,
-                    activatedAt = snapshot.activatedAt,
-                    durationMs = snapshot.durationMs,
-                    lifecycle = snapshot.lifecycle.name,
-                    ttNsId = snapshot.ttNsId,
-                    psNsId = snapshot.psNsId,
-                    rmNsId = snapshot.rmNsId,
-                    teNsId = snapshot.teNsId
-                )
-                json.put("activeScene", JSONObject(wireJson.encodeToString(NSActiveScene.serializer(), wire)))
-            }
-            json.put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
+    override fun activeSceneConfiguration(): JsonObject = buildJsonObject {
+        activeSceneSync.activeSceneSnapshot()?.let { snapshot ->
+            // Serialize from the wire DTO so the field set stays in lockstep with
+            // [NSActiveScene] (no hand-maintained put() list to drift). explicitNulls=false
+            // keeps the doc small by omitting not-yet-resolved NS ids.
+            val wire = NSActiveScene(
+                sceneId = snapshot.sceneId,
+                activatedAt = snapshot.activatedAt,
+                durationMs = snapshot.durationMs,
+                lifecycle = snapshot.lifecycle.name,
+                ttNsId = snapshot.ttNsId,
+                psNsId = snapshot.psNsId,
+                rmNsId = snapshot.rmNsId,
+                teNsId = snapshot.teNsId
+            )
+            // Straight to a JsonElement now - the old code went through text only because org.json
+            // could not read a kotlinx tree.
+            put("activeScene", wireJson.encodeToJsonElement(NSActiveScene.serializer(), wire))
         }
-        return json
+        put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())
     }
 
     // All cold-synced values (plugin selection, plugin settings, scene/quick-wizard/automation/insulin
@@ -131,19 +125,19 @@ class RunningConfigurationImpl @Inject constructor(
     // must travel and each device re-applies its own mode logic on read — hence NOT the full effective getter.
     // But a plain raw read would publish the literal default for computed-default keys (NsClientAllowClientControl,
     // AutosensPeriod, …), mis-telling clients the master's operative value; forSync uses the computed default instead.
-    private fun buildSyncedPrefs(): JSONObject {
-        val out = JSONObject()
+    // Every value here is written as a JSON *string*, including numbers and booleans. That is the
+    // existing wire format and the client parses it back that way, so it is kept as is.
+    private fun buildSyncedPrefs(): JsonObject = buildJsonObject {
         coldSyncKeys().forEach { key ->
             when (key) {
-                is BooleanNonPreferenceKey -> out.put(key.key, preferences.get(key, forSync = true).toString())
-                is StringNonPreferenceKey  -> out.put(key.key, preferences.get(key))
-                is IntNonPreferenceKey     -> out.put(key.key, preferences.get(key, forSync = true).toString())
-                is DoubleNonPreferenceKey  -> out.put(key.key, preferences.get(key).toString())   // no computed default → raw
-                is UnitDoublePreferenceKey -> out.put(key.key, preferences.getRaw(key).toString())   // raw mg/dl, 1:1
+                is BooleanNonPreferenceKey -> put(key.key, preferences.get(key, forSync = true).toString())
+                is StringNonPreferenceKey  -> put(key.key, preferences.get(key))
+                is IntNonPreferenceKey     -> put(key.key, preferences.get(key, forSync = true).toString())
+                is DoubleNonPreferenceKey  -> put(key.key, preferences.get(key).toString())   // no computed default → raw
+                is UnitDoublePreferenceKey -> put(key.key, preferences.getRaw(key).toString())   // raw mg/dl, 1:1
                 else                       -> aapsLogger.warn(LTag.CORE, "syncedPrefs: unsupported key type for ${key.key}")
             }
         }
-        return out
     }
 
     // Apply master-published synced prefs on the client. "Master wins": adopt verbatim via putRemote

@@ -41,7 +41,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -134,7 +134,7 @@ class ClientControlUplinkIntegrationTest {
 
     // -- NS bridge (the settings collection) --
     private var bridgeIdentifier: String? = null
-    private var bridgeDoc: JSONObject? = null
+    private var bridgeDoc: JsonObject? = null
 
     @BeforeEach
     fun setUp() = runBlocking {
@@ -175,7 +175,7 @@ class ClientControlUplinkIntegrationTest {
         // bridged back here, so the round-trip just times out to Unconfirmed — the command doc is still
         // captured + delivered to the master, which is what this uplink test asserts.
         whenever(nsClientV3Plugin.masterReachable).thenReturn(MutableStateFlow(true))
-        whenever(nsAndroidClient.updateSettings(any<String>(), any<JSONObject>())).thenAnswer {
+        whenever(nsAndroidClient.updateSettings(any<String>(), any<JsonObject>())).thenAnswer {
             val id = it.getArgument<String>(0)
             // The master now writes two-step ACK docs through this same NS bridge; ignore them here so
             // the capture reflects only the client's command publish (the uplink under test).

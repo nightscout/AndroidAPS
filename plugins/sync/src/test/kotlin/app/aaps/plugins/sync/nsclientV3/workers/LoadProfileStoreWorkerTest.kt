@@ -27,7 +27,8 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -105,9 +106,9 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = Long.MAX_VALUE
         sut = buildSut()
 
-        val profile = JSONObject().apply {
+        val profile = buildJsonObject {
             put("defaultProfile", "Default")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
             put("srvModified", now - 1000)
         }
         whenever(nsAndroidClient.getLastProfileStore())
@@ -129,9 +130,9 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
         sut = buildSut()
 
-        val profile = JSONObject().apply {
+        val profile = buildJsonObject {
             put("defaultProfile", "Default")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
         }
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, listOf(profile)))
@@ -152,9 +153,9 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
         sut = buildSut()
 
-        val profile = JSONObject().apply {
+        val profile = buildJsonObject {
             put("defaultProfile", "Default")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
         }
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, listOf(profile)))
@@ -174,9 +175,9 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
         sut = buildSut()
 
-        val profile = JSONObject().apply {
+        val profile = buildJsonObject {
             put("defaultProfile", "Default")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
             put("srvModified", now - 500)
         }
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
@@ -198,9 +199,9 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         sut = buildSut()
 
         val createdAt = dateUtil.toISOString(now - 300)
-        val profile = JSONObject().apply {
+        val profile = buildJsonObject {
             put("defaultProfile", "Default")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
             put("created_at", createdAt)
         }
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
@@ -255,14 +256,14 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.newestDataOnServer?.collections?.profile = now
         sut = buildSut()
 
-        val profile1 = JSONObject().apply {
+        val profile1 = buildJsonObject {
             put("defaultProfile", "Profile1")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
             put("srvModified", now - 1000)
         }
-        val profile2 = JSONObject().apply {
+        val profile2 = buildJsonObject {
             put("defaultProfile", "Profile2")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
             put("srvModified", now - 500)
         }
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
@@ -307,9 +308,9 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.doingFullSync = true
         sut = buildSut()
 
-        val profile = JSONObject().apply {
+        val profile = buildJsonObject {
             put("defaultProfile", "Default")
-            put("store", JSONObject())
+            put("store", buildJsonObject { })
         }
         whenever(nsAndroidClient.getProfileModifiedSince(anyLong()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, listOf(profile)))

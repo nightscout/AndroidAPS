@@ -37,7 +37,8 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -178,12 +179,12 @@ internal class ClientControlRoundTripTest {
     private fun progressDoc(
         phase: ProgressPhase, percent: Int = 0, status: String = "", insulin: Double = 2.0,
         delivered: Double = 0.0, ts: Long = now, signSecret: ByteArray = secret
-    ): JSONObject {
+    ): JsonObject {
         val env = ClientControlCrypto.signProgress(
             signSecret,
             ProgressEnvelope(clientId, phase, insulin, percent, status, delivered, stopDeliveryEnabled = true, timestamp = ts, signature = "")
         )
-        return JSONObject().apply { put("progress", JSONObject(json.encodeToString(ProgressEnvelope.serializer(), env))) }
+        return buildJsonObject { put("progress", json.encodeToJsonElement(ProgressEnvelope.serializer(), env)) }
     }
 
     private suspend fun stubPublish(result: ClientControlSendResult, ctr: Long? = counter) {
@@ -191,9 +192,9 @@ internal class ClientControlRoundTripTest {
     }
 
     /** A signed ACK doc as the WS layer would hand it to onAckDoc. [signSecret] lets a test forge one. */
-    private fun ackDoc(phase: AckPhase, status: AckStatus, reason: String? = null, payload: String? = null, ctr: Long = counter, signSecret: ByteArray = secret): JSONObject {
+    private fun ackDoc(phase: AckPhase, status: AckStatus, reason: String? = null, payload: String? = null, ctr: Long = counter, signSecret: ByteArray = secret): JsonObject {
         val ack = ClientControlCrypto.signAck(signSecret, AckEnvelope(clientId, ctr, phase, status, reason, payload, timestamp = now, signature = ""))
-        return JSONObject().apply { put("ack", JSONObject(json.encodeToString(AckEnvelope.serializer(), ack))) }
+        return buildJsonObject { put("ack", json.encodeToJsonElement(AckEnvelope.serializer(), ack)) }
     }
 
     @Test

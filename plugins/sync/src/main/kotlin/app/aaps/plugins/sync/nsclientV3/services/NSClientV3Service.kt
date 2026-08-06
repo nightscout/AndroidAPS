@@ -37,6 +37,7 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
+import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.android.DaggerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -299,6 +300,9 @@ class NSClientV3Service : DaggerService() {
 
             "settings"     -> {
                 val identifier = docJson.optString("identifier")
+                // socket.io hands every payload over as org.json, while the client control handlers
+                // speak the nssdk's kotlinx type. The conversion sits on each branch below, not up
+                // here: only one branch runs per event, and the cold/state branches never need it.
                 when {
                     // Client-side: cold config doc — apply everything except the active scene.
                     config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
@@ -319,17 +323,17 @@ class NSClientV3Service : DaggerService() {
                     // IDENTIFIER_PREFIX branch (ack identifiers share that prefix) so the master
                     // receiver never tries to verify an ack as an inbound command envelope.
                     config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)      ->
-                        nsClientV3Plugin.handleClientControlAckEvent(docJson)
+                        nsClientV3Plugin.handleClientControlAckEvent(docJson.toKotlinxJson())
                     // Client-side: master→client live bolus-progress mirror. Same ordering rule as ACK (shares
                     // IDENTIFIER_PREFIX) so the master never treats its own progress doc as an inbound command.
                     config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
-                        nsClientV3Plugin.handleClientControlProgressEvent(docJson)
+                        nsClientV3Plugin.handleClientControlProgressEvent(docJson.toKotlinxJson())
                     // Master-side: route client-control envelopes (paired-client → master commands)
                     // to the receiver. The plugin gates on the master toggle internally.
                     // !config.AAPSCLIENT: NS WS echoes every write back to the sender too — a client must not
                     // self-process its own outgoing commands (unknown clientId → deleteSettings → HTTP 410 tombstone).
-                    !config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX) ->
-                        nsClientV3Plugin.handleClientControlSettingsEvent(identifier, docJson)
+                    !config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)         ->
+                        nsClientV3Plugin.handleClientControlSettingsEvent(identifier, docJson.toKotlinxJson())
                 }
             }
         }
@@ -338,8 +342,12 @@ class NSClientV3Service : DaggerService() {
     private val onDataDelete = Emitter.Listener { args ->
         val response = args[0] as JSONObject
         aapsLogger.debug(LTag.NSCLIENT, "onDataDelete: $response")
-        val collection = response.optString("colName") ?: return@Listener
-        val identifier = response.optString("identifier") ?: return@Listener
+        // No elvis here: optString never returns null, it returns "" for a missing key. The old
+        // `?: return@Listener` looked like a guard but could not fire - Kotlin allowed it only
+        // because org.json is Java and the type is the platform type String!. A doc with no colName
+        // simply matches none of the collection checks below, exactly as it did before.
+        val collection = response.optString("colName")
+        val identifier = response.optString("identifier")
         nsClientRepository.addLog("◄ WS DELETE", "$collection $identifier")
         if (collection == "treatments") {
             storeDataForDb.addToDeleteTreatment(identifier)

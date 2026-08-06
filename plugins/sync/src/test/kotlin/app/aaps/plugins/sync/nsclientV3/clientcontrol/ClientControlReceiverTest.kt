@@ -49,7 +49,11 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -226,13 +230,13 @@ internal class ClientControlReceiverTest {
             SignedEnvelope(clientId = clientId, counter = counter, timestamp = timestamp, type = type, payload = payload, signature = "", validUntil = validUntil, wantsAck = wantsAck)
         )
 
-    private fun wrap(envelope: SignedEnvelope): JSONObject =
-        JSONObject().apply {
+    private fun wrap(envelope: SignedEnvelope): JsonObject =
+        buildJsonObject {
             put("date", envelope.timestamp)
             put("utcOffset", 0)
             put("app", "AAPS")
             put("schemaVersion", 1)
-            put("envelope", JSONObject(Json.encodeToString(SignedEnvelope.serializer(), envelope)))
+            put("envelope", Json.encodeToJsonElement(SignedEnvelope.serializer(), envelope))
         }
 
     private val deleteOk = CreateUpdateResponse(response = 200, identifier = null, isDeduplication = false, deduplicatedIdentifier = null, lastModified = null, errorResponse = null)
@@ -395,7 +399,7 @@ internal class ClientControlReceiverTest {
     fun missingEnvelopeFieldIsIgnoredNotDeleted() = runTest {
         pair()
         val identifier = ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + "anything"
-        val noEnvelope = JSONObject().apply {
+        val noEnvelope = buildJsonObject {
             put("date", now)
             put("app", "AAPS")
         }
@@ -410,7 +414,7 @@ internal class ClientControlReceiverTest {
     fun malformedEnvelopeJsonIsIgnoredNotDeleted() = runTest {
         pair()
         val identifier = ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + "anything"
-        val malformed = JSONObject().apply { put("envelope", JSONObject().apply { put("garbage", true) }) }
+        val malformed = buildJsonObject { put("envelope", buildJsonObject { put("garbage", true) }) }
 
         sut.onSettingsDocChanged(identifier, malformed)
 
@@ -824,11 +828,12 @@ internal class ClientControlReceiverTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         val cmdIdentifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_stop_$clientId"
-        val cmdDoc = wrap(envelope(clientId, secret, message = ClientControlMessage.SceneStop(false), counter = 5L)).also {
-            it.put("identifier", cmdIdentifier)
-        }
+        // kotlinx JsonObject is immutable, so the identifier goes on via a copy.
+        val cmdDoc = JsonObject(
+            wrap(envelope(clientId, secret, message = ClientControlMessage.SceneStop(false), counter = 5L)) + ("identifier" to JsonPrimitive(cmdIdentifier))
+        )
         // Mix in a non-clientcontrol doc that polling should ignore.
-        val unrelatedDoc = JSONObject().apply {
+        val unrelatedDoc = buildJsonObject {
             put("identifier", "aaps")
             put("date", now)
         }
@@ -851,10 +856,10 @@ internal class ClientControlReceiverTest {
         // Master writes its own pairing-offer docs under IDENTIFIER_OFFER_PREFIX. Without an
         // explicit skip, verifyAndAck would treat them as envelopes, find no `envelope` field,
         // and delete a still-live offer mid-pairing — leaving the client unable to fetch it.
-        val offerDoc = JSONObject().apply {
+        val offerDoc = buildJsonObject {
             put("identifier", "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}any-client-id")
             put("date", now)
-            put("offer", JSONObject().apply { put("clientId", "any-client-id") })
+            put("offer", buildJsonObject { put("clientId", "any-client-id") })
         }
         whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
             NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(offerDoc))
@@ -868,7 +873,7 @@ internal class ClientControlReceiverTest {
     @Test
     fun wsPushSkipsOfferDocs() = runTest {
         val identifier = "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}any-client-id"
-        val doc = JSONObject().apply { put("identifier", identifier); put("date", now) }
+        val doc = buildJsonObject { put("identifier", identifier); put("date", now) }
         sut.onSettingsDocChanged(identifier, doc)
         verify(nsAndroidClient, never()).deleteSettings(any())
     }
@@ -881,9 +886,9 @@ internal class ClientControlReceiverTest {
         // never execute it. This locks in the fix against re-delivery via the poll fallback.
         pair()
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_stop_stranger-uuid"
-        val doc = wrap(envelope("stranger-uuid", ByteArray(32) { 0x11 }, message = ClientControlMessage.SceneStop(false), counter = 5L)).also {
-            it.put("identifier", identifier)
-        }
+        val doc = JsonObject(
+            wrap(envelope("stranger-uuid", ByteArray(32) { 0x11 }, message = ClientControlMessage.SceneStop(false), counter = 5L)) + ("identifier" to JsonPrimitive(identifier))
+        )
         whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
             NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(doc))
         )
@@ -901,8 +906,8 @@ internal class ClientControlReceiverTest {
     private suspend fun captureAcks(clientId: String): MutableList<AckEnvelope> {
         val acks = mutableListOf<AckEnvelope>()
         whenever(nsAndroidClient.updateSettings(eq(ClientControlPublisher.IDENTIFIER_ACK_PREFIX + clientId), any())).thenAnswer {
-            val doc = it.getArgument<JSONObject>(1)
-            acks += Json.decodeFromString<AckEnvelope>(doc.getJSONObject("ack").toString())
+            val doc = it.getArgument<JsonObject>(1)
+            acks += Json.decodeFromString<AckEnvelope>(doc["ack"]!!.jsonObject.toString())
             deleteOk
         }
         return acks
