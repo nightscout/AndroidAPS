@@ -16,9 +16,15 @@ import javax.inject.Singleton
 @Singleton
 class RunningModeSource @Inject constructor(private val context: Context, private val sp: SP) : TileSource {
 
-    override fun getSelectedActions(): List<Action> {
+    override fun getSelectedActions(): List<Action> = getSelectedActions(getRunningModes(sp))
+
+    /**
+     * Build the launchable actions for [states]. Also used by the running-mode complication picker,
+     * which passes a freshly received [EventData.RunningModeList] instead of the SP-cached one.
+     * The result is aligned with `states.states` by index (capped at 4 entries).
+     */
+    fun getSelectedActions(states: EventData.RunningModeList): List<Action> {
         val actions = mutableListOf<Action>()
-        val states = getRunningModes(sp)
 
         for (state in states.states) {
             if (actions.size == 4) break
@@ -60,6 +66,9 @@ class RunningModeSource @Inject constructor(private val context: Context, privat
     }
 
     override fun getValidFor(): Long? = null
+
+    /** Latest mode list received from the phone (SP-cached). */
+    fun currentModes(): EventData.RunningModeList = getRunningModes(sp)
 
     private fun getRunningModes(sp: SP): EventData.RunningModeList =
         EventData.deserialize(sp.getString(R.string.key_running_mode_data, EventData.RunningModeList(0, arrayListOf()).serialize())) as EventData.RunningModeList

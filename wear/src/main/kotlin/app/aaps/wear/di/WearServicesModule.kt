@@ -20,6 +20,7 @@ import app.aaps.wear.complications.SgvComplication
 import app.aaps.wear.complications.SgvComplicationExt1
 import app.aaps.wear.complications.SgvComplicationExt2
 import app.aaps.wear.complications.SgvLargeComplication
+import app.aaps.wear.complications.RunningModeComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.complications.WallpaperDarkComplication
 import app.aaps.wear.complications.WallpaperGrayComplication
@@ -68,6 +69,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesSgvComplicationExt2(): SgvComplicationExt2
     @ContributesAndroidInjector abstract fun contributesSgvLargeComplication(): SgvLargeComplication
     @ContributesAndroidInjector abstract fun contributesUploaderBatteryComplication(): UploaderBatteryComplication
+    @ContributesAndroidInjector abstract fun contributesRunningModeComplication(): RunningModeComplication
     // The concrete wallpaper providers (the abstract WallpaperComplication is never instantiated by the
     // system, so binding it was a no-op that left these three uninjected).
     @ContributesAndroidInjector abstract fun contributesWallpaperDarkComplication(): WallpaperDarkComplication

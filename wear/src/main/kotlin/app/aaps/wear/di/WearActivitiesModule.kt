@@ -13,6 +13,7 @@ import app.aaps.wear.interaction.actions.BolusActivity
 import app.aaps.wear.interaction.actions.CarbActivity
 import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.FillActivity
+import app.aaps.wear.interaction.actions.RunningModePickerActivity
 import app.aaps.wear.interaction.actions.RunningModeTimedActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
 import app.aaps.wear.interaction.actions.QuickSnoozeActivity
@@ -60,6 +61,7 @@ abstract class WearActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesStatusMenuActivity(): StatusMenuActivity
     @ContributesAndroidInjector abstract fun contributesQuickSnoozeActivity(): QuickSnoozeActivity
     @ContributesAndroidInjector abstract fun contributesRunningModeTimedActivity(): RunningModeTimedActivity
+    @ContributesAndroidInjector abstract fun contributesRunningModePickerActivity(): RunningModePickerActivity
     @ContributesAndroidInjector abstract fun contributesLoopStatusActivity(): LoopStatusActivity
     @ContributesAndroidInjector abstract fun contributesBgGraphActivity(): BgGraphActivity
 }

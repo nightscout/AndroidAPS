@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Watch
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
@@ -188,6 +189,13 @@ class WearPlugin @Inject constructor(
             .drop(1) // Skip initial emission on collection start
             .debounce(2_000L)
             .collectResilient(newScope, aapsLogger, LTag.WEAR) { dataHandlerMobile.resendData("TempTargetChange") }
+        // Push status to watch quickly when the running mode changes on the phone, so the
+        // running-mode complication and tile do not wait for the next loop run. A wear-side
+        // change already refreshes through handleRunningModeConfirmed.
+        persistenceLayer.observeChanges<RM>()
+            .drop(1) // Skip initial emission on collection start
+            .debounce(2_000L)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR) { dataHandlerMobile.resendData("RunningModeChange") }
         // Refresh wear scene tile whenever the scene list changes (add / update / delete)
         scenes.scenesFlow
             .drop(1) // Skip initial replay on subscribe

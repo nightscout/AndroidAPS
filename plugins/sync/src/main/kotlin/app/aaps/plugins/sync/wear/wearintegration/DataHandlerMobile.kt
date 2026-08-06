@@ -403,18 +403,7 @@ class DataHandlerMobile @Inject constructor(
 
         // Map loop mode
         val runningModeRecord = loop.runningModeRecord()
-        val loopMode = when (runningModeRecord.mode) {
-            RM.Mode.CLOSED_LOOP       -> LoopStatusData.LoopMode.CLOSED
-            RM.Mode.OPEN_LOOP         -> LoopStatusData.LoopMode.OPEN
-            RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
-            RM.Mode.DISABLED_LOOP     -> LoopStatusData.LoopMode.DISABLED
-            RM.Mode.SUSPENDED_BY_USER -> LoopStatusData.LoopMode.SUSPENDED
-            RM.Mode.SUSPENDED_BY_PUMP -> LoopStatusData.LoopMode.PUMP_SUSPENDED
-            RM.Mode.SUSPENDED_BY_DST  -> LoopStatusData.LoopMode.DST_SUSPENDED
-            RM.Mode.DISCONNECTED_PUMP -> LoopStatusData.LoopMode.DISCONNECTED
-            RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
-            else                      -> LoopStatusData.LoopMode.UNKNOWN
-        }
+        val loopMode = runningModeRecord.mode.toLoopMode()
         // End time of a temporary mode (suspend/disconnect/superbolus) so the watch can show remaining duration
         val modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
 
@@ -1016,6 +1005,20 @@ class DataHandlerMobile @Inject constructor(
         )
     }
 
+    /** Domain [RM.Mode] → wear wire mode used by the loop status screen and the running-mode complication. */
+    private fun RM.Mode.toLoopMode(): LoopStatusData.LoopMode = when (this) {
+        RM.Mode.CLOSED_LOOP       -> LoopStatusData.LoopMode.CLOSED
+        RM.Mode.OPEN_LOOP         -> LoopStatusData.LoopMode.OPEN
+        RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
+        RM.Mode.DISABLED_LOOP     -> LoopStatusData.LoopMode.DISABLED
+        RM.Mode.SUSPENDED_BY_USER -> LoopStatusData.LoopMode.SUSPENDED
+        RM.Mode.SUSPENDED_BY_PUMP -> LoopStatusData.LoopMode.PUMP_SUSPENDED
+        RM.Mode.SUSPENDED_BY_DST  -> LoopStatusData.LoopMode.DST_SUSPENDED
+        RM.Mode.DISCONNECTED_PUMP -> LoopStatusData.LoopMode.DISCONNECTED
+        RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
+        else                      -> LoopStatusData.LoopMode.UNKNOWN
+    }
+
     /** Wire (wear-tile) running mode → domain [RM.Mode]; null for the non-user-selectable states (gated out anyway). */
     private fun AvailableRunningMode.RunningMode.toRmMode(): RM.Mode? = when (this) {
         AvailableRunningMode.RunningMode.LOOP_CLOSED       -> RM.Mode.CLOSED_LOOP
@@ -1398,7 +1401,8 @@ class DataHandlerMobile @Inject constructor(
                 tempTargetDuration = tempTargetDuration,
                 reservoirString = reservoirString,
                 reservoir = reservoir,
-                reservoirLevel = reservoirLevel
+                reservoirLevel = reservoirLevel,
+                loopMode = loop.runningModeRecord().mode.toLoopMode()
             )
         )
     }

@@ -380,7 +380,10 @@ sealed class EventData : Event() {
         val reservoir: Double,
         val reservoirLevel: Int,
         // Numeric COB in grams for input bounds on the watch; -1.0 = unknown (older sender or no data)
-        val cobValue: Double = -1.0
+        val cobValue: Double = -1.0,
+        // Current running mode for the wear running-mode complication; UNKNOWN = older sender.
+        // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
+        val loopMode: LoopStatusData.LoopMode = LoopStatusData.LoopMode.UNKNOWN
     ) : EventData(), EventDataSet
 
     @Serializable
