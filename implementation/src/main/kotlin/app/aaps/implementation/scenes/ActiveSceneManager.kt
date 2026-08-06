@@ -69,7 +69,6 @@ class ActiveSceneManager @Inject constructor(
 
     /** Set the active scene state (called by SceneExecutor on activation) */
     fun setActive(state: ActiveSceneState) {
-        aapsLogger.info(LTag.UI, "XXXX ActiveSceneManager.setActive('${state.scene.name}')")
         _activeSceneState.value = state
         persistActiveState(state)
     }
@@ -79,7 +78,6 @@ class ActiveSceneManager @Inject constructor(
     fun markExpired() {
         val current = _activeSceneState.value ?: return
         if (current.lifecycle == SceneLifecycle.EXPIRED) return
-        aapsLogger.info(LTag.UI, "XXXX ActiveSceneManager.markExpired() — scene='${current.scene.name}'")
         val updated = current.copy(lifecycle = SceneLifecycle.EXPIRED)
         _activeSceneState.value = updated
         persistActiveState(updated)
@@ -87,7 +85,6 @@ class ActiveSceneManager @Inject constructor(
 
     /** Clear the active scene (called by SceneExecutor on deactivation or dismiss) */
     fun clearActive() {
-        aapsLogger.info(LTag.UI, "XXXX ActiveSceneManager.clearActive() — was='${_activeSceneState.value?.scene?.name}'")
         _activeSceneState.value = null
         preferences.put(StringNonKey.ActiveScene, "")
     }

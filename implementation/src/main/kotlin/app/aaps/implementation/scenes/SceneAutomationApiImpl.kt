@@ -28,7 +28,11 @@ class SceneAutomationApiImpl @Inject constructor(
 
     override val scenesFlow: StateFlow<String> get() = sceneRepository.scenesFlow
 
-    override fun isAnySceneActive(): Boolean = activeSceneManager.isActive()
+    // An expired scene keeps its slot until the user dismisses the banner, so "a scene exists" and
+    // "a scene is in force" are different questions. isActive() answers the first one.
+    override fun isAnySceneActive(): Boolean = activeSceneManager.isActive() && !activeSceneManager.isExpired()
+
+    override fun hasSceneToStop(): Boolean = activeSceneManager.isActive()
 
     override val activeFlow: Flow<Boolean> =
         activeSceneManager.activeSceneState.map { it != null }.distinctUntilChanged()

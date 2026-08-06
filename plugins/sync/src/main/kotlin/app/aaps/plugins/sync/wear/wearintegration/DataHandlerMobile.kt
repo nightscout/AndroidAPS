@@ -687,7 +687,9 @@ class DataHandlerMobile @Inject constructor(
     private fun handleSceneStopPreCheck() {
         // Build confirm locally — no master round-trip needed before showing "End active scene".
         // The watch waits for RemoteDelivered (deferConfirm) while the stop relays to master.
-        if (!scenes.isAnySceneActive()) return sendError(rh.gs(app.aaps.core.ui.R.string.scene_ended))
+        // Wider than "a scene is running": ending an expired-but-undismissed scene from the watch is a
+        // valid stop (stopActiveScene dismisses it), and it is the only remote way to clear that banner.
+        if (!scenes.hasSceneToStop()) return sendError(rh.gs(app.aaps.core.ui.R.string.scene_ended))
         sendToWear(
             EventData.ConfirmAction(
                 title = rh.gs(app.aaps.core.ui.R.string.scenes),
@@ -1101,7 +1103,9 @@ class DataHandlerMobile @Inject constructor(
         sendUserActions()
         // Scenes
         sendScenes()
-        sendActiveSceneState(scenes.isAnySceneActive())
+        // Same condition as the live push in WearPlugin (scenes.activeFlow) — the tile is fed by both,
+        // so a resend must not disagree with the flow about whether the STOP button belongs there.
+        sendActiveSceneState(scenes.hasSceneToStop())
         // GraphData
         iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
             // Hoist out of the per-bucket map: getGlucoseStatusData copies the bucketed table and runs a polynomial fit on every call.
