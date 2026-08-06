@@ -16,6 +16,7 @@
     <string name="authorized_clients_add">新增用戶端</string>
     <string name="authorized_clients_comm_switch_title">允許用戶端控制</string>
     <string name="authorized_clients_comm_switch_summary">允許已配對的用戶端透過 Nightscout 傳送簽章的指令。關閉可在不移除的情況下停止通訊。</string>
+    <string name="authorized_clients_needs_websocket">WebSockets 已關閉，因此無法接收來自用戶端的指令。在您開啟 WebSockets 之前，用戶端會將此主機端顯示為不接受指令。</string>
     <string name="authorized_clients_state_active">啟用中</string>
     <string name="authorized_clients_state_pending">等待中</string>
     <string name="authorized_clients_last_seen">上次連線於 %1$s</string>
