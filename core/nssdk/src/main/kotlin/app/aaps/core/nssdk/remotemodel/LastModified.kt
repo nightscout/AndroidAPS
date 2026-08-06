@@ -1,6 +1,6 @@
 package app.aaps.core.nssdk.remotemodel
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -9,18 +9,18 @@ import kotlinx.serialization.Serializable
  **/
 @Serializable
 data class LastModified(
-    @SerializedName("collections") val collections: Collections
+    @SerialName("collections") val collections: Collections
 ) {
 
     @Serializable
     data class Collections(
 
-        @SerializedName("devicestatus") var devicestatus: Long = 0, // devicestatus collection
-        @SerializedName("entries") var entries: Long = 0,           // entries collection
-        @SerializedName("profile") var profile: Long = 0,           // profile collection
-        @SerializedName("treatments") var treatments: Long = 0,     // treatments collection
-        @SerializedName("foods") var foods: Long = 0,               // foods collection
-        @SerializedName("settings") var settings: Long = 0          // settings collection
+        @SerialName("devicestatus") var devicestatus: Long = 0, // devicestatus collection
+        @SerialName("entries") var entries: Long = 0,           // entries collection
+        @SerialName("profile") var profile: Long = 0,           // profile collection
+        @SerialName("treatments") var treatments: Long = 0,     // treatments collection
+        @SerialName("foods") var foods: Long = 0,               // foods collection
+        @SerialName("settings") var settings: Long = 0          // settings collection
     )
 
     fun set(colName: String, value: Long) {

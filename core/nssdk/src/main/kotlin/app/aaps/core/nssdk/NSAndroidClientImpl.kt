@@ -33,7 +33,6 @@ import app.aaps.core.nssdk.remotemodel.RemoteFood
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
 import app.aaps.core.nssdk.utils.retry
 import app.aaps.core.nssdk.utils.toNotNull
-import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -505,7 +504,7 @@ class NSAndroidClientImpl(
         // kotlinx JsonObject is immutable, so the app name goes into a copy instead of being put in
         // place. Same result on the wire: an existing "app" key is replaced, a new one is added.
         val stamped = JsonObject(remoteProfileStore + ("app" to JsonPrimitive("AAPS")))
-        val response = api.createProfile(JsonParser.parseString(stamped.toString()).asJsonObject)
+        val response = api.createProfile(stamped)
         if (response.isSuccessful) {
             if (response.code() == 200 || response.code() == 201) {
                 return@callWrapper CreateUpdateResponse(
@@ -609,7 +608,7 @@ class NSAndroidClientImpl(
 
         // See createProfileStore: kotlinx JsonObject is immutable, so stamp a copy.
         val stamped = JsonObject(settings + ("app" to JsonPrimitive("AAPS")))
-        val response = api.createSetting(JsonParser.parseString(stamped.toString()).asJsonObject)
+        val response = api.createSetting(stamped)
         if (response.isSuccessful) {
             if (response.code() == 200 || response.code() == 201) {
                 return@callWrapper CreateUpdateResponse(
@@ -632,7 +631,7 @@ class NSAndroidClientImpl(
 
     override suspend fun patchSettings(identifier: String, settings: JsonObject): CreateUpdateResponse = callWrapper(dispatcher) {
 
-        val response = api.patchSetting(JsonParser.parseString(settings.toString()).asJsonObject, identifier)
+        val response = api.patchSetting(settings, identifier)
         if (response.code() == 404) {
             return@callWrapper CreateUpdateResponse(
                 response = 404,
@@ -661,7 +660,7 @@ class NSAndroidClientImpl(
 
     override suspend fun updateSettings(identifier: String, settings: JsonObject): CreateUpdateResponse = callWrapper(dispatcher) {
 
-        val response = api.updateSetting(JsonParser.parseString(settings.toString()).asJsonObject, identifier)
+        val response = api.updateSetting(settings, identifier)
         if (response.isSuccessful) {
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),

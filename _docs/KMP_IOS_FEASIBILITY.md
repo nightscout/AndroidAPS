@@ -60,6 +60,7 @@ So most of the Compose work of the last year can be reused.
 | Retrofit + OkHttp                                      | 6                                                      | Ktor client                            |
 | socket.io-client                                       | 1 (`NSClientV3Service`)                                | **Do not replace** - see section 3a    |
 | Gson                                                   | 34                                                     | kotlinx.serialization                  |
+| `org.json` (`JSONObject`)                              | 243                                                    | kotlinx `JsonObject` - see section 8   |
 | WorkManager                                            | 44                                                     | See warning below                      |
 | joda-time                                              | 5                                                      | kotlinx-datetime                       |
 | `java.text.DecimalFormat`                              | 74                                                     | Done, see section 8                    |
@@ -372,6 +373,13 @@ Step 0 proves the toolchain works, gives an honest answer about how Compose Mult
 iOS, and makes every later step demand driven: a blocker is removed because it stands between you
 and the next screen, not because it is on a list.
 
+**Where this stands.** Step 1 is done. Half of step 0 is done too, and out of order: `:core:data`
+already builds for Kotlin/Native (wave 5), and part of step 5 has been pulled forward because
+`:core:nssdk` turned out to be sliceable after all (wave 6). What is still missing from step 0 is the
+half that needs a Mac - a real device, and an honest look at Compose Multiplatform on iOS. No amount
+of further blocker removal answers that question, which is the argument for doing it soon rather than
+continuing down the list.
+
 ---
 
 ## 8. Work done so far
@@ -383,6 +391,17 @@ Committed on `dev`:
 | `e5f4e27626` | Migrate DecimalFormat |
 | `a42d823c93` | Eliminate TimeUnit |
 | `e1068e77db` | `:core:keys` remove JVM dependency |
+| `35b5399798` | Extract dependencies |
+| `1aed547f7a` | cleanup (`TB.isInProgress` moved out of `:core:data`) |
+
+Committed on `kmp/core-data-experiment`, a throwaway branch kept because the work turned out to be
+worth keeping (see waves 5 and 6):
+
+| Commit | What |
+| --- | --- |
+| `67ecb1e696` | Going KMP - `:core:data` is a real multiplatform module |
+| `e24476237b` | Prepare `:core:nssdk` - dead code out, defaults in, characterization tests |
+| `f6a4e85e8a` | `:core:nssdk` `org.json` -> kotlinx |
 
 ### Wave 1 - `DecimalFormat` removed
 
@@ -605,6 +624,123 @@ creation is the weaker case, and the 154 call sites that care already pass `utcO
 
 Two `expect` / `actual` declarations away from compiling as `commonMain`.
 
+### Wave 5 - `:core:data` really is multiplatform (done)
+
+`:core:data` now uses `kotlin("multiplatform")` with a `jvm()` target and `mingwX64()` as a stand-in
+for iOS (real iOS targets need macOS and Xcode, so Windows cannot build them - `mingwX64` proves the
+code compiles for Kotlin/Native, which is the part that was in doubt).
+
+**Zero consumer changes.** All 13 modules that depend on `:core:data` build unmodified: an Android
+consumer still sees a normal library, because a multiplatform module publishes a normal variant.
+That was the single most valuable thing to learn, and the reason it was worth doing on a branch.
+
+Two `expect` / `actual` seams, both deliberate:
+
+| Seam | Why |
+| --- | --- |
+| `NumberFormatPlatform` | number formatting is genuinely platform work |
+| `systemUtcOffsetAt(timestamp)` | replaces `TimeZone.getDefault()` in 17 model files, no call site changed |
+
+The `mingwX64` target needed one opt-in, `kotlin.experimental.ExperimentalNativeApi`, because
+`ICfg.iobCalcForTreatment` uses `assert()`.
+
+Verified on WSA: all four flavours install, run, and sync against a live Nightscout.
+
+### Wave 6 - `:core:nssdk` off `org.json` (done)
+
+**Worth recording, because the first assessment was wrong.** The module was written off as something
+that could not be salami-sliced: the Gson annotations, the joda date parsing, the `IOException`
+hierarchy and the converter all form one wire-format contract, so the argument went that it had to
+move in a single step or not at all. That is true *of the converter*, but the converter is not the
+only seam. The carrier type is a separate one, and it came out first, alone, with the converter
+untouched. The lesson generalises: "these things are coupled" is a claim about one axis, and it is
+worth checking whether some other axis cuts cleanly before accepting a big-bang migration.
+
+`org.json` is a JVM and Android API. It was in the **public API** of `NSAndroidClient` (10 methods)
+and `RunningConfiguration` (2), carrying profiles and settings - the two document kinds AAPS does not
+model, because it does not own their shape. It is now gone from the module.
+
+Why it could be done alone: both directions already round-tripped through text, so `org.json` was
+only ever a carrier.
+
+```kotlin
+JSONObject(json.asJsonObject.toString())                      // read  - Gson tree -> text -> org.json
+api.createSetting(JsonParser.parseString(doc.toString()))     // write - org.json -> text -> Gson tree
+```
+
+Swapping the carrier for kotlinx `JsonObject` left the write line **character for character
+identical** and changed one parse call on the read side. Gson, Retrofit and the 210 `@SerializedName`
+annotations were not touched.
+
+**The trap, and why tests came first.** The two libraries disagree about a missing key, and nothing
+about the difference shows up at compile time:
+
+| accessor | `org.json`, missing key | `org.json`, explicit `null` | kotlinx, missing key |
+| --- | --- | --- | --- |
+| `optString` | `""` | `"null"` - the four letter text | `null` |
+| `optJSONObject` | `null` | `null` | `null` |
+| `optLong(k, 0)` | `0` | `0` | `null` |
+| `optBoolean` | `false` | `false` | `null` |
+
+A straight translation would silently flip every downstream `isEmpty()` and `?:`. So the swap was
+done through `OrgJsonCompat`, kotlinx accessors that reproduce `org.json` exactly, golden-mastered
+against the real thing over 21 inputs x 5 accessors. The type change is then equivalent by
+construction rather than by inspection.
+
+The one genuine divergence: reading an **object** through `optString` differs in key order, because
+`org.json` iterates a hash map and its order is unspecified. No call site does it - all six keys read
+through `optString` hold strings - so it is documented and skipped rather than pinned.
+
+**What stays on `org.json`, on purpose.** `JsonBridge` marks the two boundaries:
+
+- **socket.io** hands every payload over as `org.json.JSONObject`. That is the library's API, so the
+  conversion happens as the event arrives and everything downstream is kotlinx.
+- **The profile subsystem** - `ProfileStore`, `PureProfile`, `DataSyncSelector.PairProfileStore` - is
+  `org.json` throughout `:core:interfaces`. Converting it is its own project. Profiles are converted
+  where they cross into the client instead.
+
+Both live in `:plugins:sync`, which is Android only by nature (WorkManager, a socket.io `Service`),
+so the `org.json` quirks stay out of the shared modules.
+
+**Dead code removed on the way:**
+
+- `RemoteProfileStore` - an abandoned attempt to model the profile store as a typed class, with a
+  commented-out `Store` / `SimpleProfile` / `ProfileEntry` model still in the file. Zero consumers.
+  This was the "nested JSON I could not get working with kotlinx" that came up in discussion - the
+  archaeology was still in the file.
+- `NSAndroidRxClient` - dead, and `kotlinx.coroutines.rx3` went with it.
+- Both `?: return@Listener` guards in `NSClientV3Service.onDataDelete`. `optString` never returns
+  null, so neither could ever fire; Kotlin allowed them only because `org.json` is Java and the type
+  is the platform type `String!`.
+
+**Immutability was the only real code change.** kotlinx `JsonObject` cannot be mutated, so six
+in-place `put` calls became rebuilds. Five were mechanical; the sixth was not -
+`RunningConfigurationPublisher` mutated a *nested* object to mask `NsClientAllowClientControl` inside
+`syncedPrefs`, and that is now an explicit rebuild preserving key order and the masking semantics.
+
+The wire format's mixed typing was preserved deliberately: `isFakingTempsByExtendedBoluses` is a real
+JSON boolean while every `syncedPrefs` value is a string, exactly as `org.json` wrote them.
+
+**Left unfixed, on purpose.** `optStringCompat` faithfully reproduces the `"null"` quirk, so a server
+sending `{"message":null}` still writes the word "null" into the user visible NSClient log. Changing
+behaviour during a type migration is how regressions get smuggled in; that is a separate change.
+
+**What is left in `:core:nssdk`:**
+
+| Dependency | Files | Slice |
+| --- | --- | --- |
+| Gson | 17 | the converter switch |
+| joda-time | 1 | with the converter - `RemoteTreatment` lenient dates |
+| Retrofit | 4 | Ktor |
+| OkHttp | 3 | Ktor |
+| `java.io.IOException` | 1 | with Ktor - the exception hierarchy |
+| `android.*` | 2 | with Ktor - mainly `Context` for the OkHttp disk cache |
+
+Verified on WSA with a full sync. That specifically exercises the riskiest part: settings and profile
+reads both go through the changed Gson type adapter, and kotlinx `JsonObject` also implements
+`Map<String, JsonElement>`, so Gson picking its built-in map adapter instead of the registered one
+was a real possibility that would have failed quietly rather than thrown.
+
 ### Was behaviour preserved?
 
 An audit ran five parallel agents against the migrated code, each trying to find an input where old
@@ -654,17 +790,35 @@ keeps the old contract on a public interface method.
    in 57 files, and most of it sits in pump drivers that will never be KMP. Do it in the modules on
    the KMP path, leave `:pump:*` and `:wear` alone, and make it a rule for new code so the number
    stops growing.
-5. **Still open: which branch for the first KMP module.** Converting `:core:data` to
-   `kotlin("multiplatform")` changes how Gradle resolves it for the 13 modules that depend on it.
-   That is the most valuable thing to find out and the most likely thing to break, so a throwaway
-   branch is safer than `dev`.
+5. ~~Which branch for the first KMP module?~~ **Decided: `kmp/core-data-experiment`, and it worked.**
+   The fear was that converting `:core:data` to `kotlin("multiplatform")` would change how Gradle
+   resolves it for the 13 dependent modules. It does not - a multiplatform module still publishes a
+   normal Android variant, and all 13 built unmodified. The branch was meant to be thrown away and is
+   now worth merging.
 6. **Still open: `wear/SmallestDoubleString.kt`** - the last `DecimalFormat` in a non-test file that
    is not the deliberate platform seam. It builds patterns from a runtime string, so it needs real
    logic rather than a mapping.
+7. **Still open: the `:core:nssdk` converter switch.** Gson to kotlinx is atomic - 210
+   `@SerializedName`, the joda date parsing and the `IOException` hierarchy move together. Two things
+   need deciding first: the `Json { }` configuration (`ignoreUnknownKeys = true`, `explicitNulls =
+   false`), and what to do about the ~8 **non-null** fields that were deliberately left without
+   defaults. Gson currently leaves those null through `Unsafe.allocateInstance`; kotlinx would throw.
+   For `RemoteStatusResponse` throwing is arguably correct, since `v3/status` always sends them.
+   `RemoteFood` from a foreign uploader is the real question.
+8. **Still open: Retrofit converter, or straight to Ktor?** Adding
+   `retrofit2-kotlinx-serialization-converter` is the smaller step but adds a dependency that gets
+   thrown away when Ktor lands. Going straight to Ktor avoids that and is the actual destination, and
+   its failure mode ("no network") is louder than a serialization-only swap ("quietly wrong data").
+   Leaning Ktor.
+9. **Still open: the OkHttp disk cache needs a `Context`.** One of the two remaining `android.*`
+   imports in `:core:nssdk`. Ktor on iOS needs either a different cache story or none.
+10. **Still open: R8 has never run against the KMP module.** Both device checks were debug builds, so
+    minification against multiplatform metadata and the `expect` / `actual` pairs is untested. This is
+    the only real remaining risk on the branch.
 
-Waves 1 to 3 are committed. Still in the working tree: the `TB.isInProgress` extension and the
-`DoseStepSize` change from Wave 4. The `FoodManagement` comma defect in section 10 is found but not
-fixed.
+Waves 1 to 4 are committed on `dev`. Waves 5 and 6 are committed on `kmp/core-data-experiment`, both
+verified on WSA against a live Nightscout. The `FoodManagement` comma defect in section 10 is found
+but not fixed.
 
 ---
 

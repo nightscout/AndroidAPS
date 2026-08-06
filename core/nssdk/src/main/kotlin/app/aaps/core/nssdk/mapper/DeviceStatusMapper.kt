@@ -1,16 +1,14 @@
 package app.aaps.core.nssdk.mapper
 
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
+import app.aaps.core.nssdk.nsSdkJson
 import app.aaps.core.nssdk.remotemodel.RemoteDeviceStatus
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-import kotlinx.serialization.json.Json
 
 fun NSDeviceStatus.convertToRemoteAndBack(): NSDeviceStatus =
     toRemoteDeviceStatus().toNSDeviceStatus()
 
 fun String.toNSDeviceStatus(): NSDeviceStatus =
-    Gson().fromJson(this, RemoteDeviceStatus::class.java).toNSDeviceStatus()
+    nsSdkJson.decodeFromString(RemoteDeviceStatus.serializer(), this).toNSDeviceStatus()
 
 internal fun RemoteDeviceStatus.toNSDeviceStatus(): NSDeviceStatus =
     NSDeviceStatus(
@@ -44,6 +42,11 @@ internal fun NSDeviceStatus.toRemoteDeviceStatus(): RemoteDeviceStatus =
         openaps = openaps?.toRemoteDeviceStatusOpenAps()
     )
 
+// The schema-less subtrees (pump.extended, openaps.suggested / enacted / iob) used to be Gson trees
+// on the remote side and kotlinx trees on the local side, so every one of them was rebuilt by
+// printing it to text and parsing it back. Both sides are kotlinx now, so they are carried straight
+// across - no copy, no reparse, and no chance of the round trip changing anything.
+
 internal fun RemoteDeviceStatus.Pump.toNSDeviceStatusPump(): NSDeviceStatus.Pump =
     NSDeviceStatus.Pump(
         clock = clock,
@@ -51,7 +54,7 @@ internal fun RemoteDeviceStatus.Pump.toNSDeviceStatusPump(): NSDeviceStatus.Pump
         reservoirDisplayOverride = reservoirDisplayOverride,
         battery = NSDeviceStatus.Pump.Battery(battery?.percent, battery?.voltage),
         status = NSDeviceStatus.Pump.Status(status?.status, status?.timestamp),
-        extended = extended?.let { Json.decodeFromString(it.toString()) }
+        extended = extended
     )
 
 internal fun NSDeviceStatus.Pump.toRemoteDeviceStatusPump(): RemoteDeviceStatus.Pump =
@@ -61,19 +64,19 @@ internal fun NSDeviceStatus.Pump.toRemoteDeviceStatusPump(): RemoteDeviceStatus.
         reservoirDisplayOverride = reservoirDisplayOverride,
         battery = RemoteDeviceStatus.Pump.Battery(battery?.percent, battery?.voltage),
         status = RemoteDeviceStatus.Pump.Status(status?.status, status?.timestamp),
-        extended = extended?.let { JsonParser.parseString(it.toString()).asJsonObject }
+        extended = extended
     )
 
 internal fun RemoteDeviceStatus.OpenAps.toNSDeviceStatusOpenAps(): NSDeviceStatus.OpenAps =
     NSDeviceStatus.OpenAps(
-        suggested = suggested?.let { Json.decodeFromString(it.toString()) },
-        enacted = enacted?.let { Json.decodeFromString(it.toString()) },
-        iob = iob?.let { Json.decodeFromString(it.toString()) }
+        suggested = suggested,
+        enacted = enacted,
+        iob = iob
     )
 
 internal fun NSDeviceStatus.OpenAps.toRemoteDeviceStatusOpenAps(): RemoteDeviceStatus.OpenAps =
     RemoteDeviceStatus.OpenAps(
-        suggested = suggested?.let { JsonParser.parseString(it.toString()).asJsonObject },
-        enacted = enacted?.let { JsonParser.parseString(it.toString()).asJsonObject },
-        iob = iob?.let { JsonParser.parseString(it.toString()).asJsonObject }
+        suggested = suggested,
+        enacted = enacted,
+        iob = iob
     )

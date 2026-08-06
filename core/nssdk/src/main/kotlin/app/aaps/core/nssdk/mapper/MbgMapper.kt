@@ -3,10 +3,10 @@ package app.aaps.core.nssdk.mapper
 import app.aaps.core.nssdk.localmodel.entry.NSMbgV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.remotemodel.RemoteEntry
-import com.google.gson.Gson
+import app.aaps.core.nssdk.nsSdkJson
 
 fun String.toCalibrationMbg(): NSMbgV3? =
-    Gson().fromJson(this, RemoteEntry::class.java).toCalibrationMbg()
+    nsSdkJson.decodeFromString(RemoteEntry.serializer(), this).toCalibrationMbg()
 
 /**
  * Maps a NS `entries` document to an AAPS calibration mbg.

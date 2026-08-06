@@ -1,36 +1,42 @@
 package app.aaps.core.nssdk.remotemodel
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-internal data class NSResponse<T>(val result: T?)
+@Serializable
+internal data class NSResponse<T>(val result: T? = null)
 
+@Serializable
 internal data class RemoteStatusResponse(
-    @SerializedName("version") val version: String,
-    @SerializedName("apiVersion") val apiVersion: String,
-    @SerializedName("srvDate") val srvDate: Long,
-    @SerializedName("storage") val storage: RemoteStorage,
-    @SerializedName("apiPermissions") val apiPermissions: RemoteApiPermissions
+    @SerialName("version") val version: String,
+    @SerialName("apiVersion") val apiVersion: String,
+    @SerialName("srvDate") val srvDate: Long,
+    @SerialName("storage") val storage: RemoteStorage,
+    @SerialName("apiPermissions") val apiPermissions: RemoteApiPermissions
 )
 
+@Serializable
 internal data class RemoteStorage(
-    @SerializedName("storage") val storage: String,
-    @SerializedName("version") val version: String
+    @SerialName("storage") val storage: String,
+    @SerialName("version") val version: String
 )
 
+@Serializable
 internal data class RemoteCreateUpdateResponse(
-    @SerializedName("identifier") val identifier: String? = null,
-    @SerializedName("isDeduplication") val isDeduplication: Boolean? = null,
-    @SerializedName("deduplicatedIdentifier") val deduplicatedIdentifier: String? = null,
-    @SerializedName("lastModified") val lastModified: Long? = null
+    @SerialName("identifier") val identifier: String? = null,
+    @SerialName("isDeduplication") val isDeduplication: Boolean? = null,
+    @SerialName("deduplicatedIdentifier") val deduplicatedIdentifier: String? = null,
+    @SerialName("lastModified") val lastModified: Long? = null
 )
 
+@Serializable
 internal data class RemoteApiPermissions(
-    @SerializedName("devicestatus") val deviceStatus: RemoteApiPermission,
-    @SerializedName("entries") val entries: RemoteApiPermission,
-    @SerializedName("food") val food: RemoteApiPermission,
-    @SerializedName("profile") val profile: RemoteApiPermission,
-    @SerializedName("settings") val settings: RemoteApiPermission,
-    @SerializedName("treatments") val treatments: RemoteApiPermission
+    @SerialName("devicestatus") val deviceStatus: RemoteApiPermission,
+    @SerialName("entries") val entries: RemoteApiPermission,
+    @SerialName("food") val food: RemoteApiPermission,
+    @SerialName("profile") val profile: RemoteApiPermission,
+    @SerialName("settings") val settings: RemoteApiPermission,
+    @SerialName("treatments") val treatments: RemoteApiPermission
 )
 
 internal typealias RemoteApiPermission = String

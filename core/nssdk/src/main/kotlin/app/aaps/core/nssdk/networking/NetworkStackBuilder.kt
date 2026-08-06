@@ -1,17 +1,13 @@
 package app.aaps.core.nssdk.networking
 
 import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializer
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
+import app.aaps.core.nssdk.nsSdkJson
 import okhttp3.Cache
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
 
 internal object NetworkStackBuilder {
@@ -49,7 +45,7 @@ internal object NetworkStackBuilder {
                     logger = logger
                 )
             )
-            .addConverterFactory(GsonConverterFactory.create(provideGson()))
+            .addConverterFactory(converterFactory)
             .build()
 
     private fun getAuthRefreshRetrofit(
@@ -61,7 +57,7 @@ internal object NetworkStackBuilder {
         Retrofit.Builder()
             .baseUrl("https://$baseUrl/api/")
             .client(getAuthRefreshOkHttpClient(context = context, logging = logging, logger = logger))
-            .addConverterFactory(GsonConverterFactory.create(provideGson()))
+            .addConverterFactory(converterFactory)
             .build()
 
     private fun getOkHttpClient(
@@ -97,22 +93,10 @@ internal object NetworkStackBuilder {
         return build()
     }
 
-    /**
-     * Schema-less documents (profiles, settings) are carried as kotlinx [JsonObject] rather than
-     * being modelled, because AAPS does not own their shape.
-     *
-     * This used to build `org.json.JSONObject`, which is a JVM and Android API and cannot go to
-     * iOS. The bridge is the same as before - Gson tree to text, text to the target type - so the
-     * parsed result is unchanged. `asJsonObject` still throws for a non object, as it always did.
-     */
-    private val deserializer: JsonDeserializer<JsonObject?> =
-        JsonDeserializer<JsonObject?> { json, _, _ ->
-            Json.parseToJsonElement(json.asJsonObject.toString()).jsonObject
-        }
-
-    private fun provideGson(): Gson = GsonBuilder().also {
-        it.registerTypeAdapter(JsonObject::class.java, deserializer)
-    }.create()
+    // The schema-less documents (profiles, settings) are carried as kotlinx JsonObject. Gson needed a
+    // registered type adapter to build those; kotlinx reads JsonObject natively, so the adapter and
+    // the Gson instance behind it are gone.
+    private val converterFactory = nsSdkJson.asConverterFactory("application/json".toMediaType())
 
     private const val OK_HTTP_CACHE_SIZE = 10L * 1024 * 1024
     private const val OK_HTTP_READ_TIMEOUT = 60L * 1000

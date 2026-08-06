@@ -1,28 +1,22 @@
 package app.aaps.core.nssdk.mapper
 
 import com.google.common.truth.Truth.assertThat
-import com.google.gson.JsonSyntaxException
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 /**
  * Device status carries **schema-less** JSON: `pump.extended`, `openaps.suggested`, `openaps.enacted`
  * and `openaps.iob` hold whatever the pump driver and the APS algorithm put there. AAPS does not
  * know their shape, it only has to carry them through without losing anything.
  *
- * Today the wire model [app.aaps.core.nssdk.remotemodel.RemoteDeviceStatus] holds those subtrees as
- * **Gson** `JsonObject`, while the local model
- * [app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus] already holds them as **kotlinx**
- * `JsonObject`. `DeviceStatusMapper` bridges the two by turning a tree into text and parsing it
- * again, in both directions.
- *
- * These tests assert on **parsed structure**, never on `toString()`. The existing
- * `DeviceStatusExtensionKtTest` compares string form, which would fail after a move to kotlinx even
- * if every value were preserved, because the two libraries do not print identically.
+ * These tests were written while the wire model still held those subtrees as **Gson** `JsonObject`
+ * and the local model held them as **kotlinx** `JsonObject`, so `DeviceStatusMapper` rebuilt every
+ * subtree by printing it to text and parsing it back. Both sides are kotlinx now and the subtrees
+ * are passed straight through, which is why they still pass unchanged - that was the point of
+ * asserting on parsed structure rather than on `toString()`.
  *
  * The last test is the important one: since the schema is unknown, a rewrite that quietly drops keys
  * it does not recognise would pass every other assertion here.
@@ -172,23 +166,25 @@ class DeviceStatusMapperTest {
     }
 
     /**
-     * An **explicit** `null` is not the same as an absent key here, and it throws.
+     * An **explicit** `null` subtree now decodes to Kotlin `null` instead of throwing.
      *
-     * The field is declared `JsonObject?`, but Gson's adapter for the concrete `JsonObject` type
-     * rejects `JsonNull` instead of mapping it to Kotlin `null`. An absent key is fine, a written
-     * `null` is not.
+     * This is the deliberate behaviour change the previous version of this test predicted. Under
+     * Gson the field was declared `JsonObject?`, but Gson's adapter for the concrete `JsonObject`
+     * type rejected `JsonNull` rather than mapping it to `null`, so an absent key was fine and a
+     * written `null` threw. kotlinx maps it to `null`, which is what the declared type says.
      *
-     * Pinned, not fixed - the caller `NSClientV3Service.onDataCreateUpdate` is a socket.io listener
-     * with no try/catch, so this escapes onto the socket callback thread. Worth noting that AAPS
-     * itself never writes `null` here, but nothing stops another uploader from doing so.
-     *
-     * kotlinx.serialization would accept it and give `null`, so a migration would **change** this.
-     * If that is wanted, change this test on purpose.
+     * Changed on purpose, and it is an improvement: the caller
+     * `NSClientV3Service.onDataCreateUpdate` is a socket.io listener with no try/catch, so the old
+     * exception escaped onto the socket callback thread and lost the whole device status. AAPS never
+     * writes `null` here, but nothing stops another uploader from doing so.
      */
     @Test
-    fun `an explicit null subtree throws - current behaviour, pinned`() {
+    fun `an explicit null subtree decodes to null - changed on purpose`() {
         val json = """{"app":"AAPS","date":1,"openaps":{"suggested":{},"enacted":null}}"""
-        assertThrows<JsonSyntaxException> { json.toNSDeviceStatus() }
+
+        val openaps = json.toNSDeviceStatus().openaps
+        assertThat(openaps?.suggested).isNotNull()
+        assertThat(openaps?.enacted).isNull()
     }
 
     /**

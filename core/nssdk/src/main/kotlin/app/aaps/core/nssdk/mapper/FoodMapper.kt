@@ -2,7 +2,7 @@ package app.aaps.core.nssdk.mapper
 
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.remotemodel.RemoteFood
-import com.google.gson.Gson
+import app.aaps.core.nssdk.nsSdkJson
 
 /**
  * Convert to [RemoteFood] and back to [NSFood]
@@ -14,7 +14,7 @@ fun NSFood.convertToRemoteAndBack(): NSFood? =
     toRemoteFood().toNSFood()
 
 fun String.toNSFood(): NSFood? =
-    Gson().fromJson(this, RemoteFood::class.java).toNSFood()
+    nsSdkJson.decodeFromString(RemoteFood.serializer(), this).toNSFood()
 
 internal fun RemoteFood.toNSFood(): NSFood? {
     when (type) {

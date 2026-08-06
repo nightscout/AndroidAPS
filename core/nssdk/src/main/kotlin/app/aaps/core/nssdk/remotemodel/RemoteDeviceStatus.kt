@@ -1,59 +1,66 @@
 package app.aaps.core.nssdk.remotemodel
 
-import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * DeviceStatus coming from uploader or AAPS
  *
  **/
+@Serializable
 internal data class RemoteDeviceStatus(
-    @SerializedName("app") var app: String? = null,
-    @SerializedName("identifier")
+    @SerialName("app") var app: String? = null,
+    @SerialName("identifier")
     val identifier: String? = null, // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
-    @SerializedName("srvCreated")
+    @SerialName("srvCreated")
     val srvCreated: Long? = null,   // integer($int64) example: 1525383610088 The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
-    @SerializedName("srvModified")
+    @SerialName("srvModified")
     val srvModified: Long? = null, // integer($int64) example: 1525383610088 The server's timestamp of the last document modification in the database (Unix epoch in ms). This field appears only for documents which were somehow modified by API v3 (inserted, updated or deleted).
-    @SerializedName("created_at")
+    @SerialName("created_at")
     val createdAt: String? = null,  // string or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
-    @SerializedName("date") val date: Long? = null,                     // date as milliseconds
-    @SerializedName("uploaderBattery") val uploaderBattery: Int? = null,// integer($int64)
-    @SerializedName("isCharging") val isCharging: Boolean? = null,
-    @SerializedName("device") val device: String? = null,               // "openaps://samsung SM-G970F"
+    @SerialName("date") val date: Long? = null,                     // date as milliseconds
+    @SerialName("uploaderBattery") val uploaderBattery: Int? = null,// integer($int64)
+    @SerialName("isCharging") val isCharging: Boolean? = null,
+    @SerialName("device") val device: String? = null,               // "openaps://samsung SM-G970F"
 
-    @SerializedName("uploader") val uploader: Uploader? = null,
-    @SerializedName("pump") val pump: Pump? = null,
-    @SerializedName("openaps") val openaps: OpenAps? = null
+    @SerialName("uploader") val uploader: Uploader? = null,
+    @SerialName("pump") val pump: Pump? = null,
+    @SerialName("openaps") val openaps: OpenAps? = null
 ) {
 
+    @Serializable
     data class Pump(
-        @SerializedName("clock") val clock: String? = null, // timestamp in ISO
-        @SerializedName("reservoir") val reservoir: Double? = null,
-        @SerializedName("reservoir_display_override") val reservoirDisplayOverride: String? = null,
-        @SerializedName("battery") val battery: Battery? = null,
-        @SerializedName("status") val status: Status? = null,
-        @SerializedName("extended") val extended: JsonObject? = null   // Gson, content depending on pump driver
+        @SerialName("clock") val clock: String? = null, // timestamp in ISO
+        @SerialName("reservoir") val reservoir: Double? = null,
+        @SerialName("reservoir_display_override") val reservoirDisplayOverride: String? = null,
+        @SerialName("battery") val battery: Battery? = null,
+        @SerialName("status") val status: Status? = null,
+        @SerialName("extended") val extended: JsonObject? = null   // schema-less, content depends on the pump driver
     ) {
 
+        @Serializable
         data class Battery(
-            @SerializedName("percent") val percent: Int? = null,
-            @SerializedName("voltage") val voltage: Double? = null
+            @SerialName("percent") val percent: Int? = null,
+            @SerialName("voltage") val voltage: Double? = null
         )
 
+        @Serializable
         data class Status(
-            @SerializedName("status") val status: String? = null,
-            @SerializedName("timestamp") val timestamp: String? = null
+            @SerialName("status") val status: String? = null,
+            @SerialName("timestamp") val timestamp: String? = null
         )
     }
 
+    @Serializable
     data class OpenAps(
-        @SerializedName("suggested") val suggested: JsonObject? = null, // Gson
-        @SerializedName("enacted") val enacted: JsonObject? = null,     // Gson
-        @SerializedName("iob") val iob: JsonObject? = null              // Gson
+        @SerialName("suggested") val suggested: JsonObject? = null,
+        @SerialName("enacted") val enacted: JsonObject? = null,    
+        @SerialName("iob") val iob: JsonObject? = null             
     )
 
+    @Serializable
     data class Uploader(
-        @SerializedName("battery") val battery: Int? = null
+        @SerialName("battery") val battery: Int? = null
     )
 }

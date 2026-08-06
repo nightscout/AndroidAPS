@@ -4,13 +4,13 @@ import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.remotemodel.RemoteEntry
-import com.google.gson.Gson
+import app.aaps.core.nssdk.nsSdkJson
 
 fun NSSgvV3.convertToRemoteAndBack(): NSSgvV3? =
     toRemoteEntry().toSgv()
 
 fun String.toNSSgvV3(): NSSgvV3? =
-    Gson().fromJson(this, RemoteEntry::class.java).toSgv()
+    nsSdkJson.decodeFromString(RemoteEntry.serializer(), this).toSgv()
 
 internal fun RemoteEntry.toSgv(): NSSgvV3? {
 

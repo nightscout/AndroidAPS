@@ -12,7 +12,9 @@ android {
 
 dependencies {
     implementation(libs.com.squareup.retrofit2.retrofit)
-    implementation(libs.com.squareup.retrofit2.converter.gson)
+    // Official Retrofit 3 artifact, same group and version as the Gson converter it replaces.
+    // Goes away with Retrofit itself when the client moves to Ktor.
+    implementation(libs.com.squareup.retrofit2.converter.kotlinx.serialization)
     api(libs.com.squareup.okhttp3.okhttp)
     api(libs.com.squareup.okhttp3.logging.interceptor)
     api(libs.net.danlew.android.joda)

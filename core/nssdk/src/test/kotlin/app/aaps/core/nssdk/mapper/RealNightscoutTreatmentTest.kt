@@ -5,7 +5,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSCarbs
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import com.google.common.truth.Truth.assertThat
-import com.google.gson.JsonSyntaxException
+import kotlinx.serialization.SerializationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -157,29 +157,32 @@ class RealNightscoutTreatmentTest {
     }
 
     /**
-     * Malformed text **throws** today - `toNSTreatment()` is
-     * `Gson().fromJson(this, RemoteTreatment::class.java).toTreatment()` with no guard, even though
-     * its return type is nullable. This test records that, it does not endorse it.
+     * Malformed text still throws, and still is not caught anywhere - `toNSTreatment()` has no
+     * guard even though its return type is nullable. This test records that, it does not endorse it.
      *
-     * Pinned because the caller is unprotected: `NSClientV3Service.onDataCreateUpdate` is a
-     * socket.io listener with no try/catch, so whatever this throws escapes onto the socket
-     * callback thread. After the move to kotlinx.serialization the exception type would become
-     * `SerializationException`, and any `catch` further up would silently stop catching it.
+     * **The exception type changed** from Gson's `JsonSyntaxException` to
+     * `SerializationException`. That was called out before the migration precisely so it could not
+     * happen by accident: any `catch` further up written against the Gson type would silently stop
+     * catching. The callers were checked - `NSClientV3Service.onDataCreateUpdate` is a socket.io
+     * listener with no try/catch at all, so nothing was relying on the old type.
      *
-     * If the parser is ever made defensive, change this test on purpose - do not let a rewrite
-     * change it by accident.
+     * If the parser is ever made defensive, change this test on purpose.
      */
     @Test
-    fun `malformed json throws - current behaviour, pinned`() {
-        assertThrows<JsonSyntaxException> { "hello".toNSTreatment() }
-        assertThrows<JsonSyntaxException> { """{"eventType":"Correction Bolus","date":""".toNSTreatment() }
-        assertThrows<JsonSyntaxException> { """[{"eventType":"Correction Bolus"}]""".toNSTreatment() }
-        assertThrows<JsonSyntaxException> { """{"eventType":"Correction Bolus","date":"not-a-number"}""".toNSTreatment() }
+    fun `malformed json throws - exception type changed on purpose`() {
+        assertThrows<SerializationException> { "hello".toNSTreatment() }
+        assertThrows<SerializationException> { """{"eventType":"Correction Bolus","date":""".toNSTreatment() }
+        assertThrows<SerializationException> { """[{"eventType":"Correction Bolus"}]""".toNSTreatment() }
+        assertThrows<SerializationException> { """{"eventType":"Correction Bolus","date":"not-a-number"}""".toNSTreatment() }
     }
 
-    /** Empty text is a separate case: Gson returns null, and the unguarded `.toTreatment()` then fails. */
+    /**
+     * Empty text was a separate case under Gson: it returned null and the unguarded `.toTreatment()`
+     * then threw `NullPointerException`. kotlinx reports it as malformed input instead, which is the
+     * more honest answer for the same input.
+     */
     @Test
-    fun `empty text throws NullPointerException - current behaviour, pinned`() {
-        assertThrows<NullPointerException> { "".toNSTreatment() }
+    fun `empty text throws - now reported as malformed rather than NPE`() {
+        assertThrows<SerializationException> { "".toNSTreatment() }
     }
 }

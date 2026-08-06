@@ -33,10 +33,11 @@ data class NSTherapyEvent(
     var glucoseType: MeterType? = null,
 ) : NSTreatment {
 
+    @Serializable
     enum class MeterType(val text: String) {
-        @com.google.gson.annotations.SerializedName("Finger") FINGER("Finger"),
-        @com.google.gson.annotations.SerializedName("Sensor") SENSOR("Sensor"),
-        @com.google.gson.annotations.SerializedName("Manual") MANUAL("Manual")
+        @SerialName("Finger") FINGER("Finger"),
+        @SerialName("Sensor") SENSOR("Sensor"),
+        @SerialName("Manual") MANUAL("Manual")
         ;
 
         companion object {
