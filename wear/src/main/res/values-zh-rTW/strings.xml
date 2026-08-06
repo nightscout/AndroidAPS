@@ -107,6 +107,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">高 [%s]</string>
     <string name="action_carbs">碳水化合物</string>
     <string name="action_carbs_gram">碳水化合物 [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">最大移除量：%1$d g（COB）</string>
     <string name="action_ecarbs">碳水化合物</string>
     <string name="action_percentage">百分比\n[%]</string>
     <string name="action_start_minutes">開始\n[分鐘]</string>
@@ -262,7 +263,9 @@
     <string name="contacting_master_unknown">狀態未知 — 請檢查智慧型手機</string>
     <string name="tile_settings">資訊方塊設定</string>
     <string name="loop_status_error">狀態載入失敗</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">剩餘 %1$s</string>
     <string name="loop_status_tbr_continues">臨時基礎率持續中</string>
     <string name="loop_status_tbr_cancel">設定正常基礎率</string>
     <string name="loop_status_smb">%1$.2f U</string>
