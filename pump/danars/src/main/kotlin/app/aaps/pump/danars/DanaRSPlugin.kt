@@ -98,7 +98,8 @@ class DanaRSPlugin @Inject constructor(
         .pluginName(app.aaps.pump.dana.R.string.danarspump)
         .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
-    ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java, DanaStringComposedKey::class.java, DanaLongKey::class.java),
+    ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries + DanaStringComposedKey.entries +
+        DanaLongKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PumpPluginConstraints, OwnDatabasePlugin {
 

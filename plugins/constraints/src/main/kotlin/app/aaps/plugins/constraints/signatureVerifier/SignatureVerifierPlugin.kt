@@ -51,7 +51,7 @@ class SignatureVerifierPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.signature_verifier),
-    ownPreferences = listOf(SignatureVerifierLongKey::class.java),
+    ownPreferences = SignatureVerifierLongKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints {
 

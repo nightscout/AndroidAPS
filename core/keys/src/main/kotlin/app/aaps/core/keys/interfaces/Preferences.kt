@@ -597,10 +597,15 @@ interface Preferences {
     fun getDependingOn(key: String): List<PreferenceKey>
 
     /**
-     * Make new class available to Preference system
-     * Called from PluginBase::init
+     * Make new keys available to the Preference system.
+     * Called from PluginBase::init, normally as `registerPreferences(MyKey.entries + MyOtherKey.entries)`.
+     *
+     * Takes the key constants rather than their enum class: a `Class` only exists on the JVM, and
+     * the only thing the old signature ever did with it was read `enumConstants`.
+     *
+     * Registering the same key twice is allowed and does nothing.
      */
-    fun registerPreferences(clazz: Class<out NonPreferenceKey>)
+    fun registerPreferences(keys: List<NonPreferenceKey>)
 
     /**
      * List all stored preferences formatters

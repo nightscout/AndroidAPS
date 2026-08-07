@@ -62,27 +62,27 @@ fun StringPreferenceKey.withEntries(entries: Map<String, String>): StringPrefere
     StringKeyWithEntries(this, entries)
 
 /**
- * Wrapper that attaches a context-dependent entries provider to a StringPreferenceKey.
- * The provider is called at compose time with the current Context.
+ * Wrapper that attaches a runtime entries provider to a StringPreferenceKey.
+ * The provider is called at compose time, and the labels it returns are resolved there.
  * If the provider returns an empty map, shows a disabled preference with the empty message.
  */
 class StringKeyWithEntriesProvider(
     private val delegate: StringPreferenceKey,
-    val entriesProvider: (android.content.Context) -> Map<String, String>,
-    val emptyEntriesMessageResId: Int? = null
+    val entriesProvider: () -> Map<String, TextRef>,
+    val emptyEntriesMessage: TextRef? = null
 ) : StringPreferenceKey by delegate
 
 /**
- * Creates a new StringPreferenceKey with a context-dependent entries provider.
- * Use this when entries need to be resolved at compose time with Context access
- * (e.g., Bluetooth devices requiring permission checks).
+ * Creates a new StringPreferenceKey with a runtime entries provider.
+ * Use this when the set of entries is only known at run time - for example when it depends on the
+ * connected pump model, or on devices found by a scan.
  *
- * @param provider Function that takes Context and returns Map of stored value -> label
- * @param emptyEntriesMessageResId Optional resource ID for message to show when entries are empty
+ * @param provider Function returning Map of stored value -> label
+ * @param emptyEntriesMessage Optional message to show when entries are empty
  * @return A new StringKeyWithEntriesProvider
  */
 fun StringPreferenceKey.withEntriesProvider(
-    provider: (android.content.Context) -> Map<String, String>,
-    emptyEntriesMessageResId: Int? = null
+    provider: () -> Map<String, TextRef>,
+    emptyEntriesMessage: TextRef? = null
 ): StringKeyWithEntriesProvider =
-    StringKeyWithEntriesProvider(this, provider, emptyEntriesMessageResId)
+    StringKeyWithEntriesProvider(this, provider, emptyEntriesMessage)

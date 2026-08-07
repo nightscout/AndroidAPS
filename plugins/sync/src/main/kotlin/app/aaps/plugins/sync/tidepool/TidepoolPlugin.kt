@@ -83,10 +83,7 @@ class TidepoolPlugin @Inject constructor(
             )
         }
         .description(R.string.description_tidepool),
-    ownPreferences = listOf(
-        TidepoolBooleanKey::class.java, TidepoolLongNonKey::class.java,
-        TidepoolStringNonKey::class.java
-    ),
+    ownPreferences = TidepoolBooleanKey.entries + TidepoolLongNonKey.entries + TidepoolStringNonKey.entries,
     aapsLogger, rh, preferences
 ) {
 

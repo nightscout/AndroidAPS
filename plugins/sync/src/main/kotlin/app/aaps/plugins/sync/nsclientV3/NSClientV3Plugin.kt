@@ -169,7 +169,7 @@ class NSClientV3Plugin @Inject constructor(
                 title = rh.gs(R.string.ns_client_v3_title)
             )
         },
-    ownPreferences = listOf(NsclientBooleanKey::class.java, NsclientStringKey::class.java, NsclientLongKey::class.java),
+    ownPreferences = NsclientBooleanKey.entries + NsclientStringKey.entries + NsclientLongKey.entries,
     aapsLogger, rh, preferences
 ) {
 

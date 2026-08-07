@@ -134,10 +134,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         .pluginName(R.string.omnipod_dash_name)
         .shortName(R.string.omnipod_dash_name_short)
         .description(R.string.omnipod_dash_pump_description),
-    ownPreferences = listOf(
-        OmnipodBooleanPreferenceKey::class.java, OmnipodIntPreferenceKey::class.java,
-        DashBooleanPreferenceKey::class.java, DashStringNonPreferenceKey::class.java
-    ),
+    ownPreferences = OmnipodBooleanPreferenceKey.entries + OmnipodIntPreferenceKey.entries + DashBooleanPreferenceKey.entries +
+        DashStringNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ),
     Pump, OmnipodDash, OwnDatabasePlugin {

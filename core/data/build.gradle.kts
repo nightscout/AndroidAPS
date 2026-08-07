@@ -26,13 +26,12 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
-        val commonTest by getting {
+        getByName("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val jvmTest by getting {
+        getByName("jvmTest") {
             dependencies {
                 implementation(libs.org.junit.jupiter)
                 implementation(libs.com.google.truth)

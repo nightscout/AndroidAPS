@@ -137,10 +137,7 @@ class ComboV2Plugin @Inject constructor(
             .pluginName(R.string.combov2_plugin_name)
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description),
-        ownPreferences = listOf(
-            ComboIntKey::class.java, ComboBooleanKey::class.java,
-            ComboStringNonKey::class.java, ComboIntNonKey::class.java, ComboLongNonKey::class.java
-        ),
+        ownPreferences = ComboIntKey.entries + ComboBooleanKey.entries + ComboStringNonKey.entries + ComboIntNonKey.entries + ComboLongNonKey.entries,
         aapsLogger, rh, preferences, commandQueue
     ), Pump, PluginConstraints {
 

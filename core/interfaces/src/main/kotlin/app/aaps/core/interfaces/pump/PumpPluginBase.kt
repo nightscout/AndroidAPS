@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  */
 abstract class PumpPluginBase(
     pluginDescription: PluginDescription,
-    ownPreferences: List<Class<out NonPreferenceKey>> = emptyList(),
+    ownPreferences: List<NonPreferenceKey> = emptyList(),
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,

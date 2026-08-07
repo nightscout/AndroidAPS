@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntriesProvider
 import app.aaps.core.ui.compose.icons.IcPluginMedtrum
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -55,17 +56,17 @@ import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import javax.inject.Inject
+import javax.inject.Provider
+import javax.inject.Singleton
+import kotlin.math.abs
+import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
-import kotlin.math.abs
-import kotlin.math.min
 
 @Singleton
 class MedtrumPlugin @Inject constructor(
@@ -97,11 +98,8 @@ class MedtrumPlugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         },
-    ownPreferences = listOf(
-        MedtrumStringKey::class.java, MedtrumIntKey::class.java, MedtrumBooleanKey::class.java,
-        MedtrumIntNonKey::class.java, MedtrumLongNonKey::class.java, MedtrumStringNonKey::class.java, MedtrumDoubleNonKey::class.java,
-        MedtrumBooleanNonKey::class.java
-    ),
+    ownPreferences = MedtrumStringKey.entries + MedtrumIntKey.entries + MedtrumBooleanKey.entries + MedtrumIntNonKey.entries +
+        MedtrumLongNonKey.entries + MedtrumStringNonKey.entries + MedtrumDoubleNonKey.entries + MedtrumBooleanNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Medtrum {
 
@@ -416,7 +414,7 @@ class MedtrumPlugin @Inject constructor(
             titleResId = R.string.medtrum_pump_setting,
             items = listOf(
                 MedtrumStringKey.MedtrumAlarmSettings.withEntriesProvider(
-                    provider = { context -> getAlarmEntriesForPumpType(context) }
+                    provider = { getAlarmEntriesForPumpType() }
                 ),
                 MedtrumBooleanKey.MedtrumWarningNotification,
                 MedtrumBooleanKey.MedtrumPatchExpiration,
@@ -458,23 +456,23 @@ class MedtrumPlugin @Inject constructor(
         preferences.put(MedtrumIntKey.MedtrumDailyMaxInsulin, min(preferences.get(MedtrumIntKey.MedtrumDailyMaxInsulin), MedtrumIntKey.MedtrumDailyMaxInsulin.max))
     }
 
-    private fun getAlarmEntriesForPumpType(context: Context): Map<String, String> {
+    private fun getAlarmEntriesForPumpType(): Map<String, TextRef> {
         // For NANO and 300U pumps, only Beep and Silent options are available
         return when (medtrumPump.pumpType()) {
             PumpType.MEDTRUM_NANO, PumpType.MEDTRUM_300U -> mapOf(
-                "6" to context.getString(R.string.alarm_setting_beep),
-                "7" to context.getString(R.string.alarm_setting_silent)
+                "6" to TextRef.Res(R.string.alarm_setting_beep),
+                "7" to TextRef.Res(R.string.alarm_setting_silent)
             )
 
             else                                         -> mapOf(
-                "0" to context.getString(R.string.alarm_setting_light_vibrate_beep),
-                "1" to context.getString(R.string.alarm_setting_light_vibrate),
-                "2" to context.getString(R.string.alarm_setting_light_beep),
-                "3" to context.getString(R.string.alarm_setting_light),
-                "4" to context.getString(R.string.alarm_setting_vibrate_beep),
-                "5" to context.getString(R.string.alarm_setting_vibrate),
-                "6" to context.getString(R.string.alarm_setting_beep),
-                "7" to context.getString(R.string.alarm_setting_silent)
+                "0" to TextRef.Res(R.string.alarm_setting_light_vibrate_beep),
+                "1" to TextRef.Res(R.string.alarm_setting_light_vibrate),
+                "2" to TextRef.Res(R.string.alarm_setting_light_beep),
+                "3" to TextRef.Res(R.string.alarm_setting_light),
+                "4" to TextRef.Res(R.string.alarm_setting_vibrate_beep),
+                "5" to TextRef.Res(R.string.alarm_setting_vibrate),
+                "6" to TextRef.Res(R.string.alarm_setting_beep),
+                "7" to TextRef.Res(R.string.alarm_setting_silent)
             )
         }
     }

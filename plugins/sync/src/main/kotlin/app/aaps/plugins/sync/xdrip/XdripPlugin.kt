@@ -111,7 +111,7 @@ class XdripPlugin @Inject constructor(
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)
         .description(R.string.description_xdrip),
-    ownPreferences = listOf(XdripLongKey::class.java, XdripIntentKey::class.java),
+    ownPreferences = XdripLongKey.entries + XdripIntentKey.entries,
     aapsLogger, rh, preferences
 ) {
 

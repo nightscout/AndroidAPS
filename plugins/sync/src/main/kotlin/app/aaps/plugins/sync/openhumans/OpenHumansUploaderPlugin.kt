@@ -87,7 +87,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 context = plugin.context,
             )
         },
-    ownPreferences = listOf(OhStringKey.AppId::class.java, OhLongKey.Counter::class.java),
+    ownPreferences = OhStringKey.entries + OhLongKey.entries,
     aapsLogger, rh, preferences
 ) {
 

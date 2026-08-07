@@ -107,10 +107,7 @@ class EquilPumpPlugin @Inject constructor(
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
         .description(R.string.equil_pump_description),
-    ownPreferences = listOf(
-        EquilBooleanKey::class.java, EquilBooleanPreferenceKey::class.java, EquilIntPreferenceKey::class.java,
-        EquilStringKey::class.java
-    ),
+    ownPreferences = EquilBooleanKey.entries + EquilBooleanPreferenceKey.entries + EquilIntPreferenceKey.entries + EquilStringKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump {
 

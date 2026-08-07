@@ -97,10 +97,8 @@ class DiaconnG8Plugin @Inject constructor(
         .pluginName(R.string.diaconn_g8_pump)
         .shortName(R.string.diaconn_g8_pump_shortname)
         .description(R.string.description_pump_diaconn_g8),
-    ownPreferences = listOf(
-        DiaconnIntentKey::class.java, DiaconnIntKey::class.java, DiaconnBooleanKey::class.java,
-        DiaconnStringNonKey::class.java, DiaconnIntNonKey::class.java,
-    ),
+    ownPreferences = DiaconnIntentKey.entries + DiaconnIntKey.entries + DiaconnBooleanKey.entries + DiaconnStringNonKey.entries +
+        DiaconnIntNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Diaconn, PumpPluginConstraints, OwnDatabasePlugin {
 

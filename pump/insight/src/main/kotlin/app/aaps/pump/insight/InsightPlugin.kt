@@ -177,10 +177,7 @@ class InsightPlugin @Inject constructor(
                 appScope = appScope
             )
         },
-    ownPreferences = listOf(
-        InsightBooleanKey::class.java, InsightIntKey::class.java,
-        InsightLongNonKey::class.java, InsightDoubleNonKey::class.java,
-    ),
+    ownPreferences = InsightBooleanKey.entries + InsightIntKey.entries + InsightLongNonKey.entries + InsightDoubleNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Insight, PumpPluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 

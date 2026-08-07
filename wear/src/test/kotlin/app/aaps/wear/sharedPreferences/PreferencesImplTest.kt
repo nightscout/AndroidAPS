@@ -133,10 +133,10 @@ internal class PreferencesImplTest {
     }
 
     @Test
-    fun registerPreferencesIsIdempotentForAlreadyRegisteredClass() {
+    fun registerPreferencesIsIdempotentForAlreadyRegisteredKeys() {
         val before = sut.getAllPreferenceKeys().size
-        // BooleanKey is already registered in the default prefsList -> adding again is a no-op
-        sut.registerPreferences(BooleanKey::class.java)
+        // BooleanKey is already in the default prefsList -> adding its keys again is a no-op
+        sut.registerPreferences(BooleanKey.entries)
         val after = sut.getAllPreferenceKeys().size
         assertThat(after).isEqualTo(before)
     }

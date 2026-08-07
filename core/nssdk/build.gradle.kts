@@ -18,7 +18,7 @@ kotlin {
     mingwX64()
 
     sourceSets {
-        val commonMain by getting {
+        getByName("commonMain") {
             dependencies {
                 api(libs.io.ktor.client.core)
                 implementation(libs.io.ktor.client.content.negotiation)
@@ -28,7 +28,7 @@ kotlin {
                 api(libs.kotlinx.serialization.json)
             }
         }
-        val jvmMain by getting {
+        getByName("jvmMain") {
             dependencies {
                 // OkHttp is both the Ktor engine and, on the JVM side, what the rest of the app
                 // already uses. The client-control crypto in this source set is javax.crypto.
@@ -36,14 +36,14 @@ kotlin {
                 implementation(libs.io.ktor.client.okhttp)
             }
         }
-        val mingwX64Main by getting {
+        getByName("mingwX64Main") {
             dependencies {
                 // CIO is Ktor's own multiplatform engine, enough for the compile proof. An Apple
                 // target would use ktor-client-darwin instead.
                 implementation(libs.io.ktor.client.cio)
             }
         }
-        val jvmTest by getting {
+        getByName("jvmTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.org.junit.jupiter)

@@ -89,7 +89,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         .pluginName(app.aaps.pump.dana.R.string.danarpump)
         .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
-    ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaIntNonKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java),
+    ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaIntNonKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PumpPluginConstraints, OwnDatabasePlugin {
 

@@ -153,12 +153,9 @@ class MedtronicPumpPlugin @Inject constructor(
         .pluginName(R.string.medtronic_name)
         .shortName(R.string.medtronic_name_short)
         .description(R.string.description_pump_medtronic),
-    ownPreferences = listOf(
-        RileylinkBooleanPreferenceKey::class.java, RileyLinkDoubleKey::class.java,
-        RileyLinkLongKey::class.java, RileyLinkStringKey::class.java, RileyLinkStringPreferenceKey::class.java,
-        MedtronicBooleanPreferenceKey::class.java, MedtronicIntPreferenceKey::class.java,
-        MedtronicLongNonKey::class.java, MedtronicStringPreferenceKey::class.java
-    ),
+    ownPreferences = RileylinkBooleanPreferenceKey.entries + RileyLinkDoubleKey.entries + RileyLinkLongKey.entries + RileyLinkStringKey.entries +
+        RileyLinkStringPreferenceKey.entries + MedtronicBooleanPreferenceKey.entries + MedtronicIntPreferenceKey.entries +
+        MedtronicLongNonKey.entries + MedtronicStringPreferenceKey.entries,
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
     rh = rh,
     aapsLogger = aapsLogger,

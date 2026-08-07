@@ -10,14 +10,14 @@ import app.aaps.core.keys.interfaces.Preferences
  */
 abstract class PluginBaseWithPreferences(
     pluginDescription: PluginDescription,
-    val ownPreferences: List<Class<out NonPreferenceKey>> = emptyList(),
+    val ownPreferences: List<NonPreferenceKey> = emptyList(),
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     val preferences: Preferences
 ) : PluginBase(pluginDescription, aapsLogger, rh) {
 
     init {
-        ownPreferences.forEach { preferences.registerPreferences(it) }
+        preferences.registerPreferences(ownPreferences)
     }
 
     /**

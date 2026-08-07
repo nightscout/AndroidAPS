@@ -58,7 +58,7 @@ class InstaraPlugin @Inject constructor(
         .preferencesVisibleInSimpleMode(false)
         .description(app.aaps.plugins.source.R.string.description_source_instara_app),
     // Register Instara plugin-local preference/non-preference key enums
-    ownPreferences = listOf(InstaraBooleanKey::class.java, InstaraStringKey::class.java),
+    ownPreferences = InstaraBooleanKey.entries + InstaraStringKey.entries,
     aapsLogger, rh, preferences, config
 ), BgSource {
 

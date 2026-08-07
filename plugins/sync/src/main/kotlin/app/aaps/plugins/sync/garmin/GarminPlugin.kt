@@ -64,7 +64,7 @@ class GarminPlugin @Inject constructor(
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description),
-    ownPreferences = listOf(GarminStringKey::class.java, GarminBooleanKey::class.java, GarminIntKey::class.java),
+    ownPreferences = GarminStringKey.entries + GarminBooleanKey.entries + GarminIntKey.entries,
     aapsLogger, resourceHelper, preferences
 ) {
 

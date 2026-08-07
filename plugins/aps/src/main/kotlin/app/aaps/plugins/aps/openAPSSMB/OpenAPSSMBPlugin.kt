@@ -115,7 +115,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .showInList { config.APS || config.AAPSCLIENT }   // AAPSCLIENT: visible so a client can select the master's APS
         .description(R.string.description_smb)
         .setDefault(),
-    ownPreferences = listOf(ApsIntentKey::class.java),
+    ownPreferences = ApsIntentKey.entries,
     aapsLogger, rh, preferences
 ), APS, PluginConstraints {
 

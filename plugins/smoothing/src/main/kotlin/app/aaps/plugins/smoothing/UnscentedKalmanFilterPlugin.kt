@@ -71,7 +71,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         .pluginName(R.string.UKF_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_UKF),
-    ownPreferences = listOf(UkfLongNonKey::class.java, UkfIntNonKey::class.java, UkfDoubleNonKey::class.java),
+    ownPreferences = UkfLongNonKey.entries + UkfIntNonKey.entries + UkfDoubleNonKey.entries,
     aapsLogger, rh, preferences
 ), Smoothing {
 

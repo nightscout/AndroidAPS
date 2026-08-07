@@ -49,7 +49,7 @@ class LocalAlertUtilsImpl @Inject constructor(
 ) : LocalAlertUtils {
 
     init {
-        preferences.registerPreferences(LocalAlertLongKey::class.java)
+        preferences.registerPreferences(LocalAlertLongKey.entries)
     }
 
     private fun missedReadingsThreshold(): Long {

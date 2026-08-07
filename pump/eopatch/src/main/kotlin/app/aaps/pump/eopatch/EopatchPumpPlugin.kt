@@ -103,9 +103,7 @@ class EopatchPumpPlugin @Inject constructor(
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)
         .description(R.string.eopatch_pump_description),
-    ownPreferences = listOf(
-        EopatchIntKey::class.java, EopatchBooleanKey::class.java, EopatchStringNonKey::class.java
-    ),
+    ownPreferences = EopatchIntKey.entries + EopatchBooleanKey.entries + EopatchStringNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump {
 

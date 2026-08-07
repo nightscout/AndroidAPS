@@ -8,7 +8,6 @@ package app.aaps.core.ui.compose.preference
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.StringKey
@@ -29,12 +28,11 @@ import app.aaps.core.ui.compose.stringResource
  * Automatically selects the appropriate composable.
  *
  * For LIST types, loads entries from resources using entriesResId/entryValuesResId.
- * For URL/ACTIVITY types on IntentPreferenceKey, requires additional parameters.
+ * For URL types on IntentPreferenceKey, requires additional parameters.
  *
  * @param key The PreferenceKey to render
  * @param onIntentClick Optional click handler for IntentPreferenceKey with CLICK type
  * @param intentUrl Optional URL for IntentPreferenceKey with URL type
- * @param intentActivityClass Optional Activity class for IntentPreferenceKey with ACTIVITY type
  */
 @Composable
 fun AdaptivePreferenceItem(
@@ -42,8 +40,7 @@ fun AdaptivePreferenceItem(
     onShowMessage: (String) -> Unit,
     visibilityContext: VisibilityContext? = null,
     onIntentClick: (() -> Unit)? = null,
-    intentUrl: String? = null,
-    intentActivityClass: Class<*>? = null
+    intentUrl: String? = null
 ) {
     when (key) {
         is BooleanPreferenceKey         -> {
@@ -106,10 +103,10 @@ fun AdaptivePreferenceItem(
         }
 
         is StringKeyWithEntriesProvider -> {
-            // Handle context-dependent entries provider
-            val context = LocalContext.current
-            val entries = remember(key) { key.entriesProvider(context) }
-            val emptyMessageResId = key.emptyEntriesMessageResId
+            // Entries are only known at run time, so the provider runs here and its labels are
+            // resolved in composable scope.
+            val entries = remember(key) { key.entriesProvider() }.mapValues { stringResource(it.value) }
+            val emptyMessage = key.emptyEntriesMessage
 
             if (entries.isNotEmpty()) {
                 AdaptiveStringListPreferenceItem(
@@ -117,11 +114,11 @@ fun AdaptivePreferenceItem(
                     entries = entries,
                     visibilityContext = visibilityContext
                 )
-            } else if (emptyMessageResId != null) {
+            } else if (emptyMessage != null) {
                 // Show disabled preference with empty message
                 Preference(
                     title = { Text(stringResource(key.title)) },
-                    summary = { Text(stringResource(emptyMessageResId)) },
+                    summary = { Text(stringResource(emptyMessage)) },
                     enabled = false
                 )
             }
@@ -193,11 +190,10 @@ fun AdaptivePreferenceItem(
         }
 
         is IntentPreferenceKey          -> {
-            // Priority: 1) runtime click  2) compose screen  3) activity  4) url
+            // Priority: 1) runtime click  2) compose screen  3) url
             val resolvedClick = key.onClick ?: onIntentClick
             val resolvedCompose = key.composeScreen as? ComposeScreenContent
             val onNavigateToCompose = LocalNavigateToCompose.current
-            val resolvedActivity = key.runtimeActivityClass ?: intentActivityClass ?: key.activityClass
             val resolvedUrl = key.runtimeUrl ?: intentUrl ?: key.urlResId?.let { stringResource(it) }
 
             when {
@@ -215,15 +211,6 @@ fun AdaptivePreferenceItem(
                         intentKey = key,
                         composeScreen = resolvedCompose,
                         onNavigate = onNavigateToCompose,
-                        visibilityContext = visibilityContext
-                    )
-                }
-
-                resolvedActivity != null                               -> {
-                    AdaptiveDynamicActivityPreferenceItem(
-
-                        intentKey = key,
-                        activityClass = resolvedActivity,
                         visibilityContext = visibilityContext
                     )
                 }

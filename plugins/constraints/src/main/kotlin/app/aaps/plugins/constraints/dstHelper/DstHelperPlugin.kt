@@ -40,7 +40,7 @@ class DstHelperPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.dst_plugin_name),
-    ownPreferences = listOf(DstHelperLongKey::class.java),
+    ownPreferences = DstHelperLongKey.entries,
     aapsLogger, rh, preferences
 ), DstHelper {
 

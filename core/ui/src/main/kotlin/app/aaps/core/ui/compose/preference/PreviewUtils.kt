@@ -129,7 +129,7 @@ private object PreviewPreferences : Preferences {
     override fun get(key: String): NonPreferenceKey? = null
     override fun getIfExists(key: String): NonPreferenceKey? = null
     override fun getDependingOn(key: String): List<PreferenceKey> = emptyList()
-    override fun registerPreferences(clazz: Class<out NonPreferenceKey>) {}
+    override fun registerPreferences(keys: List<NonPreferenceKey>) {}
     override fun allMatchingStrings(key: ComposedKey): List<String> = emptyList()
     override fun allMatchingInts(key: ComposedKey): List<Int> = emptyList()
     override fun isExportableKey(key: String): Boolean = false

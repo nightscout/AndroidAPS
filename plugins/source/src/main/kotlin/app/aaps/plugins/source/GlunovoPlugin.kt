@@ -56,7 +56,7 @@ class GlunovoPlugin @Inject constructor(
         .shortName(R.string.glunovo)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_glunovo),
-    ownPreferences = listOf(GlunovoLongKey::class.java),
+    ownPreferences = GlunovoLongKey.entries,
     aapsLogger, resourceHelper, preferences, config
 ), BgSource {
 

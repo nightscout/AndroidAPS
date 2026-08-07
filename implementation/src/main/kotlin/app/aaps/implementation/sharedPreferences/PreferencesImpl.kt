@@ -75,25 +75,27 @@ class PreferencesImpl @Inject constructor(
     override val nsclientMode: Boolean = config.AAPSCLIENT
     override val pumpControlMode: Boolean = config.PUMPCONTROL
 
-    private val prefsList: MutableList<Class<out NonPreferenceKey>> =
-        mutableListOf(
-            BooleanComposedKey::class.java,
-            BooleanKey::class.java,
-            BooleanNonKey::class.java,
-            DoubleKey::class.java,
-            IntentKey::class.java,
-            IntKey::class.java,
-            IntComposedKey::class.java,
-            IntNonKey::class.java,
-            LongComposedKey::class.java,
-            LongNonKey::class.java,
-            StringKey::class.java,
-            StringNonKey::class.java,
-            UnitDoubleKey::class.java,
-            ProfileComposedStringKey::class.java,
-            ProfileComposedBooleanKey::class.java,
-            ProfileIntKey::class.java,
-        )
+    // A set, not a list. registerPreferences runs once per plugin at startup and used to hold enum
+    // classes, so it did about a dozen contains-checks in total. It now holds the key constants, and
+    // a list would mean a linear scan per key against well over a thousand of them. LinkedHashSet
+    // keeps insertion order, so everything that iterates this still sees the same sequence.
+    private val prefsList: MutableSet<NonPreferenceKey> =
+        (BooleanComposedKey.entries +
+            BooleanKey.entries +
+            BooleanNonKey.entries +
+            DoubleKey.entries +
+            IntentKey.entries +
+            IntKey.entries +
+            IntComposedKey.entries +
+            IntNonKey.entries +
+            LongComposedKey.entries +
+            LongNonKey.entries +
+            StringKey.entries +
+            StringNonKey.entries +
+            UnitDoubleKey.entries +
+            ProfileComposedStringKey.entries +
+            ProfileComposedBooleanKey.entries +
+            ProfileIntKey.entries).toCollection(LinkedHashSet())
 
     // Emits a key on every LOCAL write to a Bidirectional-synced preference (not on putRemote), so
     // the client→master sync publisher can push local edits. Buffered + DROP_OLDEST so a pref write
@@ -102,7 +104,7 @@ class PreferencesImpl @Inject constructor(
     override val syncedLocalChanges: SharedFlow<NonPreferenceKey> get() = _syncedLocalChanges
 
     override fun getSyncKeys(): List<NonPreferenceKey> =
-        prefsList.flatMap { it.enumConstants!!.asIterable() }.filter { it.sync != null }
+        prefsList.filter { it.sync != null }
 
     /** Local edit of a synced key: bump its monotonic modified stamp and signal the publisher. */
     private fun onLocalSyncedWrite(key: NonPreferenceKey) {
@@ -378,24 +380,15 @@ class PreferencesImpl @Inject constructor(
 
     override fun get(key: String): NonPreferenceKey? =
         prefsList
-            .flatMap { it.enumConstants!!.asIterable() }
             .find { it.key == key }
 
     override fun getIfExists(key: String): NonPreferenceKey? =
         prefsList
-            .flatMap { it.enumConstants!!.asIterable() }
             .find { it.key == key }
 
     override fun getDependingOn(key: String): List<PreferenceKey> =
-        mutableListOf<PreferenceKey>().also { list ->
-            prefsList.forEach { clazz ->
-                if (PreferenceKey::class.java.isAssignableFrom(clazz))
-                    clazz.enumConstants!!.filter {
-                        (it as PreferenceKey).dependency != null && it.dependency!!.key == key || it.negativeDependency != null && it.negativeDependency!!.key == key
-                    }.forEach {
-                        list.add(it as PreferenceKey)
-                    }
-            }
+        prefsList.filterIsInstance<PreferenceKey>().filter {
+            it.dependency?.key == key || it.negativeDependency?.key == key
         }
 
     override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean =
@@ -437,8 +430,8 @@ class PreferencesImpl @Inject constructor(
         return stringFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
-    override fun registerPreferences(clazz: Class<out NonPreferenceKey>) {
-        if (clazz !in prefsList) prefsList.add(clazz)
+    override fun registerPreferences(keys: List<NonPreferenceKey>) {
+        prefsList.addAll(keys)
     }
 
     override fun allMatchingStrings(key: ComposedKey): List<String> =
@@ -459,7 +452,6 @@ class PreferencesImpl @Inject constructor(
 
     override fun isExportableKey(key: String): Boolean {
         prefsList
-            .flatMap { it.enumConstants!!.asIterable() }
             .forEach {
                 if (it.key == key && it.exportable) return true
                 if (it is ComposedKey && key.startsWith(it.key) && it.exportable) return true
@@ -521,8 +513,5 @@ class PreferencesImpl @Inject constructor(
         }
 
     override fun getAllPreferenceKeys(): List<PreferenceKey> =
-        prefsList
-            .filter { PreferenceKey::class.java.isAssignableFrom(it) }
-            .flatMap { it.enumConstants!!.asIterable() }
-            .filterIsInstance<PreferenceKey>()
+        prefsList.filterIsInstance<PreferenceKey>()
 }

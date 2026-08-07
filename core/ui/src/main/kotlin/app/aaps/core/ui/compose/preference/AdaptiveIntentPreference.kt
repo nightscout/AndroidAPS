@@ -4,14 +4,12 @@
 
 package app.aaps.core.ui.compose.preference
 
-import android.content.Intent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
@@ -104,41 +102,6 @@ fun AdaptiveUrlPreferenceItem(
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) {
             { uriHandler.openUri(url) }
-        } else null
-    )
-}
-
-/**
- * Composable dynamic activity preference for use inside card sections.
- *
- * @param title Optional title override. If null, uses intentKey.title
- * @param summary Optional summary override. If null, uses intentKey.summary
- */
-@Composable
-fun AdaptiveDynamicActivityPreferenceItem(
-    intentKey: IntentPreferenceKey,
-    title: TextRef? = null,
-    activityClass: Class<*>,
-    summary: TextRef? = null,
-    visibilityContext: VisibilityContext? = null
-) {
-    val effectiveTitle = title ?: intentKey.title
-    val effectiveSummary = summary ?: intentKey.summary
-
-    val visibility = calculateIntentPreferenceVisibility(
-        intentKey = intentKey,
-        visibilityContext = visibilityContext
-    )
-
-    if (!visibility.visible) return
-
-    val context = LocalContext.current
-    Preference(
-        title = { Text(stringResource(effectiveTitle)) },
-        summary = effectiveSummary?.let { { Text(stringResource(it)) } },
-        enabled = visibility.enabled,
-        onClick = if (visibility.enabled) {
-            { context.startActivity(Intent(context, activityClass)) }
         } else null
     )
 }

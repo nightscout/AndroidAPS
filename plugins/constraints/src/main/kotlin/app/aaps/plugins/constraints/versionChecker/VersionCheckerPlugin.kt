@@ -31,7 +31,7 @@ class VersionCheckerPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.version_checker),
-    ownPreferences = listOf(VersionCheckerLongKey::class.java),
+    ownPreferences = VersionCheckerLongKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints {
 

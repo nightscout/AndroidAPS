@@ -112,7 +112,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         .preferencesVisibleInSimpleMode(false)
         .showInList { (config.APS || config.AAPSCLIENT) && config.isEngineeringMode() && config.isDev() }   // AAPSCLIENT: visible so a client can select the master's APS (still eng+dev only)
         .description(R.string.description_auto_isf),
-    ownPreferences = listOf(ApsIntentKey::class.java),
+    ownPreferences = ApsIntentKey.entries,
     aapsLogger, rh, preferences
 ), APS, PluginConstraints {
 

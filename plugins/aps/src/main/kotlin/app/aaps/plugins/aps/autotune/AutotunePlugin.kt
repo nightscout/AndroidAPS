@@ -100,7 +100,7 @@ class AutotunePlugin @Inject constructor(
         }
         .showInList { config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE) }
         .description(R.string.autotune_description),
-    ownPreferences = listOf(AutotuneStringKey::class.java),
+    ownPreferences = AutotuneStringKey.entries,
     aapsLogger, rh, preferences
 ), Autotune {
 

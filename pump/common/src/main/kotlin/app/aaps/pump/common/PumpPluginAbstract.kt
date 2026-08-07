@@ -56,7 +56,7 @@ import javax.inject.Provider
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 abstract class PumpPluginAbstract protected constructor(
     pluginDescription: PluginDescription,
-    ownPreferences: List<Class<out NonPreferenceKey>> = emptyList(),
+    ownPreferences: List<NonPreferenceKey> = emptyList(),
     pumpType: PumpType,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

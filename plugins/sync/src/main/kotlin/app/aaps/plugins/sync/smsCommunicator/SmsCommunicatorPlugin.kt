@@ -146,7 +146,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         .pluginName(R.string.smscommunicator)
         .shortName(R.string.smscommunicator_shortname)
         .description(R.string.description_sms_communicator),
-    ownPreferences = listOf(SmsIntentKey::class.java),
+    ownPreferences = SmsIntentKey.entries,
     aapsLogger, rh, preferences
 ), SmsCommunicator {
 

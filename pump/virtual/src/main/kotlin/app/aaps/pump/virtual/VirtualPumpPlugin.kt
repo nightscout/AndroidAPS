@@ -95,7 +95,7 @@ open class VirtualPumpPlugin @Inject constructor(
         .description(R.string.description_pump_virtual)
         .setDefault()
         .showInList { !config.AAPSCLIENT },
-    ownPreferences = listOf(VirtualBooleanNonPreferenceKey::class.java),
+    ownPreferences = VirtualBooleanNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, VirtualPump {
 

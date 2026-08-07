@@ -44,7 +44,7 @@ class ObjectivesPlugin @Inject constructor(
         .shortName(R.string.objectives_shortname)
         .enableByDefault(config.APS)
         .description(R.string.description_objectives),
-    ownPreferences = listOf(ObjectivesBooleanComposedKey::class.java, ObjectivesLongComposedKey::class.java),
+    ownPreferences = ObjectivesBooleanComposedKey.entries + ObjectivesLongComposedKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints, Objectives {
 

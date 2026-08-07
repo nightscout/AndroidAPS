@@ -13,7 +13,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 
 abstract class AbstractBgSourcePlugin(
     pluginDescription: PluginDescription,
-    ownPreferences: List<Class<out NonPreferenceKey>> = emptyList(),
+    ownPreferences: List<NonPreferenceKey> = emptyList(),
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,

@@ -56,7 +56,7 @@ class IntelligoPlugin @Inject constructor(
         .shortName(R.string.intelligo)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_intelligo),
-    ownPreferences = listOf(IntelligoLongKey::class.java),
+    ownPreferences = IntelligoLongKey.entries,
     aapsLogger, resourceHelper, preferences, config
 ), BgSource {
 
