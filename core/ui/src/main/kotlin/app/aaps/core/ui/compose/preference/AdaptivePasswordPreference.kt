@@ -13,10 +13,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Composable password/PIN preference that opens a dialog to set the password.
@@ -25,7 +27,7 @@ import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
  * @param preferences The Preferences instance
  * @param stringKey The StringPreferenceKey (should have isPassword=true or isPin=true)
  * @param hashPassword Function to hash the password before storing
- * @param titleResId Optional title resource ID. If 0, uses stringKey.titleResId
+ * @param titleResId Optional title resource ID. If 0, uses stringKey.title
  * @param visibilityKey Optional IntPreferenceKey that controls visibility
  * @param visibilityValue The value that visibilityKey must equal for this preference to be visible
  * @param visibilityContext Optional context for evaluating runtime visibility conditions
@@ -37,16 +39,13 @@ fun AdaptivePasswordPreferenceItem(
     stringKey: StringPreferenceKey,
     hashPassword: (String) -> String,
     onShowMessage: (String) -> Unit,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     visibilityKey: IntPreferenceKey? = null,
     visibilityValue: Int? = null,
     visibilityContext: VisibilityContext? = null
 ) {
     val preferences = LocalPreferences.current
-    val effectiveTitleResId = if (titleResId != 0) titleResId else stringKey.titleResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: stringKey.title
 
     // Check conditional visibility based on visibilityKey
     if (visibilityKey != null && visibilityValue != null) {
@@ -76,7 +75,7 @@ fun AdaptivePasswordPreferenceItem(
     }
 
     Preference(
-        title = { Text(stringResource(effectiveTitleResId)) },
+        title = { Text(stringResource(effectiveTitle)) },
         summary = { Text(summary) },
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) {
@@ -91,7 +90,7 @@ fun AdaptivePasswordPreferenceItem(
         val notChangedMsg = stringResource(if (isPin) R.string.pin_not_changed else R.string.password_not_changed)
 
         SetPasswordDialog(
-            title = stringResource(effectiveTitleResId),
+            title = stringResource(effectiveTitle),
             pinInput = isPin,
             onConfirm = { password1, password2 ->
                 when {

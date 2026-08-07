@@ -15,30 +15,29 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Composable intent preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses intentKey.titleResId
- * @param summaryResId Optional summary resource ID. If null, uses intentKey.summaryResId
+ * @param title Optional title override. If null, uses intentKey.title
+ * @param summary Optional summary override. If null, uses intentKey.summary
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  */
 @Composable
 fun AdaptiveIntentPreferenceItem(
     intentKey: IntentPreferenceKey,
-    titleResId: Int = 0,
-    summaryResId: Int? = null,
+    title: TextRef? = null,
+    summary: TextRef? = null,
     onClick: () -> Unit,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else intentKey.titleResId
-    val effectiveSummaryResId = summaryResId ?: intentKey.summaryResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: intentKey.title
+    val effectiveSummary = summary ?: intentKey.summary
 
     val visibility = calculateIntentPreferenceVisibility(
         intentKey = intentKey,
@@ -53,7 +52,7 @@ fun AdaptiveIntentPreferenceItem(
 
     if (showConfirmation && confirmationResId != null) {
         OkCancelDialog(
-            title = stringResource(effectiveTitleResId),
+            title = stringResource(effectiveTitle),
             message = stringResource(confirmationResId),
             onConfirm = {
                 onClick()
@@ -70,8 +69,8 @@ fun AdaptiveIntentPreferenceItem(
     }
 
     Preference(
-        title = { Text(stringResource(effectiveTitleResId)) },
-        summary = effectiveSummaryResId?.let { { Text(stringResource(it)) } },
+        title = { Text(stringResource(effectiveTitle)) },
+        summary = effectiveSummary?.let { { Text(stringResource(it)) } },
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) effectiveOnClick else null
     )
@@ -80,19 +79,16 @@ fun AdaptiveIntentPreferenceItem(
 /**
  * Composable URL preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses intentKey.titleResId
+ * @param title Optional title override. If null, uses intentKey.title
  */
 @Composable
 fun AdaptiveUrlPreferenceItem(
     intentKey: IntentPreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     url: String,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else intentKey.titleResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: intentKey.title
 
     val visibility = calculateIntentPreferenceVisibility(
         intentKey = intentKey,
@@ -103,7 +99,7 @@ fun AdaptiveUrlPreferenceItem(
 
     val uriHandler = LocalUriHandler.current
     Preference(
-        title = { Text(stringResource(effectiveTitleResId)) },
+        title = { Text(stringResource(effectiveTitle)) },
         summary = { Text(url) },
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) {
@@ -115,22 +111,19 @@ fun AdaptiveUrlPreferenceItem(
 /**
  * Composable dynamic activity preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses intentKey.titleResId
- * @param summaryResId Optional summary resource ID. If null, uses intentKey.summaryResId
+ * @param title Optional title override. If null, uses intentKey.title
+ * @param summary Optional summary override. If null, uses intentKey.summary
  */
 @Composable
 fun AdaptiveDynamicActivityPreferenceItem(
     intentKey: IntentPreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     activityClass: Class<*>,
-    summaryResId: Int? = null,
+    summary: TextRef? = null,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else intentKey.titleResId
-    val effectiveSummaryResId = summaryResId ?: intentKey.summaryResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: intentKey.title
+    val effectiveSummary = summary ?: intentKey.summary
 
     val visibility = calculateIntentPreferenceVisibility(
         intentKey = intentKey,
@@ -141,8 +134,8 @@ fun AdaptiveDynamicActivityPreferenceItem(
 
     val context = LocalContext.current
     Preference(
-        title = { Text(stringResource(effectiveTitleResId)) },
-        summary = effectiveSummaryResId?.let { { Text(stringResource(it)) } },
+        title = { Text(stringResource(effectiveTitle)) },
+        summary = effectiveSummary?.let { { Text(stringResource(it)) } },
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) {
             { context.startActivity(Intent(context, activityClass)) }
@@ -159,14 +152,12 @@ fun AdaptiveComposeScreenPreferenceItem(
     intentKey: IntentPreferenceKey,
     composeScreen: ComposeScreenContent,
     onNavigate: (ComposeScreenContent) -> Unit,
-    titleResId: Int = 0,
-    summaryResId: Int? = null,
+    title: TextRef? = null,
+    summary: TextRef? = null,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else intentKey.titleResId
-    val effectiveSummaryResId = summaryResId ?: intentKey.summaryResId
-
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: intentKey.title
+    val effectiveSummary = summary ?: intentKey.summary
 
     val visibility = calculateIntentPreferenceVisibility(
         intentKey = intentKey,
@@ -176,8 +167,8 @@ fun AdaptiveComposeScreenPreferenceItem(
     if (!visibility.visible) return
 
     Preference(
-        title = { Text(stringResource(effectiveTitleResId)) },
-        summary = effectiveSummaryResId?.let { { Text(stringResource(it)) } },
+        title = { Text(stringResource(effectiveTitle)) },
+        summary = effectiveSummary?.let { { Text(stringResource(it)) } },
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) {
             { onNavigate(composeScreen) }

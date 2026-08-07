@@ -1,13 +1,14 @@
 package app.aaps.pump.medtrum.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtrum.R
 
 enum class MedtrumBooleanKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -38,4 +39,8 @@ enum class MedtrumBooleanKey(
         titleResId = R.string.scan_on_connection_error_title,
         summaryResId = R.string.scan_on_connection_error_summary
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

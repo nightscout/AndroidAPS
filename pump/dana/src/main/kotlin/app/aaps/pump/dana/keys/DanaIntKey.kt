@@ -3,12 +3,13 @@ package app.aaps.pump.dana.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.R
 
 enum class DanaIntKey(
     override val key: String,
     override val defaultValue: Int,
-    override val titleResId: Int = 0,
+    private val titleResId: Int,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
@@ -36,4 +37,7 @@ enum class DanaIntKey(
             2 to R.string.bolus_speed_60
         )
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
 }

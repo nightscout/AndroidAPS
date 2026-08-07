@@ -3,13 +3,14 @@ package app.aaps.pump.medtronic.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtronic.R
 
 enum class MedtronicIntPreferenceKey(
     override val key: String,
     override val defaultValue: Int,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val entries: Map<Int, Int> = emptyMap(),
     override val min: Int = Int.MIN_VALUE,
@@ -53,4 +54,8 @@ enum class MedtronicIntPreferenceKey(
         min = 5,
         max = 15
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

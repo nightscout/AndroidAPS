@@ -22,8 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Small badge marking something that two-way syncs with the master ("main phone").
@@ -97,5 +99,5 @@ fun TextWithSyncBadge(
  * on a client for Bidirectional keys.
  */
 @Composable
-fun PreferenceTitleWithSyncBadge(titleResId: Int, key: NonPreferenceKey?) =
-    TextWithSyncBadge(stringResource(titleResId), key)
+fun PreferenceTitleWithSyncBadge(title: TextRef, key: NonPreferenceKey?) =
+    TextWithSyncBadge(stringResource(title), key)

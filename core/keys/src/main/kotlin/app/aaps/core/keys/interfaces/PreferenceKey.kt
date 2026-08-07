@@ -22,17 +22,16 @@ interface PreferenceKey : NonPreferenceKey, PreferenceItem {
     override val key: String
 
     /**
-     * String resource ID for preference title.
-     * Use ResourceHelper.gs(titleResId) for localized string.
+     * Preference title.
+     * Use `ResourceHelper.gs(title)` outside Compose, or `stringResource(title)` inside it.
      */
-    val titleResId: Int
+    val title: TextRef
 
     /**
-     * String resource ID for preference summary/description.
-     * Use ResourceHelper.gs(summaryResId) for localized string.
-     * null means no summary.
+     * Preference summary/description.
+     * null means no summary - there is no "empty" sentinel any more.
      */
-    val summaryResId: Int?
+    val summary: TextRef?
         get() = null
 
     /**

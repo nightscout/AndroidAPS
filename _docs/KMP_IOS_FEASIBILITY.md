@@ -24,18 +24,18 @@ Multiplatform for the UI**, done step by step, starting with a small working sli
 
 ## 2. What is already fine
 
-| Area                           | State                                                                              | Why it matters                     |
-|--------------------------------|------------------------------------------------------------------------------------|------------------------------------|
+| Area                           | State                                                                                            | Why it matters                         |
+|--------------------------------|--------------------------------------------------------------------------------------------------|----------------------------------------|
 | `:core:data`                   | 58 files, plain `java-library`, **0** Android imports. Two `expect`/`actual` away, see section 8 | The first module to make multiplatform |
-| `:core:keys`                   | 46 files, **0** Android and **0** `java.*` imports since Wave 3                    | Only the 381 `R.string` ids block it |
-| Room                           | 46 DAOs, **0** RxJava return types, 22 `suspend`, already on `BundledSQLiteDriver` | This is exactly the Room KMP setup |
-| Compose                        | **0** XML layouts in `:core:ui`, 2 left in `:ui`                                   | Compose Multiplatform can use this |
-| `LocalContext.current`         | 7 in `:core:ui`, 8 in `:ui`                                                        | Very small coupling to Android     |
-| Network code                   | 5 files touch Retrofit / OkHttp, 1 touches socket.io                                | REST part is small enough for Ktor |
-| kotlinx.serialization          | 64 files (Gson: 34)                                                                | Already the main choice            |
-| kotlinx-datetime               | Declared in `libs.versions.toml`                                                   | Ready to use                       |
-| `androidx.lifecycle` ViewModel | Multiplatform since 2.8                                                            | Most of the 129 uses are fine      |
-| Vico charts                    | Ships a `multiplatform` artifact                                                   | Only the artifact name changes     |
+| `:core:keys`                   | 46 files, **0** Android and **0** `java.*` imports since Wave 3                                  | Only the 381 `R.string` ids block it   |
+| Room                           | 46 DAOs, **0** RxJava return types, 22 `suspend`, already on `BundledSQLiteDriver`               | This is exactly the Room KMP setup     |
+| Compose                        | **0** XML layouts in `:core:ui`, 2 left in `:ui`                                                 | Compose Multiplatform can use this     |
+| `LocalContext.current`         | 7 in `:core:ui`, 8 in `:ui`                                                                      | Very small coupling to Android         |
+| Network code                   | 5 files touch Retrofit / OkHttp, 1 touches socket.io                                             | REST part is small enough for Ktor     |
+| kotlinx.serialization          | 64 files (Gson: 34)                                                                              | Already the main choice                |
+| kotlinx-datetime               | Declared in `libs.versions.toml`                                                                 | Ready to use                           |
+| `androidx.lifecycle` ViewModel | Multiplatform since 2.8                                                                          | Most of the 129 uses are fine          |
+| Vico charts                    | Ships a `multiplatform` artifact                                                                 | Only the artifact name changes         |
 
 The biggest surprise was `:core:ui`. Of its 432 files:
 
@@ -53,30 +53,30 @@ So most of the Compose work of the last year can be reused.
 
 ### Libraries with no Kotlin/Native version
 
-| Library                                                | Files                                                  | Replacement                            |
-|--------------------------------------------------------|--------------------------------------------------------|----------------------------------------|
-| Dagger / Hilt                                          | ~300                                                   | kotlin-inject, Metro, or Koin          |
-| RxJava 3                                               | RxBus in 35 `:ui`, 19 config, 18 sync, 13 impl, 12 aps | SharedFlow                             |
+| Library                                                | Files                                                  | Replacement                             |
+|--------------------------------------------------------|--------------------------------------------------------|-----------------------------------------|
+| Dagger / Hilt                                          | ~300                                                   | kotlin-inject, Metro, or Koin           |
+| RxJava 3                                               | RxBus in 35 `:ui`, 19 config, 18 sync, 13 impl, 12 aps | SharedFlow                              |
 | Retrofit + OkHttp                                      | 9 / 11, **0 in `:core:nssdk`**                         | Ktor client - done there, see section 8 |
-| socket.io-client                                       | 1 (`NSClientV3Service`)                                | **Do not replace** - see section 3a    |
-| Gson                                                   | 46, **0 in `:core:nssdk`**                             | kotlinx.serialization - see section 8  |
-| `org.json` (`JSONObject`)                              | 227, **0 in `:core:nssdk`**                            | kotlinx `JsonObject` - see section 8   |
-| WorkManager                                            | 44                                                     | See warning below                      |
-| joda-time                                              | 5                                                      | kotlinx-datetime                       |
-| `java.text.DecimalFormat`                              | 74                                                     | Done, see section 8                    |
-| `java.text.SimpleDateFormat`                           | 7                                                      | kotlinx-datetime formatting            |
-| `java.util.concurrent.TimeUnit`                        | 108 files, but only 93 sites convertible               | `kotlin.time.Duration`                 |
-| `Executors`, `ConcurrentHashMap`                       | 14                                                     | Coroutine dispatchers, map plus mutex  |
-| `java.security`, `javax.crypto`                        | ~20                                                    | cryptography-kotlin, or expect/actual  |
-| `java.io.File`                                         | 12                                                     | okio                                   |
-| spongycastle, tink-android                             | 2                                                      | as above                               |
-| commons-lang3, Guava                                   | 4                                                      | Inline the few helpers                 |
-| slf4j, logback-android                                 | 4                                                      | Kermit or Napier                       |
-| kotlin-reflect                                         | 9                                                      | No reflection on Native, must go       |
-| Firebase                                               | 4                                                      | GitLive Firebase KMP, or expect/actual |
-| Play Services                                          | 2                                                      | Android only by nature                 |
-| androidx.glance (widgets)                              | 7                                                      | WidgetKit is Swift only, no reuse      |
-| Garmin, osmdroid, androidsvg, appauth, java-otp, zxing | 1-3 each                                               | Mostly not client features             |
+| socket.io-client                                       | 1 (`NSClientV3Service`)                                | **Do not replace** - see section 3a     |
+| Gson                                                   | 46, **0 in `:core:nssdk`**                             | kotlinx.serialization - see section 8   |
+| `org.json` (`JSONObject`)                              | 227, **0 in `:core:nssdk`**                            | kotlinx `JsonObject` - see section 8    |
+| WorkManager                                            | 44                                                     | See warning below                       |
+| joda-time                                              | 5                                                      | kotlinx-datetime                        |
+| `java.text.DecimalFormat`                              | 74                                                     | Done, see section 8                     |
+| `java.text.SimpleDateFormat`                           | 7                                                      | kotlinx-datetime formatting             |
+| `java.util.concurrent.TimeUnit`                        | 108 files, but only 93 sites convertible               | `kotlin.time.Duration`                  |
+| `Executors`, `ConcurrentHashMap`                       | 14                                                     | Coroutine dispatchers, map plus mutex   |
+| `java.security`, `javax.crypto`                        | ~20                                                    | cryptography-kotlin, or expect/actual   |
+| `java.io.File`                                         | 12                                                     | okio                                    |
+| spongycastle, tink-android                             | 2                                                      | as above                                |
+| commons-lang3, Guava                                   | 4                                                      | Inline the few helpers                  |
+| slf4j, logback-android                                 | 4                                                      | Kermit or Napier                        |
+| kotlin-reflect                                         | 9                                                      | No reflection on Native, must go        |
+| Firebase                                               | 4                                                      | GitLive Firebase KMP, or expect/actual  |
+| Play Services                                          | 2                                                      | Android only by nature                  |
+| androidx.glance (widgets)                              | 7                                                      | WidgetKit is Swift only, no reuse       |
+| Garmin, osmdroid, androidsvg, appauth, java-otp, zxing | 1-3 each                                               | Mostly not client features              |
 
 ### Android framework
 
@@ -120,11 +120,11 @@ means giving up push updates, which is the whole point of NSClientV3.
 
 So this dependency is **abstracted, not removed**:
 
-| Where | What |
-| --- | --- |
-| Android | keep `io.socket:socket.io-client:2.1.2` **unchanged** |
-| iOS | `socket.io-client-swift` |
-| shared | a small `expect interface` over the calls actually used |
+| Where   | What                                                    |
+|---------|---------------------------------------------------------|
+| Android | keep `io.socket:socket.io-client:2.1.2` **unchanged**   |
+| iOS     | `socket.io-client-swift`                                |
+| shared  | a small `expect interface` over the calls actually used |
 
 Both clients are written by the Socket.IO project itself, so protocol compatibility follows the
 server rather than a third party's reimplementation. That matters more here than saving a
@@ -152,12 +152,12 @@ reimplementation, which is the wrong direction of risk for a medical app.
 Since the plan is to write our own small wrapper rather than depend on one, the useful reading is
 the existing wrappers' source, because they already are the `expect` / `actual` we would write:
 
-| Link | Why |
-| --- | --- |
-| [moko-socket-io] | Cleanest reference. Small, `expect class Socket` over the two native clients. |
-| [KotSock] | Same approach, a second opinion on the API shape. |
-| [moko-socket-io-sample] | A working KMP app using it, by the moko maintainer. Shows the CocoaPods wiring for `socket.io-client-swift`. |
-| [KMP Socket.IO deep dive] | Walks through building exactly this kind of wrapper. Closest thing to the POC we would be reproducing. |
+| Link                      | Why                                                                                                          |
+|---------------------------|--------------------------------------------------------------------------------------------------------------|
+| [moko-socket-io]          | Cleanest reference. Small, `expect class Socket` over the two native clients.                                |
+| [KotSock]                 | Same approach, a second opinion on the API shape.                                                            |
+| [moko-socket-io-sample]   | A working KMP app using it, by the moko maintainer. Shows the CocoaPods wiring for `socket.io-client-swift`. |
+| [KMP Socket.IO deep dive] | Walks through building exactly this kind of wrapper. Closest thing to the POC we would be reproducing.       |
 
 **Check the dates before trusting any of them as a dependency.** moko-socket-io states Gradle 6.8+,
 Android API 16+, iOS 11.0+ - those baselines are from around 2021, while this project is on Gradle
@@ -165,10 +165,15 @@ Android API 16+, iOS 11.0+ - those baselines are from around 2021, while this pr
 problem at all for reading it as a pattern.
 
 [moko-socket-io]: https://github.com/icerockdev/moko-socket-io
+
 [moko-socket-io-sample]: https://github.com/Alex009/moko-socket-io-sample
+
 [KotSock]: https://github.com/whiterabb17/KotSock
+
 [dyte-io/socketio-kotlin]: https://github.com/dyte-io/socketio-kotlin
+
 [kmp-socketio]: https://klibs.io/project/HackWebRTC/kmp-socketio
+
 [KMP Socket.IO deep dive]: https://rahuljindaltech.medium.com/building-cross-platform-libraries-with-kotlin-multiplatform-kmp-kmm-a-deep-dive-into-socket-io-89e58c3b221c
 
 ### Protocol versions - checked
@@ -176,12 +181,12 @@ problem at all for reading it as a pattern.
 Socket.IO major versions are **not** wire compatible, so the server and both clients have to agree.
 Checked on 2026-08-05:
 
-| Part | Version | Protocol |
-| --- | --- | --- |
-| Nightscout `cgm-remote-monitor` 15.0.7 | `socket.io ~4.5.4` | **v4** |
-| AAPS today, Android | `io.socket:socket.io-client:2.1.2` | v3 / v4 - correct |
-| iOS should use | `Socket.IO-Client-Swift` **16.x** | v3 / v4 |
-| moko-socket-io 0.6.0, iOS half | `Socket.IO-Client-Swift ~> 15.2.0` | **v2 - will not talk to Nightscout** |
+| Part                                   | Version                            | Protocol                             |
+|----------------------------------------|------------------------------------|--------------------------------------|
+| Nightscout `cgm-remote-monitor` 15.0.7 | `socket.io ~4.5.4`                 | **v4**                               |
+| AAPS today, Android                    | `io.socket:socket.io-client:2.1.2` | v3 / v4 - correct                    |
+| iOS should use                         | `Socket.IO-Client-Swift` **16.x**  | v3 / v4                              |
+| moko-socket-io 0.6.0, iOS half         | `Socket.IO-Client-Swift ~> 15.2.0` | **v2 - will not talk to Nightscout** |
 
 `socket.io-client-java` 2.x speaks Socket.IO 3 / 4. On the Swift side that generation only arrives
 in **16.0.0** (February 2024, "now supports Socket.IO 3 servers"); 15.x is Socket.IO 2 only.
@@ -344,13 +349,31 @@ existing translations are untouched.
 2. **iOS needs `CFBundleLocalizations` in `Info.plist`.** Without it iOS reports the wrong preferred
    language and resource lookup quietly falls back to English.
 3. **`Res` is generated per module**, so `:core:ui` and `:ui` each have their own. Same situation as
-   today with `app.aaps.core.ui.R` and `app.aaps.ui.R`.
+   today with `app.aaps.core.ui.R` and `app.aaps.ui.R`. It also needs `publicResClass = true`, or
+   the
+   generated `Res` is internal and another module cannot see it.
+4. **No public locale override.** `ResourceEnvironment` has an `internal` constructor and
+   `getSystemResourceEnvironment()` takes no parameters, so there is no supported way to ask for "
+   the
+   English text" while the UI is in another language. `SearchIndexBuilder` does exactly that,
+   through
+   `rh.gsNotLocalised(id)`, so for that one caller compose-resources is a feature loss rather than a
+   port. This is the problem that decided wave 10.
 
 ### What this means for `:core:keys`
 
 The 368 strings themselves move without trouble. The real work is that the key classes carry
 `@StringRes Int`, and a Compose Multiplatform resource is a `StringResource`, not an `Int`. That
 type change is the job, not the translations.
+
+**Done, in wave 10 - but not with `StringResource`.** The key classes now carry `TextRef`, a two
+case
+sealed interface owned by `:core:keys` with no Android and no compose-resources types in it. Putting
+`StringResource` directly on the keys was tried and rejected: problem 1 above is fatal for it, and
+there is a fourth problem the list above misses - compose-resources has **no public locale override
+**,
+so the always-English search index could not be built at all. `TextRef` moves the type change to the
+call sites once, and leaves the choice of resource system to each module, later.
 
 ---
 
@@ -376,17 +399,24 @@ and the next screen, not because it is on a list.
 **Where this stands.** Steps 1 and 5 are **done**, and step 0 is half done - out of order, because
 `:core:nssdk` turned out to be sliceable after all. Two modules now build for Kotlin/Native:
 
-| Module | State |
-| --- | --- |
-| `:core:data` | multiplatform, 2 `expect` / `actual` seams (wave 5) |
+| Module        | State                                               |
+|---------------|-----------------------------------------------------|
+| `:core:data`  | multiplatform, 2 `expect` / `actual` seams (wave 5) |
 | `:core:nssdk` | multiplatform, 72 files in `commonMain` (waves 6-9) |
 
-Nothing is left of the original blocker list inside `:core:nssdk` - `org.json`, Gson, joda, Retrofit,
+Nothing is left of the original blocker list inside `:core:nssdk` - `org.json`, Gson, joda,
+Retrofit,
 OkHttp, `android.*` and `java.io` are all gone from it.
 
-That leaves steps 2, 3, 4 and 6, and the half of step 0 that **needs a Mac**: a real device, and an
-honest look at how Compose Multiplatform feels on iOS. No amount of further blocker removal answers
-that question, which is the argument for doing it soon rather than continuing down the list.
+Step 2 is now half done as well: `:core:keys` no longer hands out bare resource ids, it hands out
+`TextRef` (wave 10). The ids are still AAPT ids inside it, so this is the seam rather than the
+move -
+but it is the half that had to come first, because it is the half that touches every call site.
+
+That leaves the rest of steps 2, 3, 4 and 6, and the half of step 0 that **needs a Mac**: a real
+device, and an honest look at how Compose Multiplatform feels on iOS. No amount of further blocker
+removal answers that question, which is the argument for doing it soon rather than continuing down
+the list.
 
 ---
 
@@ -394,27 +424,27 @@ that question, which is the argument for doing it soon rather than continuing do
 
 Committed on `dev`:
 
-| Commit | What |
-| --- | --- |
-| `e5f4e27626` | Migrate DecimalFormat |
-| `a42d823c93` | Eliminate TimeUnit |
-| `e1068e77db` | `:core:keys` remove JVM dependency |
-| `35b5399798` | Extract dependencies |
+| Commit       | What                                                  |
+|--------------|-------------------------------------------------------|
+| `e5f4e27626` | Migrate DecimalFormat                                 |
+| `a42d823c93` | Eliminate TimeUnit                                    |
+| `e1068e77db` | `:core:keys` remove JVM dependency                    |
+| `35b5399798` | Extract dependencies                                  |
 | `1aed547f7a` | cleanup (`TB.isInProgress` moved out of `:core:data`) |
 
 Committed on `kmp/core-data-experiment`, a throwaway branch kept because the work turned out to be
 worth keeping (see waves 5 and 6):
 
-| Commit | What |
-| --- | --- |
-| `67ecb1e696` | Going KMP - `:core:data` is a real multiplatform module |
-| `e24476237b` | Prepare `:core:nssdk` - dead code out, defaults in, characterization tests |
-| `f6a4e85e8a` | `:core:nssdk` `org.json` -> kotlinx |
-| `350f486be4` | `:core:nssdk` Gson -> kotlinx.serialization |
-| `cb7b8fa924` | `:core:nssdk` date parsing, eliminate joda |
+| Commit       | What                                                                               |
+|--------------|------------------------------------------------------------------------------------|
+| `67ecb1e696` | Going KMP - `:core:data` is a real multiplatform module                            |
+| `e24476237b` | Prepare `:core:nssdk` - dead code out, defaults in, characterization tests         |
+| `f6a4e85e8a` | `:core:nssdk` `org.json` -> kotlinx                                                |
+| `350f486be4` | `:core:nssdk` Gson -> kotlinx.serialization                                        |
+| `cb7b8fa924` | `:core:nssdk` date parsing, eliminate joda                                         |
 | `e92ec082d3` | `:core:nssdk` tests - the contract suite, written against Retrofit before the port |
-| `ed9c87599f` | `:core:nssdk` Ktor migration |
-| `37e146861f` | version `4.0.0-dev-b-kmp` |
+| `ed9c87599f` | `:core:nssdk` Ktor migration                                                       |
+| `37e146861f` | version `4.0.0-dev-b-kmp`                                                          |
 
 ### Wave 1 - `DecimalFormat` removed
 
@@ -603,14 +633,16 @@ is the wrong shape here:
   on `:core:data`, so the reverse edge is a cycle. And a data class default parameter has nowhere to
   receive an injected dependency anyway.
 - The ripple is large. The compiler first reported 2 errors; the real count was 38 and still growing
-  when the attempt was stopped, with test sources not yet compiled. Gradle stops at the first failing
+  when the attempt was stopped, with test sources not yet compiled. Gradle stops at the first
+  failing
   module and Kotlin caps reported errors per file - in `PersistenceLayerImpl` it named 10 of 31.
 - **`utcOffset` is not a throwaway field.** It is stored in every table, it is part of
   `contentEqualsTo` (so a changed value makes a record compare unequal and re-sync), it is uploaded
   to Nightscout - where the server validates it and `NSAndroidClientImpl` has to catch
   `"Bad or missing utcOffset field"` 400s and retry with 0 - it goes to Open Humans, and it is shown
   in the user entry history. Recomputing it by hand at 50+ sites risks silently changing stored
-  values; `expect` / `actual` keeps the computation identical at every site and changes no call site.
+  values; `expect` / `actual` keeps the computation identical at every site and changes no call
+  site.
 
 So when `:core:data` becomes multiplatform:
 
@@ -627,13 +659,13 @@ creation is the weaker case, and the 154 call sites that care already pass `utcO
 
 **State of `:core:data` now:**
 
-| Was | Now |
-| --- | --- |
-| `System.currentTimeMillis()` | gone (`T.now()` deleted, `isInProgress` moved out) |
-| `java.util.Locale` | gone (`DoseStepSize`) |
-| `java.util.concurrent.TimeUnit` | gone (Wave 2) |
-| `java.util.TimeZone`, 17 files | `expect` / `actual`, no call site changes |
-| `NumberFormatPlatform` | `expect` / `actual`, by design |
+| Was                             | Now                                                |
+|---------------------------------|----------------------------------------------------|
+| `System.currentTimeMillis()`    | gone (`T.now()` deleted, `isInProgress` moved out) |
+| `java.util.Locale`              | gone (`DoseStepSize`)                              |
+| `java.util.concurrent.TimeUnit` | gone (Wave 2)                                      |
+| `java.util.TimeZone`, 17 files  | `expect` / `actual`, no call site changes          |
+| `NumberFormatPlatform`          | `expect` / `actual`, by design                     |
 
 Two `expect` / `actual` declarations away from compiling as `commonMain`.
 
@@ -649,9 +681,9 @@ That was the single most valuable thing to learn, and the reason it was worth do
 
 Two `expect` / `actual` seams, both deliberate:
 
-| Seam | Why |
-| --- | --- |
-| `NumberFormatPlatform` | number formatting is genuinely platform work |
+| Seam                           | Why                                                                      |
+|--------------------------------|--------------------------------------------------------------------------|
+| `NumberFormatPlatform`         | number formatting is genuinely platform work                             |
 | `systemUtcOffsetAt(timestamp)` | replaces `TimeZone.getDefault()` in 17 model files, no call site changed |
 
 The `mingwX64` target needed one opt-in, `kotlin.experimental.ExperimentalNativeApi`, because
@@ -670,7 +702,8 @@ untouched. The lesson generalises: "these things are coupled" is a claim about o
 worth checking whether some other axis cuts cleanly before accepting a big-bang migration.
 
 `org.json` is a JVM and Android API. It was in the **public API** of `NSAndroidClient` (10 methods)
-and `RunningConfiguration` (2), carrying profiles and settings - the two document kinds AAPS does not
+and `RunningConfiguration` (2), carrying profiles and settings - the two document kinds AAPS does
+not
 model, because it does not own their shape. It is now gone from the module.
 
 Why it could be done alone: both directions already round-tripped through text, so `org.json` was
@@ -682,18 +715,19 @@ api.createSetting(JsonParser.parseString(doc.toString()))     // write - org.jso
 ```
 
 Swapping the carrier for kotlinx `JsonObject` left the write line **character for character
-identical** and changed one parse call on the read side. Gson, Retrofit and the 210 `@SerializedName`
+identical** and changed one parse call on the read side. Gson, Retrofit and the 210
+`@SerializedName`
 annotations were not touched.
 
 **The trap, and why tests came first.** The two libraries disagree about a missing key, and nothing
 about the difference shows up at compile time:
 
-| accessor | `org.json`, missing key | `org.json`, explicit `null` | kotlinx, missing key |
-| --- | --- | --- | --- |
-| `optString` | `""` | `"null"` - the four letter text | `null` |
-| `optJSONObject` | `null` | `null` | `null` |
-| `optLong(k, 0)` | `0` | `0` | `null` |
-| `optBoolean` | `false` | `false` | `null` |
+| accessor        | `org.json`, missing key | `org.json`, explicit `null`     | kotlinx, missing key |
+|-----------------|-------------------------|---------------------------------|----------------------|
+| `optString`     | `""`                    | `"null"` - the four letter text | `null`               |
+| `optJSONObject` | `null`                  | `null`                          | `null`               |
+| `optLong(k, 0)` | `0`                     | `0`                             | `null`               |
+| `optBoolean`    | `false`                 | `false`                         | `null`               |
 
 A straight translation would silently flip every downstream `isEmpty()` and `?:`. So the swap was
 done through `OrgJsonCompat`, kotlinx accessors that reproduce `org.json` exactly, golden-mastered
@@ -701,14 +735,16 @@ against the real thing over 21 inputs x 5 accessors. The type change is then equ
 construction rather than by inspection.
 
 The one genuine divergence: reading an **object** through `optString` differs in key order, because
-`org.json` iterates a hash map and its order is unspecified. No call site does it - all six keys read
+`org.json` iterates a hash map and its order is unspecified. No call site does it - all six keys
+read
 through `optString` hold strings - so it is documented and skipped rather than pinned.
 
 **What stays on `org.json`, on purpose.** `JsonBridge` marks the two boundaries:
 
 - **socket.io** hands every payload over as `org.json.JSONObject`. That is the library's API, so the
   conversion happens as the event arrives and everything downstream is kotlinx.
-- **The profile subsystem** - `ProfileStore`, `PureProfile`, `DataSyncSelector.PairProfileStore` - is
+- **The profile subsystem** - `ProfileStore`, `PureProfile`, `DataSyncSelector.PairProfileStore` -
+  is
   `org.json` throughout `:core:interfaces`. Converting it is its own project. Profiles are converted
   where they cross into the client instead.
 
@@ -728,28 +764,32 @@ so the `org.json` quirks stay out of the shared modules.
 
 **Immutability was the only real code change.** kotlinx `JsonObject` cannot be mutated, so six
 in-place `put` calls became rebuilds. Five were mechanical; the sixth was not -
-`RunningConfigurationPublisher` mutated a *nested* object to mask `NsClientAllowClientControl` inside
+`RunningConfigurationPublisher` mutated a *nested* object to mask `NsClientAllowClientControl`
+inside
 `syncedPrefs`, and that is now an explicit rebuild preserving key order and the masking semantics.
 
-The wire format's mixed typing was preserved deliberately: `isFakingTempsByExtendedBoluses` is a real
+The wire format's mixed typing was preserved deliberately: `isFakingTempsByExtendedBoluses` is a
+real
 JSON boolean while every `syncedPrefs` value is a string, exactly as `org.json` wrote them.
 
-**Left unfixed, on purpose.** `optStringCompat` faithfully reproduces the `"null"` quirk, so a server
+**Left unfixed, on purpose.** `optStringCompat` faithfully reproduces the `"null"` quirk, so a
+server
 sending `{"message":null}` still writes the word "null" into the user visible NSClient log. Changing
 behaviour during a type migration is how regressions get smuggled in; that is a separate change.
 
 **What is left in `:core:nssdk`:**
 
-| Dependency | Files | Slice |
-| --- | --- | --- |
-| Gson | 17 | the converter switch |
-| joda-time | 1 | with the converter - `RemoteTreatment` lenient dates |
-| Retrofit | 4 | Ktor |
-| OkHttp | 3 | Ktor |
-| `java.io.IOException` | 1 | with Ktor - the exception hierarchy |
-| `android.*` | 2 | with Ktor - mainly `Context` for the OkHttp disk cache |
+| Dependency            | Files | Slice                                                  |
+|-----------------------|-------|--------------------------------------------------------|
+| Gson                  | 17    | the converter switch                                   |
+| joda-time             | 1     | with the converter - `RemoteTreatment` lenient dates   |
+| Retrofit              | 4     | Ktor                                                   |
+| OkHttp                | 3     | Ktor                                                   |
+| `java.io.IOException` | 1     | with Ktor - the exception hierarchy                    |
+| `android.*`           | 2     | with Ktor - mainly `Context` for the OkHttp disk cache |
 
-Verified on WSA with a full sync. That specifically exercises the riskiest part: settings and profile
+Verified on WSA with a full sync. That specifically exercises the riskiest part: settings and
+profile
 reads both go through the changed Gson type adapter, and kotlinx `JsonObject` also implements
 `Map<String, JsonElement>`, so Gson picking its built-in map adapter instead of the registered one
 was a real possibility that would have failed quietly rather than thrown.
@@ -775,13 +815,13 @@ Two things got smaller rather than bigger:
 `NsSdkJson.kt` holds one `Json` instance shared by Retrofit and the string mappers. Every flag is
 there to match Gson, not because it is a good default in the abstract:
 
-| Flag | Why |
-| --- | --- |
-| `ignoreUnknownKeys` | documents carry fields this version has never seen |
-| `explicitNulls = false` | Gson omits nulls; NS rejects some explicit nulls |
-| `isLenient` | one measured case: a bare **number** arriving in a `String` field (`created_at`) |
-| `encodeDefaults` | **backward compatibility** - see below |
-| `coerceInputValues` | **forward compatibility** - see below |
+| Flag                    | Why                                                                              |
+|-------------------------|----------------------------------------------------------------------------------|
+| `ignoreUnknownKeys`     | documents carry fields this version has never seen                               |
+| `explicitNulls = false` | Gson omits nulls; NS rejects some explicit nulls                                 |
+| `isLenient`             | one measured case: a bare **number** arriving in a `String` field (`created_at`) |
+| `encodeDefaults`        | **backward compatibility** - see below                                           |
+| `coerceInputValues`     | **forward compatibility** - see below                                            |
 
 Two of those five were added only because a test failed, and both are the difference between working
 and quietly breaking somebody else's device:
@@ -791,7 +831,8 @@ and quietly breaking somebody else's device:
   `duration = 0`, `utcOffset = 0` and every `LastModified.Collections` counter simply stop being
   written. Absent is not the same as false to a reader that has not been updated.
 - **`coerceInputValues`** - an **unknown enum value** throws in kotlinx but was mapped to `null` by
-  Gson. `eventType` is an enum. A *newer* AAPS adding one event type would otherwise make every older
+  Gson. `eventType` is an enum. A *newer* AAPS adding one event type would otherwise make every
+  older
   client throw on that record, inside a socket.io listener with no try/catch.
 
 Only one case needed `isLenient`. Strict kotlinx already accepts a quoted number in a `Long` /
@@ -832,27 +873,36 @@ decode test at all** - `FoodExtensionKtTest` is object-to-object and `LoadFoodsW
 A Pixel emulator ran a **new master against a pre-KMP client** on a live Nightscout instance. Every
 record type that can be created by hand was created and followed end to end:
 
-| Record | Old client result |
-| --- | --- |
-| Carbs | `◄ INSERT`, visible in Treatments history |
-| Bolus (with nested `icfg`) | `◄ INSERT Bolus`, visible in Treatments history |
-| Profile switch | `◄ INSERT ProfileSwitch` + `EffectiveProfileSwitch` |
-| Temporary target (new **and** PATCH update) | `◄ INSERT TemporaryTarget` |
-| Therapy event | `◄ INSERT TherapyEvent` |
-| Glucose, devicestatus, settings | received and applied |
+| Record                                      | Old client result                                   |
+|---------------------------------------------|-----------------------------------------------------|
+| Carbs                                       | `◄ INSERT`, visible in Treatments history           |
+| Bolus (with nested `icfg`)                  | `◄ INSERT Bolus`, visible in Treatments history     |
+| Profile switch                              | `◄ INSERT ProfileSwitch` + `EffectiveProfileSwitch` |
+| Temporary target (new **and** PATCH update) | `◄ INSERT TemporaryTarget`                          |
+| Therapy event                               | `◄ INSERT TherapyEvent`                             |
+| Glucose, devicestatus, settings             | received and applied                                |
 
 The actual bytes are the best evidence. This is what the new master uploaded for a 20 g carb entry:
 
 ```json
-{"date":1786012366166,"utcOffset":0,"app":"AAPS","isValid":true,
- "isReadOnly":false,"eventType":"Meal Bolus","carbs":20.0,"notes":""}
+{
+  "date": 1786012366166,
+  "utcOffset": 0,
+  "app": "AAPS",
+  "isValid": true,
+  "isReadOnly": false,
+  "eventType": "Meal Bolus",
+  "carbs": 20.0,
+  "notes": ""
+}
 ```
 
 `utcOffset:0`, `isValid:true` and `isReadOnly:false` are all present - that is `encodeDefaults`
 working. Without it those three vanish. Nulls are omitted, as Gson did.
 
 The strongest single result is the **signed client-control round trip**: the old client sent an
-HMAC-signed envelope, the new master verified it and acked, and the old client verified the ack back.
+HMAC-signed envelope, the new master verified it and acked, and the old client verified the ack
+back.
 A signature only verifies if the serialized bytes match, so that is close to proof rather than
 inference.
 
@@ -862,7 +912,8 @@ download-only. The food fix rests on unit tests.
 
 ### Wave 8 - `:core:nssdk` off Retrofit and OkHttp (done)
 
-The HTTP client moved to **Ktor on the OkHttp engine**, so the app reuses the OkHttp it already ships
+The HTTP client moved to **Ktor on the OkHttp engine**, so the app reuses the OkHttp it already
+ships
 rather than carrying two HTTP stacks. On iOS the engine becomes Darwin and nothing else changes,
 which is the whole reason for the move.
 
@@ -873,7 +924,8 @@ and each finding was then attacked by an agent trying to refute it. That produce
 and **30 silent-failure risks**. Three were serious enough to have shipped:
 
 - **The 304 signal only existed because of the OkHttp disk cache.** `response.raw().networkResponse
-  ?.code` can only be 304 when the cache revalidates a GET and merges the result into a 200. Ktor has
+  ?.code` can only be 304 when the cache revalidates a GET and merges the result into a 200. Ktor
+  has
   no equivalent, so `code` would have become a constant 200 - and `LoadBgWorker`'s
   `response.code != 304 && processSgvs(...)` would have become an unconditional process. The paging
   loop never exits, `storeGlucoseValuesToDb()` is never reached, and **BG never lands in the
@@ -882,16 +934,19 @@ and **30 silent-failure risks**. Three were serious enough to have shipped:
   `v3/profile?sort$desc=date&limit=1`. Rebuild the URL from the method parameters and they vanish.
   Losing `limit=1` there makes `LoadProfileStoreWorker` take `profiles[profiles.size - 1]` from an
   unsorted list, silently applying the **wrong profile**: different basal, ISF and IC.
-- **The `utcOffset` auto-retry reads the raw 400 body text.** Ktor has no separate `errorBody()`, and
+- **The `utcOffset` auto-retry reads the raw 400 body text.** Ktor has no separate `errorBody()`,
+  and
   a body read lazily or only on success loses that string. The record is then dropped permanently
   while the sync cursor advances.
 
 #### Tests before code, against the old stack
 
-49 characterization tests were written **while Retrofit was still in place**, using **MockWebServer**
+49 characterization tests were written **while Retrofit was still in place**, using **MockWebServer
+**
+
 - a real HTTP server on localhost - rather than Ktor's `MockEngine`. That choice is the point:
-`MockEngine` only exists after the swap, so tests written with it could never have proved anything
-about the behaviour before it. The same files ran unchanged against both stacks.
+  `MockEngine` only exists after the swap, so tests written with it could never have proved anything
+  about the behaviour before it. The same files ran unchanged against both stacks.
 
 They pin: every endpoint URL as a literal string; the read/write status asymmetry and its **request
 counts**; the `utcOffset` fallback verified by inspecting both request bodies; the auth headers,
@@ -900,9 +955,9 @@ inconsistently per endpoint.
 
 Two divergences were caught this way rather than in the field:
 
-| | |
-| --- | --- |
-| `$` in query keys | survived on the first try - Ktor's `encodedParameters` leaves it literal |
+|                           |                                                                                       |
+|---------------------------|---------------------------------------------------------------------------------------|
+| `$` in query keys         | survived on the first try - Ktor's `encodedParameters` leaves it literal              |
 | `/` inside a path segment | Ktor does **not** encode it, Retrofit does (`a%2Fb`). Fixed with `encodeSlash = true` |
 
 #### Decisions worth recording
@@ -917,18 +972,22 @@ Two divergences were caught this way rather than in the field:
   with the anonymous role**, and uploads stop with nothing logged), and it refreshes on 401 only,
   while Nightscout also answers 403. It also never sees the response body, so the clock-skew error
   could not exist.
-- **The 304 brake was replaced, not reproduced.** The workers now stop when the cursor cannot advance
+- **The 304 brake was replaced, not reproduced.** The workers now stop when the cursor cannot
+  advance
   (`lastServerModified <= lastLoaded`), which is what the 304 always meant. Only the modified-since
   path can stall that way; the first load pages by date and carries no server timestamp.
 - **`close()` was added** to `NSAndroidClient` and is called from `restartOnChange`. The Retrofit
   client leaked quietly on every URL or token change; a Ktor engine holds real connections.
 
 Also fixed on the way, deliberately and separately: `getVersion` / `getStatus` threw
-`retrofit2.HttpException` and `NullPointerException`, neither a `NightscoutException`; they now throw
-`UnsuccessfulNightscoutException`. And a 10 s connect timeout is now explicit - OkHttp applied one by
+`retrofit2.HttpException` and `NullPointerException`, neither a `NightscoutException`; they now
+throw
+`UnsuccessfulNightscoutException`. And a 10 s connect timeout is now explicit - OkHttp applied one
+by
 default and Ktor does not, so a dead host would otherwise hang for the full 60 s socket timeout.
 
-**Left broken on purpose:** `updateFood` and `deleteFood` declare an `{identifier}` the path does not
+**Left broken on purpose:** `updateFood` and `deleteFood` declare an `{identifier}` the path does
+not
 contain, so Retrofit refused to build them and **no request was ever sent** - food edits have never
 synced, because the endpoint is broken on the Nightscout side. A hand-written Ktor URL would have
 turned "never sends" into `PATCH /api/v3/food` and `DELETE /api/v3/food` **with no identifier**, a
@@ -938,7 +997,8 @@ verified by a test asserting zero requests.
 #### Verified on a device
 
 A new Ktor master against a **pre-KMP client** on a live Nightscout: writes accepted (201), reads
-across status / lastModified / settings / devicestatus / treatments, socket.io push received, and the
+across status / lastModified / settings / devicestatus / treatments, socket.io push received, and
+the
 old Gson/Retrofit client stored what Ktor wrote. The auth flow ran for real - a 401 triggered
 `GET /api/v2/authorization/request/<token>` and a 200 - which exercised the hand-written interceptor
 and the leading-slash refresh URL together.
@@ -959,12 +1019,12 @@ in `commonMain`**, and all four consumer modules build unchanged.
 
 Only four things blocked `commonMain`, and none needed design work:
 
-| Blocker | Fix |
-| --- | --- |
-| `@JvmSynthetic` on an `internal` helper | dropped - it was hiding an already-internal function from Java |
+| Blocker                                      | Fix                                                                                                                                                                   |
+|----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `@JvmSynthetic` on an `internal` helper      | dropped - it was hiding an already-internal function from Java                                                                                                        |
 | `KClass<out java.lang.Exception>` in `retry` | `KClass<out Throwable>`. Exact-class matching and the `catch (Exception)` are unchanged, so which exceptions are excluded and how many attempts happen stay identical |
-| `Dispatchers.IO`, 2 sites | `expect val nsIoDispatcher`; the JVM actual is the same `Dispatchers.IO` as before |
-| the Ktor engine and its logging interceptor | `expect fun nsHttpClient(...)` - OkHttp on JVM, CIO on Native |
+| `Dispatchers.IO`, 2 sites                    | `expect val nsIoDispatcher`; the JVM actual is the same `Dispatchers.IO` as before                                                                                    |
+| the Ktor engine and its logging interceptor  | `expect fun nsHttpClient(...)` - OkHttp on JVM, CIO on Native                                                                                                         |
 
 #### The crypto did not need solving
 
@@ -1003,15 +1063,142 @@ through every caller.
 #### Honest limits of the proof
 
 `mingwX64` is a **compile proof, not a shipping target**: request logging is not wired up there, and
-CIO stands in for what an iOS build would use (Darwin). What it does prove is real - 72 files of wire
+CIO stands in for what an iOS build would use (Darwin). What it does prove is real - 72 files of
+wire
 layer, models, mappers and HTTP client with no JVM API anywhere in them.
+
+### Wave 10 - `TextRef`, a seam for strings (phase 1 done)
+
+Every user facing string in AAPS is an Android `R.string` id: a plain `Int` handed out by AAPT at
+build time. The preference keys alone carry 394 of them - a title and often a summary on each of
+about 300 constants, spread over 40 enums in `:core:keys` and the plugins. An iOS or desktop client
+has no AAPT and therefore no such ids, so this is the next real blocker after the network layer.
+
+#### The obvious answer does not fit
+
+The KMP answer is Compose Multiplatform Resources: keep the same `strings.xml` and the same
+`values-XX` folders, let the Gradle plugin generate a `Res` object per module, and read strings with
+`stringResource(Res.string.x)` in Compose or `getString(Res.string.x)` outside it. Translation stays
+in Crowdin exactly as it is now, which was the main worry and turned out to be a non-issue.
+
+Two things stop it from going on the key classes themselves:
+
+- **`getString()` is `suspend`.** In Compose that is fine. Outside Compose it is not: a preference
+  key's title is read from view models, notification builders and the search index, and none of them
+  are suspend today.
+- **There is no public way to ask for a specific locale.** `SearchIndexBuilder` builds a second,
+  always-English index so a user with a translated UI can still search using the English term they
+  read in the docs. Today that is `rh.gsNotLocalised(id)`. compose-resources has a
+  `ResourceEnvironment`, but its constructor is `internal` and `getSystemResourceEnvironment()`
+  takes
+  no parameters, so the English index cannot be built at all. That is a feature loss, not a port.
+
+moko-resources was evaluated as the alternative and rejected: it solves the suspend problem and has
+a
+real locale override, but it is a third party plugin, it wants its own `MR` object and its own
+`StringDesc`, and adopting it means every module on the KMP path takes a dependency on it before any
+of them is actually multiplatform.
+
+#### What was built instead
+
+`TextRef` is a two case sealed interface in `:core:keys`, with no Android types in it:
+
+```kotlin
+sealed interface TextRef {
+    data class Res(val id: Int, val args: List<Any> = emptyList()) : TextRef
+    data class Literal(val text: String) : TextRef
+}
+```
+
+It is deliberately **not** a resource system. It is a seam. `PreferenceKey.titleResId: Int` became
+`PreferenceKey.title: TextRef`, and `summaryResId: Int?` became `summary: TextRef?`, so nothing
+outside the resolvers passes a bare resource id around any more. There are exactly two resolvers:
+
+- `app.aaps.core.ui.compose.stringResource(ref)` for Compose,
+- `ResourceHelper.gs(ref)` / `gsNotLocalised(ref)` for everything else, both default methods on the
+  interface so no implementation had to change.
+
+Today `TextRef.Res.id` is always an ordinary AAPT id and both resolvers just pass it through. When a
+module later does move its strings to `commonMain/composeResources`, that module's ids can be
+encoded as negative tokens and only these two functions learn about it. The call sites do not change
+a second time.
+
+`TextRef.Literal` is the other half, and it is what makes the type worth having rather than a
+`typealias`: some titles are not resources at all. It also collapses the "resource id **or** already
+resolved string" property pairs that had started to appear.
+
+#### Phase 1, and what it cost
+
+The 40 preference key enums were converted by script, and every enum **constant** is byte for byte
+unchanged - they still say `titleResId = R.string.x`. Only the constructor parameter turned private
+and two property overrides were added after the constants:
+
+```kotlin
+override val title: TextRef = TextRef.Res(titleResId)
+override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+```
+
+That kept all 272 constants and their 394 resource references untouched. `PreferenceSubScreenDef`
+got
+the same treatment for the same reason - roughly fifty plugin call sites build it with
+`titleResId = R.string.x`.
+
+`:core:interfaces` had to change `implementation(project(":core:keys"))` to `api`, because `TextRef`
+now appears in a `ResourceHelper` signature. That is not a new module edge, only a widened one.
+
+The `if (titleResId == 0) return` guards in nine composables went with it: a title is now a non-null
+`TextRef`, so "no title" is not representable at the call site.
+
+**One of those guards was not dead, and the first check for that was wrong.** Grepping for
+`titleResId = 0` finds nothing, which is what the guards were removed on - but 26 key enums
+*defaulted* the parameter to `0`, and one constant took the default:
+`RileyLinkStringPreferenceKey.MacAddress`. It is storage, not a preference - the pairing wizard
+writes it and it is on no screen - so the composables never saw it, but it is registered, so it did
+reach `SearchIndexBuilder` and would have been indexed with an empty title.
+
+Rather than guard it, the key moved to where it belonged: `RileyLinkStringKey`, the
+`StringNonPreferenceKey` enum sitting next to it that already held the RileyLink device `Name`. The
+preference key string, the default and `exportable` are unchanged, so a paired RileyLink keeps its
+address and settings export is unaffected - `isExportableKey()` walks all registered enums, and both
+were already registered together. `getAllPreferenceKeys()` filters to `PreferenceKey`, so the key
+simply stops reaching the index. No guard, no magic number.
+
+With the last user of the default gone, `titleResId: Int = 0` was removed from all 26 enums, so the
+compiler now rejects a preference key declared without a title. That is the part worth keeping: the
+trap cannot come back.
+
+#### A sentinel that had been waiting to bite
+
+`SearchableItem.Wiki` carries a page title that comes from the ReadTheDocs API, so it is plain text,
+not a resource. It was stored as `titleResId = 0`, and `SearchIndexBuilder.safeGetString()` maps `0`
+to `""` - which would make every wiki hit unfindable by its own title.
+
+It never fired. Wiki results are a live search, not part of the built index: `WikiSearchRepository`
+fills `SearchIndexEntry` itself, with `localizedTitle = title`, and never calls
+`createIndexEntry()`.
+So the `0` sat there unread, correct only by the accident that nothing looked at it. It is now
+`TextRef.Literal(wikiTitle)`, and the snippet is the summary, which is what both fields meant all
+along. The point is not a fixed bug - it is that the sentinel could not survive the type change,
+whereas an `Int` field will hold a lie indefinitely.
+
+#### Deliberately left for later
+
+`IntPreferenceKey.entries: Map<Int, Int>` and `resolvedEntries: Map<Int, String>?` are the same
+resource-id-or-string pair that `TextRef` exists to collapse, and collapsing them would delete
+`IntKeyWithEntries` and `withEntries` entirely. It is not in phase 1 because it touches plugin call
+sites, and phase 1 was scoped to `:core:*`.
+
+`UnitType.valueResId()` / `rangeResId()` stay `Int?`. They are format templates that need arguments
+supplied at the call site, they live in `:core:ui`, and they are only ever read from Compose - so
+routing them through `TextRef` would add a hop and remove nothing.
 
 ### Was behaviour preserved?
 
 An audit ran five parallel agents against the migrated code, each trying to find an input where old
 and new differ, with a second pass trying to refute what they found. Results worth keeping:
 
-- **`DecimalFormat` -> `NumberFormat`: identical.** 17 patterns against ~90 values across 57 locales,
+- **`DecimalFormat` -> `NumberFormat`: identical.** 17 patterns against ~90 values across 57
+  locales,
   then all 17 against every `Locale.getAvailableLocales()` (~800). Zero differences, including NaN,
   infinities, -0.0, 1e300 and the half-even boundaries.
 - **`TimeUnit` -> `kotlin.time`: identical where it can be reached.** Checked by loading the real
@@ -1027,14 +1214,15 @@ and new differ, with a second pass trying to refute what they found. Results wor
 Three real changes, all of them fixes, and one bug that the audit caught and that is now fixed (the
 formatter cache, above):
 
-| Change | Effect |
-| --- | --- |
-| `qs()` no longer groups | `1234.5` with 1 digit: en `1,234.5` -> `1234.5`, de `1.234.5` -> `1234.5` |
+| Change                              | Effect                                                                     |
+|-------------------------------------|----------------------------------------------------------------------------|
+| `qs()` no longer groups             | `1234.5` with 1 digit: en `1,234.5` -> `1234.5`, de `1.234.5` -> `1234.5`  |
 | `formatUS` uses `Locale.US` symbols | correct in Arabic; also swaps U+2212 for `-` on sv, nb, lt, hr, fi, sl, et |
-| automation `%d` patterns | the literal-digit bug is gone, but nothing renders it |
+| automation `%d` patterns            | the literal-digit bug is gone, but nothing renders it                      |
 
 `qs()` also gained a `max(0, digits)` guard: `DecimalFormat` used to clamp a negative
-`maximumFractionDigits` to 0, while `NumberFormat` throws. No caller passes a negative, but the guard
+`maximumFractionDigits` to 0, while `NumberFormat` throws. No caller passes a negative, but the
+guard
 keeps the old contract on a public interface method.
 
 ---
@@ -1049,24 +1237,31 @@ keeps the old contract on a public interface method.
 3. ~~Wave 2 size?~~ **Decided: convert `TimeUnit` only, leave `T` alone.** `TimeUnit` is a real
    blocker and had to go. `T` is not, so replacing it would have been style work paid for with about
    221 build warnings. The dead `T.now()` was removed instead, which is a real cleanup with no cost.
-4. ~~Use `DateUtil` instead of `System.currentTimeMillis()` everywhere?~~ **Decided: only where it is
-   needed.** The principle is right - `DateUtil` is an interface, so it mocks in tests and can differ
+4. ~~Use `DateUtil` instead of `System.currentTimeMillis()` everywhere?~~ **Decided: only where it
+   is
+   needed.** The principle is right - `DateUtil` is an interface, so it mocks in tests and can
+   differ
    per platform - but the sweep would be **547 sites in 227 files**, plus 62 `TimeZone.getDefault()`
    in 57 files, and most of it sits in pump drivers that will never be KMP. Do it in the modules on
    the KMP path, leave `:pump:*` and `:wear` alone, and make it a rule for new code so the number
    stops growing.
-5. ~~Which branch for the first KMP module?~~ **Decided: `kmp/core-data-experiment`, and it worked.**
+5. ~~Which branch for the first KMP module?~~ **Decided: `kmp/core-data-experiment`, and it worked.
+   **
    The fear was that converting `:core:data` to `kotlin("multiplatform")` would change how Gradle
    resolves it for the 13 dependent modules. It does not - a multiplatform module still publishes a
-   normal Android variant, and all 13 built unmodified. The branch was meant to be thrown away and is
+   normal Android variant, and all 13 built unmodified. The branch was meant to be thrown away and
+   is
    now worth merging.
 6. **Still open: `wear/SmallestDoubleString.kt`** - the last `DecimalFormat` in a non-test file that
    is not the deliberate platform seam. It builds patterns from a runtime string, so it needs real
    logic rather than a mapping.
-7. ~~The `:core:nssdk` converter switch.~~ **Done - see wave 7.** The joda parsing turned out **not**
-   to be part of the contract: it is a plain helper on `RemoteTreatment`, called after decoding, so it
+7. ~~The `:core:nssdk` converter switch.~~ **Done - see wave 7.** The joda parsing turned out **not
+   **
+   to be part of the contract: it is a plain helper on `RemoteTreatment`, called after decoding, so
+   it
    moves on its own schedule. The ~8 non-null fields were the real answer to this question, and the
-   answer was "give them defaults" - see the trap in wave 7. `RemoteStatusResponse` was left strict on
+   answer was "give them defaults" - see the trap in wave 7. `RemoteStatusResponse` was left strict
+   on
    purpose: `v3/status` is AAPS's own call to a server it just authenticated against, and a reply
    missing those fields is not something to carry on from.
 8. ~~Retrofit converter, or straight to Ktor?~~ **Decided: the converter first, and the reasoning in
@@ -1076,21 +1271,27 @@ keeps the old contract on a public interface method.
    characterization tests could actually do their job on the serialization half. The throwaway
    dependency cost nothing in the end: Retrofit 3.0.0 ships an official
    `converter-kotlinx-serialization`, so it was one catalog line and no third party code.
-9. ~~The OkHttp disk cache needs a `Context`.~~ **Resolved: there is no cache.** It existed only so a
+9. ~~The OkHttp disk cache needs a `Context`.~~ **Resolved: there is no cache.** It existed only so
+   a
    revalidated GET could surface as a 304, which the paging workers used as their stop condition.
-   That is now expressed directly - stop when the cursor cannot advance - so the cache, the `Context`
+   That is now expressed directly - stop when the cursor cannot advance - so the cache, the
+   `Context`
    and the two `Cache` instances that shared one directory are all gone. See wave 8.
 10. ~~R8 has never run.~~ **Not a risk: AAPS does not minify.** Both convention plugins
     (`android-app-dependencies` and `android-module-dependencies`) set `isMinifyEnabled = false` for
     the `release` build type, so R8 never shrinks or obfuscates and the usual
     "kotlinx.serialization needs keep rules" problem cannot occur here. A release build was run
     anyway: it succeeds, and all five generated `$$serializer` classes plus the Retrofit kotlinx
-    converter are present in the release dex. The `benchmark` variant (`initWith(release)` plus debug
+    converter are present in the release dex. The `benchmark` variant (`initWith(release)` plus
+    debug
     signing) installs and starts clean; its runtime sync check is still outstanding because the
     emulator lost DNS, which starved both apps equally.
-11. **Still open: merge `kmp/core-data-experiment` into `dev`.** Waves 5 to 9 all live there. Nothing
-    argues against it any more - the branch was device-verified in mixed-version pairs at each step -
-    but it is a real merge of a wire format change and deserves its own decision. It gets riskier the
+11. **Still open: merge `kmp/core-data-experiment` into `dev`.** Waves 5 to 9 all live there.
+    Nothing
+    argues against it any more - the branch was device-verified in mixed-version pairs at each
+    step -
+    but it is a real merge of a wire format change and deserves its own decision. It gets riskier
+    the
     longer it waits: `dev` has not moved yet, so the merge is still a fast-forward.
 12. **Still open: client-control crypto on a non-JVM platform.** It sits in `jvmMain` and nothing in
     `commonMain` calls it, so no target needs it today. A **follower** never signs commands or
@@ -1100,12 +1301,26 @@ keeps the old contract on a public interface method.
 13. **Still open: does web ever matter?** It is the one target that changes the **API shape** rather
     than just the implementation - WebCrypto is async-only, so `sign()` and `wrap()` would have to
     become `suspend`. Cheap to decide now, expensive to retrofit.
+14. ~~compose-resources, moko-resources, or something else for strings?~~ **Decided: `TextRef` now,
+    compose-resources later, per module.** The two are not alternatives. compose-resources is still
+    the destination - same `strings.xml`, same Crowdin - but it cannot go on the key classes today,
+    because `getString()` is `suspend` and there is no public locale override, which would cost the
+    English search index. `TextRef` is the seam that lets each module move on its own schedule
+    without touching call sites twice. See wave 10.
+15. **Still open: collapse `IntPreferenceKey.entries` / `resolvedEntries`.** Same
+    resource-id-or-string pair, and `TextRef` is exactly the type for it, but it reaches into plugin
+    call sites so it was left out of the `:core:*` phase.
+16. ~~`RileyLinkStringPreferenceKey.MacAddress` should be a `NonPreferenceKey`.~~ **Done - moved to
+    `RileyLinkStringKey`.** It is storage, not a preference: no title, no screen, written by the
+    pairing wizard. With it gone the `titleResId = 0` default came out of all 26 enums, so a
+    preference key without a title no longer compiles. See wave 10.
 
 Waves 1 to 4 are committed on `dev`. Waves 5 to 9 are committed on `kmp/core-data-experiment`, each
 verified against a live Nightscout before the next one started - waves 5 and 6 on WSA, waves 7 to 9
 on an emulator running a new master against a **pre-KMP client**, so every step was checked in a
-mixed-version pair rather than only against itself. The `FoodManagement` comma defect in section 10
-is found but not fixed.
+mixed-version pair rather than only against itself. Wave 10 is on the same branch and is not on a
+device yet - it is a compile time refactor with no wire format in it, so the risk is different in
+kind from waves 5 to 9. The `FoodManagement` comma defect in section 10 is found but not fixed.
 
 ---
 

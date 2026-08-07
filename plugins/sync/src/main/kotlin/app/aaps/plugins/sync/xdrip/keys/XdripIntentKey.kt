@@ -3,12 +3,13 @@ package app.aaps.plugins.sync.xdrip.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.sync.R
 
 enum class XdripIntentKey(
     override val key: String,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.CLICK,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -26,4 +27,8 @@ enum class XdripIntentKey(
         summaryResId = R.string.xdrip_local_broadcasts_summary,
         preferenceType = PreferenceType.CLICK
     )
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

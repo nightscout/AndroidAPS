@@ -9,4 +9,5 @@ enum class RileyLinkStringKey(
 ) : StringNonPreferenceKey {
 
     Name("pref_rileylink_name", ""),
+    MacAddress("pref_rileylink_mac_address", ""),
 }

@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.PreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
@@ -21,9 +22,9 @@ sealed class SearchableItem {
     abstract val key: String
 
     /**
-     * Resource ID for the item's display title.
+     * The item's display title.
      */
-    abstract val titleResId: Int
+    abstract val title: TextRef
 
     /**
      * Compose ImageVector icon.
@@ -31,9 +32,9 @@ sealed class SearchableItem {
     open val icon: ImageVector? = null
 
     /**
-     * Optional resource ID for a summary/description.
+     * Optional summary/description.
      */
-    open val summaryResId: Int? = null
+    open val summary: TextRef? = null
 
     /**
      * Optional reference to the plugin that owns this item.
@@ -57,8 +58,8 @@ sealed class SearchableItem {
     ) : SearchableItem() {
 
         override val key: String = preferenceKey.key
-        override val titleResId: Int = preferenceKey.titleResId
-        override val summaryResId: Int? = preferenceKey.summaryResId
+        override val title: TextRef = preferenceKey.title
+        override val summary: TextRef? = preferenceKey.summary
         override val plugin: PluginBase? = ownerPlugin
     }
 
@@ -75,8 +76,8 @@ sealed class SearchableItem {
     ) : SearchableItem() {
 
         override val key: String = screenDef.key
-        override val titleResId: Int = screenDef.titleResId
-        override val summaryResId: Int? = screenDef.summaryResId
+        override val title: TextRef = screenDef.title
+        override val summary: TextRef? = screenDef.summary
         override val plugin: PluginBase? = ownerPlugin
         override val icon: ImageVector? = screenDef.icon
     }
@@ -92,11 +93,11 @@ sealed class SearchableItem {
     ) : SearchableItem() {
 
         override val key: String = elementType.name
-        override val titleResId: Int = elementType.labelResId()
+        override val title: TextRef = TextRef.Res(elementType.labelResId())
 
         @Deprecated("use icon")
         override val icon: ImageVector = elementType.icon()
-        override val summaryResId: Int? = elementType.descriptionResId().takeIf { it != 0 }
+        override val summary: TextRef? = elementType.descriptionResId().takeIf { it != 0 }?.let { TextRef.Res(it) }
     }
 
     /**
@@ -110,8 +111,8 @@ sealed class SearchableItem {
     ) : SearchableItem() {
 
         override val key: String = pluginRef.javaClass.simpleName
-        override val titleResId: Int = pluginRef.pluginDescription.pluginName
-        override val summaryResId: Int? = pluginRef.pluginDescription.description.takeIf { it != -1 }
+        override val title: TextRef = TextRef.Res(pluginRef.pluginDescription.pluginName)
+        override val summary: TextRef? = pluginRef.pluginDescription.description.takeIf { it != -1 }?.let { TextRef.Res(it) }
         override val plugin: PluginBase = pluginRef
     }
 
@@ -130,6 +131,13 @@ sealed class SearchableItem {
     ) : SearchableItem() {
 
         override val key: String = url
-        override val titleResId: Int = 0 // not used — title is dynamic
+
+        /**
+         * The title comes from the ReadTheDocs API, so it is plain text, not a resource. It used to
+         * be stored as resource id 0, which the index then turned into an empty string - wiki hits
+         * could not be found by their own title.
+         */
+        override val title: TextRef = TextRef.Literal(wikiTitle)
+        override val summary: TextRef? = snippet?.let { TextRef.Literal(it) }
     }
 }

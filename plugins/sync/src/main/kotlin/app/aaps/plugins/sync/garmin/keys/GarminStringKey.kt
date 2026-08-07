@@ -3,12 +3,13 @@ package app.aaps.plugins.sync.garmin.keys
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.sync.R
 
 enum class GarminStringKey(
     override val key: String,
     override val defaultValue: String,
-    override val titleResId: Int = 0,
+    private val titleResId: Int,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -23,4 +24,7 @@ enum class GarminStringKey(
 ) : StringPreferenceKey {
 
     RequestKey(key = "garmin_aaps_key", defaultValue = "", titleResId = R.string.garmin_request_key),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
 }

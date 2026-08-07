@@ -32,7 +32,7 @@ fun PreferenceSheetContent(
             if (groups.isEmpty()) {
                 // Single flat list → one always-expanded card titled by the def itself.
                 CollapsibleCardSectionContent(
-                    titleResId = settingsDef.titleResId,
+                    title = settingsDef.title,
                     expanded = true,
                     onToggle = {},
                     icon = settingsDef.icon,
@@ -47,7 +47,7 @@ fun PreferenceSheetContent(
                 groups.forEach { group ->
                     var expanded by remember(group.key) { mutableStateOf(false) }
                     CollapsibleCardSectionContent(
-                        titleResId = group.titleResId,
+                        title = group.title,
                         expanded = expanded,
                         onToggle = { expanded = !expanded },
                         icon = group.icon

@@ -7,14 +7,15 @@ import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.SyncChannel
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.SyncSpec
+import app.aaps.core.keys.interfaces.TextRef
 
 enum class IntKey(
     override val key: String,
     override val defaultValue: Int,
     override val min: Int,
     override val max: Int,
-    override val titleResId: Int,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val entries: Map<Int, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
@@ -451,4 +452,8 @@ enum class IntKey(
         ),
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

@@ -8,11 +8,11 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import app.aaps.core.interfaces.configuration.Config as AppConfig
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
@@ -24,6 +24,7 @@ import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import app.aaps.core.interfaces.configuration.Config as AppConfig
 import app.aaps.core.ui.R as CoreUiR
 
 /** Robolectric render tests for the remaining preference composables (adaptive variants + base widgets). */
@@ -111,7 +112,7 @@ class MorePreferenceComponentsTest {
     fun clickableCategoryHeaderRendersTitle() {
         render {
             ClickablePreferenceCategoryHeader(
-                titleResId = CoreUiR.string.treatments,
+                title = TextRef.Res(CoreUiR.string.treatments),
                 expanded = false,
                 onToggle = {}
             )
@@ -143,7 +144,7 @@ class MorePreferenceComponentsTest {
     fun collapsibleCardShowsContentWhenExpanded() {
         render {
             CollapsibleCardSectionContent(
-                titleResId = CoreUiR.string.treatments,
+                title = TextRef.Res(CoreUiR.string.treatments),
                 expanded = true,
                 onToggle = {},
                 content = { Text("cardbody") }

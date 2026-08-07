@@ -58,7 +58,7 @@ fun LazyListScope.addPreferenceSubScreenDef(
         // Get visibility context from CompositionLocal
         val visibilityContext = LocalVisibilityContext.current
         CollapsibleCardSectionContent(
-            titleResId = def.titleResId,
+            title = def.title,
             summaryItems = def.effectiveSummaryItems(),
             expanded = isExpanded,
             onToggle = { sectionState?.toggle(sectionKey, SectionLevel.TOP_LEVEL) },
@@ -112,7 +112,7 @@ private fun RenderPreferenceItems(
 
                     // Header without card (no icon for nested subscreens)
                     ClickablePreferenceCategoryHeader(
-                        titleResId = item.titleResId,
+                        title = item.title,
                         summaryItems = item.effectiveSummaryItems(),
                         expanded = isSubExpanded,
                         onToggle = { sectionState?.toggle(subSectionKey, SectionLevel.SUB_SECTION, parentKey = parentKey) },

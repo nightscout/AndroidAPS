@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
@@ -235,9 +236,6 @@ class SearchIndexBuilder @Inject constructor(
         val parentScreenMap = buildParentScreenMap()
 
         allKeys.forEach { prefKey ->
-            // Skip keys with invalid title resource
-            if (prefKey.titleResId == 0) return@forEach
-
             // Skip keys not visible in the current build mode (mirror calculatePreferenceVisibility)
             if (preferences.apsMode && !prefKey.showInApsMode) return@forEach
             if (preferences.nsclientMode && !prefKey.showInNsClientMode) return@forEach
@@ -314,10 +312,10 @@ class SearchIndexBuilder @Inject constructor(
             is SearchableItem.Wiki       -> SearchCategory.WIKI
         }
 
-        val localizedTitle = safeGetString(item.titleResId)
-        val englishTitle = safeGetStringNotLocalised(item.titleResId)
-        val localizedSummary = item.summaryResId?.let { safeGetString(it) }
-        val englishSummary = item.summaryResId?.let { safeGetStringNotLocalised(it) }
+        val localizedTitle = safeGetString(item.title)
+        val englishTitle = safeGetStringNotLocalised(item.title)
+        val localizedSummary = item.summary?.let { safeGetString(it) }
+        val englishSummary = item.summary?.let { safeGetStringNotLocalised(it) }
 
         return SearchIndexEntry(
             item = item,
@@ -329,17 +327,17 @@ class SearchIndexBuilder @Inject constructor(
         )
     }
 
-    private fun safeGetString(resId: Int): String {
+    private fun safeGetString(ref: TextRef): String {
         return try {
-            if (resId != 0) rh.gs(resId) else ""
+            rh.gs(ref)
         } catch (_: Exception) {
             ""
         }
     }
 
-    private fun safeGetStringNotLocalised(resId: Int): String {
+    private fun safeGetStringNotLocalised(ref: TextRef): String {
         return try {
-            if (resId != 0) rh.gsNotLocalised(resId) else ""
+            rh.gsNotLocalised(ref)
         } catch (_: Exception) {
             ""
         }

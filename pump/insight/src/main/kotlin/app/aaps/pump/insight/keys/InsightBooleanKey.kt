@@ -1,13 +1,14 @@
 package app.aaps.pump.insight.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.insight.R
 
 enum class InsightBooleanKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -29,4 +30,8 @@ enum class InsightBooleanKey(
     EnableTbrEmulation("insight_enable_tbr_emulation", false, titleResId = R.string.enable_tbr_emulation, summaryResId = R.string.enable_tbr_emulation_summary),
     DisableVibration("insight_disable_vibration", false, titleResId = R.string.disable_vibration, summaryResId = R.string.disable_vibration_summary),
     DisableVibrationAuto("insight_disable_vibration_auto", false, titleResId = R.string.disable_vibration_auto, summaryResId = R.string.disable_vibration_auto_summary),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

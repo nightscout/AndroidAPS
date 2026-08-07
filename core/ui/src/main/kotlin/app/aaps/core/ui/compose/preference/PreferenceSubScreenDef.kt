@@ -3,11 +3,16 @@ package app.aaps.core.ui.compose.preference
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.PreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 
 /**
  * Lightweight preference subscreen definition.
  * Can contain both PreferenceKeys and nested PreferenceSubScreenDefs for hierarchical structure.
  * Content is auto-generated from items using AdaptivePreferenceList.
+ *
+ * The constructor still takes plain resource ids, because roughly fifty plugin call sites build
+ * these with `titleResId = R.string.x`. The [title] and [summary] properties wrap them, so the
+ * rendering code only ever deals with [TextRef], the same as it does for [PreferenceKey].
  *
  * @param key Unique key for this subscreen
  * @param titleResId String resource ID for the screen title
@@ -23,12 +28,18 @@ data class PreferenceSubScreenDef(
     val icon: ImageVector? = null
 ) : PreferenceItem {
 
-    /** Effective summary items - from items' titleResId */
-    fun effectiveSummaryItems(): List<Int> =
+    /** Screen title, in the same form as [PreferenceKey.title]. */
+    val title: TextRef = TextRef.Res(titleResId)
+
+    /** Optional summary, in the same form as [PreferenceKey.summary]. */
+    val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+
+    /** Titles of the contained items, used to build the summary line in the parent list. */
+    fun effectiveSummaryItems(): List<TextRef> =
         items.mapNotNull { item ->
             when (item) {
-                is PreferenceKey          -> item.titleResId.takeIf { it != 0 }
-                is PreferenceSubScreenDef -> item.titleResId.takeIf { it != 0 }
+                is PreferenceKey          -> item.title
+                is PreferenceSubScreenDef -> item.title
                 else                      -> null
             }
         }

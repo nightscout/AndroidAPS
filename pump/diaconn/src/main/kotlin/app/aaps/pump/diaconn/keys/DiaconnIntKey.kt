@@ -3,6 +3,7 @@ package app.aaps.pump.diaconn.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.diaconn.R
 
 enum class DiaconnIntKey(
@@ -10,7 +11,7 @@ enum class DiaconnIntKey(
     override val defaultValue: Int,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
-    override val titleResId: Int = 0,
+    private val titleResId: Int,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val entries: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
@@ -41,4 +42,7 @@ enum class DiaconnIntKey(
             8 to R.string.bolus_speed_8
         )
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
 }

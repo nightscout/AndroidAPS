@@ -41,7 +41,7 @@ class HardLimitsImplTest : TestBase() {
         runTest {
             whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())).thenReturn(PersistenceLayer.TransactionResult())
         }
-        whenever(rh.gs(any())).thenReturn("")
+        whenever(rh.gs(any<Int>())).thenReturn("")
         whenever(rh.gs(any(), any())).thenReturn("")
     }
 

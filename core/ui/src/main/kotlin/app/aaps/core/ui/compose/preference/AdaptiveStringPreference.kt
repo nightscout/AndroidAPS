@@ -11,17 +11,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Composable string preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses stringKey.titleResId
- * @param summaryResId Optional summary resource ID. If null, uses stringKey.summaryResId
+ * @param title Optional title override. If null, uses stringKey.title
+ * @param summary Optional summary override. If null, uses stringKey.summary
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  *
  * @see AdaptiveStringPreferencePreview
@@ -29,16 +31,13 @@ import app.aaps.core.keys.interfaces.VisibilityContext
 @Composable
 fun AdaptiveStringPreferenceItem(
     stringKey: StringPreferenceKey,
-    titleResId: Int = 0,
-    summaryResId: Int? = null,
+    title: TextRef? = null,
+    summary: TextRef? = null,
     isPassword: Boolean = false,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else stringKey.titleResId
-    val effectiveSummaryResId = summaryResId ?: stringKey.summaryResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: stringKey.title
+    val effectiveSummary = summary ?: stringKey.summary
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = stringKey,
@@ -53,11 +52,11 @@ fun AdaptiveStringPreferenceItem(
     val isSecure = isPassword || stringKey.isPassword || stringKey.isPin
 
     // Get dialog summary from key
-    val dialogSummary = if (effectiveSummaryResId != null) stringResource(effectiveSummaryResId) else null
+    val dialogSummary = if (effectiveSummary != null) stringResource(effectiveSummary) else null
 
     TextFieldPreference(
         state = state,
-        title = { Text(stringResource(effectiveTitleResId)) },
+        title = { Text(stringResource(effectiveTitle)) },
         textToValue = { text ->
             val result = validator.validate(text)
             if (result.isValid) text else null
@@ -69,16 +68,16 @@ fun AdaptiveStringPreferenceItem(
             }
 
             isSecure && value.isEmpty()    -> {
-                val notSetResId = if (stringKey.isPin) app.aaps.core.ui.R.string.pin_not_set else app.aaps.core.ui.R.string.password_not_set
-                { Text(stringResource(effectiveSummaryResId ?: notSetResId)) }
+                val notSetResId = if (stringKey.isPin) R.string.pin_not_set else R.string.password_not_set
+                { Text(stringResource(effectiveSummary ?: TextRef.Res(notSetResId))) }
             }
 
             value.isNotEmpty()             -> {
                 { Text(value) }
             }
 
-            effectiveSummaryResId != null  -> {
-                { Text(stringResource(effectiveSummaryResId)) }
+            effectiveSummary != null       -> {
+                { Text(stringResource(effectiveSummary)) }
             }
 
             else                           -> null

@@ -14,11 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Inline text field for string preferences — for use in wizards and forms
@@ -29,9 +30,9 @@ import app.aaps.core.ui.compose.AapsSpacing
 @Composable
 fun InlineStringPreferenceItem(
     stringKey: StringPreferenceKey,
-    titleResId: Int = 0
+    title: TextRef? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else stringKey.titleResId
+    val effectiveTitle = title ?: stringKey.title
     val state = rememberPreferenceStringState(stringKey)
     val validator = stringKey.validator
     val text = state.value
@@ -46,9 +47,7 @@ fun InlineStringPreferenceItem(
         onValueChange = { newValue ->
             state.value = newValue
         },
-        label = if (effectiveTitleResId != 0) {
-            { Text(stringResource(effectiveTitleResId)) }
-        } else null,
+        label = { Text(stringResource(effectiveTitle)) },
         isError = !validationResult.isValid,
         supportingText = if (!validationResult.isValid) {
             { Text(validationResult.errorMessage ?: "") }
@@ -67,19 +66,17 @@ fun InlineStringPreferenceItem(
 @Composable
 fun InlineStringListPreferenceItem(
     stringKey: StringPreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     entries: Map<String, String>
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else stringKey.titleResId
+    val effectiveTitle = title ?: stringKey.title
     val state = rememberPreferenceStringState(stringKey)
     val selectedValue = state.value
 
-    if (effectiveTitleResId != 0) {
-        Text(
-            text = stringResource(effectiveTitleResId),
-            style = MaterialTheme.typography.titleMedium
-        )
-    }
+    Text(
+        text = stringResource(effectiveTitle),
+        style = MaterialTheme.typography.titleMedium
+    )
 
     Column(modifier = Modifier.selectableGroup()) {
         entries.forEach { (value, label) ->

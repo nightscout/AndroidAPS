@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.InlineStringListPreferenceItem
 import javax.inject.Inject
 
@@ -48,7 +49,7 @@ class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelp
         }
         InlineStringListPreferenceItem(
             stringKey = key,
-            titleResId = label ?: 0,
+            title = label?.let { TextRef.Res(it) },
             entries = entries
         )
     }

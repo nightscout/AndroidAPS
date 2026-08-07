@@ -6,16 +6,18 @@ package app.aaps.core.ui.compose.preference
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
  * Composable list int preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses intKey.titleResId
+ * @param title Optional title override. If null, uses intKey.title
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  *
  * @see AdaptiveListIntPreferencePreview
@@ -23,15 +25,12 @@ import app.aaps.core.keys.interfaces.VisibilityContext
 @Composable
 fun AdaptiveListIntPreferenceItem(
     intKey: IntPreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     entries: List<String>,
     entryValues: List<Int>,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else intKey.titleResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: intKey.title
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = intKey,
@@ -47,13 +46,12 @@ fun AdaptiveListIntPreferenceItem(
     val currentEntry = entries.getOrElse(currentIndex) { currentValue.toString() }
 
     // Get dialog summary from key
-    val summaryResId = intKey.summaryResId
-    val dialogSummary = if (summaryResId != null && summaryResId != 0) stringResource(summaryResId) else null
+    val dialogSummary = stringResourceOrNull(intKey.summary)
 
     ListPreference(
         state = state,
         values = entryValues,
-        title = { Text(stringResource(effectiveTitleResId)) },
+        title = { Text(stringResource(effectiveTitle)) },
         enabled = visibility.enabled,
         summary = { Text(currentEntry) },
         dialogSummary = dialogSummary,
@@ -67,20 +65,17 @@ fun AdaptiveListIntPreferenceItem(
 /**
  * Composable string list preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses stringKey.titleResId
+ * @param title Optional title override. If null, uses stringKey.title
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  */
 @Composable
 fun AdaptiveStringListPreferenceItem(
     stringKey: StringPreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     entries: Map<String, String>,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else stringKey.titleResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: stringKey.title
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = stringKey,
@@ -95,13 +90,12 @@ fun AdaptiveStringListPreferenceItem(
     val values = entries.keys.toList()
 
     // Get dialog summary from key
-    val summaryResId = stringKey.summaryResId
-    val dialogSummary = if (summaryResId != null && summaryResId != 0) stringResource(summaryResId) else null
+    val dialogSummary = stringResourceOrNull(stringKey.summary)
 
     ListPreference(
         state = state,
         values = values,
-        title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, stringKey) },
+        title = { PreferenceTitleWithSyncBadge(effectiveTitle, stringKey) },
         enabled = visibility.enabled,
         summary = { Text(currentEntry) },
         dialogSummary = dialogSummary,

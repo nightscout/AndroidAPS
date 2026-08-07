@@ -1,13 +1,14 @@
 package app.aaps.pump.common.hw.rileylink.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.common.hw.rileylink.R
 
 enum class RileylinkBooleanPreferenceKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -32,4 +33,8 @@ enum class RileylinkBooleanPreferenceKey(
         titleResId = R.string.riley_link_show_battery_level,
         summaryResId = R.string.riley_link_show_battery_level_summary
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

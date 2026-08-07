@@ -43,6 +43,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Internal composable for clickable category header with expand/collapse icon.
@@ -52,8 +54,8 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 internal fun ClickablePreferenceCategoryHeader(
-    titleResId: Int,
-    summaryItems: List<Int> = emptyList(),
+    title: TextRef,
+    summaryItems: List<TextRef> = emptyList(),
     expanded: Boolean,
     onToggle: () -> Unit,
     modifier: Modifier = Modifier,
@@ -67,7 +69,7 @@ internal fun ClickablePreferenceCategoryHeader(
         label = "expandIconRotation"
     )
 
-    // Build summary text from list of resource IDs — resolve each string in composable context
+    // Build summary text from the child titles — resolve each one in composable context
     val resolvedSummaries = summaryItems.map { stringResource(it) }
     val summaryText = if (resolvedSummaries.isNotEmpty()) {
         resolvedSummaries.joinToString(", ")
@@ -107,7 +109,7 @@ internal fun ClickablePreferenceCategoryHeader(
             }
             Column(modifier = Modifier.weight(1f)) {
                 ProvideTextStyle(value = theme.categoryTextStyle) {
-                    Text(text = stringResource(titleResId))
+                    Text(text = stringResource(title))
                 }
                 // Show summary when collapsed
                 if (!expanded && summaryText != null) {

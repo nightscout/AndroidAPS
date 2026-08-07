@@ -4,13 +4,14 @@ import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtronic.R
 
 enum class MedtronicStringPreferenceKey(
     override val key: String,
     override val defaultValue: String,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val entries: Map<String, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
@@ -76,4 +77,8 @@ enum class MedtronicStringPreferenceKey(
             app.aaps.pump.medtronic.defs.BatteryType.NiMH.key to R.string.medtronic_pump_battery_nimh
         )
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

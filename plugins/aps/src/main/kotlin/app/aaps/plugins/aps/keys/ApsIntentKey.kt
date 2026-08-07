@@ -3,12 +3,13 @@ package app.aaps.plugins.aps.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.aps.R
 
 enum class ApsIntentKey(
     override val key: String,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.URL,
     override val urlResId: Int? = null,
     override val defaultedBySM: Boolean = false,
@@ -27,4 +28,8 @@ enum class ApsIntentKey(
         preferenceType = PreferenceType.URL,
         urlResId = R.string.openapsama_link_to_preference_json_doc
     )
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

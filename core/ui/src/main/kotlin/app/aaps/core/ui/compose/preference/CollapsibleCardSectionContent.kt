@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.keys.interfaces.TextRef
 
 /**
  * Composable for a collapsible card section.
@@ -39,8 +40,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
  */
 @Composable
 fun CollapsibleCardSectionContent(
-    titleResId: Int,
-    summaryItems: List<Int> = emptyList(),
+    title: TextRef,
+    summaryItems: List<TextRef> = emptyList(),
     expanded: Boolean,
     onToggle: () -> Unit,
     icon: ImageVector? = null,
@@ -59,7 +60,7 @@ fun CollapsibleCardSectionContent(
     ) {
         Column {
             ClickablePreferenceCategoryHeader(
-                titleResId = titleResId,
+                title = title,
                 summaryItems = summaryItems,
                 expanded = expanded,
                 onToggle = onToggle,

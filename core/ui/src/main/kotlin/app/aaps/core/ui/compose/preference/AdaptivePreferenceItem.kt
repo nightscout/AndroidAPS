@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
@@ -18,11 +17,12 @@ import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
-import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.interfaces.StringKeyWithEntriesProvider
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Renders a preference based on its PreferenceKey type and preferenceType.
@@ -120,7 +120,7 @@ fun AdaptivePreferenceItem(
             } else if (emptyMessageResId != null) {
                 // Show disabled preference with empty message
                 Preference(
-                    title = { Text(stringResource(key.titleResId)) },
+                    title = { Text(stringResource(key.title)) },
                     summary = { Text(stringResource(emptyMessageResId)) },
                     enabled = false
                 )
@@ -201,7 +201,7 @@ fun AdaptivePreferenceItem(
             val resolvedUrl = key.runtimeUrl ?: intentUrl ?: key.urlResId?.let { stringResource(it) }
 
             when {
-                resolvedClick != null                                   -> {
+                resolvedClick != null                                  -> {
                     AdaptiveIntentPreferenceItem(
 
                         intentKey = key,
@@ -210,7 +210,7 @@ fun AdaptivePreferenceItem(
                     )
                 }
 
-                resolvedCompose != null && onNavigateToCompose != null  -> {
+                resolvedCompose != null && onNavigateToCompose != null -> {
                     AdaptiveComposeScreenPreferenceItem(
                         intentKey = key,
                         composeScreen = resolvedCompose,
@@ -219,7 +219,7 @@ fun AdaptivePreferenceItem(
                     )
                 }
 
-                resolvedActivity != null                                -> {
+                resolvedActivity != null                               -> {
                     AdaptiveDynamicActivityPreferenceItem(
 
                         intentKey = key,
@@ -228,7 +228,7 @@ fun AdaptivePreferenceItem(
                     )
                 }
 
-                resolvedUrl != null                         -> {
+                resolvedUrl != null                                    -> {
                     AdaptiveUrlPreferenceItem(
 
                         intentKey = key,

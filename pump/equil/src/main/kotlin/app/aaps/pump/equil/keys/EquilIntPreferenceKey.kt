@@ -3,6 +3,7 @@ package app.aaps.pump.equil.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.equil.R
 
 enum class EquilIntPreferenceKey(
@@ -10,7 +11,7 @@ enum class EquilIntPreferenceKey(
     override val defaultValue: Int,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
-    override val titleResId: Int = 0,
+    private val titleResId: Int,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val entries: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
@@ -39,4 +40,7 @@ enum class EquilIntPreferenceKey(
             3 to R.string.equil_tone_mode_tone_and_shake
         )
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
 }

@@ -2,13 +2,14 @@ package app.aaps.pump.medtrum.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtrum.R
 
 enum class MedtrumIntKey(
     override val key: String,
     override val defaultValue: Int,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override var min: Int = Int.MIN_VALUE,
     override var max: Int = Int.MAX_VALUE,
     override val calculatedDefaultValue: Boolean = false,
@@ -48,4 +49,8 @@ enum class MedtrumIntKey(
         min = 20,
         max = 180
     ),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

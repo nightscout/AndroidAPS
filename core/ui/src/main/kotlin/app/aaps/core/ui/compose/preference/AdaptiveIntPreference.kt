@@ -13,16 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
  * Composable int preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses intKey.titleResId
+ * @param title Optional title override. If null, uses intKey.title
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  *
  * @see AdaptiveIntPreferencePreview
@@ -30,14 +33,11 @@ import app.aaps.core.ui.R
 @Composable
 fun AdaptiveIntPreferenceItem(
     intKey: IntPreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     unit: String = "",
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else intKey.titleResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: intKey.title
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = intKey,
@@ -60,8 +60,7 @@ fun AdaptiveIntPreferenceItem(
     val unitLabel = unitLabelResId?.let { stringResource(it) } ?: unit
 
     // Get summary if available
-    val summaryResId = intKey.summaryResId
-    val summary = if (summaryResId != null && summaryResId != 0) stringResource(summaryResId) else null
+    val summary = stringResourceOrNull(intKey.summary)
 
     // Use slider if min/max range is specified (not default extreme values)
     val hasValidRange = intKey.min > Int.MIN_VALUE && intKey.max < Int.MAX_VALUE
@@ -73,7 +72,7 @@ fun AdaptiveIntPreferenceItem(
                 .padding(theme.padding)
         ) {
             TextWithSyncBadge(
-                text = stringResource(effectiveTitleResId),
+                text = stringResource(effectiveTitle),
                 key = intKey,
                 style = theme.titleTextStyle,
                 // Mirror Preference's disabled styling (the switch row greys the same way) since this
@@ -101,7 +100,7 @@ fun AdaptiveIntPreferenceItem(
                 formatAsInt = true,
                 valueFormat = NumberFormat.INTEGER,
                 unitLabel = unitLabel,
-                dialogLabel = stringResource(effectiveTitleResId),
+                dialogLabel = stringResource(effectiveTitle),
                 dialogSummary = summary,
                 enabled = visibility.enabled
             )
@@ -116,7 +115,7 @@ fun AdaptiveIntPreferenceItem(
         }
         TextFieldPreference(
             state = state,
-            title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, intKey) },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitle, intKey) },
             textToValue = { text ->
                 text.toIntOrNull()?.coerceIn(intKey.min, intKey.max)
             },

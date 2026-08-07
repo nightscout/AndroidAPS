@@ -1,14 +1,15 @@
 package app.aaps.plugins.source.instara
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.source.R
 
 // Instara plugin-local user-editable preference keys
 enum class InstaraBooleanKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val defaultedBySM: Boolean = false,
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
@@ -28,4 +29,8 @@ enum class InstaraBooleanKey(
         summaryResId = R.string.pref_summary_instara_history_request,
         showInNsClientMode = false
     )
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

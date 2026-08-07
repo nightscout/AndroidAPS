@@ -12,10 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.format.NumberFormat
-import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.abs
@@ -25,21 +28,18 @@ import app.aaps.core.ui.R as UiR
  * Composable unit double preference for use inside card sections.
  * Handles glucose unit conversion (mg/dL <-> mmol/L).
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses unitKey.titleResId
+ * @param title Optional title override. If null, uses unitKey.title
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  */
 @Composable
 fun AdaptiveUnitDoublePreferenceItem(
     unitKey: UnitDoublePreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     visibilityContext: VisibilityContext? = null
 ) {
     val preferences = LocalPreferences.current
     val profileUtil = LocalProfileUtil.current
-    val effectiveTitleResId = if (titleResId != 0) titleResId else unitKey.titleResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: unitKey.title
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = unitKey,
@@ -67,8 +67,7 @@ fun AdaptiveUnitDoublePreferenceItem(
     val unitLabel = stringResource(if (isMgdl) UiR.string.mgdl else UiR.string.mmol)
 
     // Get summary if available
-    val summaryResId = unitKey.summaryResId
-    val summary = if (summaryResId != null && summaryResId != 0) stringResource(summaryResId) else null
+    val summary = stringResourceOrNull(unitKey.summary)
 
     // Parse current display value to Double
     val currentValue = state.displayValue.toDoubleOrNull() ?: minDisplay
@@ -79,7 +78,7 @@ fun AdaptiveUnitDoublePreferenceItem(
             .padding(theme.padding)
     ) {
         TextWithSyncBadge(
-            text = stringResource(effectiveTitleResId),
+            text = stringResource(effectiveTitle),
             key = unitKey,
             style = theme.titleTextStyle,
             // Mirror Preference's disabled styling (the switch row greys the same way) since this
@@ -107,7 +106,7 @@ fun AdaptiveUnitDoublePreferenceItem(
             showValue = true,
             valueFormat = valueFormat,
             unitLabel = unitLabel,
-            dialogLabel = stringResource(effectiveTitleResId),
+            dialogLabel = stringResource(effectiveTitle),
             dialogSummary = summary,
             enabled = visibility.enabled
         )

@@ -2,6 +2,7 @@ package app.aaps.core.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 
 /**
  * Legacy IntentKey enum - keys have been migrated to module-specific key enums:
@@ -15,8 +16,8 @@ import app.aaps.core.keys.interfaces.IntentPreferenceKey
  */
 enum class IntentKey(
     override val key: String,
-    override val titleResId: Int,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.CLICK,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -26,4 +27,12 @@ enum class IntentKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val exportable: Boolean = false
-) : IntentPreferenceKey
+) : IntentPreferenceKey {
+
+    // This enum has no constants (see the note above), but the interface still requires the
+    // properties. The `;` is what separates the - empty - constant list from the members.
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+}

@@ -5,14 +5,15 @@ import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.SyncChannel
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.SyncSpec
+import app.aaps.core.keys.interfaces.TextRef
 
 enum class DoubleKey(
     override val key: String,
     override val defaultValue: Double,
     override val min: Double,
     override val max: Double,
-    override val titleResId: Int,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val defaultedBySM: Boolean = false,
     override val calculatedBySM: Boolean = false,
@@ -200,8 +201,28 @@ enum class DoubleKey(
         unitType = UnitType.DOUBLE,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    ApsAutoIsfMin(key = "autoISF_min", defaultValue = 1.0, min = 0.3, max = 1.0, titleResId = R.string.pref_title_autoisf_min, summaryResId = R.string.openapsama_autoISF_min_summary, defaultedBySM = true, unitType = UnitType.DOUBLE, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
-    ApsAutoIsfMax(key = "autoISF_max", defaultValue = 1.0, min = 1.0, max = 3.0, titleResId = R.string.pref_title_autoisf_max, summaryResId = R.string.openapsama_autoISF_max_summary, defaultedBySM = true, unitType = UnitType.DOUBLE, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsAutoIsfMin(
+        key = "autoISF_min",
+        defaultValue = 1.0,
+        min = 0.3,
+        max = 1.0,
+        titleResId = R.string.pref_title_autoisf_min,
+        summaryResId = R.string.openapsama_autoISF_min_summary,
+        defaultedBySM = true,
+        unitType = UnitType.DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    ApsAutoIsfMax(
+        key = "autoISF_max",
+        defaultValue = 1.0,
+        min = 1.0,
+        max = 3.0,
+        titleResId = R.string.pref_title_autoisf_max,
+        summaryResId = R.string.openapsama_autoISF_max_summary,
+        defaultedBySM = true,
+        unitType = UnitType.DOUBLE,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     ApsAutoIsfBgAccelWeight(
         key = "bgAccel_ISF_weight",
         defaultValue = 0.0,
@@ -257,8 +278,28 @@ enum class DoubleKey(
         unitType = UnitType.DOUBLE,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    ApsAutoIsfPpWeight(key = "pp_ISF_weight", defaultValue = 0.0, min = 0.0, max = 0.15, titleResId = R.string.pref_title_pp_weight, summaryResId = R.string.openapsama_pp_ISF_weight_summary, defaultedBySM = true, unitType = UnitType.DOUBLE_3, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
-    ApsAutoIsfDuraWeight(key = "dura_ISF_weight", defaultValue = 0.0, min = 0.0, max = 3.0, titleResId = R.string.pref_title_dura_weight, summaryResId = R.string.openapsama_dura_ISF_weight_summary, defaultedBySM = true, unitType = UnitType.DOUBLE_2, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsAutoIsfPpWeight(
+        key = "pp_ISF_weight",
+        defaultValue = 0.0,
+        min = 0.0,
+        max = 0.15,
+        titleResId = R.string.pref_title_pp_weight,
+        summaryResId = R.string.openapsama_pp_ISF_weight_summary,
+        defaultedBySM = true,
+        unitType = UnitType.DOUBLE_3,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    ApsAutoIsfDuraWeight(
+        key = "dura_ISF_weight",
+        defaultValue = 0.0,
+        min = 0.0,
+        max = 3.0,
+        titleResId = R.string.pref_title_dura_weight,
+        summaryResId = R.string.openapsama_dura_ISF_weight_summary,
+        defaultedBySM = true,
+        unitType = UnitType.DOUBLE_2,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     ApsAutoIsfSmbDeliveryRatio(
         key = "openapsama_smb_delivery_ratio",
         defaultValue = 0.5,
@@ -304,4 +345,8 @@ enum class DoubleKey(
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
 
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

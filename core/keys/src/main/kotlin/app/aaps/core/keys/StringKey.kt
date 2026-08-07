@@ -1,19 +1,20 @@
 package app.aaps.core.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
-import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.ElementVisibility
+import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
 import app.aaps.core.keys.interfaces.SyncChannel
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.SyncSpec
+import app.aaps.core.keys.interfaces.TextRef
 
 enum class StringKey(
     override val key: String,
     override val defaultValue: String,
-    override val titleResId: Int,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val entries: Map<String, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
@@ -200,4 +201,8 @@ enum class StringKey(
         validator = StringValidator.minLength(17)
     ),
 
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

@@ -3,6 +3,7 @@ package app.aaps.pump.omnipod.common.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.omnipod.common.R
 
 enum class OmnipodIntPreferenceKey(
@@ -10,8 +11,8 @@ enum class OmnipodIntPreferenceKey(
     override val min: Int,
     override val max: Int,
     override val defaultValue: Int,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val entries: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
@@ -42,4 +43,6 @@ enum class OmnipodIntPreferenceKey(
     );
 
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

@@ -4,6 +4,7 @@ import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.SyncChannel
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.SyncSpec
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 
 enum class UnitDoubleKey(
@@ -11,8 +12,8 @@ enum class UnitDoubleKey(
     override val defaultValue: Double,
     override val minMgdl: Int,
     override val maxMgdl: Int,
-    override val titleResId: Int,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -38,4 +39,8 @@ enum class UnitDoubleKey(
         dependency = BooleanKey.ApsUseDynamicSensitivity,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     )
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.AdaptiveDoublePreferenceItem
 import javax.inject.Inject
 
@@ -28,7 +29,7 @@ class SWEditNumber @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelpe
     override fun Compose() {
         AdaptiveDoublePreferenceItem(
             doubleKey = preference as DoublePreferenceKey,
-            titleResId = label ?: 0
+            title = label?.let { TextRef.Res(it) }
         )
     }
 }

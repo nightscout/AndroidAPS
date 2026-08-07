@@ -1,6 +1,7 @@
 package app.aaps.pump.omnipod.eros.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.omnipod.eros.R
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -8,7 +9,7 @@ import app.aaps.pump.omnipod.common.R as CommonR
 enum class ErosBooleanPreferenceKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int,
+    private val titleResId: Int,
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -26,4 +27,7 @@ enum class ErosBooleanPreferenceKey(
     ShowPulseLogButton("AAPS.Omnipod.pulse_log_button_enabled", false, titleResId = R.string.omnipod_eros_preferences_pulse_log_button_enabled),
     ShowRileyLinkStatsButton("AAPS.Omnipod.rileylink_stats_button_enabled", false, titleResId = R.string.omnipod_eros_preferences_riley_link_stats_button_enabled),
     TimeChangeEnabled("AAPS.Omnipod.time_change_enabled", true, titleResId = CommonR.string.omnipod_common_preferences_time_change_enabled),
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
 }

@@ -6,12 +6,13 @@ import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.SyncChannel
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.SyncSpec
+import app.aaps.core.keys.interfaces.TextRef
 
 enum class BooleanKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.SWITCH,
     override val calculatedDefaultValue: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -258,4 +259,8 @@ enum class BooleanKey(
     SiteRotationManagePump("site_rotation_manage_pump", defaultValue = false, titleResId = R.string.pref_title_site_rotation_manage_pump, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     SiteRotationManageCgm("site_rotation_manage_cgm", defaultValue = false, titleResId = R.string.pref_title_site_rotation_manage_cgm, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
 
+    ;
+
+    override val title: TextRef = TextRef.Res(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

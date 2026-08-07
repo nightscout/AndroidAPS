@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.decimalPlaces
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.step
@@ -21,11 +22,13 @@ import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
  * Composable double preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses doubleKey.titleResId
+ * @param title Optional title override. If null, uses doubleKey.title
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  *
  * @see AdaptiveDoublePreferencePreview
@@ -33,15 +36,12 @@ import app.aaps.core.ui.compose.LocalPreferences
 @Composable
 fun AdaptiveDoublePreferenceItem(
     doubleKey: DoublePreferenceKey,
-    titleResId: Int = 0,
+    title: TextRef? = null,
     unit: String = "",
     visibilityContext: VisibilityContext? = null
 ) {
     val preferences = LocalPreferences.current
-    val effectiveTitleResId = if (titleResId != 0) titleResId else doubleKey.titleResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: doubleKey.title
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = doubleKey,
@@ -67,8 +67,7 @@ fun AdaptiveDoublePreferenceItem(
     val valueFormat = NumberFormat.withDecimals(decimalPlaces)
 
     // Get summary if available
-    val summaryResId = doubleKey.summaryResId
-    val summary = if (summaryResId != null && summaryResId != 0) stringResource(summaryResId) else null
+    val summary = stringResourceOrNull(doubleKey.summary)
 
     // Use slider if min/max range is specified (not default extreme values)
     // Note: Double.MIN_VALUE is smallest positive value, not most negative
@@ -81,7 +80,7 @@ fun AdaptiveDoublePreferenceItem(
                 .padding(theme.padding)
         ) {
             TextWithSyncBadge(
-                text = stringResource(effectiveTitleResId),
+                text = stringResource(effectiveTitle),
                 key = doubleKey,
                 style = theme.titleTextStyle,
                 // Mirror Preference's disabled styling (the switch row greys the same way) since this
@@ -108,7 +107,7 @@ fun AdaptiveDoublePreferenceItem(
                 valueFormatResId = valueFormatResId,
                 valueFormat = valueFormat,
                 unitLabel = unitLabel,
-                dialogLabel = stringResource(effectiveTitleResId),
+                dialogLabel = stringResource(effectiveTitle),
                 dialogSummary = summary,
                 enabled = visibility.enabled
             )
@@ -123,7 +122,7 @@ fun AdaptiveDoublePreferenceItem(
         }
         TextFieldPreference(
             state = state,
-            title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, doubleKey) },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitle, doubleKey) },
             textToValue = { text ->
                 text.toDoubleOrNull()?.coerceIn(doubleKey.min, doubleKey.max)
             },

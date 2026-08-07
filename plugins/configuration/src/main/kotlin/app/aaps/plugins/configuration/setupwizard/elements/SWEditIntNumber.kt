@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.AdaptiveIntPreferenceItem
 import javax.inject.Inject
 
@@ -28,7 +29,7 @@ class SWEditIntNumber @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHe
     override fun Compose() {
         AdaptiveIntPreferenceItem(
             intKey = preference as IntPreferenceKey,
-            titleResId = label ?: 0
+            title = label?.let { TextRef.Res(it) }
         )
     }
 }

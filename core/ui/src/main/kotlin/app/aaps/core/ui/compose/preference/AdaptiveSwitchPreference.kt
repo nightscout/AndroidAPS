@@ -13,15 +13,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.BooleanKeyWithChangeGuard
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Composable switch preference for use inside card sections.
  *
- * @param titleResId Optional title resource ID. If 0 or not provided, uses booleanKey.titleResId
- * @param summaryResId Optional summary resource ID. If null, uses booleanKey.summaryResId
+ * @param title Optional title override. If null, uses booleanKey.title
+ * @param summary Optional summary override. If null, uses booleanKey.summary
  * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
  *
  * @see AdaptiveSwitchPreferencePreview
@@ -29,17 +31,14 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 @Composable
 fun AdaptiveSwitchPreferenceItem(
     booleanKey: BooleanPreferenceKey,
-    titleResId: Int = 0,
-    summaryResId: Int? = null,
+    title: TextRef? = null,
+    summary: TextRef? = null,
     summaryOnResId: Int? = null,
     summaryOffResId: Int? = null,
     visibilityContext: VisibilityContext? = null
 ) {
-    val effectiveTitleResId = if (titleResId != 0) titleResId else booleanKey.titleResId
-    val effectiveSummaryResId = summaryResId ?: booleanKey.summaryResId
-
-    // Skip if no title resource is available
-    if (effectiveTitleResId == 0) return
+    val effectiveTitle = title ?: booleanKey.title
+    val effectiveSummary = summary ?: booleanKey.summary
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = booleanKey,
@@ -59,8 +58,8 @@ fun AdaptiveSwitchPreferenceItem(
             { Text(stringResource(if (state.value) summaryOnResId else summaryOffResId)) }
         }
 
-        effectiveSummaryResId != null                     -> {
-            { Text(stringResource(effectiveSummaryResId)) }
+        effectiveSummary != null                          -> {
+            { Text(stringResource(effectiveSummary)) }
         }
 
         else                                              -> null
@@ -77,14 +76,14 @@ fun AdaptiveSwitchPreferenceItem(
                     guardMessage = message
                 }
             },
-            title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, booleanKey) },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitle, booleanKey) },
             summary = summary,
             enabled = visibility.enabled
         )
     } else {
         SwitchPreference(
             state = state,
-            title = { PreferenceTitleWithSyncBadge(effectiveTitleResId, booleanKey) },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitle, booleanKey) },
             summary = summary,
             enabled = visibility.enabled
         )
