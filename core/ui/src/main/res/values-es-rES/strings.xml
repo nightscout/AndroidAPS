@@ -104,6 +104,7 @@
     <string name="tdd_total">Total TDD</string>
     <string name="tdd_old_data">Datos antiguos</string>
     <string name="goingtodeliver">Entregando %1$.2f U</string>
+    <string name="carbs_not_saved_after_bolus">Bolo administrado, pero no se han podido guardar los carbohidratos. Vuelve a introducirlos</string>
     <string name="androidaps_start">AAPS iniciado</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
