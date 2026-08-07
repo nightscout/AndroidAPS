@@ -67,12 +67,11 @@ class RunningModePickerActivity : MenuListActivity() {
             val status = complicationDataRepository.complicationData.first().statusData
             val modeLabel = status.loopMode.labelRes()?.let { getString(it) }
             val remaining = status.modeEndTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() }?.takeIf { it > 0 }
-            subtitle = when {
-                modeLabel == null -> null
-                remaining != null -> getString(R.string.running_mode_picker_current, modeLabel, formatDurationMinutes(this@RunningModePickerActivity, remaining))
-                else              -> modeLabel
-            }
+            subtitle = modeLabel
             subtitleColor = if (modeLabel != null) status.loopMode.toTextColor() else null
+            subtitleSecondary = if (modeLabel != null && remaining != null)
+                getString(R.string.loop_status_duration_remaining, formatDurationMinutes(this@RunningModePickerActivity, remaining))
+            else null
         }
     }
 
@@ -108,13 +107,13 @@ class RunningModePickerActivity : MenuListActivity() {
         return rows.map { MenuItem(it.action.iconRes, it.label, iconTint = it.iconTint) }
     }
 
-    /** Display order in the picker; the resume actions first (the primary action while in a temporary mode). */
+    /** Display order in the picker: the way back to normal looping first, then the temporary modes. */
     private fun RunningMode.pickerOrder(): Int = when (this) {
-        RunningMode.LOOP_RESUME       -> 0
-        RunningMode.PUMP_RECONNECT    -> 1
-        RunningMode.PUMP_DISCONNECT   -> 2
-        RunningMode.LOOP_USER_SUSPEND -> 3
-        RunningMode.LOOP_CLOSED       -> 4
+        RunningMode.LOOP_CLOSED       -> 0
+        RunningMode.LOOP_RESUME       -> 1
+        RunningMode.PUMP_RECONNECT    -> 2
+        RunningMode.PUMP_DISCONNECT   -> 3
+        RunningMode.LOOP_USER_SUSPEND -> 4
         RunningMode.LOOP_LGS          -> 5
         RunningMode.LOOP_OPEN         -> 6
         RunningMode.LOOP_DISABLE      -> 7

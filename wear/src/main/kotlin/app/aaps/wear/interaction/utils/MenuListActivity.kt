@@ -65,6 +65,9 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
     /** Optional color for [subtitle] (e.g. the running mode text color); null uses the secondary gray */
     protected var subtitleColor by mutableStateOf<Color?>(null)
 
+    /** Optional third line in secondary gray under [subtitle] (e.g. "1 h 20 min remaining"); null hides it */
+    protected var subtitleSecondary by mutableStateOf<String?>(null)
+
     private val disposable = CompositeDisposable()
 
     protected abstract fun provideElements(): List<MenuItem>
@@ -92,6 +95,7 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
                     titleIcon = titleIcon,
                     subtitle = subtitle,
                     subtitleColor = subtitleColor,
+                    subtitleSecondary = subtitleSecondary,
                     elements = elements,
                     onAction = { doAction(it) }
                 )
@@ -116,6 +120,7 @@ private fun MenuListScreen(
     titleIcon: Int?,
     subtitle: String?,
     subtitleColor: Color?,
+    subtitleSecondary: String?,
     elements: List<MenuListActivity.MenuItem>,
     onAction: (String) -> Unit
 ) {
@@ -126,31 +131,33 @@ private fun MenuListScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                // Subtitle lives INSIDE the header so there is no extra list item: it sits directly
-                // under the title (no ListHeader bottom padding in between) and the list's
-                // auto-centering still targets the first real menu row
-                ListHeader {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (titleIcon != null) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    painter = painterResource(titleIcon),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(title)
-                            }
-                        } else {
-                            Text(title)
-                        }
-                        if (subtitle != null) {
+                // One item for title + subtitle lines, so the list's auto-centering still targets
+                // the first real menu row. With a subtitle the header is rendered compactly WITHOUT
+                // ListHeader: its min-height and padding would both open a large gap under the title
+                // and push the title above the top edge. Menus without subtitle keep the standard
+                // ListHeader so their look does not change.
+                if (subtitle == null) {
+                    ListHeader { MenuTitle(title, titleIcon) }
+                } else {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        MenuTitle(title, titleIcon)
+                        Text(
+                            text = subtitle,
+                            color = subtitleColor ?: Color.White.copy(alpha = 0.6f),
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 6.dp)
+                        )
+                        if (subtitleSecondary != null) {
                             Text(
-                                text = subtitle,
-                                color = subtitleColor ?: Color.White.copy(alpha = 0.6f),
+                                text = subtitleSecondary,
+                                color = Color.White.copy(alpha = 0.6f),
                                 fontSize = 11.sp,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(top = 4.dp)
+                                modifier = Modifier.padding(top = 2.dp)
                             )
                         }
                     }
@@ -182,6 +189,24 @@ private fun MenuListScreen(
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
+    }
+}
+
+/** Menu title row (optional icon + text) - shared by the ListHeader and the compact subtitle header */
+@Composable
+private fun MenuTitle(title: String, titleIcon: Int?) {
+    if (titleIcon != null) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(titleIcon),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(title, style = MaterialTheme.typography.titleMedium)
+        }
+    } else {
+        Text(title, style = MaterialTheme.typography.titleMedium)
     }
 }
 

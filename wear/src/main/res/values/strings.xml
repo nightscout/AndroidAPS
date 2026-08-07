@@ -305,7 +305,6 @@
     <string name="complication_uploader_phone_battery">Uploader/Phone Battery</string>
     <string name="running_mode_resume">Resume loop</string>
     <string name="running_mode_reconnect">Reconnect pump</string>
-    <string name="running_mode_picker_current" comment="Line under the running mode picker title showing the active mode and its remaining time. %1$s=mode name (example: Loop suspended), %2$s=remaining duration (example: 1h 30m)">%1$s · %2$s</string>
     <string name="key_running_mode_data" translatable="false">loop_states</string>
     <string name="label_running_mode_title">Running mode</string>
     <string name="label_bg_graph_tile">BG Graph</string>
