@@ -59,17 +59,13 @@ import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.InsulinBlue
 import app.aaps.wear.interaction.actions.LoopClosedColor
 import app.aaps.wear.interaction.actions.LoopDisabledColor
-import app.aaps.wear.interaction.actions.LoopDisconnectedColor
-import app.aaps.wear.interaction.actions.LoopLgsColor
-import app.aaps.wear.interaction.actions.LoopOpenColor
-import app.aaps.wear.interaction.actions.LoopSuperbolusColor
-import app.aaps.wear.interaction.actions.LoopSuspendedColor
 import app.aaps.wear.interaction.actions.LoopUnknownColor
 import app.aaps.wear.interaction.actions.TempTargetYellow
 import app.aaps.wear.interaction.actions.WearDivider
 import app.aaps.wear.interaction.actions.WearSecondaryText
 import app.aaps.wear.interaction.actions.WearSummaryCardBg
 import app.aaps.wear.interaction.actions.formatDurationMinutes
+import app.aaps.wear.interaction.actions.toTextColor
 import dagger.android.AndroidInjection
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -84,19 +80,6 @@ private val TempBasalColor         = Color(0xFFFF9800)
 private val TargetsAccentColor     = Color(0xFF1E88E5)
 private val TempTargetBg           = Color(0x1AF4D700)
 private val AutosensTargetBg       = Color(0x1A77DD77)
-
-private fun LoopStatusData.LoopMode.toColor(): Color = when (this) {
-    LoopStatusData.LoopMode.CLOSED       -> LoopClosedColor
-    LoopStatusData.LoopMode.OPEN         -> LoopOpenColor
-    LoopStatusData.LoopMode.LGS          -> LoopLgsColor
-    LoopStatusData.LoopMode.DISABLED     -> LoopDisabledColor
-    LoopStatusData.LoopMode.SUSPENDED       -> LoopSuspendedColor
-    LoopStatusData.LoopMode.PUMP_SUSPENDED  -> LoopDisabledColor
-    LoopStatusData.LoopMode.DST_SUSPENDED   -> LoopDisabledColor
-    LoopStatusData.LoopMode.DISCONNECTED    -> LoopDisconnectedColor
-    LoopStatusData.LoopMode.SUPERBOLUS   -> LoopSuperbolusColor
-    LoopStatusData.LoopMode.UNKNOWN      -> LoopUnknownColor
-}
 
 private fun loopAgeColor(ageMs: Long): Color {
     val minutes = ageMs / 60_000
@@ -336,7 +319,7 @@ private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndT
                 LoopStatusData.LoopMode.SUPERBOLUS   -> stringResource(R.string.loop_status_superbolus).uppercase()
                 LoopStatusData.LoopMode.UNKNOWN      -> stringResource(R.string.loop_status_unknown).uppercase()
             },
-            color = mode.toColor(),
+            color = mode.toTextColor(),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,

@@ -988,11 +988,9 @@ class DataHandlerMobile @Inject constructor(
                     AvailableRunningMode(AvailableRunningMode.RunningMode.LOOP_RESUME)
             }
 
-        val allStates = loop.allowedNextModes().mapNotNull { mapMode(it) }
-        // LOOP_DISABLE is dropped when LOOP_USER_SUSPEND is present to fit within 4 tile slots.
-        val states = if (allStates.any { it.state == AvailableRunningMode.RunningMode.LOOP_USER_SUSPEND })
-            allStates.filter { it.state != AvailableRunningMode.RunningMode.LOOP_DISABLE }
-        else allStates
+        // Send the FULL list. The 4-slot tile drops LOOP_DISABLE on the watch side
+        // (RunningModeSource); the running-mode picker shows every entry.
+        val states = loop.allowedNextModes().mapNotNull { mapMode(it) }
         // Only rotate the timestamp when available modes actually change.
         // Keeping the old TS when modes are identical lets in-flight tile taps (e.g. from a
         // just-woken watch) succeed without a "Please try again" race against onTileEnterEvent.
@@ -1381,6 +1379,9 @@ class DataHandlerMobile @Inject constructor(
             else                   -> 0
         }
 
+        // Current running mode (+ end time of a temporary one) for the running-mode complication and picker
+        val runningModeRecord = loop.runningModeRecord()
+
         sendToWear(
             EventData.Status(
                 dataset = 0,
@@ -1402,7 +1403,8 @@ class DataHandlerMobile @Inject constructor(
                 reservoirString = reservoirString,
                 reservoir = reservoir,
                 reservoirLevel = reservoirLevel,
-                loopMode = loop.runningModeRecord().mode.toLoopMode()
+                loopMode = runningModeRecord.mode.toLoopMode(),
+                modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
             )
         )
     }

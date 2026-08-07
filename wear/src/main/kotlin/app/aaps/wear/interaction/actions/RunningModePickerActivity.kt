@@ -4,16 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode.RunningMode
+import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
+import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.utils.MenuListActivity
 import app.aaps.wear.tile.Action
 import app.aaps.wear.tile.source.RunningModeSource
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -31,12 +36,13 @@ import javax.inject.Inject
 class RunningModePickerActivity : MenuListActivity() {
 
     @Inject lateinit var runningModeSource: RunningModeSource
+    @Inject lateinit var complicationDataRepository: ComplicationDataRepository
 
     private val pickerDisposable = CompositeDisposable()
     private var modeList: EventData.RunningModeList? = null
     private var rows: List<PickerRow> = emptyList()
 
-    private class PickerRow(val label: String, val action: Action)
+    private class PickerRow(val label: String, val iconTint: Int, val action: Action)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTitle(R.string.label_running_mode_title)
@@ -49,8 +55,39 @@ class RunningModePickerActivity : MenuListActivity() {
             .subscribe {
                 modeList = it
                 refreshElements()
+                updateSubtitle()
             }
         rxBus.send(EventWearToMobile(EventData.RunningModeRequest(System.currentTimeMillis())))
+        updateSubtitle()
+    }
+
+    /** Show the current mode under the title, with the remaining time when the mode is temporary. */
+    private fun updateSubtitle() {
+        lifecycleScope.launch {
+            val status = complicationDataRepository.complicationData.first().statusData
+            val modeLabel = status.loopMode.labelRes()?.let { getString(it) }
+            val remaining = status.modeEndTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() }?.takeIf { it > 0 }
+            subtitle = when {
+                modeLabel == null -> null
+                remaining != null -> getString(R.string.running_mode_picker_current, modeLabel, formatDurationMinutes(this@RunningModePickerActivity, remaining))
+                else              -> modeLabel
+            }
+            subtitleColor = if (modeLabel != null) status.loopMode.toTextColor() else null
+        }
+    }
+
+    @StringRes
+    private fun LoopStatusData.LoopMode.labelRes(): Int? = when (this) {
+        LoopStatusData.LoopMode.CLOSED         -> R.string.loop_status_closed
+        LoopStatusData.LoopMode.OPEN           -> R.string.loop_status_open
+        LoopStatusData.LoopMode.LGS            -> R.string.loop_status_lgs
+        LoopStatusData.LoopMode.DISABLED       -> R.string.loop_status_disabled
+        LoopStatusData.LoopMode.SUSPENDED      -> R.string.loop_status_suspended
+        LoopStatusData.LoopMode.PUMP_SUSPENDED -> R.string.loop_status_pump_suspended
+        LoopStatusData.LoopMode.DST_SUSPENDED  -> R.string.loop_status_dst_suspended
+        LoopStatusData.LoopMode.DISCONNECTED   -> R.string.loop_status_disconnected
+        LoopStatusData.LoopMode.SUPERBOLUS     -> R.string.loop_status_superbolus
+        LoopStatusData.LoopMode.UNKNOWN        -> null
     }
 
     override fun onDestroy() {
@@ -60,16 +97,28 @@ class RunningModePickerActivity : MenuListActivity() {
 
     override fun provideElements(): List<MenuItem> {
         val list = modeList ?: runningModeSource.currentModes().also { modeList = it }
-        val actions = runningModeSource.getSelectedActions(list)
-        // getSelectedActions is aligned with list.states by index
-        rows = actions.mapIndexed { index, action ->
-            PickerRow(getString(list.states[index].state.labelRes()), action)
-        }
-        // Explicit tint: the ic_loop_* drawables carry a theme tint that would otherwise
-        // paint every icon in the same theme color instead of the mode colors the tile shows
-        return rows.mapIndexed { index, row ->
-            MenuItem(row.action.iconRes, row.label, iconTint = list.states[index].state.colorArgb())
-        }
+        // getSelectedActions is aligned with list.states by index. Pair state and action FIRST,
+        // then sort for display - the selection index inside each action keeps pointing at the
+        // phone's list position. Explicit icon tint: the ic_loop_* drawables carry a theme tint
+        // that would otherwise paint every icon in the same color instead of the tile colors.
+        rows = runningModeSource.getSelectedActions(list)
+            .mapIndexed { index, action -> list.states[index].state to action }
+            .sortedBy { (state, _) -> state.pickerOrder() }
+            .map { (state, action) -> PickerRow(getString(state.labelRes()), state.colorArgb(), action) }
+        return rows.map { MenuItem(it.action.iconRes, it.label, iconTint = it.iconTint) }
+    }
+
+    /** Display order in the picker; the resume actions first (the primary action while in a temporary mode). */
+    private fun RunningMode.pickerOrder(): Int = when (this) {
+        RunningMode.LOOP_RESUME       -> 0
+        RunningMode.PUMP_RECONNECT    -> 1
+        RunningMode.PUMP_DISCONNECT   -> 2
+        RunningMode.LOOP_USER_SUSPEND -> 3
+        RunningMode.LOOP_CLOSED       -> 4
+        RunningMode.LOOP_LGS          -> 5
+        RunningMode.LOOP_OPEN         -> 6
+        RunningMode.LOOP_DISABLE      -> 7
+        else                          -> 8
     }
 
     override fun doAction(position: String) {

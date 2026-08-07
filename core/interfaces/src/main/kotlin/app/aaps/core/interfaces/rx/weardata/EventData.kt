@@ -383,7 +383,9 @@ sealed class EventData : Event() {
         val cobValue: Double = -1.0,
         // Current running mode for the wear running-mode complication; UNKNOWN = older sender.
         // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
-        val loopMode: LoopStatusData.LoopMode = LoopStatusData.LoopMode.UNKNOWN
+        val loopMode: LoopStatusData.LoopMode = LoopStatusData.LoopMode.UNKNOWN,
+        // End time (epoch ms) of a temporary running mode (suspend/disconnect/superbolus); null when permanent or older sender
+        val modeEndTime: Long? = null
     ) : EventData(), EventDataSet
 
     @Serializable

@@ -4,10 +4,12 @@ import android.graphics.Canvas
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -23,7 +25,9 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
@@ -54,6 +58,13 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var elements by mutableStateOf<List<MenuItem>>(emptyList())
+
+    /** Optional secondary line under the title (e.g. the current running mode); null hides it */
+    protected var subtitle by mutableStateOf<String?>(null)
+
+    /** Optional color for [subtitle] (e.g. the running mode text color); null uses the secondary gray */
+    protected var subtitleColor by mutableStateOf<Color?>(null)
+
     private val disposable = CompositeDisposable()
 
     protected abstract fun provideElements(): List<MenuItem>
@@ -79,6 +90,8 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
                 MenuListScreen(
                     title = menuTitle,
                     titleIcon = titleIcon,
+                    subtitle = subtitle,
+                    subtitleColor = subtitleColor,
                     elements = elements,
                     onAction = { doAction(it) }
                 )
@@ -101,6 +114,8 @@ private val MenuItemBg = Color.White.copy(alpha = 0.15f)
 private fun MenuListScreen(
     title: String,
     titleIcon: Int?,
+    subtitle: String?,
+    subtitleColor: Color?,
     elements: List<MenuListActivity.MenuItem>,
     onAction: (String) -> Unit
 ) {
@@ -111,19 +126,33 @@ private fun MenuListScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             item {
+                // Subtitle lives INSIDE the header so there is no extra list item: it sits directly
+                // under the title (no ListHeader bottom padding in between) and the list's
+                // auto-centering still targets the first real menu row
                 ListHeader {
-                    if (titleIcon != null) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(titleIcon),
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (titleIcon != null) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    painter = painterResource(titleIcon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(title)
+                            }
+                        } else {
                             Text(title)
                         }
-                    } else {
-                        Text(title)
+                        if (subtitle != null) {
+                            Text(
+                                text = subtitle,
+                                color = subtitleColor ?: Color.White.copy(alpha = 0.6f),
+                                fontSize = 11.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
                     }
                 }
             }

@@ -518,7 +518,7 @@
         <service
             android:name=".complications.RunningModeComplication"
             android:exported="true"
-            android:icon="@drawable/ic_loop_closed_green"
+            android:icon="@drawable/ic_loop_closed_white"
             android:label="@string/label_running_mode_title"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>

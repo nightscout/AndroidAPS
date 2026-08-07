@@ -16,18 +16,28 @@ import javax.inject.Singleton
 @Singleton
 class RunningModeSource @Inject constructor(private val context: Context, private val sp: SP) : TileSource {
 
-    override fun getSelectedActions(): List<Action> = getSelectedActions(getRunningModes(sp))
+    // The tile has only 4 slots: drop LOOP_DISABLE when LOOP_USER_SUSPEND is also offered and cap
+    // at 4. This filter lives here (not on the phone) so the running-mode picker can show every entry.
+    override fun getSelectedActions(): List<Action> {
+        val states = getRunningModes(sp)
+        val tileStates = if (states.states.any { it.state == RunningMode.LOOP_USER_SUSPEND })
+            states.states.filter { it.state != RunningMode.LOOP_DISABLE }
+        else states.states
+        return buildActions(states, tileStates).take(4)
+    }
 
     /**
-     * Build the launchable actions for [states]. Also used by the running-mode complication picker,
-     * which passes a freshly received [EventData.RunningModeList] instead of the SP-cached one.
-     * The result is aligned with `states.states` by index (capped at 4 entries).
+     * Build the launchable actions for the FULL [states] list, one per entry, aligned by index.
+     * Used by the running-mode complication picker, which passes a freshly received
+     * [EventData.RunningModeList] instead of the SP-cached one and shows every entry.
      */
-    fun getSelectedActions(states: EventData.RunningModeList): List<Action> {
+    fun getSelectedActions(states: EventData.RunningModeList): List<Action> = buildActions(states, states.states)
+
+    /** [subset] entries must come from [states]`.states` — the action index is looked up there. */
+    private fun buildActions(states: EventData.RunningModeList, subset: List<EventData.RunningModeList.AvailableRunningMode>): List<Action> {
         val actions = mutableListOf<Action>()
 
-        for (state in states.states) {
-            if (actions.size == 4) break
+        for (state in subset) {
             val index = states.states.indexOf(state)
             actions.add(
                 Action(
