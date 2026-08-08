@@ -408,15 +408,16 @@ Nothing is left of the original blocker list inside `:core:nssdk` - `org.json`, 
 Retrofit,
 OkHttp, `android.*` and `java.io` are all gone from it.
 
-Step 2 is now half done as well: `:core:keys` no longer hands out bare resource ids, it hands out
-`TextRef` (wave 10). The ids are still AAPT ids inside it, so this is the seam rather than the
-move -
-but it is the half that had to come first, because it is the half that touches every call site.
+**Step 2 is prepared but not done.** `:core:keys` now hands out `TextRef` rather than bare resource
+ids (wave 10), owns only strings it actually uses (wave 11), and nothing outside it reads its `R`
+class (wave 12). The spike proved the toolchain works (wave 13). What has **not** happened is the
+conversion itself - the module is still an Android library with `res/values*` and a generated `R`.
+Resume instructions are in section 9b.
 
-That leaves the rest of steps 2, 3, 4 and 6, and the half of step 0 that **needs a Mac**: a real
-device, and an honest look at how Compose Multiplatform feels on iOS. No amount of further blocker
-removal answers that question, which is the argument for doing it soon rather than continuing down
-the list.
+That leaves the rest of steps 2, 3, 4 and 6. Step 0's remaining half **needs a Mac** - or a
+`macos-latest` CI runner, which is how the projects with public precedent do it and which is free for
+a public repo. No amount of further blocker removal answers how Compose Multiplatform actually feels
+on iOS.
 
 ---
 
@@ -605,6 +606,13 @@ effect on the main compile.
 imports. The only blocker is **381 `R.string` references in 6 files** - the keys carry preference
 titles and summaries as raw `Int` resource ids. That is the resources job in section 6, not a
 separate problem.
+
+> **That paragraph was wrong**, and it was wrong in a way worth remembering. It came from grepping
+> `^import android` / `^import java`, which finds nothing when the type is written **fully qualified
+> inline** or is **auto-imported**. Wave 11 found two real ones:
+> `android.content.Context` in `StringPreferenceKey.kt` (written fully qualified, so no import line)
+> and `java.lang.Class` in five places (`java.lang` needs no import). The same mistake shape recurred
+> twice more later - see the note at the end of wave 12. Grep for *usage*, not for imports.
 
 ### Wave 4 - `:core:data` ambient state (partly done)
 
@@ -1188,9 +1196,148 @@ resource-id-or-string pair that `TextRef` exists to collapse, and collapsing the
 `IntKeyWithEntries` and `withEntries` entirely. It is not in phase 1 because it touches plugin call
 sites, and phase 1 was scoped to `:core:*`.
 
-`UnitType.valueResId()` / `rangeResId()` stay `Int?`. They are format templates that need arguments
-supplied at the call site, they live in `:core:ui`, and they are only ever read from Compose - so
-routing them through `TextRef` would add a hop and remove nothing.
+`UnitType.valueResId()` / `rangeResId()` stay `Int?` for now. They are format templates that need
+arguments supplied at the call site. (They lived in `:core:keys`, not `:core:ui` as an earlier
+version of this note said. Wave 11 moved them.)
+
+### Wave 11 - `TextRef` phase 2, and `:core:keys` owns only its own strings (done)
+
+Committed as `95da0fa7ca` and `6fdb924e6b`. Three separate jobs that together leave `:core:keys`
+with no raw Android resource id in its API and nothing in it that other modules reach into.
+
+#### The entries maps
+
+`IntPreferenceKey.entries: Map<Int, Int>` and `StringPreferenceKey.entries: Map<String, Int>` became
+`Map<K, TextRef>`. The 100 `value to R.string.x` pairs did **not** change: the same trick as
+`title` - the constructor parameter turned private (`entriesResIds`) and a computed property exposes
+it. 11 enums, 17 named arguments.
+
+`resolvedEntries` is **deleted**. It was the parallel `Map<K, String>?` that took precedence over
+`entries`, i.e. exactly the resource-id-or-string pair `TextRef` exists to collapse. `withEntries`
+now takes `Map<K, TextRef>`, so callers choose `Res` or `Literal` per entry. Two read sites in
+`AdaptivePreferenceItem` collapsed to one each.
+
+That change is what made a real fix possible: `EopatchPumpPlugin` built its reminder labels as
+`"$it U"` and `"$it hr"` - string concatenation no translator can reach. They now use the existing
+translated templates `units_format_insulin_int` and `units_format_hours`. Note the visible
+consequence: expiration entries read "1 h", not "1 hr". Had `withEntries` kept `Map<K, String>` and
+wrapped in `Literal` internally, the bug would have been frozen in place.
+
+#### UnitType split
+
+`UnitType.kt` is now the enum plus `decimalPlaces()` and `step()` - zero resources, zero Android. The
+resource mapping moved to `core/ui/.../UnitTypeText.kt` as `unitLabel(): TextRef?`,
+`rangeText(value, min, max): TextRef?` (arguments taken here, so a bare template cannot reach the
+screen) and `valueFormatResId(): Int?`, which stays an `Int` because the slider applies it to
+whatever value the user drags to.
+
+#### The unitLabel pair, and an identity check on a resource id
+
+`formatSliderDisplayValue` took **both** `unitLabelResId: Int = 0` **and** `unitLabel: String = ""`.
+One `unitLabel: TextRef?` replaced both, killing the sentinel and the pair, across ~26 files.
+
+Worse than the sentinel: three places detected a semantic concept by comparing resource ids -
+`unitLabelResId == KeysR.string.units_min` in `FormatUtils`, `SliderWithButtons` and
+`ValueInputDialog`. All three are now an explicit `asDuration: Boolean`. That kind of check is
+exactly what breaks when ids stop being AAPT ids.
+
+#### `:core:keys` stops hosting other people's strings
+
+40 `units_*` strings moved to `:core:ui`, where 99 of their references already were - only **two**
+were used from inside `:core:keys` (`units_mgdl`, `units_mmol` in `StringKey.GeneralUnits`), and they
+became `TextRef.Literal("mg/dL")` / `TextRef.Literal("mmol/L")`, which is honest because they read
+the same in every locale. `prefs_range_title` moved too (external-only).
+
+**The translations were moved by hand, per locale, in the same commit.** Not left to a later Crowdin
+sync - see wave 12 for why that matters.
+
+Side effect worth knowing: after this move `:core:keys` has **zero format placeholders**, zero
+plurals and zero string-arrays. Those are the categories that are hard build errors in
+compose-resources, so the module that is about to convert is now the clean one.
+
+#### Deleted as dead
+
+`getDependingOn` had **no callers** anywhere - dependency visibility is computed reactively from
+`preferenceKey.dependency` in `PreferenceState.kt`. Removed from the interface, both
+`PreferencesImpl`s, the `PreviewUtils` stub and its one test.
+
+`rangeText` was **not** deleted, and the reasoning is worth recording. It looked dead - grep for
+`min = Int.MIN_VALUE` finds nothing. But seven pump enums **default** `min`/`max` to the extreme
+values, and three Insight constants take the default, so `hasValidRange` is false for them and the
+branch runs. It returns null today only because those keys have no `unitType`. Same grep-the-explicit-
+form mistake as wave 3.
+
+### Wave 12 - clearing the way for compose-resources (done, not yet converted)
+
+Two preparatory stages, both green, both on device.
+
+**Stage 1 - `TextRef.Res` renamed to `TextRef.AndroidRes`** across 187 sites. Pure rename. It frees
+the name `Res` for the compose-resources form and, more importantly, states the truth: an Android
+resource id is *one* kind of text reference, not the only one. Pump drivers keep AAPT resources
+permanently, so two variants is the end state, not scaffolding.
+
+**Stage 2a - the `@StringRes Int` APIs take `TextRef`.** Five `:core:keys` strings were read as
+Android ints by three other modules through APIs that cannot take a `StringResource`. Rather than
+duplicate those strings (which would mean deleting them from Crowdin later - see wave 12's warning),
+the APIs changed:
+
+| API                              | Change                                                            |
+|----------------------------------|-------------------------------------------------------------------|
+| `SWItem.label`                   | `Int?` -> `TextRef?`; `label(Int)` delegates                      |
+| `SWScreen.header`                | `Int = 0` sentinel -> `TextRef?`; `with(Int)` delegates           |
+| `SWEventListener.textLabel`      | `Int = 0` sentinel -> `TextRef?`                                  |
+| `NumberInputRow.labelResId`      | -> `labelRef: TextRef?`, `Int` overload keeps **79** call sites   |
+| `PasswordCheck.queryPassword` / `setPassword` | `TextRef` overloads; `Int` versions delegate         |
+
+The delegating-overload trick is why this was ~5 call-site changes and not ~70. External callers now
+ask the key for its own label - `StringKey.ProtectionMasterPassword.title` instead of
+`R.string.master_password` - which also deleted a genuine pre-existing duplicate (`master_password`
+and `pref_title_master_password` were both "Master password").
+
+**Result: no module outside `:core:keys` references its `R` class.** That was the precondition.
+
+> **A recurring mistake, recorded so it stops happening.** Three times this wave I grepped for one
+> syntactic form and concluded something was absent: `titleResId = 0` (missed the constructor
+> *default*), `^import android` (missed fully-qualified and auto-imported use), `min = Int.MIN_VALUE`
+> (missed the default again). Two of those nearly deleted live code. "I found no matches" is weak
+> evidence, especially before a deletion.
+
+### Wave 13 - what the compose-resources spike proved
+
+A throwaway standalone project (not in the repo) answered the questions that decide the conversion.
+
+| Question | Answer |
+|---|---|
+| Does CMP resolve on Kotlin 2.4.10 / Gradle 9.6.1? | **Yes** - plugin `1.11.1`, `BUILD SUCCESSFUL`, generated a public `Res` |
+| Do Android-style locale folders survive? | **Yes** - `values-de-rDE`, `values-pt-rBR`, `values-zh-rCN`, `values-iw-rIL` all parse into `LanguageQualifier` + `RegionQualifier`. **No renaming needed.** |
+| Does `mingwX64` work? | **No.** `components-resources:1.11.1` publishes Native only for `ios_arm64`, `ios_simulator_arm64`, `macos_arm64` |
+| Build cost? | baseline **15.8s**, +compose plugin **17.7s**, +328 strings x 31 locales **29.3s** |
+
+The build-cost split matters: the **Compose compiler plugin is ~2s**; the other **~11.6s is resource
+codegen**, which scales with the number of locales, not with code. My worry that the IR transform
+over the enums would be expensive was wrong.
+
+The `mingwX64` answer only matters because it was our Windows-buildable proxy for "compiles to
+Native". The **real** target set is Android + iOS + JVM-on-Windows, and compose-resources supports
+all three. So `mingwX64` is scaffolding we can drop for this module; the cost is that its Native side
+can then only be compiled on macOS.
+
+Two corrections to earlier reasoning in this note:
+
+- `ResourceEnvironment`'s constructor is **public** in 1.11.1 (it was `internal` when wave 10 was
+  written). So an always-English `ResourceEnvironment(LanguageQualifier("en"), ...)` is possible, and
+  the search index's English half is **not** a blocker any more. That was the original reason for
+  rejecting `StringResource` on the key classes.
+- Holding a `StringResource` costs **kotlin-stdlib only** - `components-resources` declares nothing
+  else in `apiElements`; Compose appears only in `runtimeElements`.
+
+Still true: **every `getString` overload is `suspend`.** There is no synchronous variant.
+
+There is real precedent on this exact toolchain: **Meshtastic-Android** runs a dedicated
+`:core:resources` module (1747 strings, ~40 locales, `publicResClass = true`) on AGP 9.3.1 /
+Kotlin 2.4.10 / CMP 1.11.1, and **Todometer-KMP** targets android + jvm + iosArm64 +
+iosSimulatorArm64. Both build iOS only on `macos-latest` runners - which is the answer for a
+maintainer with no Mac, and free for a public repo.
 
 ### Was behaviour preserved?
 
@@ -1307,20 +1454,169 @@ keeps the old contract on a public interface method.
     because `getString()` is `suspend` and there is no public locale override, which would cost the
     English search index. `TextRef` is the seam that lets each module move on its own schedule
     without touching call sites twice. See wave 10.
-15. **Still open: collapse `IntPreferenceKey.entries` / `resolvedEntries`.** Same
-    resource-id-or-string pair, and `TextRef` is exactly the type for it, but it reaches into plugin
-    call sites so it was left out of the `:core:*` phase.
+15. ~~Collapse `IntPreferenceKey.entries` / `resolvedEntries`.~~ **Done in wave 11.** `entries` is
+    `Map<K, TextRef>`, `resolvedEntries` is deleted, `withEntries` takes `TextRef` - which is what
+    let the Eopatch `"$it U"` concatenation become a translated template.
 16. ~~`RileyLinkStringPreferenceKey.MacAddress` should be a `NonPreferenceKey`.~~ **Done - moved to
     `RileyLinkStringKey`.** It is storage, not a preference: no title, no screen, written by the
     pairing wizard. With it gone the `titleResId = 0` default came out of all 26 enums, so a
     preference key without a title no longer compiles. See wave 10.
+17. ~~Does `:core:keys` need its own strings?~~ **Yes, structurally.** It is a leaf module - zero
+    project dependencies - and `:core:ui` depends on **it**. So the strings cannot move to `:core:ui`
+    (cycle), and a key naming its own title at compile time means they must live in the same module.
+    That is what makes compose-resources the answer rather than a relocation.
+18. ~~compose-resources on `:core:keys`, or negative-integer tokens in `TextRef`?~~
+    **Decided: compose-resources.** The token scheme's whole advantage was keeping `mingwX64`, and
+    `mingwX64` is not in the real target set (Android + iOS + JVM-on-Windows). Tokens would also be a
+    bespoke design with no public precedent, which is the wrong trade when iOS cannot be compiled
+    locally. See wave 13.
+19. **Still open: when to enable `MissingTranslation` lint.** It is disabled repo-wide and is the
+    reason 19 languages silently lost `:core:keys`. Needs to be on - at warning level with a CI
+    report - before any further string relocation. See section 9a.
+20. **Still open: `:core:ui` is next after `:core:keys`.** It holds 1063 strings and every module
+    depends on it, so the same questions return at a larger scale. Worth deciding whether it converts
+    module-by-module or whether a dedicated shared-strings leaf is better at that point.
 
-Waves 1 to 4 are committed on `dev`. Waves 5 to 9 are committed on `kmp/core-data-experiment`, each
-verified against a live Nightscout before the next one started - waves 5 and 6 on WSA, waves 7 to 9
-on an emulator running a new master against a **pre-KMP client**, so every step was checked in a
-mixed-version pair rather than only against itself. Wave 10 is on the same branch and is not on a
-device yet - it is a compile time refactor with no wire format in it, so the risk is different in
-kind from waves 5 to 9. The `FoodManagement` comma defect in section 10 is found but not fixed.
+Waves 1 to 4 are committed on `dev`. Waves 5 to 13 are committed on `kmp/core-data-experiment`
+(HEAD `6fdb924e6b`), which is still **13+ commits ahead and 0 behind `dev` - a fast-forward**.
+
+Waves 5 to 9 were each verified against a live Nightscout before the next started - waves 5 and 6 on
+WSA, waves 7 to 9 on an emulator running a new master against a **pre-KMP client**, so every step was
+checked in a mixed-version pair. Waves 10 to 12 are compile-time refactors with no wire format in
+them, and were verified on the emulator by reading the UI: preference screens, nested sections,
+search, the client's sync badges, twelve setup-wizard screens, and the treatment dialogs. The failure
+mode of these waves is a **blank label**, not a crash, so they need eyes rather than logcat.
+
+Still unverified at runtime, because they need hardware the emulator cannot provide: the Eopatch and
+Medtrum entry lists, and the Insight `rangeText` path.
+
+The `FoodManagement` comma defect in section 10 is found but not fixed.
+
+---
+
+## 9a. LIVE BUG - `:core:keys` translations are missing in 19 of 30 languages
+
+**This is on `dev` today, it predates all KMP work, and nothing in the build can see it.**
+
+`core/keys/src/main/res/values/strings.xml` has 327 strings. Only **11 locales** have translations:
+bg, cs, es, fr, it, nb, ro, sk, vi, zh-rCN, zh-rTW. The other **19 locale files exist but contain
+zero `<string>` elements**: de, ru, pl, nl, pt-rBR, pt-rPT, tr, sv, uk, ar, ca, da, el, hr, hu, iw,
+ko, lt, sr.
+
+The proof it is a regression, not merely untranslated work:
+`core/ui/src/main/res/values-de-rDE/strings.xml` still carries the marker
+`<!-- master_password moved to core/keys/strings.xml -->`. The German text was removed from
+`:core:ui` when the string moved, and never arrived. German users see these strings in English.
+
+**Why nothing caught it:** `buildSrc/.../android-module-dependencies.gradle.kts:30-31` does
+`disable += "MissingTranslation"` and `disable += "ExtraTranslation"` for **every** Android library,
+and CI runs only `:app:assemble` / `:wear:assemble` - no lint, no tests. There is currently no
+mechanism in this repo that can notice a lost string.
+
+### What was already done about it
+
+A Crowdin **TM pre-translate** was run against `fileId 5662` (`/dev/core/keys/.../strings.xml`) for
+all 19 languages, with `translateUntranslatedOnly: true` and `autoApproveOption: "none"`.
+
+| | before | after |
+|---|---|---|
+| de | 18 | 150 |
+| ru | 40 | 176 |
+| pl / tr | 0 | 150 |
+| nl | 11 | 157 |
+| ... | | typically 100-150 of 327 |
+
+**Recovery is partial (~40%), and this tells us something.** If all these strings had simply *moved*,
+TM would have matched nearly all of them. It did not - so roughly 60% were **never translated in any
+locale**. It is two problems: a genuine relocation loss, sitting on a larger backlog of new strings
+from the Compose preferences migration.
+
+**Nothing is approved.** The project exports approved translations only, so a `download` still
+returns empty files until someone approves in the web editor. The entries are also fuzzy matches
+(`translateWithPerfectMatchOnly: false`), which is why they were left for review.
+
+### Why this blocks the string move
+
+Phase 3 relocates 327 strings x 30 locales. Right now you **cannot tell a relocation failure from
+the pre-existing gap** - for 19 languages there is nothing left to break. Fix and verify first, then
+move. Concretely, before converting:
+
+1. Approve the pre-translated suggestions (or decide to discard them).
+2. Turn `MissingTranslation` back on - **warning level plus a CI report**, not an error gate, or the
+   first run is unusable.
+3. Re-download and commit, so the repo has a known-good baseline.
+
+Useful commands are in the session notes: the CLI needs `-b dev`, a minimal temp `crowdin.yml` with
+`preserve_hierarchy: true`, and `--base-path`. The API route avoids the export build entirely:
+`GET /api/v2/projects/309752/languages/{lang}/translations?fileId=5662`.
+
+---
+
+## 9b. Where to resume - `:core:keys` to compose-resources
+
+Everything up to here is committed. The conversion itself has **not** started.
+
+### Stage 2b - convert the module
+
+1. **`core/keys/build.gradle.kts`** - replace the Android-library setup with:
+   `kotlin("multiplatform")` + `org.jetbrains.compose` + `org.jetbrains.kotlin.plugin.compose`
+   (the Compose plugin **hard-fails** without the compiler plugin) + `com.android.library`.
+   Targets: `androidTarget()`, `jvm()`, `iosArm64()`, `iosSimulatorArm64()`. **No `mingwX64`** -
+   `components-resources` does not publish it.
+   `compose.resources { publicResClass = true; packageOfResClass = "app.aaps.core.keys.resources";
+   generateResClass = always }`, and `android { androidResources.enable = true }`.
+   Add `api(compose.components.resources)` - `api`, because the type is in the public API.
+2. **Move sources** `src/main/kotlin` -> `src/commonMain/kotlin` (47 files).
+3. **Move resources** `src/main/res/values*/strings.xml` ->
+   `src/commonMain/composeResources/values*/strings.xml`. **Folder names stay exactly as they are** -
+   the spike proved `values-de-rDE` etc. parse correctly.
+4. **Add `TextRef.Res(resource: StringResource, args: List<Any>)`** next to `AndroidRes` and
+   `Literal`.
+5. **~340 `R.string.x` -> `Res.string.x`** in the 6 enum files. The generated class cannot be named
+   `R`, so this is a real edit, not a package alias.
+6. Watch `minSdk = min(Versions.minSdk, Versions.wearMinSdk)` - `:wear` consumes this module, and a
+   KMP module with `androidTarget()` consumed by `:wear` is the part with least public precedent.
+
+### Stage 3 - resolvers
+
+- Compose: `stringResource(TextRef)` in `:core:ui` gains a `Res` branch.
+- Non-Compose: `ResourceHelper.gs(TextRef)` must stay **synchronous** because ~15 call sites and the
+  search index are not suspend. `getString` is suspend, so use a **lazy cache**:
+  `ConcurrentHashMap<StringResource, String>`, filled with `getOrPut { runBlocking { getString(...) } }`,
+  so the blocking read happens at most once per string. Pair it with a **background warm** at startup
+  so the main thread rarely pays it. A second cache keyed on the English `ResourceEnvironment` serves
+  `gsNotLocalised` for the search index.
+- Do **not** make `SearchIndexBuilder.getIndex()` suspend - the cache removes the need, and the
+  suspend route would spread to ~15 other synchronous callers.
+
+### Follow-ups, in rough priority order
+
+1. **Merge `kmp/core-data-experiment` into `dev`** - still a fast-forward, and it gets less free
+   every day. (Open decision 11.)
+2. **The translation work in section 9a** - before any further string move.
+3. **A `macos-latest` CI job** building `iosSimulatorArm64`. Nothing verifies the Native side today;
+   CI is all `ubuntu-latest` running only `:app:assemble`.
+4. **`PluginDescription.description: Int`** - the `-1` sentinel, set by 57 files. Must become
+   `TextRef` before plugins convert.
+5. **Remaining `!= 0` / `!= -1` resource sentinels** - `SearchableItem` (2), `MainDrawer`,
+   `ManageBottomSheet`, `TreatmentBottomSheet`, `PreferenceScreenView`, `QuickLaunchResolver`,
+   `InfoStep`, `SWEventListener`. Harmless today.
+6. **`IntPreferenceKey.entries` in the pump modules** still use `entriesResIds`; fine while pumps stay
+   Android.
+7. **Swap `mingwX64` for Apple targets in `:core:data` / `:core:nssdk`** once macOS CI exists - they
+   currently prove themselves against a platform we do not ship.
+
+### Environment notes for another machine
+
+- **`:wear:kspFullDebugKotlin` fails on the first run of almost every build** with
+  `this and base files have different roots: C:\...\dagger-2.60.1.jar!... and E:\Github\AndroidAPS3\wear`.
+  It is **not flaky** - it is KSP relativising a path from the Gradle cache on `C:` against a project
+  on `E:`. A re-run succeeds because the output is cached. Fix properly by putting `GRADLE_USER_HOME`
+  on the same drive as the project.
+- **`:pump:combov2:comboctl` and `:pump:danars-emulator`** have async tests that time out under a
+  fully parallel build but pass when run alone. Verified twice each. Do not chase them.
+- Use redirect, not pipe, for gradle output - a pipe reports the *pipe's* exit code, so a failed
+  build looks like it passed.
 
 ---
 
