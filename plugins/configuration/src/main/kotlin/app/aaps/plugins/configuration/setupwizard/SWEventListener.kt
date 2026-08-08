@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventStatus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
@@ -25,7 +27,7 @@ class SWEventListener @Inject constructor(
     passwordCheck: PasswordCheck
 ) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
-    private var textLabel = 0
+    private var textLabel: TextRef? = null
     private var status = ""
     private var visibilityValidator: (() -> Boolean)? = null
 
@@ -36,10 +38,12 @@ class SWEventListener @Inject constructor(
         return this
     }
 
-    override fun label(label: Int): SWEventListener {
+    override fun label(label: TextRef): SWEventListener {
         textLabel = label
         return this
     }
+
+    override fun label(label: Int): SWEventListener = label(TextRef.AndroidRes(label))
 
     fun initialStatus(status: String): SWEventListener {
         this.status = status
@@ -65,7 +69,7 @@ class SWEventListener @Inject constructor(
                 }
             onDispose { disposable.dispose() }
         }
-        val labelText = if (textLabel != 0) stringResource(textLabel) else ""
+        val labelText = textLabel?.let { stringResource(it) } ?: ""
         Text(text = "$labelText ${statusState.value}".trim())
     }
 }

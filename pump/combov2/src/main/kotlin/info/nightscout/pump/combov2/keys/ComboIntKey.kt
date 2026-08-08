@@ -26,5 +26,5 @@ enum class ComboIntKey(
     DiscoveryDuration("combov2_bt_discovery_duration", defaultValue = 300, titleResId = R.string.combov2_discovery_duration, min = 30, max = 300),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

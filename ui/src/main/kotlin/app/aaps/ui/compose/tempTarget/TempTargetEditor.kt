@@ -31,7 +31,6 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.core.keys.R as KeysR
 
 /**
  * Editor component for temp target presets with inline activation fields.
@@ -126,7 +125,7 @@ fun TempTargetEditor(
             onValueChange = { onDurationChange((it * 60000L).toLong()) },
             valueRange = Constants.ACTION_DURATION,
             step = 5.0,
-            unitLabel = TextRef.Res(KeysR.string.units_min),
+            unitLabel = TextRef.AndroidRes(R.string.units_min),
             modifier = Modifier.fillMaxWidth()
         )
 

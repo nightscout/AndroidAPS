@@ -24,6 +24,6 @@ enum class TidepoolBooleanKey(
     UseTestServers("tidepool_dev_servers", false, titleResId = R.string.title_tidepool_dev_servers, summaryResId = R.string.summary_tidepool_dev_servers),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

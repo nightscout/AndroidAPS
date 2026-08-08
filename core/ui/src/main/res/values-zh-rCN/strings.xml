@@ -1085,4 +1085,45 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <string name="units_days">天</string>
+    <string name="units_format_days">%1$d 天</string>
+    <string name="units_format_days_range">%1$d 天 (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d 小时</string>
+    <string name="units_format_hours_double">%1$.0f 小时</string>
+    <string name="units_format_hours_double_range">%1$.0f 小时(%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_range">%1$d 小时(%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d 分</string>
+    <string name="units_format_min_range">%1$d 分(%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d 秒</string>
+    <string name="units_format_sec_range">%1$d 秒(%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">小时</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">分</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">秒</string>
+    <string name="units_years">年</string>
+    <string name="prefs_range_title">可视化范围</string>
 </resources>

@@ -26,5 +26,5 @@ enum class GarminStringKey(
     RequestKey(key = "garmin_aaps_key", defaultValue = "", titleResId = R.string.garmin_request_key),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

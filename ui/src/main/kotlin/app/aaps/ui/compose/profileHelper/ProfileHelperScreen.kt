@@ -59,6 +59,7 @@ import app.aaps.core.graph.profile.buildTargetRows
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
@@ -489,7 +490,7 @@ fun DefaultProfileContent(
             onValueChange = { onAgeChange(it.toInt()) },
             valueRange = 1.0..99.0,
             step = 1.0,
-            unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_years)
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_years)
         )
         if (showTdd) NumberInputRow(
             labelResId = app.aaps.core.ui.R.string.tdd_total,
@@ -497,7 +498,7 @@ fun DefaultProfileContent(
             onValueChange = onTddChange,
             valueRange = 0.0..200.0,
             step = 1.0,
-            unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_insulin)
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_insulin)
         )
         if (showWeight) NumberInputRow(
             labelResId = R.string.weight_label,
@@ -505,7 +506,7 @@ fun DefaultProfileContent(
             onValueChange = onWeightChange,
             valueRange = 0.0..150.0,
             step = 1.0,
-            unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_kg)
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_kg)
         )
         if (showPct) NumberInputRow(
             labelResId = R.string.basal_pct_from_tdd_label,
@@ -513,7 +514,7 @@ fun DefaultProfileContent(
             onValueChange = onPctChange,
             valueRange = 32.0..37.0,
             step = 1.0,
-            unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_percent)
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent)
         )
     }
 }

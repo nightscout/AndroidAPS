@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.core.keys.IntKey
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
@@ -37,7 +38,6 @@ import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.ui.R
 import app.aaps.ui.compose.quickWizard.viewmodels.TrendOption
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreR
 
 /**
@@ -199,7 +199,7 @@ fun QuickWizardEditor(
                 valueRange = 0.0..maxInsulin,
                 step = 0.05,
                 decimalPlaces = 2,
-                unitLabel = TextRef.Res(CoreR.string.insulin_unit_shortname),
+                unitLabel = TextRef.AndroidRes(CoreR.string.insulin_unit_shortname),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -212,7 +212,7 @@ fun QuickWizardEditor(
                 onValueChange = { onCarbsChange(it.toInt()) },
                 valueRange = 0.0..maxCarbs,
                 step = 1.0,
-                unitLabel = TextRef.Res(KeysR.string.units_grams),
+                unitLabel = TextRef.AndroidRes(CoreR.string.units_grams),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -225,7 +225,7 @@ fun QuickWizardEditor(
                 onValueChange = { onCarbTimeChange(it.toInt()) },
                 valueRange = -60.0..60.0,
                 step = 5.0,
-                unitLabel = TextRef.Res(KeysR.string.units_min),
+                unitLabel = TextRef.AndroidRes(CoreR.string.units_min),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -341,12 +341,12 @@ fun QuickWizardEditor(
 
             // Percentage
             NumberInputRow(
-                labelResId = KeysR.string.pref_title_bolus_percentage,
+                labelRef = IntKey.OverviewBolusPercentage.title,
                 value = percentage.toDouble(),
                 onValueChange = { onPercentageChange(it.toInt()) },
                 valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                 step = 5.0,
-                unitLabel = TextRef.Res(KeysR.string.units_percent),
+                unitLabel = TextRef.AndroidRes(CoreR.string.units_percent),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -399,7 +399,7 @@ fun QuickWizardEditor(
                         onValueChange = { onTimeChange(it.toInt()) },
                         valueRange = (-7 * 24 * 60).toDouble()..(12 * 60).toDouble(),
                         step = 5.0,
-                        unitLabel = TextRef.Res(KeysR.string.units_min),
+                        unitLabel = TextRef.AndroidRes(CoreR.string.units_min),
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -410,7 +410,7 @@ fun QuickWizardEditor(
                         onValueChange = { onDurationChange(it.toInt()) },
                         valueRange = 0.0..10.0,
                         step = 1.0,
-                        unitLabel = TextRef.Res(KeysR.string.units_hours),
+                        unitLabel = TextRef.AndroidRes(CoreR.string.units_hours),
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -421,7 +421,7 @@ fun QuickWizardEditor(
                         onValueChange = { onCarbs2Change(it.toInt()) },
                         valueRange = 0.0..maxCarbs,
                         step = 1.0,
-                        unitLabel = TextRef.Res(KeysR.string.units_grams),
+                        unitLabel = TextRef.AndroidRes(CoreR.string.units_grams),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

@@ -383,7 +383,7 @@ internal fun FillDialogContent(
                             valueRange = 0.0..uiState.maxInsulin,
                             step = uiState.bolusStep,
                             valueFormat = bolusFormat,
-                            unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
+                            unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                             enabled = uiState.showBolus
                         )
 

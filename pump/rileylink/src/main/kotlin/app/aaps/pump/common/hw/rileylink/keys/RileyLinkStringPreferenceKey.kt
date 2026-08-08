@@ -37,7 +37,7 @@ enum class RileyLinkStringPreferenceKey(
     ),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.AndroidRes(it.value) }
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

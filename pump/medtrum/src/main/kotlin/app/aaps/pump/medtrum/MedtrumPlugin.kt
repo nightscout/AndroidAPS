@@ -460,19 +460,19 @@ class MedtrumPlugin @Inject constructor(
         // For NANO and 300U pumps, only Beep and Silent options are available
         return when (medtrumPump.pumpType()) {
             PumpType.MEDTRUM_NANO, PumpType.MEDTRUM_300U -> mapOf(
-                "6" to TextRef.Res(R.string.alarm_setting_beep),
-                "7" to TextRef.Res(R.string.alarm_setting_silent)
+                "6" to TextRef.AndroidRes(R.string.alarm_setting_beep),
+                "7" to TextRef.AndroidRes(R.string.alarm_setting_silent)
             )
 
             else                                         -> mapOf(
-                "0" to TextRef.Res(R.string.alarm_setting_light_vibrate_beep),
-                "1" to TextRef.Res(R.string.alarm_setting_light_vibrate),
-                "2" to TextRef.Res(R.string.alarm_setting_light_beep),
-                "3" to TextRef.Res(R.string.alarm_setting_light),
-                "4" to TextRef.Res(R.string.alarm_setting_vibrate_beep),
-                "5" to TextRef.Res(R.string.alarm_setting_vibrate),
-                "6" to TextRef.Res(R.string.alarm_setting_beep),
-                "7" to TextRef.Res(R.string.alarm_setting_silent)
+                "0" to TextRef.AndroidRes(R.string.alarm_setting_light_vibrate_beep),
+                "1" to TextRef.AndroidRes(R.string.alarm_setting_light_vibrate),
+                "2" to TextRef.AndroidRes(R.string.alarm_setting_light_beep),
+                "3" to TextRef.AndroidRes(R.string.alarm_setting_light),
+                "4" to TextRef.AndroidRes(R.string.alarm_setting_vibrate_beep),
+                "5" to TextRef.AndroidRes(R.string.alarm_setting_vibrate),
+                "6" to TextRef.AndroidRes(R.string.alarm_setting_beep),
+                "7" to TextRef.AndroidRes(R.string.alarm_setting_silent)
             )
         }
     }

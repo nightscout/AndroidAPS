@@ -35,6 +35,6 @@ enum class RileylinkBooleanPreferenceKey(
     ),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

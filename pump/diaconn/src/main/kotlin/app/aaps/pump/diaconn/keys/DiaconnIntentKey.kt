@@ -21,5 +21,5 @@ enum class DiaconnIntentKey(
     BtSelector(key = "diaconn_bt_selector", titleResId = R.string.selectedpump)
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

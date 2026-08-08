@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
@@ -58,7 +59,7 @@ fun AdaptiveMasterPasswordPreferenceItem(
 
     Preference(
         title = if (showTitle) {
-            { Text(stringResource(app.aaps.core.keys.R.string.master_password)) }
+            { Text(stringResource(StringKey.ProtectionMasterPassword.title)) }
         } else {
             { Text(summary) }
         },
@@ -106,7 +107,7 @@ fun AdaptiveMasterPasswordPreferenceItem(
     // Set new password dialog
     if (showSetDialog) {
         SetPasswordDialog(
-            title = stringResource(app.aaps.core.keys.R.string.master_password),
+            title = stringResource(StringKey.ProtectionMasterPassword.title),
             pinInput = false,
             onConfirm = { password1, password2 ->
                 when {

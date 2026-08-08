@@ -19,10 +19,12 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
@@ -40,7 +42,8 @@ import javax.inject.Inject
 class PasswordCheckImpl @Inject constructor(
     private val preferences: Preferences,
     private val cryptoUtil: CryptoUtil,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val rh: ResourceHelper
 ) : PasswordCheck {
 
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
@@ -86,6 +89,16 @@ class PasswordCheckImpl @Inject constructor(
         cancel: (() -> Unit)?,
         fail: (() -> Unit)?,
         pinInput: Boolean
+    ) = queryPassword(context, TextRef.AndroidRes(labelId), preference, ok, cancel, fail, pinInput)
+
+    override fun queryPassword(
+        context: Context,
+        label: TextRef,
+        preference: StringPreferenceKey,
+        ok: ((String) -> Unit)?,
+        cancel: (() -> Unit)?,
+        fail: (() -> Unit)?,
+        pinInput: Boolean
     ) {
         val password = preferences.get(preference)
         if (password == "") {
@@ -106,7 +119,7 @@ class PasswordCheckImpl @Inject constructor(
                 ) {
                     AapsTheme {
                         QueryPasswordDialog(
-                            title = context.getString(labelId),
+                            title = rh.gs(label),
                             pinInput = pinInput,
                             onConfirm = { enteredPassword ->
                                 if (cryptoUtil.checkPassword(enteredPassword, password)) {
@@ -147,6 +160,16 @@ class PasswordCheckImpl @Inject constructor(
         cancel: (() -> Unit)?,
         clear: (() -> Unit)?,
         pinInput: Boolean
+    ) = setPassword(context, TextRef.AndroidRes(labelId), preference, ok, cancel, clear, pinInput)
+
+    override fun setPassword(
+        context: Context,
+        label: TextRef,
+        preference: StringPreferenceKey,
+        ok: ((String) -> Unit)?,
+        cancel: (() -> Unit)?,
+        clear: (() -> Unit)?,
+        pinInput: Boolean
     ) {
         val dialog = Dialog(context)
         val owner = ComposeDialogOwner()
@@ -161,7 +184,7 @@ class PasswordCheckImpl @Inject constructor(
                 ) {
                     AapsTheme {
                         SetPasswordDialog(
-                            title = context.getString(labelId),
+                            title = rh.gs(label),
                             pinInput = pinInput,
                             onConfirm = { enteredPassword, enteredPassword2 ->
                                 if (enteredPassword != enteredPassword2) {

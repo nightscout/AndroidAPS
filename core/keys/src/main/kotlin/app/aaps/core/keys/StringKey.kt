@@ -17,6 +17,12 @@ enum class StringKey(
     private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     private val entriesResIds: Map<String, Int> = emptyMap(),
+    /**
+     * Entry labels that are not a resource in this module. Only the units preference needs this:
+     * "mg/dL" and "mmol/L" read the same in every language, and the `units_*` strings themselves
+     * now live in `:core:ui`, which this module cannot depend on.
+     */
+    private val entriesLiterals: Map<String, String> = emptyMap(),
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -39,9 +45,9 @@ enum class StringKey(
         defaultValue = "mg/dl",
         titleResId = R.string.pref_title_units,
         preferenceType = PreferenceType.LIST,
-        entriesResIds = mapOf(
-            "mg/dl" to R.string.units_mgdl,
-            "mmol" to R.string.units_mmol
+        entriesLiterals = mapOf(
+            "mg/dl" to "mg/dL",
+            "mmol" to "mmol/L"
         ),
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
@@ -203,7 +209,8 @@ enum class StringKey(
 
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val entries: Map<String, TextRef> =
+        entriesResIds.mapValues { TextRef.AndroidRes(it.value) } + entriesLiterals.mapValues { TextRef.Literal(it.value) }
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

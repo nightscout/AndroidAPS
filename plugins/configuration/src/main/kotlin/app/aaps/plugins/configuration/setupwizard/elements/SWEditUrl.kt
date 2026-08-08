@@ -29,7 +29,7 @@ class SWEditUrl @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, 
     override fun Compose() {
         InlineStringPreferenceItem(
             stringKey = preference as StringPreferenceKey,
-            title = label?.let { TextRef.Res(it) }
+            title = label
         )
     }
 }

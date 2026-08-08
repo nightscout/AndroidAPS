@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.keys.R as KeysR
+import app.aaps.core.ui.R
 
 @Preview(showBackground = true)
 @Composable
@@ -48,7 +48,7 @@ internal fun SliderWithButtonsIntPreview() {
             step = 5.0,
             showValue = true,
             valueFormat = NumberFormat.INTEGER,
-            unitLabel = TextRef.Res(KeysR.string.units_min)
+            unitLabel = TextRef.AndroidRes(R.string.units_min)
         )
     }
 }

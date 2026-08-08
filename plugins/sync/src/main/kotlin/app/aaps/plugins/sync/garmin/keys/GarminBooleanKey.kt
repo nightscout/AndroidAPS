@@ -23,5 +23,5 @@ enum class GarminBooleanKey(
     LocalHttpServer("communication_http", false, titleResId = R.string.garmin_local_http_server, defaultedBySM = true, hideParentScreenIfHidden = true),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

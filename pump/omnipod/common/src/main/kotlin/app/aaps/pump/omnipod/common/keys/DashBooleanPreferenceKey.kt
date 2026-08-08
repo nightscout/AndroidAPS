@@ -24,5 +24,5 @@ enum class DashBooleanPreferenceKey(
     UseBonding("AAPS.Omnipod.Dash.use_bonding", false, titleResId = R.string.omnipod_dash_use_bonding),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

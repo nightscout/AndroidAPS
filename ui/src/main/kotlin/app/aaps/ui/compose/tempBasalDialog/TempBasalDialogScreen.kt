@@ -47,7 +47,6 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.navigation.labelResId
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -205,7 +204,7 @@ internal fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
                             valueFormat = NumberFormat.DECIMAL_2,
-                            unitLabel = TextRef.Res(CoreUiR.string.profile_ins_units_per_hour),
+                            unitLabel = TextRef.AndroidRes(CoreUiR.string.profile_ins_units_per_hour),
                             modifier = itemModifier
                         )
                     }
@@ -218,7 +217,7 @@ internal fun TempBasalDialogContent(
                         valueRange = uiState.tempDurationStep..uiState.tempMaxDuration,
                         step = uiState.tempDurationStep,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = TextRef.Res(KeysR.string.units_min),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
                         modifier = itemModifier
                     )
                 }

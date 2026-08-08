@@ -112,7 +112,7 @@ class MorePreferenceComponentsTest {
     fun clickableCategoryHeaderRendersTitle() {
         render {
             ClickablePreferenceCategoryHeader(
-                title = TextRef.Res(CoreUiR.string.treatments),
+                title = TextRef.AndroidRes(CoreUiR.string.treatments),
                 expanded = false,
                 onToggle = {}
             )
@@ -144,7 +144,7 @@ class MorePreferenceComponentsTest {
     fun collapsibleCardShowsContentWhenExpanded() {
         render {
             CollapsibleCardSectionContent(
-                title = TextRef.Res(CoreUiR.string.treatments),
+                title = TextRef.AndroidRes(CoreUiR.string.treatments),
                 expanded = true,
                 onToggle = {},
                 content = { Text("cardbody") }

@@ -230,7 +230,7 @@ internal fun TreatmentDialogContent(
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                         modifier = itemModifier
                     )
 
@@ -241,7 +241,7 @@ internal fun TreatmentDialogContent(
                         valueRange = 0.0..uiState.maxCarbs.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = TextRef.Res(CoreUiR.string.shortgramm),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.shortgramm),
                         modifier = itemModifier
                     )
                 }

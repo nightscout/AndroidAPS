@@ -14,7 +14,7 @@ import app.aaps.core.ui.R
 internal fun CollapsibleCardSectionContentPreview() {
     PreviewTheme {
         CollapsibleCardSectionContent(
-            title = TextRef.Res(R.string.configbuilder_insulin),
+            title = TextRef.AndroidRes(R.string.configbuilder_insulin),
             expanded = true,
             onToggle = {}
         ) {

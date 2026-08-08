@@ -33,6 +33,6 @@ enum class IntentKey(
     // properties. The `;` is what separates the - empty - constant list from the members.
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

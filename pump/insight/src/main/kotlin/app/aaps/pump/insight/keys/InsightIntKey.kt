@@ -28,5 +28,5 @@ enum class InsightIntKey(
     DisconnectDelay("insight_disconnect_delay", 5, titleResId = R.string.disconnect_delay),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

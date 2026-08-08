@@ -48,7 +48,7 @@ class StringKeyWithEntries(
  * Use this when the entries are only known at run time - for example a list that depends on the
  * connected device, or on values computed from another setting.
  *
- * @param entries Map of stored value -> label. Use [TextRef.Res] with arguments for anything the
+ * @param entries Map of stored value -> label. Use [TextRef.AndroidRes] with arguments for anything the
  *   user reads, so it stays translatable; [TextRef.Literal] only for text that is genuinely not a
  *   resource, such as a device name.
  * @return A new StringPreferenceKey with the entries attached

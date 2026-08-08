@@ -708,7 +708,7 @@ internal fun WizardDialogContent(
                         onValueChange = onDirectCorrectionChange,
                         valueRange = -uiState.maxBolus..uiState.maxBolus,
                         step = uiState.bolusStep,
-                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                         decimalPlaces = 2,
                         modifier = itemModifier
                     )

@@ -63,7 +63,7 @@ fun AdaptiveUnitDoublePreferenceItem(
     val valueFormat = if (isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
 
     // Get unit label from resources - short form for slider
-    val unitLabel = TextRef.Res(if (isMgdl) UiR.string.mgdl else UiR.string.mmol)
+    val unitLabel = TextRef.AndroidRes(if (isMgdl) UiR.string.mgdl else UiR.string.mmol)
 
     // Get summary if available
     val summary = stringResourceOrNull(unitKey.summary)

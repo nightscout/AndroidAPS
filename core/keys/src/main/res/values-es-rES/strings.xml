@@ -235,48 +235,8 @@
     <string name="site_rotation_profile_child">Menor</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Unidades</string>
-    <string name="units_mgdl">mg/dL</string>
-    <string name="units_mmol">mmol/L</string>
-    <string name="units_insulin">U</string>
-    <string name="units_insulin_rate">U/h</string>
-    <string name="units_min">min</string>
-    <string name="units_sec">seg</string>
-    <string name="units_hours">h</string>
-    <string name="units_days">días</string>
-    <string name="units_grams">g</string>
-    <string name="units_kg">kg</string>
-    <string name="units_years">a</string>
-    <string name="units_percent">%</string>
     <!-- Formatted unit strings with value only -->
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_min">%1$d min</string>
-    <string name="units_format_sec">%1$d seg</string>
-    <string name="units_format_hours">%1$d h</string>
-    <string name="units_format_hours_double">%1$.0f h</string>
-    <string name="units_format_days">%1$d días</string>
-    <string name="units_format_percent">%1$d%%</string>
-    <string name="units_format_insulin">%1$.1f U</string>
-    <string name="units_format_insulin_int">%1$d U</string>
-    <string name="units_format_insulin_rate">%1$.1f U/h</string>
-    <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_double">%1$.1f</string>
-    <string name="units_format_double_2">%1$.2f</string>
-    <string name="units_format_double_3">%1$.3f</string>
     <!-- Formatted unit strings with value and range -->
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
-    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
-    <string name="units_format_sec_range">%1$d seg (%2$d - %3$d)</string>
-    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
-    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
-    <string name="units_format_days_range">%1$d días (%2$d - %3$d)</string>
-    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
-    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
-    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
-    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
-    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
-    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="pref_title_language">Idioma</string>
     <string name="lang_default">Predeterminado del sistema</string>
     <string name="lang_en">Inglés</string>
@@ -419,5 +379,4 @@ Conceptos cl</string>
     <string name="lgs_threshold_summary">Valor de glucosa por debajo del cual se suspende la insulina. El valor predeterminado utiliza el modelo de objetivo estándar. El usuario puede establecer un valor entre 60 mg/dl (3.3 mmol/l) y 100 mg/dl (5.5 mmol/l). Los valores inferiores a 65/3.6 darán como resultado el uso del modelo predeterminado.</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
-    <string name="prefs_range_title">Rango para visualización</string>
 </resources>

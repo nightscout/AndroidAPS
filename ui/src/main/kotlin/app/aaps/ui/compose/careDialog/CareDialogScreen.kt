@@ -61,7 +61,6 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -375,7 +374,7 @@ private fun DurationSection(
         onValueChange = onDurationChange,
         valueRange = Constants.ACTION_DURATION,
         step = 10.0,
-        unitLabel = TextRef.Res(KeysR.string.units_min),
+        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
         modifier = modifier
     )
 }

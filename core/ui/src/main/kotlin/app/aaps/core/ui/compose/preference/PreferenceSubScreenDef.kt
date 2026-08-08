@@ -29,10 +29,10 @@ data class PreferenceSubScreenDef(
 ) : PreferenceItem {
 
     /** Screen title, in the same form as [PreferenceKey.title]. */
-    val title: TextRef = TextRef.Res(titleResId)
+    val title: TextRef = TextRef.AndroidRes(titleResId)
 
     /** Optional summary, in the same form as [PreferenceKey.summary]. */
-    val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 
     /** Titles of the contained items, used to build the summary line in the parent list. */
     fun effectiveSummaryItems(): List<TextRef> =

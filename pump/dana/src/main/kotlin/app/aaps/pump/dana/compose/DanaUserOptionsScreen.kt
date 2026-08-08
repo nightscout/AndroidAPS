@@ -37,6 +37,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.pump.dana.R
@@ -182,7 +183,7 @@ internal fun DanaUserOptionsContent(
                         valueRange = 5.0..240.0,
                         step = 5.0,
                         formatAsInt = true,
-                        unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_sec),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_sec),
                         modifier = itemModifier
                     )
 
@@ -194,7 +195,7 @@ internal fun DanaUserOptionsContent(
                         valueRange = state.minBacklight.toDouble()..60.0,
                         step = 1.0,
                         formatAsInt = true,
-                        unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_sec),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_sec),
                         modifier = itemModifier
                     )
 
@@ -215,7 +216,7 @@ internal fun DanaUserOptionsContent(
                         valueRange = 0.0..24.0,
                         step = 1.0,
                         formatAsInt = true,
-                        unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_hours),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_hours),
                         modifier = itemModifier
                     )
 

@@ -25,5 +25,5 @@ enum class ComboBooleanKey(
     VerboseLogging("combov2_verbose_logging", false, titleResId = R.string.combov2_verbose_logging),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

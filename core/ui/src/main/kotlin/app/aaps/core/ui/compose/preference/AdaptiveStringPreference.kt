@@ -69,7 +69,7 @@ fun AdaptiveStringPreferenceItem(
 
             isSecure && value.isEmpty()    -> {
                 val notSetResId = if (stringKey.isPin) R.string.pin_not_set else R.string.password_not_set
-                { Text(stringResource(effectiveSummary ?: TextRef.Res(notSetResId))) }
+                { Text(stringResource(effectiveSummary ?: TextRef.AndroidRes(notSetResId))) }
             }
 
             value.isNotEmpty()             -> {

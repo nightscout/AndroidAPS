@@ -12,7 +12,7 @@ object LocaleHelper {
         context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
 
     private fun selectedLanguage(context: Context): String =
-        // do not use app.aaps.core.keys.R.strings.kay_language = "language" to avoid module dependency
+        // do not use the key name "language" from :core:keys here, to avoid a module dependency
         if (defaultSharedPreferences(context).getBoolean("simple_mode", true)) "default"
         else defaultSharedPreferences(context).getString("language", "default")
             ?: "default"

@@ -27,11 +27,11 @@ interface ResourceHelper {
      *
      * Every non-Compose reader of a preference title goes through here, which is the point: when a
      * module later moves its strings out of `res/values`, only this one method has to learn about
-     * the new form of [TextRef.Res].
+     * the new form of [TextRef.AndroidRes].
      */
     fun gs(ref: TextRef): String = when (ref) {
         is TextRef.Literal -> ref.text
-        is TextRef.Res     ->
+        is TextRef.AndroidRes     ->
             if (ref.args.isEmpty()) gs(ref.id)
             else gs(ref.id, *ref.args.toTypedArray())
     }
@@ -39,7 +39,7 @@ interface ResourceHelper {
     /** Same, but always in English - used to build the search index. */
     fun gsNotLocalised(ref: TextRef): String = when (ref) {
         is TextRef.Literal -> ref.text
-        is TextRef.Res     -> gsNotLocalised(ref.id, *ref.args.toTypedArray())
+        is TextRef.AndroidRes     -> gsNotLocalised(ref.id, *ref.args.toTypedArray())
     }
 
     @ColorInt fun gc(@ColorRes id: Int): Int

@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.objects.extensions.isInProgress
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -215,7 +216,7 @@ private fun ExtendedBolusItem(
                     append(" ")
                     // Duration
                     append(T.msecs(extendedBolus.duration).mins().toInt().toString())
-                    append(stringResource(app.aaps.core.keys.R.string.units_min))
+                    append(stringResource(CoreUiR.string.units_min))
                 },
                 modifier = Modifier.padding(start = 4.dp),
                 fontSize = 14.sp,

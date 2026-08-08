@@ -85,7 +85,7 @@ class Objective0 @Inject constructor(
                     showMessage(rh.gs(app.aaps.core.ui.R.string.master_password_not_set))
                 } else {
                     passwordCheck.queryPassword(
-                        context, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword,
+                        context, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword,
                         ok = {
                             task.answered = true
                             callback.run()

@@ -13,6 +13,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.Scene
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
@@ -35,7 +36,6 @@ import app.aaps.plugins.automation.compose.elements.InputStringEditor
 import app.aaps.plugins.automation.compose.elements.InputWeekDayEditor
 import app.aaps.plugins.automation.compose.elements.LabelWithElementRow
 import app.aaps.plugins.automation.elements.InputPercent
-import app.aaps.core.keys.R as KeysR
 
 @Composable
 fun ActionEditor(
@@ -149,7 +149,7 @@ fun ActionCarePortalEventEditor(a: ActionCarePortalEvent, tick: Int = 0, onChang
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
         step = 10.0,
-        unitLabel = TextRef.Res(KeysR.string.units_min)
+        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
     )
     InputStringEditor(
         value = a.note.value,
@@ -194,7 +194,7 @@ fun ActionProfileSwitchPercentEditor(a: ActionProfileSwitchPercent, tick: Int = 
         onValueChange = { a.pct.value = it; onChange() },
         valueRange = InputPercent.MIN..InputPercent.MAX,
         step = 5.0,
-        unitLabel = TextRef.Res(KeysR.string.units_percent)
+        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent)
     )
     NumberInputRow(
         labelResId = app.aaps.core.ui.R.string.duration_label,
@@ -202,7 +202,7 @@ fun ActionProfileSwitchPercentEditor(a: ActionProfileSwitchPercent, tick: Int = 
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
         step = 10.0,
-        unitLabel = TextRef.Res(KeysR.string.units_min)
+        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
     )
 }
 
@@ -226,7 +226,7 @@ fun ActionRunAutotuneEditor(
         onValueChange = { a.daysBackRef().value = it.toInt(); onChange() },
         valueRange = 1.0..30.0,
         step = 1.0,
-        unitLabel = TextRef.Res(KeysR.string.units_days)
+        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_days)
     )
     InputWeekDayEditor(weekdays = a.daysRef(), onChange = onChange)
 }
@@ -266,7 +266,7 @@ fun ActionStartTempTargetEditor(a: ActionStartTempTarget, tick: Int = 0, onChang
         valueRange = if (isMmol) Constants.TT_RANGE_MMOL else Constants.TT_RANGE_MGDL,
         step = if (isMmol) 0.1 else 1.0,
         decimalPlaces = if (isMmol) 1 else 0,
-        unitLabel = TextRef.Res(if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl)
+        unitLabel = TextRef.AndroidRes(if (isMmol) CoreUiR.string.units_mmol else CoreUiR.string.units_mgdl)
     )
     NumberInputRow(
         labelResId = app.aaps.core.ui.R.string.duration_label,
@@ -274,7 +274,7 @@ fun ActionStartTempTargetEditor(a: ActionStartTempTarget, tick: Int = 0, onChang
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
         step = 10.0,
-        unitLabel = TextRef.Res(KeysR.string.units_min)
+        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
     )
 }
 

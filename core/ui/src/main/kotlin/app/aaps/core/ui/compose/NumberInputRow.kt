@@ -48,7 +48,7 @@ import kotlin.math.roundToInt
  * 0 — 300                               ← range, or error message
  * ```
  *
- * @param labelResId Resource ID for the display label
+ * @param labelRef Display label
  * @param value Current numeric value
  * @param onValueChange Callback invoked when value changes, receives new value as Double
  * @param valueRange The range of values the input can represent
@@ -70,7 +70,7 @@ import kotlin.math.roundToInt
  */
 @Composable
 fun NumberInputRow(
-    labelResId: Int,
+    labelRef: TextRef?,
     value: Double,
     onValueChange: (Double) -> Unit,
     valueRange: ClosedFloatingPointRange<Double>,
@@ -90,7 +90,7 @@ fun NumberInputRow(
         NumberFormat.withDecimals(decimalPlaces)
     }
     val focusManager = LocalFocusManager.current
-    val label = if (labelResId != 0) stringResource(labelResId) else ""
+    val label = labelRef?.let { stringResource(it) } ?: ""
     // Track whether the field is focused for editing
     var isFocused by remember { mutableStateOf(false) }
     var textFieldValue by remember {
@@ -295,4 +295,41 @@ fun NumberInputRow(
     }
 }
 
-// --- Previews ---
+/**
+ * Convenience for the many call sites that name their own module's `R.string.x`.
+ * The [TextRef] form above is the real one; this just wraps the id.
+ */
+@Composable
+fun NumberInputRow(
+    labelResId: Int,
+    value: Double,
+    onValueChange: (Double) -> Unit,
+    valueRange: ClosedFloatingPointRange<Double>,
+    step: Double,
+    modifier: Modifier = Modifier,
+    unitLabel: TextRef? = null,
+    asDuration: Boolean = false,
+    valueFormatResId: Int? = null,
+    formatAsInt: Boolean = false,
+    valueFormat: NumberFormat? = null,
+    decimalPlaces: Int = 0,
+    enabled: Boolean = true,
+    compact: Boolean = false,
+    displayValue: String? = null,
+) = NumberInputRow(
+    labelRef = if (labelResId != 0) TextRef.AndroidRes(labelResId) else null,
+    value = value,
+    onValueChange = onValueChange,
+    valueRange = valueRange,
+    step = step,
+    modifier = modifier,
+    unitLabel = unitLabel,
+    asDuration = asDuration,
+    valueFormatResId = valueFormatResId,
+    formatAsInt = formatAsInt,
+    valueFormat = valueFormat,
+    decimalPlaces = decimalPlaces,
+    enabled = enabled,
+    compact = compact,
+    displayValue = displayValue,
+)

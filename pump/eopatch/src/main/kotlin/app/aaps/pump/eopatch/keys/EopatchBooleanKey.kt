@@ -23,5 +23,5 @@ enum class EopatchBooleanKey(
     BuzzerReminder("eopatch_patch_buzzer_reminders", false, titleResId = R.string.patch_buzzer_reminders),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

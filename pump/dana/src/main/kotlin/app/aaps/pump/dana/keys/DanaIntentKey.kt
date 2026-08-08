@@ -21,5 +21,5 @@ enum class DanaIntentKey(
     BtSelector(key = "dana_rs_bt_selector", titleResId = R.string.selectedpump)
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

@@ -49,7 +49,7 @@ class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelp
         }
         InlineStringListPreferenceItem(
             stringKey = key,
-            title = label?.let { TextRef.Res(it) },
+            title = label,
             entries = entries
         )
     }

@@ -2,7 +2,7 @@ package app.aaps.core.ui.compose
 
 import app.aaps.core.keys.UnitType
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.keys.R as KeysR
+import app.aaps.core.ui.R
 
 /**
  * Maps a [UnitType] to the text that describes it.
@@ -18,26 +18,26 @@ import app.aaps.core.keys.R as KeysR
  */
 fun UnitType.unitLabel(): TextRef? = when (this) {
     UnitType.NONE                                         -> null
-    UnitType.GRAMS                                        -> TextRef.Res(KeysR.string.units_grams)
-    UnitType.MIN                                          -> TextRef.Res(KeysR.string.units_min)
-    UnitType.SEC                                          -> TextRef.Res(KeysR.string.units_sec)
-    UnitType.HOURS, UnitType.HOURS_DOUBLE                 -> TextRef.Res(KeysR.string.units_hours)
-    UnitType.DAYS                                         -> TextRef.Res(KeysR.string.units_days)
-    UnitType.PERCENT                                      -> TextRef.Res(KeysR.string.units_percent)
-    UnitType.INSULIN, UnitType.INSULIN_INT                -> TextRef.Res(KeysR.string.units_insulin)
-    UnitType.INSULIN_RATE                                 -> TextRef.Res(KeysR.string.units_insulin_rate)
+    UnitType.GRAMS                                        -> TextRef.AndroidRes(R.string.units_grams)
+    UnitType.MIN                                          -> TextRef.AndroidRes(R.string.units_min)
+    UnitType.SEC                                          -> TextRef.AndroidRes(R.string.units_sec)
+    UnitType.HOURS, UnitType.HOURS_DOUBLE                 -> TextRef.AndroidRes(R.string.units_hours)
+    UnitType.DAYS                                         -> TextRef.AndroidRes(R.string.units_days)
+    UnitType.PERCENT                                      -> TextRef.AndroidRes(R.string.units_percent)
+    UnitType.INSULIN, UnitType.INSULIN_INT                -> TextRef.AndroidRes(R.string.units_insulin)
+    UnitType.INSULIN_RATE                                 -> TextRef.AndroidRes(R.string.units_insulin_rate)
     UnitType.DOUBLE, UnitType.DOUBLE_2, UnitType.DOUBLE_3 -> null // generic doubles carry no unit
-    UnitType.MGDL                                         -> TextRef.Res(KeysR.string.units_mgdl)
+    UnitType.MGDL                                         -> TextRef.AndroidRes(R.string.units_mgdl)
 }
 
 /**
  * A value and its range, already filled in - "5 min (0 - 30)".
  *
- * The arguments are taken here rather than returned as a bare template id, because a [TextRef.Res]
+ * The arguments are taken here rather than returned as a bare template id, because a [TextRef.AndroidRes]
  * with no arguments renders the raw `%1$d` template. Taking them makes that mistake impossible.
  */
 fun UnitType.rangeText(value: Any, min: Any, max: Any): TextRef? =
-    rangeFormatResId()?.let { TextRef.Res(it, listOf(value, min, max)) }
+    rangeFormatResId()?.let { TextRef.AndroidRes(it, listOf(value, min, max)) }
 
 /**
  * Format template for a single value, e.g. `%1$d min`.
@@ -47,38 +47,38 @@ fun UnitType.rangeText(value: Any, min: Any, max: Any): TextRef? =
  */
 fun UnitType.valueFormatResId(): Int? = when (this) {
     UnitType.NONE         -> null
-    UnitType.GRAMS        -> KeysR.string.units_format_grams
-    UnitType.MIN          -> KeysR.string.units_format_min
-    UnitType.SEC          -> KeysR.string.units_format_sec
-    UnitType.HOURS        -> KeysR.string.units_format_hours
-    UnitType.HOURS_DOUBLE -> KeysR.string.units_format_hours_double
-    UnitType.DAYS         -> KeysR.string.units_format_days
-    UnitType.PERCENT      -> KeysR.string.units_format_percent
-    UnitType.INSULIN      -> KeysR.string.units_format_insulin
-    UnitType.INSULIN_INT  -> KeysR.string.units_format_insulin_int
-    UnitType.INSULIN_RATE -> KeysR.string.units_format_insulin_rate
-    UnitType.DOUBLE       -> KeysR.string.units_format_double
-    UnitType.DOUBLE_2     -> KeysR.string.units_format_double_2
-    UnitType.DOUBLE_3     -> KeysR.string.units_format_double_3
-    UnitType.MGDL         -> KeysR.string.units_format_mgdl
+    UnitType.GRAMS        -> R.string.units_format_grams
+    UnitType.MIN          -> R.string.units_format_min
+    UnitType.SEC          -> R.string.units_format_sec
+    UnitType.HOURS        -> R.string.units_format_hours
+    UnitType.HOURS_DOUBLE -> R.string.units_format_hours_double
+    UnitType.DAYS         -> R.string.units_format_days
+    UnitType.PERCENT      -> R.string.units_format_percent
+    UnitType.INSULIN      -> R.string.units_format_insulin
+    UnitType.INSULIN_INT  -> R.string.units_format_insulin_int
+    UnitType.INSULIN_RATE -> R.string.units_format_insulin_rate
+    UnitType.DOUBLE       -> R.string.units_format_double
+    UnitType.DOUBLE_2     -> R.string.units_format_double_2
+    UnitType.DOUBLE_3     -> R.string.units_format_double_3
+    UnitType.MGDL         -> R.string.units_format_mgdl
 }
 
 private fun UnitType.rangeFormatResId(): Int? = when (this) {
     UnitType.NONE         -> null
-    UnitType.GRAMS        -> KeysR.string.units_format_grams_range
-    UnitType.MIN          -> KeysR.string.units_format_min_range
-    UnitType.SEC          -> KeysR.string.units_format_sec_range
-    UnitType.HOURS        -> KeysR.string.units_format_hours_range
-    UnitType.HOURS_DOUBLE -> KeysR.string.units_format_hours_double_range
-    UnitType.DAYS         -> KeysR.string.units_format_days_range
-    UnitType.PERCENT      -> KeysR.string.units_format_percent_range
-    UnitType.INSULIN      -> KeysR.string.units_format_insulin_range
-    UnitType.INSULIN_INT  -> KeysR.string.units_format_insulin_int_range
-    UnitType.INSULIN_RATE -> KeysR.string.units_format_insulin_rate_range
-    UnitType.DOUBLE       -> KeysR.string.units_format_double_range
-    UnitType.DOUBLE_2     -> KeysR.string.units_format_double_2_range
-    UnitType.DOUBLE_3     -> KeysR.string.units_format_double_3_range
-    UnitType.MGDL         -> KeysR.string.units_format_mgdl_range
+    UnitType.GRAMS        -> R.string.units_format_grams_range
+    UnitType.MIN          -> R.string.units_format_min_range
+    UnitType.SEC          -> R.string.units_format_sec_range
+    UnitType.HOURS        -> R.string.units_format_hours_range
+    UnitType.HOURS_DOUBLE -> R.string.units_format_hours_double_range
+    UnitType.DAYS         -> R.string.units_format_days_range
+    UnitType.PERCENT      -> R.string.units_format_percent_range
+    UnitType.INSULIN      -> R.string.units_format_insulin_range
+    UnitType.INSULIN_INT  -> R.string.units_format_insulin_int_range
+    UnitType.INSULIN_RATE -> R.string.units_format_insulin_rate_range
+    UnitType.DOUBLE       -> R.string.units_format_double_range
+    UnitType.DOUBLE_2     -> R.string.units_format_double_2_range
+    UnitType.DOUBLE_3     -> R.string.units_format_double_3_range
+    UnitType.MGDL         -> R.string.units_format_mgdl_range
 }
 
 /** True when this unit should be rendered as a duration ("1 h 30 min") rather than a plain number. */

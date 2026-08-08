@@ -28,6 +28,6 @@ enum class DiaconnBooleanKey(
     SendLogsToCloud("diaconn_g8_cloudsend", true, titleResId = R.string.diaconn_g8_cloudsend_title, summaryResId = R.string.diaconn_g8_cloudsend_summary),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

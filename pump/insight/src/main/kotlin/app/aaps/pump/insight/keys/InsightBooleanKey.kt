@@ -32,6 +32,6 @@ enum class InsightBooleanKey(
     DisableVibrationAuto("insight_disable_vibration_auto", false, titleResId = R.string.disable_vibration_auto, summaryResId = R.string.disable_vibration_auto_summary),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

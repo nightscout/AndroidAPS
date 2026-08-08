@@ -10,11 +10,10 @@ package app.aaps.core.keys.interfaces
  *
  * ### Do not persist it
  *
- * A [TextRef] is meaningful **only inside one running process**. [Res.id] must never be written to
- * preferences, to the database, to a Nightscout document, to a wear message or into a crash report
- * as a number, because the same number means different things on different platforms and will change
- * again when a module moves its strings to `commonMain`. Persist the preference `key` instead, which
- * is a stable string.
+ * A [TextRef] is meaningful **only inside one running process**. [AndroidRes.id] must never be
+ * written to preferences, to the database, to a Nightscout document, to a wear message or into a
+ * crash report as a number, because the same number means different things on different builds.
+ * Persist the preference `key` instead, which is a stable string.
  *
  * ### Why an Int and not a string name
  *
@@ -26,21 +25,17 @@ package app.aaps.core.keys.interfaces
 sealed interface TextRef {
 
     /**
-     * Text that lives in a resource table.
+     * A string from an Android `R.string.*` table, in a module that still owns AAPT resources.
      *
-     * [id] is deliberately opaque:
-     * - **positive** - an Android resource id from `R.string.*`, used directly. This is the only
-     *   form that exists today.
-     * - **negative** - a token generated when a module moves its strings to
-     *   `commonMain/composeResources`; the resolver turns it into an index into that module's
-     *   platform table. Android resource ids are always positive (`0x7f……`), so the two forms can
-     *   coexist and modules can migrate one at a time rather than all at once.
+     * Most of the app is still this form, and that is fine - a module only needs to change when it
+     * itself becomes multiplatform. The two resource forms coexist so modules can migrate one at a
+     * time rather than all at once.
      *
      * [args] are format arguments, in the order the format string expects. They are not checked at
      * compile time - no worse than `stringResource(id, a, b)` today, but the arguments now travel
      * further from the format string, so a mismatch shows up when the text is built.
      */
-    data class Res(val id: Int, val args: List<Any> = emptyList()) : TextRef
+    data class AndroidRes(val id: Int, val args: List<Any> = emptyList()) : TextRef
 
     /**
      * Text that is only known at run time - a scanned pump name, a wiki page title, a user label.

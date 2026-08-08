@@ -1,14 +1,15 @@
 package app.aaps.plugins.configuration.setupwizard
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import javax.inject.Inject
 
 class SWScreen @Inject constructor(private val rh: ResourceHelper) {
 
-    var header: Int = 0
+    var header: TextRef? = null
         private set
 
     var items: MutableList<SWItem> = ArrayList()
@@ -16,19 +17,18 @@ class SWScreen @Inject constructor(private val rh: ResourceHelper) {
     var visibility: (() -> Boolean)? = null
     var skippable = false
 
-    fun with(header: Int): SWScreen {
+    fun with(header: TextRef): SWScreen {
         this.header = header
         return this
     }
 
-    fun getHeader(): String {
-        return rh.gs(header)
-    }
+    /** Convenience for the many call sites that pass their own module's `R.string.x`. */
+    fun with(header: Int): SWScreen = with(TextRef.AndroidRes(header))
+
+    fun getHeader(): String = header?.let { rh.gs(it) } ?: ""
 
     @Composable
-    fun getHeaderCompose(): String {
-        return stringResource(header)
-    }
+    fun getHeaderCompose(): String = header?.let { stringResource(it) } ?: ""
 
     fun skippable(skippable: Boolean): SWScreen {
         this.skippable = skippable

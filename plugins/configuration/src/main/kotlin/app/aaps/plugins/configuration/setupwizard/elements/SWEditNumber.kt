@@ -29,7 +29,7 @@ class SWEditNumber @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelpe
     override fun Compose() {
         AdaptiveDoublePreferenceItem(
             doubleKey = preference as DoublePreferenceKey,
-            title = label?.let { TextRef.Res(it) }
+            title = label
         )
     }
 }

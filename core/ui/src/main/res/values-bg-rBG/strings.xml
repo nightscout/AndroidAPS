@@ -1088,4 +1088,45 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">ЧУВСТВ%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">ПРОМ ЧУВСТВ</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">КРАЧКИ</string>
+    <string name="units_days">дни</string>
+    <string name="units_format_days">%1$d дни</string>
+    <string name="units_format_days_range">%1$d дни (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d гр</string>
+    <string name="units_format_grams_range">%1$d гр (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d ч</string>
+    <string name="units_format_hours_double">%1$.0f ч</string>
+    <string name="units_format_hours_double_range">%1$.0f ч (%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_range">%1$d ч (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f Ед</string>
+    <string name="units_format_insulin_int">%1$d Ед</string>
+    <string name="units_format_insulin_int_range">%1$d Ед (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f Ед (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f Ед/ч</string>
+    <string name="units_format_insulin_rate_range">%1$.1f Е/ч (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s мг/дл</string>
+    <string name="units_format_mgdl_range">%1$s мг/дл (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d мин</string>
+    <string name="units_format_min_range">%1$d мин (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d сек</string>
+    <string name="units_format_sec_range">%1$d сек (%2$d - %3$d)</string>
+    <string name="units_grams">гр</string>
+    <string name="units_hours">ч</string>
+    <string name="units_insulin">Ед</string>
+    <string name="units_insulin_rate">Е/ч</string>
+    <string name="units_kg">кг</string>
+    <string name="units_mgdl">мг/дл</string>
+    <string name="units_min">мин</string>
+    <string name="units_mmol">ммол/л</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">сек</string>
+    <string name="units_years">г</string>
+    <string name="prefs_range_title">Диапазон на визуализация</string>
 </resources>

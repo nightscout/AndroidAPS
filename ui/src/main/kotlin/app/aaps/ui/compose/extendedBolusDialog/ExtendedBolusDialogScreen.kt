@@ -48,7 +48,6 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.labelResId
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -197,7 +196,7 @@ internal fun ExtendedBolusDialogContent(
                         valueRange = uiState.minInsulin..uiState.maxInsulin,
                         step = uiState.extendedStep,
                         valueFormat = NumberFormat.DECIMAL_2,
-                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                         modifier = itemModifier
                     )
 
@@ -208,7 +207,7 @@ internal fun ExtendedBolusDialogContent(
                         valueRange = uiState.extendedDurationStep..uiState.extendedMaxDuration,
                         step = uiState.extendedDurationStep,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = TextRef.Res(KeysR.string.units_min),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
                         modifier = itemModifier
                     )
                 }

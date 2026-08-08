@@ -29,5 +29,5 @@ enum class ErosBooleanPreferenceKey(
     TimeChangeEnabled("AAPS.Omnipod.time_change_enabled", true, titleResId = CommonR.string.omnipod_common_preferences_time_change_enabled),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.navigation.ElementCategory
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
@@ -431,7 +432,7 @@ private fun ProfilePresetDialog(
                     onValueChange = { percentage = it.toInt() },
                     valueRange = Constants.CPP_PERCENTAGE_RANGE,
                     step = 5.0,
-                    unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_percent)
+                    unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent)
                 )
 
                 NumberInputRow(
@@ -440,7 +441,7 @@ private fun ProfilePresetDialog(
                     onValueChange = { durationMinutes = it.toInt() },
                     valueRange = Constants.ACTION_DURATION,
                     step = 10.0,
-                    unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_min)
+                    unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
                 )
                 if (durationMinutes == 0) {
                     Text(

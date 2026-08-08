@@ -44,6 +44,6 @@ enum class DiaconnIntKey(
     ),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.AndroidRes(it.value) }
 }

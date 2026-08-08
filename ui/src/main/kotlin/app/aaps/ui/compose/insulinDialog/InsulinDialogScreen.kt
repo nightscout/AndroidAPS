@@ -71,7 +71,6 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -357,7 +356,7 @@ internal fun InsulinDialogContent(
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname)
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname)
                     )
                     InsulinQuickAddButtons(
                         increment1 = uiState.insulinButtonIncrement1,
@@ -404,7 +403,7 @@ internal fun InsulinDialogContent(
                             onValueChange = onTimeOffsetChange,
                             valueRange = -12.0 * 60..12.0 * 60,
                             step = 5.0,
-                            unitLabel = TextRef.Res(KeysR.string.units_min)
+                            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
                         )
                         DateTimeSection(
                             dateString = dateString,

@@ -246,13 +246,13 @@ class SWDefinition @Inject constructor(
             .add(swInfoTextProvider.get().label(R.string.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
 
     private val screenPatientName
-        get() = swScreenProvider.get().with(app.aaps.core.keys.R.string.pref_title_patient_name)
+        get() = swScreenProvider.get().with(StringKey.GeneralPatientName.title)
             .skippable(true)
-            .add(swInfoTextProvider.get().label(app.aaps.core.keys.R.string.pref_summary_patient_name))
+            .add(swInfoTextProvider.get().label(StringKey.GeneralPatientName.summary!!))
             .add(swEditStringProvider.get().validator(String::isNotEmpty).preference(StringKey.GeneralPatientName))
 
     private val screenMasterPassword
-        get() = swScreenProvider.get().with(app.aaps.core.keys.R.string.master_password)
+        get() = swScreenProvider.get().with(StringKey.ProtectionMasterPassword.title)
             .skippable(false)
             .add(swEditEncryptedPasswordProvider.get().preference(StringKey.ProtectionMasterPassword).onSetPassword { onSetMasterPassword?.invoke() })
             .add(swBreakProvider.get())

@@ -1089,4 +1089,45 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">DISF</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">SKRITT</string>
+    <string name="units_days">dager</string>
+    <string name="units_format_days">%1$d dager</string>
+    <string name="units_format_days_range">%1$d dager (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d t</string>
+    <string name="units_format_hours_double">%1$.0f t</string>
+    <string name="units_format_hours_double_range">%1$.0f t (%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_range">%1$d t (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f E</string>
+    <string name="units_format_insulin_int">%1$d E</string>
+    <string name="units_format_insulin_int_range">%1$d E (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f E (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f E/t</string>
+    <string name="units_format_insulin_rate_range">%1$.1f E/t (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d sek</string>
+    <string name="units_format_sec_range">%1$d sek (%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">t</string>
+    <string name="units_insulin">E</string>
+    <string name="units_insulin_rate">E/t</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">min</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">sek</string>
+    <string name="units_years">år</string>
+    <string name="prefs_range_title">Område for visualisering</string>
 </resources>

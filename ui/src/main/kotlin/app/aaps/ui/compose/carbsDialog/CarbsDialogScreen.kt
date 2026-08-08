@@ -330,7 +330,7 @@ internal fun CarbsDialogContent(
                             valueRange = (-uiState.cobLimit).toDouble()..uiState.maxCarbs.toDouble(),
                             step = 1.0,
                             valueFormat = NumberFormat.INTEGER,
-                            unitLabel = TextRef.Res(CoreUiR.string.shortgramm)
+                            unitLabel = TextRef.AndroidRes(CoreUiR.string.shortgramm)
                         )
                         // Removing carbs (negative): show the COB-bounded limit so the user understands why it can't go lower.
                         if (uiState.carbs < 0) {
@@ -356,7 +356,7 @@ internal fun CarbsDialogContent(
                         valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = TextRef.Res(InterfacesR.string.shorthour),
+                        unitLabel = TextRef.AndroidRes(InterfacesR.string.shorthour),
                         modifier = itemModifier
                     )
 

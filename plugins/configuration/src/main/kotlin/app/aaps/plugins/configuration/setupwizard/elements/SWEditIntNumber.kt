@@ -29,7 +29,7 @@ class SWEditIntNumber @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHe
     override fun Compose() {
         AdaptiveIntPreferenceItem(
             intKey = preference as IntPreferenceKey,
-            title = label?.let { TextRef.Res(it) }
+            title = label
         )
     }
 }

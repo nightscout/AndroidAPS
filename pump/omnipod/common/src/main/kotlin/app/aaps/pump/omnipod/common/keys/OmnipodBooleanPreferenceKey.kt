@@ -43,6 +43,6 @@ enum class OmnipodBooleanPreferenceKey(
     AutomaticallyAcknowledgeAlerts("AAPS.Omnipod.automatically_acknowledge_alerts_enabled", false, titleResId = R.string.omnipod_common_preferences_automatically_silence_alerts);
 
     override val preferenceType: PreferenceType = PreferenceType.SWITCH
-    override val title: TextRef = TextRef.Res(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

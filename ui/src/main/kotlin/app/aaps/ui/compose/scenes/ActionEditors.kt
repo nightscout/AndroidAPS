@@ -145,7 +145,7 @@ internal fun ProfileSwitchEditor(
         onValueChange = { onUpdate(action.copy(percentage = it.toInt())) },
         valueRange = Constants.CPP_PERCENTAGE_RANGE,
         step = 5.0,
-        unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_percent)
+        unitLabel = TextRef.AndroidRes(R.string.units_percent)
     )
 }
 

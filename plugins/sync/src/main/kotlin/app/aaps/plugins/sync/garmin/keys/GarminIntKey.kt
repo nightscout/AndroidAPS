@@ -26,5 +26,5 @@ enum class GarminIntKey(
     LocalHttpPort("communication_http_port", 28891, 1001, 65535, dependency = GarminBooleanKey.LocalHttpServer, titleResId = R.string.garmin_local_http_server_port, defaultedBySM = true, hideParentScreenIfHidden = true),
     ;
 
-    override val title: TextRef = TextRef.Res(titleResId)
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

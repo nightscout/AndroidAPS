@@ -382,7 +382,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { password ->
+        passwordCheck.queryPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { password ->
             then(password)
         }, {
                                         rxBus.send(EventShowSnackbar(rh.gs(canceledMsg), EventShowSnackbar.Type.Warning))
@@ -400,8 +400,8 @@ class ImportExportPrefsImpl @Inject constructor(
                 EventShowDialog.Error(
                     title = rh.gs(wrongPwdTitle),
                     message = rh.gs(app.aaps.core.ui.R.string.master_password_missing),
-                    positiveButton = rh.gs(app.aaps.core.keys.R.string.master_password),
-                    onPositive = { passwordCheck.setPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword) }
+                    positiveButton = rh.gs(StringKey.ProtectionMasterPassword.title),
+                    onPositive = { passwordCheck.setPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword) }
                 )
             )
             exportPasswordDataStore.clearPasswordDataStore(context)

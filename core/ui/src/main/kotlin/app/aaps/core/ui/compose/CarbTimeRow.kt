@@ -30,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
-import app.aaps.core.keys.R as KeysR
 
 /**
  * Compact carb time row with inline expand/collapse.
@@ -142,7 +141,7 @@ fun CarbTimeRow(
                     onValueChange = { onOffsetChange(it.toInt()) },
                     valueRange = offsetRange.first.toDouble()..offsetRange.last.toDouble(),
                     step = offsetStep.toDouble(),
-                    unitLabel = TextRef.Res(KeysR.string.units_min)
+                    unitLabel = TextRef.AndroidRes(R.string.units_min)
                 )
 
                 // Alarm toggle (disabled when offset <= 0)

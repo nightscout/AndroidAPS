@@ -235,48 +235,8 @@
     <string name="site_rotation_profile_child">Trẻ em</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Đơn vị</string>
-    <string name="units_mgdl">mg/dl</string>
-    <string name="units_mmol">mmol/L</string>
-    <string name="units_insulin">U</string>
-    <string name="units_insulin_rate">U/h</string>
-    <string name="units_min">phút</string>
-    <string name="units_sec">giây</string>
-    <string name="units_hours">h</string>
-    <string name="units_days">ngày</string>
-    <string name="units_grams">g</string>
-    <string name="units_kg">kg</string>
-    <string name="units_years">y</string>
-    <string name="units_percent">%</string>
     <!-- Formatted unit strings with value only -->
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_min">%1$d phút</string>
-    <string name="units_format_sec">%1$d giây</string>
-    <string name="units_format_hours">%1$d h</string>
-    <string name="units_format_hours_double">%1$.0f h</string>
-    <string name="units_format_days">%1$d ngày</string>
-    <string name="units_format_percent">%1$d%%</string>
-    <string name="units_format_insulin">%1$.1f U</string>
-    <string name="units_format_insulin_int">%1$d U</string>
-    <string name="units_format_insulin_rate">%1$.1f U/h</string>
-    <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_double">%1$.1f</string>
-    <string name="units_format_double_2">%1$.2f</string>
-    <string name="units_format_double_3">%1$.3f</string>
     <!-- Formatted unit strings with value and range -->
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
-    <string name="units_format_min_range">%1$d phút (%2$d - %3$d)</string>
-    <string name="units_format_sec_range">%1$d giây (%2$d - %3$d)</string>
-    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
-    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
-    <string name="units_format_days_range">%1$d ngày (%2$d - %3$d)</string>
-    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
-    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
-    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
-    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
-    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
-    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="pref_title_language">Ngôn ngữ</string>
     <string name="lang_default">Mặc định hệ thống</string>
     <string name="lang_en">Tiếng Anh</string>
@@ -417,5 +377,4 @@
     <string name="lgs_threshold_summary">Đường huyết dưới mức này sẽ tạm dừng việc tiêm insulin. Mức mặc định sử dụng mô hình mục tiêu chuẩn. Người dùng có thể đặt giá trị trong khoảng 60 mg/dL (3,3 mmol/L) đến 100 mg/dL (5,5 mmol/L). Các giá trị dưới 65 mg/dL (3,6 mmol/L) sẽ sử dụng mô hình mặc định</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
-    <string name="prefs_range_title">Phạm vi để hiển thị</string>
 </resources>

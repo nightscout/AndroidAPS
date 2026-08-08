@@ -31,7 +31,7 @@ class SWEditNumberWithUnits @Inject constructor(aapsLogger: AAPSLogger, rh: Reso
     override fun Compose() {
         AdaptiveUnitDoublePreferenceItem(
             unitKey = preference as UnitDoublePreferenceKey,
-            title = label?.let { TextRef.Res(it) }
+            title = label
         )
     }
 }

@@ -36,7 +36,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
-import app.aaps.core.keys.R as KeysR
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcPluginEopatch
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.eopatch.alarm.IAlarmManager
@@ -576,10 +576,10 @@ class EopatchPumpPlugin @Inject constructor(
             // The labels used to be built as "$it U" and "$it hr", which no translator could reach.
             // The unit format templates already exist and are translated, so use those.
             EopatchIntKey.LowReservoirReminder.withEntries(
-                (10..50 step 5).associateWith { TextRef.Res(KeysR.string.units_format_insulin_int, listOf(it)) }
+                (10..50 step 5).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_insulin_int, listOf(it)) }
             ),
             EopatchIntKey.ExpirationReminder.withEntries(
-                (1..24).associateWith { TextRef.Res(KeysR.string.units_format_hours, listOf(it)) }
+                (1..24).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_hours, listOf(it)) }
             ),
             EopatchBooleanKey.BuzzerReminder
         ),
