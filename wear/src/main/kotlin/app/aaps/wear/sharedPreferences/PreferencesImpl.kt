@@ -256,11 +256,6 @@ class PreferencesImpl @Inject constructor(
     override fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String> =
         stringFlows.getOrPut(key.composeKey(*arguments)) { MutableStateFlow(get(key, *arguments)) }
 
-    override fun getDependingOn(key: String): List<PreferenceKey> =
-        prefsList.filterIsInstance<PreferenceKey>().filter {
-            it.dependency?.key == key || it.negativeDependency?.key == key
-        }
-
     override fun registerPreferences(keys: List<NonPreferenceKey>) {
         prefsList.addAll(keys)
     }

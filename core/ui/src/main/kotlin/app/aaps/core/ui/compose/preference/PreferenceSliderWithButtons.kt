@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.preference
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -42,8 +43,8 @@ fun PreferenceSliderWithButtons(
     valueFormatResId: Int? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
-    unitLabel: String = "",
-    unitLabelResId: Int = 0,
+    unitLabel: TextRef? = null,
+    asDuration: Boolean = false,
     dialogLabel: String? = null,
     dialogSummary: String? = null,
     enabled: Boolean = true,
@@ -61,7 +62,7 @@ fun PreferenceSliderWithButtons(
             formatAsInt = formatAsInt,
             valueFormat = valueFormat,
             unitLabel = unitLabel,
-            unitLabelResId = unitLabelResId,
+            asDuration = asDuration,
             dialogLabel = dialogLabel,
             dialogSummary = dialogSummary,
             enabled = enabled,
@@ -72,18 +73,13 @@ fun PreferenceSliderWithButtons(
 
     var showDialog by remember { mutableStateOf(false) }
 
-    val resolvedUnitLabel = when {
-        unitLabelResId != 0    -> stringResource(unitLabelResId)
-        unitLabel.isNotEmpty() -> unitLabel
-        else                   -> ""
-    }
     val displayText = if (showValue) formatSliderDisplayValue(
         value = value,
-        unitLabelResId = unitLabelResId,
+        unitLabel = unitLabel,
         valueFormatResId = valueFormatResId,
         formatAsInt = formatAsInt,
         valueFormat = valueFormat,
-        unitLabel = unitLabel
+        asDuration = asDuration
     ) else ""
 
     Row(
@@ -111,8 +107,8 @@ fun PreferenceSliderWithButtons(
             step = step,
             label = dialogLabel,
             summary = dialogSummary,
-            unitLabel = resolvedUnitLabel,
-            unitLabelResId = unitLabelResId,
+            unitLabel = unitLabel,
+            asDuration = asDuration,
             valueFormat = valueFormat,
             onValueConfirm = onValueChange,
             onDismiss = { showDialog = false }

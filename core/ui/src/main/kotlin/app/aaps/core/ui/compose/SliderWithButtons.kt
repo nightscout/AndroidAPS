@@ -30,15 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
-import app.aaps.core.keys.R as KeysR
 
 /**
  * A Slider with +/- buttons on each side for fine-grained value control.
@@ -53,8 +52,8 @@ import app.aaps.core.keys.R as KeysR
  * @param valueFormatResId Resource ID for formatting value with unit (e.g., "%1$.1f U" or "%1$d min")
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
  * @param valueFormat Format for the value (used for dialog and fallback)
- * @param unitLabel Unit label for dialog input suffix (deprecated, use unitLabelResId)
- * @param unitLabelResId Resource ID for unit label. When R.string.units_min, auto-formats as "Xh Ym"
+ * @param unitLabel Unit label, shown after the value and as the dialog input suffix
+ * @param asDuration Render the value as "Xh Ym" instead of a plain number
  * @param dialogLabel Label for the input dialog
  * @param dialogSummary Summary/description for the input dialog
  * @param modifier Modifier for the Row container
@@ -75,8 +74,8 @@ fun SliderWithButtons(
     valueFormatResId: Int? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
-    unitLabel: String = "",
-    unitLabelResId: Int = 0,
+    unitLabel: TextRef? = null,
+    asDuration: Boolean = false,
     dialogLabel: String? = null,
     dialogSummary: String? = null,
     enabled: Boolean = true,
@@ -157,22 +156,16 @@ fun SliderWithButtons(
     val dynamicStepPosUp = (posForCurrentPlusStep - posForCurrent).coerceAtLeast(0.001f)
     val dynamicStepPosDown = (posForCurrent - posForCurrentMinusStep).coerceAtLeast(0.001f)
 
-    // Check if this is minutes input for special formatting
-    val isMinutesUnit = unitLabelResId == KeysR.string.units_min
-    val resolvedUnitLabel = when {
-        unitLabelResId != 0 -> stringResource(unitLabelResId)
-        unitLabel.isNotEmpty() -> unitLabel
-        else -> ""
-    }
+    val resolvedUnitLabel = unitLabel?.let { stringResource(it) } ?: ""
 
     // Use shared formatting function for display text
     val displayText = if (showValue) formatSliderDisplayValue(
         value = value,
-        unitLabelResId = unitLabelResId,
+        unitLabel = unitLabel,
         valueFormatResId = valueFormatResId,
         formatAsInt = formatAsInt,
         valueFormat = valueFormat,
-        unitLabel = unitLabel
+        asDuration = asDuration
     ) else ""
 
     BoxWithConstraints(modifier = modifier) {
@@ -243,7 +236,7 @@ fun SliderWithButtons(
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.End,
                     modifier = Modifier
-                        .widthIn(min = if (isMinutesUnit || valueFormatResId != null || resolvedUnitLabel.isNotEmpty()) 70.dp else 40.dp)
+                        .widthIn(min = if (asDuration || valueFormatResId != null || resolvedUnitLabel.isNotEmpty()) 70.dp else 40.dp)
                         .then(if (enabled) Modifier.clickable { showDialog = true } else Modifier)
                         .padding(start = 4.dp)
                 )
@@ -259,8 +252,8 @@ fun SliderWithButtons(
             step = step,
             label = dialogLabel,
             summary = dialogSummary,
-            unitLabel = resolvedUnitLabel,
-            unitLabelResId = unitLabelResId,
+            unitLabel = unitLabel,
+            asDuration = asDuration,
             valueFormat = valueFormat,
             onValueConfirm = onValueChange,
             onDismiss = { showDialog = false }

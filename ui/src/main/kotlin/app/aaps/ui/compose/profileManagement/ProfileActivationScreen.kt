@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
@@ -272,7 +273,7 @@ fun ProfileActivationScreen(
                         onValueChange = { percentage = it },
                         valueRange = Constants.CPP_PERCENTAGE_RANGE,
                         step = 5.0,
-                        unitLabelResId = app.aaps.core.keys.R.string.units_percent,
+                        unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_percent),
                         modifier = itemModifier
                     )
 
@@ -283,7 +284,7 @@ fun ProfileActivationScreen(
                         onValueChange = { duration = it },
                         valueRange = Constants.ACTION_DURATION,
                         step = 10.0,
-                        unitLabelResId = app.aaps.core.keys.R.string.units_min,
+                        unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_min),
                         modifier = itemModifier
                     )
 
@@ -330,7 +331,7 @@ fun ProfileActivationScreen(
                                 onValueChange = { timeshift = it },
                                 valueRange = Constants.CPP_TIMESHIFT_RANGE,
                                 step = 1.0,
-                                unitLabelResId = app.aaps.core.keys.R.string.units_hours
+                                unitLabel = TextRef.Res(app.aaps.core.keys.R.string.units_hours)
                             )
                         }
                     }

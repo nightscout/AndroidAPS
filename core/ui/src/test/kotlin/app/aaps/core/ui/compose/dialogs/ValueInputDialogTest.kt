@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -48,7 +49,7 @@ class ValueInputDialogTest {
                     currentValue = currentValue,
                     valueRange = 0.0..10.0,
                     label = "Insulin",
-                    unitLabel = "U",
+                    unitLabel = TextRef.Literal("U"),
                     onValueConfirm = onValueConfirm,
                     onDismiss = onDismiss
                 )

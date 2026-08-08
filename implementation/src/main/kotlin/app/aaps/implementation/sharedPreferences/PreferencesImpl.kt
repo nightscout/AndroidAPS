@@ -386,11 +386,6 @@ class PreferencesImpl @Inject constructor(
         prefsList
             .find { it.key == key }
 
-    override fun getDependingOn(key: String): List<PreferenceKey> =
-        prefsList.filterIsInstance<PreferenceKey>().filter {
-            it.dependency?.key == key || it.negativeDependency?.key == key
-        }
-
     override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean =
         sp.getBoolean(key.composeKey(*arguments), key.defaultValue)
 

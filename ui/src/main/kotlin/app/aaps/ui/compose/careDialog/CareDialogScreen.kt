@@ -49,6 +49,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
@@ -350,7 +351,7 @@ private fun BgSection(
             valueRange = minBg..maxBg,
             step = step,
             valueFormat = format,
-            unitLabel = glucoseUnits.displayLabel
+            unitLabel = TextRef.Literal(glucoseUnits.displayLabel)
         )
     }
 }
@@ -374,7 +375,7 @@ private fun DurationSection(
         onValueChange = onDurationChange,
         valueRange = Constants.ACTION_DURATION,
         step = 10.0,
-        unitLabelResId = KeysR.string.units_min,
+        unitLabel = TextRef.Res(KeysR.string.units_min),
         modifier = modifier
     )
 }

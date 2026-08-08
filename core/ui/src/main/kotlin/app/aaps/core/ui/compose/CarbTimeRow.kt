@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import app.aaps.core.keys.R as KeysR
 
@@ -68,7 +68,9 @@ fun CarbTimeRow(
     var expanded by rememberSaveable { mutableStateOf(false) }
     val expandRequester = rememberBringIntoViewOnExpand(expanded)
 
-    Column(modifier = modifier.fillMaxWidth().bringIntoViewRequester(expandRequester)) {
+    Column(modifier = modifier
+        .fillMaxWidth()
+        .bringIntoViewRequester(expandRequester)) {
         // Header row: icon + label + value + Change/OK button
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -140,7 +142,7 @@ fun CarbTimeRow(
                     onValueChange = { onOffsetChange(it.toInt()) },
                     valueRange = offsetRange.first.toDouble()..offsetRange.last.toDouble(),
                     step = offsetStep.toDouble(),
-                    unitLabelResId = KeysR.string.units_min
+                    unitLabel = TextRef.Res(KeysR.string.units_min)
                 )
 
                 // Alarm toggle (disabled when offset <= 0)

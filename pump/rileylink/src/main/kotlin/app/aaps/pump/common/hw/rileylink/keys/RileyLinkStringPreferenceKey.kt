@@ -12,7 +12,7 @@ enum class RileyLinkStringPreferenceKey(
     private val titleResId: Int,
     private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<String, Int> = emptyMap(),
+    private val entriesResIds: Map<String, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -30,7 +30,7 @@ enum class RileyLinkStringPreferenceKey(
         defaultValue = "medtronic_pump_encoding_4b6b_rileylink",
         titleResId = R.string.medtronic_pump_encoding_title,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "medtronic_pump_encoding_4b6b_local" to R.string.medtronic_pump_encoding_4b6b_local,
             "medtronic_pump_encoding_4b6b_rileylink" to R.string.medtronic_pump_encoding_4b6b_rileylink
         )
@@ -38,5 +38,6 @@ enum class RileyLinkStringPreferenceKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
     override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

@@ -13,7 +13,7 @@ enum class DanaIntKey(
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<Int, Int> = emptyMap(),
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -31,7 +31,7 @@ enum class DanaIntKey(
         defaultValue = 0,
         titleResId = app.aaps.core.ui.R.string.bolusspeed,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             0 to R.string.bolus_speed_12,
             1 to R.string.bolus_speed_30,
             2 to R.string.bolus_speed_60
@@ -40,4 +40,5 @@ enum class DanaIntKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
 }

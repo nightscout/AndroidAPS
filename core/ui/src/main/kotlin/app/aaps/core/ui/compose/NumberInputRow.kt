@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import kotlin.math.roundToInt
 
@@ -52,8 +53,8 @@ import kotlin.math.roundToInt
  * @param onValueChange Callback invoked when value changes, receives new value as Double
  * @param valueRange The range of values the input can represent
  * @param step Step increment for +/- buttons
- * @param unitLabelResId Resource ID for unit label (e.g., R.string.units_min, R.string.units_percent)
- * @param unitLabel Resolved unit label string (used when unitLabelResId is 0)
+ * @param unitLabel Unit label shown after the value
+ * @param asDuration Render the value as "Xh Ym" instead of a plain number
  * @param valueFormatResId Resource ID for formatting value with unit (e.g., "%1$.1f U")
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
  * @param valueFormat Custom NumberFormat (overrides auto-created from decimalPlaces)
@@ -75,8 +76,8 @@ fun NumberInputRow(
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double,
     modifier: Modifier = Modifier,
-    unitLabelResId: Int = 0,
-    unitLabel: String = "",
+    unitLabel: TextRef? = null,
+    asDuration: Boolean = false,
     valueFormatResId: Int? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat? = null,
@@ -111,19 +112,21 @@ fun NumberInputRow(
         }
     }
 
+    val resolvedUnitLabel = unitLabel?.let { stringResource(it) } ?: ""
+
     // Formatted display text for special cases (duration)
     val formattedDisplay = formatSliderDisplayValue(
         value = value,
-        unitLabelResId = unitLabelResId,
+        unitLabel = unitLabel,
         valueFormatResId = valueFormatResId,
         formatAsInt = formatAsInt,
         valueFormat = effectiveValueFormat,
-        unitLabel = unitLabel
+        asDuration = asDuration
     )
     // Only show formatted display when it differs meaningfully from the raw number
     val rawDisplay = effectiveValueFormat.format(value)
     val showFormattedDisplay = formattedDisplay != rawDisplay &&
-        formattedDisplay != "$rawDisplay $unitLabel".trim()
+        formattedDisplay != "$rawDisplay $resolvedUnitLabel".trim()
 
     // Range text
     val rangeText = "${effectiveValueFormat.format(valueRange.start)} — ${effectiveValueFormat.format(valueRange.endInclusive)}"
@@ -173,11 +176,6 @@ fun NumberInputRow(
         onValueChange(newValue)
     }
 
-    val resolvedUnitLabel = when {
-        unitLabelResId != 0    -> stringResource(unitLabelResId)
-        unitLabel.isNotEmpty() -> unitLabel
-        else                   -> ""
-    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

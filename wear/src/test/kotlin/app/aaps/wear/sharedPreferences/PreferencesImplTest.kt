@@ -108,18 +108,6 @@ internal class PreferencesImplTest {
     }
 
     @Test
-    fun getDependingOnReturnsDependencyChildren() {
-        val wearControlDependents = sut.getDependingOn("wearcontrol")
-        assertThat(wearControlDependents).containsAtLeast(
-            BooleanKey.WearWizardBg,
-            BooleanKey.WearWizardTt,
-            BooleanKey.WearWizardTrend,
-            BooleanKey.WearWizardCob,
-            BooleanKey.WearWizardIob
-        )
-    }
-
-    @Test
     fun getAllPreferenceKeysReturnsOnlyPreferenceKeysAndExcludesNonPreferenceEnums() {
         val all = sut.getAllPreferenceKeys()
         assertThat(all).isNotEmpty()

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
@@ -64,7 +63,7 @@ fun AdaptiveUnitDoublePreferenceItem(
     val valueFormat = if (isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
 
     // Get unit label from resources - short form for slider
-    val unitLabel = stringResource(if (isMgdl) UiR.string.mgdl else UiR.string.mmol)
+    val unitLabel = TextRef.Res(if (isMgdl) UiR.string.mgdl else UiR.string.mmol)
 
     // Get summary if available
     val summary = stringResourceOrNull(unitKey.summary)

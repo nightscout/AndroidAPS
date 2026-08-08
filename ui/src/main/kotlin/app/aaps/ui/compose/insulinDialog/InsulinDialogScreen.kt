@@ -52,6 +52,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.InsulinSelector
@@ -356,7 +357,7 @@ internal fun InsulinDialogContent(
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
+                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname)
                     )
                     InsulinQuickAddButtons(
                         increment1 = uiState.insulinButtonIncrement1,
@@ -403,7 +404,7 @@ internal fun InsulinDialogContent(
                             onValueChange = onTimeOffsetChange,
                             valueRange = -12.0 * 60..12.0 * 60,
                             step = 5.0,
-                            unitLabelResId = KeysR.string.units_min
+                            unitLabel = TextRef.Res(KeysR.string.units_min)
                         )
                         DateTimeSection(
                             dateString = dateString,

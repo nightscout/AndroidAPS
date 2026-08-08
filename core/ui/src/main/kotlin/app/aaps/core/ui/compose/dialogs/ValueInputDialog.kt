@@ -25,12 +25,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.R
-
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.formatMinutesAsDuration
+import app.aaps.core.ui.compose.stringResource
 import kotlin.math.roundToInt
-import app.aaps.core.keys.R as KeysR
 
 /**
  * Dialog for entering a numeric value directly.
@@ -41,7 +41,7 @@ import app.aaps.core.keys.R as KeysR
  * @param label Optional label for the input field
  * @param summary Optional summary/description text to show below the label
  * @param unitLabel Optional unit label to show after value
- * @param unitLabelResId Resource ID for unit label. When R.string.units_min, shows formatted preview
+ * @param asDuration Show a "= Xh Ym" preview under the field
  * @param valueFormat Format for displaying/parsing the value
  * @param onValueConfirm Called when user confirms with a valid value
  * @param onDismiss Called when dialog is dismissed
@@ -55,8 +55,8 @@ fun ValueInputDialog(
     step: Double = 0.1,
     label: String? = null,
     summary: String? = null,
-    unitLabel: String = "",
-    unitLabelResId: Int = 0,
+    unitLabel: TextRef? = null,
+    asDuration: Boolean = false,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     onValueConfirm: (Double) -> Unit,
     onDismiss: () -> Unit
@@ -68,34 +68,32 @@ fun ValueInputDialog(
     }
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-
-    // Check if this is minutes input for formatted preview
-    val isMinutesUnit = unitLabelResId == KeysR.string.units_min
+    val resolvedUnitLabel = unitLabel?.let { stringResource(it) } ?: ""
 
     fun validateAndParse(): Double? {
         val text = textFieldValue.text.replace(",", ".")
         return try {
             val parsed = text.toDouble()
             when {
-                parsed < valueRange.start                                 -> {
+                parsed < valueRange.start                              -> {
                     isError = true
                     errorMessage = "Min: ${valueFormat.format(valueRange.start)}"
                     null
                 }
 
-                parsed > valueRange.endInclusive                          -> {
+                parsed > valueRange.endInclusive                       -> {
                     isError = true
                     errorMessage = "Max: ${valueFormat.format(valueRange.endInclusive)}"
                     null
                 }
 
-                isMinutesUnit && parsed != parsed.roundToInt().toDouble() -> {
+                asDuration && parsed != parsed.roundToInt().toDouble() -> {
                     isError = true
                     errorMessage = "Minutes must be whole numbers"
                     null
                 }
 
-                else                                                      -> {
+                else                                                   -> {
                     isError = false
                     // Accept value as-is (no rounding to step)
                     parsed
@@ -116,7 +114,7 @@ fun ValueInputDialog(
     }
 
     // Compute formatted preview for minutes
-    val formattedPreview: String? = if (isMinutesUnit) {
+    val formattedPreview: String? = if (asDuration) {
         val minutes = textFieldValue.text.replace(",", ".").toDoubleOrNull()?.roundToInt()
         if (minutes != null && minutes >= 60) {
             "= ${formatMinutesAsDuration(minutes)}"
@@ -162,8 +160,8 @@ fun ValueInputDialog(
 
                         else                     -> null
                     },
-                    suffix = if (unitLabel.isNotEmpty()) {
-                        { Text(unitLabel) }
+                    suffix = if (resolvedUnitLabel.isNotEmpty()) {
+                        { Text(resolvedUnitLabel) }
                     } else null,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal,

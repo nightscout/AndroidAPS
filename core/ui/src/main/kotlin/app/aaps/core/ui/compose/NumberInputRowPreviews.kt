@@ -3,6 +3,7 @@ package app.aaps.core.ui.compose
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import app.aaps.core.keys.R as KeysR
 
@@ -25,7 +26,7 @@ internal fun NumberInputRowWithUnitPreview() {
             valueRange = 0.0..10.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabel = "U"
+            unitLabel = TextRef.Literal("U")
         )
     }
 }
@@ -40,7 +41,7 @@ internal fun NumberInputRowMinutesPreview() {
             onValueChange = {},
             valueRange = 0.0..300.0,
             step = 10.0,
-            unitLabelResId = KeysR.string.units_min
+            unitLabel = TextRef.Res(KeysR.string.units_min)
         )
     }
 }
@@ -55,7 +56,7 @@ internal fun NumberInputRowPercentPreview() {
             onValueChange = {},
             valueRange = 10.0..200.0,
             step = 5.0,
-            unitLabelResId = KeysR.string.units_percent
+            unitLabel = TextRef.Res(KeysR.string.units_percent)
         )
     }
 }
@@ -70,7 +71,7 @@ internal fun NumberInputRowMinutesDirectPreview() {
             onValueChange = {},
             valueRange = 0.0..300.0,
             step = 10.0,
-            unitLabelResId = KeysR.string.units_min
+            unitLabel = TextRef.Res(KeysR.string.units_min)
         )
     }
 }

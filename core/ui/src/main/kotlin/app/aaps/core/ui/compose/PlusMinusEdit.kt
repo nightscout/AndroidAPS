@@ -23,13 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.keys.interfaces.TextRef
 import kotlin.math.roundToInt
 
 /**
@@ -45,8 +45,7 @@ import kotlin.math.roundToInt
  * @param valueRange Allowed value range; values outside are clamped on commit
  * @param step Step size for +/- buttons
  * @param valueFormat Format for the displayed text
- * @param unitLabel Resolved unit label (used when [unitLabelResId] is 0)
- * @param unitLabelResId Resource ID for the unit label, shown as the field's trailing icon
+ * @param unitLabel Unit label, shown as the field's trailing icon
  * @param enabled Whether the stepper is interactive
  * @param modifier Modifier for the row container
  */
@@ -57,8 +56,7 @@ fun PlusMinusEdit(
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
-    unitLabel: String = "",
-    unitLabelResId: Int = 0,
+    unitLabel: TextRef? = null,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
@@ -80,11 +78,7 @@ fun PlusMinusEdit(
         }
     }
 
-    val resolvedUnitLabel = when {
-        unitLabelResId != 0    -> stringResource(unitLabelResId)
-        unitLabel.isNotEmpty() -> unitLabel
-        else                   -> ""
-    }
+    val resolvedUnitLabel = unitLabel?.let { stringResource(it) } ?: ""
 
     fun validateAndCommit(text: String) {
         val cleaned = text.trim().replace(",", ".")

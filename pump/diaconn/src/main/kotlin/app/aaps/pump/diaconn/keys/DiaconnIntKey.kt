@@ -13,7 +13,7 @@ enum class DiaconnIntKey(
     override val max: Int = Int.MAX_VALUE,
     private val titleResId: Int,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<Int, Int> = emptyMap(),
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -31,7 +31,7 @@ enum class DiaconnIntKey(
         defaultValue = 5,
         titleResId = app.aaps.core.ui.R.string.bolusspeed,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             1 to R.string.bolus_speed_1,
             2 to R.string.bolus_speed_2,
             3 to R.string.bolus_speed_3,
@@ -45,4 +45,5 @@ enum class DiaconnIntKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
 }

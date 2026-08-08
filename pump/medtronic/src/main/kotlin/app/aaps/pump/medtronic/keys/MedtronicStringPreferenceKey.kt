@@ -13,7 +13,7 @@ enum class MedtronicStringPreferenceKey(
     private val titleResId: Int,
     private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<String, Int> = emptyMap(),
+    private val entriesResIds: Map<String, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -38,7 +38,7 @@ enum class MedtronicStringPreferenceKey(
         defaultValue = "",
         titleResId = R.string.medtronic_pump_type,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "Other (unsupported)" to R.string.medtronic_pump_type_unsupported,
             "512" to R.string.medtronic_pump_type_512,
             "712" to R.string.medtronic_pump_type_712,
@@ -59,7 +59,7 @@ enum class MedtronicStringPreferenceKey(
         defaultValue = "medtronic_pump_frequency_us_ca",
         titleResId = R.string.medtronic_pump_frequency,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "medtronic_pump_frequency_us_ca" to app.aaps.pump.common.hw.rileylink.R.string.medtronic_pump_frequency_us_ca,
             "medtronic_pump_frequency_worldwide" to app.aaps.pump.common.hw.rileylink.R.string.medtronic_pump_frequency_worldwide
         )
@@ -69,7 +69,7 @@ enum class MedtronicStringPreferenceKey(
         defaultValue = app.aaps.pump.medtronic.defs.BatteryType.None.key,
         titleResId = R.string.medtronic_pump_battery_select,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             app.aaps.pump.medtronic.defs.BatteryType.None.key to R.string.medtronic_pump_battery_no,
             app.aaps.pump.medtronic.defs.BatteryType.Alkaline.key to R.string.medtronic_pump_battery_alkaline,
             app.aaps.pump.medtronic.defs.BatteryType.Lithium.key to R.string.medtronic_pump_battery_lithium,
@@ -80,5 +80,6 @@ enum class MedtronicStringPreferenceKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
     override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

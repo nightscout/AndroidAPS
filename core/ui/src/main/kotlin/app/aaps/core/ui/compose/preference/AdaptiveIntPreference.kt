@@ -15,12 +15,13 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.keys.rangeResId
-import app.aaps.core.keys.unitLabelResId
-import app.aaps.core.keys.valueResId
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.isDuration
+import app.aaps.core.ui.compose.rangeText
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
+import app.aaps.core.ui.compose.unitLabel
+import app.aaps.core.ui.compose.valueFormatResId
 
 /**
  * Composable int preference for use inside card sections.
@@ -53,11 +54,11 @@ fun AdaptiveIntPreferenceItem(
 
     // Get formatting info from UnitType
     val unitType = intKey.unitType
-    val valueFormatResId = unitType.valueResId()
+    val valueFormatResId = unitType.valueFormatResId()
 
     // Get unit label from UnitType (for dialog input suffix)
-    val unitLabelResId = unitType.unitLabelResId()
-    val unitLabel = unitLabelResId?.let { stringResource(it) } ?: unit
+    val unitLabelRef = unitType.unitLabel() ?: unit.takeIf { it.isNotEmpty() }?.let { TextRef.Literal(it) }
+    val unitLabelText = unitLabelRef?.let { stringResource(it) } ?: ""
 
     // Get summary if available
     val summary = stringResourceOrNull(intKey.summary)
@@ -99,7 +100,8 @@ fun AdaptiveIntPreferenceItem(
                 valueFormatResId = valueFormatResId,
                 formatAsInt = true,
                 valueFormat = NumberFormat.INTEGER,
-                unitLabel = unitLabel,
+                unitLabel = unitLabelRef,
+                asDuration = unitType.isDuration(),
                 dialogLabel = stringResource(effectiveTitle),
                 dialogSummary = summary,
                 enabled = visibility.enabled
@@ -107,11 +109,11 @@ fun AdaptiveIntPreferenceItem(
         }
     } else {
         // For unspecified ranges, use text field with range summary
-        val rangeFormatResId = unitType.rangeResId()
-        val summaryText = if (rangeFormatResId != null) {
-            stringResource(rangeFormatResId, value, intKey.min, intKey.max)
+        val rangeRef = unitType.rangeText(value, intKey.min, intKey.max)
+        val summaryText = if (rangeRef != null) {
+            stringResource(rangeRef)
         } else {
-            stringResource(R.string.preference_range_summary, value.toString(), unitLabel, intKey.min.toString(), intKey.max.toString())
+            stringResource(R.string.preference_range_summary, value.toString(), unitLabelText, intKey.min.toString(), intKey.max.toString())
         }
         TextFieldPreference(
             state = state,

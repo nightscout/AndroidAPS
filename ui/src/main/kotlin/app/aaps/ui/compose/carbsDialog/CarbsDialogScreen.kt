@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
@@ -329,7 +330,7 @@ internal fun CarbsDialogContent(
                             valueRange = (-uiState.cobLimit).toDouble()..uiState.maxCarbs.toDouble(),
                             step = 1.0,
                             valueFormat = NumberFormat.INTEGER,
-                            unitLabel = stringResource(CoreUiR.string.shortgramm)
+                            unitLabel = TextRef.Res(CoreUiR.string.shortgramm)
                         )
                         // Removing carbs (negative): show the COB-bounded limit so the user understands why it can't go lower.
                         if (uiState.carbs < 0) {
@@ -355,7 +356,7 @@ internal fun CarbsDialogContent(
                         valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = stringResource(InterfacesR.string.shorthour),
+                        unitLabel = TextRef.Res(InterfacesR.string.shorthour),
                         modifier = itemModifier
                     )
 

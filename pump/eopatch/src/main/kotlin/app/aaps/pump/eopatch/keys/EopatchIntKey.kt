@@ -13,7 +13,7 @@ enum class EopatchIntKey(
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<Int, Int> = emptyMap(),
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -31,4 +31,5 @@ enum class EopatchIntKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
 }

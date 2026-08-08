@@ -37,6 +37,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -405,7 +406,7 @@ open class VirtualPumpPlugin @Inject constructor(
                 PumpType.entries
                     .filter { it.description != "USER" }
                     .sortedBy { it.description }
-                    .associate { it.description to it.description }
+                    .associate { it.description to TextRef.Literal(it.description) }
             ),
             BooleanKey.VirtualPumpStatusUpload
         ),

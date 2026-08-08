@@ -13,7 +13,7 @@ enum class OmnipodIntPreferenceKey(
     override val defaultValue: Int,
     private val titleResId: Int,
     private val summaryResId: Int? = null,
-    override val entries: Map<Int, Int> = emptyMap(),
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -44,5 +44,6 @@ enum class OmnipodIntPreferenceKey(
 
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
     override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

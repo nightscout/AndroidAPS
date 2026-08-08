@@ -16,7 +16,7 @@ enum class StringKey(
     private val titleResId: Int,
     private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<String, Int> = emptyMap(),
+    private val entriesResIds: Map<String, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -39,7 +39,7 @@ enum class StringKey(
         defaultValue = "mg/dl",
         titleResId = R.string.pref_title_units,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "mg/dl" to R.string.units_mgdl,
             "mmol" to R.string.units_mmol
         ),
@@ -50,7 +50,7 @@ enum class StringKey(
         defaultValue = "default",
         titleResId = R.string.pref_title_language,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "default" to R.string.lang_default,
             "en" to R.string.lang_en,
             "af" to R.string.lang_af,
@@ -93,7 +93,7 @@ enum class StringKey(
         titleResId = R.string.pref_title_app_color_scheme,
         summaryResId = R.string.pref_summary_theme_switcher,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "dark" to R.string.pref_dark_theme,
             "light" to R.string.pref_light_theme,
             "system" to R.string.pref_follow_system_theme
@@ -143,7 +143,7 @@ enum class StringKey(
         defaultValue = "PASSIVE",
         titleResId = R.string.pref_title_automation_location,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "PASSIVE" to R.string.automation_location_passive,
             "NETWORK" to R.string.automation_location_network,
             "GPS" to R.string.automation_location_gps
@@ -204,5 +204,6 @@ enum class StringKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
     override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

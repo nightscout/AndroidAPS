@@ -45,13 +45,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.calibration.AddEntryResult
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.core.ui.R as CoreUiR
@@ -203,7 +204,7 @@ internal fun CalibrationDialogContent(
                         onValueChange = onBgChange,
                         valueRange = uiState.bgRange,
                         step = uiState.bgStep,
-                        unitLabel = uiState.unitLabel,
+                        unitLabel = TextRef.Literal(uiState.unitLabel),
                         decimalPlaces = uiState.bgDecimalPlaces
                     )
                 }

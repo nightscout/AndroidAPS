@@ -57,6 +57,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.graph.InsulinGraphCompose
 import app.aaps.core.interfaces.insulin.InsulinType
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.MasterOfflineBanner
@@ -69,7 +71,6 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
 import app.aaps.core.ui.compose.masterEditingEnabled
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ManagementCarousel
 import app.aaps.core.keys.R as KeysR
@@ -364,7 +365,7 @@ fun InsulinManagementScreen(
                                 onValueChange = { viewModel.updateEditorPeak(it.toInt()) },
                                 valueRange = viewModel.peakRange(),
                                 step = 1.0,
-                                unitLabelResId = KeysR.string.units_min,
+                                unitLabel = TextRef.Res(KeysR.string.units_min),
                                 enabled = editorEnabled,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -387,7 +388,7 @@ fun InsulinManagementScreen(
                                 valueRange = viewModel.diaRange(),
                                 step = 0.1,
                                 decimalPlaces = 1,
-                                unitLabelResId = KeysR.string.units_hours,
+                                unitLabel = TextRef.Res(KeysR.string.units_hours),
                                 enabled = editorEnabled,
                                 modifier = Modifier.fillMaxWidth()
                             )

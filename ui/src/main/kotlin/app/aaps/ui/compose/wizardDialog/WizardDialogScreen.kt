@@ -76,6 +76,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
@@ -616,7 +617,7 @@ internal fun WizardDialogContent(
                             onValueChange = onCarbsChange,
                             valueRange = 0.0..uiState.maxCarbs.toDouble(),
                             step = 1.0,
-                            unitLabel = "g"
+                            unitLabel = TextRef.Literal("g")
                         )
                         QuickAddButtons(
                             increment1 = uiState.carbsButtonIncrement1,
@@ -707,7 +708,7 @@ internal fun WizardDialogContent(
                         onValueChange = onDirectCorrectionChange,
                         valueRange = -uiState.maxBolus..uiState.maxBolus,
                         step = uiState.bolusStep,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
                         decimalPlaces = 2,
                         modifier = itemModifier
                     )
@@ -776,7 +777,7 @@ internal fun WizardDialogContent(
                                 onValueChange = onBgChange,
                                 valueRange = uiState.bgRange,
                                 step = uiState.bgStep,
-                                unitLabel = unitsLabel,
+                                unitLabel = TextRef.Literal(unitsLabel),
                                 decimalPlaces = if (uiState.isMgdl) 0 else 1
                             )
                         }
@@ -823,7 +824,7 @@ internal fun WizardDialogContent(
                                 onValueChange = onPercentageChange,
                                 valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                                 step = 5.0,
-                                unitLabel = "%",
+                                unitLabel = TextRef.Literal("%"),
                                 decimalPlaces = 0
                             )
                         }

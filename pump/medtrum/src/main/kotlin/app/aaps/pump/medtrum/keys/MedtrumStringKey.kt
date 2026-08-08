@@ -14,7 +14,7 @@ enum class MedtrumStringKey(
     private val titleResId: Int,
     private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<String, Int> = emptyMap(),
+    private val entriesResIds: Map<String, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -35,7 +35,7 @@ enum class MedtrumStringKey(
         titleResId = R.string.alarm_setting_title,
         summaryResId = R.string.alarm_setting_summary,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "0" to R.string.alarm_setting_light_vibrate_beep,
             "1" to R.string.alarm_setting_light_vibrate,
             "2" to R.string.alarm_setting_light_beep,
@@ -49,5 +49,6 @@ enum class MedtrumStringKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
     override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }

@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -122,7 +123,7 @@ fun TriggerBgEditor(t: TriggerBg, onChange: () -> Unit, tick: Int = 0) {
             valueRange = if (isMmol) InputBg.MMOL_MIN..InputBg.MMOL_MAX else InputBg.MGDL_MIN..InputBg.MGDL_MAX,
             step = if (isMmol) 0.1 else 1.0,
             decimalPlaces = if (isMmol) 1 else 0,
-            unitLabelResId = if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl,
+            unitLabel = TextRef.Res(if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl),
             compact = true
         )
     }
@@ -156,7 +157,7 @@ fun TriggerDeltaEditor(t: TriggerDelta, onChange: () -> Unit, tick: Int = 0) {
             valueRange = -72.0..72.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabelResId = if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl,
+            unitLabel = TextRef.Res(if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl),
             compact = true
         )
     }
@@ -176,7 +177,7 @@ fun TriggerCOBEditor(t: TriggerCOB, onChange: () -> Unit, tick: Int = 0) {
             onValueChange = { t.cob.value = it; onChange() },
             valueRange = 0.0..150.0,
             step = 1.0,
-            unitLabelResId = KeysR.string.units_grams,
+            unitLabel = TextRef.Res(KeysR.string.units_grams),
             compact = true
         )
     }
@@ -197,7 +198,7 @@ fun TriggerIobEditor(t: TriggerIob, onChange: () -> Unit, tick: Int = 0) {
             valueRange = -20.0..20.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabelResId = KeysR.string.units_insulin,
+            unitLabel = TextRef.Res(KeysR.string.units_insulin),
             compact = true
         )
     }
@@ -217,7 +218,7 @@ fun TriggerHeartRateEditor(t: TriggerHeartRate, onChange: () -> Unit, tick: Int 
             onValueChange = { t.heartRate.value = it; onChange() },
             valueRange = 30.0..250.0,
             step = 5.0,
-            unitLabelResId = R.string.automation_unit_bpm,
+            unitLabel = TextRef.Res(R.string.automation_unit_bpm),
             compact = true
         )
     }
@@ -237,7 +238,7 @@ fun TriggerAutosensValueEditor(t: TriggerAutosensValue, onChange: () -> Unit, ti
             onValueChange = { t.autosens.value = it; onChange() },
             valueRange = 0.0..300.0,
             step = 1.0,
-            unitLabelResId = KeysR.string.units_percent,
+            unitLabel = TextRef.Res(KeysR.string.units_percent),
             compact = true
         )
     }
@@ -257,7 +258,7 @@ fun TriggerBolusAgoEditor(t: TriggerBolusAgo, onChange: () -> Unit, tick: Int = 
             onValueChange = { t.minutesAgo.value = it.toInt(); onChange() },
             valueRange = 5.0..(24 * 60.0),
             step = 10.0,
-            unitLabelResId = KeysR.string.units_min,
+            unitLabel = TextRef.Res(KeysR.string.units_min),
             compact = true
         )
     }
@@ -278,7 +279,7 @@ fun TriggerCannulaAgeEditor(t: TriggerCannulaAge, onChange: () -> Unit, tick: In
             valueRange = 0.0..336.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabelResId = KeysR.string.units_hours,
+            unitLabel = TextRef.Res(KeysR.string.units_hours),
             compact = true
         )
     }
@@ -299,7 +300,7 @@ fun TriggerInsulinAgeEditor(t: TriggerInsulinAge, onChange: () -> Unit, tick: In
             valueRange = 0.0..336.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabelResId = KeysR.string.units_hours,
+            unitLabel = TextRef.Res(KeysR.string.units_hours),
             compact = true
         )
     }
@@ -319,7 +320,7 @@ fun TriggerReservoirLevelEditor(t: TriggerReservoirLevel, onChange: () -> Unit, 
             onValueChange = { t.reservoirLevel.value = it; onChange() },
             valueRange = 0.0..800.0,
             step = 1.0,
-            unitLabelResId = KeysR.string.units_insulin,
+            unitLabel = TextRef.Res(KeysR.string.units_insulin),
             compact = true
         )
     }
@@ -340,7 +341,7 @@ fun TriggerPumpBatteryAgeEditor(t: TriggerPumpBatteryAge, onChange: () -> Unit, 
             valueRange = 0.0..336.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabelResId = KeysR.string.units_hours,
+            unitLabel = TextRef.Res(KeysR.string.units_hours),
             compact = true
         )
     }
@@ -360,7 +361,7 @@ fun TriggerPumpBatteryLevelEditor(t: TriggerPumpBatteryLevel, onChange: () -> Un
             onValueChange = { t.pumpBatteryLevel.value = it; onChange() },
             valueRange = 0.0..100.0,
             step = 1.0,
-            unitLabelResId = KeysR.string.units_percent,
+            unitLabel = TextRef.Res(KeysR.string.units_percent),
             compact = true
         )
     }
@@ -381,7 +382,7 @@ fun TriggerSensorAgeEditor(t: TriggerSensorAge, onChange: () -> Unit, tick: Int 
             valueRange = 0.0..720.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabelResId = KeysR.string.units_hours,
+            unitLabel = TextRef.Res(KeysR.string.units_hours),
             compact = true
         )
     }
@@ -406,7 +407,7 @@ fun TriggerPumpLastConnectionEditor(t: TriggerPumpLastConnection, onChange: () -
             onValueChange = { t.minutesAgo.value = it.toInt(); onChange() },
             valueRange = 5.0..(24 * 60.0),
             step = 10.0,
-            unitLabelResId = KeysR.string.units_min,
+            unitLabel = TextRef.Res(KeysR.string.units_min),
             compact = true
         )
     }
@@ -426,7 +427,7 @@ fun TriggerProfilePercentEditor(t: TriggerProfilePercent, onChange: () -> Unit, 
             onValueChange = { t.pct.value = it; onChange() },
             valueRange = InputPercent.MIN..InputPercent.MAX,
             step = 5.0,
-            unitLabelResId = KeysR.string.units_percent,
+            unitLabel = TextRef.Res(KeysR.string.units_percent),
             compact = true
         )
     }
@@ -454,7 +455,7 @@ fun TriggerTempTargetValueEditor(t: TriggerTempTargetValue, onChange: () -> Unit
             else Constants.TT_RANGE_MGDL,
             step = if (isMmol) 0.1 else 1.0,
             decimalPlaces = if (isMmol) 1 else 0,
-            unitLabelResId = if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl,
+            unitLabel = TextRef.Res(if (isMmol) KeysR.string.units_mmol else KeysR.string.units_mgdl),
             compact = true
         )
     }
@@ -565,7 +566,7 @@ fun TriggerLocationEditor(
         onValueChange = { t.distance.value = it; onChange() },
         valueRange = 0.0..100000.0,
         step = 10.0,
-        unitLabelResId = R.string.automation_unit_meters
+        unitLabel = TextRef.Res(R.string.automation_unit_meters)
     )
     InputLocationModeEditor(
         value = t.modeSelected.value,

@@ -54,6 +54,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
@@ -382,7 +383,7 @@ internal fun FillDialogContent(
                             valueRange = 0.0..uiState.maxInsulin,
                             step = uiState.bolusStep,
                             valueFormat = bolusFormat,
-                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                            unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
                             enabled = uiState.showBolus
                         )
 

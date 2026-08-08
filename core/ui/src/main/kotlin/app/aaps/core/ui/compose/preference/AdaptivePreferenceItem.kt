@@ -54,19 +54,8 @@ fun AdaptivePreferenceItem(
         is IntPreferenceKey             -> {
             when (key.preferenceType) {
                 PreferenceType.LIST       -> {
-                    // Check for runtime-resolved entries first (from withEntries)
-                    val resolved = key.resolvedEntries
-                    if (resolved != null) {
+                    if (key.entries.isNotEmpty()) {
                         AdaptiveListIntPreferenceItem(
-
-                            intKey = key,
-                            entries = resolved.values.toList(),
-                            entryValues = resolved.keys.toList(),
-                            visibilityContext = visibilityContext
-                        )
-                    } else if (key.entries.isNotEmpty()) {
-                        AdaptiveListIntPreferenceItem(
-
                             intKey = key,
                             entries = key.entries.values.map { stringResource(it) },
                             entryValues = key.entries.keys.toList(),
@@ -149,15 +138,10 @@ fun AdaptivePreferenceItem(
             } else {
                 when (key.preferenceType) {
                     PreferenceType.LIST       -> {
-                        // Check for runtime-resolved entries first (from withEntries)
-                        val entriesMap = key.resolvedEntries
-                            ?: key.entries.takeIf { it.isNotEmpty() }?.mapValues { (_, resId) -> stringResource(resId) }
-
-                        if (entriesMap != null) {
+                        if (key.entries.isNotEmpty()) {
                             AdaptiveStringListPreferenceItem(
-
                                 stringKey = key,
-                                entries = entriesMap,
+                                entries = key.entries.mapValues { (_, ref) -> stringResource(ref) },
                                 visibilityContext = visibilityContext
                             )
                         }

@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.R as KeysR
 
 @Preview(showBackground = true)
@@ -31,7 +32,7 @@ internal fun SliderWithButtonsValuePreview() {
             step = 0.1,
             showValue = true,
             valueFormat = NumberFormat.DECIMAL_1,
-            unitLabel = "U"
+            unitLabel = TextRef.Literal("U")
         )
     }
 }
@@ -47,7 +48,7 @@ internal fun SliderWithButtonsIntPreview() {
             step = 5.0,
             showValue = true,
             valueFormat = NumberFormat.INTEGER,
-            unitLabelResId = KeysR.string.units_min
+            unitLabel = TextRef.Res(KeysR.string.units_min)
         )
     }
 }

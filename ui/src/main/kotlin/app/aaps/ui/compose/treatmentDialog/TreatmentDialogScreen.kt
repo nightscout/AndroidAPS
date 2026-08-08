@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.banner.WarningBanner
@@ -229,7 +230,7 @@ internal fun TreatmentDialogContent(
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
                         modifier = itemModifier
                     )
 
@@ -240,7 +241,7 @@ internal fun TreatmentDialogContent(
                         valueRange = 0.0..uiState.maxCarbs.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = stringResource(CoreUiR.string.shortgramm),
+                        unitLabel = TextRef.Res(CoreUiR.string.shortgramm),
                         modifier = itemModifier
                     )
                 }

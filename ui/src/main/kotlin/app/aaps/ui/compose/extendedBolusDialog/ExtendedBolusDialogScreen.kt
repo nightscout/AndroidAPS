@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
@@ -196,7 +197,7 @@ internal fun ExtendedBolusDialogContent(
                         valueRange = uiState.minInsulin..uiState.maxInsulin,
                         step = uiState.extendedStep,
                         valueFormat = NumberFormat.DECIMAL_2,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.Res(CoreUiR.string.insulin_unit_shortname),
                         modifier = itemModifier
                     )
 
@@ -207,7 +208,7 @@ internal fun ExtendedBolusDialogContent(
                         valueRange = uiState.extendedDurationStep..uiState.extendedMaxDuration,
                         step = uiState.extendedDurationStep,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabelResId = KeysR.string.units_min,
+                        unitLabel = TextRef.Res(KeysR.string.units_min),
                         modifier = itemModifier
                     )
                 }

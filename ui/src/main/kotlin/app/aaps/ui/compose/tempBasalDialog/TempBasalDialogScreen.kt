@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
@@ -193,7 +194,7 @@ internal fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempPercent,
                             step = uiState.tempPercentStep,
                             valueFormat = NumberFormat.INTEGER,
-                            unitLabel = "%",
+                            unitLabel = TextRef.Literal("%"),
                             modifier = itemModifier
                         )
                     } else {
@@ -204,7 +205,7 @@ internal fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
                             valueFormat = NumberFormat.DECIMAL_2,
-                            unitLabel = stringResource(CoreUiR.string.profile_ins_units_per_hour),
+                            unitLabel = TextRef.Res(CoreUiR.string.profile_ins_units_per_hour),
                             modifier = itemModifier
                         )
                     }
@@ -217,7 +218,7 @@ internal fun TempBasalDialogContent(
                         valueRange = uiState.tempDurationStep..uiState.tempMaxDuration,
                         step = uiState.tempDurationStep,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabelResId = KeysR.string.units_min,
+                        unitLabel = TextRef.Res(KeysR.string.units_min),
                         modifier = itemModifier
                     )
                 }

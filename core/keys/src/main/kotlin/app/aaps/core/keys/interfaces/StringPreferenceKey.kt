@@ -19,19 +19,11 @@ interface StringPreferenceKey : PreferenceKey, StringNonPreferenceKey {
 
     /**
      * Entries for LIST type preferences.
-     * Map of stored value -> label resource ID.
+     * Map of stored value -> label.
      * Empty map means no entries (not a list preference).
      */
-    val entries: Map<String, Int>
+    val entries: Map<String, TextRef>
         get() = emptyMap()
-
-    /**
-     * Runtime-resolved entries for LIST type preferences.
-     * Map of stored value -> resolved label string.
-     * When set, this takes precedence over [entries] resource IDs.
-     */
-    val resolvedEntries: Map<String, String>?
-        get() = null
 
     /**
      * Validator for the string value.
@@ -43,22 +35,25 @@ interface StringPreferenceKey : PreferenceKey, StringNonPreferenceKey {
 }
 
 /**
- * Wrapper that attaches runtime-resolved entries to a StringPreferenceKey.
+ * Wrapper that attaches entries to a StringPreferenceKey.
  * Uses delegation to preserve all other properties from the original key.
  */
 class StringKeyWithEntries(
     private val delegate: StringPreferenceKey,
-    override val resolvedEntries: Map<String, String>
+    override val entries: Map<String, TextRef>
 ) : StringPreferenceKey by delegate
 
 /**
- * Creates a new StringPreferenceKey with runtime-resolved entries attached.
- * Use this when entries need to be resolved at runtime (e.g., from plugins).
+ * Creates a new StringPreferenceKey with entries attached.
+ * Use this when the entries are only known at run time - for example a list that depends on the
+ * connected device, or on values computed from another setting.
  *
- * @param entries Map of stored value -> resolved label string
+ * @param entries Map of stored value -> label. Use [TextRef.Res] with arguments for anything the
+ *   user reads, so it stays translatable; [TextRef.Literal] only for text that is genuinely not a
+ *   resource, such as a device name.
  * @return A new StringPreferenceKey with the entries attached
  */
-fun StringPreferenceKey.withEntries(entries: Map<String, String>): StringPreferenceKey =
+fun StringPreferenceKey.withEntries(entries: Map<String, TextRef>): StringPreferenceKey =
     StringKeyWithEntries(this, entries)
 
 /**

@@ -13,7 +13,7 @@ enum class EquilIntPreferenceKey(
     override val max: Int = Int.MAX_VALUE,
     private val titleResId: Int,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<Int, Int> = emptyMap(),
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -33,7 +33,7 @@ enum class EquilIntPreferenceKey(
         max = 3,
         titleResId = R.string.equil_tone,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             0 to R.string.equil_tone_mode_mute,
             1 to R.string.equil_tone_mode_tone,
             2 to R.string.equil_tone_mode_shake,
@@ -43,4 +43,5 @@ enum class EquilIntPreferenceKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
 }

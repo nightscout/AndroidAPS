@@ -590,13 +590,6 @@ interface Preferences {
     fun getIfExists(key: String): NonPreferenceKey?
 
     /**
-     * Find all [app.aaps.core.keys.interfaces.PreferenceKey] which have `dependency` or `negativeDependency`
-     * @param key string representation of key
-     * @return list of [app.aaps.core.keys.interfaces.PreferenceKey]
-     */
-    fun getDependingOn(key: String): List<PreferenceKey>
-
-    /**
      * Make new keys available to the Preference system.
      * Called from PluginBase::init, normally as `registerPreferences(MyKey.entries + MyOtherKey.entries)`.
      *

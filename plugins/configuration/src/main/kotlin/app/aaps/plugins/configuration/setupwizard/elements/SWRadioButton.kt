@@ -1,7 +1,6 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -10,6 +9,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.InlineStringListPreferenceItem
+import app.aaps.core.ui.compose.stringResource
 import javax.inject.Inject
 
 class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
@@ -45,7 +45,7 @@ class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelp
             }
         } else {
             // Static options declared on the StringPreferenceKey.
-            key.entries.mapValues { (_, resId) -> stringResource(resId) }
+            key.entries.mapValues { (_, ref) -> stringResource(ref) }
         }
         InlineStringListPreferenceItem(
             stringKey = key,

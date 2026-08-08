@@ -17,7 +17,7 @@ enum class IntKey(
     private val titleResId: Int,
     private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<Int, Int> = emptyMap(),
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val defaultedBySM: Boolean = false,
     override val calculatedDefaultValue: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -256,7 +256,7 @@ enum class IntKey(
         titleResId = R.string.pref_title_protection_type_application,
         summaryResId = R.string.pref_summary_protection_type_application,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             ProtectionType.NONE.ordinal to R.string.noprotection,
             ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
             ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
@@ -273,7 +273,7 @@ enum class IntKey(
         titleResId = R.string.pref_title_protection_type_bolus,
         summaryResId = R.string.pref_summary_protection_type_bolus,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             ProtectionType.NONE.ordinal to R.string.noprotection,
             ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
             ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
@@ -293,7 +293,7 @@ enum class IntKey(
         titleResId = R.string.pref_title_protection_type_settings,
         summaryResId = R.string.pref_summary_protection_type_settings,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             ProtectionType.NONE.ordinal to R.string.noprotection,
             ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
             ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
@@ -445,7 +445,7 @@ enum class IntKey(
         max = 2,
         titleResId = R.string.pref_title_site_rotation_profile,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             0 to R.string.site_rotation_profile_man,
             1 to R.string.site_rotation_profile_woman,
             2 to R.string.site_rotation_profile_child
@@ -455,5 +455,6 @@ enum class IntKey(
     ;
 
     override val title: TextRef = TextRef.Res(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.Res(it.value) }
     override val summary: TextRef? = summaryResId?.let { TextRef.Res(it) }
 }
