@@ -12,8 +12,8 @@ enum class UnitDoubleKey(
     override val defaultValue: Double,
     override val minMgdl: Int,
     override val maxMgdl: Int,
-    private val titleResId: Int,
-    private val summaryResId: Int? = null,
+    override val title: TextRef,
+    override val summary: TextRef? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -26,21 +26,19 @@ enum class UnitDoubleKey(
     override val sync: SyncSpec? = null
 ) : UnitDoublePreferenceKey {
 
-    OverviewLowMark(key = "low_mark", defaultValue = 72.0, minMgdl = 25, maxMgdl = 160, titleResId = R.string.pref_title_low_mark, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
-    OverviewHighMark(key = "high_mark", defaultValue = 180.0, minMgdl = 90, maxMgdl = 250, titleResId = R.string.pref_title_high_mark, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    OverviewLowMark(key = "low_mark", defaultValue = 72.0, minMgdl = 25, maxMgdl = 160, title = KeysStrings.pref_title_low_mark, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    OverviewHighMark(key = "high_mark", defaultValue = 180.0, minMgdl = 90, maxMgdl = 250, title = KeysStrings.pref_title_high_mark, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsLgsThreshold(
         key = "lgsThreshold",
         defaultValue = 65.0,
         minMgdl = 60,
         maxMgdl = 100,
-        titleResId = R.string.pref_title_lgs_threshold,
-        summaryResId = R.string.lgs_threshold_summary,
+        title = KeysStrings.pref_title_lgs_threshold,
+        summary = KeysStrings.lgs_threshold_summary,
         defaultedBySM = true,
         dependency = BooleanKey.ApsUseDynamicSensitivity,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     )
     ;
 
-    override val title: TextRef = TextRef.AndroidRes(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

@@ -14,10 +14,10 @@ enum class IntKey(
     override val defaultValue: Int,
     override val min: Int,
     override val max: Int,
-    private val titleResId: Int,
-    private val summaryResId: Int? = null,
+    override val title: TextRef,
+    override val summary: TextRef? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    private val entriesResIds: Map<Int, Int> = emptyMap(),
+    private val entriesRefs: Map<Int, TextRef> = emptyMap(),
     override val defaultedBySM: Boolean = false,
     override val calculatedDefaultValue: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -39,8 +39,8 @@ enum class IntKey(
         defaultValue = 5,
         min = -50,
         max = 50,
-        titleResId = R.string.pref_title_carbs_button_increment_1,
-        summaryResId = R.string.carb_increment_button_message,
+        title = KeysStrings.pref_title_carbs_button_increment_1,
+        summary = KeysStrings.carb_increment_button_message,
         defaultedBySM = true,
         dependency = BooleanKey.OverviewShowCarbsButton,
         unitType = UnitType.GRAMS,
@@ -51,8 +51,8 @@ enum class IntKey(
         defaultValue = 10,
         min = -50,
         max = 50,
-        titleResId = R.string.pref_title_carbs_button_increment_2,
-        summaryResId = R.string.carb_increment_button_message,
+        title = KeysStrings.pref_title_carbs_button_increment_2,
+        summary = KeysStrings.carb_increment_button_message,
         defaultedBySM = true,
         dependency = BooleanKey.OverviewShowCarbsButton,
         unitType = UnitType.GRAMS,
@@ -63,8 +63,8 @@ enum class IntKey(
         defaultValue = 20,
         min = -50,
         max = 50,
-        titleResId = R.string.pref_title_carbs_button_increment_3,
-        summaryResId = R.string.carb_increment_button_message,
+        title = KeysStrings.pref_title_carbs_button_increment_3,
+        summary = KeysStrings.carb_increment_button_message,
         defaultedBySM = true,
         dependency = BooleanKey.OverviewShowCarbsButton,
         unitType = UnitType.GRAMS,
@@ -76,7 +76,7 @@ enum class IntKey(
         defaultValue = 48,
         min = 24,
         max = 240,
-        titleResId = R.string.pref_title_cage_warning,
+        title = KeysStrings.pref_title_cage_warning,
         defaultedBySM = true,
         unitType = UnitType.HOURS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -86,7 +86,7 @@ enum class IntKey(
         defaultValue = 72,
         min = 24,
         max = 240,
-        titleResId = R.string.pref_title_cage_critical,
+        title = KeysStrings.pref_title_cage_critical,
         defaultedBySM = true,
         unitType = UnitType.HOURS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -96,7 +96,7 @@ enum class IntKey(
         defaultValue = 72,
         min = 24,
         max = 240,
-        titleResId = R.string.pref_title_iage_warning,
+        title = KeysStrings.pref_title_iage_warning,
         defaultedBySM = true,
         visibility = ElementVisibility.NON_PATCH_PUMP,
         unitType = UnitType.HOURS,
@@ -107,7 +107,7 @@ enum class IntKey(
         defaultValue = 144,
         min = 24,
         max = 240,
-        titleResId = R.string.pref_title_iage_critical,
+        title = KeysStrings.pref_title_iage_critical,
         defaultedBySM = true,
         visibility = ElementVisibility.NON_PATCH_PUMP,
         unitType = UnitType.HOURS,
@@ -118,7 +118,7 @@ enum class IntKey(
         defaultValue = 216,
         min = 24,
         max = 720,
-        titleResId = R.string.pref_title_sage_warning,
+        title = KeysStrings.pref_title_sage_warning,
         defaultedBySM = true,
         unitType = UnitType.HOURS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -128,7 +128,7 @@ enum class IntKey(
         defaultValue = 240,
         min = 24,
         max = 720,
-        titleResId = R.string.pref_title_sage_critical,
+        title = KeysStrings.pref_title_sage_critical,
         defaultedBySM = true,
         unitType = UnitType.HOURS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -138,7 +138,7 @@ enum class IntKey(
         defaultValue = 25,
         min = 0,
         max = 100,
-        titleResId = R.string.pref_title_sbat_warning,
+        title = KeysStrings.pref_title_sbat_warning,
         defaultedBySM = true,
         unitType = UnitType.PERCENT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -148,7 +148,7 @@ enum class IntKey(
         defaultValue = 5,
         min = 0,
         max = 100,
-        titleResId = R.string.pref_title_sbat_critical,
+        title = KeysStrings.pref_title_sbat_critical,
         defaultedBySM = true,
         unitType = UnitType.PERCENT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -158,7 +158,7 @@ enum class IntKey(
         defaultValue = 216,
         min = 24,
         max = 1000,
-        titleResId = R.string.pref_title_bage_warning,
+        title = KeysStrings.pref_title_bage_warning,
         defaultedBySM = true,
         unitType = UnitType.HOURS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -168,7 +168,7 @@ enum class IntKey(
         defaultValue = 240,
         min = 24,
         max = 1000,
-        titleResId = R.string.pref_title_bage_critical,
+        title = KeysStrings.pref_title_bage_critical,
         defaultedBySM = true,
         unitType = UnitType.HOURS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -178,7 +178,7 @@ enum class IntKey(
         defaultValue = 80,
         min = 0,
         max = 300,
-        titleResId = R.string.pref_title_res_warning,
+        title = KeysStrings.pref_title_res_warning,
         defaultedBySM = true,
         unitType = UnitType.INSULIN_INT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -188,7 +188,7 @@ enum class IntKey(
         defaultValue = 10,
         min = 0,
         max = 300,
-        titleResId = R.string.pref_title_res_critical,
+        title = KeysStrings.pref_title_res_critical,
         defaultedBySM = true,
         unitType = UnitType.INSULIN_INT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -198,7 +198,7 @@ enum class IntKey(
         defaultValue = 51,
         min = 0,
         max = 100,
-        titleResId = R.string.pref_title_batt_warning,
+        title = KeysStrings.pref_title_batt_warning,
         defaultedBySM = true,
         unitType = UnitType.PERCENT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -208,7 +208,7 @@ enum class IntKey(
         defaultValue = 26,
         min = 0,
         max = 100,
-        titleResId = R.string.pref_title_batt_critical,
+        title = KeysStrings.pref_title_batt_critical,
         defaultedBySM = true,
         unitType = UnitType.PERCENT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -218,8 +218,8 @@ enum class IntKey(
         defaultValue = 100,
         min = 10,
         max = 100,
-        titleResId = R.string.pref_title_bolus_percentage,
-        summaryResId = R.string.deliverpartofboluswizard,
+        title = KeysStrings.pref_title_bolus_percentage,
+        summary = KeysStrings.deliverpartofboluswizard,
         unitType = UnitType.PERCENT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
@@ -228,8 +228,8 @@ enum class IntKey(
         defaultValue = 16,
         min = 6,
         max = 120,
-        titleResId = R.string.pref_title_reset_bolus_percentage_time,
-        summaryResId = R.string.deliver_part_of_boluswizard_reset_time,
+        title = KeysStrings.pref_title_reset_bolus_percentage_time,
+        summary = KeysStrings.deliver_part_of_boluswizard_reset_time,
         defaultedBySM = true,
         engineeringModeOnly = true,
         unitType = UnitType.MIN,
@@ -240,7 +240,7 @@ enum class IntKey(
         defaultValue = 1,
         min = 0,
         max = 180,
-        titleResId = R.string.pref_title_protection_timeout,
+        title = KeysStrings.pref_title_protection_timeout,
         defaultedBySM = true,
         unitType = UnitType.SEC,
         visibility = ElementVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
@@ -253,15 +253,15 @@ enum class IntKey(
         defaultValue = ProtectionType.NONE.ordinal,
         min = ProtectionType.NONE.ordinal,
         max = ProtectionType.CUSTOM_PIN.ordinal,
-        titleResId = R.string.pref_title_protection_type_application,
-        summaryResId = R.string.pref_summary_protection_type_application,
+        title = KeysStrings.pref_title_protection_type_application,
+        summary = KeysStrings.pref_summary_protection_type_application,
         preferenceType = PreferenceType.LIST,
-        entriesResIds = mapOf(
-            ProtectionType.NONE.ordinal to R.string.noprotection,
-            ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
-            ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
-            ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
-            ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
+        entriesRefs = mapOf(
+            ProtectionType.NONE.ordinal to KeysStrings.noprotection,
+            ProtectionType.BIOMETRIC.ordinal to KeysStrings.biometric,
+            ProtectionType.MASTER_PASSWORD.ordinal to KeysStrings.master_password,
+            ProtectionType.CUSTOM_PASSWORD.ordinal to KeysStrings.custom_password,
+            ProtectionType.CUSTOM_PIN.ordinal to KeysStrings.custom_pin
         ),
         visibility = ElementVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
@@ -270,15 +270,15 @@ enum class IntKey(
         defaultValue = ProtectionType.NONE.ordinal,
         min = ProtectionType.NONE.ordinal,
         max = ProtectionType.CUSTOM_PIN.ordinal,
-        titleResId = R.string.pref_title_protection_type_bolus,
-        summaryResId = R.string.pref_summary_protection_type_bolus,
+        title = KeysStrings.pref_title_protection_type_bolus,
+        summary = KeysStrings.pref_summary_protection_type_bolus,
         preferenceType = PreferenceType.LIST,
-        entriesResIds = mapOf(
-            ProtectionType.NONE.ordinal to R.string.noprotection,
-            ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
-            ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
-            ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
-            ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
+        entriesRefs = mapOf(
+            ProtectionType.NONE.ordinal to KeysStrings.noprotection,
+            ProtectionType.BIOMETRIC.ordinal to KeysStrings.biometric,
+            ProtectionType.MASTER_PASSWORD.ordinal to KeysStrings.master_password,
+            ProtectionType.CUSTOM_PASSWORD.ordinal to KeysStrings.custom_password,
+            ProtectionType.CUSTOM_PIN.ordinal to KeysStrings.custom_pin
         ),
         visibility = ElementVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword },
         enabledCondition = PreferenceEnabledCondition { ctx ->
@@ -290,26 +290,26 @@ enum class IntKey(
         defaultValue = ProtectionType.NONE.ordinal,
         min = ProtectionType.NONE.ordinal,
         max = ProtectionType.CUSTOM_PIN.ordinal,
-        titleResId = R.string.pref_title_protection_type_settings,
-        summaryResId = R.string.pref_summary_protection_type_settings,
+        title = KeysStrings.pref_title_protection_type_settings,
+        summary = KeysStrings.pref_summary_protection_type_settings,
         preferenceType = PreferenceType.LIST,
-        entriesResIds = mapOf(
-            ProtectionType.NONE.ordinal to R.string.noprotection,
-            ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
-            ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
-            ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
-            ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
+        entriesRefs = mapOf(
+            ProtectionType.NONE.ordinal to KeysStrings.noprotection,
+            ProtectionType.BIOMETRIC.ordinal to KeysStrings.biometric,
+            ProtectionType.MASTER_PASSWORD.ordinal to KeysStrings.master_password,
+            ProtectionType.CUSTOM_PASSWORD.ordinal to KeysStrings.custom_password,
+            ProtectionType.CUSTOM_PIN.ordinal to KeysStrings.custom_pin
         ),
         visibility = ElementVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
-    SafetyMaxCarbs(key = "treatmentssafety_maxcarbs", defaultValue = 48, min = 1, max = 200, titleResId = R.string.pref_title_max_carbs, unitType = UnitType.GRAMS, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    SafetyMaxCarbs(key = "treatmentssafety_maxcarbs", defaultValue = 48, min = 1, max = 200, title = KeysStrings.pref_title_max_carbs, unitType = UnitType.GRAMS, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     LoopOpenModeMinChange(
         key = "loop_openmode_min_change",
         defaultValue = 30,
         min = 0,
         max = 50,
-        titleResId = R.string.pref_title_open_mode_min_change,
-        summaryResId = R.string.loop_open_mode_min_change_summary,
+        title = KeysStrings.pref_title_open_mode_min_change,
+        summary = KeysStrings.loop_open_mode_min_change_summary,
         defaultedBySM = true,
         unitType = UnitType.PERCENT
     ),
@@ -318,7 +318,7 @@ enum class IntKey(
         defaultValue = 3,
         min = 1,
         max = 10,
-        titleResId = R.string.pref_title_smb_frequency,
+        title = KeysStrings.pref_title_smb_frequency,
         defaultedBySM = true,
         dependency = BooleanKey.ApsUseSmb,
         unitType = UnitType.MIN,
@@ -329,14 +329,14 @@ enum class IntKey(
         defaultValue = 30,
         min = 15,
         max = 120,
-        titleResId = R.string.pref_title_smb_max_minutes,
+        title = KeysStrings.pref_title_smb_max_minutes,
         defaultedBySM = true,
         dependency = BooleanKey.ApsUseSmb,
         unitType = UnitType.MIN,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsUamMaxMinutesOfBasalToLimitSmb(
-        key = "uamsmbmaxminutes", defaultValue = 30, min = 15, max = 120, titleResId = R.string.pref_title_uam_smb_max_minutes, summaryResId = R.string.uam_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb,
+        key = "uamsmbmaxminutes", defaultValue = 30, min = 15, max = 120, title = KeysStrings.pref_title_uam_smb_max_minutes, summary = KeysStrings.uam_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb,
         visibility = ElementVisibility { it.preferences.get(BooleanKey.ApsUseUam) },
         unitType = UnitType.MIN,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -346,8 +346,8 @@ enum class IntKey(
         defaultValue = 1,
         min = 1,
         max = 100,
-        titleResId = R.string.pref_title_carbs_request_threshold,
-        summaryResId = R.string.carbs_req_threshold_summary,
+        title = KeysStrings.pref_title_carbs_request_threshold,
+        summary = KeysStrings.carbs_req_threshold_summary,
         defaultedBySM = true,
         unitType = UnitType.GRAMS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -357,8 +357,8 @@ enum class IntKey(
         defaultValue = 160,
         min = 120,
         max = 200,
-        titleResId = R.string.pref_title_half_basal_exercise_target,
-        summaryResId = R.string.half_basal_exercise_target_summary,
+        title = KeysStrings.pref_title_half_basal_exercise_target,
+        summary = KeysStrings.half_basal_exercise_target_summary,
         defaultedBySM = true,
         unitType = UnitType.MGDL,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -368,8 +368,8 @@ enum class IntKey(
         defaultValue = 100,
         min = 10,
         max = 100,
-        titleResId = R.string.pref_title_iob_threshold_percent,
-        summaryResId = R.string.openapsama_iob_threshold_percent_summary,
+        title = KeysStrings.pref_title_iob_threshold_percent,
+        summary = KeysStrings.openapsama_iob_threshold_percent_summary,
         defaultedBySM = true,
         unitType = UnitType.PERCENT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -379,8 +379,8 @@ enum class IntKey(
         defaultValue = 100,
         min = 1,
         max = 300,
-        titleResId = R.string.pref_title_dynisf_adjustment_factor,
-        summaryResId = R.string.dyn_isf_adjust_summary,
+        title = KeysStrings.pref_title_dynisf_adjustment_factor,
+        summary = KeysStrings.dyn_isf_adjust_summary,
         dependency = BooleanKey.ApsUseDynamicSensitivity,
         unitType = UnitType.PERCENT,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
@@ -390,19 +390,19 @@ enum class IntKey(
         defaultValue = 24,
         min = 4,
         max = 24,
-        titleResId = R.string.pref_title_autosens_period,
-        summaryResId = R.string.openapsama_autosens_period_summary,
+        title = KeysStrings.pref_title_autosens_period,
+        summary = KeysStrings.openapsama_autosens_period_summary,
         calculatedDefaultValue = true,
         unitType = UnitType.HOURS,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    MaintenanceLogsAmount(key = "maintenance_logs_amount", defaultValue = 2, min = 1, max = 10, titleResId = R.string.pref_title_logs_amount, defaultedBySM = true),
+    MaintenanceLogsAmount(key = "maintenance_logs_amount", defaultValue = 2, min = 1, max = 10, title = KeysStrings.pref_title_logs_amount, defaultedBySM = true),
     AlertsStaleDataThreshold(
         key = "missed_bg_readings_threshold",
         defaultValue = 30,
         min = 15,
         max = 10000,
-        titleResId = R.string.pref_title_stale_data_threshold,
+        title = KeysStrings.pref_title_stale_data_threshold,
         defaultedBySM = true,
         dependency = BooleanKey.AlertMissedBgReading,
         unitType = UnitType.MIN
@@ -412,20 +412,20 @@ enum class IntKey(
         defaultValue = 30,
         min = 30,
         max = 300,
-        titleResId = R.string.pref_title_pump_unreachable_threshold,
+        title = KeysStrings.pref_title_pump_unreachable_threshold,
         defaultedBySM = true,
         dependency = BooleanKey.AlertPumpUnreachable,
         unitType = UnitType.MIN
     ),
 
-    AutotuneDefaultTuneDays(key = "autotune_default_tune_days", defaultValue = 5, min = 1, max = 30, titleResId = R.string.pref_title_autotune_days, summaryResId = R.string.autotune_default_tune_days_summary, unitType = UnitType.DAYS),
+    AutotuneDefaultTuneDays(key = "autotune_default_tune_days", defaultValue = 5, min = 1, max = 30, title = KeysStrings.pref_title_autotune_days, summary = KeysStrings.autotune_default_tune_days_summary, unitType = UnitType.DAYS),
 
     SmsRemoteBolusDistance(
         key = "smscommunicator_remotebolusmindistance",
         defaultValue = 15,
         min = 3,
         max = 60,
-        titleResId = R.string.pref_title_sms_remote_bolus_distance,
+        title = KeysStrings.pref_title_sms_remote_bolus_distance,
         unitType = UnitType.MIN,
         // Enabled only when multiple phone numbers are configured (2FA requirement)
         enabledCondition = PreferenceEnabledCondition { ctx ->
@@ -434,27 +434,25 @@ enum class IntKey(
         }
     ),
 
-    BgSourceRandomInterval(key = "randombg_interval_min", defaultValue = 5, min = 1, max = 15, titleResId = R.string.pref_title_random_bg_interval, defaultedBySM = true, unitType = UnitType.MIN),
-    NsClientAlarmStaleData(key = "ns_alarm_stale_data_value", defaultValue = 16, min = 15, max = 120, titleResId = R.string.pref_title_alarm_stale_data, unitType = UnitType.MIN),
-    NsClientUrgentAlarmStaleData(key = "ns_alarm_urgent_stale_data_value", defaultValue = 31, min = 30, max = 180, titleResId = R.string.pref_title_urgent_alarm_stale_data, unitType = UnitType.MIN),
+    BgSourceRandomInterval(key = "randombg_interval_min", defaultValue = 5, min = 1, max = 15, title = KeysStrings.pref_title_random_bg_interval, defaultedBySM = true, unitType = UnitType.MIN),
+    NsClientAlarmStaleData(key = "ns_alarm_stale_data_value", defaultValue = 16, min = 15, max = 120, title = KeysStrings.pref_title_alarm_stale_data, unitType = UnitType.MIN),
+    NsClientUrgentAlarmStaleData(key = "ns_alarm_urgent_stale_data_value", defaultValue = 31, min = 30, max = 180, title = KeysStrings.pref_title_urgent_alarm_stale_data, unitType = UnitType.MIN),
 
     SiteRotationUserProfile(
         key = "site_rotation_user_profile",
         defaultValue = 0,
         min = 0,
         max = 2,
-        titleResId = R.string.pref_title_site_rotation_profile,
+        title = KeysStrings.pref_title_site_rotation_profile,
         preferenceType = PreferenceType.LIST,
-        entriesResIds = mapOf(
-            0 to R.string.site_rotation_profile_man,
-            1 to R.string.site_rotation_profile_woman,
-            2 to R.string.site_rotation_profile_child
+        entriesRefs = mapOf(
+            0 to KeysStrings.site_rotation_profile_man,
+            1 to KeysStrings.site_rotation_profile_woman,
+            2 to KeysStrings.site_rotation_profile_child
         ),
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ;
 
-    override val title: TextRef = TextRef.AndroidRes(titleResId)
-    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.AndroidRes(it.value) }
-    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
+    override val entries: Map<Int, TextRef> = entriesRefs
 }

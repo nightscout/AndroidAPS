@@ -16,8 +16,8 @@ import app.aaps.core.keys.interfaces.TextRef
  */
 enum class IntentKey(
     override val key: String,
-    private val titleResId: Int,
-    private val summaryResId: Int? = null,
+    override val title: TextRef,
+    override val summary: TextRef? = null,
     override val preferenceType: PreferenceType = PreferenceType.CLICK,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -33,6 +33,4 @@ enum class IntentKey(
     // properties. The `;` is what separates the - empty - constant list from the members.
     ;
 
-    override val title: TextRef = TextRef.AndroidRes(titleResId)
-    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

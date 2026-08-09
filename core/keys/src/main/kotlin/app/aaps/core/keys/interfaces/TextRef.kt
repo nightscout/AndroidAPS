@@ -15,12 +15,16 @@ package app.aaps.core.keys.interfaces
  * crash report as a number, because the same number means different things on different builds.
  * Persist the preference `key` instead, which is a stable string.
  *
- * ### Why an Int and not a string name
+ * ### Names and ids
  *
- * Resolving by name needs `Resources.getIdentifier()`, which is a reflective lookup that R8 cannot
- * see - it would keep every string alive and silently return 0 for a typo. Keeping the Android
- * resource id means the existing `R.string.x` references stay compile checked exactly as they are
- * today.
+ * [Named] is for a module that has stopped naming Android resource ids in its own code. [AndroidRes]
+ * is for everything else, and there is a lot of it, so both stay.
+ *
+ * An earlier version of this note argued that a name could not work, because resolving one needs
+ * `Resources.getIdentifier()` - a reflective lookup R8 cannot see, which would keep every string
+ * alive and silently return 0 for a typo. That is true of a hand written name and false of a
+ * generated one: `GenerateKeyStringsTask` emits the names and their id map together from the same
+ * `strings.xml`, so R8 sees ordinary `R.string.x` references and a typo does not compile.
  */
 sealed interface TextRef {
 
@@ -36,6 +40,21 @@ sealed interface TextRef {
      * further from the format string, so a mismatch shows up when the text is built.
      */
     data class AndroidRes(val id: Int, val args: List<Any> = emptyList()) : TextRef
+
+    /**
+     * A string named rather than numbered, so the declaring code holds nothing Android specific.
+     *
+     * [name] is the `name` attribute from `strings.xml`. Take these from the generated object for
+     * the owning module - `KeysStrings` for `:core:keys` - never by writing the string out by hand,
+     * because only the generated form is checked against the XML at build time.
+     *
+     * Each platform resolves the name its own way. Android looks it up in the generated id map and
+     * then reads it through `Resources`, so locale matching and the always English lookup work
+     * exactly as they did when keys carried ids.
+     *
+     * [args] behave as in [AndroidRes].
+     */
+    data class Named(val name: String, val args: List<Any> = emptyList()) : TextRef
 
     /**
      * Text that is only known at run time - a scanned pump name, a wiki page title, a user label.
