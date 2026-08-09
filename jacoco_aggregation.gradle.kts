@@ -47,16 +47,33 @@ project.afterEvaluate {
 
         val classes = HashSet<ConfigurableFileTree>()
         subprojects.forEach { proj ->
-            variants.forEach { variant ->
-                // Use variant directory as base - fileTree recurses into subdirectories
-                // This avoids hardcoding exact task-name subdirectories that may vary between AGP versions
-                val javaPath = proj.layout.buildDirectory.dir("intermediates/javac/$variant").get()
-                classes.add(fileTree(javaPath) { exclude(excludes); include("**/*.class") })
-                val kotlinPath = proj.layout.buildDirectory.dir("intermediates/built_in_kotlinc/$variant").get()
-                classes.add(fileTree(kotlinPath) { exclude(excludes); include("**/*.class") })
-                // Fallback for older AGP versions
-                val kotlinLegacyPath = proj.layout.buildDirectory.dir("tmp/kotlin-classes/$variant").get()
-                classes.add(fileTree(kotlinLegacyPath) { exclude(excludes); include("**/*.class") })
+            // A multiplatform module has no build variants, so the variant paths below cannot
+            // legitimately hold anything for it. Deciding up front matters, and not only for
+            // tidiness: a module that used to be an Android library leaves its old
+            // intermediates/built_in_kotlinc/fullDebug behind in an existing build directory, and
+            // feeding both that and the new output to JaCoCo fails the whole report with
+            // "Can't add different class with same name".
+            if (File("${proj.projectDir}/src/commonMain").isDirectory) {
+                // Take the Android compilation when the module has one, the JVM compilation
+                // otherwise. Never both: a multiplatform module compiles the same commonMain code
+                // once per target, and only the target whose tests actually ran produces .exec
+                // data. Counting the other copy would report identical code as 0% covered and make
+                // the number worse than leaving the module out.
+                val kmpTarget = if (File("${proj.projectDir}/src/androidMain").isDirectory) "android" else "jvm"
+                val kmpPath = proj.layout.buildDirectory.dir("classes/kotlin/$kmpTarget/main").get()
+                classes.add(fileTree(kmpPath) { exclude(excludes); include("**/*.class") })
+            } else {
+                variants.forEach { variant ->
+                    // Use variant directory as base - fileTree recurses into subdirectories
+                    // This avoids hardcoding exact task-name subdirectories that may vary between AGP versions
+                    val javaPath = proj.layout.buildDirectory.dir("intermediates/javac/$variant").get()
+                    classes.add(fileTree(javaPath) { exclude(excludes); include("**/*.class") })
+                    val kotlinPath = proj.layout.buildDirectory.dir("intermediates/built_in_kotlinc/$variant").get()
+                    classes.add(fileTree(kotlinPath) { exclude(excludes); include("**/*.class") })
+                    // Fallback for older AGP versions
+                    val kotlinLegacyPath = proj.layout.buildDirectory.dir("tmp/kotlin-classes/$variant").get()
+                    classes.add(fileTree(kotlinLegacyPath) { exclude(excludes); include("**/*.class") })
+                }
             }
         }
         classDirectories.setFrom(files(listOf(classes)))
@@ -69,6 +86,11 @@ project.afterEvaluate {
                     it.add("${proj.projectDir}/src/$variant/java")
                     it.add("${proj.projectDir}/src/$variant/kotlin")
                 }
+                // Multiplatform source sets. A missing directory contributes nothing, so these are
+                // harmless on the modules that are still plain Android.
+                it.add("${proj.projectDir}/src/commonMain/kotlin")
+                it.add("${proj.projectDir}/src/androidMain/kotlin")
+                it.add("${proj.projectDir}/src/jvmMain/kotlin")
             }
         }
         sourceDirectories.setFrom(files(sources))
@@ -86,6 +108,14 @@ project.afterEvaluate {
                     println("Collecting android execution data from: ${file.absolutePath}")
                     executions.add(file)
                 }
+            }
+            // Multiplatform test tasks write here instead - testAndroidHostTest.exec for a module
+            // with an Android target, jvmTest.exec otherwise. Matched to the class directories
+            // chosen above.
+            val kmpJacocoPath = proj.layout.buildDirectory.dir("jacoco").get()
+            fileTree(kmpJacocoPath) { include("*.exec") }.forEach { file ->
+                println("Collecting multiplatform execution data from: ${file.absolutePath}")
+                executions.add(file)
             }
         }
         executionData.setFrom(executions)

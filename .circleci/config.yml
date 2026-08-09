@@ -264,7 +264,15 @@ jobs:
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest
+            # jvmTest and testAndroidHostTest cover the multiplatform modules. They have no build
+            # variants, so testFullDebugUnitTest does not exist for them and their tests would
+            # silently not run at all - which is what happened to :core:data and :core:nssdk, and
+            # showed up as a Codecov drop the moment :core:keys converted too.
+            # Both task names are unqualified on purpose: Gradle runs them in whichever projects
+            # have them, so a module converting later is picked up without editing this file.
+            # Deliberately not `allTests`: that would pull in the Kotlin/Native toolchain for the
+            # mingw and iOS targets, whose tests cannot run on a Linux box anyway.
+            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest jvmTest testAndroidHostTest
 
       - run:
           name: Non-app module androidTests (Gradle, emu-5554)
