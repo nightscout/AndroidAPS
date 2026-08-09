@@ -11,6 +11,8 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.os.Build
+import android.support.wearable.complications.ComplicationData as WireComplicationData
 import android.text.format.DateFormat
 import android.util.TypedValue
 import android.view.Gravity
@@ -39,6 +41,7 @@ import androidx.wear.watchface.complications.ComplicationSlotBounds
 import androidx.wear.watchface.complications.DefaultComplicationDataSourcePolicy
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.toApiComplicationData
 import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationStyle
@@ -121,6 +124,25 @@ class CustomWatchface : BaseWatchFace() {
         const val COMPLICATION_SLOT_ID_2 = 102
         const val COMPLICATION_SLOT_ID_3 = 103
 
+        /**
+         * Absolute floor in real pixels, so a very small slot still gets a visible ring. Deliberately
+         * **not** named after the library default: the effective default is `2dp` from
+         * `R.dimen.complicationDrawable_rangedValueRingWidth` (applied by
+         * `ComplicationDrawable.setContext`), not the `2` px field initializer. This is our own
+         * minimum, unrelated to either.
+         */
+        private const val MIN_RING_WIDTH_PX = 2
+
+        /**
+         * **Provisional placeholder, not a finished value.** Ring thickness as a fraction of the
+         * slot's declared width, eyeballed against an OEM watch face (ring ~= 1/6 of radius, and
+         * radius = width/2, hence 12). Not an upstream design guideline - no such guideline exists,
+         * see [complicationRingWidth]. To be replaced by an explicit CWF json key in the styling
+         * parameter audit, at which point this becomes only the documented fallback ratio used when
+         * the key is absent.
+         */
+        private const val PROVISIONAL_RING_WIDTH_RATIO = 12
+
         private const val SLOT_STYLE_SETTING_ID = "cwf_slots"
         private const val SLOT_STYLE_OPTION_ID_DEFAULT = "cwf_d"
         private const val SLOT_STYLE_OPTION_ID_PREFIX = "cwf_"
@@ -201,20 +223,20 @@ class CustomWatchface : BaseWatchFace() {
         val overlays = mutableListOf<ComplicationSlotOverlay>()
         val signature = StringBuilder()
         for (config in complicationSlotConfigs) {
-            val view = complicationPlaceholder(config.slotId)
-            val visible = view != null && view.isVisible && view.width > 0 && view.height > 0
+            val view = complicationPlaceholder(config.slotId)?.takeIf { it.isVisible && it.width > 0 && it.height > 0 }
             // ComplicationSlotBounds are fractional (unit-square, canvas-relative), same conversion
             // as complicationSlotBoundsFromJson but starting from the laid-out placeholder so any
             // DynProvider offset is already included. Empty for a hidden slot: nothing to hit-test.
-            val bounds = if (visible && view != null)
-                RectF(view.left / width, view.top / height, view.right / width, view.bottom / height)
-            else
-                RectF()
-            overlays += ComplicationSlotOverlay(
-                complicationSlotId = config.slotId,
-                enabled = visible,
-                complicationSlotBounds = ComplicationSlotBounds(bounds)
-            )
+            val bounds = view
+                ?.let { RectF(it.left / width, it.top / height, it.right / width, it.bottom / height) }
+                ?: RectF()
+            val visible = view != null
+            // Builder rather than the constructor: the overlay's 4-argument secondary constructor is
+            // deprecated, and named arguments resolve to it rather than to the primary one.
+            overlays += ComplicationSlotOverlay.Builder(config.slotId)
+                .setEnabled(visible)
+                .setComplicationSlotBounds(ComplicationSlotBounds(bounds))
+                .build()
             signature.append(config.slotId).append(visible).append(bounds).append('|')
         }
 
@@ -262,9 +284,51 @@ class CustomWatchface : BaseWatchFace() {
          * complications rendering as empty until the provider was re-picked - do not "simplify" it
          * by passing the parameter through, that reintroduces the bug. See the class doc for the
          * full mechanism.
+         *
+         * Also strips a redundant small image first - see [withoutRedundantSmallImage].
          */
         override fun loadData(complicationData: ComplicationData, loadDrawablesAsynchronous: Boolean) {
-            super.loadData(complicationData, false)
+            super.loadData(withoutRedundantSmallImage(complicationData), false)
+        }
+
+        /**
+         * Works around an androidx layout bug that drops **both** images when a ranged-value-family
+         * complication carries a monochromatic image *and* a small image on a non-wide slot.
+         *
+         * `RangedValueLayoutHelper.getIconBounds` returns empty whenever a small image exists (the
+         * small image is meant to win), but its `getSmallImageBounds` then resolves the small image's
+         * position by delegating to `ShortTextLayoutHelper.getIconBounds`, which returns empty for
+         * that very same reason. Both rects end up empty and nothing is drawn - confirmed against the
+         * 1.2.1 sources and on device, where a provider sending both images rendered ring + value but
+         * no icon, while the identical payload under SHORT_TEXT (which never enters that delegation)
+         * did show one. Details in `_docs/Complication_Libraries.md`.
+         *
+         * Dropping the small image makes `hasSmallImage()` false, so the monochromatic image renders
+         * normally. Only touched when there is a monochromatic image to fall back on, and only for
+         * the types routed through `RangedValueLayoutHelper` - SHORT_TEXT and friends render small
+         * images correctly and are passed through untouched.
+         *
+         * The wire round-trip is used rather than `RangedValueComplicationData.Builder` because the
+         * builder exposes no setters for `dataSource`, `persistencePolicy`, `displayPolicy` or
+         * `extras`, so rebuilding through it would silently discard them; copying the wire object
+         * preserves every field and changes exactly one. Both conversions are `@RestrictTo`
+         * (lint-only, not private), hence the suppression.
+         */
+        @Suppress("RestrictedApi")
+        private fun withoutRedundantSmallImage(complicationData: ComplicationData): ComplicationData {
+            val wire = complicationData.asWireComplicationData()
+            // Wire type constants rather than the ComplicationType enum: GOAL_PROGRESS and
+            // WEIGHTED_ELEMENTS are @RequiresApi(TIRAMISU) on the enum, while these are plain ints.
+            val routedThroughRangedValueLayout =
+                wire.type == WireComplicationData.TYPE_RANGED_VALUE ||
+                    wire.type == WireComplicationData.TYPE_GOAL_PROGRESS ||
+                    wire.type == WireComplicationData.TYPE_WEIGHTED_ELEMENTS
+            if (!routedThroughRangedValueLayout || !wire.hasSmallImage() || !wire.hasIcon()) return complicationData
+            return WireComplicationData.Builder(wire)
+                .setSmallImage(null)
+                .setBurnInProtectionSmallImage(null)
+                .build()
+                .toApiComplicationData()
         }
     }
 
@@ -278,14 +342,49 @@ class CustomWatchface : BaseWatchFace() {
         ComplicationSlotConfig(COMPLICATION_SLOT_ID_2, R.id.complication2, ViewKeys.COMPLICATION2.key, RectF(100f / 400f, 200f / 400f, 150f / 400f, 250f / 400f)),
         ComplicationSlotConfig(COMPLICATION_SLOT_ID_3, R.id.complication3, ViewKeys.COMPLICATION3.key, RectF(100f / 400f, 300f / 400f, 150f / 400f, 350f / 400f))
     )
-    private val complicationSupportedTypes = listOf(
-        ComplicationType.SHORT_TEXT,
-        ComplicationType.LONG_TEXT,
-        ComplicationType.RANGED_VALUE,
-        ComplicationType.MONOCHROMATIC_IMAGE,
-        ComplicationType.SMALL_IMAGE,
-        ComplicationType.PHOTO_IMAGE
-    )
+    // Order is a real preference order, not cosmetic: during data source selection the system walks
+    // this list in order and picks the first entry a provider also supports (ComplicationSlot.kt's
+    // supportedTypes doc, confirmed against source - see _docs/Complication_Libraries.md's
+    // "Supported-type negotiation" section). Data-bearing types are listed first so a provider
+    // capable of sending a live value (e.g. heart rate as RANGED_VALUE) is asked for that instead of
+    // defaulting to a static SHORT_TEXT label - which is what a Samsung Health heart-rate provider
+    // was confirmed (via device logcat) to send when SHORT_TEXT was first in this list.
+    // GOAL_PROGRESS/WEIGHTED_ELEMENTS are @RequiresApi(TIRAMISU) on the ComplicationType enum
+    // constants themselves - gated rather than included unconditionally despite that annotation
+    // being lint-only (referencing the constant can't itself crash on an older device), because
+    // whether a pre-Tiramisu Wear OS system service understands that wire type at all is a
+    // separate, unverified question this project has no way to test on such a device.
+    //
+    // RANGED_VALUE deliberately outranks GOAL_PROGRESS despite the latter's more promising name.
+    // ComplicationRenderer.drawGoalProgress() renders GOAL_PROGRESS on a completely separate path
+    // from every other type, with visuals we cannot style: progress is scaled against
+    // targetValue * 1.1 (so it always reads ~9% low), the progress mark is a dot rather than a
+    // filled arc, and a 36-degree arc at the end of the circle is painted with a hardcoded
+    // Color.RED that no ComplicationStyle property can override. RANGED_VALUE uses the ordinary
+    // arc renderer and the same content layout, so it is the better target for a
+    // progress-toward-a-goal complication. Confirmed on device against a provider offering both.
+    private val complicationSupportedTypes =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            listOf(
+                ComplicationType.RANGED_VALUE,
+                ComplicationType.GOAL_PROGRESS,
+                ComplicationType.WEIGHTED_ELEMENTS,
+                ComplicationType.SHORT_TEXT,
+                ComplicationType.LONG_TEXT,
+                ComplicationType.MONOCHROMATIC_IMAGE,
+                ComplicationType.SMALL_IMAGE,
+                ComplicationType.PHOTO_IMAGE
+            )
+        } else {
+            listOf(
+                ComplicationType.RANGED_VALUE,
+                ComplicationType.SHORT_TEXT,
+                ComplicationType.LONG_TEXT,
+                ComplicationType.MONOCHROMATIC_IMAGE,
+                ComplicationType.SMALL_IMAGE,
+                ComplicationType.PHOTO_IMAGE
+            )
+        }
 
     // This method is foundational engine setup and must never throw - confirmed via a real crash
     // (UninitializedPropertyAccessException on complicationDataRepository, logged internally by
@@ -402,11 +501,59 @@ class CustomWatchface : BaseWatchFace() {
         applyComplicationStyle(config.slotId)
     }
 
-    // ComplicationDrawable's own library defaults include an OPAQUE BLACK background
-    // (ComplicationStyle.BACKGROUND_COLOR_DEFAULT = Color.BLACK, confirmed against the real 1.2.1
-    // source) - a slot with no CWF styling would otherwise render as a solid black square. Apply
-    // our own sane defaults unconditionally (transparent background, white/light-gray text/icon),
-    // then let the CWF json's COLOR/FONTCOLOR/FONTTITLECOLOR keys override them when present.
+    // Applies our own defaults unconditionally, then lets the CWF json's COLOR/FONTCOLOR/
+    // FONTTITLECOLOR keys override them when present.
+    //
+    // NOTE: an earlier version of this comment said ComplicationStyle defaults to an OPAQUE BLACK
+    // background (ComplicationStyle.BACKGROUND_COLOR_DEFAULT = Color.BLACK) and that a slot without
+    // CWF styling would therefore render as a solid black square. That is the *field initializer*,
+    // and it does not apply to us: ComplicationDrawable.setContext() overwrites nearly every style
+    // field from resources via setStyleToDefaultValues(), and the resource default is
+    // R.color.complicationDrawable_backgroundColor = #00000000, i.e. already transparent. Since we
+    // build the drawable as ComplicationDrawable(this) - with a context - the resource defaults are
+    // what actually apply. Setting a transparent background here is therefore redundant rather than
+    // load-bearing; it is kept because it makes the intent explicit and costs nothing.
+    // The black-square symptom investigated earlier in this feature's development was real, but its
+    // root cause is NOT this default and remains unidentified - do not "restore" the black-background
+    // reasoning without new evidence. See _docs/Complication_Libraries.md, ComplicationStyle section.
+    /**
+     * Ring thickness for `RANGED_VALUE`/`GOAL_PROGRESS`, derived from the slot's own declared size so
+     * it stays proportional to the complication rather than being the library's fixed hairline.
+     *
+     * **Units.** [JsonKeys.WIDTH] is in the CWF's 400x400 space, so it is multiplied by [zoomFactor]
+     * to reach physical pixels - the same conversion `customizeViewCommon` applies to every other
+     * view. `ComplicationStyle.rangedValueRingWidth` is `@Px`, i.e. physical pixels, so the computed
+     * value is already in the correct unit. [MIN_RING_WIDTH_PX] is in that same unit and is
+     * deliberately **not** scaled by [zoomFactor]: it is an absolute lower bound, not a design value.
+     *
+     * **Why not just use the library's own default?** The library's effective default is `2dp`
+     * (`R.dimen.complicationDrawable_rangedValueRingWidth`, applied by
+     * `ComplicationDrawable.setContext`), and it must never be multiplied by [zoomFactor]: `dp` is
+     * already a complete device-specific conversion belonging to Android's physical-size
+     * resolution-independence system, while [zoomFactor] belongs to this watch face's own system -
+     * proportion of the declared 400x400 space. Combining them would double-apply two unrelated
+     * scaling schemes. Using `2dp` *unscaled* was also rejected: it is a fixed physical thickness
+     * regardless of how large the CWF declared the slot, so it would be the one CWF dimension that
+     * does not scale with its slot, breaking the reproducible-across-devices design the format is
+     * built on. This library offers no size-relative default at all - `ComplicationRenderer` uses the
+     * value directly as a stroke width - so a proportional value computed here is the only option
+     * consistent with every other CWF-declared dimension. Do not reintroduce `2dp` as a "fix".
+     *
+     * **Where the ratio comes from.** A visual comparison, during this feature's development, against
+     * a Samsung Watch Face Format watch face whose ring measured roughly 1/6 of the complication
+     * radius; radius is width/2, hence width/12. That face does not use this renderer, so it is a
+     * design target rather than a like-for-like measurement, and no upstream guideline exists. See
+     * [PROVISIONAL_RING_WIDTH_RATIO] - it is a placeholder awaiting a CWF json key.
+     *
+     * Rounds rather than truncates, matching `ComplicationSlot.computeBounds`, which adds 0.5 before
+     * `toInt()` for exactly this reason.
+     */
+    private fun complicationRingWidth(viewJson: JSONObject?): Int {
+        val declaredWidth = viewJson?.optInt(JsonKeys.WIDTH.key) ?: 0
+        if (declaredWidth <= 0) return MIN_RING_WIDTH_PX
+        return (0.5 + declaredWidth * zoomFactor / PROVISIONAL_RING_WIDTH_RATIO).toInt().coerceAtLeast(MIN_RING_WIDTH_PX)
+    }
+
     private fun applyComplicationStyle(slotId: Int) {
         val drawable = complicationDrawables[slotId] ?: return
         val viewJson = complicationStyleJson[slotId]
@@ -428,6 +575,12 @@ class CustomWatchface : BaseWatchFace() {
             //   declared is the box the content gets.
             style.borderStyle = ComplicationStyle.BORDER_STYLE_NONE
             style.borderRadius = 0
+            // Same story again: rangedValueRingWidth defaults to 2px (ComplicationStyle's
+            // RING_WIDTH_DEFAULT), which on a real complication is a hairline - on a 115px slot that
+            // is about 1/29 of the radius, against roughly 1/6 on OEM watch faces. Scale it to the
+            // slot instead of leaving an absolute default: a ring 1/12 of the declared width is
+            // 1/6 of the radius.
+            style.rangedValueRingWidth = complicationRingWidth(viewJson)
             style.backgroundColor = backgroundColor
             style.textColor = textColor
             style.titleColor = titleColor
