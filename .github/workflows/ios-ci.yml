@@ -101,8 +101,16 @@ jobs:
       # are still run: if either grows shared tests later they start executing here with no change to
       # this file, and until then they are simply NO-SOURCE.
       - name: Run the shared tests on the iOS simulator
+        # GitHub's macOS runners are UTC, and at UTC every assertion in SystemTimeZoneTest passes
+        # trivially - the offset is zero whatever unit it is in, so a seconds-instead-of-milliseconds
+        # bug in the NSTimeZone actual would sail straight through. Pin a zone that has both a
+        # non-zero offset and daylight saving, so the whole-minutes, range and whole-hour-DST
+        # assertions actually mean something. Foundation honours TZ on macOS, as does the JVM.
+        env:
+          TZ: Europe/Prague
         run: |
           set -o pipefail
+          echo "Running with TZ=$TZ"
           ./gradlew --console=plain --no-daemon \
             :core:data:iosSimulatorArm64Test :core:nssdk:iosSimulatorArm64Test :core:keys:iosSimulatorArm64Test \
             | tee test.log
