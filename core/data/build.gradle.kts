@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
 }
@@ -11,17 +13,26 @@ kotlin {
         }
     }
 
-    // Stand-in for a real Kotlin/Native target. iOS targets need macOS and Xcode, which cannot run
-    // on Windows, but mingwX64 compiles the same common code through Kotlin/Native, so it proves
-    // there is no JVM API left in commonMain. Replace or extend with
-    // iosArm64() / iosSimulatorArm64() on a Mac.
-    mingwX64 {
-        compilerOptions {
-            // kotlin.assert has an experimental implementation on Native. ICfg.iobCalcForTreatment
-            // uses it. Opting in here keeps that code exactly as it is - turning the asserts into
-            // require() would change behaviour, because JVM assertions are off in production while
-            // require() always throws.
-            optIn.add("kotlin.experimental.ExperimentalNativeApi")
+    // Real Apple targets. Kotlin/Native cross compiles klibs for them from any host, so these do
+    // build on Windows - only linking, cinterop and running their tests need a Mac.
+    iosArm64()
+    iosSimulatorArm64()
+
+    // mingwX64 stays, and not out of habit: it is the only Kotlin/Native target whose tests can
+    // actually RUN on this machine. iosSimulatorArm64Test is disabled off macOS ("simulator tests
+    // require macOS"), so without mingw there would be no way to execute common code through
+    // Kotlin/Native at all before a Mac appears.
+    mingwX64()
+
+    targets.withType<KotlinNativeTarget>().configureEach {
+        compilations.configureEach {
+            compileTaskProvider.configure {
+                // kotlin.assert has an experimental implementation on Native. ICfg.iobCalcForTreatment
+                // uses it. Opting in here keeps that code exactly as it is - turning the asserts into
+                // require() would change behaviour, because JVM assertions are off in production while
+                // require() always throws.
+                compilerOptions.optIn.add("kotlin.experimental.ExperimentalNativeApi")
+            }
         }
     }
 
