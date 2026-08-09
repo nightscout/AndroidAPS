@@ -1530,11 +1530,48 @@ Two build details worth keeping:
   hierarchy template creates it **after** the build script is evaluated, so use the lazy `iosMain { }`
   accessor.
 
-**What is still unproven, and it is the substantive gap:** whether `NSNumberFormatter` and
-`NSTimeZone` produce byte-identical output to `DecimalFormat` and `TimeZone.getOffset`. `utcOffset`
-is stored in every record, takes part in `contentEqualsTo`, and is validated by Nightscout. Comparing
-the two needs a host that can *run* Apple tests. The tests to do it with now exist in `commonTest`;
-they just cannot execute for an Apple target here.
+**The one thing this could not prove was whether `NSNumberFormatter` and `NSTimeZone` actually agree
+with `DecimalFormat` and `TimeZone.getOffset`** - which matters, because `utcOffset` is stored in
+every record, takes part in `contentEqualsTo` and is validated by Nightscout, so a units mistake
+would corrupt data quietly rather than crash. That gap is closed in wave 16.
+
+### Wave 16 - the shared code runs on Apple, and the actuals are correct (done)
+
+Committed as `e115e407a7`, `08f5384826` and `c017e469b4`.
+
+Two `commonTest` suites were added to `:core:data` to pin platform behaviour as literal expectations
+rather than as a comparison, so they mean something on a target that has no JVM to compare against:
+`NumberFormatParityTest` (10 tests) and `SystemTimeZoneTest` (4).
+
+**They found a real divergence on their first run, on Windows.** `0.35` is not representable as a
+double - the nearest one is `0.34999999999999997779...`, just below the midpoint. `DecimalFormat`
+works from that true decimal value and rounds **down** to `0.3`. The mingw actual multiplies by ten
+first, and `0.35 * 10.0 == 3.5` exactly in IEEE-754, so it sees a perfect tie, applies half-even, and
+produces `0.4`. Ties are now pinned only on exactly representable values, where every platform must
+agree; the non-representable case is documented instead. `DecimalFormat` is the reference, because it
+is what every existing AAPS number has been rendered with.
+
+`.github/workflows/ios-ci.yml` runs on `macos-latest`, needs no secrets, and asserts the tasks
+**executed** rather than that the build was green - a disabled Kotlin/Native task reports SKIPPED and
+still exits 0, so "BUILD SUCCESSFUL" on its own would stay green if the whole Apple side silently
+stopped building. It also checks each klib manifest names the target it claims.
+
+Result: **29 tests execute on the iOS simulator, zero failures** - the same 29 that run on JVM and
+mingw - and all six klibs build on macOS.
+
+The first run passed but proved less than it looked: GitHub's macOS runners are **UTC**, where every
+assertion in `SystemTimeZoneTest` holds trivially because the offset is zero in any unit. The job now
+pins `TZ=Europe/Prague`, which has both a non-zero offset and daylight saving. There the winter offset
+is 3,600,000 ms, so a seconds-returning implementation would fail both the whole-minutes check
+(`3600 % 60000 != 0`) and the whole-hour DST delta. It passes, which is what actually confirms the
+`* 1000` in the `NSTimeZone` actual.
+
+Two traps worth remembering from writing that workflow:
+
+- GitHub Actions runs `bash -e` but **not** `pipefail`, so `./gradlew ... | tee log` returns *tee's*
+  exit code and a failed build reports success. Same trap as the pipe warning further down, in a new
+  place.
+- Kotlin/Native rejects a **comma** inside a backtick test name, which the JVM accepts.
 
 ### Was behaviour preserved?
 
@@ -1798,8 +1835,7 @@ only as a record of what was planned; what actually happened is wave 14, and the
 5. **`IntPreferenceKey.entries` in the pump modules** still use `entriesResIds`; fine while pumps stay
    Android.
 6. ~~Add Apple targets to `:core:data` / `:core:nssdk`.~~ **Done - wave 15.**
-7. **A `macos-latest` CI job.** Now buys less than it used to, because compiling for Apple already
-   happens locally - but it is still the only place iOS tests can *run* and frameworks can link.
+7. ~~A `macos-latest` CI job.~~ **Done - wave 16.** `.github/workflows/ios-ci.yml`.
 8. **A resolver for `TextRef.Named` off Android.** `KeysStrings` is in `commonMain`, but the id map
    that turns a name into text is `androidMain`. Nothing needs this until there is a non-Android UI,
    and the client only needs the system language, so it is a small generated table when it comes.
