@@ -161,7 +161,6 @@ class SceneExecutor @Inject constructor(
      * @return Result of the execution
      */
     suspend fun activate(scene: Scene, durationMinutes: Int = scene.defaultDurationMinutes): SceneExecutionResult {
-        aapsLogger.info(LTag.UI, "XXXX activate() entry scene='${scene.name}' id=${scene.id} duration=${durationMinutes}min actions=${scene.actions.size}")
 
         // Defensive precondition gate — covers automation rules and races
         // where UI state lagged behind reality. UI normally disables the entry
@@ -181,41 +180,24 @@ class SceneExecutor @Inject constructor(
         //   scheduleExpiryWorker handles any leftover work.
         if (activeSceneManager.isActive()) {
             val previouslyExpired = activeSceneManager.isExpired()
-            aapsLogger.info(LTag.UI, "XXXX activate() — winding down previous active scene '${activeSceneManager.getActiveState()?.scene?.name}' expired=$previouslyExpired")
             if (!previouslyExpired) {
                 deactivate()
             } else {
                 activeSceneManager.clearActive()
             }
         } else {
-            aapsLogger.info(LTag.UI, "XXXX activate() — no previous active scene")
         }
 
         val now = dateUtil.now()
         val durationMs = T.mins(durationMinutes.toLong()).msecs()
-        aapsLogger.info(LTag.UI, "XXXX activate() now=$now durationMs=$durationMs")
 
         // Capture pre-activation SMB flag (the only "truly prior" state) before making changes.
-        aapsLogger.info(LTag.UI, "XXXX activate() calling capturePriorSmb()")
-        val priorSmb = try {
-            capturePriorSmb(scene)
-        } catch (e: Throwable) {
-            aapsLogger.error(LTag.UI, "XXXX activate() capturePriorSmb FAILED", e)
-            throw e
-        }
-        aapsLogger.info(LTag.UI, "XXXX activate() capturePriorSmb() returned: $priorSmb")
+        val priorSmb = capturePriorSmb(scene)
 
         // Execute each action
         val actionResults = mutableListOf<SceneExecutionResult.ActionResult>()
-        for ((idx, action) in scene.actions.withIndex()) {
-            aapsLogger.info(LTag.UI, "XXXX activate() executing action $idx/${scene.actions.size}: ${action::class.simpleName}")
-            val result = try {
-                executeAction(action, durationMinutes, now)
-            } catch (e: Throwable) {
-                aapsLogger.error(LTag.UI, "XXXX activate() executeAction #$idx FAILED", e)
-                throw e
-            }
-            aapsLogger.info(LTag.UI, "XXXX activate() action $idx result: success=${result.success} err=${result.errorMessage}")
+        for (action in scene.actions) {
+            val result = executeAction(action, durationMinutes, now)
             actionResults.add(result)
         }
 
@@ -235,15 +217,12 @@ class SceneExecutor @Inject constructor(
             priorSmb = priorSmb,
             scopedRecords = scopedRecords
         )
-        aapsLogger.info(LTag.UI, "XXXX activate() setting active state for '${scene.name}'")
         activeSceneManager.setActive(activeState)
 
         // Schedule expiry notification if duration-based
         if (durationMs > 0) {
-            aapsLogger.info(LTag.UI, "XXXX activate() scheduling expiry worker in ${durationMs}ms")
             scheduleExpiryWorker(scene.name, durationMs)
         } else {
-            aapsLogger.info(LTag.UI, "XXXX activate() durationMs==0, no expiry worker scheduled (indefinite)")
         }
 
         // Log user entry
@@ -308,13 +287,10 @@ class SceneExecutor @Inject constructor(
      * Marks the scene as expired so the banner shows "Dismiss" instead of "End Scene".
      */
     suspend fun onExpiry() {
-        aapsLogger.info(LTag.UI, "XXXX onExpiry() entry")
         val activeState = activeSceneManager.getActiveState()
         if (activeState == null) {
-            aapsLogger.info(LTag.UI, "XXXX onExpiry() — no active state, returning")
             return
         }
-        aapsLogger.info(LTag.UI, "XXXX onExpiry() scene='${activeState.scene.name}' endAction=${activeState.scene.endAction}")
 
         val now = dateUtil.now()
 
@@ -330,14 +306,12 @@ class SceneExecutor @Inject constructor(
         // TT / LoopMode / CarePortal records self-expire via their own timestamp+duration queries.
         for (action in activeState.scene.actions) {
             if (action is SceneAction.SmbToggle || action is SceneAction.ProfileSwitch) {
-                aapsLogger.info(LTag.UI, "XXXX onExpiry() reverting ${action::class.simpleName}")
                 revertAction(action, activeState, now)
             }
         }
 
         // Mark as expired (keep state for banner display) instead of clearing.
         // Lifecycle change rides the existing RunningConfigurationPublisher cycle to clients.
-        aapsLogger.info(LTag.UI, "XXXX onExpiry() calling markExpired()")
         activeSceneManager.markExpired()
 
         // Log
