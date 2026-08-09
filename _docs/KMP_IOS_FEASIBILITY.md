@@ -419,11 +419,15 @@ and the next screen, not because it is on a list.
 **Where this stands.** Steps 1, 2 and 5 are **done**, and step 0 is half done - out of order, because
 `:core:nssdk` turned out to be sliceable after all. Three modules now build for Kotlin/Native:
 
-| Module        | State                                                                      |
-|---------------|----------------------------------------------------------------------------|
-| `:core:data`  | multiplatform, 2 `expect` / `actual` seams (wave 5)                        |
-| `:core:nssdk` | multiplatform, 72 files in `commonMain` (waves 6-9)                        |
-| `:core:keys`  | multiplatform, 47 files in `commonMain`, **real iOS targets** (wave 14)    |
+| Module        | State                                                                                  |
+|---------------|----------------------------------------------------------------------------------------|
+| `:core:data`  | multiplatform, 2 seams, **real iOS targets**, 15 tests run on Native (waves 5, 15)      |
+| `:core:nssdk` | multiplatform, 72 files in `commonMain`, **real iOS targets** (waves 6-9, 15)           |
+| `:core:keys`  | multiplatform, 47 files in `commonMain`, **real iOS targets** (wave 14)                 |
+
+All three build for `iosArm64` and `iosSimulatorArm64` on Windows. Together they are the data models,
+the complete Nightscout read/write client and the preference keys - the whole spine a follower needs
+below the UI - and the entire platform-specific surface under them is **four** `actual`s.
 
 Nothing is left of the original blocker list inside `:core:nssdk` - `org.json`, Gson, joda,
 Retrofit,
@@ -1482,6 +1486,56 @@ module has no `testFullDebugUnitTest` task and silently runs **no tests at all**
 been happening to `:core:data` and `:core:nssdk` since waves 5 to 9, unnoticed because
 `failOnNoDiscoveredTests = false`.
 
+### Wave 15 - the data spine builds for iOS, and 15 tests run on Native (done)
+
+Committed as `a4291a17cc`, `01678c46dc` and `47798f9e84`.
+
+`:core:data` and `:core:nssdk` gained `iosArm64()` and `iosSimulatorArm64()`. Both produce genuine
+klibs - `native_targets=ios_arm64` and `ios_simulator_arm64` in the manifests - built on Windows.
+
+**The whole shared data spine needed exactly four `actual`s**, which is the real headline. Grep all
+three multiplatform modules for `expect` and that is the entire platform surface underneath a
+complete Nightscout read/write client:
+
+| `expect` | iOS `actual` |
+|----------|--------------|
+| `systemUtcOffsetAt` | `NSTimeZone.localTimeZone.secondsFromGMTForDate` - the direct counterpart of `TimeZone.getOffset(timestamp)`, per-moment so DST is right |
+| `NumberFormatPlatform` | `NSNumberFormatter` - same CLDR data as `DecimalFormat`, with grouping off, half-even rounding and an explicit separator |
+| `nsHttpClient` | Ktor **Darwin**, i.e. `NSURLSession` - the system's own connections, proxies and certificate validation |
+| `nsIoDispatcher` | `Dispatchers.IO`, which Kotlin/Native does provide on Apple targets |
+
+These are real implementations, not stubs, and they compile here because the Apple platform klibs
+ship **pre-generated inside the Windows Kotlin/Native distribution** - 177 of them for `ios_arm64`,
+including `Foundation`. Running cinterop against a new header needs a Mac; consuming what is already
+generated does not.
+
+**`mingwX64` stays, and the reason is the opposite of what was assumed.** It is obsolete as a
+*compile* proxy now that the real targets build. But it is the only Kotlin/Native target whose tests
+can *run* on Windows - KGP says so plainly: *"Native task 'iosSimulatorArm64Test' is disabled ...
+cannot run on the current host (windows-x86_64). Reason: simulator tests require macOS."*
+
+So `:core:data` got a `commonTest`. `ICfgTest` (8) and `SourceSensorExtensionsTest` (7) moved there
+from `jvmTest` and were rewritten from Truth + JUnit 5 to `kotlin.test`; `NumberFormatTest` stayed on
+the JVM because it *is* the oracle - it compares against `java.text.DecimalFormat`. Result: **15 tests
+now execute through Kotlin/Native**, and the same 15 still run on the JVM. That matters more than it
+sounds for `ICfgTest`, which is dosing arithmetic: the point of sharing it with a client is that it
+computes the same numbers on every platform, and until now nothing checked that off the JVM.
+
+Two build details worth keeping:
+
+- The `ExperimentalNativeApi` opt-in lived inside the `mingwX64 { }` block. It has to move to
+  `targets.withType<KotlinNativeTarget>`, or `ICfg.iobCalcForTreatment`'s `assert()` will not compile
+  for iOS.
+- `getByName("iosMain")` fails with *"KotlinSourceSet with name 'iosMain' not found"*. The default
+  hierarchy template creates it **after** the build script is evaluated, so use the lazy `iosMain { }`
+  accessor.
+
+**What is still unproven, and it is the substantive gap:** whether `NSNumberFormatter` and
+`NSTimeZone` produce byte-identical output to `DecimalFormat` and `TimeZone.getOffset`. `utcOffset`
+is stored in every record, takes part in `contentEqualsTo`, and is validated by Nightscout. Comparing
+the two needs a host that can *run* Apple tests. The tests to do it with now exist in `commonTest`;
+they just cannot execute for an Apple target here.
+
 ### Was behaviour preserved?
 
 An audit ran five parallel agents against the migrated code, each trying to find an input where old
@@ -1743,9 +1797,7 @@ only as a record of what was planned; what actually happened is wave 14, and the
    `InfoStep`, `SWEventListener`. Harmless today.
 5. **`IntPreferenceKey.entries` in the pump modules** still use `entriesResIds`; fine while pumps stay
    Android.
-6. **Swap `mingwX64` for Apple targets in `:core:data` / `:core:nssdk`.** No longer gated on macOS CI
-   - Apple klibs cross compile on Windows. For `:core:nssdk` the engine moves from `ktor-client-cio`
-   in `mingwX64Main` to `ktor-client-darwin` in `appleMain`.
+6. ~~Add Apple targets to `:core:data` / `:core:nssdk`.~~ **Done - wave 15.**
 7. **A `macos-latest` CI job.** Now buys less than it used to, because compiling for Apple already
    happens locally - but it is still the only place iOS tests can *run* and frameworks can link.
 8. **A resolver for `TextRef.Named` off Android.** `KeysStrings` is in `commonMain`, but the id map
