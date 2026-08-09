@@ -1,8 +1,19 @@
 package app.aaps.core.data.model
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
+/**
+ * In `commonTest`, so this runs through Kotlin/Native as well as the JVM - which matters more here
+ * than for most tests, because `iobCalcForTreatment` is dosing arithmetic and the whole point of
+ * sharing it with a client is that it computes the same numbers everywhere.
+ *
+ * `kotlin.test` rather than Truth and JUnit 5, because neither of those exists off the JVM. Truth's
+ * `isGreaterThan` / `isAtLeast` / `isFinite` become plain boolean assertions with a message, so a
+ * failure still says what it expected.
+ */
 class ICfgTest {
 
     private fun bolus(amount: Double, iCfg: ICfg, timestamp: Long = 0L) =
@@ -13,9 +24,9 @@ class ICfgTest {
         val iCfg = ICfg(insulinLabel = "test", peak = 75, dia = 6.0, concentration = 1.0)
         // 30 min after a 1 U bolus
         val iob = iCfg.iobCalcForTreatment(bolus(1.0, iCfg, timestamp = 0L), time = 30 * 60 * 1000L)
-        assertThat(iob.iobContrib).isFinite()
-        assertThat(iob.iobContrib).isGreaterThan(0.0)
-        assertThat(iob.iobContrib).isLessThan(1.0)
+        assertTrue(iob.iobContrib.isFinite(), "iobContrib was ${iob.iobContrib}")
+        assertTrue(iob.iobContrib > 0.0, "expected > 0.0 but was ${iob.iobContrib}")
+        assertTrue(iob.iobContrib < 1.0, "expected < 1.0 but was ${iob.iobContrib}")
     }
 
     @Test
@@ -24,9 +35,9 @@ class ICfgTest {
         // dia rounds to 0.0 -> td = 0 -> the `t < td` gate would never fire -> silent zero IOB.
         val iCfg = ICfg(insulinLabel = "sentinel", insulinEndTime = -1L, insulinPeakTime = -1L, concentration = 1.0)
         val iob = iCfg.iobCalcForTreatment(bolus(5.0, iCfg, timestamp = 0L), time = 30 * 60 * 1000L)
-        assertThat(iob.iobContrib).isFinite()
+        assertTrue(iob.iobContrib.isFinite(), "iobContrib was ${iob.iobContrib}")
         // 5 U bolus 30 min ago must still be counted as on board, not silently dropped to 0.
-        assertThat(iob.iobContrib).isGreaterThan(0.0)
+        assertTrue(iob.iobContrib > 0.0, "expected > 0.0 but was ${iob.iobContrib}")
     }
 
     @Test
@@ -34,8 +45,8 @@ class ICfgTest {
         // dia 5h -> td = 300 min; peak 150 min makes 2*tp == td -> original formula divides by zero.
         val iCfg = ICfg(insulinLabel = "singular", peak = 150, dia = 5.0, concentration = 1.0)
         val iob = iCfg.iobCalcForTreatment(bolus(2.0, iCfg, timestamp = 0L), time = 60 * 60 * 1000L)
-        assertThat(iob.iobContrib).isFinite()
-        assertThat(iob.activityContrib).isFinite()
+        assertTrue(iob.iobContrib.isFinite(), "iobContrib was ${iob.iobContrib}")
+        assertTrue(iob.activityContrib.isFinite(), "activityContrib was ${iob.activityContrib}")
     }
 
     @Test
@@ -43,8 +54,8 @@ class ICfgTest {
         // 2*tp > td would yield a negative tau and negative iobContrib, inflating dosing.
         val iCfg = ICfg(insulinLabel = "negativeTau", peak = 200, dia = 5.0, concentration = 1.0)
         val iob = iCfg.iobCalcForTreatment(bolus(3.0, iCfg, timestamp = 0L), time = 60 * 60 * 1000L)
-        assertThat(iob.iobContrib).isFinite()
-        assertThat(iob.iobContrib).isAtLeast(0.0)
+        assertTrue(iob.iobContrib.isFinite(), "iobContrib was ${iob.iobContrib}")
+        assertTrue(iob.iobContrib >= 0.0, "expected >= 0.0 but was ${iob.iobContrib}")
     }
 
     @Test
@@ -52,7 +63,7 @@ class ICfgTest {
         val iCfg = ICfg(insulinLabel = "test", peak = 75, dia = 5.0, concentration = 1.0)
         // 6 h after bolus, well past the 5 h DIA
         val iob = iCfg.iobCalcForTreatment(bolus(1.0, iCfg, timestamp = 0L), time = 6 * 60 * 60 * 1000L)
-        assertThat(iob.iobContrib).isEqualTo(0.0)
+        assertEquals(0.0, iob.iobContrib)
     }
 
     // The DB v33 migration stamps this sentinel onto every pre-ICfg row, including the active profile's.
@@ -61,18 +72,18 @@ class ICfgTest {
     fun `the v33 migration sentinel is not a usable insulin`() {
         val sentinel = ICfg(insulinLabel = "", insulinEndTime = -1, insulinPeakTime = -1, concentration = 1.0)
 
-        assertThat(sentinel.isUsable).isFalse()
-        assertThat(sentinel.dia).isEqualTo(0.0) // the value that blocks the loop
+        assertFalse(sentinel.isUsable)
+        assertEquals(0.0, sentinel.dia) // the value that blocks the loop
     }
 
     @Test
     fun `a real insulin is usable`() {
-        assertThat(ICfg(insulinLabel = "test", peak = 75, dia = 5.0, concentration = 1.0).isUsable).isTrue()
+        assertTrue(ICfg(insulinLabel = "test", peak = 75, dia = 5.0, concentration = 1.0).isUsable)
     }
 
     @Test
     fun `a zero or negative DIA or peak is not usable`() {
-        assertThat(ICfg(insulinLabel = "", insulinEndTime = 0, insulinPeakTime = 4_500_000, concentration = 1.0).isUsable).isFalse()
-        assertThat(ICfg(insulinLabel = "", insulinEndTime = 18_000_000, insulinPeakTime = 0, concentration = 1.0).isUsable).isFalse()
+        assertFalse(ICfg(insulinLabel = "", insulinEndTime = 0, insulinPeakTime = 4_500_000, concentration = 1.0).isUsable)
+        assertFalse(ICfg(insulinLabel = "", insulinEndTime = 18_000_000, insulinPeakTime = 0, concentration = 1.0).isUsable)
     }
 }
