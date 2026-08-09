@@ -139,9 +139,13 @@ private fun MenuListScreen(
                 if (subtitle == null) {
                     ListHeader { MenuTitle(title, titleIcon) }
                 } else {
+                    // Horizontal padding is on us here: ListHeader would have supplied it, and the
+                    // screen is round - text at the top edge needs room or it runs outside the circle
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     ) {
                         MenuTitle(title, titleIcon)
                         Text(
@@ -192,7 +196,11 @@ private fun MenuListScreen(
     }
 }
 
-/** Menu title row (optional icon + text) - shared by the ListHeader and the compact subtitle header */
+/**
+ * Menu title row (optional icon + text) - shared by the ListHeader and the compact subtitle header.
+ * Centered: a long translated title wraps, and without this the wrapped lines start at the left edge
+ * of the square canvas, which on a round screen is outside the visible circle.
+ */
 @Composable
 private fun MenuTitle(title: String, titleIcon: Int?) {
     if (titleIcon != null) {
@@ -203,10 +211,10 @@ private fun MenuTitle(title: String, titleIcon: Int?) {
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(title, style = MaterialTheme.typography.titleMedium)
+            Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
         }
     } else {
-        Text(title, style = MaterialTheme.typography.titleMedium)
+        Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
     }
 }
 

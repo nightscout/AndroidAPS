@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.activity.ConfirmationActivity
@@ -182,18 +183,22 @@ private fun RunningModeConfirmScreen(title: String?, titleColor: Color, duration
         // Same layout as the temp target confirm page: the requested value (here the mode name)
         // colored and bold, the duration below in secondary gray
         if (title != null) {
+            // Centered: a translated mode name wraps to two lines, and the second line would
+            // otherwise hang on the left instead of sitting under the first
             Text(
                 text = title,
                 color = titleColor,
                 fontSize = 17.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
         }
         Text(
             text = formatDurationMinutes(duration),
             color = WearSecondaryText,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
         )
     }
 }
