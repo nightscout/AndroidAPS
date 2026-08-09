@@ -31,6 +31,10 @@ glance = "1.1.1"
 
 [plugins]
 android-library = { id = "com.android.library" }
+# No version, exactly like android-library above: both plugin ids ship in com.android.tools.build:gradle,
+# which is already on the root buildscript classpath. AGP 9 refuses com.android.library together with
+# the Kotlin multiplatform plugin, so a multiplatform module with an Android target needs this one.
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.10" }
