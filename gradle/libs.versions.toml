@@ -29,6 +29,16 @@ vico = "3.2.3"
 composeUi = "1.11.4"
 glance = "1.1.1"
 
+# Compose Multiplatform - spike only, see :spike:cmp. Separate from the androidx Compose above:
+# CMP publishes the same androidx.compose.* package names and its Android variants delegate to
+# androidx, so the composeBom still decides the Android versions.
+# 1.11.1 rather than 1.12.0-beta03 on purpose: the beta's Android side delegates to androidx
+# 1.12.0-beta02, which would drag a pre-release androidx into an app pinned to stable 1.11.x.
+composeMultiplatform = "1.11.1"
+# material3 and material-icons-extended are separate, lagging version lines in CMP.
+cmpMaterial3 = "1.9.0"
+cmpIcons = "1.7.3"
+
 [plugins]
 android-library = { id = "com.android.library" }
 # No version, exactly like android-library above: both plugin ids ship in com.android.tools.build:gradle,
@@ -40,6 +50,9 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.10" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+# Compose Multiplatform framework plugin. It hard-fails unless compose-compiler above is applied in
+# the same module - the compiler itself ships with Kotlin, this plugin only adds the framework.
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 
 [libraries]
 com-android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "gradlePlugin" }
@@ -205,4 +218,12 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.1.0" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
+
+# Compose Multiplatform - spike only. Explicit coordinates rather than the `compose.xxx` DSL
+# accessors, which are deprecated in 1.11.1.
+cmp-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+cmp-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+cmp-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+cmp-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "cmpMaterial3" }
+cmp-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "cmpIcons" }
 
