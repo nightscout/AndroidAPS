@@ -96,8 +96,8 @@ data class ICfg(
     fun deepClone(): ICfg = ICfg(insulinLabel, insulinEndTime, insulinPeakTime, concentration).also { it.insulinNickname = insulinNickname }
 
     fun iobCalcForTreatment(bolus: BS, time: Long): Iob {
-        assert(insulinEndTime != 0L)
-        assert(insulinPeakTime != 0L)
+        devAssert(insulinEndTime != 0L)
+        devAssert(insulinPeakTime != 0L)
         val result = Iob()
         if (bolus.amount != 0.0) {
             val bolusTime = bolus.timestamp

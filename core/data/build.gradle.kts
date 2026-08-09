@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
@@ -24,17 +23,9 @@ kotlin {
     // Kotlin/Native at all before a Mac appears.
     mingwX64()
 
-    targets.withType<KotlinNativeTarget>().configureEach {
-        compilations.configureEach {
-            compileTaskProvider.configure {
-                // kotlin.assert has an experimental implementation on Native. ICfg.iobCalcForTreatment
-                // uses it. Opting in here keeps that code exactly as it is - turning the asserts into
-                // require() would change behaviour, because JVM assertions are off in production while
-                // require() always throws.
-                compilerOptions.optIn.add("kotlin.experimental.ExperimentalNativeApi")
-            }
-        }
-    }
+    // No module-wide opt-in for ExperimentalNativeApi. `assert` is not in the common standard
+    // library at all, so opting in could never have fixed it; the fix is the devAssert
+    // expect/actual, and the Native actual scopes its own opt-in to one file.
 
     sourceSets {
         getByName("commonTest") {
