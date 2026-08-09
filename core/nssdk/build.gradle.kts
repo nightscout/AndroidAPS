@@ -12,9 +12,12 @@ kotlin {
         }
     }
 
-    // Stand-in for a real Kotlin/Native target, same as :core:data. iOS needs macOS and Xcode, but
-    // mingwX64 compiles the same common code through Kotlin/Native, which is what proves there is no
-    // JVM API left in commonMain. Replace or extend with iosArm64() / iosSimulatorArm64() on a Mac.
+    // Real Apple targets, same as :core:data. They cross compile on Windows; only linking, cinterop
+    // and running their tests need a Mac.
+    iosArm64()
+    iosSimulatorArm64()
+
+    // Kept because it is the only Kotlin/Native target whose tests can run on Windows.
     mingwX64()
 
     sourceSets {
@@ -36,10 +39,18 @@ kotlin {
                 implementation(libs.io.ktor.client.okhttp)
             }
         }
+        // Accessor rather than getByName: iosMain is created by the default hierarchy template,
+        // which is applied after this block is evaluated, so getByName("iosMain") fails.
+        iosMain {
+            dependencies {
+                // Darwin runs on NSURLSession, so an iOS build gets the system's own connection
+                // handling rather than a second HTTP stack.
+                implementation(libs.io.ktor.client.darwin)
+            }
+        }
         getByName("mingwX64Main") {
             dependencies {
-                // CIO is Ktor's own multiplatform engine, enough for the compile proof. An Apple
-                // target would use ktor-client-darwin instead.
+                // CIO is Ktor's own multiplatform engine, enough for the compile proof on Windows.
                 implementation(libs.io.ktor.client.cio)
             }
         }
