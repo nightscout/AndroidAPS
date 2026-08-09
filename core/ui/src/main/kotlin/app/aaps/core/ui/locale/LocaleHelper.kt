@@ -19,6 +19,13 @@ object LocaleHelper {
     // injection not possible because of use in attachBaseContext
     //preferences.get(R.string.key_language, Locale.getDefault().language)
 
+    // The language list has offered "dk" for Danish from the start, but "dk" is a country code,
+    // not a language code. The ISO 639 code is "da", and every Danish translation lives in a
+    // values-da-rDK folder. A stored "dk" matched no folder, so picking Danish showed the whole
+    // app in English. The stored value is left as it is, because it is a preference that syncs
+    // between master and client; it is corrected here, where the Locale is built.
+    private fun isoLanguage(language: String): String = if (language == "dk") "da" else language
+
     fun currentLocale(context: Context): Locale {
         val language = selectedLanguage(context)
         if (language == "default") return Locale.getDefault()
@@ -29,7 +36,7 @@ object LocaleHelper {
             val country = language.substring(3, 5)
             Locale.Builder().setLanguage(lang).setRegion(country).build()
         } else {
-            Locale.Builder().setLanguage(language).build()
+            Locale.Builder().setLanguage(isoLanguage(language)).build()
         }
     }
 
