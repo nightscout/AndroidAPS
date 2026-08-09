@@ -12,9 +12,13 @@ build folders excluded.
 
 ## 1. Short answer
 
-There is **no KMP setup in the project today**. No module uses the multiplatform plugin.
-(`:pump:combov2:comboctl` has `commonMain` / `androidMain` folder names left over from the upstream
-project, but it builds as a normal Android library.)
+*(Written when there was no KMP setup at all. Three modules are multiplatform now - `:core:data`,
+`:core:nssdk` and `:core:keys` - and the last of them compiles for real iOS targets. See section 7
+for where things actually stand; the rest of this section is kept because the reasoning still holds.)*
+
+There was **no KMP setup in the project** when this note was written. No module used the
+multiplatform plugin. (`:pump:combov2:comboctl` has `commonMain` / `androidMain` folder names left
+over from the upstream project, but it builds as a normal Android library.)
 
 The shape of the code is much better than in a typical Android app, mostly because of the Compose
 migration and the RxJava removal. The realistic path is **Kotlin Multiplatform with Compose
@@ -37,13 +41,21 @@ Multiplatform for the UI**, done step by step, starting with a small working sli
 | `androidx.lifecycle` ViewModel | Multiplatform since 2.8                                                                          | Most of the 129 uses are fine          |
 | Vico charts                    | Ships a `multiplatform` artifact                                                                 | Only the artifact name changes         |
 
-The biggest surprise was `:core:ui`. Of its 432 files:
+The biggest surprise was `:core:ui`. Of its 434 files:
 
 - 424 are under `compose/`
 - **0** import Dagger or `javax.inject`
 - 27 import `app.aaps.core.interfaces`
 - 34 import `app.aaps.core.keys`
-- **361 (84%) import none of Android, Dagger or the AAPS interfaces**
+- **only 16 import `android.*`**
+
+Wave 14 re-measured that last line, because it is the one that decides whether a shared Compose UI is
+realistic, and an earlier count of "427 of 434" was wrong - it grepped `^import android` without the
+dot, which also matches `androidx`. The real figure is 16. The other 424 import `androidx.*`, and
+almost all of those are `androidx.compose.*`, which Compose Multiplatform publishes under the *same
+package names*. What is left is a tail of about 26 non-Compose androidx imports -
+`core.graphics` (6), `lifecycle.compose` (5), `annotation` (3), `activity.compose` (3), and single
+uses of `fragment.app`, `appcompat.app`, `core.view`, `core.content` and `activity.result`.
 
 So most of the Compose work of the last year can be reused.
 
@@ -317,6 +329,14 @@ This is real work, not an afterthought. Plan for it.
 
 ## 6. Resources and translations
 
+> **Superseded by wave 14 - compose-resources is not being used.** This section works through what
+> adopting it would mean, and the conclusion turned out to be wrong for a reason it never considered:
+> the same `values-XX` folder names *parse* under compose-resources but do not *match* a request that
+> carries no region, which is what this app sends for 22 of its 25 languages. The current answer is
+> simpler than anything below - **Android keeps AAPT and nothing moves**, and only a platform neutral
+> name crosses the boundary. The three problems listed further down are still real, and are still the
+> reasons compose-resources was rejected. Keep reading for those; ignore the migration plan.
+
 **Translations survive almost unchanged.** Compose Multiplatform Resources uses the same
 `strings.xml` format and the same `values-XX` folder names as Android.
 
@@ -396,28 +416,29 @@ Step 0 proves the toolchain works, gives an honest answer about how Compose Mult
 iOS, and makes every later step demand driven: a blocker is removed because it stands between you
 and the next screen, not because it is on a list.
 
-**Where this stands.** Steps 1 and 5 are **done**, and step 0 is half done - out of order, because
-`:core:nssdk` turned out to be sliceable after all. Two modules now build for Kotlin/Native:
+**Where this stands.** Steps 1, 2 and 5 are **done**, and step 0 is half done - out of order, because
+`:core:nssdk` turned out to be sliceable after all. Three modules now build for Kotlin/Native:
 
-| Module        | State                                               |
-|---------------|-----------------------------------------------------|
-| `:core:data`  | multiplatform, 2 `expect` / `actual` seams (wave 5) |
-| `:core:nssdk` | multiplatform, 72 files in `commonMain` (waves 6-9) |
+| Module        | State                                                                      |
+|---------------|----------------------------------------------------------------------------|
+| `:core:data`  | multiplatform, 2 `expect` / `actual` seams (wave 5)                        |
+| `:core:nssdk` | multiplatform, 72 files in `commonMain` (waves 6-9)                        |
+| `:core:keys`  | multiplatform, 47 files in `commonMain`, **real iOS targets** (wave 14)    |
 
 Nothing is left of the original blocker list inside `:core:nssdk` - `org.json`, Gson, joda,
 Retrofit,
 OkHttp, `android.*` and `java.io` are all gone from it.
 
-**Step 2 is prepared but not done.** `:core:keys` now hands out `TextRef` rather than bare resource
-ids (wave 10), owns only strings it actually uses (wave 11), and nothing outside it reads its `R`
-class (wave 12). The spike proved the toolchain works (wave 13). What has **not** happened is the
-conversion itself - the module is still an Android library with `res/values*` and a generated `R`.
-Resume instructions are in section 9b.
+**Step 2 is done (wave 14).** `:core:keys` hands out `TextRef` rather than bare resource ids
+(wave 10), owns only strings it actually uses (wave 11), nothing outside it reads its `R` class
+(wave 12), and it is now a `com.android.kotlin.multiplatform.library` targeting android + jvm +
+iosArm64 + iosSimulatorArm64. Its strings never moved: they are still AAPT resources in
+`src/androidMain/res`, and a generated name/id pair is what crosses the platform boundary.
 
-That leaves the rest of steps 2, 3, 4 and 6. Step 0's remaining half **needs a Mac** - or a
-`macos-latest` CI runner, which is how the projects with public precedent do it and which is free for
-a public repo. No amount of further blocker removal answers how Compose Multiplatform actually feels
-on iOS.
+That leaves steps 3, 4 and 6. **Step 0's remaining half is smaller than this note assumed**: Apple
+klibs cross compile on Windows, so "does it compile for iOS" is answerable locally and already
+answered for three modules. What still needs a Mac is running iOS tests, linking a framework, and the
+only question that really matters - how Compose Multiplatform *feels* on a real iPhone.
 
 ---
 
@@ -446,6 +467,13 @@ worth keeping (see waves 5 and 6):
 | `e92ec082d3` | `:core:nssdk` tests - the contract suite, written against Retrofit before the port |
 | `ed9c87599f` | `:core:nssdk` Ktor migration                                                       |
 | `37e146861f` | version `4.0.0-dev-b-kmp`                                                          |
+| `307b1ed615` | `TextRef` (wave 10)                                                               |
+| `defd131dec` | `:core:keys` eliminate dependencies (wave 11)                                     |
+| `95da0fa7ca` | more `TextRef` migration (wave 11)                                                |
+| `6fdb924e6b` | `:core:keys` String migration (wave 12)                                           |
+| `c8c1069817` | Fix Danish language selection - `dk` matched no folder, see section 9a            |
+| `29dd6ff33e` | `:core:keys` `TextRef.Named` - generated names + id map, 342 call sites (wave 14) |
+| `eeddd8182c` | `:core:keys` kmp - multiplatform module, real iOS targets (wave 14)               |
 
 ### Wave 1 - `DecimalFormat` removed
 
@@ -1324,20 +1352,135 @@ can then only be compiled on macOS.
 
 Two corrections to earlier reasoning in this note:
 
-- `ResourceEnvironment`'s constructor is **public** in 1.11.1 (it was `internal` when wave 10 was
-  written). So an always-English `ResourceEnvironment(LanguageQualifier("en"), ...)` is possible, and
-  the search index's English half is **not** a blocker any more. That was the original reason for
-  rejecting `StringResource` on the key classes.
+- ~~`ResourceEnvironment`'s constructor is **public** in 1.11.1~~ - **this was wrong, and it was the
+  load bearing claim.** Wave 14 downloaded the published `components-resources:1.11.1` sources jar
+  and read it: the declaration is `class ResourceEnvironment internal constructor(...)`. The only
+  public producer is `getSystemResourceEnvironment()`, which reads `Locale.getDefault()`. So there is
+  still **no way to ask for a specific locale**, and the always English search index still cannot be
+  built. Wave 10's original objection stood the whole time. 1.12.0-beta03 does not fix it either -
+  the constructor is still internal and has gained a fifth parameter.
 - Holding a `StringResource` costs **kotlin-stdlib only** - `components-resources` declares nothing
-  else in `apiElements`; Compose appears only in `runtimeElements`.
+  else in `apiElements`; Compose appears only in `runtimeElements`. (Still true.)
 
-Still true: **every `getString` overload is `suspend`.** There is no synchronous variant.
+Still true: **every `getString` overload is `suspend`.** There is no synchronous variant. Wave 14
+adds one more: `stringResource()` is a **blocking** read on every platform except JS, including
+inside composition.
+
+**The spike also asked the wrong question about locale folders.** It checked that `values-de-rDE`
+*parses* into a `LanguageQualifier` plus a `RegionQualifier`. It never checked that such a folder
+*matches* a request. It does not, when the request carries no region - see wave 14.
 
 There is real precedent on this exact toolchain: **Meshtastic-Android** runs a dedicated
 `:core:resources` module (1747 strings, ~40 locales, `publicResClass = true`) on AGP 9.3.1 /
 Kotlin 2.4.10 / CMP 1.11.1, and **Todometer-KMP** targets android + jvm + iosArm64 +
 iosSimulatorArm64. Both build iOS only on `macos-latest` runners - which is the answer for a
 maintainer with no Mac, and free for a public repo.
+
+### Wave 14 - `:core:keys` is multiplatform, and the string plan changed (done)
+
+Committed as `c8c1069817`, `29dd6ff33e` and `eeddd8182c`. This wave overturned the destination that
+waves 10 to 13 had been walking towards, so the reasoning matters more than the diff.
+
+#### compose-resources cannot serve this app, and no version of it can
+
+Two facts, both read out of the **published** `components-resources:1.11.1` sources jar rather than a
+docs page or a GitHub branch:
+
+- `class ResourceEnvironment internal constructor(...)`. The only public producer is
+  `getSystemResourceEnvironment()`, which reads `Locale.getDefault()`. There is no way to ask for
+  English while the UI is in another language. Wave 13 claimed this had been fixed; it had not, and
+  1.12.0-beta03 still has it internal, now with a fifth parameter.
+- `filterByLocale` has exactly three steps, and the source comment says so: exact language+region,
+  then language **with no region qualifier**, then no locale qualifiers at all. There is no
+  sibling-region fallback.
+
+That second one is the fatal one, and nobody had looked at it. `LocaleHelper.currentLocale()` builds
+a **region-less** `Locale` for 22 of the 25 in-app languages, and every `:core:keys` folder is
+region-pinned (`values-cs-rCZ`; no bare `values-cs` exists anywhere). Walk the algorithm: step 1
+needs a region and there is none, step 2 needs a folder without a region and there is none, so it
+falls through to the unqualified default - **English**. Concretely, 8 of the 11 translated locales
+would have shown English preference screens: bg, cs, es, fr, it, nb, ro, sk. It also breaks device
+locales whose region differs from the folder - de_AT, fr_CA, es_MX, nl_BE, zh_HK - which AAPT
+resolves correctly today.
+
+Build green, no crash, no test catches it, and CI runs no tests. This is exactly the failure shape
+section 9a describes, and it would have been introduced deliberately.
+
+#### moko-resources was the better library and still lost
+
+It does no locale matching of its own: it generates real `values-XX` files and emits
+`StringResource(R.string.key)`, so Android keeps AAPT semantics, and `StringDesc.LocaleType.Custom`
+is a real locale override. Both defects gone. But `0.26.4` shipped 2026-05-06, one month **before**
+Kotlin 2.4.0, with no commits since, 175 open issues and a catalog pinned to Kotlin 2.1.0/2.3.20. A
+medical app's string layer is the wrong place for an unattended dependency.
+
+#### What was built instead
+
+The insight is that the module shape was never the blocker. `:core:data` has been multiplatform since
+wave 5 and 39 modules consume it with a plain `implementation(project(...))`. What blocked
+`:core:keys` was the `R.string` **`Int`** inside 6 enum files - a *content* problem.
+
+`buildSrc/src/main/kotlin/GenerateKeyStringsTask.kt` makes one pass over `res/values/strings.xml` and
+emits two files:
+
+| Generated | Where | What |
+|-----------|-------|------|
+| `KeysStrings` | `commonMain` | 327 `val x: TextRef = TextRef.Named("x")` - no Android types |
+| `KeysStringIds` | `androidMain` | 327 `"x" to R.string.x`, plus `idOf(name)` |
+
+Same pass, so they cannot drift: a string deleted from the XML disappears from both and any call site
+naming it stops compiling. `TextRef` gained `Named(name, args)`; the 6 enums now take
+`override val title: TextRef` directly and the computed `AndroidRes` properties are gone; 342
+references were rewritten; the three resolvers gained a `Named` branch.
+
+The KDoc in `TextRef.kt` that argued against names was **conditionally right and absolutely wrong**.
+It said a name needs `Resources.getIdentifier()` - reflective, invisible to R8, silently 0 for a
+typo. All three objections die against a *generated* map: no reflection, R8 sees 327 literal
+`R.string.x` references, and a typo does not compile.
+
+Net effect: **zero resource files moved, `crowdin.yml` untouched, AAPT still resolves every locale,
+and `gsNotLocalised` still works.** Only one of the 19 production `gsNotLocalised` call sites touches
+`:core:keys` at all - `SearchIndexBuilder.kt:340`. The other 18 resolve `:plugins:sync` and
+plugin-name strings and were never at risk.
+
+#### The module flip, and three things it taught
+
+`com.android.kotlin.multiplatform.library`, `android { }` **inside** `kotlin { }`,
+`androidResources { enable = true }`, targets android + jvm + iosArm64 + iosSimulatorArm64. Sources
+went to `commonMain` (47), `androidMain` (res), `androidHostTest` (1 test); git recorded every one as
+a pure rename.
+
+- **The flavour fear was unfounded.** That AGP extension really does expose no `productFlavors`, but
+  AGP matches a flavourless library to any app variant. All 5 flavours of `:app` and `:wear` build.
+- **`platform()` does not exist** in a Kotlin source set dependency block. Use
+  `project.dependencies.platform(...)`.
+- **Dropping `android-module-dependencies` silently switches `MissingTranslation` on** and restores
+  `checkReleaseBuilds` to its default `true`. With 19 empty locales that could fail a release build,
+  so the `lint { }` block has to be restated in the module.
+
+#### iOS compiles here
+
+Kotlin/Native has cross compiled klibs for Apple targets from any host since 2.2.20, on by default -
+`PropertiesProvider.kt:595` reads `... ?: true`. `compileKotlinIosArm64` and
+`compileKotlinIosSimulatorArm64` genuinely **execute** on the Windows machine this project is
+developed on and produce real klibs, against the 177 prebuilt `ios_arm64` klibs already sitting in
+`~/.konan`. Nothing is fetched from Apple and Xcode is not involved.
+
+A Mac is still needed to **run** iOS tests, to link frameworks and XCFrameworks, and for cinterop.
+Those tasks are `enabled = false` and report **SKIPPED**, not failed - so a build stays green even if
+the entire Apple side silently stops compiling. Any CI job must assert the task *executed*.
+
+#### Verified
+
+`:app` + `:wear` green across all 5 flavours; `testFullDebugUnitTest allTests` green; the resource
+baseline is byte-identical before and after the move (3924 elements, 31 dirs, 12/12 name lists); and
+on an emulator the English screens render titles and summaries, Czech renders `:core:keys` strings in
+Czech, and Danish renders Danish.
+
+`runtests.bat` / `.sh` now run `testFullDebugUnitTest allTests`. Without `allTests` a multiplatform
+module has no `testFullDebugUnitTest` task and silently runs **no tests at all** - which is what had
+been happening to `:core:data` and `:core:nssdk` since waves 5 to 9, unnoticed because
+`failOnNoDiscoveredTests = false`.
 
 ### Was behaviour preserved?
 
@@ -1448,12 +1591,13 @@ keeps the old contract on a public interface method.
 13. **Still open: does web ever matter?** It is the one target that changes the **API shape** rather
     than just the implementation - WebCrypto is async-only, so `sign()` and `wrap()` would have to
     become `suspend`. Cheap to decide now, expensive to retrofit.
-14. ~~compose-resources, moko-resources, or something else for strings?~~ **Decided: `TextRef` now,
-    compose-resources later, per module.** The two are not alternatives. compose-resources is still
-    the destination - same `strings.xml`, same Crowdin - but it cannot go on the key classes today,
-    because `getString()` is `suspend` and there is no public locale override, which would cost the
-    English search index. `TextRef` is the seam that lets each module move on its own schedule
-    without touching call sites twice. See wave 10.
+14. ~~compose-resources, moko-resources, or something else for strings?~~ **Reopened and decided
+    again in wave 14: neither. Android keeps AAPT, and only a platform neutral *handle* is shared.**
+    compose-resources is not the destination after all - it cannot match a region-less locale against
+    a region-pinned folder, and it has no locale override, so it would have broken 8 of the 11
+    translated locales and the always English search index at the same time. moko-resources solves
+    both, but its latest release predates Kotlin 2.4 with no commits since. `TextRef` is still the
+    seam, and it is now what makes the answer cheap: the backend is hidden from 342 call sites.
 15. ~~Collapse `IntPreferenceKey.entries` / `resolvedEntries`.~~ **Done in wave 11.** `entries` is
     `Map<K, TextRef>`, `resolvedEntries` is deleted, `withEntries` takes `TextRef` - which is what
     let the Eopatch `"$it U"` concatenation become a translated template.
@@ -1464,21 +1608,30 @@ keeps the old contract on a public interface method.
 17. ~~Does `:core:keys` need its own strings?~~ **Yes, structurally.** It is a leaf module - zero
     project dependencies - and `:core:ui` depends on **it**. So the strings cannot move to `:core:ui`
     (cycle), and a key naming its own title at compile time means they must live in the same module.
-    That is what makes compose-resources the answer rather than a relocation.
+    What changed in wave 14 is only *how* they are named: the strings stayed exactly where they were,
+    in `res/values*`, and the module became multiplatform around them.
 18. ~~compose-resources on `:core:keys`, or negative-integer tokens in `TextRef`?~~
-    **Decided: compose-resources.** The token scheme's whole advantage was keeping `mingwX64`, and
-    `mingwX64` is not in the real target set (Android + iOS + JVM-on-Windows). Tokens would also be a
-    bespoke design with no public precedent, which is the wrong trade when iOS cannot be compiled
-    locally. See wave 13.
+    **Overturned in wave 14. Neither: `TextRef.Named` plus a generated id map.** The conclusion that
+    tokens were wrong survives - they encode a handle without providing a table behind it - but
+    compose-resources turned out to be worse, not better. A *generated* name is what the reasoning
+    missed: it is not the reflective `getIdentifier()` lookup that the token scheme was invented to
+    avoid, and it needs no resource framework at all on the platform that already has one.
 19. **Still open: when to enable `MissingTranslation` lint.** It is disabled repo-wide and is the
-    reason 19 languages silently lost `:core:keys`. Needs to be on - at warning level with a CI
-    report - before any further string relocation. See section 9a.
-20. **Still open: `:core:ui` is next after `:core:keys`.** It holds 1063 strings and every module
-    depends on it, so the same questions return at a larger scale. Worth deciding whether it converts
-    module-by-module or whether a dedicated shared-strings leaf is better at that point.
+    reason 19 languages silently lost `:core:keys`. Wave 14 makes this less urgent but not moot: the
+    generator now prints per locale completeness on every build of `:core:keys`, so that one module
+    is covered. The other 32 string owning modules still have no detector.
+20. **Still open: what comes after `:core:keys`.** It holds 1063 strings and every module depends on
+    it, so the string question returns at a larger scale - though wave 14's answer scales with it,
+    because nothing has to move. The bigger question for `:core:ui` is not strings at all: it is 16
+    files importing `android.*` and a handful of non-Compose `androidx` artifacts.
+21. ~~Do Apple targets need a Mac to compile?~~ **No - decided in wave 14.** Kotlin/Native has cross
+    compiled klibs for Apple targets from any host since 2.2.20, on by default. `:core:keys` compiles
+    for `iosArm64` and `iosSimulatorArm64` on the Windows machine this project is developed on. A Mac
+    is still needed to *run* iOS tests, to link frameworks, and for cinterop.
 
-Waves 1 to 4 are committed on `dev`. Waves 5 to 13 are committed on `kmp/core-data-experiment`
-(HEAD `6fdb924e6b`), which is still **13+ commits ahead and 0 behind `dev` - a fast-forward**.
+Waves 1 to 4 are committed on `dev`. Waves 5 to 14 are committed on `kmp` (HEAD `eeddd8182c`), which
+is now **20 ahead and 1 behind `dev`**. It stopped being a fast-forward when `dev` moved, so the
+merge in open decision 11 is a real merge and gets no cheaper by waiting.
 
 Waves 5 to 9 were each verified against a live Nightscout before the next started - waves 5 and 6 on
 WSA, waves 7 to 9 on an emulator running a new master against a **pre-KMP client**, so every step was
@@ -1497,6 +1650,19 @@ The `FoodManagement` comma defect in section 10 is found but not fixed.
 ## 9a. LIVE BUG - `:core:keys` translations are missing in 19 of 30 languages
 
 **This is on `dev` today, it predates all KMP work, and nothing in the build can see it.**
+
+> **A second, separate translation bug was found while checking this one, and is now fixed**
+> (`c8c1069817`). The in-app language list offered `"dk"` for Danish, but `dk` is a country code -
+> the ISO 639 language code is `da`, and all 32 modules keep their Danish text in `values-da-rDK`.
+> No `values-dk` folder exists anywhere in the repository, so `Locale.Builder().setLanguage("dk")`
+> matched nothing and **picking Danish rendered the entire app in English**. The translations were
+> there the whole time and simply unreachable. Fixed at the single choke point,
+> `LocaleHelper.currentLocale()`, which now maps `dk` to `da`; the stored preference value is left
+> alone, because `GeneralLanguage` syncs between master and client. Device-verified.
+>
+> Two more offered languages have no folders anywhere - `af` (Afrikaans) and `ga` (Irish) - but
+> nothing is lost there, because they were never translated. The picker simply promises more than it
+> can deliver.
 
 `core/keys/src/main/res/values/strings.xml` has 327 strings. Only **11 locales** have translations:
 bg, cs, es, fr, it, nb, ro, sk, vi, zh-rCN, zh-rTW. The other **19 locale files exist but contain
@@ -1552,59 +1718,39 @@ Useful commands are in the session notes: the CLI needs `-b dev`, a minimal temp
 
 ---
 
-## 9b. Where to resume - `:core:keys` to compose-resources
+## 9b. ~~Where to resume - `:core:keys` to compose-resources~~ Superseded by wave 14
 
-Everything up to here is committed. The conversion itself has **not** started.
+**The recipe that used to be here would not have built.** It applied `com.android.library` next to
+`kotlin("multiplatform")`, which AGP 9 refuses outright, and it moved 30 locale folders into
+`composeResources`, where they would have stopped matching the app's own language setting. It is kept
+only as a record of what was planned; what actually happened is wave 14, and the current state is:
 
-### Stage 2b - convert the module
-
-1. **`core/keys/build.gradle.kts`** - replace the Android-library setup with:
-   `kotlin("multiplatform")` + `org.jetbrains.compose` + `org.jetbrains.kotlin.plugin.compose`
-   (the Compose plugin **hard-fails** without the compiler plugin) + `com.android.library`.
-   Targets: `androidTarget()`, `jvm()`, `iosArm64()`, `iosSimulatorArm64()`. **No `mingwX64`** -
-   `components-resources` does not publish it.
-   `compose.resources { publicResClass = true; packageOfResClass = "app.aaps.core.keys.resources";
-   generateResClass = always }`, and `android { androidResources.enable = true }`.
-   Add `api(compose.components.resources)` - `api`, because the type is in the public API.
-2. **Move sources** `src/main/kotlin` -> `src/commonMain/kotlin` (47 files).
-3. **Move resources** `src/main/res/values*/strings.xml` ->
-   `src/commonMain/composeResources/values*/strings.xml`. **Folder names stay exactly as they are** -
-   the spike proved `values-de-rDE` etc. parse correctly.
-4. **Add `TextRef.Res(resource: StringResource, args: List<Any>)`** next to `AndroidRes` and
-   `Literal`.
-5. **~340 `R.string.x` -> `Res.string.x`** in the 6 enum files. The generated class cannot be named
-   `R`, so this is a real edit, not a package alias.
-6. Watch `minSdk = min(Versions.minSdk, Versions.wearMinSdk)` - `:wear` consumes this module, and a
-   KMP module with `androidTarget()` consumed by `:wear` is the part with least public precedent.
-
-### Stage 3 - resolvers
-
-- Compose: `stringResource(TextRef)` in `:core:ui` gains a `Res` branch.
-- Non-Compose: `ResourceHelper.gs(TextRef)` must stay **synchronous** because ~15 call sites and the
-  search index are not suspend. `getString` is suspend, so use a **lazy cache**:
-  `ConcurrentHashMap<StringResource, String>`, filled with `getOrPut { runBlocking { getString(...) } }`,
-  so the blocking read happens at most once per string. Pair it with a **background warm** at startup
-  so the main thread rarely pays it. A second cache keyed on the English `ResourceEnvironment` serves
-  `gsNotLocalised` for the search index.
-- Do **not** make `SearchIndexBuilder.getIndex()` suspend - the cache removes the need, and the
-  suspend route would spread to ~15 other synchronous callers.
+- `:core:keys` **is** a multiplatform module - `com.android.kotlin.multiplatform.library`, targets
+  android + jvm + iosArm64 + iosSimulatorArm64, all 47 sources in `commonMain`.
+- Its strings **did not move**. They are still `src/androidMain/res/values*/strings.xml`, still
+  processed by AAPT, still the same paths in `crowdin.yml`.
+- No `R.string` id appears in its public API any more.
 
 ### Follow-ups, in rough priority order
 
-1. **Merge `kmp/core-data-experiment` into `dev`** - still a fast-forward, and it gets less free
-   every day. (Open decision 11.)
-2. **The translation work in section 9a** - before any further string move.
-3. **A `macos-latest` CI job** building `iosSimulatorArm64`. Nothing verifies the Native side today;
-   CI is all `ubuntu-latest` running only `:app:assemble`.
-4. **`PluginDescription.description: Int`** - the `-1` sentinel, set by 57 files. Must become
-   `TextRef` before plugins convert.
-5. **Remaining `!= 0` / `!= -1` resource sentinels** - `SearchableItem` (2), `MainDrawer`,
+1. **Merge `kmp` into `dev`** - no longer a fast-forward, and it gets less free every day.
+   (Open decision 11.)
+2. **The translation work in section 9a** - 19 of 30 locales are still empty shells.
+3. **`PluginDescription.description: Int`** - the `-1` sentinel, set by 57 files. It is now a smaller
+   job than it was: `TextRef.Named` exists, and the pattern for generating names is in `buildSrc`.
+4. **Remaining `!= 0` / `!= -1` resource sentinels** - `SearchableItem` (2), `MainDrawer`,
    `ManageBottomSheet`, `TreatmentBottomSheet`, `PreferenceScreenView`, `QuickLaunchResolver`,
    `InfoStep`, `SWEventListener`. Harmless today.
-6. **`IntPreferenceKey.entries` in the pump modules** still use `entriesResIds`; fine while pumps stay
+5. **`IntPreferenceKey.entries` in the pump modules** still use `entriesResIds`; fine while pumps stay
    Android.
-7. **Swap `mingwX64` for Apple targets in `:core:data` / `:core:nssdk`** once macOS CI exists - they
-   currently prove themselves against a platform we do not ship.
+6. **Swap `mingwX64` for Apple targets in `:core:data` / `:core:nssdk`.** No longer gated on macOS CI
+   - Apple klibs cross compile on Windows. For `:core:nssdk` the engine moves from `ktor-client-cio`
+   in `mingwX64Main` to `ktor-client-darwin` in `appleMain`.
+7. **A `macos-latest` CI job.** Now buys less than it used to, because compiling for Apple already
+   happens locally - but it is still the only place iOS tests can *run* and frameworks can link.
+8. **A resolver for `TextRef.Named` off Android.** `KeysStrings` is in `commonMain`, but the id map
+   that turns a name into text is `androidMain`. Nothing needs this until there is a non-Android UI,
+   and the client only needs the system language, so it is a small generated table when it comes.
 
 ### Environment notes for another machine
 
