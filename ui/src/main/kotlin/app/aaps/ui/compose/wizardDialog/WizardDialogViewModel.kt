@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -534,7 +534,7 @@ class WizardDialogViewModel @Inject constructor(
                 // Master-local compute failure (no modal) or client offline; a client round-trip failure already showed on the app modal.
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = prepared.detail ?: rh.gs(prepared.reason.failTextResId())))
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit // Unconfirmed → app modal
             }

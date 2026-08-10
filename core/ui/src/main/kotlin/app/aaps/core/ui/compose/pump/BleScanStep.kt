@@ -65,7 +65,7 @@ fun BleScanStep(
     WizardStepLayout(
         scrollable = false,
         secondaryButton = WizardButton(
-            text = stringResource(app.aaps.core.ui.R.string.cancel),
+            text = stringResource(UiStrings.cancel),
             onClick = onCancel
         )
     ) {

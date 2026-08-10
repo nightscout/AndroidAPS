@@ -56,7 +56,7 @@ import kotlin.math.roundToInt
  * @param step Step increment for +/- buttons
  * @param unitLabel Unit label shown after the value
  * @param asDuration Render the value as "Xh Ym" instead of a plain number
- * @param valueFormatResId Resource ID for formatting value with unit (e.g., "%1$.1f U")
+ * @param valueFormat Resource ID for formatting value with unit (e.g., "%1$.1f U")
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
  * @param valueFormat Custom NumberFormat (overrides auto-created from decimalPlaces)
  * @param decimalPlaces Number of decimal places for value display (0 = integer, default). Ignored if valueFormat is set.
@@ -79,7 +79,7 @@ fun NumberInputRow(
     modifier: Modifier = Modifier,
     unitLabel: TextRef? = null,
     asDuration: Boolean = false,
-    valueFormatResId: Int? = null,
+    valueFormatRef: TextRef? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat? = null,
     decimalPlaces: Int = 0,
@@ -119,7 +119,7 @@ fun NumberInputRow(
     val formattedDisplay = formatSliderDisplayValue(
         value = value,
         unitLabel = unitLabel,
-        valueFormatResId = valueFormatResId,
+        valueFormatRef = valueFormatRef,
         formatAsInt = formatAsInt,
         valueFormat = effectiveValueFormat,
         asDuration = asDuration
@@ -297,7 +297,7 @@ fun NumberInputRow(
 }
 
 /**
- * Convenience for the many call sites that name their own module's `R.string.x`.
+ * Convenience for the many call sites that name their own module's `UiStrings.x`.
  * The [TextRef] form above is the real one; this just wraps the id.
  */
 @Composable
@@ -310,7 +310,7 @@ fun NumberInputRow(
     modifier: Modifier = Modifier,
     unitLabel: TextRef? = null,
     asDuration: Boolean = false,
-    valueFormatResId: Int? = null,
+    valueFormatRef: TextRef? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat? = null,
     decimalPlaces: Int = 0,
@@ -326,7 +326,7 @@ fun NumberInputRow(
     modifier = modifier,
     unitLabel = unitLabel,
     asDuration = asDuration,
-    valueFormatResId = valueFormatResId,
+    valueFormatRef = valueFormatRef,
     formatAsInt = formatAsInt,
     valueFormat = valueFormat,
     decimalPlaces = decimalPlaces,

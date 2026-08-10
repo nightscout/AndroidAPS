@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -10,7 +11,7 @@ import app.aaps.core.ui.R
 @Composable
 internal fun NumberInputRowBasicPreview() {
     MaterialTheme {
-        NumberInputRow(labelResId = R.string.carbs, value = 20.0, onValueChange = {}, valueRange = 0.0..100.0, step = 1.0)
+        NumberInputRow(labelRef = UiStrings.carbs, value = 20.0, onValueChange = {}, valueRange = 0.0..100.0, step = 1.0)
     }
 }
 
@@ -19,7 +20,7 @@ internal fun NumberInputRowBasicPreview() {
 internal fun NumberInputRowWithUnitPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = R.string.insulin_label,
+            labelRef = UiStrings.insulin_label,
             value = 3.5,
             onValueChange = {},
             valueRange = 0.0..10.0,
@@ -35,12 +36,12 @@ internal fun NumberInputRowWithUnitPreview() {
 internal fun NumberInputRowMinutesPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = R.string.duration,
+            labelRef = UiStrings.duration,
             value = 130.0,
             onValueChange = {},
             valueRange = 0.0..300.0,
             step = 10.0,
-            unitLabel = TextRef.AndroidRes(R.string.units_min)
+            unitLabel = UiStrings.units_min
         )
     }
 }
@@ -50,12 +51,12 @@ internal fun NumberInputRowMinutesPreview() {
 internal fun NumberInputRowPercentPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = R.string.duration,
+            labelRef = UiStrings.duration,
             value = 100.0,
             onValueChange = {},
             valueRange = 10.0..200.0,
             step = 5.0,
-            unitLabel = TextRef.AndroidRes(R.string.units_percent)
+            unitLabel = UiStrings.units_percent
         )
     }
 }
@@ -65,12 +66,12 @@ internal fun NumberInputRowPercentPreview() {
 internal fun NumberInputRowMinutesDirectPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = R.string.duration,
+            labelRef = UiStrings.duration,
             value = 130.0,
             onValueChange = {},
             valueRange = 0.0..300.0,
             step = 10.0,
-            unitLabel = TextRef.AndroidRes(R.string.units_min)
+            unitLabel = UiStrings.units_min
         )
     }
 }

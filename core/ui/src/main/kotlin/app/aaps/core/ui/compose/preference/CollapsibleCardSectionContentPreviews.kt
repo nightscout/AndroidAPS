@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.preference
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ import app.aaps.core.ui.R
 internal fun CollapsibleCardSectionContentPreview() {
     PreviewTheme {
         CollapsibleCardSectionContent(
-            title = TextRef.AndroidRes(R.string.configbuilder_insulin),
+            title = UiStrings.configbuilder_insulin,
             expanded = true,
             onToggle = {}
         ) {

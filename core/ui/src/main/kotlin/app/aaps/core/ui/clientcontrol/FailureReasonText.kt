@@ -1,5 +1,7 @@
 package app.aaps.core.ui.clientcontrol
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.ui.R
@@ -9,23 +11,23 @@ import app.aaps.core.ui.R
  * (`ClientControlPendingDialog`) and the wear relay error path (`DataHandlerMobile`). Resolve the returned id on
  * the SHOWING device (`stringResource` / `ResourceHelper.gs`) so the text is in that device's locale.
  */
-@StringRes
-fun FailureReason.failTextResId(): Int = when (this) {
-    FailureReason.NotPaired          -> R.string.clientcontrol_fail_not_paired
-    FailureReason.NotReachable       -> R.string.clientcontrol_fail_not_reachable
-    FailureReason.NoReply            -> R.string.clientcontrol_fail_no_reply
-    FailureReason.Expired            -> R.string.clientcontrol_fail_expired
-    FailureReason.Busy               -> R.string.clientcontrol_fail_busy
-    FailureReason.SendFailed         -> R.string.clientcontrol_fail_send_failed
-    FailureReason.NoActiveProfile    -> R.string.clientcontrol_fail_no_active_profile
-    FailureReason.SceneNotFound      -> R.string.clientcontrol_fail_scene_not_found
-    FailureReason.SceneDisabled      -> R.string.clientcontrol_fail_scene_disabled
-    FailureReason.PartialFailure     -> R.string.clientcontrol_fail_partial
-    FailureReason.ExecutionFailed    -> R.string.clientcontrol_fail_execution
-    FailureReason.ControlDisabled    -> R.string.clientcontrol_fail_control_disabled
-    FailureReason.NoAction           -> R.string.no_action_selected
-    FailureReason.NoPendingBolus     -> R.string.clientcontrol_fail_no_pending_bolus
-    FailureReason.BolusComputeFailed -> R.string.clientcontrol_fail_bolus_compute
-    FailureReason.Internal           -> R.string.clientcontrol_fail_internal
-    FailureReason.Unknown            -> R.string.clientcontrol_fail_unknown
+
+fun FailureReason.failText(): TextRef = when (this) {
+    FailureReason.NotPaired          -> UiStrings.clientcontrol_fail_not_paired
+    FailureReason.NotReachable       -> UiStrings.clientcontrol_fail_not_reachable
+    FailureReason.NoReply            -> UiStrings.clientcontrol_fail_no_reply
+    FailureReason.Expired            -> UiStrings.clientcontrol_fail_expired
+    FailureReason.Busy               -> UiStrings.clientcontrol_fail_busy
+    FailureReason.SendFailed         -> UiStrings.clientcontrol_fail_send_failed
+    FailureReason.NoActiveProfile    -> UiStrings.clientcontrol_fail_no_active_profile
+    FailureReason.SceneNotFound      -> UiStrings.clientcontrol_fail_scene_not_found
+    FailureReason.SceneDisabled      -> UiStrings.clientcontrol_fail_scene_disabled
+    FailureReason.PartialFailure     -> UiStrings.clientcontrol_fail_partial
+    FailureReason.ExecutionFailed    -> UiStrings.clientcontrol_fail_execution
+    FailureReason.ControlDisabled    -> UiStrings.clientcontrol_fail_control_disabled
+    FailureReason.NoAction           -> UiStrings.no_action_selected
+    FailureReason.NoPendingBolus     -> UiStrings.clientcontrol_fail_no_pending_bolus
+    FailureReason.BolusComputeFailed -> UiStrings.clientcontrol_fail_bolus_compute
+    FailureReason.Internal           -> UiStrings.clientcontrol_fail_internal
+    FailureReason.Unknown            -> UiStrings.clientcontrol_fail_unknown
 }

@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ internal fun SliderWithButtonsIntPreview() {
             step = 5.0,
             showValue = true,
             valueFormat = NumberFormat.INTEGER,
-            unitLabel = TextRef.AndroidRes(R.string.units_min)
+            unitLabel = UiStrings.units_min
         )
     }
 }

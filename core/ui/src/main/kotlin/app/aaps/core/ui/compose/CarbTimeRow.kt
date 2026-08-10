@@ -136,12 +136,12 @@ fun CarbTimeRow(
 
                 // Offset input
                 NumberInputRow(
-                    labelResId = R.string.time,
+                    labelRef = UiStrings.time,
                     value = offsetMinutes.toDouble(),
                     onValueChange = { onOffsetChange(it.toInt()) },
                     valueRange = offsetRange.first.toDouble()..offsetRange.last.toDouble(),
                     step = offsetStep.toDouble(),
-                    unitLabel = TextRef.AndroidRes(R.string.units_min)
+                    unitLabel = UiStrings.units_min
                 )
 
                 // Alarm toggle (disabled when offset <= 0)

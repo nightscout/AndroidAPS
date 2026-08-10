@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.quickLaunch
 
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

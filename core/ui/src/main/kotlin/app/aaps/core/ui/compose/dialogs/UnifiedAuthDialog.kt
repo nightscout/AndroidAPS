@@ -59,9 +59,9 @@ fun UnifiedAuthDialog(
 
     // Pick hint: master password is always accepted, plus any custom credentials
     val hintRes = when {
-        hasPin -> R.string.auth_hint_master_or_pin
-        hasCustomPassword -> R.string.auth_hint_master_or_password
-        else -> R.string.auth_hint_master_password
+        hasPin -> UiStrings.auth_hint_master_or_pin
+        hasCustomPassword -> UiStrings.auth_hint_master_or_password
+        else -> UiStrings.auth_hint_master_password
     }
 
     var passwordText by remember { mutableStateOf("") }

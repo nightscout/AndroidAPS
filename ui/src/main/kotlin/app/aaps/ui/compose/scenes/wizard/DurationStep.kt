@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.scenes.wizard
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ internal fun DurationStep(
             onValueChange = { onSetDuration(it.toInt()) },
             valueRange = Constants.SCENE_DURATION,
             step = 5.0,
-            valueFormatResId = R.string.mins,
+            valueFormatRef = TextRef.AndroidRes(R.string.mins),
             formatAsInt = true,
             displayValue = when {
                 state.durationMinutes == 0 -> stringResource(R.string.scene_duration_indefinite)

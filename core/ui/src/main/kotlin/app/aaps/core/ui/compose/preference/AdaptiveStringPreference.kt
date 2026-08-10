@@ -4,6 +4,7 @@
 
 package app.aaps.core.ui.compose.preference
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
@@ -69,8 +70,8 @@ fun AdaptiveStringPreferenceItem(
             }
 
             isSecure && value.isEmpty()    -> {
-                val notSetResId = if (stringKey.isPin) R.string.pin_not_set else R.string.password_not_set
-                { Text(stringResource(effectiveSummary ?: TextRef.AndroidRes(notSetResId))) }
+                val notSetResId = if (stringKey.isPin) UiStrings.pin_not_set else UiStrings.password_not_set
+                { Text(stringResource(effectiveSummary ?: notSetResId)) }
             }
 
             value.isNotEmpty()             -> {

@@ -85,10 +85,10 @@ fun AdaptivePasswordPreferenceItem(
     )
 
     if (showDialog) {
-        val dontMatchMsg = stringResource(if (isPin) R.string.pin_dont_match else R.string.passwords_dont_match)
-        val setMsg = stringResource(if (isPin) R.string.pin_set else R.string.password_set)
-        val clearedMsg = stringResource(if (isPin) R.string.pin_cleared else R.string.password_cleared)
-        val notChangedMsg = stringResource(if (isPin) R.string.pin_not_changed else R.string.password_not_changed)
+        val dontMatchMsg = stringResource(if (isPin) UiStrings.pin_dont_match else UiStrings.passwords_dont_match)
+        val setMsg = stringResource(if (isPin) UiStrings.pin_set else UiStrings.password_set)
+        val clearedMsg = stringResource(if (isPin) UiStrings.pin_cleared else UiStrings.password_cleared)
+        val notChangedMsg = stringResource(if (isPin) UiStrings.pin_not_changed else UiStrings.password_not_changed)
 
         SetPasswordDialog(
             title = stringResource(effectiveTitle),

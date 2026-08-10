@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -479,7 +479,7 @@ class MainViewModel @Inject constructor(
             // A master-local compute failure (no modal) or a client offline pre-check surfaces here; a client round-trip failure already showed on the app modal.
             is ActionProgress.Rejected ->
                 if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = entry.buttonText(), message = prepared.detail ?: rh.gs(prepared.reason.failTextResId())))
+                    rxBus.send(EventShowDialog.Ok(title = entry.buttonText(), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
             else                       -> Unit // Unconfirmed → app modal
         }
@@ -509,7 +509,7 @@ class MainViewModel @Inject constructor(
             // A master-local failure (no modal) or a client offline pre-check surfaces here; a client round-trip failure already showed on the app modal.
             is ActionProgress.Rejected ->
                 if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = entry.buttonText(), message = prepared.detail ?: rh.gs(prepared.reason.failTextResId())))
+                    rxBus.send(EventShowDialog.Ok(title = entry.buttonText(), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
             else                       -> Unit // Unconfirmed → app modal
         }
@@ -673,7 +673,7 @@ class MainViewModel @Inject constructor(
 
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failTextResId())))
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit
             }
@@ -691,7 +691,7 @@ class MainViewModel @Inject constructor(
 
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = label, message = prepared.detail ?: rh.gs(prepared.reason.failTextResId())))
+                        rxBus.send(EventShowDialog.Ok(title = label, message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit
             }
@@ -776,7 +776,7 @@ class MainViewModel @Inject constructor(
 
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = title, message = prepared.detail ?: rh.gs(prepared.reason.failTextResId())))
+                        rxBus.send(EventShowDialog.Ok(title = title, message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit
             }

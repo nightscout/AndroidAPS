@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.configuration
 
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize

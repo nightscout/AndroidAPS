@@ -127,7 +127,7 @@ internal fun ClickablePreferenceCategoryHeader(
             if (collapsible) {
                 Icon(
                     imageVector = Icons.Default.ExpandMore,
-                    contentDescription = stringResource(if (expanded) app.aaps.core.ui.R.string.collapse else app.aaps.core.ui.R.string.expand),
+                    contentDescription = stringResource(if (expanded) UiStrings.collapse else UiStrings.expand),
                     modifier = Modifier
                         .size(theme.expandIconSize)
                         .graphicsLayer { rotationZ = rotationAngle.value }

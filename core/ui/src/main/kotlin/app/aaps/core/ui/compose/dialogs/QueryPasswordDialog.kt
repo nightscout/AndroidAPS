@@ -75,7 +75,7 @@ fun QueryPasswordDialog(
                 value = passwordText,
                 onValueChange = { passwordText = it },
                 label = {
-                    Text(stringResource(if (pinInput) R.string.protection_pin_hint else R.string.protection_password_hint))
+                    Text(stringResource(if (pinInput) UiStrings.protection_pin_hint else UiStrings.protection_password_hint))
                 },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(

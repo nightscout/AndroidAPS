@@ -9,7 +9,7 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -220,7 +220,7 @@ class SceneListViewModel @Inject constructor(
                     DialogState.ConfirmActivation(scene, prepared.lines.map { it.text }, conflicts, prepared.id)
 
                 is ActionProgress.Rejected ->
-                    _dialogState.value = DialogState.ValidationError(prepared.detail ?: rh.gs(prepared.reason.failTextResId()))
+                    _dialogState.value = DialogState.ValidationError(prepared.detail ?: rh.gs(prepared.reason.failText()))
 
                 else                       -> Unit // Unconfirmed → the round-trip's app-level modal already showed it
             }

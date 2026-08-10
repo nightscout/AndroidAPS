@@ -42,7 +42,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.icons.IcProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -655,7 +655,7 @@ class ProfileManagementViewModel @Inject constructor(
 
                                     is ActionProgress.Rejected ->
                                         if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
-                                            rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failTextResId())))
+                                            rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
                                         else result.detail?.let { detail ->
                                             rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                                         }
@@ -672,7 +672,7 @@ class ProfileManagementViewModel @Inject constructor(
             // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal.
             is ActionProgress.Rejected -> {
                 if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failTextResId())))
+                    rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
                 else prepared.detail?.let { detail ->
                     rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                 }

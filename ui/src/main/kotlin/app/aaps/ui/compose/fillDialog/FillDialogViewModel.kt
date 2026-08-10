@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -436,7 +436,7 @@ class FillDialogViewModel @Inject constructor(
 
             else                          -> {
                 // Rejected, or a non-terminal value that can never become one here (nothing further awaits it).
-                val detail = (outcome as? ActionProgress.Rejected)?.let { rh.gs(it.reason.failTextResId()) }
+                val detail = (outcome as? ActionProgress.Rejected)?.let { rh.gs(it.reason.failText()) }
                 aapsLogger.warn(LTag.UI, "Fill insulin activation failed: $outcome")
                 reportAfterClose(
                     CoreUiR.string.activate_insulin,

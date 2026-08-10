@@ -34,7 +34,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
@@ -241,7 +241,7 @@ class InsulinDialogViewModel @Inject constructor(
                 // Offline block (and a master-local failure) surface here; a client round-trip failure already showed
                 // on the app-level modal, so only re-surface NotReachable or a master-side detail message.
                 is ActionProgress.Rejected -> when (prepared.reason) {
-                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(prepared.reason.failTextResId())))
+                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(prepared.reason.failText())))
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
                     FailureReason.NoAction                                    -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     else                                                      -> prepared.detail?.let { detail ->
@@ -267,7 +267,7 @@ class InsulinDialogViewModel @Inject constructor(
             // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(result.reason.failTextResId())))
+                    rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
                     if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = detail))
                     else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))

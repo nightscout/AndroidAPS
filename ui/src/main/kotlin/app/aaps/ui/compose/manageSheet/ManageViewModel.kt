@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -221,7 +221,7 @@ class ManageViewModel @Inject constructor(
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(elementType, prepared.id, prepared.lines, label))
                 // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the modal.
                 is ActionProgress.Rejected ->
-                    if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failTextResId())))
+                    if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
                     else prepared.detail?.let { detail ->
                         if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                         else _sideEffect.tryEmit(SideEffect.ShowError(elementType, detail))
@@ -238,7 +238,7 @@ class ManageViewModel @Inject constructor(
             // NoPendingBolus (a double-tapped dialog already consumed it) stays silent — the cancel ran once.
             val result = batchExecutor.commit(bolusId, Sources.Actions, label, pumpDirect = true)
             if (result is ActionProgress.Rejected)
-                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failTextResId())))
+                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
                     if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                     else _sideEffect.tryEmit(SideEffect.ShowError(elementType, detail))

@@ -48,7 +48,7 @@ import app.aaps.core.ui.R
  * @param onPrimary Called when primary button is clicked
  * @param secondaryLabel Label for the alternative action button (e.g., "End")
  * @param onSecondary Called when secondary button is clicked
- * @param cancelLabel Optional override for cancel label; defaults to R.string.cancel
+ * @param cancelLabel Optional override for cancel label; defaults to UiStrings.cancel
  * @param onDismiss Called when cancel is clicked or dialog is dismissed
  *
  * @see ThreeButtonDialogPreview

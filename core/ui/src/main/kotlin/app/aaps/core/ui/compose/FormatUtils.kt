@@ -51,7 +51,7 @@ fun formatMinutesAsDuration(minutes: Int, rh: ResourceHelper): String {
  *
  * Priority order:
  * 1. [asDuration] → "X h Y min" or "X min"
- * 2. valueFormatResId → stringResource with value (as Int if formatAsInt, else Double)
+ * 2. valueFormat → stringResource with value (as Int if formatAsInt, else Double)
  * 3. unitLabel set → "formatted_value unitLabel"
  * 4. Plain → valueFormat.format(value)
  *
@@ -63,7 +63,7 @@ fun formatMinutesAsDuration(minutes: Int, rh: ResourceHelper): String {
 fun formatSliderDisplayValue(
     value: Double,
     unitLabel: TextRef? = null,
-    valueFormatResId: Int? = null,
+    valueFormatRef: TextRef? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat,
     asDuration: Boolean = false
@@ -72,9 +72,9 @@ fun formatSliderDisplayValue(
     return when {
         asDuration                     -> formatMinutesAsDuration(value.roundToInt())
 
-        valueFormatResId != null       -> {
-            if (formatAsInt) stringResource(valueFormatResId, value.roundToInt())
-            else stringResource(valueFormatResId, value)
+        valueFormatRef != null       -> {
+            if (formatAsInt) stringResource(valueFormatRef, value.roundToInt())
+            else stringResource(valueFormatRef, value)
         }
 
         resolvedUnitLabel.isNotEmpty() -> "${valueFormat.format(value)} $resolvedUnitLabel"

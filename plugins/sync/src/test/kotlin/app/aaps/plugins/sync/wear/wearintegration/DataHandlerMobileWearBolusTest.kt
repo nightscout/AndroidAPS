@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.wear.wearintegration
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
@@ -102,6 +103,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         sut.automation = automation
         // Confirm-title + error-title + client-reject string all go through the single-arg gs().
         whenever(rh.gs(any<Int>())).thenReturn("CONFIRM")
+        whenever(rh.gs(any<TextRef>())).thenReturn("CONFIRM")
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
     }

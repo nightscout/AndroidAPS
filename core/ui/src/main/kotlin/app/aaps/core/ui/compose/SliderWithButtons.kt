@@ -50,7 +50,7 @@ import kotlin.math.roundToInt
  * @param step The step size for +/- buttons (default 0.1)
  * @param controlPoints Pairs of (position [0-1], value) to create a non linear slider, if null slider is linear
  * @param showValue Whether to show a clickable value label (default false)
- * @param valueFormatResId Resource ID for formatting value with unit (e.g., "%1$.1f U" or "%1$d min")
+ * @param valueFormat Resource ID for formatting value with unit (e.g., "%1$.1f U" or "%1$d min")
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
  * @param valueFormat Format for the value (used for dialog and fallback)
  * @param unitLabel Unit label, shown after the value and as the dialog input suffix
@@ -72,7 +72,7 @@ fun SliderWithButtons(
     step: Double = 0.1,
     controlPoints: List<Pair<Double, Double>>? = null,
     showValue: Boolean = false,
-    valueFormatResId: Int? = null,
+    valueFormatRef: TextRef? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: TextRef? = null,
@@ -163,7 +163,7 @@ fun SliderWithButtons(
     val displayText = if (showValue) formatSliderDisplayValue(
         value = value,
         unitLabel = unitLabel,
-        valueFormatResId = valueFormatResId,
+        valueFormatRef = valueFormatRef,
         formatAsInt = formatAsInt,
         valueFormat = valueFormat,
         asDuration = asDuration
@@ -237,7 +237,7 @@ fun SliderWithButtons(
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.End,
                     modifier = Modifier
-                        .widthIn(min = if (asDuration || valueFormatResId != null || resolvedUnitLabel.isNotEmpty()) 70.dp else 40.dp)
+                        .widthIn(min = if (asDuration || valueFormat != null || resolvedUnitLabel.isNotEmpty()) 70.dp else 40.dp)
                         .then(if (enabled) Modifier.clickable { showDialog = true } else Modifier)
                         .padding(start = 4.dp)
                 )

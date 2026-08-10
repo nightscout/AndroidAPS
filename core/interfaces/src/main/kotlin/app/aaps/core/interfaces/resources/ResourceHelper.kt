@@ -14,6 +14,7 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import app.aaps.core.keys.KeysStringIds
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 
 interface ResourceHelper {
 
@@ -47,6 +48,9 @@ interface ResourceHelper {
             }
         }
     }
+
+    /** Same, with format arguments - mirrors `gs(id, vararg)`. */
+    fun gs(ref: TextRef, vararg args: Any): String = gs(ref.withArgs(*args))
 
     /** Same, but always in English - used to build the search index. */
     fun gsNotLocalised(ref: TextRef): String = when (ref) {

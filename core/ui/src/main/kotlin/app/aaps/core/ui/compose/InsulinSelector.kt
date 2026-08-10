@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +38,7 @@ fun InsulinSelector(
     selected: ICfg?,
     onSelect: (ICfg) -> Unit,
     modifier: Modifier = Modifier,
-    labelResId: Int = R.string.select_insulin
+    label: TextRef = UiStrings.select_insulin
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -50,7 +51,7 @@ fun InsulinSelector(
             value = selected?.insulinLabel ?: "",
             onValueChange = {},
             readOnly = true,
-            label = { Text(stringResource(labelResId)) },
+            label = { Text(stringResource(label)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             modifier = Modifier

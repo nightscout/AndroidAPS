@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import androidx.annotation.StringRes
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.ui.R
@@ -9,16 +11,16 @@ import app.aaps.core.ui.R
  * screen and the Quick-launch config. Exhaustive `when` (no `else`) so adding a [PluginType] is a
  * compile-forced decision here.
  */
-@StringRes
-fun pluginCategoryTitleRes(type: PluginType): Int = when (type) {
-    PluginType.BGSOURCE    -> R.string.configbuilder_bgsource
-    PluginType.SMOOTHING   -> R.string.configbuilder_smoothing
-    PluginType.CALIBRATION -> R.string.configbuilder_calibration
-    PluginType.PUMP        -> R.string.configbuilder_pump
-    PluginType.SENSITIVITY -> R.string.configbuilder_sensitivity
-    PluginType.APS         -> R.string.configbuilder_aps
-    PluginType.LOOP        -> R.string.configbuilder_loop
-    PluginType.CONSTRAINTS -> R.string.constraints
-    PluginType.SYNC        -> R.string.configbuilder_sync
-    PluginType.GENERAL     -> R.string.configbuilder_general
+
+fun pluginCategoryTitle(type: PluginType): TextRef = when (type) {
+    PluginType.BGSOURCE    -> UiStrings.configbuilder_bgsource
+    PluginType.SMOOTHING   -> UiStrings.configbuilder_smoothing
+    PluginType.CALIBRATION -> UiStrings.configbuilder_calibration
+    PluginType.PUMP        -> UiStrings.configbuilder_pump
+    PluginType.SENSITIVITY -> UiStrings.configbuilder_sensitivity
+    PluginType.APS         -> UiStrings.configbuilder_aps
+    PluginType.LOOP        -> UiStrings.configbuilder_loop
+    PluginType.CONSTRAINTS -> UiStrings.constraints
+    PluginType.SYNC        -> UiStrings.configbuilder_sync
+    PluginType.GENERAL     -> UiStrings.configbuilder_general
 }

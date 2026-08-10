@@ -90,7 +90,7 @@ fun PluginPreferencesScreen(
                                     IconButton(onClick = onBackClick) {
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                            contentDescription = stringResource(UiStrings.back)
                                         )
                                     }
                                 }
@@ -105,7 +105,7 @@ fun PluginPreferencesScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = stringResource(app.aaps.core.ui.R.string.no_compose_preferences),
+                                text = stringResource(UiStrings.no_compose_preferences),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -147,7 +147,7 @@ private fun SinglePluginPreferencesRenderer(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(UiStrings.back)
                         )
                     }
                 }

@@ -25,7 +25,7 @@ import app.aaps.core.ui.compose.rangeText
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.core.ui.compose.unitLabel
-import app.aaps.core.ui.compose.valueFormatResId
+import app.aaps.core.ui.compose.valueFormat
 
 /**
  * Composable double preference for use inside card sections.
@@ -60,7 +60,7 @@ fun AdaptiveDoublePreferenceItem(
     val unitType = doubleKey.unitType
     val decimalPlaces = unitType.decimalPlaces()
     val step = unitType.step()
-    val valueFormatResId = unitType.valueFormatResId()
+    val valueFormatRef = unitType.valueFormat()
 
     // Get unit label from UnitType (for dialog input suffix)
     val unitLabelRef = unitType.unitLabel() ?: unit.takeIf { it.isNotEmpty() }?.let { TextRef.Literal(it) }
@@ -106,7 +106,7 @@ fun AdaptiveDoublePreferenceItem(
                 valueRange = doubleKey.min..doubleKey.max,
                 step = step,
                 showValue = true,
-                valueFormatResId = valueFormatResId,
+                valueFormatRef = valueFormatRef,
                 valueFormat = valueFormat,
                 unitLabel = unitLabelRef,
                 asDuration = unitType.isDuration(),

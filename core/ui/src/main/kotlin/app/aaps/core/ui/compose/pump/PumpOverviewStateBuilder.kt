@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.R
 

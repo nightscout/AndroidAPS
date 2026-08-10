@@ -41,7 +41,7 @@ fun PreferenceSliderWithButtons(
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double = 0.1,
     showValue: Boolean = false,
-    valueFormatResId: Int? = null,
+    valueFormatRef: TextRef? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: TextRef? = null,
@@ -59,7 +59,7 @@ fun PreferenceSliderWithButtons(
             valueRange = valueRange,
             step = step,
             showValue = showValue,
-            valueFormatResId = valueFormatResId,
+            valueFormatRef = valueFormatRef,
             formatAsInt = formatAsInt,
             valueFormat = valueFormat,
             unitLabel = unitLabel,
@@ -77,7 +77,7 @@ fun PreferenceSliderWithButtons(
     val displayText = if (showValue) formatSliderDisplayValue(
         value = value,
         unitLabel = unitLabel,
-        valueFormatResId = valueFormatResId,
+        valueFormatRef = valueFormatRef,
         formatAsInt = formatAsInt,
         valueFormat = valueFormat,
         asDuration = asDuration

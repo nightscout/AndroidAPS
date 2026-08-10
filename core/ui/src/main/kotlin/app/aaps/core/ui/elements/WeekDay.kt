@@ -1,6 +1,7 @@
 package app.aaps.core.ui.elements
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.R
 import java.util.Calendar
 import java.util.Date
@@ -14,7 +15,7 @@ open class WeekDay {
             return calendarInts[ordinal]
         }
 
-        @get:StringRes val shortName: Int
+        val shortName: TextRef
             get() = shortNames[ordinal]
 
         companion object {
@@ -28,14 +29,14 @@ open class WeekDay {
                 Calendar.SATURDAY,
                 Calendar.SUNDAY
             )
-            private val shortNames = intArrayOf(
-                R.string.weekday_monday_short,
-                R.string.weekday_tuesday_short,
-                R.string.weekday_wednesday_short,
-                R.string.weekday_thursday_short,
-                R.string.weekday_friday_short,
-                R.string.weekday_saturday_short,
-                R.string.weekday_sunday_short
+            private val shortNames = arrayOf(
+                UiStrings.weekday_monday_short,
+                UiStrings.weekday_tuesday_short,
+                UiStrings.weekday_wednesday_short,
+                UiStrings.weekday_thursday_short,
+                UiStrings.weekday_friday_short,
+                UiStrings.weekday_saturday_short,
+                UiStrings.weekday_sunday_short
             )
 
             fun fromCalendarInt(day: Int): DayOfWeek {

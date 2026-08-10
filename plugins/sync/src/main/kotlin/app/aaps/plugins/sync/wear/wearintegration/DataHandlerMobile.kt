@@ -93,7 +93,7 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.plugins.sync.R
@@ -841,7 +841,7 @@ class DataHandlerMobile @Inject constructor(
      */
     private fun relayReason(progress: ActionProgress): String = when (progress) {
         is ActionProgress.Unconfirmed -> rh.gs(app.aaps.core.ui.R.string.clientcontrol_unconfirmed_wear)
-        is ActionProgress.Rejected    -> progress.detail ?: rh.gs(progress.reason.failTextResId())
+        is ActionProgress.Rejected    -> progress.detail ?: rh.gs(progress.reason.failText())
         else                          -> rh.gs(app.aaps.core.ui.R.string.error)
     }
 

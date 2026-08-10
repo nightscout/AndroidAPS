@@ -22,7 +22,7 @@ import app.aaps.core.ui.compose.rangeText
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.core.ui.compose.unitLabel
-import app.aaps.core.ui.compose.valueFormatResId
+import app.aaps.core.ui.compose.valueFormat
 
 /**
  * Composable int preference for use inside card sections.
@@ -55,7 +55,7 @@ fun AdaptiveIntPreferenceItem(
 
     // Get formatting info from UnitType
     val unitType = intKey.unitType
-    val valueFormatResId = unitType.valueFormatResId()
+    val valueFormatRef = unitType.valueFormat()
 
     // Get unit label from UnitType (for dialog input suffix)
     val unitLabelRef = unitType.unitLabel() ?: unit.takeIf { it.isNotEmpty() }?.let { TextRef.Literal(it) }
@@ -98,7 +98,7 @@ fun AdaptiveIntPreferenceItem(
                 valueRange = intKey.min.toDouble()..intKey.max.toDouble(),
                 step = 1.0,
                 showValue = true,
-                valueFormatResId = valueFormatResId,
+                valueFormatRef = valueFormatRef,
                 formatAsInt = true,
                 valueFormat = NumberFormat.INTEGER,
                 unitLabel = unitLabelRef,
