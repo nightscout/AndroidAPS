@@ -1,9 +1,8 @@
 package app.aaps.core.interfaces.maintenance
 
-import android.os.Parcelable
 import androidx.compose.ui.graphics.vector.ImageVector
 
-interface PrefsStatus : Parcelable {
+interface PrefsStatus {
 
     val icon: ImageVector
     val isOk: Boolean get() = false

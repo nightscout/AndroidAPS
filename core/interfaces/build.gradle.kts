@@ -4,7 +4,6 @@ import kotlin.math.min
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
-    id("kotlin-parcelize")
     id("kotlinx-serialization")
     id("android-module-dependencies")
     id("test-module-dependencies")
