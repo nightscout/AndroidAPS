@@ -1606,6 +1606,52 @@ formatter cache, above):
 guard
 keeps the old contract on a public interface method.
 
+### Wave 17 - what the in-repo CMP spike proved, and its recipe (spike now deleted)
+
+Wave 13's spike was a standalone project outside the repo and only asked about **compose-resources**.
+A second spike, `:spike:cmp`, lived *inside* the build for several waves and asked a different
+question: does Compose Multiplatform work in **this** build, next to the androidx Compose the app
+already uses. It has been deleted now that it has nothing left to answer, so its result and its build
+recipe are recorded here.
+
+**What it proved.** Two real `:core:ui` files - `PlusMinusEdit` and its `Helpers` - compiled unchanged
+from `commonMain` for `android`, `iosArm64` and `iosSimulatorArm64`, against the real
+`:core:data` and `:core:keys` (not stubs), with `stringResource(TextRef)` as an `expect`/`actual`
+seam. That is the whole `:core:ui` module flip in miniature, so the flip is a build-configuration
+problem rather than an open technical question.
+
+**The recipe, which the flip should reuse:**
+
+```kotlin
+plugins {
+    kotlin("multiplatform")
+    alias(libs.plugins.android.kmp.library)   // NOT com.android.library - AGP 9 refuses that with KMP
+    alias(libs.plugins.compose.compiler)      // ships with Kotlin; org.jetbrains.compose hard-fails without it
+    alias(libs.plugins.compose.multiplatform)
+}
+```
+
+Four deliberate omissions, each of which would have cost a debugging session to rediscover:
+
+- **No `compose.components.resources`.** compose-resources was rejected for AAPS (it cannot match a
+  region-less locale against a region-pinned folder). `generateResClass` defaults to `auto`, which
+  generates nothing unless that dependency is present - so leaving it out *is* the opt-out.
+- **No `jvm()` target.** It pulls in the desktop Compose surface (skiko-awt) and gives the module
+  another way to fail without saying anything about iOS.
+- **No `androidResources`.** Off by default for a KMP library. `:core:ui` *does* own `res/`, so unlike
+  the spike it must enable it - and that is exactly where CMP-9547 (resources not packaged under
+  AGP 9) becomes relevant, which it could not be for the spike.
+- **`lint { checkReleaseBuilds = false }` restated inline**, because `android-module-dependencies`
+  applies `com.android.library` and so cannot be applied to a multiplatform module. Same reason as
+  `:core:keys`.
+
+`material-icons-extended` needed its CMP artifact (`libs.cmp.material.icons.extended`): both copied
+files use `Icons.Filled.Remove`, which is not in the core icon set.
+
+The general form of the question was already answered in public - coil-kt/coil and plainhub/plain-app
+both ship these four plugins on Kotlin 2.4.10 + AGP 9.3.1 + CMP 1.11.1 - so the spike only ever
+checked that nothing repo-specific interferes. Nothing did.
+
 ---
 
 ## 9. Open decisions

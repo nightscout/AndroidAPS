@@ -13,8 +13,6 @@ include ':core:nssdk'
 include ':core:objects'
 include ':core:utils'
 include ':core:ui'
-// Throwaway. Answers whether Compose Multiplatform works in THIS build; delete once decided.
-include ':spike:cmp'
 include ':database:impl'
 include ':database:persistence'
 include ':implementation'
