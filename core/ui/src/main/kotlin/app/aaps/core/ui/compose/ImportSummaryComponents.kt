@@ -151,7 +151,7 @@ private fun ImportDetailsDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(android.R.string.ok))
+                Text(stringResource(UiStrings.ok))
             }
         },
         properties = androidx.compose.ui.window.DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)

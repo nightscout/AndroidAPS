@@ -117,7 +117,7 @@ fun <T> ListPreference(
                     title = title,
                     buttons = {
                         TextButton(onClick = { openSelector = false }) {
-                            Text(text = stringResource(android.R.string.cancel))
+                            Text(text = stringResource(UiStrings.cancel))
                         }
                     },
                 ) {

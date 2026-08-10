@@ -34,8 +34,8 @@ fun AdaptiveSwitchPreferenceItem(
     booleanKey: BooleanPreferenceKey,
     title: TextRef? = null,
     summary: TextRef? = null,
-    summaryOnResId: Int? = null,
-    summaryOffResId: Int? = null,
+    summaryOn: TextRef? = null,
+    summaryOff: TextRef? = null,
     visibilityContext: VisibilityContext? = null
 ) {
     val effectiveTitle = title ?: booleanKey.title
@@ -55,8 +55,8 @@ fun AdaptiveSwitchPreferenceItem(
     var guardMessage by remember { mutableStateOf<String?>(null) }
 
     val summary: @Composable (() -> Unit)? = when {
-        summaryOnResId != null && summaryOffResId != null -> {
-            { Text(stringResource(if (state.value) summaryOnResId else summaryOffResId)) }
+        summaryOn != null && summaryOff != null -> {
+            { Text(stringResource(if (state.value) summaryOn else summaryOff)) }
         }
 
         effectiveSummary != null                          -> {

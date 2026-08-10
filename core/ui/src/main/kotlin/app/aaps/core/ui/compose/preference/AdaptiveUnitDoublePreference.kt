@@ -4,7 +4,6 @@
 
 package app.aaps.core.ui.compose.preference
 
-import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

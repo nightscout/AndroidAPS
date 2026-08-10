@@ -124,9 +124,9 @@ fun <T> TextFieldPreference(
             title = title,
             buttons = {
                 TextButton(onClick = { openDialog = false }) {
-                    Text(text = stringResource(android.R.string.cancel))
+                    Text(text = stringResource(UiStrings.cancel))
                 }
-                TextButton(onClick = onOk) { Text(text = stringResource(android.R.string.ok)) }
+                TextButton(onClick = onOk) { Text(text = stringResource(UiStrings.ok)) }
             },
         ) {
             val focusRequester = remember { FocusRequester() }

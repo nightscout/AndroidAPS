@@ -1,7 +1,6 @@
 package app.aaps.core.ui.compose.dialogs
 
 import app.aaps.core.ui.compose.stringResourceOrNull
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable

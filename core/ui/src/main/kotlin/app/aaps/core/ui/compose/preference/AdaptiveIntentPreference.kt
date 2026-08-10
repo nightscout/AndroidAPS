@@ -45,14 +45,14 @@ fun AdaptiveIntentPreferenceItem(
 
     if (!visibility.visible) return
 
-    // Show confirmation dialog when confirmationMessageResId is set on the key
-    val confirmationResId = intentKey.confirmationMessageResId
+    // Show confirmation dialog when confirmationMessage is set on the key
+    val confirmation = intentKey.confirmationMessage
     var showConfirmation by remember { mutableStateOf(false) }
 
-    if (showConfirmation && confirmationResId != null) {
+    if (showConfirmation && confirmation != null) {
         OkCancelDialog(
             title = stringResource(effectiveTitle),
-            message = stringResource(confirmationResId),
+            message = stringResource(confirmation),
             onConfirm = {
                 onClick()
                 showConfirmation = false
@@ -61,7 +61,7 @@ fun AdaptiveIntentPreferenceItem(
         )
     }
 
-    val effectiveOnClick = if (confirmationResId != null) {
+    val effectiveOnClick = if (confirmation != null) {
         { showConfirmation = true }
     } else {
         onClick

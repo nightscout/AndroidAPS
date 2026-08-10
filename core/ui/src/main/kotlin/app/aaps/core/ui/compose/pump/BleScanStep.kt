@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose.pump
 
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.clickable

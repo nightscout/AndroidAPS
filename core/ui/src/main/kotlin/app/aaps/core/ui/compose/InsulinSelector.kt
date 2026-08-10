@@ -1,7 +1,6 @@
 package app.aaps.core.ui.compose
 
 import app.aaps.core.keys.interfaces.TextRef
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem

@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose.pickers
 
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement

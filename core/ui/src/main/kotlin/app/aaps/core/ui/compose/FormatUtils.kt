@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose
 
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import app.aaps.core.data.format.NumberFormat
