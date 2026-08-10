@@ -350,7 +350,7 @@ class NotificationManagerImpl @Inject constructor(
             .setStyle(NotificationCompat.BigTextStyle().bigText(n.text))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.id.ordinal))
-            .setContentIntent(notificationHolder.openAppIntent(context))
+            .setContentIntent(notificationHolder.openAppIntent())
         if (n.level == NotificationLevel.URGENT) {
             notificationBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
                 .setContentTitle(rh.gs(app.aaps.core.ui.R.string.urgent_alarm))

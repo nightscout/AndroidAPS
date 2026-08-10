@@ -334,7 +334,7 @@ class ComposeMainActivity : AppCompatActivity() {
             LocalProfileUtil provides profileUtil,
             LocalCheckPassword provides cryptoUtil::checkPassword,
             LocalHashPassword provides cryptoUtil::hashPassword,
-            LocalClearExportPasswordStore provides { exportPasswordDataStore.clearPasswordDataStore(this@ComposeMainActivity) },
+            LocalClearExportPasswordStore provides { exportPasswordDataStore.clearPasswordDataStore() },
             LocalVisibilityContext provides visibilityContext
         ) {
             AapsTheme {

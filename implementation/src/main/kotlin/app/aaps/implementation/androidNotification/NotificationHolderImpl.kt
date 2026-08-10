@@ -32,7 +32,7 @@ class NotificationHolderImpl @Inject constructor(
         }
         get() = _notification ?: placeholderNotification()
 
-    override fun openAppIntent(context: Context): PendingIntent? = TaskStackBuilder.create(context).run {
+    override fun openAppIntent(): PendingIntent? = TaskStackBuilder.create(context).run {
         addParentStack(uiInteraction.mainActivity)
         addNextIntent(Intent(context, uiInteraction.mainActivity))
         getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -49,7 +49,7 @@ class NotificationHolderImpl @Inject constructor(
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
             .setContentTitle(rh.gs(app.aaps.core.ui.R.string.loading))
-            .setContentIntent(openAppIntent(context))
+            .setContentIntent(openAppIntent())
             .build()
             .also {
                 (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(notificationID, it)

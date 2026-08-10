@@ -12,7 +12,7 @@ class ExportPasswordDataStoreImplTest : TestBaseWithProfile() {
     private val somePassword = "somePassword"
 
     val sut: ExportPasswordDataStoreImpl by lazy {
-        ExportPasswordDataStoreImpl(aapsLogger, preferences, config)
+        ExportPasswordDataStoreImpl(context, aapsLogger, preferences, config)
     }
 
     @Test
@@ -24,28 +24,28 @@ class ExportPasswordDataStoreImplTest : TestBaseWithProfile() {
         // When enabled
         whenever(preferences.get(BooleanKey.MaintenanceEnableExportSettingsAutomation)).thenReturn(true)
         assertTrue(sut.exportPasswordStoreEnabled())
-        assertTrue(sut.clearPasswordDataStore(context).isEmpty())
+        assertTrue(sut.clearPasswordDataStore().isEmpty())
 
         // These will fail to run (can not instantiate secure encrypt?)
-        // assertTrue(sut.putPasswordToDataStore(context, somePassword) == somePassword)
-        // assertTrue(sut.getPasswordFromDataStore(context) == Triple ("", true, true))
+        // assertTrue(sut.putPasswordToDataStore(somePassword) == somePassword)
+        // assertTrue(sut.getPasswordFromDataStore() == Triple ("", true, true))
     }
 
     @Test
     fun clearPasswordDataStore() {
         whenever(preferences.get(BooleanKey.MaintenanceEnableExportSettingsAutomation)).thenReturn(false)
-        assertTrue(sut.clearPasswordDataStore(context).isEmpty())
+        assertTrue(sut.clearPasswordDataStore().isEmpty())
     }
 
     @Test
     fun putPasswordToDataStore() {
         whenever(preferences.get(BooleanKey.MaintenanceEnableExportSettingsAutomation)).thenReturn(false)
-        assertTrue(sut.putPasswordToDataStore(context, somePassword) == somePassword)
+        assertTrue(sut.putPasswordToDataStore(somePassword) == somePassword)
     }
 
     @Test
     fun getPasswordFromDataStore() {
         whenever(preferences.get(BooleanKey.MaintenanceEnableExportSettingsAutomation)).thenReturn(false)
-        assertTrue(sut.getPasswordFromDataStore(context) == Triple("", true, true))
+        assertTrue(sut.getPasswordFromDataStore() == Triple("", true, true))
     }
 }

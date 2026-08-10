@@ -447,7 +447,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             if (serialNumber != null) {
                 preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(serialNumber))
                 fh.delete()
-                exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+                exportPasswordDataStore.clearPasswordDataStore()
                 config.showInitSnackbar(getString(app.aaps.core.ui.R.string.password_set))
             } else {
                 aapsLogger.warn(LTag.CORE, "Password reset timed out waiting for pump serial number")
@@ -458,7 +458,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
     private fun exportPasswordResetCheck() {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("ExportPasswordReset")
         if (fh?.exists() == true) {
-            exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+            exportPasswordDataStore.clearPasswordDataStore()
             fh.delete()
             config.showInitSnackbar(getString(app.aaps.core.ui.R.string.datastore_password_cleared))
         }

@@ -192,7 +192,7 @@ class PasswordCheckImpl @Inject constructor(
                                     rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Error))
                                 } else if (enteredPassword.isNotEmpty()) {
                                     preferences.put(preference, cryptoUtil.hashPassword(enteredPassword))
-                                    exportPasswordDataStore.clearPasswordDataStore(context)
+                                    exportPasswordDataStore.clearPasswordDataStore()
                                     val msg = if (pinInput) app.aaps.core.ui.R.string.pin_set else app.aaps.core.ui.R.string.password_set
                                     rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Success))
                                     dialog.dismiss()

@@ -61,7 +61,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
         if (exportPasswordDataStore.exportPasswordStoreEnabled()) {
 
             // Get the (encrypted) password and status from the DataStore
-            val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
+            val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore()
             aapsLogger.debug(LTag.AUTOMATION, "Exporting settings: passwordIsNotEmpty=${password.isNotEmpty()}, isExpired=$isExpired, isAboutToExpire=$isAboutToExpire")
 
             // And do according to password state
@@ -80,7 +80,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                     exportResultLevel = NotificationLevel.INFO // INFO -> e.g. color GREEN
                 }
                 // Execute settings export, then notify user
-                if (!importExportPrefs.exportSharedPreferencesNonInteractive(context, password)) {
+                if (!importExportPrefs.exportSharedPreferencesNonInteractive(password)) {
                     // :-( Export failed (see logfile!?)
                     aapsLogger.error(LTag.AUTOMATION, "ERROR: exportSharedPreferencesNonInteractive() failed to export settings")
                     exportResultComment = app.aaps.core.ui.R.string.export_failed
@@ -95,7 +95,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                 exportResultLevel = NotificationLevel.IMPORTANT  // URGENT -> e.g. color RED
                 // Clear password in datastore, then notify user
                 aapsLogger.info(LTag.AUTOMATION, "No password or was expired and needs re-entering by user")
-                exportPasswordDataStore.clearPasswordDataStore(context)
+                exportPasswordDataStore.clearPasswordDataStore()
                 announceAlert = true
             }
         } else {

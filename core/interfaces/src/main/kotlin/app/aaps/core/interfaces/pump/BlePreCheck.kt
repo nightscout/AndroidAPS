@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.pump
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 
 interface BlePreCheck {
@@ -12,6 +11,6 @@ interface BlePreCheck {
      * Attempts to enable Bluetooth if permissions are granted.
      * Returns [BlePreCheckResult] indicating the current state.
      */
-    fun checkBleReady(context: Context): BlePreCheckResult
+    fun checkBleReady(): BlePreCheckResult
 
 }

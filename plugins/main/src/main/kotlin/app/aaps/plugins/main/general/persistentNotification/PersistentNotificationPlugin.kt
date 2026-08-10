@@ -252,7 +252,7 @@ class PersistentNotificationPlugin @Inject constructor(
             )
         }
         /// End Android Auto
-        builder.setContentIntent(notificationHolder.openAppIntent(context))
+        builder.setContentIntent(notificationHolder.openAppIntent())
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = builder.build()
         mNotificationManager.notify(notificationHolder.notificationID, notification)

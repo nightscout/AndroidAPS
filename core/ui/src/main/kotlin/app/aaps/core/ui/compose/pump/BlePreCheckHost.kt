@@ -41,7 +41,7 @@ fun BlePreCheckHost(
 
     LaunchedEffect(Unit) {
         checkResult = withContext(Dispatchers.IO) {
-            blePreCheck.checkBleReady(context)
+            blePreCheck.checkBleReady()
         }
     }
 

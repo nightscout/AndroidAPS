@@ -214,9 +214,9 @@ class ImportExportPrefsImpl @Inject constructor(
             pendingExportFile = newFile
         }
 
-        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
+        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore()
         val cachedPassword = if (password.isNotEmpty() && !(isExpired || isAboutToExpire)) password else {
-            exportPasswordDataStore.clearPasswordDataStore(context)
+            exportPasswordDataStore.clearPasswordDataStore()
             null
         }
 
@@ -342,7 +342,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     override fun cacheExportPassword(password: String): String =
-        exportPasswordDataStore.putPasswordToDataStore(context, password)
+        exportPasswordDataStore.putPasswordToDataStore(password)
 
     // Legacy export — uses dialogs via uiInteraction (kept for old UI)
 
@@ -404,7 +404,7 @@ class ImportExportPrefsImpl @Inject constructor(
                     onPositive = { passwordCheck.setPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword) }
                 )
             )
-            exportPasswordDataStore.clearPasswordDataStore(context)
+            exportPasswordDataStore.clearPasswordDataStore()
             return false
         }
         return true
@@ -419,7 +419,7 @@ class ImportExportPrefsImpl @Inject constructor(
         }
 
         // Get password from datastore
-        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
+        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore()
         if (password.isNotEmpty() && !(isExpired || isAboutToExpire)) {
             // We have an (encrypted) password in the phones DataStore that is not expired or about to expire (third)
             then(password)
@@ -427,7 +427,7 @@ class ImportExportPrefsImpl @Inject constructor(
         }
 
         // Make sure stored password is properly reset
-        exportPasswordDataStore.clearPasswordDataStore((context))
+        exportPasswordDataStore.clearPasswordDataStore()
 
         // Ask for entering password and store when successfully entered
         rxBus.send(
@@ -439,7 +439,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 onOk = {
                     askForMasterPassIfNeeded(activity, app.aaps.core.ui.R.string.preferences_export_canceled)
                     { password ->
-                        then(exportPasswordDataStore.putPasswordToDataStore(context, password))
+                        then(exportPasswordDataStore.putPasswordToDataStore(password))
                     }
                 }
             )
@@ -705,7 +705,7 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean {
+    override fun exportSharedPreferencesNonInteractive(password: String): Boolean {
         // Check export destination preferences (same logic as manual export)
         val localEnabled = preferences.get(BooleanNonKey.ExportSettingsLocalEnabled)
         val cloudEnabled = preferences.get(BooleanNonKey.ExportSettingsCloudEnabled)
@@ -926,7 +926,7 @@ class ImportExportPrefsImpl @Inject constructor(
         preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
     }
 
-    override fun exportUserEntriesCsv(context: Context) {
+    override fun exportUserEntriesCsv() {
         aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT exportUserEntriesCsv called, enqueuing WorkManager")
         WorkManager.getInstance(context).enqueueUniqueWork(
             "export",

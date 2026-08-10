@@ -51,8 +51,8 @@ interface ImportExportPrefs {
 
     fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean = true)
     fun exportSharedPreferences(activity: FragmentActivity)
-    fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean
-    fun exportUserEntriesCsv(context: Context)
+    fun exportSharedPreferencesNonInteractive(password: String): Boolean
+    fun exportUserEntriesCsv()
     suspend fun executeCsvExport(): ExportResult
     fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?)
 
