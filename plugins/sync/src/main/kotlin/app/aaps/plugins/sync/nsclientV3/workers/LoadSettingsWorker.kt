@@ -18,7 +18,7 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
-import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optLongCompat
+import app.aaps.core.data.json.OrgJsonCompat.optLongCompat
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers

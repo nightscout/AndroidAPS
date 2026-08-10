@@ -43,8 +43,8 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.WizardDetailDto
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optJsonObjectCompat
-import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optStringCompat
+import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
+import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

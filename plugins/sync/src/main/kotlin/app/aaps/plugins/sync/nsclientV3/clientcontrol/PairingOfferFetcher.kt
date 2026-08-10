@@ -9,8 +9,8 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingOffer
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optJsonObjectCompat
-import app.aaps.plugins.sync.nsclientV3.json.OrgJsonCompat.optStringCompat
+import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
+import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

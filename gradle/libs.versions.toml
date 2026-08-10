@@ -180,6 +180,12 @@ com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.14.2.1" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.14.3" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
+# Test-only oracle. On Android `org.json` comes from the platform, so a plain JVM test has no real
+# implementation to compare against. This is AOSP's own org.json, repackaged for the JVM - NOT
+# Crockford's `org.json:json`, which is a different implementation and disagrees on real cases
+# (optString of a JSON null gives "" there and "null" on Android). It is what jsonassert already
+# pulls in, so Android module tests are measured against this too. Never use it in main source.
+org-json-android = { group = "com.vaadin.external.google", name = "android-json", version = "0.0.20131108.vaadin1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
 com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta10" } # do not update to 4.xx
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }

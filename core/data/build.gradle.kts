@@ -28,6 +28,12 @@ kotlin {
     // expect/actual, and the Native actual scopes its own opt-in to one file.
 
     sourceSets {
+        commonMain {
+            dependencies {
+                api(project.dependencies.platform(libs.kotlinx.serialization.bom))
+                api(libs.kotlinx.serialization.json)
+            }
+        }
         getByName("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
@@ -38,6 +44,8 @@ kotlin {
                 implementation(libs.org.junit.jupiter)
                 implementation(libs.com.google.truth)
                 runtimeOnly(libs.org.junit.platform.launcher)
+                // The oracle for OrgJsonCompatParityTest, and the only place org.json may appear.
+                implementation(libs.org.json.android)
             }
         }
     }
