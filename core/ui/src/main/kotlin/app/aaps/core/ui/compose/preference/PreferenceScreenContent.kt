@@ -1,9 +1,9 @@
 package app.aaps.core.ui.compose.preference
 
-import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 
@@ -77,17 +77,24 @@ class PreferenceSectionState(
 
     companion object {
 
-        val Saver: Saver<PreferenceSectionState, Bundle> = Saver(
+        /**
+         * Saved as a flat `[key, value, key, value, ...]` list rather than a `Bundle`.
+         *
+         * A `Bundle` is Android only, and it bought nothing here: the state is a map of section key
+         * to expanded flag, and `listSaver` stores `String` and `Boolean` through the same
+         * SaveableStateRegistry that a Bundle-backed saver used. Same behaviour across
+         * configuration changes, no Android type in the signature.
+         */
+        val Saver: Saver<PreferenceSectionState, Any> = listSaver(
             save = { state ->
-                Bundle().apply {
-                    state.expandedSections.forEach { (k, v) -> putBoolean(k, v) }
-                }
+                state.expandedSections.flatMap { (key, expanded) -> listOf(key, expanded) }
             },
-            restore = { bundle ->
+            restore = { saved ->
                 PreferenceSectionState(
                     expandedSections = mutableStateMapOf<String, Boolean>().apply {
-                        bundle.keySet().forEach { key ->
-                            put(key, bundle.getBoolean(key))
+                        saved.chunked(2).forEach { pair ->
+                            val key = pair.getOrNull(0) as? String ?: return@forEach
+                            put(key, pair.getOrNull(1) as? Boolean ?: false)
                         }
                     }
                 )
