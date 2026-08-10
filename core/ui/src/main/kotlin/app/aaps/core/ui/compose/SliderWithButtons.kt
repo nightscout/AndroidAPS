@@ -38,6 +38,8 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import kotlinx.coroutines.delay
+import kotlin.math.roundToLong
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 /**
@@ -266,8 +268,8 @@ internal fun roundToStep(value: Double, step: Double): Double {
     val scaled = (value / step).roundToInt() * step
     // Fix floating point precision errors (e.g., 6.1000000000005 -> 6.1)
     val decimals = step.toString().substringAfter('.', "").length
-    val factor = Math.pow(10.0, decimals.toDouble())
-    return Math.round(scaled * factor) / factor
+    val factor = 10.0.pow(decimals.toDouble())
+    return (scaled * factor).roundToLong() / factor
 }
 
 /**

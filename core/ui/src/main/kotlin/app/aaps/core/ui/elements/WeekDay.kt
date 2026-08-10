@@ -2,9 +2,9 @@ package app.aaps.core.ui.elements
 
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
-import app.aaps.core.ui.R
-import java.util.Calendar
-import java.util.Date
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 open class WeekDay {
 
@@ -20,15 +20,11 @@ open class WeekDay {
 
         companion object {
 
-            private val calendarInts = intArrayOf(
-                Calendar.MONDAY,
-                Calendar.TUESDAY,
-                Calendar.WEDNESDAY,
-                Calendar.THURSDAY,
-                Calendar.FRIDAY,
-                Calendar.SATURDAY,
-                Calendar.SUNDAY
-            )
+            // The numbers java.util.Calendar uses: SUNDAY is 1 and SATURDAY is 7, so Monday is 2.
+            // They are written out rather than taken from Calendar because these values are a
+            // persisted contract - automation triggers store them and `getSelectedDays()` hands
+            // them to other modules - so they must not change, and they must not need the JVM.
+            private val calendarInts = intArrayOf(2, 3, 4, 5, 6, 7, 1)
             private val shortNames = arrayOf(
                 UiStrings.weekday_monday_short,
                 UiStrings.weekday_tuesday_short,
@@ -64,9 +60,18 @@ open class WeekDay {
 
     fun isSet(day: DayOfWeek): Boolean = weekdays[day.ordinal]
 
+    /**
+     * Which weekday a moment falls on, in the device's own time zone - an automation set for Monday
+     * has to mean the user's Monday, not UTC's.
+     *
+     * `kotlinx.datetime.DayOfWeek` runs MONDAY..SUNDAY, the same order as [DayOfWeek] here, so the
+     * ordinal carries across directly and no ISO-number conversion is involved.
+     */
     fun isSet(timestamp: Long): Boolean {
-        val scheduledDayOfWeek = Calendar.getInstance().also { it.time = Date(timestamp) }
-        return isSet(DayOfWeek.fromCalendarInt(scheduledDayOfWeek[Calendar.DAY_OF_WEEK]))
+        val dayOfWeek = Instant.fromEpochMilliseconds(timestamp)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .dayOfWeek
+        return isSet(DayOfWeek.entries[dayOfWeek.ordinal])
     }
 
     fun getSelectedDays(): List<Int> {
