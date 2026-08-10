@@ -1652,6 +1652,101 @@ The general form of the question was already answered in public - coil-kt/coil a
 both ship these four plugins on Kotlin 2.4.10 + AGP 9.3.1 + CMP 1.11.1 - so the spike only ever
 checked that nothing repo-specific interferes. Nothing did.
 
+### Wave 18 - `:core:interfaces` starts moving, and three bugs fall out (done)
+
+Commits `7ba30dcdc6`, `8e928f3036`, `ba3c465093`.
+
+**The strategy was wrong at first, and the correction matters.** `:core:interfaces` was measured the
+same way `:core:ui` was - "has an Android import, therefore blocked" - which is a reasonable question
+for a UI module and the wrong one for a module of *interfaces*. An Android type in a signature there
+is usually a leak in the contract, not a property of the concept. The split is three ways:
+
+1. **direct elimination** - a multiplatform equivalent exists
+2. **abstraction + platform implementation** - the concept is real everywhere, only the type is
+   Android's; narrow the contract and let the Android implementation keep the Android type
+3. **genuinely platform-only** - pump BLE, wear tiles, notification channels; stays in `androidMain`
+
+#### `androidx` is not uniformly Android, and guessing it is got this wrong twice
+
+Probed against a real `compileKotlinIosArm64`, not assumed:
+
+| artifact | verdict |
+|---|---|
+| `androidx.collection` | **multiplatform** since 1.4.0 - `LongSparseArray` compiles for iOS unchanged |
+| `androidx.compose.*` | **free** - Compose Multiplatform publishes the same package names |
+| `androidx.annotation` | **split** - `@VisibleForTesting` is common, `@StringRes`/`@RawRes` are not |
+| `appcompat`, `fragment`, `activity`, `documentfile` | Android only |
+
+That correction alone moved 17 files out of the blocked set. `LongSparseArray` had been written down
+as "replace with a plain `Map`" - which would have been a **bug**, not just wasted work: it iterates
+in ascending key order, and the sensitivity/autosens plugins and the TDD/TIR screens walk it by
+index. A `HashMap` would have silently reordered them.
+
+Corrected count: **64 directly blocked, 85 after propagation, 168 clean** of 253.
+
+#### org.json, and why the oracle version decides what "correct" means
+
+`OrgJsonCompat` moved from `:plugins:sync` to `:core:data` so the profile spine can reach it. Its
+first parity run failed, and the reason is worth keeping: **Android's `org.json` and Maven's
+`org.json:json` are different implementations.** `optString` of a JSON null gives `"null"` on Android
+and `""` in Crockford's. The right oracle is `com.vaadin.external.google:android-json`, which is
+AOSP's own implementation repackaged for the JVM - it is what `jsonassert` already pulled in, so the
+existing Android module tests were measured against it too. It is now declared explicitly.
+
+Two more findings from that suite:
+
+- **`optInt` was wrong.** `org.json` reads a numeric **string** through `Double.intValue()`, which
+  *saturates*, but a real JSON **number** through `Long.intValue()`, which *truncates*. Reading both
+  through `Long.toInt()` looks obviously right and turns `"1785992181588"` into **-714213548**.
+- **Reading is safe to shim; writing is not.** The old suite only covered reads. `org.json` writes a
+  whole-numbered double without its fraction (`1.0` -> `1`), rejects non-finite doubles that kotlinx
+  happily emits as invalid JSON, and accepts malformed input kotlinx rejects. Since
+  `Profile.toPureNsJson` feeds Nightscout, those change bytes on the wire. They are asserted as
+  divergences rather than hidden.
+
+**The org.json call sites were deliberately NOT converted.** They are viral: `Profile.toPureNsJson()`,
+`ProfileStore.with()`, `SingleProfile.ic/isf/basal` and `APSResult.json()` carry `JSONObject` and
+`JSONArray` in their **contracts**, and 164 files touch `org.json`. That is its own deliberate piece,
+starting from characterization tests over real profile documents.
+
+#### A locale bug on the wire
+
+`RT.toISOString` built the APS result timestamp with `SimpleDateFormat(pattern, Locale.getDefault())`.
+`SimpleDateFormat` resolves its calendar from the locale, and a Thai locale selects the Buddhist
+calendar: the year went out as **2569 instead of 2026**, a timestamp 543 years in the future, for any
+user whose phone is set to Thai. Pre-existing on `dev`, fixed by the conversion because the kotlinx
+formatter is locale independent. `RtIsoStringParityTest` asserts the defect existed in the old code
+too, so the claim is measured rather than asserted.
+
+The formatter is built explicitly instead of using `Instant.toString()`, which drops trailing zeros
+and omits the fraction on a whole second - the format has to stay `.SSS` always.
+
+#### joda is gone from `:core:interfaces`
+
+Only `RT.kt` used it. The parser matters more than it looks: `RT.deserialize` runs on **device status
+written by other Nightscout uploaders**, so `+0200` without a colon, offset-less values and bare dates
+all arrive in practice, and kotlinx rejects all three. `:core:nssdk` already had a proven lenient
+parser, so that logic moved to `:core:data` and is pinned against real joda over 15 shapes.
+
+Two judgement calls, both deliberate:
+
+- it is **knowingly duplicated** in `:core:nssdk`, which has *zero* project dependencies; coupling a
+  standalone SDK module to the app's data module to share ~30 lines is the worse trade
+- joda **threw** on garbage while the nssdk copy returns `0L`, so the shared function returns `Long?`
+  and each caller keeps its own behaviour - `RT` throws, nssdk maps to `0L`
+
+#### Also found, deliberately not fixed
+
+`MidnightTime.calc(time)` reads its cache, computes on a miss, and **never stores the result**. The
+map is always empty, the `THRESHOLD` reset is dead, and the existing `resetCache` test passes
+trivially. It predates the multiplatform work. Adding the write back changes memory use on a hot path
+(the graph renderer calls this per point), so it is left alone and recorded here instead.
+
+The DST sweeps written for that file are the useful part: the old test only asked "is this midnight,
+today, in this zone", which any roughly-right implementation passes. It now runs hour by hour across
+both 2026 transitions in Europe/Prague, with a guard test asserting the sweep really crosses an offset
+change - otherwise a UTC CI machine makes the whole thing vacuous, the same trap as the iOS workflow.
+
 ---
 
 ## 9. Open decisions
