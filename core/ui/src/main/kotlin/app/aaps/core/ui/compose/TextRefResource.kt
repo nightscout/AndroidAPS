@@ -2,6 +2,7 @@ package app.aaps.core.ui.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.InterfacesStringIds
 import app.aaps.core.keys.KeysStringIds
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
@@ -42,13 +43,15 @@ fun stringResource(ref: TextRef): String = when (ref) {
  * maps in some order - `ns_wifi_ssids` exists in both with different translations, and guessing
  * would silently pick one.
  *
- * `:core:ui` can see both maps because it depends on `:core:keys`. A module that converts later adds
- * its own branch here, or this becomes a registry once there are enough of them to be worth one.
+ * `:core:ui` can see all three maps because it depends on `:core:keys` and `:core:interfaces`. A
+ * module that converts later adds its own branch here, or this becomes a registry once there are
+ * enough of them to be worth one.
  */
 private fun androidIdOf(ref: TextRef.Named): Int? = when (ref.owner) {
-    "keys" -> KeysStringIds.idOf(ref.name)
-    "ui"   -> UiStringIds.idOf(ref.name)
-    else   -> null
+    "keys"       -> KeysStringIds.idOf(ref.name)
+    "ui"         -> UiStringIds.idOf(ref.name)
+    "interfaces" -> InterfacesStringIds.idOf(ref.name)
+    else         -> null
 }
 
 /**

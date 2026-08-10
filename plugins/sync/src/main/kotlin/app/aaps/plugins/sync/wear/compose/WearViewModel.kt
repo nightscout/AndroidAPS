@@ -259,8 +259,8 @@ class WearViewModel @Inject constructor(
             val items = files.map { cwfFile ->
                 val metadata = cwfFile.cwfData.metadata
                 val name = metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { av ->
-                    rh.gs(CwfMetadataKey.CWF_AUTHOR_VERSION.label, metadata[CwfMetadataKey.CWF_NAME], av)
-                } ?: rh.gs(CwfMetadataKey.CWF_NAME.label, metadata[CwfMetadataKey.CWF_NAME])
+                    rh.gs(CwfMetadataKey.CWF_AUTHOR_VERSION.label, metadata[CwfMetadataKey.CWF_NAME] ?: "", av)
+                } ?: rh.gs(CwfMetadataKey.CWF_NAME.label, metadata[CwfMetadataKey.CWF_NAME] ?: "")
                 val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it.${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
                 CwfImportItemState(
                     cwfFile = cwfFile,
