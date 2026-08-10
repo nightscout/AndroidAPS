@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.dialogs
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.UiStrings
@@ -9,14 +10,14 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 
 /**
  * Shared confirmation dialog for the action dialogs (wizard, treatment, insulin, temp-basal, care, …).
  *
  * Carries the [elementType]'s visual identity — its label as the title and its themed icon/tint — so each
  * dialog only supplies the per-action [message] (a colored [AnnotatedString] summary) and the confirm/dismiss
- * callbacks, instead of re-inlining `OkCancelDialog(title = …labelResId(), icon = …icon(), iconTint = …color())`
+ * callbacks, instead of re-inlining `OkCancelDialog(title = …label(), icon = …icon(), iconTint = …color())`
  * in every screen.
  */
 @Composable
@@ -27,7 +28,7 @@ fun ElementConfirmationDialog(
     onDismiss: () -> Unit
 ) {
     OkCancelDialog(
-        title = stringResource(elementType.labelResId()),
+        title = (stringResourceOrNull(elementType.label()) ?: ""),
         message = message,
         icon = elementType.icon(),
         iconTint = elementType.color(),
@@ -61,7 +62,7 @@ fun ElementConfirmationDialog(
     onDismiss: () -> Unit
 ) {
     OkCancelDialog(
-        title = stringResource(elementType.labelResId()),
+        title = (stringResourceOrNull(elementType.label()) ?: ""),
         message = message,
         icon = elementType.icon(),
         iconTint = elementType.color(),

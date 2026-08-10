@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.treatmentDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,7 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.components.DialogStatusBar
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
@@ -149,7 +150,7 @@ internal fun TreatmentDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.TREATMENT.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.TREATMENT.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(

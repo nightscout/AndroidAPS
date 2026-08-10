@@ -51,13 +51,13 @@ class ElementTypeStyleTest {
 
     @Test
     fun typesWithZeroLabel_matchDocumentedDynamicSet() {
-        val actualZero = ElementType.entries.filter { it.labelResId() == 0 }.toSet()
+        val actualZero = ElementType.entries.filter { it.label() == null }.toSet()
         assertThat(actualZero).isEqualTo(typesWithDynamicLabel)
     }
 
     @Test
     fun typesWithZeroDescription_matchDocumentedSet() {
-        val actualZero = ElementType.entries.filter { it.descriptionResId() == 0 }.toSet()
+        val actualZero = ElementType.entries.filter { it.description() == null }.toSet()
         assertThat(actualZero).isEqualTo(typesWithoutDescription)
     }
 
@@ -65,7 +65,7 @@ class ElementTypeStyleTest {
     fun searchableEntries_haveDisplayableLabel() {
         // A search hit with no label and no dynamic-label fallback would show as a blank row.
         val blank = ElementType.searchableEntries.filter {
-            it.labelResId() == 0 && it !in typesWithDynamicLabel
+            it.label() == null && it !in typesWithDynamicLabel
         }
         assertThat(blank).isEmpty()
     }

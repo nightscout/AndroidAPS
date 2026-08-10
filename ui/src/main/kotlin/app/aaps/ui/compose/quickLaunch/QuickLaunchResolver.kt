@@ -22,9 +22,9 @@ import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
-import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.core.interfaces.scenes.SceneStore
@@ -134,8 +134,8 @@ class QuickLaunchResolver @Inject constructor(
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)?.let { rh.gs(it.pluginDescription.pluginName) } ?: "?"
 
         else                                   -> {
-            val resId = action.elementType?.labelResId() ?: 0
-            if (resId != 0) rh.gs(resId) else action.typeId
+            val label = action.elementType?.label()
+            label?.let { rh.gs(it) } ?: action.typeId
         }
     }
 
@@ -181,8 +181,8 @@ class QuickLaunchResolver @Inject constructor(
             ?.pluginDescription?.description?.takeIf { it != -1 }?.let { rh.gs(it) }
 
         else                                   -> {
-            val resId = action.elementType?.descriptionResId() ?: 0
-            if (resId != 0) rh.gs(resId) else null
+            val desc = action.elementType?.description()
+            desc?.let { rh.gs(it) }
         }
     }
 

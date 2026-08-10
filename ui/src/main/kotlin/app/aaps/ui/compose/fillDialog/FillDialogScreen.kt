@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.fillDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -64,7 +65,7 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.insulin.SelectInsulin
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
@@ -237,7 +238,7 @@ internal fun FillDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.FILL.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.FILL.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(

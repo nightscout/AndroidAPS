@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.treatmentsSheet
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,9 +42,9 @@ import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.main.QuickWizardItem
@@ -321,7 +323,7 @@ private fun TreatmentItem(
     onClick: () -> Unit
 ) {
     val color = elementType.color()
-    val descResId = elementType.descriptionResId()
+    val desc = elementType.description()
     // A relayed action (visible only to master/paired-client) is also DISABLED when the master is unreachable or
     // has remote control off. Local items (CGM, Calibration) use the default ALWAYS visibility → stay enabled.
     val effectiveEnabled = enabled &&
@@ -329,15 +331,15 @@ private fun TreatmentItem(
     ListItem(
         headlineContent = {
             Text(
-                text = stringResource(elementType.labelResId()),
+                text = (stringResourceOrNull(elementType.label()) ?: ""),
                 color = if (effectiveEnabled) color
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha)
             )
         },
-        supportingContent = if (descResId != 0) {
+        supportingContent = if (desc != null) {
             {
                 Text(
-                    text = stringResource(descResId),
+                    text = stringResource(desc),
                     color = if (effectiveEnabled) MaterialTheme.colorScheme.onSurfaceVariant
                     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = disabledAlpha)
                 )

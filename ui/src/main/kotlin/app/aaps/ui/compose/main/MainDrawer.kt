@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.main
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -26,9 +27,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 
 @Composable
 fun MainDrawer(
@@ -96,11 +97,11 @@ private fun DrawerMenuItem(
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
-    val descResId = elementType.descriptionResId()
+    val desc = elementType.description()
     DrawerMenuItem(
         icon = elementType.icon(),
-        label = stringResource(elementType.labelResId()),
-        description = if (descResId != 0) stringResource(descResId) else null,
+        label = (stringResourceOrNull(elementType.label()) ?: ""),
+        description = stringResourceOrNull(desc),
         enabled = enabled,
         onClick = onClick
     )

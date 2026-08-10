@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.extendedBolusDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,7 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -131,7 +132,7 @@ internal fun ExtendedBolusDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.EXTENDED_BOLUS.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.EXTENDED_BOLUS.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(

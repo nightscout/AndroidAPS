@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.tempBasalDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,7 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -123,7 +124,7 @@ internal fun TempBasalDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.TEMP_BASAL.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.TEMP_BASAL.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(

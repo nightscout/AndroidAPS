@@ -5,9 +5,9 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 
 /**
@@ -93,11 +93,11 @@ sealed class SearchableItem {
     ) : SearchableItem() {
 
         override val key: String = elementType.name
-        override val title: TextRef = TextRef.AndroidRes(elementType.labelResId())
+        override val title: TextRef = elementType.label() ?: TextRef.Literal("")
 
         @Deprecated("use icon")
         override val icon: ImageVector = elementType.icon()
-        override val summary: TextRef? = elementType.descriptionResId().takeIf { it != 0 }?.let { TextRef.AndroidRes(it) }
+        override val summary: TextRef? = elementType.description()
     }
 
     /**

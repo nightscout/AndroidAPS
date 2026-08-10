@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.calibrationDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,7 +54,7 @@ import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.R
 import app.aaps.core.ui.R as CoreUiR
 
@@ -135,7 +136,7 @@ internal fun CalibrationDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.CALIBRATION.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.CALIBRATION.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(

@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.wizardDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -92,7 +93,7 @@ import app.aaps.core.ui.compose.icons.IcPizza
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
@@ -241,7 +242,7 @@ internal fun WizardDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.BOLUS_WIZARD.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.BOLUS_WIZARD.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(

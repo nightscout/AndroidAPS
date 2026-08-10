@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.profileHelper
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,7 +65,7 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.R
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.stats.TddStatsCompose
@@ -322,7 +323,7 @@ internal fun ProfileHelperContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.PROFILE_HELPER.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.PROFILE_HELPER.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
