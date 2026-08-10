@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.pump
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 
@@ -69,7 +70,7 @@ fun <T : PumpHistoryRecord> PumpHistoryScreen(
                 if (state.isLoading) {
                     CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
                 } else {
-                    Text(stringResource(R.string.refresh))
+                    Text(stringResource(UiStrings.refresh))
                 }
             }
         }
@@ -92,7 +93,7 @@ fun <T : PumpHistoryRecord> PumpHistoryScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = stringResource(R.string.no_history_records),
+                    text = stringResource(UiStrings.no_history_records),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

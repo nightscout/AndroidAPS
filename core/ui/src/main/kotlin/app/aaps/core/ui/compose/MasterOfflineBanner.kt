@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 
@@ -34,8 +34,8 @@ import app.aaps.core.ui.R
 fun MasterOfflineBanner(
     editingEnabled: Boolean,
     modifier: Modifier = Modifier,
-    text: String = if (!LocalMasterControlAllowed.current) stringResource(R.string.master_control_disabled_banner)
-    else stringResource(R.string.master_offline_banner)
+    text: String = if (!LocalMasterControlAllowed.current) stringResource(UiStrings.master_control_disabled_banner)
+    else stringResource(UiStrings.master_offline_banner)
 ) {
     if (editingEnabled) return
     Surface(

@@ -45,6 +45,16 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
     @get:Input
     abstract val packageName: Property<String>
 
+    /**
+     * Which module owns these names, for example `keys` or `ui`.
+     *
+     * A string name is only unique inside one module - `ns_wifi_ssids` exists in both `:core:keys`
+     * and `:core:ui` with different translations - so the resolver needs to know which map to look
+     * in rather than guessing by order.
+     */
+    @get:Input
+    abstract val owner: Property<String>
+
     /** Name of the platform neutral object, for example `KeysStrings`. */
     @get:Input
     abstract val objectName: Property<String>
@@ -68,15 +78,16 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val res = resDir.get().asFile
-        val baseFile = File(res, "values/strings.xml")
-        if (!baseFile.isFile) throw GradleException("No values/strings.xml under $res")
+        val baseDir = File(res, "values")
+        if (!baseDir.isDirectory) throw GradleException("No values/ directory under $res")
 
-        val names = readStringNames(baseFile)
-        if (names.isEmpty()) throw GradleException("No <string> elements in $baseFile")
+        val names = readStringNames(baseDir)
+        if (names.isEmpty()) throw GradleException("No <string> elements under $baseDir")
 
         val duplicates = names.groupBy { it }.filterValues { it.size > 1 }.keys
         if (duplicates.isNotEmpty()) {
-            throw GradleException("Duplicate string names in $baseFile: ${duplicates.sorted()}")
+            // AAPT would reject these too, so this cannot fire on a project that builds.
+            throw GradleException("Duplicate string names under $baseDir: ${duplicates.sorted()}")
         }
 
         val unsafe = names.filterNot { it.isSafeKotlinIdentifier() }
@@ -86,7 +97,7 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
             // so it has to be a deliberate act rather than something the generator papers over.
             throw GradleException(
                 "These string names cannot be generated as Kotlin properties: ${unsafe.sorted()}. " +
-                    "Rename them in $baseFile."
+                    "Rename them under $baseDir."
             )
         }
 
@@ -114,7 +125,8 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
                 append(" * declaring code stays free of Android resource ids.\n")
                 append(" */\n")
                 append("object $obj {\n\n")
-                names.forEach { append("    val $it: TextRef = TextRef.Named(\"$it\")\n") }
+                val ownerName = owner.get()
+                names.forEach { append("    val $it: TextRef = TextRef.Named(\"$ownerName\", \"$it\")\n") }
                 append("}\n")
             }
         )
@@ -170,8 +182,7 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
         var empty = 0
         var partial = 0
         locales.forEach { dir ->
-            val file = File(dir, "strings.xml")
-            val present = if (file.isFile) readStringNames(file).toSet() else emptySet()
+            val present = readStringNames(dir).toSet()
             val missing = expected - present
             val extra = present - expected
             val state = when {
@@ -197,14 +208,26 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
         }
     }
 
-    private fun readStringNames(file: File): List<String> {
-        val doc = DocumentBuilderFactory.newInstance()
+    /**
+     * Every `<string>` in EVERY xml file of a `values*` directory, because that is what AAPT does.
+     *
+     * Reading only `strings.xml` is the obvious shortcut and it is wrong: `:core:ui` keeps 1059
+     * strings in `strings.xml`, 32 in `protection.xml` and 60 in `strings_scene_wizard.xml`, and a
+     * generator that missed the other two would leave 92 names unresolvable while looking correct.
+     * Files with no `<string>` at all - colors, styles, layout aliases - simply contribute nothing.
+     */
+    private fun readStringNames(dir: File): List<String> {
+        val files = dir.listFiles { f: File -> f.isFile && f.extension.equals("xml", ignoreCase = true) }
+            ?.sortedBy { it.name }
+            .orEmpty()
+        val builder = DocumentBuilderFactory.newInstance()
             .apply { isNamespaceAware = false }
             .newDocumentBuilder()
-            .parse(file)
-        val nodes = doc.getElementsByTagName("string")
-        return (0 until nodes.length).mapNotNull { i ->
-            nodes.item(i).attributes?.getNamedItem("name")?.nodeValue
+        return files.flatMap { file ->
+            val nodes = builder.parse(file).getElementsByTagName("string")
+            (0 until nodes.length).mapNotNull { i ->
+                nodes.item(i).attributes?.getNamedItem("name")?.nodeValue
+            }
         }
     }
 

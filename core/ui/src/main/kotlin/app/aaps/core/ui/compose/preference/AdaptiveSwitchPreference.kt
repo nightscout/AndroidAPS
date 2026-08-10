@@ -4,13 +4,14 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.BooleanKeyWithChangeGuard
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
@@ -92,7 +93,7 @@ fun AdaptiveSwitchPreferenceItem(
     // Show guard rejection dialog
     guardMessage?.let { message ->
         OkDialog(
-            title = stringResource(R.string.error),
+            title = stringResource(UiStrings.error),
             message = message,
             onDismiss = { guardMessage = null }
         )

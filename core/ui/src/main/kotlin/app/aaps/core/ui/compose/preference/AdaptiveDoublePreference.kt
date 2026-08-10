@@ -4,13 +4,14 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.decimalPlaces
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
@@ -120,7 +121,7 @@ fun AdaptiveDoublePreferenceItem(
         val summaryText = if (rangeRef != null) {
             stringResource(rangeRef)
         } else {
-            stringResource(R.string.preference_range_summary, valueFormat.format(value), unitLabelText, valueFormat.format(doubleKey.min), valueFormat.format(doubleKey.max))
+            stringResource(UiStrings.preference_range_summary, valueFormat.format(value), unitLabelText, valueFormat.format(doubleKey.min), valueFormat.format(doubleKey.max))
         }
         TextFieldPreference(
             state = state,

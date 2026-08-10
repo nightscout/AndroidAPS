@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.dialogs
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -105,7 +106,7 @@ fun QueryAnyPasswordDialog(
                 OutlinedTextField(
                     value = passwordText,
                     onValueChange = { passwordText = it },
-                    label = { Text(stringResource(R.string.protection_password_hint)) },
+                    label = { Text(stringResource(UiStrings.protection_password_hint)) },
                     isError = errorMessage != null,
                     supportingText = errorMessage?.let { msg -> { Text(msg, color = MaterialTheme.colorScheme.error) } },
                     visualTransformation = PasswordVisualTransformation(),
@@ -136,12 +137,12 @@ fun QueryAnyPasswordDialog(
                     onConfirm(passwordText)
                 }
             ) {
-                Text(stringResource(R.string.ok))
+                Text(stringResource(UiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(UiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)

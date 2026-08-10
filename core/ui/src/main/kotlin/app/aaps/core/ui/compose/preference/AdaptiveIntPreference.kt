@@ -4,13 +4,14 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
@@ -113,7 +114,7 @@ fun AdaptiveIntPreferenceItem(
         val summaryText = if (rangeRef != null) {
             stringResource(rangeRef)
         } else {
-            stringResource(R.string.preference_range_summary, value.toString(), unitLabelText, intKey.min.toString(), intKey.max.toString())
+            stringResource(UiStrings.preference_range_summary, value.toString(), unitLabelText, intKey.min.toString(), intKey.max.toString())
         }
         TextFieldPreference(
             state = state,

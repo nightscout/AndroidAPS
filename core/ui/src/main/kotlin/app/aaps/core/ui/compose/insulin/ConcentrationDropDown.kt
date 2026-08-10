@@ -1,5 +1,8 @@
 package app.aaps.core.ui.compose.insulin
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.ui.R
 
@@ -37,7 +39,7 @@ fun ConcentrationDropdown(
             onValueChange = {},
             readOnly = true,
             enabled = enabled,
-            label = { Text(stringResource(R.string.concentration_label)) },
+            label = { Text(stringResource(UiStrings.concentration_label)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()

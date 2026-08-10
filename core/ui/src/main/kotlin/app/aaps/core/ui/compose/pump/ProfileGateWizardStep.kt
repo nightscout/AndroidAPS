@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.pump
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.R
@@ -52,18 +53,18 @@ fun ProfileGateWizardStep(host: ProfileGateStepHost) {
 
     WizardStepLayout(
         primaryButton = if (hasStore) WizardButton(
-            text = stringResource(R.string.activate_profile),
+            text = stringResource(UiStrings.activate_profile),
             onClick = { host.activateSelectedProfile() },
             enabled = selected != null
         ) else null,
         secondaryButton = WizardButton(
-            text = stringResource(R.string.cancel),
+            text = stringResource(UiStrings.cancel),
             onClick = { host.cancelGate() }
         )
     ) {
         if (hasStore) {
             Text(
-                text = stringResource(R.string.pump_wizard_profile_gate_pick),
+                text = stringResource(UiStrings.pump_wizard_profile_gate_pick),
                 style = MaterialTheme.typography.bodyLarge
             )
             Column(
@@ -95,7 +96,7 @@ fun ProfileGateWizardStep(host: ProfileGateStepHost) {
             }
         } else {
             Text(
-                text = stringResource(R.string.pump_wizard_profile_gate_no_store),
+                text = stringResource(UiStrings.pump_wizard_profile_gate_no_store),
                 style = MaterialTheme.typography.bodyLarge
             )
         }

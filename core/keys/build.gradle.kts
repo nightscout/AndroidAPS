@@ -13,6 +13,7 @@ plugins {
 val generateKeyStrings = tasks.register<GenerateKeyStringsTask>("generateKeyStrings") {
     resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
     packageName.set("app.aaps.core.keys")
+    owner.set("keys")
     objectName.set("KeysStrings")
     idsObjectName.set("KeysStringIds")
     reportFile.set(layout.buildDirectory.file("reports/keyStrings/translations.txt"))

@@ -1,12 +1,12 @@
 package app.aaps.core.ui.compose.preference
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.R
@@ -48,9 +48,9 @@ fun AdaptiveMasterPasswordPreferenceItem(
     val hasPassword = passwordState.isNotEmpty()
 
     val summary = if (hasPassword) {
-        stringResource(R.string.password_set)
+        stringResource(UiStrings.password_set)
     } else {
-        stringResource(R.string.password_not_set)
+        stringResource(UiStrings.password_not_set)
     }
 
     // Dialog states
@@ -81,16 +81,16 @@ fun AdaptiveMasterPasswordPreferenceItem(
     )
 
     // Message strings (resolved here for use in callbacks)
-    val wrongPasswordMsg = stringResource(R.string.wrongpassword)
-    val dontMatchMsg = stringResource(R.string.passwords_dont_match)
-    val passwordSetMsg = stringResource(R.string.password_set)
-    val passwordClearedMsg = stringResource(R.string.password_cleared)
-    val notChangedMsg = stringResource(R.string.password_not_changed)
+    val wrongPasswordMsg = stringResource(UiStrings.wrongpassword)
+    val dontMatchMsg = stringResource(UiStrings.passwords_dont_match)
+    val passwordSetMsg = stringResource(UiStrings.password_set)
+    val passwordClearedMsg = stringResource(UiStrings.password_cleared)
+    val notChangedMsg = stringResource(UiStrings.password_not_changed)
 
     // Query current password dialog
     if (showQueryDialog) {
         QueryPasswordDialog(
-            title = stringResource(R.string.current_master_password),
+            title = stringResource(UiStrings.current_master_password),
             pinInput = false,
             onConfirm = { enteredPassword ->
                 if (checkPassword(enteredPassword, passwordState)) {

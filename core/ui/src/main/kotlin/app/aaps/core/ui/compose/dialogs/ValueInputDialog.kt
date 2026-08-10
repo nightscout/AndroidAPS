@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.dialogs
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -185,12 +186,12 @@ fun ValueInputDialog(
         },
         confirmButton = {
             TextButton(onClick = { confirm() }) {
-                Text(stringResource(R.string.ok))
+                Text(stringResource(UiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(UiStrings.cancel))
             }
         }
     )

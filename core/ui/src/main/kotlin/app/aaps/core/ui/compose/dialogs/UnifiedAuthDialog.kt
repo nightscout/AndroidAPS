@@ -1,5 +1,8 @@
 package app.aaps.core.ui.compose.dialogs
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -95,7 +97,7 @@ fun UnifiedAuthDialog(
         },
         title = {
             Text(
-                text = stringResource(R.string.biometric_title),
+                text = stringResource(UiStrings.biometric_title),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -134,12 +136,12 @@ fun UnifiedAuthDialog(
                     tryAuthenticate(passwordText)
                 }
             ) {
-                Text(stringResource(R.string.ok))
+                Text(stringResource(UiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = { onResult(AuthorizationResult(null, ProtectionResult.CANCELLED)) }) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(UiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)

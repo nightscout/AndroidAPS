@@ -5,10 +5,11 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey

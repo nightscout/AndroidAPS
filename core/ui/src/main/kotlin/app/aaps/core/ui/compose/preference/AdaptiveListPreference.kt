@@ -4,6 +4,7 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.AnnotatedString

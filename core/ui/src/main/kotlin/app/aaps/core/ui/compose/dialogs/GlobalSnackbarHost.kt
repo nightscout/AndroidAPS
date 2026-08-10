@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.dialogs
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -25,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -87,7 +88,7 @@ fun GlobalSnackbarHost(
             dismissAction = {
                 TextButton(onClick = { hostState.currentSnackbarData?.dismiss() }) {
                     Text(
-                        text = stringResource(R.string.dismiss),
+                        text = stringResource(UiStrings.dismiss),
                         color = contentColor
                     )
                 }

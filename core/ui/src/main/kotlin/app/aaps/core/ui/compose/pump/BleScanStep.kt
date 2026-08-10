@@ -1,5 +1,8 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.ui.R
@@ -46,8 +48,8 @@ fun BleScanStep(
     onStopScan: () -> Unit = {},
     onCancel: () -> Unit,
     deviceNameFilter: Regex? = null,
-    title: String = stringResource(R.string.ble_scan_select_pump),
-    subtitle: String = stringResource(R.string.ble_scan_scanning)
+    title: String = stringResource(UiStrings.ble_scan_select_pump),
+    subtitle: String = stringResource(UiStrings.ble_scan_scanning)
 ) {
     DisposableEffect(Unit) {
         onStartScan()

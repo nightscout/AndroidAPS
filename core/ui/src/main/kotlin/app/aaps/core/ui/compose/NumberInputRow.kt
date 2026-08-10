@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -132,7 +133,7 @@ fun NumberInputRow(
     val rangeText = "${effectiveValueFormat.format(valueRange.start)} — ${effectiveValueFormat.format(valueRange.endInclusive)}"
 
     // Pre-resolve error strings for use in non-composable validateAndCommit
-    val errorInvalidNumber = stringResource(R.string.invalid_number)
+    val errorInvalidNumber = stringResource(UiStrings.invalid_number)
 
     fun validateAndCommit(text: String) {
         val cleaned = text.trim().replace(",", ".")

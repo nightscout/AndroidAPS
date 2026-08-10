@@ -1,8 +1,9 @@
 package app.aaps.core.ui.compose.siteRotation
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.R
@@ -40,12 +41,12 @@ fun SiteLocationWizardStep(host: SiteLocationStepHost) {
 
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.next),
+            text = stringResource(UiStrings.next),
             onClick = { host.completeSiteLocation() },
             enabled = siteLocation != TE.Location.NONE
         ),
         secondaryButton = WizardButton(
-            text = stringResource(R.string.skip),
+            text = stringResource(UiStrings.skip),
             onClick = {
                 host.updateSiteLocation(TE.Location.NONE)
                 host.updateSiteArrow(TE.Arrow.NONE)

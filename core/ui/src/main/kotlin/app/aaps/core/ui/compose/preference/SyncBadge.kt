@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.InlineTextContent
@@ -13,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextStyle
@@ -42,7 +43,7 @@ fun SyncBadge(visible: Boolean, modifier: Modifier = Modifier) {
     // NOT a tappable refresh/sync control.
     Icon(
         imageVector = Icons.Default.PhonelinkRing,
-        contentDescription = stringResource(R.string.pref_syncs_with_main_phone),
+        contentDescription = stringResource(UiStrings.pref_syncs_with_main_phone),
         modifier = modifier.size(14.dp),
         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
     )
@@ -84,7 +85,7 @@ fun TextWithSyncBadge(
         ) {
             Icon(
                 imageVector = Icons.Default.PhonelinkRing,
-                contentDescription = stringResource(R.string.pref_syncs_with_main_phone),
+                contentDescription = stringResource(UiStrings.pref_syncs_with_main_phone),
                 modifier = Modifier.fillMaxSize(),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )

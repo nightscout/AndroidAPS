@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.pump
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -7,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BlePreCheckResult
 import app.aaps.core.ui.R
@@ -47,8 +48,8 @@ fun BlePreCheckHost(
     when (checkResult) {
         BlePreCheckResult.BLE_NOT_SUPPORTED -> {
             OkDialog(
-                title = stringResource(R.string.message),
-                message = stringResource(R.string.ble_not_supported),
+                title = stringResource(UiStrings.message),
+                message = stringResource(UiStrings.ble_not_supported),
                 onDismiss = {
                     checkResult = null
                     onFailed?.invoke()
@@ -58,8 +59,8 @@ fun BlePreCheckHost(
 
         BlePreCheckResult.BLE_NOT_ENABLED -> {
             OkDialog(
-                title = stringResource(R.string.message),
-                message = stringResource(R.string.ble_not_enabled),
+                title = stringResource(UiStrings.message),
+                message = stringResource(UiStrings.ble_not_enabled),
                 onDismiss = {
                     checkResult = null
                     onFailed?.invoke()
@@ -69,8 +70,8 @@ fun BlePreCheckHost(
 
         BlePreCheckResult.PERMISSIONS_MISSING -> {
             OkDialog(
-                title = stringResource(R.string.message),
-                message = stringResource(R.string.ble_permissions_missing),
+                title = stringResource(UiStrings.message),
+                message = stringResource(UiStrings.ble_permissions_missing),
                 onDismiss = {
                     checkResult = null
                     onFailed?.invoke()

@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.siteRotation
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -16,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -42,12 +43,12 @@ fun SiteLocationPickerScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.site_rotation)) },
+                title = { Text(stringResource(UiStrings.site_rotation)) },
                 navigationIcon = {
                     IconButton(onClick = onClose) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(R.string.close)
+                            contentDescription = stringResource(UiStrings.close)
                         )
                     }
                 },
@@ -58,7 +59,7 @@ fun SiteLocationPickerScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = stringResource(R.string.save),
+                            contentDescription = stringResource(UiStrings.save),
                             tint = if (selectedLocation != TE.Location.NONE)
                                 MaterialTheme.colorScheme.primary
                             else

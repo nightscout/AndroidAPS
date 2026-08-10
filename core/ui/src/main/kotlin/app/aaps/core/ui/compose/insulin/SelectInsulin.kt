@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.insulin
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +22,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.ICfg
@@ -77,7 +78,7 @@ fun SelectInsulin(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(R.string.current_insulin),
+                    text = stringResource(UiStrings.current_insulin),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -88,7 +89,7 @@ fun SelectInsulin(
                 )
             }
             FilledTonalButton(onClick = { expanded = !expanded }) {
-                Text(stringResource(R.string.change_insulin))
+                Text(stringResource(UiStrings.change_insulin))
             }
         }
 
@@ -138,7 +139,7 @@ fun SelectInsulin(
                             )
                             if (isActive) {
                                 Text(
-                                    text = stringResource(R.string.current_insulin),
+                                    text = stringResource(UiStrings.current_insulin),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

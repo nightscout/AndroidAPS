@@ -1,7 +1,8 @@
 package app.aaps.core.ui.compose
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
+import androidx.compose.runtime.Composable
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
@@ -20,10 +21,10 @@ fun formatMinutesAsDuration(minutes: Int): String {
     return if (abs >= 60) {
         val hours = abs / 60
         val mins = abs % 60
-        sign + if (mins == 0) stringResource(R.string.format_hours_only, hours)
-        else stringResource(R.string.format_hour_minute, hours, mins)
+        sign + if (mins == 0) stringResource(UiStrings.format_hours_only, hours)
+        else stringResource(UiStrings.format_hour_minute, hours, mins)
     } else {
-        stringResource(R.string.format_mins, minutes)
+        stringResource(UiStrings.format_mins, minutes)
     }
 }
 

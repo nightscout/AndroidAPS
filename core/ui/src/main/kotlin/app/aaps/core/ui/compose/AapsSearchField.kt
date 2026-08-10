@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
@@ -40,7 +40,7 @@ fun AapsSearchField(
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = stringResource(R.string.search),
+    placeholder: String = stringResource(UiStrings.search),
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -67,7 +67,7 @@ fun AapsSearchField(
                 IconButton(onClick = { onQueryChange("") }) {
                     Icon(
                         Icons.Filled.Clear,
-                        contentDescription = stringResource(R.string.clear),
+                        contentDescription = stringResource(UiStrings.clear),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

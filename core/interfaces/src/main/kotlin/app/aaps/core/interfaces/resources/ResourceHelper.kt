@@ -39,7 +39,7 @@ interface ResourceHelper {
             else gs(ref.id, *ref.args.toTypedArray())
 
         is TextRef.Named      -> {
-            val id = KeysStringIds.idOf(ref.name)
+            val id = keysIdOf(ref)
             when {
                 id == null          -> ref.name
                 ref.args.isEmpty()  -> gs(id)
@@ -52,7 +52,7 @@ interface ResourceHelper {
     fun gsNotLocalised(ref: TextRef): String = when (ref) {
         is TextRef.Literal    -> ref.text
         is TextRef.AndroidRes -> gsNotLocalised(ref.id, *ref.args.toTypedArray())
-        is TextRef.Named      -> KeysStringIds.idOf(ref.name)
+        is TextRef.Named      -> keysIdOf(ref)
             ?.let { gsNotLocalised(it, *ref.args.toTypedArray()) }
             ?: ref.name
     }
@@ -70,3 +70,18 @@ interface ResourceHelper {
     fun dpToPx(dp: Float): Int
     fun shortTextMode(): Boolean
 }
+
+/**
+ * Resolves a [TextRef.Named] that this module can see.
+ *
+ * `:core:interfaces` depends on `:core:keys` and nothing else that owns strings, so only `keys` is
+ * resolvable here. A name owned by another module falls back to showing the raw name - visibly wrong
+ * rather than silently blank.
+ *
+ * That is not a gap in practice today: the `ui`-owned names are used from Composables, and
+ * `app.aaps.core.ui.compose.stringResource` sits in `:core:ui`, which can see both maps. If a
+ * non-Compose caller ever needs a `ui` name, this is the place that has to learn about it - probably
+ * as a registry rather than another branch.
+ */
+private fun keysIdOf(ref: TextRef.Named): Int? =
+    if (ref.owner == "keys") KeysStringIds.idOf(ref.name) else null

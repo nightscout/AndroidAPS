@@ -45,16 +45,23 @@ sealed interface TextRef {
      * A string named rather than numbered, so the declaring code holds nothing Android specific.
      *
      * [name] is the `name` attribute from `strings.xml`. Take these from the generated object for
-     * the owning module - `KeysStrings` for `:core:keys` - never by writing the string out by hand,
-     * because only the generated form is checked against the XML at build time.
+     * the owning module - `KeysStrings` for `:core:keys`, `UiStrings` for `:core:ui` - never by
+     * writing the string out by hand, because only the generated form is checked against the XML at
+     * build time.
      *
-     * Each platform resolves the name its own way. Android looks it up in the generated id map and
-     * then reads it through `Resources`, so locale matching and the always English lookup work
-     * exactly as they did when keys carried ids.
+     * [owner] says which module's `strings.xml` [name] came from, because a name is only unique
+     * within one module. `ns_wifi_ssids` really does exist in both `:core:keys` and `:core:ui` with
+     * different translations in Bulgarian, Norwegian and Chinese, so a resolver that guessed by
+     * lookup order would silently pick one of them. Tagging the owner makes it unambiguous and costs
+     * nothing at the call sites, because only the generator ever constructs this.
+     *
+     * Each platform resolves the pair its own way. Android looks it up in that module's generated id
+     * map and then reads it through `Resources`, so locale matching and the always English lookup
+     * work exactly as they did when keys carried ids.
      *
      * [args] behave as in [AndroidRes].
      */
-    data class Named(val name: String, val args: List<Any> = emptyList()) : TextRef
+    data class Named(val owner: String, val name: String, val args: List<Any> = emptyList()) : TextRef
 
     /**
      * Text that is only known at run time - a scanned pump name, a wiki page title, a user label.
@@ -63,4 +70,20 @@ sealed interface TextRef {
      * no resource here", which callers had to remember to test for.
      */
     data class Literal(val text: String) : TextRef
+
+    companion object {
+
+        /**
+         * The same reference with format arguments attached.
+         *
+         * The generated objects hand out argument-free references, because a generator cannot know
+         * what a call site wants to substitute. This is how a call site supplies them:
+         * `UiStrings.some_format.withArgs(count, unit)`.
+         */
+        fun TextRef.withArgs(vararg args: Any): TextRef = when (this) {
+            is Named      -> copy(args = args.toList())
+            is AndroidRes -> copy(args = args.toList())
+            is Literal    -> this
+        }
+    }
 }

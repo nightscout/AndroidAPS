@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.siteRotation
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.R
@@ -65,21 +66,21 @@ fun SiteLocationSummary(
 
             if (hasSelection) {
                 Text(
-                    text = stringResource(R.string.selected_location, selectedLocationString),
+                    text = stringResource(UiStrings.selected_location, selectedLocationString),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.weight(1f)
                 )
             } else if (lastLocationString != null) {
                 Text(
-                    text = stringResource(R.string.last_site_location, lastLocationString),
+                    text = stringResource(UiStrings.last_site_location, lastLocationString),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
                 )
             } else {
                 Text(
-                    text = stringResource(R.string.select_site_location),
+                    text = stringResource(UiStrings.select_site_location),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
@@ -87,7 +88,7 @@ fun SiteLocationSummary(
             }
 
             OutlinedButton(onClick = onPickSiteClick) {
-                Text(stringResource(R.string.pick_site))
+                Text(stringResource(UiStrings.pick_site))
             }
         }
     }

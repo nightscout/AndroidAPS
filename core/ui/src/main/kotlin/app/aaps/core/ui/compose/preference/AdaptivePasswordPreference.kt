@@ -4,13 +4,14 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
@@ -70,8 +71,8 @@ fun AdaptivePasswordPreferenceItem(
 
     val summary = when {
         hasValue -> "••••••••"
-        isPin    -> stringResource(R.string.pin_not_set)
-        else     -> stringResource(R.string.password_not_set)
+        isPin    -> stringResource(UiStrings.pin_not_set)
+        else     -> stringResource(UiStrings.password_not_set)
     }
 
     Preference(

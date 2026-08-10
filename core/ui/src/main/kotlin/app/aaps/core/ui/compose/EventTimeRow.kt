@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -18,7 +19,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 
@@ -58,12 +58,12 @@ fun EventTimeRow(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = stringResource(R.string.time) + ": ",
+                    text = stringResource(UiStrings.time) + ": ",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (timeChanged) displayText else stringResource(R.string.carb_time_now),
+                    text = if (timeChanged) displayText else stringResource(UiStrings.carb_time_now),
                     style = MaterialTheme.typography.titleMedium,
                     color = if (timeChanged) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.onSurface
@@ -72,7 +72,7 @@ fun EventTimeRow(
 
             if (!expanded) {
                 FilledTonalButton(onClick = { expanded = true }) {
-                    Text(stringResource(R.string.change))
+                    Text(stringResource(UiStrings.change))
                 }
             }
         }

@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 
@@ -148,7 +148,7 @@ fun ConfigPluginCard(
                 if (showSettings) {
                     InCardActionRow(
                         leadingIcon = Icons.Filled.Settings,
-                        label = stringResource(R.string.settings),
+                        label = stringResource(UiStrings.settings),
                         onClick = onSettingsClick
                     )
                 }
@@ -158,7 +158,7 @@ fun ConfigPluginCard(
                     }
                     InCardActionRow(
                         leadingIcon = Icons.AutoMirrored.Filled.OpenInNew,
-                        label = stringResource(R.string.open_plugin),
+                        label = stringResource(UiStrings.open_plugin),
                         onClick = onOpenPluginClick
                     )
                 }

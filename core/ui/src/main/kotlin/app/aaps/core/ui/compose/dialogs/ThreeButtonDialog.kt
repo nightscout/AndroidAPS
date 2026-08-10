@@ -1,5 +1,7 @@
 package app.aaps.core.ui.compose.dialogs
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +67,7 @@ fun ThreeButtonDialog(
     cancelLabel: String? = null,
     onDismiss: () -> Unit
 ) {
-    val resolvedCancel = cancelLabel ?: stringResource(R.string.cancel)
+    val resolvedCancel = cancelLabel ?: stringResource(UiStrings.cancel)
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = icon?.let {

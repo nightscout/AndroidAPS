@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.UiStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -26,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
@@ -82,13 +82,13 @@ fun CarbTimeRow(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = stringResource(R.string.wizard_carb_time) + ": ",
+                    text = stringResource(UiStrings.wizard_carb_time) + ": ",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (offsetMinutes == 0) {
                     Text(
-                        text = stringResource(R.string.carb_time_now),
+                        text = stringResource(UiStrings.carb_time_now),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -120,7 +120,7 @@ fun CarbTimeRow(
 
             if (!expanded) {
                 FilledTonalButton(onClick = { expanded = true }) {
-                    Text(stringResource(R.string.change))
+                    Text(stringResource(UiStrings.change))
                 }
             }
         }
@@ -167,7 +167,7 @@ fun CarbTimeRow(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = stringResource(R.string.wizard_set_alarm),
+                            text = stringResource(UiStrings.wizard_set_alarm),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = alarmAlpha)
                         )
@@ -192,7 +192,7 @@ fun CarbTimeRow(
 @Composable
 private fun formatOffset(minutes: Int): String {
     return when {
-        minutes == 0 -> stringResource(R.string.carb_time_now)
+        minutes == 0 -> stringResource(UiStrings.carb_time_now)
         minutes > 0  -> "+${formatMinutesAsDuration(minutes)}"
         else         -> "-${formatMinutesAsDuration(-minutes)}"
     }
