@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.siteRotation
 
-import android.graphics.Path
-import android.graphics.Region
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -12,14 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.Matrix
-import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import app.aaps.core.data.model.TE
-import androidx.compose.ui.graphics.Path as ComposePath
 
 @Composable
 fun BodyView(
@@ -87,8 +86,8 @@ fun BodyView(
 
             zones.forEach { (location, path) ->
                 if (showLocation(location)) {
-                    val originalComposePath = path.asComposePath()
-                    val transformedPath = ComposePath().apply {
+                    val originalComposePath = path
+                    val transformedPath = Path().apply {
                         addPath(originalComposePath)
                         transform(matrix)
                     }
@@ -109,13 +108,20 @@ fun BodyView(
     }
 }
 
-// Workaround to manage click, was not able to make composePath.contains( ... ) working
+/**
+ * Whether a tap landed inside a body zone.
+ *
+ * The original used `android.graphics.Region`, with a note that `composePath.contains(...)` could
+ * not be made to work. That note was right, and so is the reason: Compose's `Path` has no point
+ * test. Intersecting with a tiny rectangle is the portable way to ask the same question, and unlike
+ * the `Region` version it does not round the tap to whole pixels - `Region` works in integers, so
+ * the old code truncated the coordinates before testing.
+ */
 fun Path.containsPoint(x: Float, y: Float): Boolean {
-    val region = Region()
-    val bounds = android.graphics.RectF()
-    computeBounds(bounds, true)
-    region.setPath(this, Region(bounds.left.toInt(), bounds.top.toInt(), bounds.right.toInt(), bounds.bottom.toInt()))
-    return region.contains(x.toInt(), y.toInt())
+    val probe = Path().apply { addRect(Rect(x - 0.5f, y - 0.5f, x + 0.5f, y + 0.5f)) }
+    val hit = Path()
+    hit.op(this, probe, PathOperation.Intersect)
+    return !hit.isEmpty
 }
 
 internal fun computeZoneColors(

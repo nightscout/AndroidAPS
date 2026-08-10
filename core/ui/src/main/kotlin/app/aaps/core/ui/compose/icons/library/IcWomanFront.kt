@@ -1,6 +1,6 @@
 package app.aaps.core.ui.compose.icons.library
 
-import android.graphics.Path
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.PathParser
+import androidx.compose.ui.graphics.vector.PathParser
 import app.aaps.core.data.model.TE.Location
 
 /**
@@ -204,7 +204,7 @@ object WomanFrontPaths {
     )
     val zones: List<Pair<Location, Path>> by lazy {
         pathData.map { (location, svgData) ->
-            location to PathParser.createPathFromPathData(svgData)
+            location to PathParser().parsePathString(svgData).toPath()
         }
     }
 }

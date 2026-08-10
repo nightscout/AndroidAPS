@@ -1,6 +1,6 @@
 package app.aaps.core.ui.compose.icons.library
 
-import android.graphics.Path
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.PathParser
+import androidx.compose.ui.graphics.vector.PathParser
 import app.aaps.core.data.model.TE.Location
 
 /**
@@ -204,6 +204,6 @@ object ManFrontPaths {
         Location.FRONT_LEFT_UPPER_CHEST to "M33.046,25.581 a3.989,2.16 -7.0 1,0 -7.978,0 a3.989,2.16 -7.0 1,0 7.978,0z",
     )
     val zones: List<Pair<Location, Path>> = pathData.map { (location, svgData) ->
-        location to PathParser.createPathFromPathData(svgData)
+        location to PathParser().parsePathString(svgData).toPath()
     }
 }
