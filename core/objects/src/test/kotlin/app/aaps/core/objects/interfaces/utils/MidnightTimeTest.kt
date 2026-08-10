@@ -61,6 +61,8 @@ class MidnightTimeTest {
         val now = System.currentTimeMillis()
         MidnightTime.calc(now)
         MidnightTime.resetCache()
-        assertThat(MidnightTime.times.size().toLong()).isEqualTo(0L)
+        // Passes trivially: `calc` never writes to `times`, so the map is already empty before the
+        // reset. Kept as a regression guard for the day the cache is actually wired up.
+        assertThat(MidnightTime.times.size.toLong()).isEqualTo(0L)
     }
 }

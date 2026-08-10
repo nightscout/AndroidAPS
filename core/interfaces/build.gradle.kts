@@ -69,6 +69,7 @@ dependencies {
 
     api(libs.org.apache.commons.lang3)
     api(libs.net.danlew.android.joda)
+    api(libs.kotlinx.datetime)
 
     //RxBus / RxJava base
     api(libs.io.reactivex.rxjava3.rxkotlin)

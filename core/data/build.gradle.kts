@@ -32,6 +32,7 @@ kotlin {
             dependencies {
                 api(project.dependencies.platform(libs.kotlinx.serialization.bom))
                 api(libs.kotlinx.serialization.json)
+                api(libs.kotlinx.datetime)
             }
         }
         getByName("commonTest") {
@@ -46,6 +47,8 @@ kotlin {
                 runtimeOnly(libs.org.junit.platform.launcher)
                 // The oracle for OrgJsonCompatParityTest, and the only place org.json may appear.
                 implementation(libs.org.json.android)
+                // The oracle for IsoDateParserParityTest - the joda parser being replaced.
+                implementation(libs.joda.time)
             }
         }
     }
