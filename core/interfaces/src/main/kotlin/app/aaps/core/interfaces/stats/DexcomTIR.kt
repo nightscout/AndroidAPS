@@ -1,10 +1,5 @@
 package app.aaps.core.interfaces.stats
 
-import android.content.Context
-import android.widget.TableRow
-import android.widget.TextView
-import app.aaps.core.interfaces.profile.ProfileUtil
-
 /**
  * Interface for Dexcom-style Time In Range (TIR) statistics.
  *
@@ -36,54 +31,6 @@ interface DexcomTIR {
      * @return Standard deviation in mg/dL, or 0.0 if no data points exist
      */
     fun calculateSD(): Double
-
-    /**
-     * Creates an Android TextView displaying the estimated HbA1c.
-     *
-     * HbA1c is calculated from mean glucose using the formula:
-     * HbA1c (%) = (mean + 46.7) / 28.7
-     * HbA1c (mmol/mol) = ((mean + 46.7) / 28.7 - 2.15) * 10.929
-     *
-     * @param context Android context for creating the TextView
-     * @return TextView with formatted HbA1c value, or empty if no data
-     */
-    fun toHbA1cView(context: Context): TextView
-
-    /**
-     * Creates an Android TextView displaying the standard deviation.
-     *
-     * @param context Android context for creating the TextView
-     * @param profileUtil Utility for converting glucose values to user's preferred units
-     * @return TextView with formatted standard deviation value
-     */
-    fun toSDView(context: Context, profileUtil: ProfileUtil): TextView
-
-    /**
-     * Creates an Android TextView displaying the range headers with threshold values.
-     *
-     * Shows the 5 glucose ranges with their thresholds for both day and night periods.
-     *
-     * @param context Android context for creating the TextView
-     * @param profileUtil Utility for converting glucose values to user's preferred units
-     * @return TextView with formatted range headers
-     */
-    fun toRangeHeaderView(context: Context, profileUtil: ProfileUtil): TextView
-
-    /**
-     * Creates an Android TableRow with column headers for the TIR table.
-     *
-     * @param context Android context for creating the TableRow
-     * @return TableRow with headers: Very Low, Low, In Range, High, Very High
-     */
-    fun toTableRowHeader(context: Context): TableRow
-
-    /**
-     * Creates an Android TableRow with percentage values for each glucose range.
-     *
-     * @param context Android context for creating the TableRow
-     * @return TableRow with formatted percentage values for each range
-     */
-    fun toTableRow(context: Context): TableRow
 
     // Data accessors for Compose
 

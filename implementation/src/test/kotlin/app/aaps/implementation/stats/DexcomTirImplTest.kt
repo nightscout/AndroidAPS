@@ -1,21 +1,9 @@
 package app.aaps.implementation.stats
 
-import app.aaps.core.interfaces.profile.ProfileUtil
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.kotlin.mock
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
 internal class DexcomTirImplTest {
-
-    // Unstubbed: its results only feed getString/StringBuilder in the view builders, which tolerate null.
-    private val profileUtil: ProfileUtil = mock()
-    private val context get() = RuntimeEnvironment.getApplication()
 
     /** Builds a TIR with one reading in each band + one error, using values that fall in the same band
      *  whether the timestamp is treated as day or night (so the assertions are timezone-independent). */
@@ -66,21 +54,5 @@ internal class DexcomTirImplTest {
         assertThat(tir.lowTirMgdl()).isLessThan(tir.highTirMgdl())
         assertThat(tir.highTirMgdl()).isLessThan(tir.veryHighTirMgdl())
         assertThat(tir.highNightTirMgdl()).isLessThan(tir.highTirMgdl())
-    }
-
-    @Test
-    fun `view builders produce the expected structure`() {
-        val tir = populated()
-        assertThat(tir.toTableRowHeader(context).childCount).isEqualTo(5)
-        assertThat(tir.toTableRow(context).childCount).isEqualTo(5)
-        // HbA1c/SD/range-header text views build without throwing.
-        assertThat(tir.toHbA1cView(context)).isNotNull()
-        assertThat(tir.toSDView(context, profileUtil)).isNotNull()
-        assertThat(tir.toRangeHeaderView(context, profileUtil)).isNotNull()
-    }
-
-    @Test
-    fun `HbA1c view is empty when there are no readings`() {
-        assertThat(DexcomTirImpl().toHbA1cView(context).text.toString()).isEmpty()
     }
 }
