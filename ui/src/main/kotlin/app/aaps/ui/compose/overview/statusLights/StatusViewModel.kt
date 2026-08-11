@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.TimeDiff
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -39,7 +40,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -255,8 +255,8 @@ class StatusViewModel @Inject constructor(
 
     private fun formatAge(timestamp: Long): String {
         val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
-        val days = diff[TimeUnit.DAYS] ?: 0
-        val hours = diff[TimeUnit.HOURS] ?: 0
+        val days = diff.days
+        val hours = diff.hours
         return if (rh.shortTextMode()) {
             "${days}${rh.gs(app.aaps.core.interfaces.R.string.shortday)}${hours}${rh.gs(app.aaps.core.interfaces.R.string.shorthour)}"
         } else {

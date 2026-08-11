@@ -1,7 +1,6 @@
 package app.aaps.core.interfaces.utils
 
 import app.aaps.core.interfaces.resources.ResourceHelper
-import java.util.concurrent.TimeUnit
 
 /**
  * The Class DateUtil. A modern utility class for handling dates, times, and durations using the `java.time` API.
@@ -430,7 +429,7 @@ interface DateUtil {
      * @return A map containing the total number of full days, leftover hours, and leftover minutes.
      */
     //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
-    fun computeDiff(date1: Long, date2: Long): Map<TimeUnit, Long>
+    fun computeDiff(date1: Long, date2: Long): TimeDiff
 
     /**
      * Converts a duration in milliseconds into a human-readable "age" string (e.g., "5 days 3 hours").

@@ -1003,13 +1003,20 @@ class DateUtilImplTest {
         val oldResult = dateUtilOldImpl.computeDiff(date1, date2)
 
         // ASSERT
-        assertThat(newResult[TimeUnit.DAYS]).isEqualTo(1L)
-        assertThat(newResult[TimeUnit.HOURS]).isEqualTo(3L)
-        assertThat(newResult[TimeUnit.MINUTES]).isEqualTo(46L)
-        assertThat(newResult[TimeUnit.SECONDS]).isEqualTo(40L)
+        assertThat(newResult.days).isEqualTo(1L)
+        assertThat(newResult.hours).isEqualTo(3L)
+        assertThat(newResult.minutes).isEqualTo(46L)
+        assertThat(newResult.seconds).isEqualTo(40L)
 
-        // Check that the new, clearer implementation matches the old, complex one
-        assertThat(newResult).isEqualTo(oldResult)
+        // Still compared against the old map-returning implementation, component by component, so
+        // the TimeDiff conversion cannot quietly change one of them.
+        assertThat(newResult.days).isEqualTo(oldResult[TimeUnit.DAYS])
+        assertThat(newResult.hours).isEqualTo(oldResult[TimeUnit.HOURS])
+        assertThat(newResult.minutes).isEqualTo(oldResult[TimeUnit.MINUTES])
+        assertThat(newResult.seconds).isEqualTo(oldResult[TimeUnit.SECONDS])
+        assertThat(newResult.milliseconds).isEqualTo(oldResult[TimeUnit.MILLISECONDS])
+        assertThat(newResult.microseconds).isEqualTo(oldResult[TimeUnit.MICROSECONDS])
+        assertThat(newResult.nanoseconds).isEqualTo(oldResult[TimeUnit.NANOSECONDS])
     }
 
     @Test

@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.TimeDiff
 import java.security.SecureRandom
 import java.time.Clock
 import java.time.Instant
@@ -20,7 +21,6 @@ import java.time.format.FormatStyle
 import java.time.temporal.ChronoField
 import java.time.temporal.ChronoUnit
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -348,18 +348,18 @@ class DateUtilImpl @Inject constructor(
     }
 
     //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
-    override fun computeDiff(date1: Long, date2: Long): Map<TimeUnit, Long> {
+    override fun computeDiff(date1: Long, date2: Long): TimeDiff {
         val duration = (date2 - date1).milliseconds
         return duration.toComponents { days, hours, minutes, seconds, nanoseconds ->
-            mapOf(
-                TimeUnit.DAYS to days,
-                TimeUnit.HOURS to hours.toLong(),
-                TimeUnit.MINUTES to minutes.toLong(),
-                TimeUnit.SECONDS to seconds.toLong(),
-                // Convert remaining nanoseconds into millis, micros, and nanos for the map.
-                TimeUnit.MILLISECONDS to nanoseconds.toLong() / 1_000_000,
-                TimeUnit.MICROSECONDS to (nanoseconds.toLong() / 1_000) % 1000,
-                TimeUnit.NANOSECONDS to nanoseconds.toLong() % 1000
+            TimeDiff(
+                days = days,
+                hours = hours.toLong(),
+                minutes = minutes.toLong(),
+                seconds = seconds.toLong(),
+                // Remaining nanoseconds, split into millis, micros and nanos.
+                milliseconds = nanoseconds.toLong() / 1_000_000,
+                microseconds = (nanoseconds.toLong() / 1_000) % 1000,
+                nanoseconds = nanoseconds.toLong() % 1000
             )
         }
     }
