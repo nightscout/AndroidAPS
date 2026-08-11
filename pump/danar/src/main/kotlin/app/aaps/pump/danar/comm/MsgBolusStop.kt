@@ -1,6 +1,7 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.keys.interfaces.TextRef
 import dagger.android.HasAndroidInjector
 
 class MsgBolusStop(
@@ -20,7 +21,7 @@ class MsgBolusStop(
             bolusProgressData.updateProgress(percent = 100)
         } else {
             val currentPercent = bolusProgressData.state.value?.percent ?: 0
-            bolusProgressData.updateProgress(currentPercent, rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped))
+            bolusProgressData.updateProgress(currentPercent, TextRef.AndroidRes(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped))
         }
     }
 }

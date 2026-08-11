@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.diaconn.DiaconnG8Plugin
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
@@ -535,7 +536,7 @@ class DiaconnG8Service : DaggerService() {
                         progressPercent = ((totalwaitTime - waitTime) * 100 / totalwaitTime).toInt()
                     }
                     val percent = min(progressPercent, 100)
-                    bolusProgressData.updateProgress(percent, rh.gs(R.string.waitingforbolusend))
+                    bolusProgressData.updateProgress(percent, TextRef.AndroidRes(R.string.waitingforbolusend))
                 }
                 SystemClock.sleep(200)
             }

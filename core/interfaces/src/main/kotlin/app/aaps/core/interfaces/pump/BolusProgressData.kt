@@ -1,8 +1,10 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,6 @@ import javax.inject.Singleton
 @Singleton
 class BolusProgressData @Inject constructor(
     val ch: ConcentrationHelper,
-    val rh: ResourceHelper,
     @ApplicationScope private val appScope: CoroutineScope,
 ) {
 
@@ -51,8 +52,8 @@ class BolusProgressData @Inject constructor(
             isSMB = isSMB,
             isPriming = isPriming,
             percent = 0,
-            status = "",
-            wearStatus = "",
+            status = TextRef.Literal(""),
+            wearStatus = TextRef.Literal(""),
             delivered = PumpInsulin(0.0),
             stopPressed = false,
             stopDeliveryEnabled = true
@@ -64,7 +65,7 @@ class BolusProgressData @Inject constructor(
      * Called by pump drivers to report delivery progress.
      * Purely informational — does not control dialog lifecycle.
      */
-    fun updateProgress(percent: Int, status: String, delivered: PumpInsulin = PumpInsulin(0.0)) {
+    fun updateProgress(percent: Int, status: TextRef, delivered: PumpInsulin = PumpInsulin(0.0)) {
         // A fresh frame proves liveness → clear any prior stall flag (lets the client dialog recover).
         _state.update { it?.copy(percent = percent, status = status, wearStatus = status, delivered = delivered, stalled = false) }
     }
@@ -78,10 +79,11 @@ class BolusProgressData @Inject constructor(
             val insulin = state.insulin
             val delivered = if (state.isPriming) PumpInsulin(insulin * percent / 100)
                             else PumpInsulin(insulin / ch.concentration * percent / 100)
-            val status = if (percent < 100) ch.bolusProgressString(delivered, state.isPriming)
-                         else rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin)
-            val wearStatus = if (percent < 100) ch.bolusProgressString(delivered, insulin, state.isPriming)
-                             else rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin)
+            val done = InterfacesStrings.bolus_delivered_successfully.withArgs(insulin)
+            val status = if (percent < 100) TextRef.Literal(ch.bolusProgressString(delivered, state.isPriming))
+                         else done
+            val wearStatus = if (percent < 100) TextRef.Literal(ch.bolusProgressString(delivered, insulin, state.isPriming))
+                             else done
             _state.update { it?.copy(percent = percent, status = status, wearStatus = wearStatus, delivered = delivered, stalled = false) }
         }
     }
@@ -94,8 +96,8 @@ class BolusProgressData @Inject constructor(
         _state.value?.let { state ->
             val insulin = state.insulin
             val percent = (ch.fromPump(delivered, state.isPriming) / insulin * 100).toInt().coerceAtMost(100)
-            val status = ch.bolusProgressString(delivered, state.isPriming)
-            val wearStatus = ch.bolusProgressString(delivered, insulin, state.isPriming)
+            val status = TextRef.Literal(ch.bolusProgressString(delivered, state.isPriming))
+            val wearStatus = TextRef.Literal(ch.bolusProgressString(delivered, insulin, state.isPriming))
             _state.update { it?.copy(percent = percent, status = status, wearStatus = wearStatus, delivered = delivered, stalled = false) }
         }
     }
@@ -209,8 +211,14 @@ data class BolusProgressState(
     val isSMB: Boolean,
     val isPriming: Boolean,
     val percent: Int,
-    val status: String,
-    val wearStatus: String,
+    /**
+     * Kept as an unresolved reference rather than rendered text: the dialog resolves it with Compose,
+     * while the wear and Tizen bridges resolve it with their own ResourceHelper before putting it on
+     * the wire. Those bridges are why this cannot simply be a TextRef all the way to the watch - a
+     * different APK cannot resolve this one's resource ids, so the phone has to render before sending.
+     */
+    val status: TextRef,
+    val wearStatus: TextRef,
     val delivered: PumpInsulin,
     val stopPressed: Boolean,
     val stopDeliveryEnabled: Boolean,

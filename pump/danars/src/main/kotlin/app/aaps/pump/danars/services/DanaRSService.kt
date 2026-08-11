@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
@@ -372,7 +373,7 @@ class DanaRSService : DaggerService() {
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
-            bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
+            bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, TextRef.AndroidRes(R.string.waitingforestimatedbolusend, listOf(waitTime / 1000)), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
@@ -381,7 +382,7 @@ class DanaRSService : DaggerService() {
             // reread bolus status
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
             sendMessage(danaRSPacketBolusGetStepBolusInformation.get()) // last bolus
-            bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.disconnecting), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
+            bolusProgressData.updateProgress(100, TextRef.AndroidRes(app.aaps.core.interfaces.R.string.disconnecting), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         }
         return !start.failed && !connectionBroken

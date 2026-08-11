@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.keys.interfaces.TextRef
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
@@ -16,8 +17,8 @@ internal fun PreviewBolusInProgress() {
                 isSMB = false,
                 isPriming = false,
                 percent = 45,
-                status = "Delivering 1.80U",
-                wearStatus = "Delivering 1.80U",
+                status = TextRef.Literal("Delivering 1.80U"),
+                wearStatus = TextRef.Literal("Delivering 1.80U"),
                 delivered = PumpInsulin(1.8),
                 stopPressed = false,
                 stopDeliveryEnabled = true
@@ -40,8 +41,8 @@ internal fun PreviewBolusStopPressed() {
                 isSMB = false,
                 isPriming = false,
                 percent = 45,
-                status = "Delivering 1.80U",
-                wearStatus = "Delivering 1.80U",
+                status = TextRef.Literal("Delivering 1.80U"),
+                wearStatus = TextRef.Literal("Delivering 1.80U"),
                 delivered = PumpInsulin(1.8),
                 stopPressed = true,
                 stopDeliveryEnabled = true
@@ -64,8 +65,8 @@ internal fun PreviewBolusCompleted() {
                 isSMB = false,
                 isPriming = false,
                 percent = 100,
-                status = "Bolus 4.00U delivered successfully",
-                wearStatus = "Bolus 4.00U delivered successfully",
+                status = TextRef.Literal("Bolus 4.00U delivered successfully"),
+                wearStatus = TextRef.Literal("Bolus 4.00U delivered successfully"),
                 delivered = PumpInsulin(4.0),
                 stopPressed = false,
                 stopDeliveryEnabled = true
@@ -88,8 +89,8 @@ internal fun PreviewBolusIndeterminate() {
                 isSMB = false,
                 isPriming = false,
                 percent = 0,
-                status = "",
-                wearStatus = "",
+                status = TextRef.Literal(""),
+                wearStatus = TextRef.Literal(""),
                 delivered = PumpInsulin(0.0),
                 stopPressed = false,
                 stopDeliveryEnabled = false
@@ -112,8 +113,8 @@ internal fun PreviewBolusStalled() {
                 isSMB = false,
                 isPriming = false,
                 percent = 85,
-                status = "Delivering 1.36U",
-                wearStatus = "Delivering 1.36U",
+                status = TextRef.Literal("Delivering 1.36U"),
+                wearStatus = TextRef.Literal("Delivering 1.36U"),
                 delivered = PumpInsulin(1.36),
                 stopPressed = false,
                 stopDeliveryEnabled = true,

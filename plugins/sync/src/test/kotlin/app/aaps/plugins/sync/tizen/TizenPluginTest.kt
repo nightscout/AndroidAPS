@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
 internal class TizenPluginTest : TestBaseWithProfile() {
@@ -39,7 +41,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
 
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)) }
     private lateinit var sut: TizenPlugin
 
     @BeforeEach
@@ -48,6 +50,14 @@ internal class TizenPluginTest : TestBaseWithProfile() {
             aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
             loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, pumpStatusProvider, bolusProgressData
         )
+        // gs(TextRef) is a DEFAULT interface method, so a mock answers null unless it is stubbed.
+        whenever(rh.gs(any<TextRef>())).thenAnswer {
+            when (val ref = it.getArgument<TextRef>(0)) {
+                is TextRef.Literal    -> ref.text
+                is TextRef.Named      -> ref.name
+                is TextRef.AndroidRes -> "S" + ref.id
+            }
+        }
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         whenever(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
         runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
@@ -81,7 +91,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     fun prepareDataTestAPS() {
         whenever(config.APS).thenReturn(true)
         bolusProgressData.start(insulin = 1.0, isSMB = false)
-        bolusProgressData.updateProgress(100, "Some status", PumpInsulin(1.0))
+        bolusProgressData.updateProgress(100, TextRef.Literal("Some status"), PumpInsulin(1.0))
         val event = EventLoopUpdateGui()
         val bundle = BundleMock.mocked()
         sut.prepareData(event, bundle)
@@ -122,7 +132,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     fun prepareDataTestAAPSClient() {
         whenever(config.APS).thenReturn(false)
         bolusProgressData.start(insulin = 1.0, isSMB = false)
-        bolusProgressData.updateProgress(100, "Some status", PumpInsulin(1.0))
+        bolusProgressData.updateProgress(100, TextRef.Literal("Some status"), PumpInsulin(1.0))
         val event = EventLoopUpdateGui()
         val bundle = BundleMock.mocked()
         sut.prepareData(event, bundle)

@@ -9,6 +9,7 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -39,6 +40,8 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
@@ -945,14 +948,14 @@ class ComboV2Plugin @Inject constructor(
                         is RTCommandProgressStage.DeliveringBolus -> {
                             val percent = (progressReport.overallProgress * 100).toInt()
                             val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
-                            val status = if (percent == 100) rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin)
-                            else rh.gs(app.aaps.core.interfaces.R.string.bolus_delivering, totalInsulin * percent / 100.0)
+                            val status = if (percent == 100) InterfacesStrings.bolus_delivered_successfully.withArgs(totalInsulin)
+                            else InterfacesStrings.bolus_delivering.withArgs(totalInsulin * percent / 100.0)
                             bolusProgressData.updateProgress(percent, status)
                         }
 
                         BasicProgressStage.Finished               -> {
                             val percent = (progressReport.overallProgress * 100).toInt()
-                            bolusProgressData.updateProgress(percent, "Bolus finished, performing post-bolus checks")
+                            bolusProgressData.updateProgress(percent, TextRef.Literal("Bolus finished, performing post-bolus checks"))
                         }
 
                         else                                      -> Unit

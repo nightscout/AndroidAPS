@@ -120,7 +120,7 @@ class TizenPlugin @Inject constructor(
         bolusProgressData.state.value?.let { state ->
             if (!state.isSMB) {
                 bundle.putInt("progressPercent", state.percent)
-                bundle.putString("progressStatus", state.status)
+                bundle.putString("progressStatus", rh.gs(state.status))
             }
         }
     }

@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
@@ -28,6 +29,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.BatchActionDto
@@ -73,6 +75,7 @@ internal class ClientControlReceiverTest {
 
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var aapsLogger: AAPSLogger
+    @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var nsClientRepository: NSClientRepository
     @Mock private lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Mock private lateinit var nsAndroidClient: NSAndroidClient
@@ -129,6 +132,14 @@ internal class ClientControlReceiverTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        // gs(TextRef) is a DEFAULT interface method, so a mock answers null unless it is stubbed.
+        whenever(rh.gs(any<TextRef>())).thenAnswer {
+            when (val ref = it.getArgument<TextRef>(0)) {
+                is TextRef.Literal    -> ref.text
+                is TextRef.Named      -> ref.name
+                is TextRef.AndroidRes -> "S" + ref.id
+            }
+        }
         stored = "[]"
         storage.clear()
         storage[StringNonKey.SceneDefinitions.key] = "[]"
@@ -173,6 +184,7 @@ internal class ClientControlReceiverTest {
             config,
             bolusProgressData,
             commandQueue,
+            rh,
             aapsLogger,
             appScope
         )
@@ -623,8 +635,8 @@ internal class ClientControlReceiverTest {
     }
 
     private fun progressState(percent: Int) = BolusProgressState(
-        insulin = 2.0, isSMB = false, isPriming = false, percent = percent, status = "x",
-        wearStatus = "x", delivered = PumpInsulin(1.0), stopPressed = false, stopDeliveryEnabled = true
+        insulin = 2.0, isSMB = false, isPriming = false, percent = percent, status = TextRef.Literal("x"),
+        wearStatus = TextRef.Literal("x"), delivered = PumpInsulin(1.0), stopPressed = false, stopDeliveryEnabled = true
     )
 
     @Test

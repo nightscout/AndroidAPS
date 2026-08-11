@@ -212,7 +212,7 @@ class ClientControlUplinkIntegrationTest {
         masterScope = CoroutineScope(Dispatchers.Unconfined)
         masterReceiver = ClientControlReceiver(
             masterAuthorizedRepository, Provider { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
-            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, wizardBolusExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, aapsLogger,
+            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, wizardBolusExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
             masterScope
         )
 

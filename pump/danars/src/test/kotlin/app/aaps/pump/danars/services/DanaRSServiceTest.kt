@@ -67,7 +67,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
-        danaRSService.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
+        danaRSService.bolusProgressData = BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined))
         danaRSService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRSService.danaRSPacketGeneralInitialScreenInformation = danaRSPacketGeneralInitialScreenInformationProvider
         danaRSService.danaRSPacketOptionSetUserOption = danaRSPacketOptionSetUserOptionProvider

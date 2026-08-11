@@ -38,7 +38,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRPlugin(
             aapsLogger, rh, preferences, config, commandQueue, aapsSchedulers, rxBus, context, activePlugin, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), pumpEnactResultProvider
+            notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), pumpEnactResultProvider
         )
     }
 

@@ -175,9 +175,10 @@ private fun BolusProgressSection(
 
     // Status text — hidden when stalled: a present-tense "Delivering …" line would contradict the
     // "connection lost / status unknown" message and read as if delivery were still being tracked.
-    if (state.status.isNotEmpty() && !state.stalled) {
+    val statusText = stringResource(state.status)
+    if (statusText.isNotEmpty() && !state.stalled) {
         Text(
-            text = state.status,
+            text = statusText,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()

@@ -25,6 +25,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.utils.ClientControlCrypto
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -147,7 +148,7 @@ internal class ClientControlRoundTripTest {
         sut.onProgressDoc(progressDoc(ProgressPhase.Active, percent = 40, status = "Delivering 0.8U", insulin = 2.0, delivered = 0.8))
 
         verify(bolusProgressData).start(eq(2.0), eq(false), eq(false))
-        verify(bolusProgressData).updateProgress(eq(40), eq("Delivering 0.8U"), any<PumpInsulin>())
+        verify(bolusProgressData).updateProgress(eq(40), eq(TextRef.Literal("Delivering 0.8U")), any<PumpInsulin>())
     }
 
     @Test

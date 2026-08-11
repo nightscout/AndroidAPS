@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R
@@ -399,7 +400,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
             scope.launch { commandQueue.readStatus(rh.gs(R.string.bolus_error)) } // make sure if anything is delivered (which is highly unlikely at this point) we get it
             medtrumPump.bolusDone = true
-            bolusProgressData.updateProgress(percent = 0, status = "")
+            bolusProgressData.updateProgress(percent = 0, status = TextRef.Literal(""))
             return false
         }
 

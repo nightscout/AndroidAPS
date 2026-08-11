@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.scenes.ClientControlSendResult
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckPhase
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckStatus
@@ -210,7 +211,7 @@ class ClientControlRoundTrip @Inject constructor(
         when (env.phase) {
             ProgressPhase.Active   -> {
                 if (bolusProgressData.state.value == null) bolusProgressData.start(env.insulin, isSMB = false)
-                bolusProgressData.updateProgress(env.percent, env.status, PumpInsulin(env.delivered))
+                bolusProgressData.updateProgress(env.percent, TextRef.Literal(env.status), PumpInsulin(env.delivered))
                 bolusProgressData.enableStopDelivery(env.stopDeliveryEnabled)
                 armProgressWatchdog()
             }

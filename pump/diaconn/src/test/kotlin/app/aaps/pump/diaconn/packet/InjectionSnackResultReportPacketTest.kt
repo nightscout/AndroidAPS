@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
 
     private lateinit var diaconnG8Pump: DiaconnG8Pump
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)) }
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

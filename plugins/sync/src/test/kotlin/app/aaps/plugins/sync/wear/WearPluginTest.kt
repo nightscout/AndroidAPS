@@ -24,6 +24,6 @@ class WearPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), persistenceLayer, scenes)
+        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), persistenceLayer, scenes)
     }
 }

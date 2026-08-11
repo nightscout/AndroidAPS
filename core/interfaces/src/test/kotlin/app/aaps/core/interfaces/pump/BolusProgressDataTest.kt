@@ -25,7 +25,7 @@ class BolusProgressDataTest {
         whenever(ch.fromPump(any<PumpInsulin>(), any<Boolean>())).thenAnswer { (it.arguments[0] as PumpInsulin).cU }
         whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("")
         whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Double>(), any<Boolean>())).thenReturn("")
-        sut = BolusProgressData(ch, rh, TestScope())
+        sut = BolusProgressData(ch, TestScope())
     }
 
     @Test

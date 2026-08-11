@@ -67,7 +67,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     private val commandExecutorProvider: Provider<CommandExecutor> by lazy { Provider { commandExecutor } }
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh, testScope) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, testScope) }
     private val profileSwitchSilentGate = ProfileSwitchSilentGate()
 
     class CommandQueueMocked(

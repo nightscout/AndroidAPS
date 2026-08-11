@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.keys.interfaces.TextRef
 
 @Preview(showBackground = true)
 @Composable
@@ -29,8 +30,8 @@ internal fun PreviewPumpFabSmbPercent() {
                 isSMB = true,
                 isPriming = false,
                 percent = 42,
-                status = "Delivering 0.13U",
-                wearStatus = "Delivering 0.13U",
+                status = TextRef.Literal("Delivering 0.13U"),
+                wearStatus = TextRef.Literal("Delivering 0.13U"),
                 delivered = PumpInsulin(0.13),
                 stopPressed = false,
                 stopDeliveryEnabled = true

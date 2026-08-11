@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
@@ -113,6 +114,7 @@ class ClientControlReceiver @Inject constructor(
     config: Config,
     private val bolusProgressData: BolusProgressData,
     private val commandQueue: CommandQueue,
+    private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     @ApplicationScope private val appScope: CoroutineScope
 ) {
@@ -830,7 +832,7 @@ class ClientControlReceiver @Inject constructor(
         val env = ClientControlCrypto.signProgress(
             secret,
             ProgressEnvelope(
-                clientId = clientId, phase = phase, insulin = st.insulin, percent = st.percent, status = st.status,
+                clientId = clientId, phase = phase, insulin = st.insulin, percent = st.percent, status = rh.gs(st.status),
                 delivered = st.delivered.cU, stopDeliveryEnabled = st.stopDeliveryEnabled, timestamp = dateUtil.now(), signature = ""
             )
         )
