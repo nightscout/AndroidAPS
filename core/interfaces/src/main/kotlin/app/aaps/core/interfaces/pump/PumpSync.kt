@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.time.Clock
 
 /**
  * This interface allows pump drivers to push data changes (creation and update of treatments, temporary basals and extended boluses) back to AAPS-core.
@@ -93,7 +94,7 @@ interface PumpSync {
         ) {
 
             val end: Long get() = timestamp + duration
-            val plannedRemainingMinutes: Long get() = max(T.msecs(end - System.currentTimeMillis()).mins(), 0L)
+            val plannedRemainingMinutes: Long get() = max(T.msecs(end - Clock.System.now().toEpochMilliseconds()).mins(), 0L)
             fun convertedToAbsolute(time: Long, profile: Profile): Double =
                 if (isAbsolute) rate
                 else profile.getBasal(time) * rate / 100
@@ -132,7 +133,7 @@ interface PumpSync {
                 get() = timestamp + duration
 
             val plannedRemainingMinutes: Long
-                get() = max(T.msecs(end - System.currentTimeMillis()).mins(), 0L)
+                get() = max(T.msecs(end - Clock.System.now().toEpochMilliseconds()).mins(), 0L)
 
             private fun getPassedDurationToTimeInMinutes(time: Long): Int =
                 ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()

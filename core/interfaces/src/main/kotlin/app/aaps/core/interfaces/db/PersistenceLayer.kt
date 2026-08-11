@@ -29,6 +29,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APSResult
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
+import kotlin.time.Clock
 
 /**
  * Read-only diagnostics gathered before a startup VACUUM.
@@ -1290,7 +1291,7 @@ interface PersistenceLayer {
      */
     suspend fun insertPumpTherapyEventIfNewByTimestamp(
         therapyEvent: TE,
-        timestamp: Long = System.currentTimeMillis(),
+        timestamp: Long = Clock.System.now().toEpochMilliseconds(),
         action: Action,
         source: Sources,
         note: String?,

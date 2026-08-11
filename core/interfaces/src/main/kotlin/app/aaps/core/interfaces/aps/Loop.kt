@@ -7,6 +7,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import kotlin.time.Clock
 
 interface Loop {
 
@@ -26,7 +27,7 @@ interface Loop {
         var tbrSetByPump: PumpEnactResult? = null
         var smbSetByPump: PumpEnactResult? = null
         var source: String? = null
-        var lastAPSRun = System.currentTimeMillis()
+        var lastAPSRun = Clock.System.now().toEpochMilliseconds()
         var lastTBREnact: Long = 0
         var lastSMBEnact: Long = 0
         var lastTBRRequest: Long = 0

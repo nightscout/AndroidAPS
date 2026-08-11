@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.smsCommunicator
 
 import android.telephony.SmsMessage
+import kotlin.time.Clock
 
 class Sms {
 
@@ -22,7 +23,7 @@ class Sms {
     constructor(phoneNumber: String, text: String) {
         this.phoneNumber = phoneNumber
         this.text = text
-        date = System.currentTimeMillis()
+        date = Clock.System.now().toEpochMilliseconds()
         sent = true
     }
 

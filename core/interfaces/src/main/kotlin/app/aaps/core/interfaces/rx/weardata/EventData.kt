@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import java.util.Date
 import java.util.Objects
+import kotlin.time.Clock
 
 @Serializable
 sealed class EventData : Event() {
@@ -29,14 +30,14 @@ sealed class EventData : Event() {
         fun deserialize(json: String) = try {
             lenientJson.decodeFromString(serializer(), json)
         } catch (_: Exception) {
-            Error(System.currentTimeMillis())
+            Error(Clock.System.now().toEpochMilliseconds())
         }
 
         @ExperimentalSerializationApi
         fun deserializeByte(byteArray: ByteArray) = try {
             ProtoBuf.decodeFromByteArray(serializer(), byteArray)
         } catch (_: Exception) {
-            Error(System.currentTimeMillis())
+            Error(Clock.System.now().toEpochMilliseconds())
         }
     }
 

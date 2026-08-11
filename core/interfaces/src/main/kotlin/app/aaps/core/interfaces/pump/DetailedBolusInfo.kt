@@ -8,17 +8,18 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import kotlin.time.Clock
 
 class DetailedBolusInfo {
 
-    val id = System.currentTimeMillis()
+    val id = Clock.System.now().toEpochMilliseconds()
 
     // Requesting parameters for driver
     @JvmField var insulin = 0.0
     @JvmField var carbs = 0.0
 
     // Additional requesting parameters
-    @JvmField var timestamp = System.currentTimeMillis()
+    @JvmField var timestamp = Clock.System.now().toEpochMilliseconds()
     var lastKnownBolusTime: Long = 0 // for SMB check
     var deliverAtTheLatest: Long = 0 // SMB should be delivered within 1 min from this time
     @Transient var context: Context? = null // context for progress dialog

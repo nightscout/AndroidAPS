@@ -3,6 +3,7 @@ package app.aaps.core.interfaces.notifications
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.time.Clock
 
 interface NotificationManager {
 
@@ -25,7 +26,7 @@ interface NotificationManager {
         id: NotificationId,
         text: String,
         level: NotificationLevel = id.defaultLevel,
-        date: Long = System.currentTimeMillis(),
+        date: Long = Clock.System.now().toEpochMilliseconds(),
         validTo: Long = 0L,
         @RawRes soundRes: Int? = null,
         actions: List<NotificationAction> = emptyList(),
@@ -38,7 +39,7 @@ interface NotificationManager {
         vararg formatArgs: Any?,
         level: NotificationLevel = id.defaultLevel,
         validMinutes: Int = 0,
-        date: Long = System.currentTimeMillis(),
+        date: Long = Clock.System.now().toEpochMilliseconds(),
         validTo: Long = 0L,
         @RawRes soundRes: Int? = null,
         actions: List<NotificationAction> = emptyList(),
