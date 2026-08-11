@@ -50,6 +50,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
@@ -185,8 +186,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     override fun requiredPermissions(): List<PermissionGroup> = listOf(
         PermissionGroup(
             permissions = listOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS),
-            rationaleTitle = R.string.permission_sms_title,
-            rationaleDescription = R.string.permission_sms_description,
+            rationaleTitle = TextRef.AndroidRes(R.string.permission_sms_title),
+            rationaleDescription = TextRef.AndroidRes(R.string.permission_sms_description),
         )
     )
 

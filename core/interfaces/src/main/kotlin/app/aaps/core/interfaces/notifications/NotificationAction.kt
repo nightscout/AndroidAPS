@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.notifications
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
 
 data class NotificationAction(
-    @StringRes val buttonTextRes: Int,
+    val buttonText: TextRef,
     val action: () -> Unit
 )

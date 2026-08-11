@@ -25,6 +25,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.localmodel.entry.NSMbgV3
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
@@ -215,7 +216,7 @@ class NsIncomingDataProcessor @Inject constructor(
                                         text = therapyEvent.note ?: "",
                                         validTo = dateUtil.now() + T.mins(60).msecs(),
                                         soundRes = R.raw.alarm,
-                                        actions = listOf(NotificationAction(R.string.snooze) { })
+                                        actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.snooze)) { })
                                     )
                             }
 

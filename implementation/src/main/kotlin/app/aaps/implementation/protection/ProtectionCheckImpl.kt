@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import dagger.Reusable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -291,7 +292,7 @@ class ProtectionCheckImpl @Inject constructor(
             id = requestIdCounter.incrementAndGet(),
             protection = protection,
             type = type,
-            titleRes = titleRes,
+            title = TextRef.AndroidRes(titleRes),
             onResult = { result ->
                 if (result == ProtectionResult.GRANTED) onGranted(protection)
                 _pendingRequest.value = null

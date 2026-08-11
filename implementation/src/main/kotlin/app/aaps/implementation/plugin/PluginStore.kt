@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.implementation.R
 import dagger.Lazy
 import javax.inject.Inject
@@ -73,16 +74,16 @@ class PluginStore @Inject constructor(
         add(
             PermissionGroup(
                 permissions = listOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS),
-                rationaleTitle = R.string.permission_battery_title,
-                rationaleDescription = R.string.permission_battery_description,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_battery_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_battery_description),
                 special = true,
             )
         )
         add(
             PermissionGroup(
                 permissions = listOf(PERMISSION_SELECT_DIRECTORY),
-                rationaleTitle = R.string.permission_directory_title,
-                rationaleDescription = R.string.permission_directory_description,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_directory_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_directory_description),
                 special = true,
                 alwaysShowAction = true,
             )
@@ -95,8 +96,8 @@ class PluginStore @Inject constructor(
             add(
                 PermissionGroup(
                     permissions = listOf(Manifest.permission.POST_NOTIFICATIONS),
-                    rationaleTitle = R.string.permission_notifications_title,
-                    rationaleDescription = R.string.permission_notifications_description,
+                    rationaleTitle = TextRef.AndroidRes(R.string.permission_notifications_title),
+                    rationaleDescription = TextRef.AndroidRes(R.string.permission_notifications_description),
                     special = needsSettingsWorkaround,
                 )
             )

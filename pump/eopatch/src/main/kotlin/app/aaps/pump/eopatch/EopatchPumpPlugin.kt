@@ -123,8 +123,8 @@ class EopatchPumpPlugin @Inject constructor(
     override fun requiredPermissions(): List<PermissionGroup> = super.requiredPermissions() + listOf(
         PermissionGroup(
             permissions = listOf(Manifest.permission.SCHEDULE_EXACT_ALARM),
-            rationaleTitle = R.string.permission_exact_alarm_title,
-            rationaleDescription = R.string.permission_exact_alarm_description,
+            rationaleTitle = TextRef.AndroidRes(R.string.permission_exact_alarm_title),
+            rationaleDescription = TextRef.AndroidRes(R.string.permission_exact_alarm_description),
             special = true,
         )
     )

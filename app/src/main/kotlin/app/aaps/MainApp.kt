@@ -73,6 +73,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.locale.LocaleHelper
@@ -471,7 +472,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                 id = NotificationId.IDENTIFICATION_NOT_SET,
                 R.string.identification_not_set,
                 level = NotificationLevel.INFO,
-                actions = listOf(NotificationAction(R.string.set) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank() }
             )
         // Master password not set
@@ -480,7 +481,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                 id = NotificationId.MASTER_PASSWORD_NOT_SET,
                 app.aaps.core.ui.R.string.master_password_not_set,
                 level = NotificationLevel.NORMAL,
-                actions = listOf(NotificationAction(R.string.set) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { preferences.get(StringKey.ProtectionMasterPassword) == "" }
             )
         // AAPS directory not selected
@@ -489,7 +490,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                 id = NotificationId.AAPS_DIR_NOT_SELECTED,
                 app.aaps.core.ui.R.string.aaps_directory_not_selected,
                 level = NotificationLevel.LOW,
-                actions = listOf(NotificationAction(R.string.select) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
     }

@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcCalibration
 import app.aaps.plugins.calibration.compose.CalibrationComposeContent
 import kotlinx.coroutines.CoroutineScope
@@ -212,7 +213,7 @@ class LinearCalibrationPlugin @Inject constructor(
             id = NotificationId.SENSOR_CHANGE_DETECTED,
             text = rh.gs(R.string.sensor_change_detected_text, dateUtil.timeString(detectedAt)),
             actions = listOf(
-                NotificationAction(R.string.sensor_change_detected_action) {
+                NotificationAction(TextRef.AndroidRes(R.string.sensor_change_detected_action)) {
                     runBlocking { insertSensorChange(detectedAt) }
                 }
             )

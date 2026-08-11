@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.ui.R
 
 @Preview(showBackground = true)
@@ -15,24 +16,24 @@ internal fun PermissionsSheetContentPreview() {
         PermissionItem(
             group = PermissionGroup(
                 permissions = listOf("android.permission.BLUETOOTH_CONNECT"),
-                rationaleTitle = R.string.permission_sheet_title,
-                rationaleDescription = R.string.permission_sheet_subtitle,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_sheet_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle),
             ),
             granted = true
         ),
         PermissionItem(
             group = PermissionGroup(
                 permissions = listOf("android.permission.POST_NOTIFICATIONS"),
-                rationaleTitle = R.string.permission_grant,
-                rationaleDescription = R.string.permission_sheet_subtitle,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_grant),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle),
             ),
             granted = false
         ),
         PermissionItem(
             group = PermissionGroup(
                 permissions = listOf("android.permission.ACCESS_FINE_LOCATION"),
-                rationaleTitle = R.string.permission_change,
-                rationaleDescription = R.string.permission_sheet_subtitle,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_change),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle),
                 alwaysShowAction = true,
             ),
             granted = true

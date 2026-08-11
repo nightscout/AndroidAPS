@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.eopatch.EoPatchRxBus
 import app.aaps.pump.eopatch.alarm.AlarmCode.A005
 import app.aaps.pump.eopatch.alarm.AlarmCode.A016
@@ -155,11 +156,13 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             soundRes = if (!isCritical) app.aaps.core.ui.R.raw.error else null,
             actions = listOf(
                 NotificationAction(
-                    when (alarmCode) {
-                        B001           -> app.aaps.core.ui.R.string.pump_resume
-                        AlarmCode.A007 -> app.aaps.core.ui.R.string.retry
-                        else           -> app.aaps.core.ui.R.string.confirm
-                    }
+                    TextRef.AndroidRes(
+                        when (alarmCode) {
+                            B001           -> app.aaps.core.ui.R.string.pump_resume
+                            AlarmCode.A007 -> app.aaps.core.ui.R.string.retry
+                            else           -> app.aaps.core.ui.R.string.confirm
+                        }
+                    )
                 ) {
                     compositeDisposable.add(
                         Single.just(isValid(alarmCode))

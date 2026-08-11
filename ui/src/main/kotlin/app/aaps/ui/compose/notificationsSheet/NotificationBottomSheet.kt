@@ -28,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.NotificationCategory
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcCgmInsert
@@ -115,26 +117,26 @@ private fun NotificationItem(
         ) {
             if (notification.actions.isNotEmpty()) {
                 notification.actions.forEach { action ->
-                    ActionButton(textRes = action.buttonTextRes) {
+                    ActionButton(text = action.buttonText) {
                         action.action()
                         onActionClick()
                         onDismiss()
                     }
                 }
             } else {
-                ActionButton(textRes = R.string.dismiss, onClick = onDismiss)
+                ActionButton(text = TextRef.AndroidRes(R.string.dismiss), onClick = onDismiss)
             }
         }
     }
 }
 
 @Composable
-private fun RowScope.ActionButton(textRes: Int, onClick: () -> Unit) {
+private fun RowScope.ActionButton(text: TextRef, onClick: () -> Unit) {
     FilledTonalButton(
         onClick = onClick,
         modifier = Modifier.weight(1f)
     ) {
-        Text(text = stringResource(textRes))
+        Text(text = stringResource(text))
     }
 }
 

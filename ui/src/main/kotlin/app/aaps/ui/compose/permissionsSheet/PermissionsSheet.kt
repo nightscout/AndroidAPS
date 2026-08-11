@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)

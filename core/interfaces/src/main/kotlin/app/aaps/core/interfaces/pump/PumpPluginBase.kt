@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,8 +63,8 @@ abstract class PumpPluginBase(
     override fun requiredPermissions(): List<PermissionGroup> = listOf(
         PermissionGroup(
             permissions = listOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN),
-            rationaleTitle = R.string.permission_bluetooth_title,
-            rationaleDescription = R.string.permission_bluetooth_description,
+            rationaleTitle = TextRef.AndroidRes(R.string.permission_bluetooth_title),
+            rationaleDescription = TextRef.AndroidRes(R.string.permission_bluetooth_description),
         )
     )
 }

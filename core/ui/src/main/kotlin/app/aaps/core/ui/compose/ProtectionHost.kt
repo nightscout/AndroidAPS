@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
@@ -38,8 +39,8 @@ fun ProtectionHost(
     protectionCheck: ProtectionCheck,
     preferences: Preferences,
     checkPassword: (password: String, hash: String) -> Boolean,
-    showBiometric: (FragmentActivity, Int, () -> Unit, () -> Unit, () -> Unit) -> Unit,
-    showBiometricSimple: (FragmentActivity, Int, () -> Unit, () -> Unit, () -> Unit) -> Unit = showBiometric
+    showBiometric: (FragmentActivity, String, () -> Unit, () -> Unit, () -> Unit) -> Unit,
+    showBiometricSimple: (FragmentActivity, String, () -> Unit, () -> Unit, () -> Unit) -> Unit = showBiometric
 ) {
     val context = LocalContext.current
     val activity = context as? FragmentActivity
@@ -49,13 +50,15 @@ fun ProtectionHost(
 
     authRequest?.let { req ->
         var showDialog by remember(req.id) { mutableStateOf(!req.hasBiometric) }
+        // Read while still in composition: stringResource is @Composable, the biometric callback is not.
+        val biometricTitle = stringResource(app.aaps.core.ui.R.string.biometric_title)
 
         if (req.hasBiometric && !showDialog) {
             LaunchedEffect(req.id) {
                 if (activity != null) {
                     showBiometricSimple(
                         activity,
-                        app.aaps.core.ui.R.string.biometric_title,
+                        biometricTitle,
                         {
                             // Biometric success → grant highest level that uses biometric
                             protectionCheck.completeAuthRequest(
@@ -94,6 +97,7 @@ fun ProtectionHost(
     val request by protectionCheck.pendingRequest.collectAsStateWithLifecycle()
 
     request?.let { req ->
+        val reqTitle = stringResource(req.title)
         when (req.type) {
             ProtectionType.NONE            -> {
                 LaunchedEffect(req.id) {
@@ -106,7 +110,7 @@ fun ProtectionHost(
                     if (activity != null) {
                         showBiometric(
                             activity,
-                            req.titleRes,
+                            reqTitle,
                             { protectionCheck.completeRequest(req.id, ProtectionResult.GRANTED) },
                             { protectionCheck.completeRequest(req.id, ProtectionResult.CANCELLED) },
                             { protectionCheck.completeRequest(req.id, ProtectionResult.DENIED) }
@@ -120,7 +124,7 @@ fun ProtectionHost(
             ProtectionType.MASTER_PASSWORD -> {
                 val storedHash = preferences.get(StringKey.ProtectionMasterPassword)
                 QueryPasswordDialog(
-                    title = stringResource(req.titleRes),
+                    title = stringResource(req.title),
                     pinInput = false,
                     onConfirm = { enteredPassword ->
                         if (checkPassword(enteredPassword, storedHash)) {
@@ -142,7 +146,7 @@ fun ProtectionHost(
                 }
                 val storedHash = preferences.get(passwordKey)
                 QueryPasswordDialog(
-                    title = stringResource(req.titleRes),
+                    title = stringResource(req.title),
                     pinInput = false,
                     onConfirm = { enteredPassword ->
                         if (checkPassword(enteredPassword, storedHash)) {
@@ -164,7 +168,7 @@ fun ProtectionHost(
                 }
                 val storedHash = preferences.get(pinKey)
                 QueryPasswordDialog(
-                    title = stringResource(req.titleRes),
+                    title = stringResource(req.title),
                     pinInput = true,
                     onConfirm = { enteredPin ->
                         if (checkPassword(enteredPin, storedHash)) {

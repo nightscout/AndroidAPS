@@ -32,7 +32,7 @@ object BiometricCheck {
      * All errors and the negative button trigger [onFallback], letting the caller
      * (e.g. ProtectionHost) show the unified auth dialog instead.
      */
-    fun biometricPromptSimple(activity: FragmentActivity, title: Int, rxBus: RxBus, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
+    fun biometricPromptSimple(activity: FragmentActivity, title: String, rxBus: RxBus, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
         val executor = ContextCompat.getMainExecutor(activity)
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -57,7 +57,7 @@ object BiometricCheck {
         })
 
         val promptInfo = PromptInfo.Builder()
-            .setTitle(activity.getString(title))
+            .setTitle(title)
             .setDescription(activity.getString(R.string.biometric_title))
             .setNegativeButtonText(activity.getString(R.string.use_pin_password))
             .setConfirmationRequired(false)
@@ -68,7 +68,7 @@ object BiometricCheck {
         }
     }
 
-    fun biometricPrompt(activity: FragmentActivity, title: Int, rxBus: RxBus, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
+    fun biometricPrompt(activity: FragmentActivity, title: String, rxBus: RxBus, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
         val executor = ContextCompat.getMainExecutor(activity)
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -119,7 +119,7 @@ object BiometricCheck {
         })
 
         val promptInfo = PromptInfo.Builder()
-            .setTitle(activity.getString(title))
+            .setTitle(title)
             .setDescription(activity.getString(R.string.biometric_title))
             .setNegativeButtonText(activity.getString(R.string.cancel)) // not possible with setDeviceCredentialAllowed
             .setConfirmationRequired(false)

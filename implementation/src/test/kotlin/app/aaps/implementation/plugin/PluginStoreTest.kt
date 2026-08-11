@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.Lazy
@@ -29,8 +30,8 @@ class PluginStoreTest : TestBase() {
 
     private val locationGroup = PermissionGroup(
         permissions = listOf("android.permission.ACCESS_FINE_LOCATION"),
-        rationaleTitle = 0,
-        rationaleDescription = 0
+        rationaleTitle = TextRef.Literal(""),
+        rationaleDescription = TextRef.Literal("")
     )
 
     private fun store(providers: Set<PermissionProvider>): PluginStore {

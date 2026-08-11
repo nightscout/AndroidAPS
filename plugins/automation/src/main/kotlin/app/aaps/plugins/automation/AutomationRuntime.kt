@@ -32,6 +32,7 @@ import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.automation.actions.Action
@@ -259,13 +260,13 @@ class AutomationRuntime @Inject constructor(
         if (config.APS && usesLocationTrigger()) listOf(
             PermissionGroup(
                 permissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                rationaleTitle = R.string.permission_location_title,
-                rationaleDescription = R.string.permission_location_description,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_location_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_location_description),
             ),
             PermissionGroup(
                 permissions = listOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
-                rationaleTitle = R.string.permission_location_title,
-                rationaleDescription = R.string.permission_background_location_description,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_location_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_background_location_description),
             ),
         ) else emptyList()
 

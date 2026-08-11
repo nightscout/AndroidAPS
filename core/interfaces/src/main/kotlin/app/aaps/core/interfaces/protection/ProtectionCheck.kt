@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.protection
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -61,7 +61,7 @@ data class ProtectionRequest(
     val id: Long,
     val protection: ProtectionCheck.Protection,
     val type: ProtectionType,
-    @StringRes val titleRes: Int,
+    val title: TextRef,
     val onResult: (ProtectionResult) -> Unit
 )
 

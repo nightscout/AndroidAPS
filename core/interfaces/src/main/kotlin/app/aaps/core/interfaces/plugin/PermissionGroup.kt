@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.plugin
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
 
 /**
  * Declares a group of related runtime permissions that a plugin requires.
@@ -17,8 +17,8 @@ import androidx.annotation.StringRes
  */
 data class PermissionGroup(
     val permissions: List<String>,
-    @StringRes val rationaleTitle: Int,
-    @StringRes val rationaleDescription: Int,
+    val rationaleTitle: TextRef,
+    val rationaleDescription: TextRef,
     val special: Boolean = false,
     val alwaysShowAction: Boolean = false,
 )

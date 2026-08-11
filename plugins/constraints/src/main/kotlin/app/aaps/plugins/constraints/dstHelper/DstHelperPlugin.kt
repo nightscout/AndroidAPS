@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.dstHelper.keys.DstHelperLongKey
 import kotlinx.coroutines.runBlocking
@@ -61,7 +62,7 @@ class DstHelperPlugin @Inject constructor(
                 notificationManager.post(
                     NotificationId.DST_IN_24H,
                     R.string.dst_in_24h_warning,
-                    actions = listOf(NotificationAction(app.aaps.core.ui.R.string.snooze) {
+                    actions = listOf(NotificationAction(TextRef.AndroidRes(app.aaps.core.ui.R.string.snooze)) {
                         preferences.put(DstHelperLongKey.SnoozeDstIn24h, System.currentTimeMillis() + T.hours(24).msecs())
                     })
                 )
@@ -81,7 +82,7 @@ class DstHelperPlugin @Inject constructor(
                     notificationManager.post(
                         NotificationId.DST_LOOP_DISABLED,
                         R.string.dst_loop_disabled_warning,
-                        actions = listOf(NotificationAction(app.aaps.core.ui.R.string.snooze) {
+                        actions = listOf(NotificationAction(TextRef.AndroidRes(app.aaps.core.ui.R.string.snooze)) {
                             preferences.put(DstHelperLongKey.SnoozeLoopDisabled, System.currentTimeMillis() + T.hours(24).msecs())
                         })
                     )
