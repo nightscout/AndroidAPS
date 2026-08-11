@@ -1,11 +1,11 @@
 package app.aaps.core.utils
 
-import java.util.Locale
-
 private val HEX_CHARS = "0123456789abcdef".toCharArray()
 
-fun ByteArray.toHex() : String{
-    val result = StringBuffer()
+fun ByteArray.toHex(): String {
+    // StringBuilder, not StringBuffer: StringBuffer is a JVM class and its synchronization bought
+    // nothing here - the builder never leaves this function.
+    val result = StringBuilder()
 
     forEach {
         val octet = it.toInt()
@@ -22,7 +22,9 @@ fun String.hexStringToByteArray(): ByteArray {
 
     val result = ByteArray(length / 2)
 
-    val lowerCased = this.lowercase(Locale.getDefault())
+    // Locale independent lowercase. The previous `lowercase(Locale.getDefault())` made hex parsing
+    // depend on the phone's language, which is never what a wire format wants.
+    val lowerCased = this.lowercase()
     for (i in indices step 2) {
         val firstIndex = HEX_CHARS.indexOf(lowerCased[i])
         val secondIndex = HEX_CHARS.indexOf(lowerCased[i + 1])
