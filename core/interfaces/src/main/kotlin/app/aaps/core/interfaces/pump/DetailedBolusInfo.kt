@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.pump
 
-import android.content.Context
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -22,7 +21,6 @@ class DetailedBolusInfo {
     @JvmField var timestamp = Clock.System.now().toEpochMilliseconds()
     var lastKnownBolusTime: Long = 0 // for SMB check
     var deliverAtTheLatest: Long = 0 // SMB should be delivered within 1 min from this time
-    @Transient var context: Context? = null // context for progress dialog
 
     // Prefilled info for storing to db
     var bolusCalculatorResult: BCR? = null
