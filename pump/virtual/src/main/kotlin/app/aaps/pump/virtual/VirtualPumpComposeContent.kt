@@ -35,7 +35,6 @@ class VirtualPumpComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val scope = rememberCoroutineScope()
-        val context = androidx.compose.ui.platform.LocalContext.current
         val viewModel = remember {
             VirtualPumpViewModel(
                 virtualPumpPlugin = virtualPumpPlugin,
@@ -47,7 +46,6 @@ class VirtualPumpComposeContent(
                 ch = ch,
                 rxBus = rxBus,
                 commandQueue = commandQueue,
-                context = context,
                 scope = scope
             )
         }

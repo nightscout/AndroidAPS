@@ -1,6 +1,6 @@
 package app.aaps.pump.virtual
 
-import android.os.SystemClock
+import kotlinx.coroutines.delay
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -218,7 +218,7 @@ open class VirtualPumpPlugin @Inject constructor(
         var delivering = 0.0
         var stopped = false
         while (delivering < detailedBolusInfo.insulin) {
-            SystemClock.sleep(200)
+            delay(200)
             delivering = (delivering + 0.1).coerceAtMost(detailedBolusInfo.insulin)
             bolusProgressData.updateProgress(delivered = PumpInsulin(delivering))
             if (bolusProgressData.isStopPressed) {
@@ -228,9 +228,9 @@ open class VirtualPumpPlugin @Inject constructor(
         }
 
         if (!stopped) {
-            SystemClock.sleep(200)
+            delay(200)
             bolusProgressData.updateProgress(100)
-            SystemClock.sleep(1000)
+            delay(1000)
         } else {
             result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
         }

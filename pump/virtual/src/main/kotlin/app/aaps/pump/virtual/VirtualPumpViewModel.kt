@@ -1,6 +1,5 @@
 package app.aaps.pump.virtual
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.data.model.EB
@@ -50,7 +49,6 @@ class VirtualPumpViewModel(
     private val ch: ConcentrationHelper,
     rxBus: RxBus,
     commandQueue: CommandQueue,
-    context: Context,
     scope: CoroutineScope
 ) {
 

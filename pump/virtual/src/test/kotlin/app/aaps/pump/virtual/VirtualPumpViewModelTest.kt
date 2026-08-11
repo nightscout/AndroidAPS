@@ -1,6 +1,5 @@
 package app.aaps.pump.virtual
 
-import android.content.Context
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.TB
@@ -40,7 +39,6 @@ internal class VirtualPumpViewModelTest {
     @Mock private lateinit var ch: ConcentrationHelper
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var commandQueue: CommandQueue
-    @Mock private lateinit var context: Context
 
     // PumpCommunicationStatus subscribes to these in its init; they never emit so the status
     // banner / queue stay null and the launched collectors just park.
@@ -81,7 +79,6 @@ internal class VirtualPumpViewModelTest {
         ch = ch,
         rxBus = rxBus,
         commandQueue = commandQueue,
-        context = context,
         scope = CoroutineScope(Dispatchers.Unconfined)
     )
 
