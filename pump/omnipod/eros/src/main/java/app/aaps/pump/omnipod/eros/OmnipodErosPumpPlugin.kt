@@ -280,7 +280,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
+            .subscribe({ event -> rxBus.send(EventSWRLStatus(rh.gs(event.getStatus()))) }, fabricPrivacy::logException)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         merge(

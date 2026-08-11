@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
@@ -58,18 +57,20 @@ class SWEventListener @Inject constructor(
     @Composable
     override fun Compose() {
         if (visibilityValidator?.invoke() == false) return
-        val context = LocalContext.current
-        val statusState = remember { mutableStateOf(status) }
+        // The event carries a TextRef now, so it is held unresolved and turned into text here, in
+        // the Composable. That keeps the resolving out of the Rx callback, which had to reach for a
+        // Context purely to read a string.
+        val statusState = remember { mutableStateOf<TextRef>(TextRef.Literal(status)) }
         DisposableEffect(clazz) {
             val disposable = rxBus
                 .toObservable(clazz)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { event ->
-                    statusState.value = event.getStatus(context)
+                    statusState.value = event.getStatus()
                 }
             onDispose { disposable.dispose() }
         }
         val labelText = textLabel?.let { stringResource(it) } ?: ""
-        Text(text = "$labelText ${statusState.value}".trim())
+        Text(text = "$labelText ${stringResource(statusState.value)}".trim())
     }
 }

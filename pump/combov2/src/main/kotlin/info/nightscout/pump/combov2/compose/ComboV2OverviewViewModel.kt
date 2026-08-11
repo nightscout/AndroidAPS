@@ -72,7 +72,7 @@ class ComboV2OverviewViewModel @Inject constructor(
     @ApplicationContext context: Context
 ) : ViewModel() {
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     private data class PumpSnapshot(
         val isPaired: Boolean,

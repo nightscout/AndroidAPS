@@ -1,7 +1,8 @@
 package app.aaps.core.interfaces.rx.events
 
-import android.content.Context
-import app.aaps.core.interfaces.R
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 
 /**
  * Fired when the pump connection status changes.
@@ -90,15 +91,15 @@ class EventPumpStatusChanged : EventStatus {
     /**
      * Gets a human-readable status message for the startup wizard.
      */
-    override fun getStatus(context: Context): String {
+    override fun getStatus(): TextRef {
         return when (status) {
-            Status.CONNECTING                -> context.getString(R.string.connecting_for, secondsElapsed)
-            Status.HANDSHAKING               -> context.getString(R.string.handshaking)
-            Status.CONNECTED                 -> context.getString(R.string.connected)
-            Status.PERFORMING                -> performingAction
-            Status.WAITING_FOR_DISCONNECTION -> context.getString(R.string.waiting_for_disconnection)
-            Status.DISCONNECTING             -> context.getString(R.string.disconnecting)
-            Status.DISCONNECTED              -> ""
+            Status.CONNECTING                -> InterfacesStrings.connecting_for.withArgs(secondsElapsed)
+            Status.HANDSHAKING               -> InterfacesStrings.handshaking
+            Status.CONNECTED                 -> InterfacesStrings.connected
+            Status.PERFORMING                -> TextRef.Literal(performingAction)
+            Status.WAITING_FOR_DISCONNECTION -> InterfacesStrings.waiting_for_disconnection
+            Status.DISCONNECTING             -> InterfacesStrings.disconnecting
+            Status.DISCONNECTED              -> TextRef.Literal("")
         }
     }
 }

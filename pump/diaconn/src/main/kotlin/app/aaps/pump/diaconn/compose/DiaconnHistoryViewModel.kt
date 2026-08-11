@@ -67,7 +67,7 @@ class DiaconnHistoryViewModel @Inject constructor(
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ event ->
-                           _uiState.update { it.copy(statusMessage = event.getStatus(context)) }
+                           _uiState.update { it.copy(statusMessage = rh.gs(event.getStatus())) }
                        }, { aapsLogger.error(LTag.PUMP, "Error", it) })
 
         types.firstOrNull()?.let { loadRecords(it.type) }

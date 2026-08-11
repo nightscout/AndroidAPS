@@ -122,7 +122,7 @@ class ErosOverviewViewModel @Inject constructor(
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
 
     private val _events = MutableSharedFlow<OmnipodOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<OmnipodOverviewEvent> = _events

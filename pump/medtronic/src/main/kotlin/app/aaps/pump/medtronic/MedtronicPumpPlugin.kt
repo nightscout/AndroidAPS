@@ -214,7 +214,7 @@ class MedtronicPumpPlugin @Inject constructor(
             rxBus
                 .toObservable(EventRileyLinkDeviceStatusChange::class.java)
                 .observeOn(aapsSchedulers.io)
-                .subscribe({ event: EventRileyLinkDeviceStatusChange -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
+                .subscribe({ event: EventRileyLinkDeviceStatusChange -> rxBus.send(EventSWRLStatus(rh.gs(event.getStatus()))) }, fabricPrivacy::logException)
         )
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope

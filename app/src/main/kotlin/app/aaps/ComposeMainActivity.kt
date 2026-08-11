@@ -248,7 +248,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private val siteRotationManagementViewModel: SiteRotationManagementViewModel by viewModels()
 
     private val pumpCommunicationStatus by lazy {
-        PumpCommunicationStatus(rxBus, commandQueue, this, lifecycleScope)
+        PumpCommunicationStatus(rxBus, commandQueue, rh, lifecycleScope)
     }
     private var navController: NavHostController? = null
     private val _autoShowNotifications = mutableStateOf(false)

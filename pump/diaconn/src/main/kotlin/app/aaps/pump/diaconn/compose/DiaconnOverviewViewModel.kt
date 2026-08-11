@@ -90,7 +90,7 @@ class DiaconnOverviewViewModel @Inject constructor(
     private val _events = MutableSharedFlow<DiaconnOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<DiaconnOverviewEvent> = _events
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     private val rxTrigger = MutableStateFlow(0L)
 

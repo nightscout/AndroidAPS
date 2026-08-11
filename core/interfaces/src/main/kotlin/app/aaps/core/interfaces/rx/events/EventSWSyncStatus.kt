@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.rx.events
 
-import android.content.Context
+import app.aaps.core.keys.interfaces.TextRef
 
 /**
  * Fired to update the setup wizard with the sync status.
@@ -9,5 +9,5 @@ import android.content.Context
  */
 class EventSWSyncStatus(val status: String) : EventStatus() {
 
-    override fun getStatus(context: Context): String = status
+    override fun getStatus(): TextRef = TextRef.Literal(status)
 }

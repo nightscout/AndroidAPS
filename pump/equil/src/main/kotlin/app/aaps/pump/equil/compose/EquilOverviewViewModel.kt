@@ -78,7 +78,7 @@ class EquilOverviewViewModel @Inject constructor(
     private val _isModeChanging = MutableStateFlow(false)
     val isModeChanging: StateFlow<Boolean> = _isModeChanging
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     // Trigger re-composition on RxBus events and periodic ticks
     private val _refreshTrigger = MutableStateFlow(0L)

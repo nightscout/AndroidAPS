@@ -83,7 +83,7 @@ class MedtrumOverviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
     private val stateBuilder = PumpOverviewStateBuilder(rh)
 
     private val _events = MutableSharedFlow<MedtrumOverviewEvent>(extraBufferCapacity = 5)

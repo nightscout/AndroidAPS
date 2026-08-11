@@ -92,7 +92,7 @@ class MedtronicOverviewViewModel @Inject constructor(
         private const val PLACEHOLDER = "-"
     }
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     private val _events = MutableSharedFlow<MedtronicOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<MedtronicOverviewEvent> = _events

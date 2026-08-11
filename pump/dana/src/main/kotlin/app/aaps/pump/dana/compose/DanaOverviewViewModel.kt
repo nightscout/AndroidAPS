@@ -90,7 +90,7 @@ open class DanaOverviewViewModel @Inject constructor(
     private val _events = MutableSharedFlow<DanaOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<DanaOverviewEvent> = _events
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     // RxBus events converted to a flow trigger for recomposition
     protected val rxTrigger = MutableStateFlow(0L)

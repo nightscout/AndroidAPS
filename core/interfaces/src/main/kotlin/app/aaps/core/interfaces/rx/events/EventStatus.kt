@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.rx.events
 
-import android.content.Context
+import app.aaps.core.keys.interfaces.TextRef
 
 /**
  * Base class for events that carry a status message used in UI updates
@@ -10,8 +10,7 @@ abstract class EventStatus : Event() {
     /**
      * Gets the status message.
      *
-     * @param context The context.
-     * @return The status message string.
+     * @return The status message, as a platform neutral reference.
      */
-    abstract fun getStatus(context: Context): String
+    abstract fun getStatus(): TextRef
 }

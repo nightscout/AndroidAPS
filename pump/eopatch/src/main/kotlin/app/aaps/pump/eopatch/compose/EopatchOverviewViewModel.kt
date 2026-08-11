@@ -94,7 +94,7 @@ class EopatchOverviewViewModel @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val stateBuilder = PumpOverviewStateBuilder(rh)
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
     private val disposables = CompositeDisposable()
 
     private val _events = MutableSharedFlow<EopatchOverviewEvent>(extraBufferCapacity = 5)

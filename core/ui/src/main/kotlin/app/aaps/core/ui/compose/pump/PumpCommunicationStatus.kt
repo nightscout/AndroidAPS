@@ -1,6 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
-import android.content.Context
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.onEach
 class PumpCommunicationStatus(
     rxBus: RxBus,
     private val commandQueue: CommandQueue,
-    private val context: Context,
+    private val rh: ResourceHelper,
     scope: CoroutineScope
 ) {
 
@@ -39,7 +39,7 @@ class PumpCommunicationStatus(
     init {
         rxBus.toFlow(EventPumpStatusChanged::class.java)
             .onEach { event ->
-                val text = event.getStatus(context)
+                val text = rh.gs(event.getStatus())
                 _statusBanner.value = if (text.isEmpty()) null else StatusBanner(text = text, level = StatusLevel.UNSPECIFIED)
                 refreshTrigger.value = System.currentTimeMillis()
             }

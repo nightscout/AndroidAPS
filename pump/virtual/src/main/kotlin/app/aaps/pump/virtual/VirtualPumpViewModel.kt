@@ -55,7 +55,7 @@ class VirtualPumpViewModel(
 ) {
 
     private val stateBuilder = PumpOverviewStateBuilder(rh)
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
 
     // VirtualPump has no hardware — it relies on DB to know active TB/EB
     private val dbChanged = merge(
