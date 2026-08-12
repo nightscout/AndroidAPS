@@ -4,6 +4,10 @@ import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -80,29 +84,63 @@ fun List<TargetBlock>.highTargetBlockValueBySeconds(secondsFromMidnight: Int, ti
     return last().highTarget
 }
 
-fun blockFromJsonArray(jsonArray: JSONArray?, dateUtil: DateUtil): List<Block>? {
-    val size = jsonArray?.length() ?: return null
-    val ret = ArrayList<Block>(size)
-    try {
-        for (index in 0 until jsonArray.length() - 1) {
-            val o = jsonArray.getJSONObject(index)
-            val tas = dateUtil.toSeconds(o.getString("time"))
-            val next = jsonArray.getJSONObject(index + 1)
-            val nextTas = dateUtil.toSeconds(next.getString("time"))
-            val value = o.getDouble("value")
-            if (tas % 3600 != 0) return null
-            if (nextTas % 3600 != 0) return null
-            ret.add(index, Block((nextTas - tas) * 1000L, value))
-        }
-        val last: JSONObject = jsonArray.getJSONObject(jsonArray.length() - 1)
-        val lastTas = dateUtil.toSeconds(last.getString("time"))
-        val value = last.getDouble("value")
-        ret.add(jsonArray.length() - 1, Block((T.hours(24).secs() - lastTas) * 1000L, value))
-    } catch (e: Exception) {
-        return null
+/**
+ * Bridge from `org.json` to kotlinx at the module boundary.
+ *
+ * Goes via text because that is the only lossless thing both libraries agree on, and the cost is
+ * paid once per schedule rather than per entry. Returns null rather than throwing so callers keep the
+ * existing "unreadable means invalid profile" behaviour.
+ */
+private fun JSONArray?.toKotlinxOrNull(): JsonArray? =
+    this?.let { runCatching { Json.parseToJsonElement(it.toString()) as? JsonArray }.getOrNull() }
+
+/**
+ * `time` as org.json's `getString` would give it: a quoted string comes back unquoted, and a bare
+ * number comes back as its text. Null when absent or not a primitive.
+ */
+private fun JsonArray.timeAt(index: Int): String? =
+    ((getOrNull(index) as? JsonObject)?.get("time") as? JsonPrimitive)?.content
+
+/**
+ * `value` as org.json's `getDouble` would give it - coercing a quoted number, which real Nightscout
+ * and AAPS documents both contain. Null when absent or not numeric, which the callers turn into an
+ * invalid profile.
+ */
+private fun JsonArray.valueAt(index: Int): Double? =
+    ((getOrNull(index) as? JsonObject)?.get("value") as? JsonPrimitive)?.content?.toDoubleOrNull()
+
+/**
+ * Reads a profile schedule (`basal`, `sens`, `carbratio`) into blocks.
+ *
+ * The logic lives on kotlinx [JsonArray] so it can eventually move to commonMain; the `org.json`
+ * entry point below is a thin adapter kept while the callers still hold `JSONArray`. This is the
+ * inside-out step of the org.json migration - the parsing rules move first, the contracts follow.
+ *
+ * Behaviour is deliberately unchanged and is pinned by `ProfileJsonCharacterizationTest`:
+ * - a value may be a real number OR a quoted string; both occur in the wild
+ * - a schedule not aligned to whole hours is rejected
+ * - anything unreadable yields **null** (an invalid profile), never an exception
+ */
+fun blockFromJson(jsonArray: JsonArray?, dateUtil: DateUtil): List<Block>? {
+    if (jsonArray == null || jsonArray.isEmpty()) return null
+    val ret = ArrayList<Block>(jsonArray.size)
+    for (index in 0 until jsonArray.size - 1) {
+        val tas = dateUtil.toSeconds(jsonArray.timeAt(index) ?: return null)
+        val nextTas = dateUtil.toSeconds(jsonArray.timeAt(index + 1) ?: return null)
+        val value = jsonArray.valueAt(index) ?: return null
+        if (tas % 3600 != 0) return null
+        if (nextTas % 3600 != 0) return null
+        ret.add(index, Block((nextTas - tas) * 1000L, value))
     }
+    val lastTas = dateUtil.toSeconds(jsonArray.timeAt(jsonArray.size - 1) ?: return null)
+    val lastValue = jsonArray.valueAt(jsonArray.size - 1) ?: return null
+    ret.add(jsonArray.size - 1, Block((T.hours(24).secs() - lastTas) * 1000L, lastValue))
     return ret
 }
+
+/** `org.json` entry point. Converts once at the boundary and delegates to [blockFromJson]. */
+fun blockFromJsonArray(jsonArray: JSONArray?, dateUtil: DateUtil): List<Block>? =
+    blockFromJson(jsonArray.toKotlinxOrNull(), dateUtil)
 
 fun targetBlockFromJsonArray(jsonArray1: JSONArray?, jsonArray2: JSONArray?, dateUtil: DateUtil): List<TargetBlock>? {
     val size1 = jsonArray1?.length() ?: return null
