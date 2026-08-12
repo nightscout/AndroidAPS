@@ -199,19 +199,6 @@ abstract class WatchFace : WatchFaceService() {
      */
     protected open fun onDrawOverlay(canvas: Canvas) {}
 
-    /** How a subclass wants one [ComplicationSlot] painted for the frame being rendered. */
-    protected sealed interface ComplicationRender {
-
-        /** Paint at the slot's own declared bounds - what the framework does on its own. */
-        data object Declared : ComplicationRender
-
-        /** Don't paint this slot at all this frame. */
-        data object Skip : ComplicationRender
-
-        /** Paint into [bounds], rotated [rotation] degrees about its centre. */
-        data class At(val bounds: Rect, val rotation: Float = 0f) : ComplicationRender
-    }
-
     /**
      * Decides how [slot] is painted this frame, letting a subclass supply bounds per frame instead
      * of being stuck with the ones the slot was created with.
@@ -231,12 +218,16 @@ abstract class WatchFace : WatchFaceService() {
      * `computeBounds`, all internal, and `createRoundRectComplicationSlotBuilder` hard-codes the
      * filter). A subclass that paints a slot away from where it was declared must therefore also
      * bring the declared bounds up to date, or taps land on the wrong complication - see
-     * `CustomWatchface.syncComplicationSlotStyle` for the only supported way to do that.
+     * [WatchFaceComplications.syncGeometry] for the only supported way to do that.
      *
      * [ComplicationRender.Declared] for every watch face that doesn't override this, which keeps the
      * render loop below byte-for-byte equivalent to what it did before the hook existed.
+     *
+     * `internal` rather than `protected` because [ComplicationRender] is an `internal` type of this
+     * module - a `protected` member of a public class may not expose one. Every watch face lives in
+     * this module, so nothing is lost.
      */
-    protected open fun complicationRender(slot: ComplicationSlot): ComplicationRender = ComplicationRender.Declared
+    internal open fun complicationRender(slot: ComplicationSlot): ComplicationRender = ComplicationRender.Declared
 
     // Renderer instance
     private var renderer: WatchFaceRenderer? = null

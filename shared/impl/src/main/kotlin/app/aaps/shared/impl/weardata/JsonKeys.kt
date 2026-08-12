@@ -24,19 +24,17 @@ enum class JsonKeys(val key: String) {
     LEFTMARGIN("leftmargin"),
     ROTATION("rotation"),
     VISIBILITY("visibility"),
-    TEXTSIZE("textsize"),
+    TEXTSIZE("textsize"),           // Also used in Complications
     TEXTVALUE("textvalue"),
     GRAVITY("gravity"),
-    FONT("font"),
-    FONTSTYLE("fontStyle"),
-    FONTCOLOR("fontColor"),
-    FONTTITLE("fontTitle"),           // Complication slots only: typeface for the title/label text (see ComplicationStyle.titleTypeface)
-    FONTTITLECOLOR("fontTitleColor"), // Complication slots only: color for the title/label text (see ComplicationStyle.titleColor)
-    COLOR("color"),
+    FONT("font"),                   // Also used in Complications
+    FONTSTYLE("fontStyle"),         // Also used in Complications
+    FONTCOLOR("fontColor"),         // Also used in Complications
+    COLOR("color"),                 // Also used for Complications Background Color
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),
     MONTHFORMAT("monthFormat"),
-    BACKGROUND("background"),       // Background image for textView
+    BACKGROUND("background"),       // Background image for textView, also used in Complications
     LEFTOFFSET("leftOffset"),       // Boolean allow left offset according to dynData value or key for LeftOffset Range definition
     TOPOFFSET("topOffset"),         // Boolean allow top offset according to dynData value or key for TopOffset Range definition
     ROTATIONOFFSET("rotationOffset"),// Boolean allow rotation offset according to dynData value or key for rotation Offset Range definition
@@ -63,5 +61,15 @@ enum class JsonKeys(val key: String) {
     INVALIDLEFTOFFSET("invalidLeftOffset"),
     INVALIDROTATIONOFFSET("invalidRotationOffset"),
     INVALIDTEXTVALUE("invalidTextvalue"),
+    COMPLICATIONSTYLE("complicationStyle"), // Key for Complication global styling block
+    ICONCOLOR("iconColor"),         // Complication slots only: set icon color
+    TITLESIZE("titleSize"),         // Complication slots only: text size for Complication Title/label
+    TITLESTYLE("titleStyle"),       // Complication slots only: title Style for Complication Title/label
+    FONTTITLE("fontTitle"),         // Complication slots only: typeface for the title/label text (see ComplicationStyle.titleTypeface)
+    FONTTITLECOLOR("fontTitleColor"), // Complication slots only: color for the title/label text (see ComplicationStyle.titleColor)
+    BORDERRADIUS("borderRadius"),   // Complication slots only: corner radius of the complication
+    RINGWIDTH("ringWidth"),         // Complication slots only: ring width in percentage of bounds Width/Height)
+    RINGPRIMARYCOLOR("ringPrimaryColor"), // Complication slots only: ring color
+    RINGSECONDARYCOLOR("ringSecondaryColor"), // Complication slots only: ring color// )
     DEFAULT("default")
 }

@@ -74,6 +74,9 @@ import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
+import app.aaps.wear.watchfaces.utils.ComplicationRender
+import app.aaps.wear.watchfaces.utils.ComplicationStyleValues
+import app.aaps.wear.watchfaces.utils.WatchFaceComplications
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
@@ -91,257 +94,12 @@ class CustomWatchface : BaseWatchFace() {
     @Inject lateinit var context: Context
     private lateinit var binding: ActivityCustomBinding
     private var zoomFactor = 1.0
-    private val templeResolution = 400
     private var lowBatColor = Color.RED
     private var resDataMap: CwfResDataMap = mutableMapOf()
     private var json = JSONObject()
     private var jsonString = ""
     private var backgroundDrawable: Drawable? = null
 
-    // Complication styling state, kept per slot id so it survives the two independent orderings the
-    // framework can use: the CWF json can be parsed before the ComplicationDrawable exists (lazy
-    // renderer creation) or after it. Both applyComplicationStyle() call sites are cheap and
-    // idempotent, so whichever happens second completes the styling.
-    private val complicationDrawables = mutableMapOf<Int, ComplicationDrawable>()
-    private val complicationStyleJson = mutableMapOf<Int, JSONObject?>()
-
-    // Created on a background thread in createUserStyleSchema()/createComplicationSlotsManager(),
-    // read on the render thread in syncComplicationSlotStyle() - hence @Volatile.
-    @Volatile private var complicationSlotsSetting: ComplicationSlotsUserStyleSetting? = null
-    @Volatile private var userStyleRepository: CurrentUserStyleRepository? = null
-
-    // What syncComplicationSlotStyle() last pushed, so it only pushes on a real change, and the
-    // counter that keeps every pushed option's id distinct (see that method for why that matters).
-    private var pushedSlotStyleSignature: String? = null
-    private var slotStyleRevision = 0
-
-    companion object {
-
-        // Stable slot IDs: the system persists the chosen provider per (watch face component, slot
-        // id) across app updates, so these must never change once shipped. Public so the in-app
-        // complication picker (WatchfaceConfigurationActivity) can target the same slots.
-        const val COMPLICATION_SLOT_ID_1 = 101
-        const val COMPLICATION_SLOT_ID_2 = 102
-        const val COMPLICATION_SLOT_ID_3 = 103
-
-        /**
-         * Absolute floor in real pixels, so a very small slot still gets a visible ring. Deliberately
-         * **not** named after the library default: the effective default is `2dp` from
-         * `R.dimen.complicationDrawable_rangedValueRingWidth` (applied by
-         * `ComplicationDrawable.setContext`), not the `2` px field initializer. This is our own
-         * minimum, unrelated to either.
-         */
-        private const val MIN_RING_WIDTH_PX = 2
-
-        /**
-         * **Provisional placeholder, not a finished value.** Ring thickness as a fraction of the
-         * slot's declared width, eyeballed against an OEM watch face (ring ~= 1/6 of radius, and
-         * radius = width/2, hence 12). Not an upstream design guideline - no such guideline exists,
-         * see [complicationRingWidth]. To be replaced by an explicit CWF json key in the styling
-         * parameter audit, at which point this becomes only the documented fallback ratio used when
-         * the key is absent.
-         */
-        private const val PROVISIONAL_RING_WIDTH_RATIO = 12
-
-        private const val SLOT_STYLE_SETTING_ID = "cwf_slots"
-        private const val SLOT_STYLE_OPTION_ID_DEFAULT = "cwf_d"
-        private const val SLOT_STYLE_OPTION_ID_PREFIX = "cwf_"
-    }
-
-    /**
-     * Declares the one [ComplicationSlotsUserStyleSetting] that [syncComplicationSlotStyle] needs in
-     * order to move the slots at runtime.
-     *
-     * The single option carries **no** overlays, which the library documents as meaning "the net
-     * result is the initial complication configuration" - so by itself this schema changes nothing.
-     * It exists only because `CurrentUserStyleRepository.updateUserStyle` validates that the
-     * *setting* is part of the schema; the options actually applied are built later, at runtime.
-     */
-    override fun createUserStyleSchema(): UserStyleSchema {
-        val defaultOption = ComplicationSlotsOption(
-            UserStyleSetting.Option.Id(SLOT_STYLE_OPTION_ID_DEFAULT),
-            resources,
-            R.string.cwf_complication_layout_option,
-            R.string.cwf_complication_layout_option,
-            null,
-            emptyList()
-        )
-        val setting = ComplicationSlotsUserStyleSetting(
-            UserStyleSetting.Id(SLOT_STYLE_SETTING_ID),
-            resources,
-            R.string.cwf_complication_layout,
-            R.string.cwf_complication_layout_description,
-            null,
-            listOf(defaultOption),
-            // The library requires this setting to affect the complications layer.
-            listOf(WatchFaceLayer.COMPLICATIONS)
-        )
-        complicationSlotsSetting = setting
-        return UserStyleSchema(listOf(setting))
-    }
-
-    /**
-     * Brings each slot's **declared** bounds and enabled state into line with what is actually being
-     * drawn, which is what fixes complication *taps* after a CWF change.
-     *
-     * [complicationRender] only fixes what the user sees: tap hit-testing goes through
-     * `ComplicationSlotsManager.getComplicationSlotAt` -> `RoundRectComplicationTapFilter` ->
-     * `ComplicationSlot.computeBounds`, which reads the slot's own cached bounds and never the ones
-     * a render call was given. Left alone, the two diverge the moment a CWF moves a complication -
-     * confirmed on device: with two CWFs differing only by complication1/complication2 being
-     * swapped, each slot rendered in its new place but tapping it fired the *other* slot's provider,
-     * silently and wrongly.
-     *
-     * `ComplicationSlot.complicationSlotBounds` and `.enabled` have `internal` setters, so the only
-     * supported way to write them is a user-style change: the library's own
-     * `ComplicationSlotsManager.listenForStyleChanges` reacts to a new [ComplicationSlotsOption] by
-     * calling `applyComplicationSlotsStyleCategoryOption`, which writes both. That also keeps
-     * accessibility bounds and what an editor sees correct, which a render-side-only fix cannot.
-     *
-     * Two non-obvious constraints, both verified against the androidx sources:
-     * - **Every push needs a fresh option id.** `UserStyleSetting.Option.equals` compares *only*
-     *   the id, and `listenForStyleChanges` ignores an option it considers equal to the previous
-     *   one. Reusing an id means new bounds are accepted and then silently never applied.
-     * - `updateUserStyle` is `@RestrictTo(LIBRARY_GROUP)`, hence the suppression below. It is
-     *   lint-only - the call is ordinary type-checked Kotlin, so a future incompatible change breaks
-     *   the build rather than failing silently at runtime. `validateUserStyle` requires only that
-     *   the setting belongs to the schema and that the option's class matches it; it deliberately
-     *   does *not* require the option to be one the schema enumerated, which is what makes
-     *   runtime-computed bounds legal here.
-     *
-     * Called once per frame from [onDraw], but only pushes when the geometry actually changed, so in
-     * practice this runs on a CWF (re)load or when a DynProvider offset moves a slot - not per frame.
-     */
-    @Suppress("RestrictedApi")
-    private fun syncComplicationSlotStyle() {
-        val setting = complicationSlotsSetting ?: return
-        val repository = userStyleRepository ?: return
-        val width = getWidth().toFloat()
-        val height = getHeight().toFloat()
-        if (width <= 0f || height <= 0f) return
-
-        val overlays = mutableListOf<ComplicationSlotOverlay>()
-        val signature = StringBuilder()
-        for (config in complicationSlotConfigs) {
-            val view = complicationPlaceholder(config.slotId)?.takeIf { it.isVisible && it.width > 0 && it.height > 0 }
-            // ComplicationSlotBounds are fractional (unit-square, canvas-relative), same conversion
-            // as complicationSlotBoundsFromJson but starting from the laid-out placeholder so any
-            // DynProvider offset is already included. Empty for a hidden slot: nothing to hit-test.
-            val bounds = view
-                ?.let { RectF(it.left / width, it.top / height, it.right / width, it.bottom / height) }
-                ?: RectF()
-            val visible = view != null
-            // Builder rather than the constructor: the overlay's 4-argument secondary constructor is
-            // deprecated, and named arguments resolve to it rather than to the primary one.
-            overlays += ComplicationSlotOverlay.Builder(config.slotId)
-                .setEnabled(visible)
-                .setComplicationSlotBounds(ComplicationSlotBounds(bounds))
-                .build()
-            signature.append(config.slotId).append(visible).append(bounds).append('|')
-        }
-
-        if (signature.toString() == pushedSlotStyleSignature) return
-        pushedSlotStyleSignature = signature.toString()
-
-        val option = ComplicationSlotsOption(
-            UserStyleSetting.Option.Id("$SLOT_STYLE_OPTION_ID_PREFIX${++slotStyleRevision}"),
-            resources,
-            R.string.cwf_complication_layout_option,
-            R.string.cwf_complication_layout_option,
-            null,
-            overlays
-        )
-        repository.updateUserStyle(
-            repository.userStyle.value.toMutableUserStyle().apply { set(setting, option) }.toUserStyle()
-        )
-    }
-
-    /**
-     * Renderer for CustomWatchface's complication slots. Exists to force the **synchronous** branch
-     * of `ComplicationDrawable.setComplicationData`.
-     *
-     * With `loadDrawablesAsync = true` (what the framework passes) the library does not put the new
-     * data into the renderer it is currently drawing with. It builds a *second* `ComplicationRenderer`
-     * and installs it only once the async drawable load completes - its own comment says this
-     * "causes it to render as blank until the async load has completed". On the engine-start /
-     * complication-cache-restore path that completion does not arrive here, so the live renderer keeps
-     * its empty data and paints nothing at all, while `ComplicationDrawable.complicationData` already
-     * reports the real type. That combination is exactly the observed symptom: a complication that
-     * responds to taps (tap handling reads the slot, not the renderer) and reports correct data at
-     * every layer, yet stays invisible until the provider is re-picked.
-     *
-     * Loading synchronously puts the data into the live renderer immediately. The cost is decoding
-     * two or three small complication icons on the calling thread instead of off it.
-     */
-    private class CwfCanvasComplication(
-        drawable: ComplicationDrawable,
-        watchState: WatchState,
-        invalidateCallback: CanvasComplication.InvalidateCallback
-    ) : CanvasComplicationDrawable(drawable, watchState, invalidateCallback) {
-
-        /**
-         * Ignores [loadDrawablesAsynchronous] and always loads synchronously. This is the fix for
-         * complications rendering as empty until the provider was re-picked - do not "simplify" it
-         * by passing the parameter through, that reintroduces the bug. See the class doc for the
-         * full mechanism.
-         *
-         * Also strips a redundant small image first - see [withoutRedundantSmallImage].
-         */
-        override fun loadData(complicationData: ComplicationData, loadDrawablesAsynchronous: Boolean) {
-            super.loadData(withoutRedundantSmallImage(complicationData), false)
-        }
-
-        /**
-         * Works around an androidx layout bug that drops **both** images when a ranged-value-family
-         * complication carries a monochromatic image *and* a small image on a non-wide slot.
-         *
-         * `RangedValueLayoutHelper.getIconBounds` returns empty whenever a small image exists (the
-         * small image is meant to win), but its `getSmallImageBounds` then resolves the small image's
-         * position by delegating to `ShortTextLayoutHelper.getIconBounds`, which returns empty for
-         * that very same reason. Both rects end up empty and nothing is drawn - confirmed against the
-         * 1.2.1 sources and on device, where a provider sending both images rendered ring + value but
-         * no icon, while the identical payload under SHORT_TEXT (which never enters that delegation)
-         * did show one. Details in `_docs/Complication_Libraries.md`.
-         *
-         * Dropping the small image makes `hasSmallImage()` false, so the monochromatic image renders
-         * normally. Only touched when there is a monochromatic image to fall back on, and only for
-         * the types routed through `RangedValueLayoutHelper` - SHORT_TEXT and friends render small
-         * images correctly and are passed through untouched.
-         *
-         * The wire round-trip is used rather than `RangedValueComplicationData.Builder` because the
-         * builder exposes no setters for `dataSource`, `persistencePolicy`, `displayPolicy` or
-         * `extras`, so rebuilding through it would silently discard them; copying the wire object
-         * preserves every field and changes exactly one. Both conversions are `@RestrictTo`
-         * (lint-only, not private), hence the suppression.
-         */
-        @Suppress("RestrictedApi")
-        private fun withoutRedundantSmallImage(complicationData: ComplicationData): ComplicationData {
-            val wire = complicationData.asWireComplicationData()
-            // Wire type constants rather than the ComplicationType enum: GOAL_PROGRESS and
-            // WEIGHTED_ELEMENTS are @RequiresApi(TIRAMISU) on the enum, while these are plain ints.
-            val routedThroughRangedValueLayout =
-                wire.type == WireComplicationData.TYPE_RANGED_VALUE ||
-                    wire.type == WireComplicationData.TYPE_GOAL_PROGRESS ||
-                    wire.type == WireComplicationData.TYPE_WEIGHTED_ELEMENTS
-            if (!routedThroughRangedValueLayout || !wire.hasSmallImage() || !wire.hasIcon()) return complicationData
-            return WireComplicationData.Builder(wire)
-                .setSmallImage(null)
-                .setBurnInProtectionSmallImage(null)
-                .build()
-                .toApiComplicationData()
-        }
-    }
-
-    private class ComplicationSlotConfig(val slotId: Int, @IdRes val viewId: Int, val viewKey: String, val defaultBounds: RectF)
-
-    // defaultBounds match the original hardcoded placeholder positions (100..150 x 100..150 etc.
-    // in the 400x400 templeResolution space) - used only on a truly first-ever launch, before any
-    // CWF (including the default one) has been persisted yet, so slots never start zero-sized.
-    private val complicationSlotConfigs = listOf(
-        ComplicationSlotConfig(COMPLICATION_SLOT_ID_1, R.id.complication1, ViewKeys.COMPLICATION1.key, RectF(100f / 400f, 100f / 400f, 150f / 400f, 150f / 400f)),
-        ComplicationSlotConfig(COMPLICATION_SLOT_ID_2, R.id.complication2, ViewKeys.COMPLICATION2.key, RectF(100f / 400f, 200f / 400f, 150f / 400f, 250f / 400f)),
-        ComplicationSlotConfig(COMPLICATION_SLOT_ID_3, R.id.complication3, ViewKeys.COMPLICATION3.key, RectF(100f / 400f, 300f / 400f, 150f / 400f, 350f / 400f))
-    )
     // Order is a real preference order, not cosmetic: during data source selection the system walks
     // this list in order and picks the first entry a provider also supports (ComplicationSlot.kt's
     // supportedTypes doc, confirmed against source - see _docs/Complication_Libraries.md's
@@ -363,6 +121,9 @@ class CustomWatchface : BaseWatchFace() {
     // Color.RED that no ComplicationStyle property can override. RANGED_VALUE uses the ordinary
     // arc renderer and the same content layout, so it is the better target for a
     // progress-toward-a-goal complication. Confirmed on device against a provider offering both.
+    //
+    // TODO(later): a `SUPPORTEDTYPES` CWF key would replace this list. Creation-time only - it is a
+    //  ComplicationSlot.Builder argument, so a value arriving later cannot be applied.
     private val complicationSupportedTypes =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             listOf(
@@ -386,6 +147,86 @@ class CustomWatchface : BaseWatchFace() {
             )
         }
 
+    /**
+     * The generic complication plumbing for *this* engine instance - see [WatchFaceComplications],
+     * which holds everything that is not specific to this watch face.
+     *
+     * The slot list is derived from [ViewMap]: an entry *is* a complication slot exactly when it
+     * declares a [ViewMap.slotId], so adding a slot means one new entry there and nothing here.
+     *
+     * Deliberately an instance field rather than enum state. Complication state includes live objects
+     * bound to this one engine (a `ComplicationDrawable` owning a renderer and an invalidate
+     * callback), and the watch face editor runs a **second, headless** CustomWatchface instance
+     * concurrently. Enum entries - the pattern [ViewMap] uses for ordinary views - are process-wide
+     * singletons and could not hold that safely: the two instances would share one drawable. This is
+     * also why a `ComplicationMap` enum was rejected during design; it would have had exactly the
+     * same defect as putting the drawable on [ViewMap].
+     */
+    private val complications = WatchFaceComplications(
+        context = this,
+        slotIds = ViewMap.entries.mapNotNull { it.slotId },
+        supportedTypes = complicationSupportedTypes,
+        layoutSettingLabel = R.string.cwf_complication_layout,
+        layoutSettingDescription = R.string.cwf_complication_layout_description
+    )
+
+    /**
+     * The CWF-wide `complicationStyle` values, decoded once per [setWatchfaceStyle] pass alongside
+     * every other transversal value - see [ComplicationGlobalStyle].
+     */
+    private val complicationStyle = ComplicationGlobalStyle(this)
+
+    companion object {
+
+        // Stable slot IDs: the system persists the chosen provider per (watch face component, slot
+        // id) across app updates, so these must never change once shipped. Public so the in-app
+        // complication picker (WatchfaceConfigurationActivity) can target the same slots.
+        const val COMPLICATION_SLOT_ID_1 = 101
+        const val COMPLICATION_SLOT_ID_2 = 102
+        const val COMPLICATION_SLOT_ID_3 = 103
+
+        /**
+         * The fixed coordinate space every CWF json declares its geometry in. A format constant
+         * rather than per-instance state, so code that has no [CustomWatchface] instance to hand -
+         * such as `ComplicationHost.slotBounds` - can reach it.
+         */
+        private const val TEMPLE_RESOLUTION = 400
+
+        /**
+         * A typeface combining a `FONT`-style key with a `FONTSTYLE`-style one, for the complication
+         * properties that accept only a single [Typeface] and have no separate style argument.
+         *
+         * `ComplicationStyle.setTextTypeface`/`setTitleTypeface` take one `Typeface`, unlike
+         * `TextView.setTypeface(tf, style)`. `Typeface.create(base, style)` is the equivalent for the
+         * system families (`sans-serif`, `serif`, `monospace`, default), which carry real bold and
+         * italic variants. **It is not fully equivalent for a single-weight custom font**: `TextView`
+         * additionally sets `fakeBoldText`/`textSkewX` on its paint when the family has no matching
+         * variant, and `ComplicationStyle` exposes no paint to do that on - so asking for bold on a
+         * font resource that ships only one weight yields the unstyled face rather than a synthesised
+         * bold.
+         */
+        private fun typefaceOf(json: JSONObject?, fontKey: String, styleKey: String, default: Typeface): Typeface {
+            val base = json?.optString(fontKey)?.takeIf { it.isNotEmpty() }?.let { FontMap.font(it) } ?: default
+            val style = json?.optString(styleKey)?.takeIf { it.isNotEmpty() }?.let { StyleMap.style(it) } ?: return base
+            return Typeface.create(base, style)
+        }
+
+
+        /**
+         * **Provisional placeholder, not a finished value.** Ring thickness as a fraction of the
+         * slot's declared width, eyeballed against an OEM watch face (ring ~= 1/6 of radius, and
+         * radius = width/2, hence 12). Not an upstream design guideline - no such guideline exists,
+         * see [ViewMap.ringWidthPx]. To be replaced by an explicit CWF json key in the
+         * styling parameter audit, at which point this becomes only the documented fallback ratio
+         * used when the key is absent.
+         */
+        private const val PROVISIONAL_RING_WIDTH_RATIO = 12
+
+
+    }
+
+    override fun createUserStyleSchema(): UserStyleSchema = complications.createUserStyleSchema()
+
     // This method is foundational engine setup and must never throw - confirmed via a real crash
     // (UninitializedPropertyAccessException on complicationDataRepository, logged internally by
     // WatchFaceService's own background-thread handler) that it can run before BaseWatchFace's
@@ -399,8 +240,9 @@ class CustomWatchface : BaseWatchFace() {
     // bounds (same as a fresh install) - a valid manager with the right slot ids beats a crashed one.
     override fun createComplicationSlotsManager(currentUserStyleRepository: CurrentUserStyleRepository): ComplicationSlotsManager {
         ensureInjected()
-        // Kept so syncComplicationSlotStyle() can push slot geometry changes back through it.
-        userStyleRepository = currentUserStyleRepository
+        // Read here rather than in WatchFaceComplications because ensureInjected /
+        // daggerInjectionComplete are protected members of BaseWatchFace, reachable from this subclass
+        // but not from another class. The generic layer only needs the resulting bounds.
         val storedJson = if (daggerInjectionComplete) {
             runBlocking {
                 complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
@@ -408,46 +250,9 @@ class CustomWatchface : BaseWatchFace() {
         } else {
             null
         }
-        val slots = complicationSlotConfigs.map { config ->
-            buildComplicationSlot(config, storedJson?.optJSONObject(config.viewKey))
+        return complications.createSlotsManager(currentUserStyleRepository) { slotId ->
+            slotBounds(storedJson?.optJSONObject(ViewMap.entries.firstOrNull { it.slotId == slotId }?.key))
         }
-        return ComplicationSlotsManager(slots, currentUserStyleRepository)
-    }
-
-    private fun buildComplicationSlot(config: ComplicationSlotConfig, viewJson: JSONObject?): ComplicationSlot {
-        val canvasComplicationFactory = CanvasComplicationFactory { watchState, invalidateCallback ->
-            // Keep the ComplicationDrawable so styling never depends on being able to reach it
-            // through complicationSlotsManager - see applyComplicationStyle. The library creates
-            // renderers lazily, so this can run either before or after the CWF json is parsed;
-            // applying here covers "drawable created last", and customizeComplicationView covers
-            // "json parsed last".
-            val drawable = ComplicationDrawable(this)
-            complicationDrawables[config.slotId] = drawable
-            applyComplicationStyle(config.slotId)
-            CwfCanvasComplication(drawable, watchState, invalidateCallback)
-        }
-        return ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = config.slotId,
-            canvasComplicationFactory = canvasComplicationFactory,
-            supportedTypes = complicationSupportedTypes,
-            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(),
-            bounds = complicationSlotBoundsFromJson(viewJson, config.defaultBounds)
-        ).build()
-    }
-
-    // ComplicationSlotBounds are fractional unit-square (canvas-relative), while the CWF json's
-    // WIDTH/HEIGHT/TOPMARGIN/LEFTMARGIN are expressed in the fixed 400x400 templeResolution space
-    // used by every other view. Dividing by templeResolution converts directly to the fraction -
-    // the zoomFactor used elsewhere to reach real display pixels cancels out (fraction is
-    // resolution-independent), so no screen-size lookup is needed here. Falls back to a per-slot
-    // default when there's no CWF json at all yet (truly first-ever launch).
-    private fun complicationSlotBoundsFromJson(viewJson: JSONObject?, default: RectF): ComplicationSlotBounds {
-        if (viewJson == null) return ComplicationSlotBounds(default)
-        val left = viewJson.optInt(JsonKeys.LEFTMARGIN.key) / templeResolution.toFloat()
-        val top = viewJson.optInt(JsonKeys.TOPMARGIN.key) / templeResolution.toFloat()
-        val width = viewJson.optInt(JsonKeys.WIDTH.key) / templeResolution.toFloat()
-        val height = viewJson.optInt(JsonKeys.HEIGHT.key) / templeResolution.toFloat()
-        return ComplicationSlotBounds(RectF(left, top, left + width, top + height))
     }
 
     /**
@@ -467,6 +272,7 @@ class CustomWatchface : BaseWatchFace() {
      * editor's headless instance never inflates one), which is exactly the pre-hook behaviour.
      */
     override fun complicationRender(slot: ComplicationSlot): ComplicationRender {
+        // Stays here: the geometry source is this watch face's own placeholder layout.
         val view = complicationPlaceholder(slot.id) ?: return ComplicationRender.Declared
         if (view.width == 0 || view.height == 0) return ComplicationRender.Declared
         if (!view.isVisible) return ComplicationRender.Skip
@@ -476,119 +282,185 @@ class CustomWatchface : BaseWatchFace() {
         return ComplicationRender.At(Rect(view.left, view.top, view.right, view.bottom), view.rotation)
     }
 
-    private fun complicationPlaceholder(slotId: Int): FrameLayout? {
-        if (!::binding.isInitialized) return null
-        return when (slotId) {
-            COMPLICATION_SLOT_ID_1 -> binding.complication1
-            COMPLICATION_SLOT_ID_2 -> binding.complication2
-            COMPLICATION_SLOT_ID_3 -> binding.complication3
-            else                   -> null
-        }
-    }
-
-    // Position/size/visibility/rotation are no longer applied here - customizeViewCommon writes them
-    // onto the placeholder view and complicationRender() reads them back per frame. What is left is
-    // the styling that ComplicationDrawable does accept at any time.
-    private fun customizeComplicationView(view: FrameLayout, viewMap: ViewMap) {
-        viewMap.customizeViewCommon(view, this)
-        val config = complicationSlotConfigs.firstOrNull { it.viewId == view.id } ?: return
-        // Record the style even if the drawable doesn't exist yet, then apply what we can. This
-        // pass runs from setWatchfaceStyle() <- setColorDark(), which BaseWatchFace.onCreate()
-        // triggers BEFORE the engine ever calls createWatchFace() - so previously the slot lookup
-        // returned null on a cold start, applyComplicationStyle never ran, and the drawable kept
-        // the library's OPAQUE BLACK default background until something forced a later CWF reload.
-        complicationStyleJson[config.slotId] = viewMap.viewJson
-        applyComplicationStyle(config.slotId)
-    }
-
-    // Applies our own defaults unconditionally, then lets the CWF json's COLOR/FONTCOLOR/
-    // FONTTITLECOLOR keys override them when present.
-    //
-    // NOTE: an earlier version of this comment said ComplicationStyle defaults to an OPAQUE BLACK
-    // background (ComplicationStyle.BACKGROUND_COLOR_DEFAULT = Color.BLACK) and that a slot without
-    // CWF styling would therefore render as a solid black square. That is the *field initializer*,
-    // and it does not apply to us: ComplicationDrawable.setContext() overwrites nearly every style
-    // field from resources via setStyleToDefaultValues(), and the resource default is
-    // R.color.complicationDrawable_backgroundColor = #00000000, i.e. already transparent. Since we
-    // build the drawable as ComplicationDrawable(this) - with a context - the resource defaults are
-    // what actually apply. Setting a transparent background here is therefore redundant rather than
-    // load-bearing; it is kept because it makes the intent explicit and costs nothing.
-    // The black-square symptom investigated earlier in this feature's development was real, but its
-    // root cause is NOT this default and remains unidentified - do not "restore" the black-background
-    // reasoning without new evidence. See _docs/Complication_Libraries.md, ComplicationStyle section.
     /**
-     * Ring thickness for `RANGED_VALUE`/`GOAL_PROGRESS`, derived from the slot's own declared size so
-     * it stays proportional to the complication rather than being the library's fixed hairline.
+     * Placeholder views by slot id, resolved once per inflate rather than per lookup.
      *
-     * **Units.** [JsonKeys.WIDTH] is in the CWF's 400x400 space, so it is multiplied by [zoomFactor]
-     * to reach physical pixels - the same conversion `customizeViewCommon` applies to every other
-     * view. `ComplicationStyle.rangedValueRingWidth` is `@Px`, i.e. physical pixels, so the computed
-     * value is already in the correct unit. [MIN_RING_WIDTH_PX] is in that same unit and is
-     * deliberately **not** scaled by [zoomFactor]: it is an absolute lower bound, not a design value.
-     *
-     * **Why not just use the library's own default?** The library's effective default is `2dp`
-     * (`R.dimen.complicationDrawable_rangedValueRingWidth`, applied by
-     * `ComplicationDrawable.setContext`), and it must never be multiplied by [zoomFactor]: `dp` is
-     * already a complete device-specific conversion belonging to Android's physical-size
-     * resolution-independence system, while [zoomFactor] belongs to this watch face's own system -
-     * proportion of the declared 400x400 space. Combining them would double-apply two unrelated
-     * scaling schemes. Using `2dp` *unscaled* was also rejected: it is a fixed physical thickness
-     * regardless of how large the CWF declared the slot, so it would be the one CWF dimension that
-     * does not scale with its slot, breaking the reproducible-across-devices design the format is
-     * built on. This library offers no size-relative default at all - `ComplicationRenderer` uses the
-     * value directly as a stroke width - so a proportional value computed here is the only option
-     * consistent with every other CWF-declared dimension. Do not reintroduce `2dp` as a "fix".
-     *
-     * **Where the ratio comes from.** A visual comparison, during this feature's development, against
-     * a Samsung Watch Face Format watch face whose ring measured roughly 1/6 of the complication
-     * radius; radius is width/2, hence width/12. That face does not use this renderer, so it is a
-     * design target rather than a like-for-like measurement, and no upstream guideline exists. See
-     * [PROVISIONAL_RING_WIDTH_RATIO] - it is a placeholder awaiting a CWF json key.
-     *
-     * Rounds rather than truncates, matching `ComplicationSlot.computeBounds`, which adds 0.5 before
-     * `toInt()` for exactly this reason.
+     * Cached because the lookup is on the render path - `complicationRender` asks per slot per frame
+     * and `syncSlotGeometry` once more - so resolving by `findViewById` each time would walk a
+     * ~90-view tree several times a frame, where the previous hardcoded `when` was a direct field
+     * read. Being empty before inflate also replaces the old `::binding.isInitialized` guard: "no
+     * usable layout yet" is already a case every caller handles.
      */
-    private fun complicationRingWidth(viewJson: JSONObject?): Int {
-        val declaredWidth = viewJson?.optInt(JsonKeys.WIDTH.key) ?: 0
-        if (declaredWidth <= 0) return MIN_RING_WIDTH_PX
-        return (0.5 + declaredWidth * zoomFactor / PROVISIONAL_RING_WIDTH_RATIO).toInt().coerceAtLeast(MIN_RING_WIDTH_PX)
+    private var complicationPlaceholders: Map<Int, FrameLayout> = emptyMap()
+
+    private fun complicationPlaceholder(slotId: Int): FrameLayout? = complicationPlaceholders[slotId]
+
+    /**
+     * Where [slotId] is actually being drawn this frame, as fractional unit-square (canvas-relative)
+     * bounds, or null when it is hidden. Handed to [WatchFaceComplications.syncGeometry] so the slot's
+     * *declared* bounds - which is what taps are tested against - follow what the CWF draws.
+     *
+     * Read from the laid-out placeholder rather than recomputed from json, so any `DynProvider`
+     * top/left offset is already included. Same fractional conversion as [slotBounds], just starting
+     * from pixels instead of from the CWF's 400x400 space.
+     */
+    private fun visibleSlotBounds(slotId: Int): RectF? {
+        val width = getWidth().toFloat()
+        val height = getHeight().toFloat()
+        if (width <= 0f || height <= 0f) return null
+        val view = complicationPlaceholder(slotId)?.takeIf { it.isVisible && it.width > 0 && it.height > 0 } ?: return null
+        return RectF(view.left / width, view.top / height, view.right / width, view.bottom / height)
     }
 
-    private fun applyComplicationStyle(slotId: Int) {
-        val drawable = complicationDrawables[slotId] ?: return
-        val viewJson = complicationStyleJson[slotId]
-        val textColor = getColor(viewJson?.optString(JsonKeys.FONTCOLOR.key) ?: "", Color.WHITE)
-        val titleColor = getColor(viewJson?.optString(JsonKeys.FONTTITLECOLOR.key) ?: "", Color.LTGRAY)
-        val textTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONT.key) ?: FontMap.DEFAULT.key)
-        val titleTypeface = FontMap.font(viewJson?.optString(JsonKeys.FONTTITLE.key) ?: FontMap.DEFAULT.key)
-        val backgroundColor = if (viewJson?.has(JsonKeys.COLOR.key) == true) getColor(viewJson.optString(JsonKeys.COLOR.key)) else Color.TRANSPARENT
-        for (style in listOf(drawable.activeStyle, drawable.ambientStyle)) {
-            // Two more library defaults that would otherwise show through, same class of problem as
-            // the opaque black background above:
-            // - borderStyle defaults to BORDER_STYLE_SOLID with a 1px white borderColor, drawing a
-            //   border no CWF ever asked for.
-            // - borderRadius defaults to Int.MAX_VALUE, which ComplicationRenderer clamps to half the
-            //   shorter edge and then insets the *content* area by ceil((sqrt(2)-1) * radius) on every
-            //   side (ComplicationRenderer.getBorderRadius + LayoutUtils.getInnerBounds). That throws
-            //   away ~41% of the declared box before any text or icon is placed, which is why
-            //   complication content rendered far smaller than its CWF bounds. 0 means the box the CWF
-            //   declared is the box the content gets.
-            style.borderStyle = ComplicationStyle.BORDER_STYLE_NONE
-            style.borderRadius = 0
-            // Same story again: rangedValueRingWidth defaults to 2px (ComplicationStyle's
-            // RING_WIDTH_DEFAULT), which on a real complication is a hairline - on a 115px slot that
-            // is about 1/29 of the radius, against roughly 1/6 on OEM watch faces. Scale it to the
-            // slot instead of leaving an absolute default: a ring 1/12 of the declared width is
-            // 1/6 of the radius.
-            style.rangedValueRingWidth = complicationRingWidth(viewJson)
-            style.backgroundColor = backgroundColor
-            style.textColor = textColor
-            style.titleColor = titleColor
-            style.iconColor = textColor
-            style.setTextTypeface(textTypeface)
-            style.setTitleTypeface(titleTypeface)
-        }
+    /**
+     * The one and only way a slot's **declared** bounds are produced from CWF json. Takes the slot's
+     * json section and nothing else - there is deliberately no second, separately-named "default
+     * bounds" for a caller to choose between; the fallback lives inside.
+     *
+     * `ComplicationSlotBounds` are fractional unit-square (canvas-relative), while the CWF json's
+     * WIDTH/HEIGHT/TOPMARGIN/LEFTMARGIN are expressed in the fixed 400x400 [TEMPLE_RESOLUTION] space
+     * used by every other view. Dividing by it converts directly to the fraction - the `zoomFactor`
+     * used elsewhere to reach real display pixels cancels out, a fraction being
+     * resolution-independent - so no screen-size lookup is needed here.
+     *
+     * **The fallback is an empty rect, deliberately.** With no json (or nothing usable in it) the slot
+     * has never been positioned by any CWF, and an arbitrary non-empty default would draw a visible box
+     * at a location no watch face asked for. Empty means nothing is drawn and nothing is hit-tested
+     * until a CWF defines the slot - `ComplicationSlotBounds` accepts an empty rect (its `init`
+     * validates only map completeness) and `ComplicationSlot.computeBounds` maps it to `Rect(0,0,0,0)`,
+     * since `RectF.intersect` leaves a non-overlapping rect untouched.
+     *
+     * A fresh `RectF` per call, never a stored one: the `ComplicationSlotBounds(bounds)` convenience
+     * constructor does `ComplicationType.values().associateWith { bounds }` and **never copies**, so a
+     * shared instance would be reachable from every slot of every engine instance at once.
+     */
+    private fun slotBounds(slotJson: JSONObject?): ComplicationSlotBounds {
+        val width = (slotJson?.optInt(JsonKeys.WIDTH.key) ?: 0) / TEMPLE_RESOLUTION.toFloat()
+        val height = (slotJson?.optInt(JsonKeys.HEIGHT.key) ?: 0) / TEMPLE_RESOLUTION.toFloat()
+        if (width <= 0f || height <= 0f) return ComplicationSlotBounds(RectF(0f, 0f, 0f, 0f))
+        val left = (slotJson?.optInt(JsonKeys.LEFTMARGIN.key) ?: 0) / TEMPLE_RESOLUTION.toFloat()
+        val top = (slotJson?.optInt(JsonKeys.TOPMARGIN.key) ?: 0) / TEMPLE_RESOLUTION.toFloat()
+        return ComplicationSlotBounds(RectF(left, top, left + width, top + height))
     }
+
+    /**
+     * The CWF-wide `complicationStyle` json section, decoded once per [setWatchfaceStyle] pass.
+     *
+     * A *transversal* section - like `metadata` or `dynPref`, not a per-view block - so it is decoded
+     * here, outside [ViewMap], at the same level the json itself places it. Per-slot keys stay in
+     * [ViewMap.customizeComplicationView]; these are only the values a slot falls back to when it
+     * declares nothing of its own.
+     *
+     * Style is CWF-wide rather than per-slot because which complication ends up in which slot is the
+     * user's choice and can change at any time, so a style authored for one particular data source
+     * does not hold up - only one consistent with the CWF's own design language does.
+     */
+    private class ComplicationGlobalStyle(private val cwf: CustomWatchface) {
+
+        private var json: JSONObject? = null
+
+        /**
+         * `DYNPREF`/`DYNDATA` declared on the section itself, so one CWF-wide value (BG level, say)
+         * can drive complication style across every slot at once.
+         *
+         * Only the three values `DynProvider` exposes a per-step getter for can be driven: font
+         * colour, background colour and text size. There is no `getTitleColorStep`,
+         * `getIconColorStep`, `getRingWidthStep` or `getBorderRadiusStep`, so the rest stay static
+         * until `DynProvider` itself gains them.
+         */
+        private var dynData: DynProvider? = null
+
+        /**
+         * Adopts the `complicationStyle` section of a newly loaded CWF, or null when it declares none
+         * - in which case every value below resolves to its own default, which is what makes a CWF
+         * without the section reset cleanly instead of inheriting the previous CWF's style.
+         *
+         * Named to match `ViewMap.init` and `DynProvider.init`, the other two places a CWF-wide json
+         * block is adopted.
+         */
+        fun init(json: JSONObject?) {
+            this.json = json
+            // Built here rather than by customizeViewCommon, which only serves entries that have a
+            // View. 0,0 for width/height is safe because nothing in this section is drawable-backed -
+            // those arguments only scale drawable steps. If BACKGROUND is ever wired in here, they
+            // must become a real size first.
+            //
+            // The cache key must not collide with any ViewMap key; COMPLICATIONSTYLE's own key is
+            // unique by construction. It doubles as getDyn's `defaultViewKey`, which is only a
+            // fallback ValueMap name - and no ValueMap is called "complicationStyle", so
+            // ValueMap.fromKey lands on NONE. A global dyn block therefore *must* declare VALUEKEY
+            // explicitly; unlike a per-view block it has no view name to fall back on.
+            dynData = DynProvider.getDyn(
+                cwf, json?.optString(JsonKeys.DYNPREF.key) ?: "", json?.optString(JsonKeys.DYNDATA.key) ?: "",
+                0, 0, JsonKeys.COMPLICATIONSTYLE.key
+            )
+        }
+
+        // Computed on every read, like ViewMap's own visibility()/drawable(), so a value always
+        // reflects the CWF currently loaded and the live DynProvider step. Each chain ends in a
+        // concrete default and never in null: an undeclared key must still produce something to
+        // write, or the ComplicationDrawable - which outlives the CWF - keeps the previous one's.
+        val fontColor: Int
+            get() = dynData?.getFontColorStep(cwf) ?: cwf.getColor(json?.optString(JsonKeys.FONTCOLOR.key) ?: "", Color.WHITE)
+
+        val titleColor: Int
+            get() = cwf.getColor(json?.optString(JsonKeys.FONTTITLECOLOR.key) ?: "", Color.LTGRAY)
+
+        /** Falls back to [fontColor], which is what the icon followed before ICONCOLOR existed. */
+        val iconColor: Int
+            get() = cwf.getColor(json?.optString(JsonKeys.ICONCOLOR.key) ?: "", fontColor)
+
+        val backgroundColor: Int
+            get() = dynData?.getColorStep(cwf)
+                ?: json?.let { if (it.has(JsonKeys.COLOR.key)) cwf.getColor(it.optString(JsonKeys.COLOR.key)) else null }
+                ?: Color.TRANSPARENT
+
+        val font: Typeface
+            get() = typefaceOf(json, JsonKeys.FONT.key, JsonKeys.FONTSTYLE.key, FontMap.DEFAULT.font)
+
+        val titleFont: Typeface
+            get() = typefaceOf(json, JsonKeys.FONTTITLE.key, JsonKeys.TITLESTYLE.key, FontMap.DEFAULT.font)
+
+        val borderRadius: Int
+            get() = ((json?.optInt(JsonKeys.BORDERRADIUS.key) ?: 0) * cwf.zoomFactor).toInt().coerceAtLeast(0)
+
+        val textSize: Int
+            get() = (dynData?.getTextSizeStep(cwf) ?: json?.optInt(JsonKeys.TEXTSIZE.key)?.takeIf { it > 0 })
+                ?.let { (it * cwf.zoomFactor).toInt() } ?: ComplicationStyleValues.TEXT_SIZE_FIT_BOX
+
+        val titleSize: Int
+            get() = json?.optInt(JsonKeys.TITLESIZE.key)?.takeIf { it > 0 }
+                ?.let { (it * cwf.zoomFactor).toInt() } ?: ComplicationStyleValues.TEXT_SIZE_FIT_BOX
+
+        /**
+         * Nullable, unlike every other value here, and legitimately so: absent means "no percentage
+         * was given", which [ViewMap.ringWidthPx] answers with its own proportional fallback rather
+         * than with a percentage. The pixel value that produces is always written, so nothing
+         * persists across CWF loads.
+         */
+        val ringWidthPercent: Int?
+            get() = json?.optInt(JsonKeys.RINGWIDTH.key)?.takeIf { it > 0 }
+
+        val ringPrimaryColor: Int
+            get() = cwf.getColor(json?.optString(JsonKeys.RINGPRIMARYCOLOR.key) ?: "", Color.WHITE)
+
+        val ringSecondaryColor: Int
+            get() = cwf.getColor(json?.optString(JsonKeys.RINGSECONDARYCOLOR.key) ?: "", ComplicationStyleValues.RING_SECONDARY_COLOR_DEFAULT)
+    }
+
+
+    /**
+     * Everything complication-related for one engine instance: the slots' identity, their live state,
+     * the CWF-wide style, and the cross-slot user-style mechanism that keeps declared bounds in step
+     * with what is drawn.
+     *
+     * Takes [cwf] as a constructor parameter, the same idiom [ViewMap] and [DynProvider] already use
+     * in this file. A few things deliberately stay on [CustomWatchface] rather than moving here,
+     * because Kotlin visibility does not reach into a nested class: `ensureInjected()` /
+     * `daggerInjectionComplete` are `protected` on `BaseWatchFace`, `ComplicationRender` is a
+     * `protected` type of `WatchFace`, and `::binding.isInitialized` is only usable inside the class
+     * that declares `binding`.
+     */
 
     private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
         1L   -> highColor
@@ -615,6 +487,12 @@ class CustomWatchface : BaseWatchFace() {
         sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CUSTOM.ordinal)
         rxBus.send(EventUpdateSelectedWatchface())
         binding = ActivityCustomBinding.inflate(inflater)
+        // Resolved from the ViewMap entries that declare a slot id, so a new complication slot needs
+        // no change here - only its entry, and the matching FrameLayout in activity_custom.xml.
+        complicationPlaceholders = ViewMap.entries
+            .filter { it.slotId != null }
+            .mapNotNull { view -> binding.root.findViewById<FrameLayout>(view.id)?.let { view.slotId!! to it } }
+            .toMap()
         setDefaultColors()
         runBlocking {
             complicationDataRepository.storeCustomWatchface(
@@ -625,7 +503,7 @@ class CustomWatchface : BaseWatchFace() {
         }
         val windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
         val displayWidth = windowManager.currentWindowMetrics.bounds.width()
-        zoomFactor = displayWidth.toDouble() / templeResolution.toDouble()
+        zoomFactor = displayWidth.toDouble() / TEMPLE_RESOLUTION.toDouble()
         return binding
     }
 
@@ -647,7 +525,7 @@ class CustomWatchface : BaseWatchFace() {
         // paints over the simple UI.
         if (simpleUi.isEnabled(currentWatchMode)) return
         backgroundDrawable?.let {
-            val size = (templeResolution * zoomFactor).toInt()
+            val size = (TEMPLE_RESOLUTION * zoomFactor).toInt()
             it.setBounds(0, 0, size, size)
             it.draw(canvas)
         }
@@ -655,7 +533,7 @@ class CustomWatchface : BaseWatchFace() {
         // frame's geometry - the point at which the slots' own bounds can be brought into line with
         // it. Not in complicationRender(): that runs per slot, while one pushed option covers all
         // three at once.
-        syncComplicationSlotStyle()
+        complications.syncGeometry(::visibleSlotBounds)
     }
 
     override fun onDrawOverlay(canvas: Canvas) {
@@ -816,6 +694,11 @@ class CustomWatchface : BaseWatchFace() {
                 reservoirColor = getColor(jsonColor.optString(JsonKeys.RESERVOIRCOLOR.key), Color.WHITE)
                 reservoirWarningColor = getColor(jsonColor.optString(JsonKeys.RESERVOIRWARNINGCOLOR.key), ContextCompat.getColor(this, R.color.dark_warning))
                 reservoirUrgentColor = getColor(jsonColor.optString(JsonKeys.RESERVOIRURGENTCOLOR.key), ContextCompat.getColor(this, R.color.dark_alarm))
+                // Decoded here, with the other CWF-wide values, because `complicationStyle` is a
+                // transversal json section like `metadata` or `dynPref` - not a per-view block. The
+                // per-slot complication keys are read in ViewMap.customizeComplicationView instead,
+                // mirroring where each lives in the json.
+                complicationStyle.init(json.optJSONObject(JsonKeys.COMPLICATIONSTYLE.key))
                 enableExt1 = false
                 enableExt2 = false
                 binding.mainLayout.forEach { view ->
@@ -824,7 +707,7 @@ class CustomWatchface : BaseWatchFace() {
                             is TextView                                 -> viewMap.customizeTextView(view, this)
                             is ImageView                                -> viewMap.customizeImageView(view, this)
                             is lecho.lib.hellocharts.view.LineChartView -> viewMap.customizeGraphView(view, this)
-                            is FrameLayout                              -> customizeComplicationView(view, viewMap)
+                            is FrameLayout                              -> viewMap.customizeComplicationView(view, this)
                             else                                        -> viewMap.customizeViewCommon(view, this)
                         }
                         if (viewMap.external == 1 && view.isVisible)
@@ -1015,7 +898,7 @@ class CustomWatchface : BaseWatchFace() {
     // image (customHigh/customLow, and any DYNDATA step image) never lags a tick behind the rest
     // of the dial; onDraw() just paints whatever this last resolved to, every frame.
     private fun resolveBackgroundDrawable() {
-        val size = (templeResolution * zoomFactor).toInt()
+        val size = (TEMPLE_RESOLUTION * zoomFactor).toInt()
         ViewMap.BACKGROUND.width = size
         ViewMap.BACKGROUND.height = size
         val viewJson = ViewMap.BACKGROUND.viewJson
@@ -1037,7 +920,19 @@ class CustomWatchface : BaseWatchFace() {
         val customDrawable: ResFileMap? = null,
         val customHigh: ResFileMap? = null,
         val customLow: ResFileMap? = null,
-        val external: Int = 0
+        val external: Int = 0,
+        /**
+         * The `ComplicationSlot` id this entry carries the geometry for, or null for every ordinary
+         * view. Non-null is what marks an entry as a complication placeholder, and
+         * `ComplicationHost` derives its whole slot list by filtering on it - so a new slot is one
+         * new entry here, not a second parallel list to keep in sync.
+         *
+         * Safe as enum state precisely because it is an immutable constructor constant, exactly like
+         * [pref] or [key]. The state that must **not** live on this enum is live per-engine state -
+         * a `ComplicationDrawable`, [viewJson], [width] - because entries are process-wide
+         * singletons and the editor runs a second headless CustomWatchface concurrently.
+         */
+        val slotId: Int? = null
     ) {
 
         BACKGROUND(
@@ -1048,12 +943,18 @@ class CustomWatchface : BaseWatchFace() {
             customHigh = ResFileMap.BACKGROUND_HIGH,
             customLow = ResFileMap.BACKGROUND_LOW
         ),
-        // Plain FrameLayout placeholders that carry position/size/visibility for the real
-        // ComplicationSlots (see complicationSlotConfigs / customizeComplicationView). They draw
-        // nothing themselves - the framework renders the actual complication onto the Canvas.
-        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1),
-        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2),
-        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3),
+        // Plain FrameLayout placeholders that carry position/size/visibility/rotation for the real
+        // ComplicationSlots (see ComplicationHost / customizeComplicationView). They draw nothing
+        // themselves - the framework renders the actual complication onto the Canvas.
+        //
+        // These entries are the single source of truth for complication slot identity: the slot id,
+        // the json key, the placeholder view id and the pre-first-launch bounds all live here. The
+        // slot ids stay as named constants because they are a stable public contract (the system
+        // persists the chosen data source per watch face component + slot id) and must never be
+        // derived from something as movable as an enum ordinal.
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, slotId = COMPLICATION_SLOT_ID_1),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, slotId = COMPLICATION_SLOT_ID_2),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, slotId = COMPLICATION_SLOT_ID_3),
         CHART(ViewKeys.CHART.key, R.id.chart),
         COVER_CHART(
             key = ViewKeys.COVER_CHART.key,
@@ -1176,6 +1077,54 @@ class CustomWatchface : BaseWatchFace() {
 
             fun fromId(id: Int): ViewMap? = entries.firstOrNull { it.id == id }
             fun fromKey(key: String?): ViewMap? = entries.firstOrNull { it.key == key }
+
+            /**
+             * Ring thickness in physical pixels for `RANGED_VALUE`/`GOAL_PROGRESS`, from the slot's
+             * declared size so it stays proportional to the complication rather than being the
+             * library's fixed hairline. Pure arithmetic - the json reads that feed it happen in
+             * [customizeComplicationView], like every other key in that block.
+             *
+             * **Units.** [declaredWidth] is in the CWF's 400x400 space, so it is multiplied by
+             * [zoomFactor] to reach physical pixels - the same conversion [customizeViewCommon]
+             * applies to every other view. `ComplicationStyle.rangedValueRingWidth` is `@Px`, i.e.
+             * physical pixels, so the result is already in the right unit. [ComplicationStyleValues.MIN_RING_WIDTH_PX] is in
+             * that same unit and is deliberately **not** scaled: an absolute floor, not a design
+             * value.
+             *
+             * **Why not the library's own default?** Its effective default is `2dp`
+             * (`R.dimen.complicationDrawable_rangedValueRingWidth`, applied by
+             * `ComplicationDrawable.setContext`), and it must never be multiplied by [zoomFactor]:
+             * `dp` is already a complete device-specific conversion belonging to Android's
+             * physical-size resolution-independence system, while [zoomFactor] belongs to this watch
+             * face's own - proportion of the declared 400x400 space. Combining them double-applies
+             * two unrelated scaling schemes. Using `2dp` *unscaled* was also rejected: a fixed
+             * physical thickness regardless of how large the CWF declared the slot would make ring
+             * width the one CWF dimension that does not scale with its slot, breaking the
+             * reproducible-across-devices design the format is built on. The library offers no
+             * size-relative default at all - `ComplicationRenderer` uses the value directly as a
+             * stroke width - so a proportional value computed here is the only option consistent with
+             * every other CWF-declared dimension. Do not reintroduce `2dp` as a "fix".
+             *
+             * **Where the ratio comes from.** A visual comparison, during this feature's development,
+             * against a Samsung Watch Face Format watch face whose ring measured roughly 1/6 of the
+             * complication radius; radius is width/2, hence width/12. That face does not use this
+             * renderer (proven - see `_docs/Complication_Libraries.md`), so it is a design target
+             * rather than a like-for-like measurement, and no upstream guideline exists.
+             *
+             * Rounds rather than truncates, matching `ComplicationSlot.computeBounds`, which adds 0.5
+             * before `toInt()` for exactly this reason.
+             */
+            fun ringWidthPx(declaredWidth: Int, percent: Int?, zoomFactor: Double): Int {
+                if (declaredWidth <= 0) return ComplicationStyleValues.MIN_RING_WIDTH_PX
+                val slotWidthPx = declaredWidth * zoomFactor
+                // Clamped rather than trusted: the ring is stroked centred on the arc, so a value
+                // beyond 100 would paint outside the slot, and a negative one is meaningless. 100 is
+                // already absurd in practice (the ring would swallow the whole complication) but it
+                // is the honest upper bound of "percentage of the declared width".
+                val raw = percent?.let { slotWidthPx * it.coerceIn(1, 100) / 100.0 }
+                    ?: (slotWidthPx / PROVISIONAL_RING_WIDTH_RATIO)
+                return (0.5 + raw).toInt().coerceAtLeast(ComplicationStyleValues.MIN_RING_WIDTH_PX)
+            }
         }
 
         var width = 0
@@ -1225,6 +1174,91 @@ class CustomWatchface : BaseWatchFace() {
                 val rotationOffsetStep = (dynData?.getRotationOffsetStep(cwf) ?: 0).toFloat()
                 view.rotation = viewJson.optInt(JsonKeys.ROTATION.key).toFloat() + rotationOffset + rotationOffsetStep
             }
+        }
+
+        /**
+         * The complication-placeholder counterpart of [customizeTextView] and friends.
+         *
+         * Position/size/visibility/rotation are not applied to the complication itself here -
+         * [customizeViewCommon] writes them onto the placeholder view and
+         * `CustomWatchface.complicationRender` reads them back per frame. What is left is the styling
+         * `ComplicationDrawable` accepts at any time.
+         *
+         * Every key of the `complication1/2/3` json block is read here, directly off [viewJson], the
+         * same way [customizeTextView] reads its own - the decode site follows the json's structure,
+         * not whether another view type happens to have an equivalent concept. `dynData` is wired
+         * identically too: [customizeViewCommon] has already built it from this block's `DYNPREF` /
+         * `DYNDATA`, so the per-step getters below are the same ones every other view uses, with no
+         * complication-specific DynProvider logic anywhere. The only difference from
+         * [customizeTextView] is where each chain *ends*: at the CWF-wide `complicationStyle` section
+         * rather than at a literal.
+         */
+        fun customizeComplicationView(view: FrameLayout, cwf: CustomWatchface) {
+            // Called first and unconditionally, and nothing below may short-circuit it: this is what
+            // gives a complication every geometry behaviour an ordinary view has - DynProvider
+            // top/left/rotation offsets, and the twinView + TOPOFFSETTWINHIDDEN/LEFTOFFSETTWINHIDDEN
+            // space-ceding mechanism - rather than a reimplemented subset of them. It also builds
+            // dynData, which the reads below depend on.
+            customizeViewCommon(view, cwf)
+            val state = slotId?.let { cwf.complications.stateFor(it) } ?: return
+            val global = cwf.complicationStyle
+            // Each chain: this slot's dynData step (only where DynProvider actually exposes one),
+            // then this slot's own json key, then the CWF-wide complicationStyle value. dynData is
+            // the very same instance customizeViewCommon just built from this block's DYNPREF/DYNDATA
+            // to drive the placeholder's offsets - no complication-specific DynProvider logic exists.
+            val textColor = dynData?.getFontColorStep(cwf)
+                ?: viewJson?.optString(JsonKeys.FONTCOLOR.key)?.takeIf { it.isNotEmpty() }?.let { cwf.getColor(it, global.fontColor) }
+                ?: global.fontColor
+            // No getTitleColorStep/getIconColorStep on DynProvider, so these two start at the json.
+            val titleColor = viewJson?.optString(JsonKeys.FONTTITLECOLOR.key)?.takeIf { it.isNotEmpty() }
+                ?.let { cwf.getColor(it, global.titleColor) } ?: global.titleColor
+            // ICONCOLOR wins; without it the icon follows this slot's own text colour, which is what
+            // it did before the key existed; only if neither is declared does the global value apply.
+            val iconColor = viewJson?.optString(JsonKeys.ICONCOLOR.key)?.takeIf { it.isNotEmpty() }?.let { cwf.getColor(it, global.iconColor) }
+                ?: viewJson?.optString(JsonKeys.FONTCOLOR.key)?.takeIf { it.isNotEmpty() }?.let { cwf.getColor(it, global.iconColor) }
+                ?: global.iconColor
+            // `has` rather than the emptiness test used above: a COLOR key explicitly present but
+            // empty resolves through getColor's own default instead of falling back. Kept from before
+            // the refactor - the keys disagree on this and unifying them is a deliberate future
+            // decision, not something to change silently here.
+            val backgroundColor = dynData?.getColorStep(cwf)
+                ?: viewJson?.let { json -> if (json.has(JsonKeys.COLOR.key)) cwf.getColor(json.optString(JsonKeys.COLOR.key)) else null }
+                ?: global.backgroundColor
+            val textTypeface = typefaceOf(viewJson, JsonKeys.FONT.key, JsonKeys.FONTSTYLE.key, global.font)
+            val titleTypeface = typefaceOf(viewJson, JsonKeys.FONTTITLE.key, JsonKeys.TITLESTYLE.key, global.titleFont)
+            // Sizes are @Px upper bounds - ComplicationRenderer hands them to Paint.setTextSize and
+            // TextRenderer then shrinks to fit - so they take the same zoomFactor scaling as every
+            // other CWF dimension. The global values arrive already scaled.
+            val textSize = (dynData?.getTextSizeStep(cwf) ?: viewJson?.optInt(JsonKeys.TEXTSIZE.key)?.takeIf { it > 0 })
+                ?.let { (it * cwf.zoomFactor).toInt() } ?: global.textSize
+            val titleSize = viewJson?.optInt(JsonKeys.TITLESIZE.key)?.takeIf { it > 0 }
+                ?.let { (it * cwf.zoomFactor).toInt() } ?: global.titleSize
+            val borderRadius = viewJson?.optInt(JsonKeys.BORDERRADIUS.key)?.takeIf { it > 0 }
+                ?.let { (it * cwf.zoomFactor).toInt() } ?: global.borderRadius
+            val ringWidth = ringWidthPx(
+                viewJson?.optInt(JsonKeys.WIDTH.key) ?: 0,
+                viewJson?.optInt(JsonKeys.RINGWIDTH.key)?.takeIf { it > 0 } ?: global.ringWidthPercent,
+                cwf.zoomFactor
+            )
+            val ringPrimaryColor = viewJson?.optString(JsonKeys.RINGPRIMARYCOLOR.key)?.takeIf { it.isNotEmpty() }
+                ?.let { cwf.getColor(it) } ?: global.ringPrimaryColor
+            val ringSecondaryColor = viewJson?.optString(JsonKeys.RINGSECONDARYCOLOR.key)?.takeIf { it.isNotEmpty() }
+                ?.let { cwf.getColor(it) } ?: global.ringSecondaryColor
+            state.style = ComplicationStyleValues(
+                textColor = textColor,
+                titleColor = titleColor,
+                iconColor = iconColor,
+                backgroundColor = backgroundColor,
+                textTypeface = textTypeface,
+                titleTypeface = titleTypeface,
+                borderRadius = borderRadius,
+                ringWidth = ringWidth,
+                textSize = textSize,
+                titleSize = titleSize,
+                ringPrimaryColor = ringPrimaryColor,
+                ringSecondaryColor = ringSecondaryColor
+            )
+            state.applyStyle()
         }
 
         fun customizeTextView(view: TextView, cwf: CustomWatchface) {
