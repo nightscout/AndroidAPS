@@ -1,7 +1,6 @@
 package app.aaps.core.interfaces.pump
 
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
@@ -13,19 +12,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicLong
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Core-controlled bolus progress state.
  *
  * Lifecycle is managed by the command queue (start/complete/clear),
  * pump drivers only report progress via [updateProgress].
+ *
+ * Deliberately carries no DI annotations. `javax.inject` is a JVM library and does not resolve in
+ * commonMain, so a class meant to be shared cannot be annotated - the Android graph provides it
+ * instead (`ImplementationModule.provideBolusProgressData`, which keeps the singleton scope and
+ * supplies the application-scoped CoroutineScope).
  */
-@Singleton
-class BolusProgressData @Inject constructor(
+class BolusProgressData(
     val ch: ConcentrationHelper,
-    @ApplicationScope private val appScope: CoroutineScope,
+    private val appScope: CoroutineScope,
 ) {
 
     private val _state = MutableStateFlow<BolusProgressState?>(null)
