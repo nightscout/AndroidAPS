@@ -35,11 +35,14 @@ import org.mockito.Mock
  * 2. A malformed schedule makes `blockFromJsonArray` return **null** (an invalid profile), not throw.
  *    Strict parsing would turn that into an exception, i.e. a crash where today there is a rejected
  *    profile.
- * 3. `org.json` writes a whole-numbered double without its fraction, so a basal of `1.0` is uploaded
- *    as `1`. kotlinx writes `1.0`. A full profile has ~120 such values.
+ * 3. The write side renders differently (`1` vs `1.0`, `mg\/dl` vs `mg/dl`) and it does NOT matter.
+ *    That was investigated as a blocker and dismissed on evidence: `ProfileSealed.isEqual` compares
+ *    decoded values hour by hour, no profile document is hashed or signed, and both forms decode to
+ *    the same number or string. A rendering shim was planned and dropped. See section 3.
  *
- * When the conversion happens these assertions must still hold. Where a divergence is intentional it
- * is asserted as a divergence here, not quietly skipped.
+ * So the risk lives entirely on the READ side: tolerate both quoted and unquoted numbers, tolerate
+ * missing AAPS fields and unknown server fields, accept two different ISO shapes, and keep returning
+ * null - not throwing - on malformed input. Those are the assertions a conversion must not break.
  */
 class ProfileJsonCharacterizationTest : TestBase() {
 
@@ -114,26 +117,37 @@ class ProfileJsonCharacterizationTest : TestBase() {
         assertThat(blockFromJsonArray(null, dateUtil)).isNull()
     }
 
-    // ---------------------------------------------------------------- 3. the write side diverges
+    // -------------------------------------------- 3. the write side differs, and it does NOT matter
 
     /**
-     * The divergence that would change bytes uploaded to Nightscout.
+     * `org.json` renders a whole-numbered double bare (`1`), kotlinx keeps the fraction (`1.0`).
      *
-     * A profile has 24 basal + 24 ISF + 24 IC + 48 target entries, so a document can differ in ~120
-     * places without a single value being wrong. Both parse back identically - what breaks is any
-     * consumer comparing documents as text.
+     * Recorded so nobody "fixes" it: this was investigated as a possible blocker and is not one.
+     * Nothing in AAPS or Nightscout observes the rendering, because nothing compares profile
+     * documents as text:
+     *
+     * - `ProfileSealed.isEqual` walks the DECODED values hour by hour
+     *   (`getBasalTimeFromMidnight(...) != ...`), so `1` and `1.0` compare equal.
+     * - No profile document is hashed or signed anywhere; the only `getData().toString()` is a log
+     *   line in `ProfileRepositoryImpl`.
+     * - Both sides parse either form to the same double, so the round trip is lossless.
+     *
+     * A number-rendering shim was planned and then dropped on that evidence. Do not add one without
+     * first finding a consumer that actually reads the text.
      */
-    @Test fun `whole numbered profile values serialize differently`() {
+    @Test fun `whole numbered values render differently but nothing observes it`() {
         val org = JSONObject().put("value", 1.0).toString()
         val kotlinx = buildJsonObject { put("value", JsonPrimitive(1.0)) }.toString()
 
         assertThat(org).isEqualTo("""{"value":1}""")
         assertThat(kotlinx).isEqualTo("""{"value":1.0}""")
-        assertWithMessage("if this ever passes, the divergence is gone and the shim can drop it")
-            .that(org).isNotEqualTo(kotlinx)
+
+        // The part that makes it benign: both decode to the same number.
+        assertThat(JSONObject(org).getDouble("value")).isEqualTo(1.0)
+        assertThat(JSONObject(kotlinx).getDouble("value")).isEqualTo(1.0)
     }
 
-    /** A fractional basal rate is written the same by both, so only the whole-numbered case matters. */
+    /** A fractional basal rate is written identically by both - only the whole-numbered case differs at all. */
     @Test fun `fractional profile values serialize identically`() {
         assertThat(JSONObject().put("value", 0.825).toString())
             .isEqualTo(buildJsonObject { put("value", JsonPrimitive(0.825)) }.toString())
@@ -177,12 +191,12 @@ class ProfileJsonCharacterizationTest : TestBase() {
     }
 
     /**
-     * The one that decides the whole-number question.
+     * Nightscout writes a whole-numbered rate **bare** - the live document contains `"value":1`,
+     * `"value":6`, `"value":10`, never `1.0`.
      *
-     * Nightscout itself writes a whole-numbered rate **bare** - the live document contains
-     * `"value":1`, `"value":6`, `"value":10`, never `1.0`. So `org.json`'s rendering matches what the
-     * server produces, and kotlinx's `1.0` would match neither AAPS today nor Nightscout. That makes
-     * the divergence worth shimming rather than accepting.
+     * Kept as a shape fact, not as an argument for a shim. What matters is the line below: whatever
+     * the rendering, it reads back as the same double, and that is all any consumer of a profile
+     * does with it.
      */
     @Test fun `nightscout writes whole numbered rates without a fraction`() {
         val fromNs = """{"basal":[{"time":"00:00","timeAsSeconds":0,"value":1}]}"""
@@ -231,13 +245,12 @@ class ProfileJsonCharacterizationTest : TestBase() {
     }
 
     /**
-     * The divergence that only real data revealed: `org.json` escapes a forward slash, kotlinx does
-     * not. Every profile carries two slashed strings - `units` (`mg/dl`) and `timezone`
-     * (`Africa/Cairo`) - so this changes bytes on every single upload, independently of the
-     * whole-number issue above.
+     * `org.json` escapes a forward slash, kotlinx does not - `mg\/dl` versus `mg/dl`.
      *
-     * Both decode to the same string, so nothing inside AAPS notices. A document hash or a byte
-     * comparison on the Nightscout side would.
+     * Benign for the same reason as the whole-number case: both decode to the same string and nothing
+     * compares profile documents as text. Doubly so here, because Nightscout stores and returns the
+     * slash UNESCAPED (see the test below), so the difference does not even survive a round trip -
+     * `org.json` is the odd one out, not kotlinx.
      */
     @Test fun `forward slashes are escaped by org json but not by kotlinx`() {
         val org = JSONObject().put("units", "mg/dl").toString()
