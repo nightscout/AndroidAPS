@@ -48,6 +48,10 @@ class IsoDateParserParityTest {
         "2017-11-19T22:50:34.417+0200",       // from the historical DateUtil test
         "2017-12-03T16:09:25.000Z",
         "2017-12-22T00:32:30Z",
+        // Real Nightscout data: `startDate` carries SEVEN fractional digits while `created_at` in the
+        // same document carries three. A parser pinned to `.SSS` would reject half of every profile.
+        "2026-04-26T08:48:38.9980000Z",
+        "2026-04-26T08:48:38.998Z",
         "2026-08-06T04:56:19.555",            // no offset at all - local
         "2026-08-06T04:56:19",                // no offset, no fraction - local
         "2026-08-06T04:56",                   // minutes only - local

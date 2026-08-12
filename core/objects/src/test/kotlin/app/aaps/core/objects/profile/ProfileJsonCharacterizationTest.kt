@@ -139,6 +139,72 @@ class ProfileJsonCharacterizationTest : TestBase() {
             .isEqualTo(buildJsonObject { put("value", JsonPrimitive(0.825)) }.toString())
     }
 
+    // ---------------------------------------------------------------- 5. what a real NS store looks like
+
+    /**
+     * Shape facts taken from a live Nightscout `/api/v1/profile.json`, not from the NS docs.
+     *
+     * The response is an **array** of store documents (the profile history), each holding a `store`
+     * keyed by user-chosen profile name. Nightscout adds its own fields (`_id`, `date`, `srvModified`,
+     * `app`, `subject`, `identifier`, `utcOffset`) and omits the AAPS-specific ones entirely - a real
+     * NS-authored profile has no `dia` and no `iCfg`, so those must stay optional on the read path.
+     */
+    @Test fun `a real nightscout store document parses`() {
+        val nsShaped = """
+            [{"_id":"6a4507e64d1ba8c2e4196ec1","defaultProfile":"Vsedni den",
+              "date":1782908904415,"created_at":"2026-07-01T12:28:24.415Z",
+              "startDate":"2026-07-01T12:28:24.4150000Z","utcOffset":0,
+              "store":{"Vsedni den":{
+                "carbratio":[{"time":"00:00","timeAsSeconds":0,"value":8.1}],
+                "sens":[{"time":"00:00","timeAsSeconds":0,"value":10}],
+                "basal":[{"time":"00:00","timeAsSeconds":0,"value":1},
+                         {"time":"06:00","timeAsSeconds":21600,"value":1.27}],
+                "target_low":[{"time":"00:00","timeAsSeconds":0,"value":5.5}],
+                "target_high":[{"time":"00:00","timeAsSeconds":0,"value":5.5}],
+                "units":"mmol","timezone":"Europe/Prague"}}}]
+        """.trimIndent()
+
+        val doc = JSONArray(nsShaped).getJSONObject(0)
+        assertThat(doc.getString("defaultProfile")).isEqualTo("Vsedni den")
+        assertThat(doc.has("dia")).isFalse()
+        assertThat(doc.has("iCfg")).isFalse()
+
+        val profile = doc.getJSONObject("store").getJSONObject("Vsedni den")
+        val basal = blockFromJsonArray(profile.getJSONArray("basal"), dateUtil)
+        assertThat(basal).isNotNull()
+        assertThat(basal!![0].amount).isEqualTo(1.0)
+        assertThat(basal[1].amount).isEqualTo(1.27)
+    }
+
+    /**
+     * The one that decides the whole-number question.
+     *
+     * Nightscout itself writes a whole-numbered rate **bare** - the live document contains
+     * `"value":1`, `"value":6`, `"value":10`, never `1.0`. So `org.json`'s rendering matches what the
+     * server produces, and kotlinx's `1.0` would match neither AAPS today nor Nightscout. That makes
+     * the divergence worth shimming rather than accepting.
+     */
+    @Test fun `nightscout writes whole numbered rates without a fraction`() {
+        val fromNs = """{"basal":[{"time":"00:00","timeAsSeconds":0,"value":1}]}"""
+        val entry = JSONObject(fromNs).getJSONArray("basal").getJSONObject(0)
+
+        assertThat(entry.getDouble("value")).isEqualTo(1.0)
+        // round-tripping it through org.json keeps the bare form
+        assertThat(JSONObject().put("value", entry.getDouble("value")).toString()).isEqualTo("""{"value":1}""")
+    }
+
+    /**
+     * Softens the slash finding: Nightscout stores and returns `Europe/Prague` unescaped, so the
+     * `mg\/dl` form org.json emits is normalised away server-side. It is still a byte difference on
+     * the way out, but it does not survive a round trip - worth knowing before treating it as a
+     * blocker.
+     */
+    @Test fun `nightscout returns slashes unescaped`() {
+        val fromNs = """{"timezone":"Europe/Prague"}"""
+        assertThat(fromNs).doesNotContain("\\/")
+        assertThat(JSONObject(fromNs).getString("timezone")).isEqualTo("Europe/Prague")
+    }
+
     // ---------------------------------------------------------------- 4. what strict parsing costs (less than expected)
 
     /**
