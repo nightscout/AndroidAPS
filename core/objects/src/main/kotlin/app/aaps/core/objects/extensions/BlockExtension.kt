@@ -142,34 +142,41 @@ fun blockFromJson(jsonArray: JsonArray?, dateUtil: DateUtil): List<Block>? {
 fun blockFromJsonArray(jsonArray: JSONArray?, dateUtil: DateUtil): List<Block>? =
     blockFromJson(jsonArray.toKotlinxOrNull(), dateUtil)
 
-fun targetBlockFromJsonArray(jsonArray1: JSONArray?, jsonArray2: JSONArray?, dateUtil: DateUtil): List<TargetBlock>? {
-    val size1 = jsonArray1?.length() ?: return null
-    val size2 = jsonArray2?.length() ?: return null
-    if (size1 != size2) return null
-    val ret = ArrayList<TargetBlock>(size1)
-    try {
-        for (index in 0 until jsonArray1.length() - 1) {
-            val o1: JSONObject = jsonArray1.getJSONObject(index)
-            val tas1 = dateUtil.toSeconds(o1.getString("time"))
-            val value1 = o1.getDouble("value")
-            val next1 = jsonArray1.getJSONObject(index + 1)
-            val nextTas1 = dateUtil.toSeconds(next1.getString("time"))
-            val o2 = jsonArray2.getJSONObject(index)
-            val tas2 = dateUtil.toSeconds(o2.getString("time"))
-            val value2 = o2.getDouble("value")
-            if (tas1 != tas2) return null
-            if (tas1 % 3600 != 0) return null
-            if (nextTas1 % 3600 != 0) return null
-            ret.add(index, TargetBlock((nextTas1 - tas1) * 1000L, value1, value2))
-        }
-        val last1 = jsonArray1.getJSONObject(jsonArray1.length() - 1)
-        val lastTas1 = dateUtil.toSeconds(last1.getString("time"))
-        val value1 = last1.getDouble("value")
-        val last2 = jsonArray2.getJSONObject(jsonArray2.length() - 1)
-        val value2 = last2.getDouble("value")
-        ret.add(jsonArray1.length() - 1, TargetBlock((T.hours(24).secs() - lastTas1) * 1000L, value1, value2))
-    } catch (e: Exception) {
-        return null
+/**
+ * Reads `target_low` and `target_high` together into range blocks.
+ *
+ * Same inside-out treatment as [blockFromJson]. Rules pinned by `ProfileJsonCharacterizationTest`:
+ * the two arrays must be the same length, entry N of each must be for the same time, and every time
+ * must fall on the hour.
+ *
+ * The last entry's times are deliberately NOT compared - the original loop only checked entries
+ * 0..n-2 and read just the value of the final one. That is reproduced exactly rather than tightened,
+ * so this conversion stays provably behaviour-preserving; see
+ * `a differing time on the LAST entry is not caught`.
+ */
+fun targetBlockFromJson(jsonArray1: JsonArray?, jsonArray2: JsonArray?, dateUtil: DateUtil): List<TargetBlock>? {
+    if (jsonArray1 == null || jsonArray2 == null) return null
+    if (jsonArray1.isEmpty() || jsonArray1.size != jsonArray2.size) return null
+    val ret = ArrayList<TargetBlock>(jsonArray1.size)
+    for (index in 0 until jsonArray1.size - 1) {
+        val tas1 = dateUtil.toSeconds(jsonArray1.timeAt(index) ?: return null)
+        val value1 = jsonArray1.valueAt(index) ?: return null
+        val nextTas1 = dateUtil.toSeconds(jsonArray1.timeAt(index + 1) ?: return null)
+        val tas2 = dateUtil.toSeconds(jsonArray2.timeAt(index) ?: return null)
+        val value2 = jsonArray2.valueAt(index) ?: return null
+        if (tas1 != tas2) return null
+        if (tas1 % 3600 != 0) return null
+        if (nextTas1 % 3600 != 0) return null
+        ret.add(index, TargetBlock((nextTas1 - tas1) * 1000L, value1, value2))
     }
+    val lastIndex = jsonArray1.size - 1
+    val lastTas1 = dateUtil.toSeconds(jsonArray1.timeAt(lastIndex) ?: return null)
+    val lastValue1 = jsonArray1.valueAt(lastIndex) ?: return null
+    val lastValue2 = jsonArray2.valueAt(lastIndex) ?: return null
+    ret.add(lastIndex, TargetBlock((T.hours(24).secs() - lastTas1) * 1000L, lastValue1, lastValue2))
     return ret
 }
+
+/** `org.json` entry point. Converts once at the boundary and delegates to [targetBlockFromJson]. */
+fun targetBlockFromJsonArray(jsonArray1: JSONArray?, jsonArray2: JSONArray?, dateUtil: DateUtil): List<TargetBlock>? =
+    targetBlockFromJson(jsonArray1.toKotlinxOrNull(), jsonArray2.toKotlinxOrNull(), dateUtil)

@@ -4,6 +4,7 @@ import android.content.Context
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.targetBlockFromJsonArray
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -92,6 +93,93 @@ class ProfileJsonCharacterizationTest : TestBase() {
     @Test fun `integer looking strings become doubles`() {
         val blocks = blockFromJsonArray(schedule("00:00" to "6"), dateUtil)
         assertThat(blocks!![0].amount).isEqualTo(6.0)
+    }
+
+    // ------------------------------------------------- 1b. target ranges: two arrays read in lockstep
+
+    /**
+     * `target_low` and `target_high` are separate arrays read together, which gives this parser two
+     * rules the single-schedule one does not have. Neither was covered by any test before this file,
+     * so they are pinned here first - the conversion must not quietly drop them.
+     */
+    @Test fun `target ranges pair low and high by position`() {
+        val blocks = targetBlockFromJsonArray(
+            schedule("00:00" to "5.5", "12:00" to "6.0"),
+            schedule("00:00" to "7.0", "12:00" to "7.5"),
+            dateUtil
+        )
+
+        assertThat(blocks).isNotNull()
+        assertThat(blocks!!).hasSize(2)
+        assertThat(blocks[0].lowTarget).isEqualTo(5.5)
+        assertThat(blocks[0].highTarget).isEqualTo(7.0)
+        assertThat(blocks[1].lowTarget).isEqualTo(6.0)
+        assertThat(blocks[1].highTarget).isEqualTo(7.5)
+    }
+
+    /** Rule 1: the two arrays must be the same length. */
+    @Test fun `mismatched target array lengths are rejected`() {
+        assertThat(
+            targetBlockFromJsonArray(
+                schedule("00:00" to "5.5", "12:00" to "6.0"),
+                schedule("00:00" to "7.0"),
+                dateUtil
+            )
+        ).isNull()
+    }
+
+    /** Rule 2: entry N of low and entry N of high must be for the same time. */
+    @Test fun `target arrays with differing times are rejected`() {
+        assertThat(
+            targetBlockFromJsonArray(
+                schedule("00:00" to "5.5", "08:00" to "6.0", "12:00" to "6.5"),
+                schedule("00:00" to "7.0", "09:00" to "7.5", "12:00" to "8.0"),
+                dateUtil
+            )
+        ).isNull()
+    }
+
+    /**
+     * ...but NOT on the final entry, and that is a gap rather than a decision.
+     *
+     * The loop compares `tas1 != tas2` for entries 0..n-2. The last entry is handled after the loop,
+     * where only `last2`'s **value** is read - its time is never looked at. So two arrays that
+     * disagree about when the final segment starts are accepted, and the resulting block pairs a low
+     * from one time with a high from another.
+     *
+     * Pinned as current behaviour, deliberately NOT fixed here: this file exists to make the org.json
+     * conversion provably behaviour-preserving, and tightening a validation rule at the same time
+     * would make any later regression impossible to attribute. In practice both AAPS and Nightscout
+     * write the two arrays with identical times, so it is latent rather than active.
+     */
+    @Test fun `a differing time on the LAST entry is not caught`() {
+        val blocks = targetBlockFromJsonArray(
+            schedule("00:00" to "5.5", "12:00" to "6.0"),
+            schedule("00:00" to "7.0", "13:00" to "7.5"),
+            dateUtil
+        )
+
+        assertThat(blocks).isNotNull()
+        assertThat(blocks!!).hasSize(2)
+        // the high value came from the 13:00 entry, the duration from the 12:00 one
+        assertThat(blocks[1].lowTarget).isEqualTo(6.0)
+        assertThat(blocks[1].highTarget).isEqualTo(7.5)
+    }
+
+    /** ...and the hour-alignment rule applies here too. */
+    @Test fun `target ranges not aligned to whole hours are rejected`() {
+        assertThat(
+            targetBlockFromJsonArray(
+                schedule("00:30" to "5.5", "12:00" to "6.0"),
+                schedule("00:30" to "7.0", "12:00" to "7.5"),
+                dateUtil
+            )
+        ).isNull()
+    }
+
+    @Test fun `a null target array yields null`() {
+        assertThat(targetBlockFromJsonArray(null, schedule("00:00" to "7.0"), dateUtil)).isNull()
+        assertThat(targetBlockFromJsonArray(schedule("00:00" to "5.5"), null, dateUtil)).isNull()
     }
 
     // ---------------------------------------------------------------- 2. failure is null, not throw
