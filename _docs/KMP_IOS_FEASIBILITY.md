@@ -1747,6 +1747,28 @@ today, in this zone", which any roughly-right implementation passes. It now runs
 both 2026 transitions in Europe/Prague, with a guard test asserting the sweep really crosses an offset
 change - otherwise a UTC CI machine makes the whole thing vacuous, the same trap as the iOS workflow.
 
+### Decisions taken, so they are not re-opened by the next analysis
+
+**`CustomAction` / `CustomActionType` stay, even though they are dead.** A seven-agent pass over the
+pump layer classified them as safe to eliminate, with good evidence: nothing constructs a
+`CustomAction` anywhere, the only `CustomActionType` implementation is referenced only by its own
+declaration, and `git log -S` traces the loss to commit `060ec9d218` ("MDT: compose migration"), which
+deleted MedtronicPumpPlugin's wake-up-and-tune / clear-bolus-block / reset-RileyLink actions.
+
+That evidence is right and the conclusion is still no: this is a deliberate **extension point** for
+pump drivers that fell out of use as a side effect of a UI migration, not accidental cruft. Deleting
+it would foreclose bringing those actions back. The retention is recorded in the KDoc of both types,
+because any future dead-code sweep will find them again and the finding will look new.
+
+When the feature is revived, `CustomAction.name` is an Android string resource id and needs the same
+`TextRef` treatment as everything else here.
+
+**The `QuickWizardEditor` re-indentation stays in the branch.** ~260 of its ~290 changed lines are a
+re-indent: the body of `if (mode == QuickWizardMode.WIZARD) {` was previously indented at the same
+level as the `if` itself, which reads as though the block is not there. The new indentation is
+correct, and the file had to be touched for the `TextRef` migration anyway. It does bury the ~30 real
+lines during review - that is the known cost, accepted rather than overlooked.
+
 ---
 
 ## 9. Open decisions
