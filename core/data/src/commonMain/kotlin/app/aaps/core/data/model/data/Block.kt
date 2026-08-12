@@ -2,7 +2,7 @@ package app.aaps.core.data.model.data
 
 import kotlin.time.Duration.Companion.days
 
-data class Block(var duration: Long, var amount: Double)
+data class Block(val duration: Long, val amount: Double)
 
 fun List<Block>.checkSanity(): Boolean {
     var sum = 0L

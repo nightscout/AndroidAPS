@@ -17,32 +17,40 @@ private fun getShiftedTimeSecs(originalSeconds: Int, timeShiftHours: Int): Int {
     return shiftedSeconds
 }
 
+/**
+ * Expands to 24 one-hour blocks, then merges neighbours that carry the same value.
+ *
+ * Builds the merged list forward instead of mutating durations in place, so [Block] can stay
+ * immutable. Same output as before: consecutive equal-valued hours collapse into one block whose
+ * duration is their sum.
+ */
 fun List<Block>.shiftBlock(multiplier: Double, timeShiftHours: Int): List<Block> {
-    val newList = arrayListOf<Block>()
-    for (hour in 0..23) newList.add(Block(1000L * 60 * 60, blockValueBySeconds(hour * 3600, multiplier, timeShiftHours)))
-    for (i in newList.indices.reversed()) {
-        if (i > 0)
-            if (newList[i].amount == newList[i - 1].amount) {
-                newList[i - 1].duration += newList[i].duration
-                newList.removeAt(i)
-            }
+    val hourly = (0..23).map { blockValueBySeconds(it * 3600, multiplier, timeShiftHours) }
+    val merged = ArrayList<Block>(hourly.size)
+    for (amount in hourly) {
+        val last = merged.lastOrNull()
+        if (last != null && last.amount == amount) merged[merged.size - 1] = last.copy(duration = last.duration + HOUR_MS)
+        else merged.add(Block(HOUR_MS, amount))
     }
-    return newList
+    return merged
 }
 
+/** Same merge, for the paired low/high target schedule. */
 fun List<TargetBlock>.shiftTargetBlock(timeShiftHours: Int): List<TargetBlock> {
-    val newList = arrayListOf<TargetBlock>()
-    for (hour in 0..23)
-        newList.add(TargetBlock(1000L * 60 * 60, lowTargetBlockValueBySeconds(hour * 3600, timeShiftHours), highTargetBlockValueBySeconds(hour * 3600, timeShiftHours)))
-    for (i in newList.indices.reversed()) {
-        if (i > 0)
-            if (newList[i].lowTarget == newList[i - 1].lowTarget && newList[i].highTarget == newList[i - 1].highTarget) {
-                newList[i - 1].duration += newList[i].duration
-                newList.removeAt(i)
-            }
+    val hourly = (0..23).map {
+        lowTargetBlockValueBySeconds(it * 3600, timeShiftHours) to highTargetBlockValueBySeconds(it * 3600, timeShiftHours)
     }
-    return newList
+    val merged = ArrayList<TargetBlock>(hourly.size)
+    for ((low, high) in hourly) {
+        val last = merged.lastOrNull()
+        if (last != null && last.lowTarget == low && last.highTarget == high)
+            merged[merged.size - 1] = last.copy(duration = last.duration + HOUR_MS)
+        else merged.add(TargetBlock(HOUR_MS, low, high))
+    }
+    return merged
 }
+
+private const val HOUR_MS = 1000L * 60 * 60
 
 fun List<Block>.blockValueBySeconds(secondsFromMidnight: Int, multiplier: Double, timeShiftHours: Int): Double {
     var elapsed = 0L

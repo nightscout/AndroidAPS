@@ -235,6 +235,13 @@ sealed class ProfileSealed(
      * pump's time granularity (30-min vs full-hour). This gates profile *activation* and drives the
      * non-blocking "won't run on this pump" warning shown while editing/viewing — it never blocks
      * editing, storage or sync.
+     *
+     * Pure: it reports, it does not repair. It used to also clamp `basal.amount` to the pump limit in
+     * place, which made a "validity check" quietly rewrite the caller's profile. No caller ever used
+     * the clamped value - both build a throwaway [Pure] first and read only [Profile.ValidityCheck] -
+     * and the clamp `break`s after the first offending block, so it could not have produced a
+     * consistently corrected profile anyway. Removing it is what let [app.aaps.core.data.model.data.Block]
+     * become immutable.
      */
     fun validatePump(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, sendNotifications: Boolean): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
@@ -257,13 +264,11 @@ sealed class ProfileSealed(
             }
             // Check for minimal basal value
             if (basalAmount < description.basalMinimumRate) {
-                basal.amount = description.basalMinimumRate
                 if (sendNotifications) sendBelowMinimumNotification(from, notificationManager, rh)
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.minimalbasalvaluereplaced, from))
                 break
             } else if (basalAmount > description.basalMaximumRate) {
-                basal.amount = description.basalMaximumRate
                 if (sendNotifications) sendAboveMaximumNotification(from, notificationManager, rh)
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))

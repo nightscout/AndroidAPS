@@ -60,9 +60,11 @@ class ProfileFunctionImpl @Inject constructor(
     // profile — up to 30000 identical copies within one switch's window. Canonicalize by EPS id: the first
     // deep copy seen for an id is kept and every later second reuses it, so the whole window shares one
     // instance. The wrapper stays per-second (cheap, re-captures activePlugin.activeAPS exactly as before).
-    // Guarded by the [cache] monitor. Safe to share because the cached EPS profile is only ever READ
-    // (getBasal/getIsf/… derive fresh lists via shiftBlock) — the one in-place mutator, validatePump()'s
-    // basal clamp, runs solely on freshly built Pure/PS profiles, never on a getProfile() result.
+    // Guarded by the [cache] monitor. Safe to share because Block and TargetBlock are immutable and
+    // the accessors derive fresh lists via shiftBlock, so a shared profile cannot be altered by a
+    // reader. This used to rest on a convention instead - validatePump() clamped basal amounts in
+    // place, and sharing was only safe because that clamp happened to run on freshly built profiles.
+    // The clamp is gone and the types are `val`, so the guarantee is now the compiler's.
     @VisibleForTesting
     val canonicalEps = HashMap<Long, EPS>()
 
