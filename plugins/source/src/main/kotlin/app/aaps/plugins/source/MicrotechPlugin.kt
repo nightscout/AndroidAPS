@@ -21,7 +21,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * 微泰动泰 / Linx (Microtech Aidex) 血糖来源插件
+ * 微泰动态 / Linx (Microtech Aidex) 血糖来源插件
  * 接收微泰官方 App 广播(com.microtechmd.cgms.aidex.action.BgEstimate)
  * 接口协议参考 xDrip AidexReceiver(通知/广播常量与字段名一致)
  */
