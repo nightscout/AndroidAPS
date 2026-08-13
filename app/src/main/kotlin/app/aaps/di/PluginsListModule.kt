@@ -60,6 +60,7 @@ import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -165,6 +166,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(170)
     abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(180)
+    abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
 
     @Binds
     @APS

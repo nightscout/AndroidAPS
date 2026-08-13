@@ -184,6 +184,7 @@ dependencies {
     implementation(project(":pump:danars"))
     implementation(project(":pump:danar"))
     implementation(project(":pump:equil"))
+    implementation(project(":pump:virtual"))
     implementation(project(":pump:common"))
     implementation(project(":workflow"))
 

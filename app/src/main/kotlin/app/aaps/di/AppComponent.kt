@@ -21,6 +21,7 @@ import app.aaps.pump.dana.di.DanaModule
 import app.aaps.pump.danar.di.DanaRModule
 import app.aaps.pump.danars.di.DanaRSModule
 import app.aaps.pump.equil.di.EquilModule
+import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.LoggerModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.ui.di.UiModule
@@ -66,7 +67,8 @@ import javax.inject.Singleton
         DanaRModule::class,
         DanaRSModule::class,
         PumpCommonModule::class,
-        EquilModule::class
+        EquilModule::class,
+        VirtualPumpModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {
