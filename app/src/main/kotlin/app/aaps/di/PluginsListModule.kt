@@ -163,30 +163,6 @@ abstract class PluginsListModule {
     @Binds
     @PumpDriver
     @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @Binds
-    @PumpDriver
-    @IntoMap
     @IntKey(170)
     abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
 
