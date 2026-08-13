@@ -2,6 +2,7 @@ package app.aaps.implementation.queue
 
 import android.content.Context
 import android.os.PowerManager
+import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -842,6 +843,60 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         backgroundScope.launch { commandQueue.cancelTempBasal(enforceNew = true, autoForced = false) }
         yield()
         assertThat(commandQueue.size()).isEqualTo(1)
+    }
+
+    /**
+     * The queue status carries real styling now.
+     *
+     * It used to be assembled as an HTML string and handed to `Html.fromHtml`, but the only consumer
+     * flattened that with `toString()` - which keeps the line breaks and silently drops the bold,
+     * because a String cannot carry spans. So the emphasis on the command actually executing never
+     * reached the screen. These two tests pin both halves of the replacement: one line per command,
+     * and the running one actually bold.
+     */
+    /**
+     * The two command captions the status list is built from.
+     *
+     * `read_status` takes an argument, and the shared mock formats it from the NO-ARG `gs(id)`, so
+     * this has to hand back the template rather than the finished string.
+     */
+    private fun stubStatusCaptions() {
+        whenever(rh.gs(app.aaps.core.ui.R.string.read_status)).thenReturn("READSTATUS %1\$s")
+        whenever(rh.gs(app.aaps.core.ui.R.string.load_events)).thenReturn("LOAD EVENTS")
+    }
+
+    @Test
+    fun `queued commands are listed one per line`() = runTest {
+        stubStatusCaptions()
+        backgroundScope.launch { commandQueue.readStatus("test") }
+        yield()
+
+        val status = commandQueue.statusAsAnnotated()
+
+        assertThat(status.text).isNotEmpty()
+        // Only one command queued and nothing running, so there is no separator yet.
+        assertThat(status.text).doesNotContain("\n")
+        assertThat(status.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `the executing command is bold, the queued ones are not`() = runTest {
+        stubStatusCaptions()
+        backgroundScope.launch { commandQueue.readStatus("test") }
+        yield()
+        // pickup() moves the head of the queue into `performing`, which is what the bold marks.
+        commandQueue.pickup()
+        backgroundScope.launch { commandQueue.loadEvents() }
+        yield()
+
+        val status = commandQueue.statusAsAnnotated()
+
+        assertThat(status.text).contains("\n")
+        val bold = status.spanStyles.filter { it.item.fontWeight == FontWeight.Bold }
+        assertThat(bold).hasSize(1)
+        // Exactly the first line - the running command - and nothing after it.
+        assertThat(bold.single().start).isEqualTo(0)
+        assertThat(bold.single().end).isEqualTo(status.text.indexOf('\n'))
     }
 
     private suspend fun stubActiveMode(mode: app.aaps.core.data.model.RM.Mode) {

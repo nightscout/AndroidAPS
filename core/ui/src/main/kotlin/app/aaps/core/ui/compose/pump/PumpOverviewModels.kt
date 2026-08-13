@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -15,7 +16,7 @@ data class PumpOverviewUiState(
     val infoRows: List<PumpInfoInterface> = emptyList(),
     val primaryActions: List<PumpAction> = emptyList(),
     val managementActions: List<PumpAction> = emptyList(),
-    val queueStatus: String? = null
+    val queueStatus: AnnotatedString? = null
 )
 
 /**

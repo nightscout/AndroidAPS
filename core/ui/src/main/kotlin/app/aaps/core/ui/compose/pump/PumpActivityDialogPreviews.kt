@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -96,7 +97,7 @@ internal fun PreviewBolusIndeterminate() {
                 stopDeliveryEnabled = false
             ),
             pumpStatus = "Connecting for 5s",
-            queueStatus = "BOLUS 2.50U",
+            queueStatus = AnnotatedString("BOLUS 2.50U"),
             onStop = {},
             onDismiss = {}
         )
@@ -135,7 +136,7 @@ internal fun PreviewPumpStatusOnly() {
         PumpActivityCard(
             bolusState = null,
             pumpStatus = "Handshaking",
-            queueStatus = "READSTATUS",
+            queueStatus = AnnotatedString("READSTATUS"),
             onStop = {},
             onDismiss = {}
         )

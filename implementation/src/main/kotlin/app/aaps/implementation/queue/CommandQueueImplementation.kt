@@ -1,6 +1,10 @@
 package app.aaps.implementation.queue
 
-import android.text.Spanned
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
@@ -44,7 +48,6 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.implementation.R
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
@@ -769,22 +772,25 @@ class CommandQueueImplementation @Inject constructor(
         }
     }
 
-    override fun spannedStatus(): Spanned {
-        var s = ""
-        var line = 0
+    /**
+     * The running command in bold, then one queued command per line.
+     *
+     * This used to build an HTML string and hand it to `Html.fromHtml`, but the only caller flattened
+     * the result with `toString()` - which keeps the line breaks and silently drops the bold, because
+     * a String cannot carry spans. Building the styling directly means the emphasis on the command
+     * actually executing now survives all the way to the screen.
+     */
+    override fun statusAsAnnotated(): AnnotatedString = buildAnnotatedString {
         val perf = performing
         if (perf != null) {
-            s += "<b>" + perf.status() + "</b>"
-            line++
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(perf.status()) }
         }
         synchronized(queue) {
-            for (i in queue.indices) {
-                if (line != 0) s += "<br>"
-                s += queue[i].status()
-                line++
+            for (command in queue) {
+                if (length != 0) append('\n')
+                append(command.status())
             }
         }
-        return HtmlHelper.fromHtml(s)
     }
 
     override suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {

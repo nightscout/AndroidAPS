@@ -1,6 +1,5 @@
 package app.aaps.implementation.aps
 
-import android.text.Spanned
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -32,7 +31,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
-import app.aaps.core.utils.HtmlHelper
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -140,31 +138,6 @@ class DetermineBasalResult @Inject constructor(
         return if (isCarbsRequired) {
             carbsRequiredText
         } else rh.gs(R.string.nochangerequested)
-    }
-
-    override suspend fun resultAsSpanned(): Spanned = HtmlHelper.fromHtml(resultAsHtmlString())
-    override suspend fun resultAsHtmlString(): String {
-        val pump = activePlugin.activePump
-        if (isChangeRequested()) {
-            // rate
-            var ret: String =
-                if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
-                else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>"
-                else if (usePercent) rh.gs(R.string.percent_rate_duration_formatted, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)
-                else rh.gs(R.string.rate_percent_duration_formatted, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)
-
-            // smb
-            if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep) + "<br>"
-            if (isCarbsRequired) {
-                ret += "$carbsRequiredText<br>"
-            }
-
-            // reason
-            ret += "<b>" + rh.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
-            return ret
-        }
-        return if (isCarbsRequired) carbsRequiredText
-        else rh.gs(R.string.nochangerequested)
     }
 
     override fun newAndClone(): APSResult = apsResultProvider.get().with(result)

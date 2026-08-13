@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -30,8 +31,8 @@ class PumpCommunicationStatus(
     private val _statusBanner = MutableStateFlow<StatusBanner?>(null)
     val statusBannerFlow: StateFlow<StatusBanner?> = _statusBanner.asStateFlow()
 
-    private val _queueStatus = MutableStateFlow<String?>(null)
-    val queueStatusFlow: StateFlow<String?> = _queueStatus.asStateFlow()
+    private val _queueStatus = MutableStateFlow<AnnotatedString?>(null)
+    val queueStatusFlow: StateFlow<AnnotatedString?> = _queueStatus.asStateFlow()
 
     /** Emits whenever communication status or queue changes. */
     val refreshTrigger: MutableStateFlow<Long> = MutableStateFlow(0L)
@@ -47,7 +48,7 @@ class PumpCommunicationStatus(
 
         rxBus.toFlow(EventQueueChanged::class.java)
             .onEach {
-                _queueStatus.value = commandQueue.spannedStatus().toString().takeIf { it.isNotEmpty() }
+                _queueStatus.value = commandQueue.statusAsAnnotated().takeIf { it.isNotEmpty() }
                 refreshTrigger.value = System.currentTimeMillis()
             }
             .launchIn(scope)
@@ -57,5 +58,5 @@ class PumpCommunicationStatus(
     fun statusBanner(): StatusBanner? = _statusBanner.value
 
     /** Returns the current command queue status text. */
-    fun queueStatus(): String? = _queueStatus.value
+    fun queueStatus(): AnnotatedString? = _queueStatus.value
 }

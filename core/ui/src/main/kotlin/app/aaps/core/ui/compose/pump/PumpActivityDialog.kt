@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.background
@@ -46,7 +47,7 @@ import app.aaps.core.ui.compose.AapsSpacing
 fun PumpActivityDialog(
     bolusState: BolusProgressState?,
     pumpStatus: String,
-    queueStatus: String?,
+    queueStatus: AnnotatedString?,
     isModal: Boolean,
     onStop: () -> Unit,
     onDismiss: () -> Unit
@@ -101,7 +102,7 @@ fun PumpActivityDialog(
 internal fun PumpActivityCard(
     bolusState: BolusProgressState?,
     pumpStatus: String,
-    queueStatus: String?,
+    queueStatus: AnnotatedString?,
     onStop: () -> Unit,
     onDismiss: () -> Unit
 ) {

@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -82,7 +83,7 @@ fun PumpOverviewScreen(
 // ── Communication status card (banner + queue in one card) ────────────────
 
 @Composable
-private fun CommunicationStatusCard(banner: StatusBanner?, queueStatus: String?) {
+private fun CommunicationStatusCard(banner: StatusBanner?, queueStatus: AnnotatedString?) {
     if (banner == null && queueStatus == null) return
 
     val (bgColor, fgColor) = when (banner?.level) {

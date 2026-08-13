@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.aps
 
-import android.text.Spanned
 import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.constraints.Constraint
 import org.json.JSONObject
@@ -52,8 +51,6 @@ interface APSResult {
     val iob: IobTotal? get() = iobData?.get(0)
 
     suspend fun resultAsString(): String
-    suspend fun resultAsSpanned(): Spanned
-    suspend fun resultAsHtmlString(): String
     fun newAndClone(): APSResult
     fun json(): JSONObject?
     fun predictions(): Predictions?

@@ -27,6 +27,8 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
@@ -42,7 +44,6 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -172,14 +173,13 @@ class DanaRPairWizardUiTest {
     }
 
     private fun seedLocalProfile() {
-        val profile = profileRepository.newDraft().apply {
-            mgdl = true
-            ic = JSONArray(singleValue(10.0))
-            isf = JSONArray(singleValue(50.0))
-            basal = JSONArray(singleValue(0.5))
-            targetLow = JSONArray(singleValue(100.0))
-            targetHigh = JSONArray(singleValue(110.0))
-        }
+        val profile = profileRepository.newDraft().copy(
+            mgdl = true,
+            ic = singleBlock(10.0),
+            isf = singleBlock(50.0),
+            basal = singleBlock(0.5),
+            target = singleTargetBlock(100.0, 110.0)
+        )
         runBlocking { profileRepository.add(profile) }.getOrThrow()
     }
 
@@ -198,8 +198,6 @@ class DanaRPairWizardUiTest {
         }
         checkNotNull(switch) { "Could not activate the seeded local profile" }
     }
-
-    private fun singleValue(value: Double) = """[{"time":"00:00","timeAsSeconds":0,"value":$value}]"""
 
     // ---- ui helpers (same contract as DanaRSPairWizardUiTest) -----------------------------------
 

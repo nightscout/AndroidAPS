@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.queue
 
-import android.text.Spanned
+import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -57,6 +57,6 @@ interface CommandQueue {
     suspend fun customCommand(customCommand: CustomCommand): PumpEnactResult
     fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
     fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean
-    fun spannedStatus(): Spanned
+    fun statusAsAnnotated(): AnnotatedString
     suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean
 }

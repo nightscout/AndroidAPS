@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.pump
 
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -51,7 +52,7 @@ class PumpOverviewScreenTest {
     fun showsQueueStatus() {
         val state = PumpOverviewUiState(
             statusBanner = StatusBanner(text = "Idle"),
-            queueStatus = "Reading status"
+            queueStatus = AnnotatedString("Reading status")
         )
         compose.setContent {
             MaterialTheme { PumpOverviewScreen(state = state) }

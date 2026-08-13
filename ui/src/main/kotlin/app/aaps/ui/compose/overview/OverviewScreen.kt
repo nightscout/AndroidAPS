@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.overview
 
+import androidx.compose.ui.text.AnnotatedString
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -90,7 +91,7 @@ fun OverviewScreen(
     fabBottomOffset: Dp = 0.dp,
     bolusState: BolusProgressState? = null,
     pumpStatusText: String = "",
-    queueStatusText: String? = null,
+    queueStatusText: AnnotatedString? = null,
     isPumpCommunicating: Boolean = false,
     onStopBolus: () -> Unit = {},
     modifier: Modifier = Modifier

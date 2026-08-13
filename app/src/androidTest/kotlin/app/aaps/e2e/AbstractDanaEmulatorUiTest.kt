@@ -22,6 +22,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
@@ -32,7 +34,6 @@ import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.DanaPump
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
 import org.junit.After
 import org.junit.Before
 import java.io.File
@@ -192,14 +193,13 @@ abstract class AbstractDanaEmulatorUiTest {
      * deliberately invalid — fill them in or the profile switch below is rejected as invalid.
      */
     private fun seedLocalProfile() {
-        val profile = profileRepository.newDraft().apply {
-            mgdl = true
-            ic = JSONArray(singleValue(10.0))
-            isf = JSONArray(singleValue(50.0))
-            basal = JSONArray(singleValue(0.5))
-            targetLow = JSONArray(singleValue(100.0))
-            targetHigh = JSONArray(singleValue(110.0))
-        }
+        val profile = profileRepository.newDraft().copy(
+            mgdl = true,
+            ic = singleBlock(10.0),
+            isf = singleBlock(50.0),
+            basal = singleBlock(0.5),
+            target = singleTargetBlock(100.0, 110.0)
+        )
         check(profile.name == PROFILE_NAME) { "Expected the draft to be named $PROFILE_NAME, got ${profile.name}" }
         runBlocking { profileRepository.add(profile) }.getOrThrow()
     }
@@ -242,9 +242,6 @@ abstract class AbstractDanaEmulatorUiTest {
     }
 
     /** The profile-editor JSON shape: a single all-day value. */
-    private fun singleValue(value: Double) =
-        """[{"time":"00:00","timeAsSeconds":0,"value":$value}]"""
-
     /** Polls [supplier] until it returns non-null or [timeoutMs] elapses. */
     private fun <T> awaitNotNull(timeoutMs: Long, supplier: () -> T?): T? {
         val end = SystemClock.uptimeMillis() + timeoutMs
