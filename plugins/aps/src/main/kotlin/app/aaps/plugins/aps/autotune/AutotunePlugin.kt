@@ -31,6 +31,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
@@ -407,13 +408,15 @@ class AutotunePlugin @Inject constructor(
             profileRepository.add(profileRepository.copyFrom(newProfile.getProfile(circadian), newProfile.profileName))
             return
         }
-        // Snapshot-and-commit: deep-clone the existing profile, mutate the clone, hand it
-        // back to the repo. Avoids in-place mutation of the shared list element.
-        val updated = profileRepository.profiles.value[indexLocalProfile].deepClone().apply {
-            basal = newProfile.basal()
-            ic = newProfile.ic(circadian)
-            isf = newProfile.isf(circadian)
-        }
+        // Copy-and-commit: the stored profile is immutable, so build the tuned version with copy()
+        // and hand that back to the repo. A schedule that cannot be read is left at its old value
+        // rather than replaced with something unusable.
+        val existing = profileRepository.profiles.value[indexLocalProfile]
+        val updated = existing.copy(
+            basal = blockFromJsonArray(newProfile.basal(), dateUtil) ?: existing.basal,
+            ic = blockFromJsonArray(newProfile.ic(circadian), dateUtil) ?: existing.ic,
+            isf = blockFromJsonArray(newProfile.isf(circadian), dateUtil) ?: existing.isf
+        )
         profileRepository.replace(indexLocalProfile, updated)
     }
 

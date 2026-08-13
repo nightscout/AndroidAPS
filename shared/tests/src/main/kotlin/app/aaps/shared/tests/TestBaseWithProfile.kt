@@ -159,6 +159,7 @@ open class TestBaseWithProfile : TestBase() {
         whenever(preferences.observe(any<IntNonPreferenceKey>())).thenReturn(MutableStateFlow(0))
         whenever(preferences.observe(any<LongNonPreferenceKey>())).thenReturn(MutableStateFlow(0L))
         whenever(profileRepository.profiles).thenReturn(MutableStateFlow(emptyList()))
+        whenever(profileRepository.revision).thenReturn(MutableStateFlow(0L))
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         deltaCalculator = DeltaCalculator(aapsLogger)
         apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider, ch) }

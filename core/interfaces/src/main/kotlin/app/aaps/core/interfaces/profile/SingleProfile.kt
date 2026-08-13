@@ -1,35 +1,27 @@
 package app.aaps.core.interfaces.profile
 
-import org.json.JSONArray
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 
 /**
  * One entry in the local profile list.
  *
- * Pairs a [name] with profile data ([ic], [isf], [basal], target ranges) and the glucose
- * unit flag ([mgdl]). The [JSONArray] fields hold the per-hour-block schedules in the same
- * shape as Nightscout profile JSON, so they round-trip cleanly through the profile store.
+ * Pairs a [name] with profile data ([ic], [isf], [basal], [target]) and the glucose unit flag
+ * ([mgdl]). The schedules are plain Kotlin data: JSON exists only at the edges — the stored
+ * preference document and the Nightscout wire format — never in memory.
  *
- * Use [deepClone] before mutating an instance you've received from [ProfileRepository] —
- * the repository holds references and the `JSONArray`s are mutable.
+ * Immutable and structurally comparable. Edit with [copy]; there is nothing to clone defensively,
+ * so a profile handed out by [ProfileRepository] can be held and compared freely.
+ *
+ * Low and high targets live in ONE [TargetBlock] list rather than two parallel ones. The two JSON
+ * arrays must always have matching times and lengths, and pairing them here makes that a property of
+ * the type instead of something each reader has to re-check.
  */
-class SingleProfile(
-    var name: String,
-    var mgdl: Boolean,
-    var ic: JSONArray,
-    var isf: JSONArray,
-    var basal: JSONArray,
-    var targetLow: JSONArray,
-    var targetHigh: JSONArray,
-) {
-
-    fun deepClone(): SingleProfile =
-        SingleProfile(
-            name = name,
-            mgdl = mgdl,
-            ic = JSONArray(ic.toString()),
-            isf = JSONArray(isf.toString()),
-            basal = JSONArray(basal.toString()),
-            targetLow = JSONArray(targetLow.toString()),
-            targetHigh = JSONArray(targetHigh.toString())
-        )
-}
+data class SingleProfile(
+    val name: String,
+    val mgdl: Boolean,
+    val ic: List<Block>,
+    val isf: List<Block>,
+    val basal: List<Block>,
+    val target: List<TargetBlock>
+)

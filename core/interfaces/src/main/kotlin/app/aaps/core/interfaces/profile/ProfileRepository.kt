@@ -21,11 +21,12 @@ interface ProfileRepository {
      * The current profile list. Emits whenever profiles are added, removed, cloned,
      * or replaced (e.g. by an NS push via [loadFromNs]).
      *
-     * **Mutability contract:** [SingleProfile] is a mutable holder (its `JSONArray` fields
-     * are mutable, and the list spine is a snapshot but the elements are shared). Callers
-     * that intend to edit a profile must [SingleProfile.deepClone] first; mutating an
-     * element from this flow corrupts repository state and will leak across other
-     * collectors. To commit an edited clone back, call [replace].
+     * [SingleProfile] is immutable, so a profile taken from here can be held, compared and passed
+     * around freely. Edit with `copy()` and commit through [replace].
+     *
+     * Because the elements compare structurally, a mutation that produces an identical list is
+     * **not** re-emitted. Collectors that must react to every mutation, not only to every change of
+     * content, should watch [revision] instead.
      */
     val profiles: StateFlow<List<SingleProfile>>
 
@@ -38,6 +39,19 @@ interface ProfileRepository {
      * collect this flow with `.drop(1)` to ignore the replayed current value on subscription.
      */
     val profile: StateFlow<ProfileStore?>
+
+    /**
+     * Counts mutations. Bumped once per completed mutation, after [profiles] and [profile] already
+     * hold the new state, so a collector here can read either `.value` and get the matching (or a
+     * newer) snapshot.
+     *
+     * This exists because [profiles] deduplicates: [SingleProfile] compares structurally, so
+     * re-storing an identical list produces no emit at all. Some actions are about the *event*, not
+     * the content — [reset] must reload the editor's working copy even when the stored profile turned
+     * out to be byte-identical to what the user was editing. Watching this instead of [profiles]
+     * keeps those working without giving up deduplication for everyone else.
+     */
+    val revision: StateFlow<Long>
 
     /**
      * Clone the profile at [index]. The clone is appended with " copy" suffixed to its name.
@@ -147,7 +161,7 @@ interface ProfileRepository {
 
     /**
      * Replace the profile at [index] with [profile] and persist. Used by the editor to commit
-     * a snapshot-edited profile back to the store.
+     * an edited profile back to the store.
      *
      * @return [Result.success] if the replacement was persisted, or [Result.failure] with
      *         [IndexOutOfBoundsException] if [index] is no longer valid (e.g. profiles were

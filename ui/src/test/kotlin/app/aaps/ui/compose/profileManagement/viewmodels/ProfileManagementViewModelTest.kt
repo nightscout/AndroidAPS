@@ -19,6 +19,8 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.ui.compose.ScreenMode
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -31,8 +33,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.json.JSONArray
-import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -68,17 +68,13 @@ internal class ProfileManagementViewModelTest {
 
     private val profilesFlow = MutableStateFlow<List<SingleProfile>>(emptyList())
 
-    private fun singleBlock(value: Double): JSONArray =
-        JSONArray().put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", value))
-
     private fun profile(name: String) = SingleProfile(
         name = name,
         mgdl = true,
         ic = singleBlock(15.0),
         isf = singleBlock(100.0),
         basal = singleBlock(0.1),
-        targetLow = singleBlock(110.0),
-        targetHigh = singleBlock(120.0)
+        target = singleTargetBlock(110.0, 120.0)
     )
 
     /** Publish [count] profiles named P0..P(count-1) as the repository's current list. */

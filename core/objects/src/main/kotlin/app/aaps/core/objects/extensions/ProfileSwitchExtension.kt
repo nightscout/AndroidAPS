@@ -28,22 +28,24 @@ fun PS.getCustomizedName(decimalFormatter: DecimalFormatter): String {
 }
 
 /**
- * Convert a [SingleProfile] to a [PureProfile] for graph rendering, validation, or
- * activation. Single source of truth for the JSON-build pattern that was previously
- * duplicated across ProfileManagementViewModel and ProfileEditorViewModel.
+ * Convert a [SingleProfile] to a [PureProfile] for graph rendering, validation, or activation.
+ *
+ * Both types now hold the same block lists, so this is a field copy. It used to render the profile
+ * to JSON and parse it straight back, which is why the editor paid for a full serialise/parse round
+ * trip on every keystroke.
+ *
+ * Nullable only to keep the call sites unchanged — a [SingleProfile] always carries usable blocks,
+ * so this never actually returns null.
  */
-fun SingleProfile.toPureProfile(dateUtil: DateUtil): PureProfile? {
-    val json = JSONObject().apply {
-        put("carbratio", ic)
-        put("sens", isf)
-        put("basal", basal)
-        put("target_low", targetLow)
-        put("target_high", targetHigh)
-        put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
-        put("timezone", TimeZone.getDefault().id)
-    }
-    return pureProfileFromJson(json, dateUtil)
-}
+fun SingleProfile.toPureProfile(dateUtil: DateUtil): PureProfile? =
+    PureProfile(
+        basalBlocks = basal,
+        isfBlocks = isf,
+        icBlocks = ic,
+        targetBlocks = target,
+        glucoseUnit = if (mgdl) GlucoseUnit.MGDL else GlucoseUnit.MMOL,
+        timeZone = TimeZone.getDefault()
+    )
 
 /**
  * Pure profile doesn't contain timestamp, percentage, timeshift, profileName
@@ -66,7 +68,6 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits
             ?: return null
 
         return PureProfile(
-            jsonObject = jsonObject,
             basalBlocks = basalBlocks,
             isfBlocks = isfBlocks,
             icBlocks = icBlocks,

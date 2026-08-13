@@ -372,7 +372,6 @@ sealed class ProfileSealed(
 
     override fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile =
         PureProfile(
-            jsonObject = toPureNsJson(dateUtil),
             basalBlocks = basalBlocks.shiftBlock(percentage / 100.0, timeshift),
             isfBlocks = isfBlocks.shiftBlock(100.0 / percentage, timeshift),
             icBlocks = icBlocks.shiftBlock(100.0 / percentage, timeshift),
@@ -510,7 +509,6 @@ sealed class ProfileSealed(
         if (this is EffectiveProfile)
             PP(
                 PureProfile(
-                    jsonObject = JSONObject(),
                     basalBlocks = basalBlocks.shiftBlock(percentage / 100.0 / iCfg.concentration, timeshift),
                     isfBlocks = isfBlocks.shiftBlock(100.0 / percentage * iCfg.concentration, timeshift),
                     icBlocks = icBlocks.shiftBlock(100.0 / percentage * iCfg.concentration, timeshift),

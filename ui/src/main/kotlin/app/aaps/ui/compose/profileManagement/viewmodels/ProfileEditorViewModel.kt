@@ -5,6 +5,9 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -29,10 +32,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONObject
 import java.math.RoundingMode
-import java.util.Locale
 import javax.inject.Inject
 
 data class TimeValue(
@@ -106,23 +106,24 @@ class ProfileEditorViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    // VM-local edit state. The profile here is a deep clone of the repo's version at
-    // selection time; edits mutate this clone and commit via [profileRepository.replace].
+    // VM-local edit state. [SingleProfile] is immutable, so this is simply the repo's version at
+    // selection time with the user's edits applied on top via copy(); it commits through
+    // [profileRepository.replace]. Nothing is shared with the repository, so no clone is needed.
     private var editingIndex: Int = 0
     private var editingProfile: SingleProfile? = null
     private var locallyEdited: Boolean = false
 
     // True while editing a not-yet-persisted "new profile" draft. In this mode [editingIndex] is a
     // sentinel (-1): the profile has no row in the store, so [saveProfile] appends via the repo's
-    // add() and the external-change subscriber must never re-clone from the (nonexistent) index.
+    // add() and the external-change subscriber must never reload from the (nonexistent) index.
     private var isNewDraft: Boolean = false
 
-    // Content of the last profile this editor saved, used to recognise the echo of our own save in
-    // the [profileRepository.profiles] stream. It is NOT a one-shot flag on purpose: one save can
-    // produce two emits — the local write, and then (on a paired client) the master's authoritative
-    // copy coming back through the sync channel a moment later. A flag would be consumed by the first
-    // and let the second wipe edits the user typed meanwhile; comparing content survives both.
-    private var lastSavedContent: String? = null
+    // The last profile this editor saved, used to recognise the echo of our own save. It is NOT a
+    // one-shot flag on purpose: one save can produce two emits — the local write, and then (on a
+    // paired client) the master's authoritative copy coming back through the sync channel a moment
+    // later. A flag would be consumed by the first and let the second wipe edits the user typed
+    // meanwhile; comparing content survives both.
+    private var lastSaved: SingleProfile? = null
 
     init {
         viewModelScope.launch { loadState() }
@@ -130,28 +131,31 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     private fun subscribeToEvents() {
-        // Drop the StateFlow's replayed initial value — we only care about subsequent changes.
-        profileRepository.profiles.drop(1)
+        // Watch [revision], not [profiles]. Profiles are compared structurally now, so a mutation
+        // that lands on an identical list does not emit there — and "reset while the stored profile
+        // happens to match what is on screen" is exactly such a case. Reset must still reload.
+        // Drop the StateFlow's replayed initial value; we only care about subsequent changes.
+        profileRepository.revision.drop(1)
             .onEach {
-                aapsLogger.debug(LTag.PROFILE, "profileRepository.profiles changed")
+                aapsLogger.debug(LTag.PROFILE, "profileRepository changed")
                 if (isNewDraft) {
                     // Uncommitted draft — its index doesn't exist in the persisted list. Never
-                    // re-clone (that would wipe the draft); just refresh derived UI state.
+                    // reload (that would wipe the draft); just refresh derived UI state.
                     loadState()
                     return@onEach
                 }
                 val stored = profileRepository.profiles.value.getOrNull(editingIndex)
-                if (lastSavedContent != null && stored?.contentKey() == lastSavedContent) {
+                if (lastSaved != null && stored == lastSaved) {
                     // The emit carries exactly what we saved — our own write, or the master echoing
-                    // it back after applying it. The live `editingProfile` reference is correct as-is
-                    // (and may already hold newer typing). Skip the re-clone, just refresh the UI.
+                    // it back after applying it. The working copy is correct as-is (and may already
+                    // hold newer typing). Skip the reload, just refresh the UI.
                     loadState()
                 } else {
                     // Somebody else changed this profile (NS push, master edit, editor reset).
-                    // Reload the clone — discards in-flight edits.
-                    editingProfile = stored?.deepClone()
+                    // Reload — discards in-flight edits.
+                    editingProfile = stored
                     locallyEdited = false
-                    lastSavedContent = null
+                    lastSaved = null
                     loadState()
                 }
             }.launchIn(viewModelScope)
@@ -235,7 +239,7 @@ class ProfileEditorViewModel @Inject constructor(
     fun selectProfile(index: Int) {
         isNewDraft = false
         editingIndex = index
-        editingProfile = profileRepository.profiles.value.getOrNull(index)?.deepClone()
+        editingProfile = profileRepository.profiles.value.getOrNull(index)
         locallyEdited = false
         viewModelScope.launch { loadState() }
     }
@@ -253,166 +257,134 @@ class ProfileEditorViewModel @Inject constructor(
         viewModelScope.launch { loadState() }
     }
 
-    fun updateProfileName(name: String) {
-        editingProfile?.name = name
+    fun updateProfileName(name: String) = editProfile { it.copy(name = name) }
+
+    fun updateIcEntry(index: Int, timeValue: TimeValue) =
+        editProfile { it.copy(ic = it.ic.timeValues().updateAt(index, timeValue).toBlocks()) }
+
+    fun updateIsfEntry(index: Int, timeValue: TimeValue) =
+        editProfile { it.copy(isf = it.isf.timeValues().updateAt(index, timeValue).toBlocks()) }
+
+    fun updateBasalEntry(index: Int, timeValue: TimeValue) =
+        editProfile { it.copy(basal = it.basal.timeValues().updateAt(index, timeValue).toBlocks()) }
+
+    fun updateTargetEntry(index: Int, low: TimeValue, high: TimeValue) =
+        editProfile {
+            it.copy(
+                target = toTargetBlocks(
+                    it.target.lowTimeValues().updateAt(index, low),
+                    it.target.highTimeValues().updateAt(index, high)
+                )
+            )
+        }
+
+    fun addIcEntry(afterIndex: Int) = editProfile { it.copy(ic = it.ic.timeValues().addAfter(afterIndex).toBlocks()) }
+
+    fun addIsfEntry(afterIndex: Int) = editProfile { it.copy(isf = it.isf.timeValues().addAfter(afterIndex).toBlocks()) }
+
+    fun addBasalEntry(afterIndex: Int) = editProfile { it.copy(basal = it.basal.timeValues().addAfter(afterIndex).toBlocks()) }
+
+    fun addTargetEntry(afterIndex: Int) =
+        editProfile {
+            it.copy(
+                target = toTargetBlocks(
+                    it.target.lowTimeValues().addAfter(afterIndex),
+                    it.target.highTimeValues().addAfter(afterIndex)
+                )
+            )
+        }
+
+    fun removeIcEntry(index: Int) = editProfile { it.copy(ic = it.ic.timeValues().removeAt(index).toBlocks()) }
+
+    fun removeIsfEntry(index: Int) = editProfile { it.copy(isf = it.isf.timeValues().removeAt(index).toBlocks()) }
+
+    fun removeBasalEntry(index: Int) = editProfile { it.copy(basal = it.basal.timeValues().removeAt(index).toBlocks()) }
+
+    fun removeTargetEntry(index: Int) =
+        editProfile {
+            it.copy(
+                target = toTargetBlocks(
+                    it.target.lowTimeValues().removeAt(index),
+                    it.target.highTimeValues().removeAt(index)
+                )
+            )
+        }
+
+    /**
+     * Apply [transform] to the working copy and refresh the UI.
+     *
+     * An edit that changes nothing is dropped, so re-picking the value that is already there no
+     * longer lights up "unsaved changes". That check needs structural equality, which arrived with
+     * [SingleProfile] becoming immutable data; the previous mutate-in-place code could not tell the
+     * difference and always marked the profile edited.
+     */
+    private fun editProfile(transform: (SingleProfile) -> SingleProfile) {
+        val current = editingProfile ?: return
+        val updated = transform(current)
+        if (updated == current) return
+        editingProfile = updated
         markEdited()
     }
 
-    fun updateIcEntry(index: Int, timeValue: TimeValue) {
-        editingProfile?.let { profile ->
-            updateJsonArrayEntry(profile.ic, index, timeValue)
-            markEdited()
-        }
+    // -----------------------------------------------------------------------------------------
+    // Blocks <-> rows. A [Block] carries a DURATION, while the editor shows a START TIME per row,
+    // so a row's duration depends on the row after it. These two conversions are the only place
+    // that relationship is expressed.
+    // -----------------------------------------------------------------------------------------
+
+    private fun List<Block>.timeValues(): List<TimeValue> {
+        var start = 0
+        return map { block -> TimeValue(start, block.amount).also { start += T.msecs(block.duration).secs().toInt() } }
     }
 
-    fun updateIsfEntry(index: Int, timeValue: TimeValue) {
-        editingProfile?.let { profile ->
-            updateJsonArrayEntry(profile.isf, index, timeValue)
-            markEdited()
-        }
+    private fun List<TargetBlock>.lowTimeValues(): List<TimeValue> = timeValues { it.lowTarget }
+
+    private fun List<TargetBlock>.highTimeValues(): List<TimeValue> = timeValues { it.highTarget }
+
+    private fun List<TargetBlock>.timeValues(select: (TargetBlock) -> Double): List<TimeValue> {
+        var start = 0
+        return map { block -> TimeValue(start, select(block)).also { start += T.msecs(block.duration).secs().toInt() } }
     }
 
-    fun updateBasalEntry(index: Int, timeValue: TimeValue) {
-        editingProfile?.let { profile ->
-            updateJsonArrayEntry(profile.basal, index, timeValue)
-            markEdited()
+    private fun List<TimeValue>.toBlocks(): List<Block> =
+        mapIndexed { index, row -> Block(durationMs(index, row), row.value) }
+
+    /** Low and high always share their times, so the low side drives the durations. */
+    private fun toTargetBlocks(low: List<TimeValue>, high: List<TimeValue>): List<TargetBlock> =
+        low.mapIndexed { index, row ->
+            TargetBlock(low.durationMs(index, row), row.value, high.getOrNull(index)?.value ?: row.value)
         }
+
+    /** A row lasts until the next row starts; the last one runs to midnight. */
+    private fun List<TimeValue>.durationMs(index: Int, row: TimeValue): Long =
+        ((getOrNull(index + 1)?.timeSeconds ?: DAY_SECONDS) - row.timeSeconds) * 1000L
+
+    // -----------------------------------------------------------------------------------------
+    // Row operations. Each returns a new list and keeps the previous JSON-based limits: at most 24
+    // rows, a new row starts one hour after the one it follows, and row 0 can never be removed
+    // because the schedule has to start at midnight.
+    // -----------------------------------------------------------------------------------------
+
+    private fun List<TimeValue>.updateAt(index: Int, row: TimeValue): List<TimeValue> =
+        if (index in indices) toMutableList().also { it[index] = row } else this
+
+    private fun List<TimeValue>.addAfter(afterIndex: Int): List<TimeValue> {
+        if (size >= 24) return this
+        val previous = getOrNull(afterIndex)
+        val newTime = previous?.let { it.timeSeconds + 3600 } ?: 0
+        if (newTime >= DAY_SECONDS) return this
+        // The new row inherits the value of the row it follows, so adding a row alone never changes
+        // what the profile delivers.
+        return toMutableList().also { it.add((afterIndex + 1).coerceIn(0, it.size), TimeValue(newTime, previous?.value ?: 0.0)) }
     }
 
-    fun updateTargetEntry(index: Int, low: TimeValue, high: TimeValue) {
-        editingProfile?.let { profile ->
-            updateJsonArrayEntry(profile.targetLow, index, low)
-            updateJsonArrayEntry(profile.targetHigh, index, high)
-            markEdited()
-        }
-    }
-
-    fun addIcEntry(afterIndex: Int) {
-        editingProfile?.let { profile ->
-            addJsonArrayEntry(profile.ic, afterIndex)
-            markEdited()
-        }
-    }
-
-    fun addIsfEntry(afterIndex: Int) {
-        editingProfile?.let { profile ->
-            addJsonArrayEntry(profile.isf, afterIndex)
-            markEdited()
-        }
-    }
-
-    fun addBasalEntry(afterIndex: Int) {
-        editingProfile?.let { profile ->
-            addJsonArrayEntry(profile.basal, afterIndex)
-            markEdited()
-        }
-    }
-
-    fun addTargetEntry(afterIndex: Int) {
-        editingProfile?.let { profile ->
-            addJsonArrayEntry(profile.targetLow, afterIndex)
-            addJsonArrayEntry(profile.targetHigh, afterIndex)
-            markEdited()
-        }
-    }
-
-    fun removeIcEntry(index: Int) {
-        editingProfile?.let { profile ->
-            if (profile.ic.length() > 1 && index > 0) {
-                profile.ic.remove(index)
-                markEdited()
-            }
-        }
-    }
-
-    fun removeIsfEntry(index: Int) {
-        editingProfile?.let { profile ->
-            if (profile.isf.length() > 1 && index > 0) {
-                profile.isf.remove(index)
-                markEdited()
-            }
-        }
-    }
-
-    fun removeBasalEntry(index: Int) {
-        editingProfile?.let { profile ->
-            if (profile.basal.length() > 1 && index > 0) {
-                profile.basal.remove(index)
-                markEdited()
-            }
-        }
-    }
-
-    fun removeTargetEntry(index: Int) {
-        editingProfile?.let { profile ->
-            if (profile.targetLow.length() > 1 && index > 0) {
-                profile.targetLow.remove(index)
-                profile.targetHigh.remove(index)
-                markEdited()
-            }
-        }
-    }
-
-    private fun updateJsonArrayEntry(array: JSONArray, index: Int, timeValue: TimeValue) {
-        if (index < array.length()) {
-            val obj = array.getJSONObject(index)
-            val hour = timeValue.timeSeconds / 3600
-            obj.put("time", String.format(Locale.getDefault(), "%02d:00", hour))
-            obj.put("timeAsSeconds", timeValue.timeSeconds)
-            obj.put("value", timeValue.value)
-        }
-    }
-
-    private fun addJsonArrayEntry(array: JSONArray, afterIndex: Int) {
-        if (array.length() >= 24) return
-
-        val prevObj = if (afterIndex >= 0 && afterIndex < array.length()) {
-            array.getJSONObject(afterIndex)
-        } else {
-            null
-        }
-
-        val newTime = if (prevObj != null) {
-            prevObj.getInt("timeAsSeconds") + 3600 // Add 1 hour after current entry
-        } else {
-            0
-        }
-
-        if (newTime >= 24 * 3600) return
-
-        // Copy value from previous entry (the one before it)
-        val inheritedValue = prevObj?.optDouble("value", 0.0) ?: 0.0
-
-        val newObj = JSONObject().apply {
-            val hour = newTime / 3600
-            put("time", String.format(Locale.getDefault(), "%02d:00", hour))
-            put("timeAsSeconds", newTime)
-            put("value", inheritedValue)
-        }
-
-        // Insert at position afterIndex + 1
-        val insertPos = afterIndex + 1
-        val tempList = mutableListOf<JSONObject>()
-        for (i in 0 until array.length()) {
-            tempList.add(array.getJSONObject(i))
-        }
-        tempList.add(insertPos.coerceIn(0, tempList.size), newObj)
-
-        // Clear and rebuild array
-        while (array.length() > 0) array.remove(0)
-        tempList.forEach { array.put(it) }
-    }
+    private fun List<TimeValue>.removeAt(index: Int): List<TimeValue> =
+        if (size > 1 && index > 0) toMutableList().also { it.removeAt(index) } else this
 
     private fun markEdited() {
         locallyEdited = true
         viewModelScope.launch { loadState() }
     }
-
-    /**
-     * Stable content fingerprint of a profile. [SingleProfile] holds `JSONArray` fields, which have no
-     * structural `equals`, so the serialised form is what can be compared.
-     */
-    private fun SingleProfile.contentKey(): String = "$name|$mgdl|$ic|$isf|$basal|$targetLow|$targetHigh"
 
     fun saveProfile() {
         viewModelScope.launch {
@@ -425,11 +397,11 @@ class ProfileEditorViewModel @Inject constructor(
                 return@launch
             }
             // Remember what we are about to persist so the resulting emit(s) are recognised as ours.
-            lastSavedContent = profile.contentKey()
+            lastSaved = profile
             if (isNewDraft) {
-                // Commit the draft as a new profile. deepClone so the stored copy is independent of
-                // the editor's working reference (mirrors replace()'s defensive clone).
-                profileRepository.add(profile.deepClone())
+                // Commit the draft as a new profile. No clone needed - SingleProfile is immutable, so
+                // the editor keeping its own reference cannot reach into the store.
+                profileRepository.add(profile)
                     .onSuccess {
                         // Draft is now persisted: leave draft mode and point at its row so further
                         // saves go through replace().
@@ -457,7 +429,7 @@ class ProfileEditorViewModel @Inject constructor(
                         // Forget the expected echo so the NEXT external event isn't mis-attributed to
                         // this failed save. Surface the error in the log; the user keeps their unsaved
                         // edits visible in the editor (locallyEdited stays true).
-                        lastSavedContent = null
+                        lastSaved = null
                         aapsLogger.error(LTag.PROFILE, "saveProfile failed at index $editingIndex", error)
                     }
             }
@@ -479,29 +451,19 @@ class ProfileEditorViewModel @Inject constructor(
         viewModelScope.launch { profileRepository.reset() }
     }
 
-    private fun SingleProfile.toState(): SingleProfileState {
-        return SingleProfileState(
+    private fun SingleProfile.toState(): SingleProfileState =
+        SingleProfileState(
             name = name,
             mgdl = mgdl,
-            ic = ic.toTimeValueList(),
-            isf = isf.toTimeValueList(),
-            basal = basal.toTimeValueList(),
-            targetLow = targetLow.toTimeValueList(),
-            targetHigh = targetHigh.toTimeValueList()
+            ic = ic.timeValues(),
+            isf = isf.timeValues(),
+            basal = basal.timeValues(),
+            targetLow = target.lowTimeValues(),
+            targetHigh = target.highTimeValues()
         )
-    }
 
-    private fun JSONArray.toTimeValueList(): List<TimeValue> {
-        val list = mutableListOf<TimeValue>()
-        for (i in 0 until length()) {
-            val obj = getJSONObject(i)
-            list.add(
-                TimeValue(
-                    timeSeconds = obj.optInt("timeAsSeconds", 0),
-                    value = obj.optDouble("value", 0.0)
-                )
-            )
-        }
-        return list
+    private companion object {
+
+        const val DAY_SECONDS = 24 * 3600
     }
 }

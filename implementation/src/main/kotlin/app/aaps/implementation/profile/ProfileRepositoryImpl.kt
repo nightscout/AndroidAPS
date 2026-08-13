@@ -3,6 +3,7 @@ package app.aaps.implementation.profile
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -29,6 +30,12 @@ import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.highToJSONArray
+import app.aaps.core.objects.extensions.lowToJSONArray
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
+import app.aaps.core.objects.extensions.targetBlockFromJsonArray
+import app.aaps.core.objects.extensions.toJSONArray
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
@@ -104,6 +111,9 @@ class ProfileRepositoryImpl @Inject constructor(
     private val _profile = MutableStateFlow<ProfileStore?>(null)
     override val profile: StateFlow<ProfileStore?> = _profile.asStateFlow()
 
+    private val _revision = MutableStateFlow(0L)
+    override val revision: StateFlow<Long> = _revision.asStateFlow()
+
     init {
         // Synchronous initial load. Dagger constructs this @Singleton before any other
         // coroutine can run, so no mutex is needed here. Once init returns, the StateFlow
@@ -153,15 +163,21 @@ class ProfileRepositoryImpl @Inject constructor(
      * mutation, inside the mutex. Reads `profilesList` / `rawProfile` (which are stable
      * under the lock) and publishes immutable views.
      *
-     * Order matters: `_profile` is written first, then `_profiles`. At least one current
-     * subscriber (ProfileManagementViewModel in the UI module) reads `profile.value` inside
-     * a `profiles` collector — writing the by-name JSON projection first means that when
+     * Order matters: `_profile` is written first, then `_profiles`, and `_revision` last. At least
+     * one current subscriber (ProfileManagementViewModel in the UI module) reads `profile.value`
+     * inside a `profiles` collector — writing the by-name JSON projection first means that when
      * the list emit fires, the store the collector reads is the new one (or newer), never
      * older. Subscribers that read only one flow are unaffected by ordering.
+     *
+     * `_revision` goes last for the same reason one step further out: it is the "something happened"
+     * signal, so by the time it fires both data flows must already carry the new state. It also
+     * always emits, while `_profiles` deduplicates identical lists — see
+     * [app.aaps.core.interfaces.profile.ProfileRepository.revision].
      */
     private fun snapshot() {
         _profile.value = rawProfile
         _profiles.value = profilesList.toList()
+        _revision.value = _revision.value + 1
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -175,9 +191,8 @@ class ProfileRepositoryImpl @Inject constructor(
         }
         runCatching {
             withContext(Dispatchers.IO) {
-                val p = profilesList[index].deepClone()
-                p.name += " copy"
-                profilesList.add(p)
+                val original = profilesList[index]
+                profilesList.add(original.copy(name = original.name + " copy"))
                 storeSettingsInternal(timestamp = dateUtil.now())
             }
             snapshot()
@@ -238,10 +253,9 @@ class ProfileRepositoryImpl @Inject constructor(
         }
         runCatching {
             withContext(Dispatchers.IO) {
-                // Defensive clone: the caller may continue to hold the reference (the editor
-                // keeps editingProfile alive after save). Storing the live reference would let
-                // subsequent caller-side mutations leak directly into profilesList[index].
-                profilesList[index] = profile.deepClone()
+                // No defensive clone needed: SingleProfile is immutable, so the editor keeping its
+                // reference alive after save cannot reach into profilesList.
+                profilesList[index] = profile
                 storeSettingsInternal(timestamp = dateUtil.now())
             }
             snapshot()
@@ -259,10 +273,10 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun loadFromNs(store: ProfileStore): Result<Unit> = mutex.withLock {
         runCatching {
-            withContext(Dispatchers.IO) {
-                loadFromStoreInternal(store)
-            }
-            snapshot()
+            // Snapshot only when the store was actually taken. A rejected store changes nothing, and
+            // [revision] means "a mutation happened" — bumping it anyway would tell the editor to
+            // reload and would throw away whatever the user was typing at that moment.
+            if (withContext(Dispatchers.IO) { loadFromStoreInternal(store) }) snapshot()
         }
     }
 
@@ -278,43 +292,29 @@ class ProfileRepositoryImpl @Inject constructor(
             if (name.isEmpty()) {
                 errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.missing_profile_name)))
             }
-            // A block list is invalid when it cannot be read, when it holds no block at all, or when
-            // *any* single block is out of range. Two traps this avoids: "all blocks out of range"
-            // lets one bad block hide between good ones, and a null list must not count as valid.
-            fun invalid(blocks: List<Block>?, inRange: (Double) -> Boolean): Boolean =
-                blocks.isNullOrEmpty() || blocks.any { !inRange(it.amount) }
+            // A schedule is invalid when it holds no block at all, or when *any* single block is out
+            // of range. The "any" matters: checking only the first block would let one bad block hide
+            // between good ones.
+            fun invalid(blocks: List<Block>, inRange: (Double) -> Boolean): Boolean =
+                blocks.isEmpty() || blocks.any { !inRange(it.amount) }
 
             // BG values are stored in the profile unit, the limits are always mg/dL.
             fun asMgdl(value: Double): Double = if (mgdl) value else profileUtil.convertToMgdl(value, GlucoseUnit.MMOL)
 
-            val low = blockFromJsonArray(targetLow, dateUtil)
-            val high = blockFromJsonArray(targetHigh, dateUtil)
+            fun targetError() = ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values))
 
-            if (invalid(blockFromJsonArray(ic, dateUtil)) { it in hardLimits.icRange() }) {
+            if (invalid(ic) { it in hardLimits.icRange() }) {
                 errors.add(ProfileValidationError(ProfileErrorType.IC, rh.gs(R.string.error_in_ic_values)))
             }
-            if (invalid(blockFromJsonArray(isf, dateUtil)) { asMgdl(it) in HardLimits.LIMIT_ISF }) {
+            if (invalid(isf) { asMgdl(it) in HardLimits.LIMIT_ISF }) {
                 errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
             }
-            if (invalid(blockFromJsonArray(basal, dateUtil)) { it in 0.01..hardLimits.maxBasal() }) {
+            if (invalid(basal) { it in 0.01..hardLimits.maxBasal() }) {
                 errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
             }
-            if (invalid(low) { asMgdl(it) in HardLimits.LIMIT_MIN_BG }) {
-                errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-            }
-            if (invalid(high) { asMgdl(it) in HardLimits.LIMIT_MAX_BG }) {
-                errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-            }
-            low?.let { lowList ->
-                high?.let { highList ->
-                    for (i in lowList.indices) {
-                        if (lowList[i].amount > highList[i].amount) {
-                            errors.add(ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values)))
-                            break
-                        }
-                    }
-                }
-            }
+            if (target.isEmpty() || target.any { asMgdl(it.lowTarget) !in HardLimits.LIMIT_MIN_BG }) errors.add(targetError())
+            if (target.isEmpty() || target.any { asMgdl(it.highTarget) !in HardLimits.LIMIT_MAX_BG }) errors.add(targetError())
+            if (target.any { it.lowTarget > it.highTarget }) errors.add(targetError())
             if (name.contains(".")) {
                 errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.profile_name_contains_dot)))
             }
@@ -341,11 +341,10 @@ class ProfileRepositoryImpl @Inject constructor(
         return SingleProfile(
             name = Constants.LOCAL_PROFILE + free,
             mgdl = profileFunction.get().getUnits() == GlucoseUnit.MGDL,
-            ic = singleBlockProfileArray(0.0),
-            isf = singleBlockProfileArray(0.0),
-            basal = singleBlockProfileArray(0.0),
-            targetLow = singleBlockProfileArray(0.0),
-            targetHigh = singleBlockProfileArray(0.0)
+            ic = singleBlock(0.0),
+            isf = singleBlock(0.0),
+            basal = singleBlock(0.0),
+            target = singleTargetBlock(0.0, 0.0)
         )
     }
 
@@ -358,16 +357,15 @@ class ProfileRepositoryImpl @Inject constructor(
         if (_profile.value?.getSpecificProfile(newName) != null) {
             verifiedName += " " + dateUtil.now().toString()
         }
-        val profile = ProfileSealed.Pure(pureProfile, activePlugin)
-        val pureJson = pureProfile.jsonObject
+        // Straight field copy — a PureProfile already holds the same block lists, so there is no
+        // JSON to unpack any more.
         return SingleProfile(
             name = verifiedName,
-            mgdl = profile.units == GlucoseUnit.MGDL,
-            ic = pureJson.getJSONArray("carbratio"),
-            isf = pureJson.getJSONArray("sens"),
-            basal = pureJson.getJSONArray("basal"),
-            targetLow = pureJson.getJSONArray("target_low"),
-            targetHigh = pureJson.getJSONArray("target_high")
+            mgdl = pureProfile.glucoseUnit == GlucoseUnit.MGDL,
+            ic = pureProfile.icBlocks,
+            isf = pureProfile.isfBlocks,
+            basal = pureProfile.basalBlocks,
+            target = pureProfile.targetBlocks
         )
     }
 
@@ -420,15 +418,20 @@ class ProfileRepositoryImpl @Inject constructor(
             val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)
             if (profilesList.any { it.name == name }) continue
             try {
+                val entry = JSONObject()
+                    .put(KEY_IC, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)))
+                    .put(KEY_ISF, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)))
+                    .put(KEY_BASAL, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)))
+                    .put(KEY_TARGET_LOW, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)))
+                    .put(KEY_TARGET_HIGH, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)))
                 profilesList.add(
                     SingleProfile(
                         name = name,
                         mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
-                        ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)),
-                        isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)),
-                        basal = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)),
-                        targetLow = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)),
-                        targetHigh = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i))
+                        ic = readSchedule(entry, KEY_IC, name),
+                        isf = readSchedule(entry, KEY_ISF, name),
+                        basal = readSchedule(entry, KEY_BASAL, name),
+                        target = readTargetSchedule(entry, name)
                     )
                 )
             } catch (e: JSONException) {
@@ -465,7 +468,13 @@ class ProfileRepositoryImpl @Inject constructor(
         aapsLogger.debug(LTag.PROFILE, "Storing settings ($origin): " + rawProfile?.getData().toString())
     }
 
-    /** The stored form: one document carrying its own edit stamp plus the profile list. */
+    /**
+     * The stored form: one document carrying its own edit stamp plus the profile list.
+     *
+     * The field names and the per-schedule array shape are the master↔client sync wire format and
+     * the 3.4.x upgrade path, so they are rendered back exactly as before — the in-memory model
+     * changed, the document did not. Targets are one paired list in memory and two arrays here.
+     */
     private fun profilesToJson(timestamp: Long): JSONObject {
         val array = JSONArray()
         for (profile in profilesList) {
@@ -473,11 +482,11 @@ class ProfileRepositoryImpl @Inject constructor(
                 JSONObject()
                     .put(KEY_NAME, profile.name)
                     .put(KEY_MGDL, profile.mgdl)
-                    .put(KEY_IC, profile.ic)
-                    .put(KEY_ISF, profile.isf)
-                    .put(KEY_BASAL, profile.basal)
-                    .put(KEY_TARGET_LOW, profile.targetLow)
-                    .put(KEY_TARGET_HIGH, profile.targetHigh)
+                    .put(KEY_IC, profile.ic.toJSONArray())
+                    .put(KEY_ISF, profile.isf.toJSONArray())
+                    .put(KEY_BASAL, profile.basal.toJSONArray())
+                    .put(KEY_TARGET_LOW, profile.target.lowToJSONArray())
+                    .put(KEY_TARGET_HIGH, profile.target.highToJSONArray())
             )
         }
         return JSONObject().put(KEY_LAST_CHANGE, timestamp).put(KEY_PROFILES, array)
@@ -508,11 +517,10 @@ class ProfileRepositoryImpl @Inject constructor(
                         // current units: this runs from init(), and resolving that Lazy there closes a
                         // dependency cycle back into this repository (crash at startup).
                         mgdl = entry.optBoolean(KEY_MGDL, ProfileComposedBooleanKey.LocalProfileNumberedMgdl.defaultValue),
-                        ic = entry.optJSONArray(KEY_IC) ?: emptyBlockArray(),
-                        isf = entry.optJSONArray(KEY_ISF) ?: emptyBlockArray(),
-                        basal = entry.optJSONArray(KEY_BASAL) ?: emptyBlockArray(),
-                        targetLow = entry.optJSONArray(KEY_TARGET_LOW) ?: emptyBlockArray(),
-                        targetHigh = entry.optJSONArray(KEY_TARGET_HIGH) ?: emptyBlockArray()
+                        ic = readSchedule(entry, KEY_IC, name),
+                        isf = readSchedule(entry, KEY_ISF, name),
+                        basal = readSchedule(entry, KEY_BASAL, name),
+                        target = readTargetSchedule(entry, name)
                     )
                 )
             }
@@ -523,10 +531,31 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    /** The same placeholder the legacy per-profile keys used, so a missing block reads as "unset", not as valid. */
-    private fun emptyBlockArray(): JSONArray = singleBlockProfileArray(0.0)
+    /**
+     * One schedule out of a stored profile entry, or the zero placeholder when it cannot be read.
+     *
+     * "Cannot be read" now covers a damaged array as well as a missing one — with typed blocks the
+     * parse either succeeds or it does not, where the old code could carry unreadable JSON around
+     * untouched. The outcome is the documented one either way: a zero schedule is out of hard limits,
+     * so the profile shows as invalid in the editor and is refused by save and by sync. It fails
+     * where the user can see and fix it, instead of reaching the pump.
+     */
+    private fun readSchedule(entry: JSONObject, key: String, profileName: String): List<Block> =
+        blockFromJsonArray(entry.optJSONArray(key), dateUtil) ?: run {
+            if (entry.has(key)) aapsLogger.error(LTag.PROFILE, "Cannot read '$key' of profile '$profileName', using zero")
+            singleBlock(0.0)
+        }
 
-    private fun loadFromStoreInternal(store: ProfileStore) {
+    /** [readSchedule] for the paired target arrays. */
+    private fun readTargetSchedule(entry: JSONObject, profileName: String): List<TargetBlock> =
+        targetBlockFromJsonArray(entry.optJSONArray(KEY_TARGET_LOW), entry.optJSONArray(KEY_TARGET_HIGH), dateUtil) ?: run {
+            if (entry.has(KEY_TARGET_LOW) || entry.has(KEY_TARGET_HIGH))
+                aapsLogger.error(LTag.PROFILE, "Cannot read targets of profile '$profileName', using zero")
+            singleTargetBlock(0.0, 0.0)
+        }
+
+    /** @return true when the incoming store replaced the list, false when it was rejected. */
+    private fun loadFromStoreInternal(store: ProfileStore): Boolean {
         try {
             val newProfiles: ArrayList<SingleProfile> = ArrayList()
             for (p in store.getProfileList()) {
@@ -539,11 +568,9 @@ class ProfileRepositoryImpl @Inject constructor(
                 if (pureProfile != null && validityCheck.isValid) {
                     // copyFrom would timestamp-suffix the name if it collides with the
                     // CURRENT store, but here we're REPLACING the whole list — the NS name
-                    // should be preserved verbatim. Reuse copyFrom for the JSON-field
-                    // unpacking, then restore the raw name.
-                    val sp = copyFrom(pureProfile, p.toString())
-                    sp.name = p.toString()
-                    newProfiles.add(sp)
+                    // should be preserved verbatim. Reuse copyFrom for the field copying,
+                    // then restore the raw name.
+                    newProfiles.add(copyFrom(pureProfile, p.toString()).copy(name = p.toString()))
                 } else {
                     notificationManager.post(
                         NotificationId.INVALID_PROFILE_NOT_ACCEPTED,
@@ -556,12 +583,13 @@ class ProfileRepositoryImpl @Inject constructor(
                 aapsLogger.debug(LTag.PROFILE, "Accepted ${profilesList.size} profiles")
                 // Adopted, not authored: a Nightscout store must not be pushed back to the master.
                 storeSettingsInternal(timestamp = store.getStartDate(), origin = WriteOrigin.ADOPTED)
-            } else {
-                aapsLogger.debug(LTag.PROFILE, "ProfileStore not accepted")
+                return true
             }
+            aapsLogger.debug(LTag.PROFILE, "ProfileStore not accepted")
         } catch (e: Exception) {
             aapsLogger.error("Error loading ProfileStore", e)
         }
+        return false
     }
 
     private fun addNewProfileInternal() {
@@ -576,23 +604,13 @@ class ProfileRepositoryImpl @Inject constructor(
             SingleProfile(
                 name = Constants.LOCAL_PROFILE + free,
                 mgdl = isMgdl,
-                ic = singleBlockProfileArray(15.0),
-                isf = singleBlockProfileArray(if (isMgdl) 100.0 else 5.6),
-                basal = singleBlockProfileArray(0.1),
-                targetLow = singleBlockProfileArray(if (isMgdl) 110.0 else 6.1),
-                targetHigh = singleBlockProfileArray(if (isMgdl) 120.0 else 6.7)
+                ic = singleBlock(15.0),
+                isf = singleBlock(if (isMgdl) 100.0 else 5.6),
+                basal = singleBlock(0.1),
+                target = singleTargetBlock(if (isMgdl) 110.0 else 6.1, if (isMgdl) 120.0 else 6.7)
             )
         )
     }
-
-    /** A single 00:00 profile block carrying [value], matching the JSON shape AAPS profiles expect. */
-    private fun singleBlockProfileArray(value: Double): JSONArray =
-        JSONArray().put(
-            JSONObject()
-                .put("time", "00:00")
-                .put("timeAsSeconds", 0)
-                .put("value", value)
-        )
 
     private fun createAndStoreConvertedProfile() {
         val json = JSONObject()
@@ -601,11 +619,11 @@ class ProfileRepositoryImpl @Inject constructor(
             for (i in profilesList.indices) {
                 profilesList[i].run {
                     val pj = JSONObject()
-                    pj.put("carbratio", ic)
-                    pj.put("sens", isf)
-                    pj.put("basal", basal)
-                    pj.put("target_low", targetLow)
-                    pj.put("target_high", targetHigh)
+                    pj.put("carbratio", ic.toJSONArray())
+                    pj.put("sens", isf.toJSONArray())
+                    pj.put("basal", basal.toJSONArray())
+                    pj.put("target_low", target.lowToJSONArray())
+                    pj.put("target_high", target.highToJSONArray())
                     pj.put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
                     pj.put("timezone", TimeZone.getDefault().id)
                     store.put(name, pj)

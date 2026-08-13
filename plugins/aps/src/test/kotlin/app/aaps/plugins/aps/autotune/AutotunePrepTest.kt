@@ -183,7 +183,6 @@ class AutotunePrepTest : TestBaseWithProfile() {
             }
 
             val pure = PureProfile(
-                jsonObject = jsonObject,
                 basalBlocks = basalBlocks.shiftBlock(1.0, ts),
                 isfBlocks = isfBlocks,
                 icBlocks = icBlocks,

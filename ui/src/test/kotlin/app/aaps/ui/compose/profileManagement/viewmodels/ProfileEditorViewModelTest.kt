@@ -5,6 +5,8 @@ import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.interfaces.profile.ProfileValidationError
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -14,8 +16,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.json.JSONArray
-import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,10 +37,8 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
     @Mock lateinit var protectionCheck: ProtectionCheck
 
     private val profilesFlow = MutableStateFlow<List<SingleProfile>>(emptyList())
+    private val revisionFlow = MutableStateFlow(0L)
     private lateinit var sut: ProfileEditorViewModel
-
-    private fun singleBlock(value: Double): JSONArray =
-        JSONArray().put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", value))
 
     // A well-formed, parseable profile (validity is driven by the validateStructured stub, not content).
     private fun profile(name: String) = SingleProfile(
@@ -49,14 +47,24 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         ic = singleBlock(15.0),
         isf = singleBlock(100.0),
         basal = singleBlock(0.1),
-        targetLow = singleBlock(110.0),
-        targetHigh = singleBlock(120.0)
+        target = singleTargetBlock(110.0, 120.0)
     )
+
+    /**
+     * Publish a profile list the way the repository does: list first, then the revision bump. The
+     * editor watches the revision, so a test that only set the list would be publishing a change the
+     * editor never hears about — and an identical list would not even emit.
+     */
+    private fun publish(vararg profiles: SingleProfile) {
+        profilesFlow.value = profiles.toList()
+        revisionFlow.value = revisionFlow.value + 1
+    }
 
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         whenever(profileRepository.profiles).thenReturn(profilesFlow)
+        whenever(profileRepository.revision).thenReturn(revisionFlow)
         whenever(profileRepository.newDraft()).thenReturn(profile("LocalProfile1"))
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         whenever(protectionCheck.isLocked(any())).thenReturn(false)
@@ -96,7 +104,7 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
     @Test
     fun existingProfileSavedAsReplaceNotAdd() = runTest {
         whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
-        profilesFlow.value = listOf(profile("Existing"))
+        publish(profile("Existing"))
 
         sut.selectProfile(0)
         sut.saveProfile()
@@ -112,9 +120,9 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         val draftName = sut.uiState.value.currentProfile?.name
 
         // An external profile-list change (e.g. an NS push) arrives while the draft is open.
-        profilesFlow.value = listOf(profile("PushedFromNs"))
+        publish(profile("PushedFromNs"))
 
-        // The draft survives (its index doesn't exist in the list, so it must not be re-cloned away)...
+        // The draft survives (its index doesn't exist in the list, so it must not be reloaded away)...
         assertThat(sut.uiState.value.currentProfile?.name).isEqualTo(draftName)
         // ...and still commits as a new profile.
         sut.saveProfile()
@@ -128,17 +136,17 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         // change may re-clone the editor.
         whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
         val saved = profile("Existing")
-        profilesFlow.value = listOf(saved)
+        publish(saved)
         sut.selectProfile(0)
         sut.saveProfile()
 
-        // First emit: the local write. Fresh instances each time — SingleProfile has no structural
-        // equals, so distinct objects are what make the StateFlow emit at all.
-        profilesFlow.value = listOf(saved.deepClone())
+        // First emit: the local write. The content is identical to what we saved, which is exactly
+        // why this rides on the revision counter — the profile list itself does not emit here.
+        publish(saved)
         // The user keeps typing while the round-trip is in flight.
         sut.updateProfileName("RenamedWhileInFlight")
         // Second emit: the same content echoed back after the master applied it.
-        profilesFlow.value = listOf(saved.deepClone())
+        publish(saved)
 
         assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("RenamedWhileInFlight")
     }
@@ -146,13 +154,50 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
     @Test
     fun aForeignProfileChangeStillReloadsTheEditor() = runTest {
         whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
-        profilesFlow.value = listOf(profile("Existing"))
+        publish(profile("Existing"))
         sut.selectProfile(0)
         sut.saveProfile()
 
         // Different content at our index — somebody else edited this profile.
-        profilesFlow.value = listOf(profile("ChangedByMaster"))
+        publish(profile("ChangedByMaster"))
 
         assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("ChangedByMaster")
+    }
+
+    /**
+     * The reason the editor watches [app.aaps.core.interfaces.profile.ProfileRepository.revision]
+     * rather than the profile list.
+     *
+     * Reset re-reads the stored profile and republishes it. When the user's edit happened to bring
+     * the profile back to what is already stored, the republished list is structurally equal to the
+     * previous one, so the list StateFlow does not emit at all. Watching the list would leave the
+     * editor showing the edit it was asked to discard, with Save still offered.
+     */
+    @Test
+    fun resetToAnIdenticalListStillDiscardsTheEdit() = runTest {
+        val stored = profile("Existing")
+        publish(stored)
+        sut.selectProfile(0)
+
+        sut.updateProfileName("TypedButNotSaved")
+        assertThat(sut.uiState.value.isEdited).isTrue()
+
+        // reset() reloads from storage and publishes the same list it already had.
+        publish(stored)
+
+        assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("Existing")
+        assertThat(sut.uiState.value.isEdited).isFalse()
+    }
+
+    /** A no-op edit is not an edit: re-entering the value already on screen must not offer Save. */
+    @Test
+    fun reEnteringTheSameValueDoesNotMarkTheProfileEdited() = runTest {
+        publish(profile("Existing"))
+        sut.selectProfile(0)
+
+        sut.updateProfileName("Existing")
+        sut.updateBasalEntry(0, TimeValue(0, 0.1))
+
+        assertThat(sut.uiState.value.isEdited).isFalse()
     }
 }

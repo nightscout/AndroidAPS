@@ -8,6 +8,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -102,12 +105,41 @@ fun List<TargetBlock>.highTargetBlockValueBySeconds(secondsFromMidnight: Int, ti
 private fun JSONArray?.toKotlinxOrNull(): JsonArray? =
     this?.let { runCatching { Json.parseToJsonElement(it.toString()) as? JsonArray }.getOrNull() }
 
+/** The shape [DateUtil.toSeconds] can actually read: ASCII digits, `HH:MM`. It matches with `find`. */
+private val READABLE_TIME = Regex("""\d+:\d+""")
+
 /**
- * `time` as org.json's `getString` would give it: a quoted string comes back unquoted, and a bare
- * number comes back as its text. Null when absent or not a primitive.
+ * Start-of-block seconds for entry [index].
+ *
+ * `timeAsSeconds` is the source of truth, and `time` is read only when it is missing or zero. That
+ * matches how the profile editor always worked - it wrote `time` but read the rows back from
+ * `timeAsSeconds`, never from `time`.
+ *
+ * Preferring the integer matters because `time` is the fragile field. Older builds formatted it with
+ * the device locale's digits, so a profile saved under ar-SA (a locale AAPS ships) holds `"٠٦:٠٠"`,
+ * and [DateUtil.toSeconds] matches ASCII `\d` only, answering 0 without complaining. That used to be
+ * survivable - the editor showed the right rows and the stored array was written back verbatim - but
+ * the document is now re-rendered from whatever is parsed here, so a `time` we cannot read would
+ * collapse every block to 00:00 and publish that to the sync channel and to Nightscout. The damage
+ * would be silent, because all-zero starts still divide evenly by 3600 and so still parse.
+ *
+ * Treating **zero** as "ask `time`" is what keeps this from failing the same way in reverse: an
+ * uploader that omits `timeAsSeconds` from a defaults-filled struct writes 0 for every entry, and
+ * trusting that would flatten the schedule just as badly. A real midnight block is unaffected - its
+ * `time` reads back as 0 anyway - and when neither field can be read, a present-but-zero
+ * `timeAsSeconds` is still honoured.
+ *
+ * Null only when neither field is usable, which the callers turn into an invalid profile.
  */
-private fun JsonArray.timeAt(index: Int): String? =
-    ((getOrNull(index) as? JsonObject)?.get("time") as? JsonPrimitive)?.content
+private fun JsonArray.startSecondsAt(index: Int, dateUtil: DateUtil): Int? {
+    val entry = getOrNull(index) as? JsonObject
+    val seconds = (entry?.get("timeAsSeconds") as? JsonPrimitive)?.content?.toDoubleOrNull()?.toInt()
+    if (seconds != null && seconds != 0) return seconds
+    val time = (entry?.get("time") as? JsonPrimitive)?.content
+    if (time != null && READABLE_TIME.containsMatchIn(time)) return dateUtil.toSeconds(time)
+    // Absent -> null (invalid profile); present and zero -> a genuine midnight block.
+    return seconds
+}
 
 /**
  * `value` as org.json's `getDouble` would give it - coercing a quoted number, which real Nightscout
@@ -133,14 +165,14 @@ fun blockFromJson(jsonArray: JsonArray?, dateUtil: DateUtil): List<Block>? {
     if (jsonArray == null || jsonArray.isEmpty()) return null
     val ret = ArrayList<Block>(jsonArray.size)
     for (index in 0 until jsonArray.size - 1) {
-        val tas = dateUtil.toSeconds(jsonArray.timeAt(index) ?: return null)
-        val nextTas = dateUtil.toSeconds(jsonArray.timeAt(index + 1) ?: return null)
+        val tas = jsonArray.startSecondsAt(index, dateUtil) ?: return null
+        val nextTas = jsonArray.startSecondsAt(index + 1, dateUtil) ?: return null
         val value = jsonArray.valueAt(index) ?: return null
         if (tas % 3600 != 0) return null
         if (nextTas % 3600 != 0) return null
         ret.add(index, Block((nextTas - tas) * 1000L, value))
     }
-    val lastTas = dateUtil.toSeconds(jsonArray.timeAt(jsonArray.size - 1) ?: return null)
+    val lastTas = jsonArray.startSecondsAt(jsonArray.size - 1, dateUtil) ?: return null
     val lastValue = jsonArray.valueAt(jsonArray.size - 1) ?: return null
     ret.add(jsonArray.size - 1, Block((T.hours(24).secs() - lastTas) * 1000L, lastValue))
     return ret
@@ -167,10 +199,10 @@ fun targetBlockFromJson(jsonArray1: JsonArray?, jsonArray2: JsonArray?, dateUtil
     if (jsonArray1.isEmpty() || jsonArray1.size != jsonArray2.size) return null
     val ret = ArrayList<TargetBlock>(jsonArray1.size)
     for (index in 0 until jsonArray1.size - 1) {
-        val tas1 = dateUtil.toSeconds(jsonArray1.timeAt(index) ?: return null)
+        val tas1 = jsonArray1.startSecondsAt(index, dateUtil) ?: return null
         val value1 = jsonArray1.valueAt(index) ?: return null
-        val nextTas1 = dateUtil.toSeconds(jsonArray1.timeAt(index + 1) ?: return null)
-        val tas2 = dateUtil.toSeconds(jsonArray2.timeAt(index) ?: return null)
+        val nextTas1 = jsonArray1.startSecondsAt(index + 1, dateUtil) ?: return null
+        val tas2 = jsonArray2.startSecondsAt(index, dateUtil) ?: return null
         val value2 = jsonArray2.valueAt(index) ?: return null
         if (tas1 != tas2) return null
         if (tas1 % 3600 != 0) return null
@@ -178,7 +210,7 @@ fun targetBlockFromJson(jsonArray1: JsonArray?, jsonArray2: JsonArray?, dateUtil
         ret.add(index, TargetBlock((nextTas1 - tas1) * 1000L, value1, value2))
     }
     val lastIndex = jsonArray1.size - 1
-    val lastTas1 = dateUtil.toSeconds(jsonArray1.timeAt(lastIndex) ?: return null)
+    val lastTas1 = jsonArray1.startSecondsAt(lastIndex, dateUtil) ?: return null
     val lastValue1 = jsonArray1.valueAt(lastIndex) ?: return null
     val lastValue2 = jsonArray2.valueAt(lastIndex) ?: return null
     ret.add(lastIndex, TargetBlock((T.hours(24).secs() - lastTas1) * 1000L, lastValue1, lastValue2))
@@ -188,3 +220,70 @@ fun targetBlockFromJson(jsonArray1: JsonArray?, jsonArray2: JsonArray?, dateUtil
 /** `org.json` entry point. Converts once at the boundary and delegates to [targetBlockFromJson]. */
 fun targetBlockFromJsonArray(jsonArray1: JSONArray?, jsonArray2: JSONArray?, dateUtil: DateUtil): List<TargetBlock>? =
     targetBlockFromJson(jsonArray1.toKotlinxOrNull(), jsonArray2.toKotlinxOrNull(), dateUtil)
+
+/**
+ * `HH:00` for a whole-hour offset from midnight.
+ *
+ * Padded by hand rather than with `String.format`: `%02d` renders digits using the *locale's* zero
+ * digit, so under a locale such as ar-EG it writes `٠١:٠٠`, which no reader can parse back. The
+ * profile editor used to build times that way, so this also removes that trap.
+ */
+private fun hourLabel(secondsFromMidnight: Int): String {
+    val hours = secondsFromMidnight / 3600
+    return (if (hours < 10) "0$hours" else "$hours") + ":00"
+}
+
+/**
+ * Render a schedule back to the `[{time, timeAsSeconds, value}, …]` array shape used by both
+ * Nightscout and the stored profile document.
+ *
+ * Blocks carry durations, not start times, so each entry's start is the running sum of the blocks
+ * before it. Inverse of [blockFromJson] for any schedule that one accepts.
+ */
+fun List<Block>.toJsonArray(): JsonArray {
+    var startSeconds = 0
+    return buildJsonArray {
+        for (block in this@toJsonArray) {
+            add(timeValueObject(startSeconds, block.amount))
+            startSeconds += T.msecs(block.duration).secs().toInt()
+        }
+    }
+}
+
+/** [toJsonArray] for the low side of a target schedule. */
+fun List<TargetBlock>.lowToJsonArray(): JsonArray = toJsonArray { it.lowTarget }
+
+/** [toJsonArray] for the high side of a target schedule. */
+fun List<TargetBlock>.highToJsonArray(): JsonArray = toJsonArray { it.highTarget }
+
+private fun List<TargetBlock>.toJsonArray(select: (TargetBlock) -> Double): JsonArray {
+    var startSeconds = 0
+    return buildJsonArray {
+        for (block in this@toJsonArray) {
+            add(timeValueObject(startSeconds, select(block)))
+            startSeconds += T.msecs(block.duration).secs().toInt()
+        }
+    }
+}
+
+private fun timeValueObject(startSeconds: Int, value: Double): JsonObject =
+    buildJsonObject {
+        put("time", hourLabel(startSeconds))
+        put("timeAsSeconds", startSeconds)
+        put("value", value)
+    }
+
+/** `org.json` adapter for [toJsonArray], mirroring [blockFromJsonArray] on the read side. */
+fun List<Block>.toJSONArray(): JSONArray = JSONArray(toJsonArray().toString())
+
+/** `org.json` adapter for [lowToJsonArray]. */
+fun List<TargetBlock>.lowToJSONArray(): JSONArray = JSONArray(lowToJsonArray().toString())
+
+/** `org.json` adapter for [highToJsonArray]. */
+fun List<TargetBlock>.highToJSONArray(): JSONArray = JSONArray(highToJsonArray().toString())
+
+/** One block covering the whole day — the shape a freshly seeded or damaged schedule takes. */
+fun singleBlock(value: Double): List<Block> = listOf(Block(T.hours(24).msecs(), value))
+
+/** [singleBlock] for a target schedule. */
+fun singleTargetBlock(low: Double, high: Double): List<TargetBlock> = listOf(TargetBlock(T.hours(24).msecs(), low, high))
