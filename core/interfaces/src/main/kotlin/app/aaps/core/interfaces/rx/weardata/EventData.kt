@@ -2,11 +2,10 @@ package app.aaps.core.interfaces.rx.weardata
 
 import app.aaps.core.interfaces.rx.events.Event
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
-import java.util.Date
-import java.util.Objects
 import kotlin.time.Clock
 
 @Serializable
@@ -64,7 +63,7 @@ sealed class EventData : Event() {
             }
 
         override fun hashCode(): Int {
-            return Objects.hash(timeStamp, fingerprint)
+            return 31 * timeStamp.hashCode() + fingerprint.hashCode()
         }
     }
 
@@ -164,7 +163,7 @@ sealed class EventData : Event() {
     ) : EventData() {
 
         override fun toString() =
-            "HR ${beatsPerMinute.toInt()} at ${Date(timestamp)} for ${duration / 1000.0}sec $device"
+            "HR ${beatsPerMinute.toInt()} at ${Instant.fromEpochMilliseconds(timestamp)} for ${duration / 1000.0}sec $device"
     }
 
     @Serializable
@@ -181,7 +180,7 @@ sealed class EventData : Event() {
     ) : EventData() {
 
         override fun toString() =
-            "STEPS 5min: $steps5min, 10min: $steps10min, 15min: $steps15min, 30min: $steps30min, 60min: $steps60min, 180min: $steps180min at ${Date(timestamp)} for ${duration / 1000.0}sec $device"
+            "STEPS 5min: $steps5min, 10min: $steps10min, 15min: $steps15min, 30min: $steps30min, 60min: $steps60min, 180min: $steps180min at ${Instant.fromEpochMilliseconds(timestamp)} for ${duration / 1000.0}sec $device"
     }
 
     @Serializable
@@ -311,7 +310,7 @@ sealed class EventData : Event() {
             }
 
         override fun hashCode(): Int {
-            return Objects.hash(timeStamp, color)
+            return 31 * timeStamp.hashCode() + color.hashCode()
         }
 
         override fun compareTo(other: SingleBg): Int {

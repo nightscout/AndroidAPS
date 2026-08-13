@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.utils
 
-import androidx.annotation.VisibleForTesting
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -21,7 +20,7 @@ object MidnightTime {
      *
      * Note this cache has never actually filled - see [calc].
      */
-    @VisibleForTesting
+    // Visible for testing only.
     val times = HashMap<Long, Long>()
 
     private const val THRESHOLD = 100000
@@ -97,7 +96,7 @@ object MidnightTime {
         return date.atStartOfDayIn(tz).toEpochMilliseconds()
     }
 
-    @VisibleForTesting
+    // Visible for testing only.
     fun resetCache() {
         times.clear()
     }

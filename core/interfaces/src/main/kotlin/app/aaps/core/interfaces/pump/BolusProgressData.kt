@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicLong
+import kotlin.concurrent.atomics.AtomicLong
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
 
 /**
  * Core-controlled bolus progress state.
@@ -24,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong
  * instead (`ImplementationModule.provideBolusProgressData`, which keeps the singleton scope and
  * supplies the application-scoped CoroutineScope).
  */
+@OptIn(ExperimentalAtomicApi::class)
 class BolusProgressData(
     val ch: ConcentrationHelper,
     private val appScope: CoroutineScope,
@@ -37,7 +40,7 @@ class BolusProgressData(
     private val generation = AtomicLong(0)
 
     /** Snapshot of the current generation, captured by the client watchdog when it arms (see [markStalled]). */
-    val currentGeneration: Long get() = generation.get()
+    val currentGeneration: Long get() = generation.load()
 
     /**
      * Called by CommandQueue before bolus delivery starts.
@@ -47,7 +50,7 @@ class BolusProgressData(
      * wipe the progress state of a NEWER bolus that has already started (see [clear]).
      */
     fun start(insulin: Double, isSMB: Boolean, isPriming: Boolean = false): Long {
-        val gen = generation.incrementAndGet()
+        val gen = generation.incrementAndFetch()
         _state.value = BolusProgressState(
             insulin = insulin,
             isSMB = isSMB,
@@ -129,7 +132,7 @@ class BolusProgressData(
      * mirror, whose relayed frames are timestamp-ordered. A per-command MASTER bolus MUST use the generation-scoped
      * [completeAndAutoClear] overload instead (same rationale as [clear] vs [clear]).
      */
-    fun completeAndAutoClear() = completeAndAutoClear(generation.get())
+    fun completeAndAutoClear() = completeAndAutoClear(generation.load())
 
     /**
      * Generation-scoped completion for a single master bolus command (mirror of [clear]). Guards BOTH the immediate
@@ -140,11 +143,11 @@ class BolusProgressData(
      */
     fun completeAndAutoClear(expectedGeneration: Long) {
         _state.update { current ->
-            if (current != null && generation.get() == expectedGeneration) current.copy(percent = 100, stalled = false) else current
+            if (current != null && generation.load() == expectedGeneration) current.copy(percent = 100, stalled = false) else current
         }
         appScope.launch {
             delay(AUTO_CLEAR_DELAY_MS)
-            if (generation.get() == expectedGeneration) _state.value = null
+            if (generation.load() == expectedGeneration) _state.value = null
         }
     }
 
@@ -179,7 +182,7 @@ class BolusProgressData(
      * a no-op instead of wiping the state it just installed.
      */
     fun clear(expectedGeneration: Long) {
-        _state.update { current -> if (generation.get() == expectedGeneration) null else current }
+        _state.update { current -> if (generation.load() == expectedGeneration) null else current }
     }
 
     /**
@@ -197,7 +200,7 @@ class BolusProgressData(
      */
     fun markStalled(expectedGeneration: Long) {
         _state.update {
-            if (it != null && it.percent < 100 && generation.get() == expectedGeneration) it.copy(stalled = true)
+            if (it != null && it.percent < 100 && generation.load() == expectedGeneration) it.copy(stalled = true)
             else it
         }
     }
