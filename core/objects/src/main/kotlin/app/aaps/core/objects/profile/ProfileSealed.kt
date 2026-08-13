@@ -29,9 +29,15 @@ import app.aaps.core.objects.extensions.lowTargetBlockValueBySeconds
 import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.extensions.shiftTargetBlock
 import app.aaps.core.objects.extensions.targetBlockValueBySeconds
-import app.aaps.core.objects.extensions.toJson
+import app.aaps.core.objects.extensions.toJsonObject
 import app.aaps.core.ui.R
 import app.aaps.core.utils.MidnightUtils
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.TimeZone
@@ -381,69 +387,41 @@ sealed class ProfileSealed(
             timeZone = TimeZone.getDefault()
         )
 
-    override fun toPureNsJson(dateUtil: DateUtil): JSONObject {
-        val o = JSONObject()
-        o.put("units", units.asText)
-        iCfg?.let { o.put("iCfg", it.toJson()) }
-        o.put("timezone", dateUtil.timeZoneByOffset(utcOffset))
-        // SENS
-        val sens = JSONArray()
+    /**
+     * One `[{time, timeAsSeconds, value}, …]` schedule.
+     *
+     * The five schedules below used to be four near-identical loops with the entry shape written out
+     * each time. They differ only in which blocks set the boundaries and which accessor supplies the
+     * value, so that is all this takes: [durations] gives the hour boundaries, [valueAt] answers for
+     * each one. Note the value comes from the accessor, not from the block - the accessors apply
+     * percentage and time shift, which is why a raw block amount would be wrong here.
+     */
+    private fun schedule(durations: List<Long>, valueAt: (Int) -> Double): JsonArray = buildJsonArray {
         var elapsedHours = 0L
-        isfBlocks.forEach {
-            sens.put(
-                JSONObject()
-                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
-                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                    .put("value", getIsfTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
+        durations.forEach { duration ->
+            val seconds = T.hours(elapsedHours).secs()
+            add(
+                buildJsonObject {
+                    put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
+                    put("timeAsSeconds", seconds)
+                    put("value", valueAt(seconds.toInt()))
+                }
             )
-            elapsedHours += T.msecs(it.duration).hours()
+            elapsedHours += T.msecs(duration).hours()
         }
-        o.put("sens", sens)
-        val carbratio = JSONArray()
-        elapsedHours = 0L
-        icBlocks.forEach {
-            carbratio.put(
-                JSONObject()
-                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
-                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                    .put("value", getIcTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
-            )
-            elapsedHours += T.msecs(it.duration).hours()
-        }
-        o.put("carbratio", carbratio)
-        val basal = JSONArray()
-        elapsedHours = 0L
-        basalBlocks.forEach {
-            basal.put(
-                JSONObject()
-                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
-                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                    .put("value", getBasalTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
-            )
-            elapsedHours += T.msecs(it.duration).hours()
-        }
-        o.put("basal", basal)
-        val targetLow = JSONArray()
-        val targetHigh = JSONArray()
-        elapsedHours = 0L
-        targetBlocks.forEach {
-            targetLow.put(
-                JSONObject()
-                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
-                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                    .put("value", getTargetLowTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
-            )
-            targetHigh.put(
-                JSONObject()
-                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
-                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                    .put("value", getTargetHighTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
-            )
-            elapsedHours += T.msecs(it.duration).hours()
-        }
-        o.put("target_low", targetLow)
-        o.put("target_high", targetHigh)
-        return o
+    }
+
+    override fun toPureNsJson(dateUtil: DateUtil): JsonObject = buildJsonObject {
+        put("units", units.asText)
+        iCfg?.let { put("iCfg", it.toJsonObject()) }
+        put("timezone", dateUtil.timeZoneByOffset(utcOffset))
+        put("sens", schedule(isfBlocks.map { it.duration }, ::getIsfTimeFromMidnight))
+        put("carbratio", schedule(icBlocks.map { it.duration }, ::getIcTimeFromMidnight))
+        put("basal", schedule(basalBlocks.map { it.duration }, ::getBasalTimeFromMidnight))
+        // Low and high share the same boundaries, so they walk the same durations.
+        val targetDurations = targetBlocks.map { it.duration }
+        put("target_low", schedule(targetDurations, ::getTargetLowTimeFromMidnight))
+        put("target_high", schedule(targetDurations, ::getTargetHighTimeFromMidnight))
     }
 
     override fun getMaxDailyBasal(): Double = basalBlocks.maxByOrNull { it.amount }?.amount ?: 0.0

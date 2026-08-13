@@ -176,7 +176,8 @@ class ATProfile @Inject constructor(
     }
 
     fun data(circadian: Boolean = false): PureProfile? {
-        val json: JSONObject = profile.toPureNsJson(dateUtil)
+        // Still org.json below: the overrides use org.json arrays and pureProfileFromJson takes one.
+        val json = JSONObject(profile.toPureNsJson(dateUtil).toString())
         try {
             if (circadian) {
                 json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
@@ -200,7 +201,7 @@ class ATProfile @Inject constructor(
         if (profileName.isEmpty())
             profileName = rh.gs(R.string.autotune_tunedprofile_name)
         try {
-            store.put(profileName, tunedProfile.toPureNsJson(dateUtil))
+            store.put(profileName, JSONObject(tunedProfile.toPureNsJson(dateUtil).toString()))
             json.put("defaultProfile", profileName)
             json.put("store", store)
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))

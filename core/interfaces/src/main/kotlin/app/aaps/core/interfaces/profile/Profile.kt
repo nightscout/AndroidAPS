@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 interface Profile {
 
@@ -133,7 +133,7 @@ interface Profile {
     fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String
 
     fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile
-    fun toPureNsJson(dateUtil: DateUtil): JSONObject
+    fun toPureNsJson(dateUtil: DateUtil): JsonObject
     fun getMaxDailyBasal(): Double
     fun baseBasalSum(): Double
     fun percentageBasalSum(): Double

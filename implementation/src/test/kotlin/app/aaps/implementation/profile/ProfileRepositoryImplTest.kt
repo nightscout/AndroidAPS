@@ -188,6 +188,86 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
     // ---------------------------------------------------------------------------------------------
 
     /** Stub the pre-JSON per-profile keys so the legacy reader finds [names]. */
+    /** A schedule the way a pre-JSON build wrote it. ASCII digits, whole hours, both time fields. */
+    private fun legacySchedule(vararg hourToValue: Pair<Int, Double>): String =
+        hourToValue.joinToString(",", "[", "]") { (hour, value) ->
+            val hh = if (hour < 10) "0$hour" else "$hour"
+            """{"time":"$hh:00","timeAsSeconds":${hour * 3600},"value":$value}"""
+        }
+
+    /**
+     * One profile in the pre-JSON keys, shaped like real data rather than a placeholder.
+     *
+     * The values are taken from an actual 3.4.x install: mmol/L, several blocks per schedule, and the
+     * long decimals that come out of unit conversion. The existing [givenLegacyProfiles] fixture uses
+     * one round-numbered block per schedule, which cannot catch a boundary or precision mistake.
+     */
+    private fun givenRealisticLegacyProfile(name: String) {
+        whenever(preferences.get(ProfileIntKey.AmountOfProfiles)).thenReturn(1)
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, 0)).thenReturn(name)
+        whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, 0)).thenReturn(false)
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, 0))
+            .thenReturn(legacySchedule(0 to 8.1, 7 to 6.0, 10 to 8.0))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, 0))
+            .thenReturn(legacySchedule(0 to 9.523809523809524))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, 0))
+            .thenReturn(legacySchedule(0 to 1.0, 6 to 1.27, 11 to 1.6300000000000001))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, 0))
+            .thenReturn(legacySchedule(0 to 5.5, 11 to 6.6000000000000005))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, 0))
+            .thenReturn(legacySchedule(0 to 5.5, 11 to 7.7))
+    }
+
+    /**
+     * The 3.4.x upgrade: legacy keys in, one JSON document out, nothing altered on the way.
+     *
+     * This is the highest-risk path in the profile rework - it runs once, silently, on every upgrading
+     * install, and a mistake in it corrupts profiles that were fine. It was verified against a real
+     * device carrying five such profiles; this pins the same guarantees so a future change cannot undo
+     * it. Times, values and the unit flag must survive exactly, including the long decimals, because
+     * blocks are stored as durations and rebuilt as start times.
+     */
+    @Test
+    fun `legacy keys migrate into the document without altering any value`() = runTest {
+        givenRealisticLegacyProfile("Vsedni den")
+        whenever(config.APS).thenReturn(true)
+
+        val sut = createSut()
+
+        assertThat(sut.names()).containsExactly("Vsedni den")
+        val migrated = JSONObject(localWrites().last()).getJSONArray("profiles").getJSONObject(0)
+        assertThat(migrated.getString("name")).isEqualTo("Vsedni den")
+        assertThat(migrated.getBoolean("mgdl")).isFalse()
+
+        fun schedule(key: String) = migrated.getJSONArray(key).let { array ->
+            (0 until array.length()).map { array.getJSONObject(it).getInt("timeAsSeconds") to array.getJSONObject(it).getDouble("value") }
+        }
+
+        assertThat(schedule("ic")).containsExactly(0 to 8.1, 25200 to 6.0, 36000 to 8.0).inOrder()
+        assertThat(schedule("isf")).containsExactly(0 to 9.523809523809524).inOrder()
+        assertThat(schedule("basal")).containsExactly(0 to 1.0, 21600 to 1.27, 39600 to 1.6300000000000001).inOrder()
+        assertThat(schedule("targetLow")).containsExactly(0 to 5.5, 39600 to 6.6000000000000005).inOrder()
+        assertThat(schedule("targetHigh")).containsExactly(0 to 5.5, 39600 to 7.7).inOrder()
+    }
+
+    /** The migrated profile must also be readable back, not merely written correctly. */
+    @Test
+    fun `a migrated profile is usable as a profile`() = runTest {
+        givenRealisticLegacyProfile("Vsedni den")
+        whenever(config.APS).thenReturn(true)
+
+        val sut = createSut()
+        val profile = sut.profiles.value.single()
+
+        assertThat(profile.mgdl).isFalse()
+        assertThat(profile.ic).hasSize(3)
+        assertThat(profile.basal).hasSize(3)
+        assertThat(profile.target).hasSize(2)
+        // Durations, not start times: 00:00-07:00 is seven hours.
+        assertThat(profile.ic.first().duration).isEqualTo(7 * 3600 * 1000L)
+        assertThat(profile.basal.last().amount).isEqualTo(1.6300000000000001)
+    }
+
     private fun givenLegacyProfiles(vararg names: String) {
         whenever(preferences.get(ProfileIntKey.AmountOfProfiles)).thenReturn(names.size)
         names.forEachIndexed { i, name ->
