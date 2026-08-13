@@ -409,7 +409,14 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ start() }, fabricPrivacy::logException)
+            .subscribe({
+                           // 授权锁:未验证/过期不启动主页与向导,避免覆盖授权弹窗
+                           val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                           val verified = prefs.getBoolean("password_verified", false)
+                           val lastTs = prefs.getLong("last_verify_time", 0)
+                           val expired = lastTs > 0 && (System.currentTimeMillis() - lastTs >= EXPIRE_15DAY_MS)
+                           if (verified && !expired) start()
+                       }, fabricPrivacy::logException)
 
         // 返回键加固：未验证/过期直接退出，无法绕过弹窗
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
