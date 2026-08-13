@@ -162,6 +162,8 @@
     <string name="pref_complication_1">Complication 1</string>
     <string name="pref_complication_2">Complication 2</string>
     <string name="pref_complication_3">Complication 3</string>
+    <string name="pref_complication_4">Complication 4</string>
+    <string name="pref_complication_5">Complication 5</string>
     <string name="complication_summary_none">Tap to select a data source</string>
     <string name="cwf_complication_layout">Complication layout</string>
     <string name="cwf_complication_layout_description">Position and size of the complications, taken from the loaded custom watch face.</string>
@@ -247,12 +249,19 @@
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
     <string name="key_complication_bg_graph_hours" translatable="false">complication_bg_graph_hours</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
+    <string name="key_show_complication_1" translatable="false">show_complication_1</string>
+    <string name="key_show_complication_2" translatable="false">show_complication_2</string>
+    <string name="key_show_complication_3" translatable="false">show_complication_3</string>
+    <string name="key_show_complication_4" translatable="false">show_complication_4</string>
+    <string name="key_show_complication_5" translatable="false">show_complication_5</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="key_last_selected_watchface" translatable="false">last_selected_watchface</string>
     <string name="key_complication_1" translatable="false">complication_1</string>
     <string name="key_complication_2" translatable="false">complication_2</string>
     <string name="key_complication_3" translatable="false">complication_3</string>
+    <string name="key_complication_4" translatable="false">complication_4</string>
+    <string name="key_complication_5" translatable="false">complication_5</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>

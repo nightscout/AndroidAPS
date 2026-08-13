@@ -11,6 +11,8 @@ enum class ViewKeys(val key: String, @StringRes val comment: Int) {
     COMPLICATION1("complication1", R.string.cwf_comment_complication),
     COMPLICATION2("complication2", R.string.cwf_comment_complication),
     COMPLICATION3("complication3", R.string.cwf_comment_complication),
+    COMPLICATION4("complication4", R.string.cwf_comment_complication),
+    COMPLICATION5("complication5", R.string.cwf_comment_complication),
     FREETEXT1("freetext1", R.string.cwf_comment_freetext1),
     FREETEXT2("freetext2", R.string.cwf_comment_freetext2),
     FREETEXT3("freetext3", R.string.cwf_comment_freetext3),

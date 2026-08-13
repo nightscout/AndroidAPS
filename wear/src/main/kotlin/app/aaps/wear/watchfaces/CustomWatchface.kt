@@ -12,7 +12,6 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.wearable.complications.ComplicationData as WireComplicationData
 import android.text.format.DateFormat
 import android.util.TypedValue
 import android.view.Gravity
@@ -32,26 +31,12 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
-import androidx.wear.watchface.CanvasComplication
-import androidx.wear.watchface.CanvasComplicationFactory
 import androidx.wear.watchface.ComplicationSlot
 import androidx.wear.watchface.ComplicationSlotsManager
-import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.complications.ComplicationSlotBounds
-import androidx.wear.watchface.complications.DefaultComplicationDataSourcePolicy
-import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
-import androidx.wear.watchface.complications.data.toApiComplicationData
-import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
-import androidx.wear.watchface.complications.rendering.ComplicationDrawable
-import androidx.wear.watchface.complications.rendering.ComplicationStyle
 import androidx.wear.watchface.style.CurrentUserStyleRepository
 import androidx.wear.watchface.style.UserStyleSchema
-import androidx.wear.watchface.style.UserStyleSetting
-import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting
-import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting.ComplicationSlotOverlay
-import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting.ComplicationSlotsOption
-import androidx.wear.watchface.style.WatchFaceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
@@ -184,6 +169,8 @@ class CustomWatchface : BaseWatchFace() {
         const val COMPLICATION_SLOT_ID_1 = 101
         const val COMPLICATION_SLOT_ID_2 = 102
         const val COMPLICATION_SLOT_ID_3 = 103
+        const val COMPLICATION_SLOT_ID_4 = 104
+        const val COMPLICATION_SLOT_ID_5 = 105
 
         /**
          * The fixed coordinate space every CWF json declares its geometry in. A format constant
@@ -447,20 +434,6 @@ class CustomWatchface : BaseWatchFace() {
         val ringSecondaryColor: Int
             get() = cwf.getColor(json?.optString(JsonKeys.RINGSECONDARYCOLOR.key) ?: "", ComplicationStyleValues.RING_SECONDARY_COLOR_DEFAULT)
     }
-
-
-    /**
-     * Everything complication-related for one engine instance: the slots' identity, their live state,
-     * the CWF-wide style, and the cross-slot user-style mechanism that keeps declared bounds in step
-     * with what is drawn.
-     *
-     * Takes [cwf] as a constructor parameter, the same idiom [ViewMap] and [DynProvider] already use
-     * in this file. A few things deliberately stay on [CustomWatchface] rather than moving here,
-     * because Kotlin visibility does not reach into a nested class: `ensureInjected()` /
-     * `daggerInjectionComplete` are `protected` on `BaseWatchFace`, `ComplicationRender` is a
-     * `protected` type of `WatchFace`, and `::binding.isInitialized` is only usable inside the class
-     * that declares `binding`.
-     */
 
     private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
         1L   -> highColor
@@ -765,6 +738,7 @@ class CustomWatchface : BaseWatchFace() {
             .put(JsonKeys.RESERVOIRURGENTCOLOR.key, String.format("#%06X", 0xFFFFFF and ContextCompat.getColor(this, R.color.dark_alarm)))
             .put(JsonKeys.POINTSIZE.key, 2)
             .put(JsonKeys.ENABLESECOND.key, true)
+            .put(JsonKeys.COMPLICATIONSTYLE.key, JSONObject())
 
         binding.mainLayout.forEach { view ->
             val params = view.layoutParams as FrameLayout.LayoutParams
@@ -804,6 +778,8 @@ class CustomWatchface : BaseWatchFace() {
                 }
             }
         }
+        json.put(JsonKeys.DYNPREF.key, JSONObject())
+        json.put(JsonKeys.DYNDATA.key, JSONObject())
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
         val drawableDataMap: CwfResDataMap = mutableMapOf()
         getResourceByteArray(R.drawable.watchface_custom)?.let {
@@ -952,9 +928,11 @@ class CustomWatchface : BaseWatchFace() {
         // slot ids stay as named constants because they are a stable public contract (the system
         // persists the chosen data source per watch face component + slot id) and must never be
         // derived from something as movable as an enum ordinal.
-        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, slotId = COMPLICATION_SLOT_ID_1),
-        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, slotId = COMPLICATION_SLOT_ID_2),
-        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, slotId = COMPLICATION_SLOT_ID_3),
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, PrefMap.SHOW_COMPLICATION_1, slotId = COMPLICATION_SLOT_ID_1),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, PrefMap.SHOW_COMPLICATION_2, slotId = COMPLICATION_SLOT_ID_2),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, PrefMap.SHOW_COMPLICATION_3, slotId = COMPLICATION_SLOT_ID_3),
+        COMPLICATION4(ViewKeys.COMPLICATION4.key, R.id.complication4, PrefMap.SHOW_COMPLICATION_4, slotId = COMPLICATION_SLOT_ID_4),
+        COMPLICATION5(ViewKeys.COMPLICATION5.key, R.id.complication5, PrefMap.SHOW_COMPLICATION_5, slotId = COMPLICATION_SLOT_ID_5),
         CHART(ViewKeys.CHART.key, R.id.chart),
         COVER_CHART(
             key = ViewKeys.COVER_CHART.key,
@@ -1427,6 +1405,11 @@ class CustomWatchface : BaseWatchFace() {
     private enum class PrefMap(val key: String, @StringRes val prefKey: Int, val defaultValue: Any, val typeBool: Boolean) {
 
         SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob, true, true),
+        SHOW_COMPLICATION_1(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION1.key, R.string.key_show_complication_1, true, true),
+        SHOW_COMPLICATION_2(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION2.key, R.string.key_show_complication_2, true, true),
+        SHOW_COMPLICATION_3(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION3.key, R.string.key_show_complication_3, true, true),
+        SHOW_COMPLICATION_4(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION4.key, R.string.key_show_complication_4, true, true),
+        SHOW_COMPLICATION_5(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION5.key, R.string.key_show_complication_5, true, true),
         SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob, false, true),
         SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob, true, true),
         SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta, true, true),

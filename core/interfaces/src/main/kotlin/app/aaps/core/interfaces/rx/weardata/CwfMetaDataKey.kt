@@ -31,7 +31,12 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true),
     CWF_PREF_WATCH_SHOW_WEEK_NUMBER("key_show_week_number", R.string.pref_show_week_number, true),
     CWF_PREF_WATCH_SHOW_DATE("key_show_date", R.string.pref_show_date, true),
-    CWF_PREF_WATCH_SHOW_SECONDS("key_show_seconds", R.string.pref_show_seconds, true);
+    CWF_PREF_WATCH_SHOW_SECONDS("key_show_seconds", R.string.pref_show_seconds, true),
+    CWF_PREF_WATCH_SHOW_COMPLICATION1("key_show_complication1", R.string.pref_show_complication1, true),
+    CWF_PREF_WATCH_SHOW_COMPLICATION2("key_show_complication2", R.string.pref_show_complication2, true),
+    CWF_PREF_WATCH_SHOW_COMPLICATION3("key_show_complication3", R.string.pref_show_complication3, true),
+    CWF_PREF_WATCH_SHOW_COMPLICATION4("key_show_complication4", R.string.pref_show_complication4, true),
+    CWF_PREF_WATCH_SHOW_COMPLICATION5("key_show_complication5", R.string.pref_show_complication5, true);
 
     companion object {
 

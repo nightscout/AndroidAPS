@@ -11,26 +11,42 @@
 
     <FrameLayout
         android:id="@+id/complication1"
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:layout_marginTop="100px"
-        android:layout_marginLeft="100px"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
         android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/complication2"
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:layout_marginTop="200px"
-        android:layout_marginLeft="100px"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
         android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/complication3"
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:layout_marginTop="300px"
-        android:layout_marginLeft="100px"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication4"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication5"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
         android:visibility="gone" />
 
     <lecho.lib.hellocharts.view.LineChartView
