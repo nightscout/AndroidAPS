@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.notifications
 
-import androidx.annotation.RawRes
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_FULLSCREEN
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_INTERNAL
 
@@ -23,7 +22,7 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_I
 interface AlarmSoundPlayer {
 
     /**
-     * Start looping playback of [soundRes], recording [ownerTag] as the current owner. Any previous
+     * Start looping playback of [sound], recording [ownerTag] as the current owner. Any previous
      * playback (from either owner) is stopped first.
      *
      * @param postedAtElapsedRealtime [android.os.SystemClock.elapsedRealtime] when an accompanying
@@ -32,7 +31,7 @@ interface AlarmSoundPlayer {
      *   auto-launch). Pass 0 (the default) when there is no accompanying channel sound — the
      *   duration probe is then skipped entirely.
      */
-    fun play(@RawRes soundRes: Int, ownerTag: String, postedAtElapsedRealtime: Long = 0L)
+    fun play(sound: AlarmSound, ownerTag: String, postedAtElapsedRealtime: Long = 0L)
 
     /** Stop and release playback **only if** [ownerTag] is the current owner. No-op otherwise. */
     fun stop(ownerTag: String)

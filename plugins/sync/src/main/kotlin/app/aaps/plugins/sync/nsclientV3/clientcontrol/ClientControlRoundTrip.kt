@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
@@ -180,7 +181,7 @@ class ClientControlRoundTrip @Inject constructor(
                     NotificationId.BOLUS_DELIVERY_FAILED,
                     // payload is the master-authored full text ("title\n<pump detail>"); show it as-is, don't re-prefix the title.
                     ack.payload ?: rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror),
-                    validMinutes = 0, soundRes = app.aaps.core.ui.R.raw.boluserror
+                    validMinutes = 0, sound = AlarmSound.BOLUS_ERROR
                 )
             return
         }

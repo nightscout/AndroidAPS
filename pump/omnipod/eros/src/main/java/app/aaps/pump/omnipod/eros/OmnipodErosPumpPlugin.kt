@@ -19,6 +19,7 @@ import app.aaps.core.data.time.T.Companion.msecs
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
@@ -365,7 +366,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS")
-                notificationManager.post(NotificationId.OMNIPOD_UNKNOWN_TBR, R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware, soundRes = app.aaps.core.ui.R.raw.boluserror)
+                notificationManager.post(NotificationId.OMNIPOD_UNKNOWN_TBR, R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware, sound = AlarmSound.BOLUS_ERROR)
             }
         } else if (!podStateManager.isTempBasalRunning && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded")
@@ -659,7 +660,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             return pumpEnactResultProvider.get().success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex))
         }
 
-        uiInteraction.runAlarm(rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString(), rh.gs(R.string.omnipod_eros_pod_management_pulse_log), 0)
+        uiInteraction.runAlarm(rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString(), rh.gs(R.string.omnipod_eros_pod_management_pulse_log), null)
         return pumpEnactResultProvider.get().success(true).enacted(false)
     }
 

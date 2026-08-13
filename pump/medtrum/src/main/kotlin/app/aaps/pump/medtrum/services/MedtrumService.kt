@@ -10,6 +10,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -617,7 +618,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                             NotificationId.PUMP_SYNC_ERROR,
                             R.string.pump_sync_error,
                             level = NotificationLevel.URGENT,
-                            soundRes = app.aaps.core.ui.R.raw.alarm
+                            sound = AlarmSound.ALARM
                         )
                     } else if (failureCount >= 2) {
                         break
@@ -705,7 +706,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                         NotificationId.PUMP_ERROR,
                         R.string.patch_reset_after_primed_error,
                         level = NotificationLevel.URGENT,
-                        soundRes = app.aaps.core.ui.R.raw.alarm
+                        sound = AlarmSound.ALARM
                     )
                 }
             }
@@ -745,7 +746,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                     NotificationId.PUMP_SUSPENDED,
                     R.string.pump_is_suspended_hour_max,
                     level = NotificationLevel.URGENT,
-                    soundRes = app.aaps.core.ui.R.raw.alarm
+                    sound = AlarmSound.ALARM
                 )
                 // Pump will report proper TBR for this from loadEvents()
                 scope.launch { commandQueue.loadEvents() }
@@ -756,7 +757,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                     NotificationId.PUMP_SUSPENDED,
                     R.string.pump_is_suspended_day_max,
                     level = NotificationLevel.URGENT,
-                    soundRes = app.aaps.core.ui.R.raw.alarm
+                    sound = AlarmSound.ALARM
                 )
                 // Pump will report proper TBR for this from loadEvents()
                 scope.launch { commandQueue.loadEvents() }
@@ -776,7 +777,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                 notificationManager.post(
                     NotificationId.PUMP_ERROR,
                     R.string.pump_error, alarmState?.let { medtrumPump.alarmStateToString(it) },
-                    soundRes = app.aaps.core.ui.R.raw.alarm
+                    sound = AlarmSound.ALARM
                 )
                 // Get pump status, use readStatus here as for loadEvents() we cannot be sure callback is executed
                 scope.launch {

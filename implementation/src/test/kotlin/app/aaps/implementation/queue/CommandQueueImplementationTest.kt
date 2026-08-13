@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -262,7 +263,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         return result
     }
 
-    // Both helpers match the String post() overload (id, text, level, validMinutes, soundRes, actions, validityCheck).
+    // Both helpers match the String post() overload (id, text, level, validMinutes, sound, actions, validityCheck).
     private fun verifyOkPosted(text: String) =
         verify(notificationManager).post(
             eq(NotificationId.PROFILE_SET_OK), eq(text), any<NotificationLevel>(), any<Int>(),
@@ -272,7 +273,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     private fun verifyFailurePosted(text: String) =
         verify(notificationManager).post(
             eq(NotificationId.FAILED_UPDATE_PROFILE), eq(text), any<NotificationLevel>(), any<Int>(),
-            eq(app.aaps.core.ui.R.raw.boluserror), any<List<NotificationAction>>(), anyOrNull()
+            eq(AlarmSound.BOLUS_ERROR), any<List<NotificationAction>>(), anyOrNull()
         )
 
     private fun verifyNothingPosted() =

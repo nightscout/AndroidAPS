@@ -4,6 +4,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -145,7 +146,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
 
         // Critical alarms trigger the global alarm sound overlay
         if (isCritical) {
-            uiInteraction.runAlarm(alarmMsg, resourceHelper.gs(app.aaps.core.ui.R.string.alarm), app.aaps.core.ui.R.raw.error)
+            uiInteraction.runAlarm(alarmMsg, resourceHelper.gs(app.aaps.core.ui.R.string.alarm), AlarmSound.ERROR)
         }
 
         notificationManager.post(
@@ -153,7 +154,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             text = alarmMsg,
             level = if (isCritical) NotificationLevel.IMPORTANT else NotificationLevel.INFO,
             date = alarms.getOccuredAlarmTimestamp(alarmCode),
-            soundRes = if (!isCritical) app.aaps.core.ui.R.raw.error else null,
+            sound = if (!isCritical) AlarmSound.ERROR else null,
             actions = listOf(
                 NotificationAction(
                     TextRef.AndroidRes(

@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -134,7 +135,7 @@ class EquilPumpPlugin @Inject constructor(
                 // (alarms now come from the GATT history read on every connection, not just from an
                 // advertisement scan caught mid-bolus). See #5040.
                 notificationManager.dismiss(NotificationId.EQUIL_ALARM)
-                notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, soundRes = app.aaps.core.ui.R.raw.alarm)
+                notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, sound = AlarmSound.ALARM)
                 // But only halt bolus tracking if a bolus is actually delivering.
                 if (commandQueue.performing()?.commandType == Command.CommandType.BOLUS) {
                     stopBolusDelivering()
@@ -416,7 +417,7 @@ class EquilPumpPlugin @Inject constructor(
                 notificationManager.post(
                     NotificationId.EQUIL_LOW_BATTERY,
                     rh.gs(R.string.equil_low_battery) + battery + "%",
-                    soundRes = app.aaps.core.ui.R.raw.alarm
+                    sound = AlarmSound.ALARM
                 )
                 preferences.put(EquilBooleanKey.AlarmBattery10, true)
             } else {
@@ -425,7 +426,7 @@ class EquilPumpPlugin @Inject constructor(
                         NotificationId.EQUIL_LOW_BATTERY,
                         rh.gs(R.string.equil_low_battery) + battery + "%",
                         NotificationLevel.IMPORTANT,
-                        soundRes = app.aaps.core.ui.R.raw.alarm
+                        sound = AlarmSound.ALARM
                     )
                 }
             }
@@ -440,7 +441,7 @@ class EquilPumpPlugin @Inject constructor(
                         notificationManager.post(
                             NotificationId.EQUIL_ALARM_INSULIN,
                             rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                            soundRes = app.aaps.core.ui.R.raw.alarm
+                            sound = AlarmSound.ALARM
                         )
                         preferences.put(EquilBooleanKey.AlarmInsulin10, true)
                     }
@@ -453,7 +454,7 @@ class EquilPumpPlugin @Inject constructor(
                         notificationManager.post(
                             NotificationId.EQUIL_ALARM_INSULIN,
                             rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                            soundRes = app.aaps.core.ui.R.raw.alarm
+                            sound = AlarmSound.ALARM
                         )
                         preferences.put(EquilBooleanKey.AlarmInsulin5, true)
                     }
@@ -464,7 +465,7 @@ class EquilPumpPlugin @Inject constructor(
                     notificationManager.post(
                         NotificationId.EQUIL_ALARM_INSULIN,
                         rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                        soundRes = app.aaps.core.ui.R.raw.alarm
+                        sound = AlarmSound.ALARM
                     )
                 }
             }

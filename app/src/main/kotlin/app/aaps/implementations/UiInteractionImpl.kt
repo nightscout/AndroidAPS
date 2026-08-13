@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Looper
 import android.widget.Toast
-import androidx.annotation.RawRes
+import app.aaps.core.interfaces.notifications.AlarmSound
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.ComposeMainActivity
@@ -45,7 +45,7 @@ class UiInteractionImpl @Inject constructor(
     override val mainActivity: Class<*> = ComposeMainActivity::class.java
     override val errorHelperActivity: Class<*> = ErrorActivity::class.java
 
-    override fun runAlarm(status: String, title: String, @RawRes soundId: Int) {
+    override fun runAlarm(status: String, title: String, sound: AlarmSound?) {
         // Persist the error as an announcement at fire time — gated by the NS-announcement
         // preference + APS build. Done here (not in ErrorActivity) so the record is written for
         // every alarm with the true trigger time, regardless of whether/how it is later
@@ -66,8 +66,8 @@ class UiInteractionImpl @Inject constructor(
         // from non-main threads. From those contexts we skip the foreground-direct optimization
         // entirely and use the FSI path, which is safe from any thread.
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            aapsLogger.debug(LTag.CORE, "runAlarm (off-main → FSI): $title - $status (sound=$soundId)")
-            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, soundId = soundId)
+            aapsLogger.debug(LTag.CORE, "runAlarm (off-main → FSI): $title - $status (sound=$sound)")
+            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound)
             return
         }
 
@@ -77,9 +77,9 @@ class UiInteractionImpl @Inject constructor(
             //   • Activity opens instantly, owns ramped audio from 0.
             //   • Works because the caller's process is already foreground (Android's
             //     background-activity-start restriction does not apply).
-            aapsLogger.debug(LTag.CORE, "runAlarm (foreground direct): $title - $status (sound=$soundId)")
+            aapsLogger.debug(LTag.CORE, "runAlarm (foreground direct): $title - $status (sound=$sound)")
             val intent = Intent(context, errorHelperActivity).apply {
-                putExtra(AlarmIntent.EXTRA_SOUND_ID, soundId)
+                putExtra(AlarmIntent.EXTRA_SOUND, sound?.name)
                 putExtra(AlarmIntent.EXTRA_STATUS, status)
                 putExtra(AlarmIntent.EXTRA_TITLE, title)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -90,14 +90,14 @@ class UiInteractionImpl @Inject constructor(
                 // Defensive: if the activity start is rejected for any reason, fall back to
                 // the FSI notification path so the alert is never silently lost.
                 aapsLogger.error(LTag.CORE, "runAlarm: direct startActivity failed, falling back to FSI", ex)
-                postFsiFallback(status, title, soundId)
+                postFsiFallback(status, title, sound)
             }
         } else {
             // Background path — FSI notification. Android auto-launches the activity on
             // lockscreen/idle, or shows a heads-up (with channel sound) when the user is
             // active in another app.
-            aapsLogger.debug(LTag.CORE, "runAlarm (background via FSI): $title - $status (sound=$soundId)")
-            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, soundId = soundId)
+            aapsLogger.debug(LTag.CORE, "runAlarm (background via FSI): $title - $status (sound=$sound)")
+            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound)
         }
     }
 
@@ -116,8 +116,8 @@ class UiInteractionImpl @Inject constructor(
      * visible signal that something tried to alarm. Best-effort; Toast can also fail (e.g.
      * if a system overlay permission is denied) but it costs nothing to try.
      */
-    private fun postFsiFallback(status: String, title: String, @RawRes soundId: Int) {
-        alarmNotificationManager.postFullScreenAlarm(status = status, title = title, soundId = soundId)
+    private fun postFsiFallback(status: String, title: String, sound: AlarmSound?) {
+        alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound)
         // Toast must be created on the main thread (we are — runAlarm guards above).
         runCatching {
             Toast.makeText(context, "ALARM: $title — $status", Toast.LENGTH_LONG).show()

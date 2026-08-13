@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.ui
 
-import androidx.annotation.RawRes
+import app.aaps.core.interfaces.notifications.AlarmSound
 
 /**
  * Interface to use activities located in different modules
@@ -18,9 +18,9 @@ interface UiInteraction {
      * Show ErrorHelperActivity and start alarm.
      * @param status message inside dialog
      * @param title title of dialog
-     * @param soundId sound resource. if == 0 alarm is not started
+     * @param sound alarm sound, or null for a silent alarm
      */
-    fun runAlarm(status: String, title: String, @RawRes soundId: Int = 0)
+    fun runAlarm(status: String, title: String, sound: AlarmSound? = null)
 
     /**
      * Stops any currently playing alarm (cancels FSI + all sound notifications).

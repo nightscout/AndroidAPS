@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.notifications
 
-import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.time.Clock
@@ -17,7 +16,7 @@ interface NotificationManager {
         text: String,
         level: NotificationLevel = id.defaultLevel,
         validMinutes: Int = 0,
-        @RawRes soundRes: Int? = null,
+        sound: AlarmSound? = null,
         actions: List<NotificationAction> = emptyList(),
         validityCheck: (() -> Boolean)? = null
     ): NotificationHandle
@@ -28,7 +27,7 @@ interface NotificationManager {
         level: NotificationLevel = id.defaultLevel,
         date: Long = Clock.System.now().toEpochMilliseconds(),
         validTo: Long = 0L,
-        @RawRes soundRes: Int? = null,
+        sound: AlarmSound? = null,
         actions: List<NotificationAction> = emptyList(),
         validityCheck: (() -> Boolean)? = null
     ): NotificationHandle
@@ -41,7 +40,7 @@ interface NotificationManager {
         validMinutes: Int = 0,
         date: Long = Clock.System.now().toEpochMilliseconds(),
         validTo: Long = 0L,
-        @RawRes soundRes: Int? = null,
+        sound: AlarmSound? = null,
         actions: List<NotificationAction> = emptyList(),
         validityCheck: (() -> Boolean)? = null
     ): NotificationHandle

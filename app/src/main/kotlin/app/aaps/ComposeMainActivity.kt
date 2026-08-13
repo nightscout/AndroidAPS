@@ -81,6 +81,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -643,7 +644,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     isSimpleMode = state.isSimpleMode,
                     onNavigate = { request -> handleNavigationRequest(request, navController) },
                     onActionsError = { comment, title ->
-                        uiInteraction.runAlarm(comment, title, app.aaps.core.ui.R.raw.boluserror)
+                        uiInteraction.runAlarm(comment, title, AlarmSound.BOLUS_ERROR)
                     },
                 )
 
@@ -799,7 +800,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 visibilityContext = visibilityContext,
                 onNavigationRequest = { request, nc -> handleNavigationRequest(request, nc) },
                 onShowDeliveryError = { comment, titleResId ->
-                    uiInteraction.runAlarm(comment, rh.gs(titleResId), app.aaps.core.ui.R.raw.boluserror)
+                    uiInteraction.runAlarm(comment, rh.gs(titleResId), AlarmSound.BOLUS_ERROR)
                 },
                 withProtection = { protection, action -> withProtection(protection, action) },
                 requestEditModeAuthorization = { onGranted ->

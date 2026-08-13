@@ -8,7 +8,9 @@ package app.aaps.core.interfaces.notifications
 object AlarmIntent {
 
     /** Raw sound resource id; the activity uses it to play audio with volume ramp. */
-    const val EXTRA_SOUND_ID = "soundId"
+    /** The [app.aaps.core.interfaces.notifications.AlarmSound] name. A name, not a resource id: an id
+     * is build specific, and this value outlives the process that wrote it. */
+    const val EXTRA_SOUND = "sound"
 
     /** Alarm status / body text. */
     const val EXTRA_STATUS = "status"

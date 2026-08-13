@@ -2,6 +2,7 @@ package app.aaps.plugins.automation
 
 import android.content.Context
 import android.content.Intent
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -32,7 +33,7 @@ class TimerReminderReceiver : DaggerBroadcastReceiver() {
         super.onReceive(context, intent)
         val text = intent.getStringExtra(EXTRA_TEXT)?.takeIf { it.isNotBlank() } ?: rh.gs(config.appName)
         aapsLogger.debug(LTag.AUTOMATION, "TimerReminderReceiver fired: $text")
-        uiInteraction.runAlarm(status = text, title = rh.gs(config.appName), soundId = CoreUiR.raw.alarm)
+        uiInteraction.runAlarm(status = text, title = rh.gs(config.appName), sound = AlarmSound.ALARM)
     }
 
     companion object {

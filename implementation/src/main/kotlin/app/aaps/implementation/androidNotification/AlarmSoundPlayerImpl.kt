@@ -9,6 +9,8 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.annotation.RawRes
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.ui.rawRes
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
@@ -42,31 +44,30 @@ class AlarmSoundPlayerImpl @Inject constructor(
 
     // --- main-looper-confined state ---
     private var player: MediaPlayer? = null
-    @RawRes private var currentSound: Int = 0
+    private var currentSound: AlarmSound? = null
     private var currentOwner: String? = null
     private var currentVolumeLevel = 0
 
     // Stable reference so a deferred start can be cancelled by doStop() during the channel-sound guard.
     private val startRunnable = Runnable { startMediaPlayer() }
 
-    override fun play(@RawRes soundRes: Int, ownerTag: String, postedAtElapsedRealtime: Long) {
-        if (soundRes == 0) return
-        handler.post { doPlay(soundRes, ownerTag, postedAtElapsedRealtime) }
+    override fun play(sound: AlarmSound, ownerTag: String, postedAtElapsedRealtime: Long) {
+        handler.post { doPlay(sound, ownerTag, postedAtElapsedRealtime) }
     }
 
     override fun stop(ownerTag: String) {
         handler.post { if (currentOwner == ownerTag) doStop() }
     }
 
-    private fun doPlay(@RawRes soundRes: Int, ownerTag: String, postedAtElapsedRealtime: Long) {
+    private fun doPlay(sound: AlarmSound, ownerTag: String, postedAtElapsedRealtime: Long) {
         // Idempotent: a re-request of the exact same sound by the same owner while it's already
         // playing is a no-op. This lets ErrorActivity call play() when it foregrounds on top of an
         // alarm that AlarmNotificationManager already started (same OWNER_FULLSCREEN) without a
         // stop/restart audio glitch.
-        if (player != null && currentOwner == ownerTag && currentSound == soundRes) return
+        if (player != null && currentOwner == ownerTag && currentSound == sound) return
 
         doStop()
-        currentSound = soundRes
+        currentSound = sound
         currentOwner = ownerTag
 
         // Only the full-screen path passes postedAt > 0 (it has an accompanying channel one-shot to
@@ -74,7 +75,7 @@ class AlarmSoundPlayerImpl @Inject constructor(
         // probe entirely and start immediately.
         val deferralMs =
             if (postedAtElapsedRealtime > 0L) {
-                val soundDurationMs = probeSoundDurationMs(soundRes)
+                val soundDurationMs = probeSoundDurationMs(sound.rawRes)
                 (soundDurationMs - (SystemClock.elapsedRealtime() - postedAtElapsedRealtime)).coerceAtLeast(0L)
             } else 0L
 
@@ -102,8 +103,7 @@ class AlarmSoundPlayerImpl @Inject constructor(
     }
 
     private fun startMediaPlayer() {
-        val soundRes = currentSound
-        if (soundRes == 0) return
+        val soundRes = currentSound?.rawRes ?: return
 
         val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         val audioAttrs = AudioAttributes.Builder()
