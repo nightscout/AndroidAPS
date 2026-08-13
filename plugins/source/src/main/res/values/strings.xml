@@ -22,6 +22,8 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
+    <string name="microtech_aidex">Microtech Aidex</string>
+    <string name="description_source_microtech_aidex">Receive BG values from Microtech Aidex app (Aidex/Linx)</string>
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
     <string name="random_bg_short">BG</string>

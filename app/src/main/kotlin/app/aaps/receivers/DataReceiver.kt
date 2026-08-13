@@ -19,6 +19,7 @@ import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
+import app.aaps.plugins.source.MicrotechPlugin
 import app.aaps.plugins.source.PatchedSiAppPlugin
 import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
@@ -67,6 +68,14 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     .setInputData(Data.Builder().also {
                         it.copyDouble("com.fanqies.tomatofn.Extras.BgEstimate", bundle)
                         it.copyLong("com.fanqies.tomatofn.Extras.Time", bundle)
+                    }.build()).build()
+
+            Intents.AIDEX_BG                          ->
+                OneTimeWorkRequest.Builder(MicrotechPlugin.MicrotechWorker::class.java)
+                    .setInputData(Data.Builder().also {
+                        it.copyDouble("com.microtechmd.cgms.aidex.BgValue", bundle)
+                        it.copyString("com.microtechmd.cgms.aidex.BgType", bundle)
+                        it.copyLong("com.microtechmd.cgms.aidex.Time", bundle)
                     }.build()).build()
 
             Intents.NS_EMULATOR                       ->

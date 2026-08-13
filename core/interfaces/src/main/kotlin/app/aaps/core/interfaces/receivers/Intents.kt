@@ -41,6 +41,7 @@ interface Intents {
         const val DEXCOM_G7_BG = "com.dexcom.g7.EXTERNAL_BROADCAST"
         const val POCTECH_BG = "com.china.poctech.data"
         const val TOMATO_BG = "com.fanqies.tomatofn.BgEstimate"
+        const val AIDEX_BG = "com.microtechmd.cgms.aidex.action.BgEstimate"
 
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"
