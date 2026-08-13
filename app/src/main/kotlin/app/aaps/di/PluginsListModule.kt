@@ -167,9 +167,6 @@ abstract class PluginsListModule {
     abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
 
     @Binds
-    @AllConfigs
-    @IntoMap
-    @Binds
     @APS
     @IntoMap
     @IntKey(190)
