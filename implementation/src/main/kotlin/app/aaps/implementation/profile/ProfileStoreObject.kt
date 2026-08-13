@@ -13,6 +13,9 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -29,11 +32,27 @@ class ProfileStoreObject @Inject constructor(
 
     private lateinit var data: JSONObject
 
-    override fun with(data: JSONObject): ProfileStore = this.also {
-        this.data = data
+    /**
+     * Converts once at the boundary and keeps working on `org.json` inside.
+     *
+     * The interface speaks kotlinx so it can move to common code; the reading below still leans on
+     * `JsonHelper` and `pureProfileFromJson`, which are `org.json` throughout and are their own
+     * migration. This is the same inside-out step used for the profile block parsers: the contract
+     * crosses first, the internals follow.
+     */
+    override fun with(data: JsonObject): ProfileStore = this.also {
+        this.data = JSONObject(data.toString())
     }
 
-    override fun getData(): JSONObject = data
+    /**
+     * The store as kotlinx, rebuilt on each call.
+     *
+     * Deliberately not a view of [data]: the previous version handed out the live `JSONObject`, and
+     * both sync selectors wrote into it (`profileJson.put("date", …)`), mutating the store they had
+     * just read. A kotlinx tree is immutable, so that cannot happen - the callers now build the
+     * amended copy they actually wanted.
+     */
+    override fun getData(): JsonObject = Json.parseToJsonElement(data.toString()).jsonObject
 
     private val cachedObjects = ArrayMap<String, PureProfile>()
 
@@ -58,8 +77,8 @@ class ProfileStoreObject @Inject constructor(
     }
 
     override fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
-    override fun getDefaultProfileJson(): JSONObject? =
-        getDefaultProfileName()?.let { getSpecificProfileJson(it) }
+    override fun getDefaultProfileJson(): JsonObject? =
+        getDefaultProfileName()?.let { getSpecificProfileJson(it) }?.let { Json.parseToJsonElement(it.toString()).jsonObject }
 
     override fun getDefaultProfileName(): String? {
         val defaultProfileName = data.optString("defaultProfile")

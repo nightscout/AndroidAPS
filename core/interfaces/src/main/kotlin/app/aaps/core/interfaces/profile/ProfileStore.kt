@@ -1,15 +1,15 @@
 package app.aaps.core.interfaces.profile
 
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 interface ProfileStore {
 
-    fun with(data: JSONObject): ProfileStore
+    fun with(data: JsonObject): ProfileStore
 
-    fun getData(): JSONObject
+    fun getData(): JsonObject
     fun getStartDate(): Long
     fun getDefaultProfile(): PureProfile?
-    fun getDefaultProfileJson(): JSONObject?
+    fun getDefaultProfileJson(): JsonObject?
     fun getDefaultProfileName(): String?
     fun getProfileList(): ArrayList<CharSequence>
     fun getSpecificProfile(profileName: String): PureProfile?

@@ -18,6 +18,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -361,6 +363,25 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
 
         assertThat(sut.revision.value).isEqualTo(revisionBefore)
         assertThat(sut.profiles.value).isSameInstanceAs(listBefore)
+    }
+
+    /**
+     * The published store always carries a numeric `date`.
+     *
+     * Nightscout v3 needs that field, and both sync selectors now read it straight from the store.
+     * They used to patch it in when absent - a branch that could never fire, because this is the only
+     * producer and it writes `date` unconditionally. Deleting an unreachable guard is only safe if the
+     * invariant it guarded is pinned somewhere reachable, which is what this is.
+     */
+    @Test
+    fun `the published store always carries a numeric date`() = runTest {
+        val sut = createSut()
+        assertThat(sut.profile.value?.getData()?.get("date")?.jsonPrimitive?.longOrNull).isNotNull()
+
+        // And still after a mutation rebuilds it.
+        sut.add(profile("Mine"))
+
+        assertThat(sut.profile.value?.getData()?.get("date")?.jsonPrimitive?.longOrNull).isNotNull()
     }
 
     /** The accepted case still bumps, otherwise the editor would never notice an NS push. */

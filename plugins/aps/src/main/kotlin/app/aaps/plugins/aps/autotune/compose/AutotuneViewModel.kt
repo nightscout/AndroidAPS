@@ -34,6 +34,7 @@ import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
+import kotlinx.serialization.json.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -349,7 +350,7 @@ class AutotuneViewModel(
 
     fun onCheckInputProfile() {
         scope.launch {
-            val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JSONObject())
+            val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
             val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
                 profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
                     atProfileProvider.get().with(ProfileSealed.Pure(specificProfile, null), currentProfile.iCfg).also {
@@ -396,7 +397,7 @@ class AutotuneViewModel(
     // --- Internal ---
 
     private suspend fun resolveProfile() {
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JSONObject())
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
         profileFunction.getProfile()?.let { currentProfile ->
             profile = atProfileProvider.get().with(
                 profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile,
@@ -426,7 +427,7 @@ class AutotuneViewModel(
 
     private suspend fun addWarnings(): String {
         val currentProfile = profileFunction.getProfile() ?: return rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JSONObject())
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
         val iCfg = currentProfile.iCfg
         val atProfile = atProfileProvider.get().with(
             profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile,
@@ -486,7 +487,7 @@ class AutotuneViewModel(
     }
 
     private suspend fun refreshState() {
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JSONObject())
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
         val profileList = profileStore.getProfileList().toMutableList()
         profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
         val profileNames = profileList.map { it.toString() }

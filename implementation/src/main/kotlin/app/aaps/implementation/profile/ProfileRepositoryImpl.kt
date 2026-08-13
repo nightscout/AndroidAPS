@@ -31,11 +31,14 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.highToJSONArray
+import app.aaps.core.objects.extensions.highToJsonArray
 import app.aaps.core.objects.extensions.lowToJSONArray
+import app.aaps.core.objects.extensions.lowToJsonArray
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.objects.extensions.targetBlockFromJsonArray
 import app.aaps.core.objects.extensions.toJSONArray
+import app.aaps.core.objects.extensions.toJsonArray
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
@@ -50,6 +53,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -612,36 +618,40 @@ class ProfileRepositoryImpl @Inject constructor(
         )
     }
 
+    /**
+     * Rebuild the by-name store that [profile] publishes.
+     *
+     * Built as kotlinx directly rather than as `org.json` and converted: [ProfileStore] takes a
+     * kotlinx tree now, and the block renderers already produce one, so the whole path from typed
+     * blocks to the published store stays in one representation. There is no `try/catch` any more
+     * because a builder cannot throw the way `JSONObject.put` could.
+     */
     private fun createAndStoreConvertedProfile() {
-        val json = JSONObject()
-        val store = JSONObject()
-        try {
-            for (i in profilesList.indices) {
-                profilesList[i].run {
-                    val pj = JSONObject()
-                    pj.put("carbratio", ic.toJSONArray())
-                    pj.put("sens", isf.toJSONArray())
-                    pj.put("basal", basal.toJSONArray())
-                    pj.put("target_low", target.lowToJSONArray())
-                    pj.put("target_high", target.highToJSONArray())
-                    pj.put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
-                    pj.put("timezone", TimeZone.getDefault().id)
-                    store.put(name, pj)
+        val startDate = preferences.getIfExists(LongNonKey.LocalProfileLastChange) ?: dateUtil.now()
+        rawProfile = profileStoreProvider.get().with(
+            buildJsonObject {
+                // First profile is the stable "default" for the serialised store. Activation
+                // decisions live in ProfileFunction (EPS-based); this field is purely cosmetic
+                // for NS upload and tooling that reads the store JSON directly.
+                if (profilesList.isNotEmpty()) put("defaultProfile", profilesList.first().name)
+                put("date", startDate)
+                put("created_at", dateUtil.toISOAsUTC(startDate))
+                put("startDate", dateUtil.toISOAsUTC(startDate))
+                putJsonObject("store") {
+                    for (profile in profilesList) profile.run {
+                        putJsonObject(name) {
+                            put("carbratio", ic.toJsonArray())
+                            put("sens", isf.toJsonArray())
+                            put("basal", basal.toJsonArray())
+                            put("target_low", target.lowToJsonArray())
+                            put("target_high", target.highToJsonArray())
+                            put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
+                            put("timezone", TimeZone.getDefault().id)
+                        }
+                    }
                 }
             }
-            // First profile is the stable "default" for the serialised store. Activation
-            // decisions live in ProfileFunction (EPS-based); this field is purely cosmetic
-            // for NS upload and tooling that reads the store JSON directly.
-            if (profilesList.isNotEmpty()) json.put("defaultProfile", profilesList.first().name)
-            val startDate = preferences.getIfExists(LongNonKey.LocalProfileLastChange) ?: dateUtil.now()
-            json.put("date", startDate)
-            json.put("created_at", dateUtil.toISOAsUTC(startDate))
-            json.put("startDate", dateUtil.toISOAsUTC(startDate))
-            json.put("store", store)
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-        rawProfile = profileStoreProvider.get().with(json)
+        )
     }
 
     companion object {

@@ -22,6 +22,8 @@ import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.R
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -202,7 +204,7 @@ class ATProfile @Inject constructor(
             json.put("defaultProfile", profileName)
             json.put("store", store)
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
-            profileStore = profileStoreProvider.get().with(json)
+            profileStore = profileStoreProvider.get().with(Json.parseToJsonElement(json.toString()).jsonObject)
         } catch (e: JSONException) {
             aapsLogger.error(LTag.CORE, e.stackTraceToString())
         }

@@ -760,7 +760,7 @@ class NSClientV3Plugin @Inject constructor(
         val data = (dataPair as DataSyncSelector.PairProfileStore).value
         try {
             nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", data)
-            nsAndroidClient?.createProfileStore(data.toKotlinxJson())?.let { result ->
+            nsAndroidClient?.createProfileStore(data)?.let { result ->
                 when (result.response) {
                     200  -> nsClientRepository.addLog("◄ UPDATED", "OK ProfileStore")
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ProfileStore")

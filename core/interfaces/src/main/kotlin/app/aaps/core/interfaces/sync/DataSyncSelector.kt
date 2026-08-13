@@ -14,7 +14,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 interface DataSyncSelector {
 
@@ -38,7 +38,7 @@ interface DataSyncSelector {
     data class PairProfileSwitch(override val value: PS, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairEffectiveProfileSwitch(override val value: EPS, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairRunningMode(override val value: RM, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairProfileStore(override val value: JSONObject, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairProfileStore(override val value: JsonObject, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairDeviceStatus(override val value: DS, override val id: Long, override var confirmed: Boolean = false) : DataPair
 
     fun queueSize(): Long

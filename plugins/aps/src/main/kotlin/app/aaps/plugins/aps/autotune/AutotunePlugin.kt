@@ -44,6 +44,7 @@ import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
+import kotlinx.serialization.json.JsonObject
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
@@ -398,7 +399,7 @@ class AutotunePlugin @Inject constructor(
     suspend fun updateProfile(newProfile: ATProfile?) {
         if (newProfile == null) return
         val circadian = preferences.get(BooleanKey.AutotuneCircadianIcIsf)
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JSONObject())
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
         for (p in profileList.indices)

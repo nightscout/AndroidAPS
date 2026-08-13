@@ -51,6 +51,8 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyDouble
@@ -331,7 +333,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(json)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -340,7 +342,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(json)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -350,6 +352,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(json)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 }
