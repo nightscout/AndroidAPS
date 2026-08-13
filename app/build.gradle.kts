@@ -15,7 +15,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    google()
+    maven("https://dl.google.com/dl/android/maven2/")
 }
 
 fun generateGitBuild(): String {
