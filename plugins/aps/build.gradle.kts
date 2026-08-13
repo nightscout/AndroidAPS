@@ -21,7 +21,6 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
 
-    testImplementation(project(":pump:virtual"))
     testImplementation(project(":shared:tests"))
 
     api(libs.androidx.appcompat)

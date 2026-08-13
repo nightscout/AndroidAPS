@@ -24,7 +24,6 @@ dependencies {
     testImplementation(project(":shared:impl"))
     testImplementation(project(":implementation"))
     testImplementation(project(":plugins:main"))
-    testImplementation(project(":pump:virtual"))
 
     api(libs.androidx.constraintlayout)
     api(libs.com.google.android.gms.playservices.location)

@@ -22,7 +22,6 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":plugins:aps"))
-    testImplementation(project(":pump:virtual"))
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.work.testing)
 
