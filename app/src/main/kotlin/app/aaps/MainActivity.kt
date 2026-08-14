@@ -286,6 +286,15 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
+            if (showKeyOnly) {
+                addView(TextView(this@MainActivity).apply {
+                    text = authStatusText()
+                    textSize = 14f
+                    setTextColor(Color.parseColor("#FF8C00"))
+                    setPadding(0, 0, 0, dp2px(8))
+                })
+            }
+
             if (!showKeyOnly) {
                 addView(EditText(this@MainActivity).apply {
                     id = android.R.id.input
@@ -346,6 +355,19 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
+     * 授权状态文本:尚未验证 / 剩余X天 / 已过期X天
+     */
+    private fun authStatusText(): String {
+        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        val lastTs = prefs.getLong("last_verify_time", 0L)
+        if (lastTs == 0L) return "授权状态：尚未验证"
+        val remainMs = EXPIRE_15DAY_MS - (System.currentTimeMillis() - lastTs)
+        val days = remainMs / (24 * 60 * 60 * 1000)
+        return if (remainMs > 0) "授权状态：已验证，剩余 $days 天"
+        else "授权状态：已过期 ${-days} 天，请重新验证"
+    }
+
+    /**
      * 全局置顶密码弹窗（带忘记密码重置）
      */
     private fun showPasswordVerificationDialog() {
@@ -362,9 +384,20 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val padding = dp2px(16)
         passwordInput.setPadding(padding, padding, padding, padding)
 
+        val dialogLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(TextView(this@MainActivity).apply {
+                text = authStatusText()
+                textSize = 13f
+                setTextColor(Color.parseColor("#FF8C00"))
+                setPadding(0, 0, 0, dp2px(8))
+            })
+            addView(passwordInput)
+        }
+
         MaterialAlertDialogBuilder(this)
             .setTitle("APP授权码验证")
-            .setView(passwordInput)
+            .setView(dialogLayout)
             .setCancelable(false)
             .setNeutralButton("获取密钥") { _, _ ->
                 // 不再重置密钥:有密钥则只展示密钥信息(不输码、不重新生成),无密钥走首次激活
@@ -490,6 +523,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.plugins.configuration.R.string.engineering_mode_enabled)}"
                         if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
                         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
+                        message += "\n" + authStatusText()
                         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
                         val messageSpanned = SpannableString(message)
                         Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
