@@ -25,9 +25,11 @@ import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeEnable
 import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.R
 import app.aaps.pump.danars.databinding.DanarsBlescannerActivityBinding
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -38,6 +40,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var danaRSPlugin: DanaRSPlugin
 
     private var listAdapter: ListAdapter? = null
     private val devices = ArrayList<BluetoothDeviceItem>()
@@ -66,6 +69,40 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         binding.bleScannerListview.emptyView = binding.bleScannerNoDevice
         binding.bleScannerListview.adapter = listAdapter
         listAdapter?.notifyDataSetChanged()
+
+        binding.bleScannerClearPairing.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("清除配对")
+                .setMessage("将清除当前泵的蓝牙绑定和配对密钥，清除后需要重新扫描并配对。是否继续？")
+                .setPositiveButton("确认清除") { _, _ -> doClearPairing() }
+                .setNegativeButton("取消", null)
+                .show()
+        }
+    }
+
+    /**
+     * 清除配对:系统蓝牙绑定 + AAPS 存储的配对密钥,然后重新扫描
+     */
+    @SuppressLint("MissingPermission")
+    private fun doClearPairing() {
+        // 1. 清除系统蓝牙绑定(反射 removeBond)
+        preferences.getIfExists(DanaStringKey.MacAddress)?.let { address ->
+            try {
+                bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
+                    device.javaClass.getMethod("removeBond").invoke(device)
+                }
+            } catch (_: Exception) {
+                // 忽略:可能无绑定或无权限,密钥清除仍会执行
+            }
+        }
+        // 2. 清除 AAPS 存储的配对密钥
+        danaRSPlugin.clearPairing()
+        // 3. 清空列表重新扫描
+        devices.clear()
+        listAdapter?.notifyDataSetChanged()
+        stopScan()
+        startScan()
+        ToastUtils.okToast(this, "配对已清除，请重新扫描并配对泵")
     }
 
     override fun onResume() {
