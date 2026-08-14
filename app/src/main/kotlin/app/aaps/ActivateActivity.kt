@@ -412,26 +412,29 @@ class ActivateActivity : AppCompatActivity() {
 
     private fun onConfirm() {
         if (showKeyOnly) { setResult(RESULT_CANCELED); finish(); return }
-        val code = inputInvite.text.toString().trim()
-        if (code.isEmpty()) { ToastUtils.errorToast(this, "请输入8位邀请码"); return }
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val secret = prefs.getString("totp_secret", null)
-        if (secret == null) { ToastUtils.errorToast(this, "设备标识异常, 请重置"); return }
-        if (TotpUtils.verifyTotp(secret, code)) {
-            val phone = inputPhone.text.toString().trim()
-            prefs.edit()
-                .apply {
-                    if (phone.isNotEmpty()) putString("phone", phone)
-                    putBoolean("password_verified", true)
-                    putLong("last_verify_time", System.currentTimeMillis())
-                }
-                .apply()
-            ToastUtils.okToast(this, "验证成功!365天后需重新验证")
-            setResult(RESULT_OK)
-            finish()
-        } else {
-            statusLine.text = "邀请码错误, 请核对后重试"
-            statusLine.visibility = View.VISIBLE
+        try {
+            val code = inputInvite.text.toString().trim()
+            if (code.isEmpty()) { ToastUtils.errorToast(this, "请输入8位邀请码"); return }
+            val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val secret = prefs.getString("totp_secret", null)
+            if (secret == null) { ToastUtils.errorToast(this, "设备标识异常, 请重置"); return }
+            if (TotpUtils.verifyTotp(secret, code)) {
+                val phone = inputPhone.text.toString().trim()
+                val editor = prefs.edit()
+                if (phone.isNotEmpty()) editor.putString("phone", phone)
+                editor.putBoolean("password_verified", true)
+                editor.putLong("last_verify_time", System.currentTimeMillis())
+                editor.apply()
+                ToastUtils.okToast(this, "验证成功!365天后需重新验证")
+                setResult(RESULT_OK)
+                finish()
+            } else {
+                ToastUtils.errorToast(this, "邀请码错误, 请核对后重试")
+            }
+        } catch (e: Exception) {
+            // 异常直接显示, 便于定位(正常不会走到这里)
+            android.util.Log.e("ActivateActivity", "onConfirm 异常: " + e.message, e)
+            ToastUtils.errorToast(this, "验证异常: ${e.javaClass.simpleName}: ${e.message}")
         }
     }
 
