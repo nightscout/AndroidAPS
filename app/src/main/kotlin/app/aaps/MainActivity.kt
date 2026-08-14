@@ -113,7 +113,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // 15天过期毫秒常量
+    // 365天过期毫秒常量(变量名保留旧名 EXPIRE_15DAY_MS,避免大范围改名)
     private val EXPIRE_15DAY_MS = 365L * 24 * 60 * 60 * 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,7 +144,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 .apply()
         }
 
-        // 未验证 或 15天过期，强制弹窗拦截全部APP流程
+        // 未验证 或 365天过期，强制弹窗拦截全部APP流程
         if (!verified || isExpired) {
             Handler(Looper.getMainLooper()).postDelayed({
                                                             if (initTotpSecretIfNeeded()) {
@@ -296,13 +296,15 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
                 if (TotpUtils.verifyTotp(secret, inputCode)) {
-                    ToastUtils.okToast(this, "授权码输入成功！15天后需要重新验证")
+                    ToastUtils.okToast(this, "授权码输入成功！365天后需要重新验证")
                     // 首次验证写入时间戳
                     prefs.edit()
                         .putBoolean("password_verified", true)
                         .putLong("last_verify_time", System.currentTimeMillis())
                         .apply()
-                    showPasswordVerificationDialog()
+                    // 首次验证成功后直接进入,不再重复弹第二次验证框
+                    dialog.dismiss()
+                    Handler(Looper.getMainLooper()).post { start() }
                 } else {
                     ToastUtils.errorToast(this, "授权码错误，重新生成密钥")
                     prefs.edit().remove("totp_secret").apply()
@@ -371,7 +373,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         .apply()
                     rootView.removeView(maskView)
                     dialog.dismiss()
-                    ToastUtils.okToast(this, "验证成功，15天后将再次校验")
+                    ToastUtils.okToast(this, "验证成功，365天后将再次校验")
                     Handler(Looper.getMainLooper()).post { start() }
                 } else {
                     ToastUtils.errorToast(this, "动态密码错误，请联系管理员")
