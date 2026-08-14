@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.AapsClientLevel
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
@@ -123,6 +122,19 @@ import kotlin.math.min
  * MIGRATION NOTE: This coexists with OverviewDataImpl during migration.
  * Workers populate graph data. After migration complete, OverviewDataImpl will be deleted.
  */
+
+// Thresholds for the pump pill shown on an AAPSClient. These are the Nightscout defaults. They used to
+// be read from the server's "extendedSettings" through NSSettingsStatus, but the NSClient V3 API does
+// not return that section, so the defaults were the only value ever used. They are stated here now.
+private const val WARN_CLOCK_MINUTES = 30L
+private const val URGENT_CLOCK_MINUTES = 60L
+private const val WARN_RESERVOIR = 10.0
+private const val URGENT_RESERVOIR = 5.0
+private const val WARN_BATTERY_PERCENT = 30.0
+private const val URGENT_BATTERY_PERCENT = 20.0
+private const val WARN_BATTERY_VOLTAGE = 1.35
+private const val URGENT_BATTERY_VOLTAGE = 1.3
+
 @OptIn(FlowPreview::class)
 class OverviewDataCacheImpl @AssistedInject constructor(
     private val aapsLogger: AAPSLogger,
@@ -137,7 +149,6 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     private val loop: Loop,
     private val config: Config,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
-    private val nsSettingsStatus: NSSettingsStatus,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val decimalFormatter: DecimalFormatter,
@@ -948,15 +959,15 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         val now = dateUtil.now()
         val pumpItem = processedDeviceStatusData.pumpData?.let { pumpData ->
             val level = when {
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < now                               -> AapsClientLevel.URGENT
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                                                -> AapsClientLevel.URGENT
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")                          -> AapsClientLevel.URGENT
-                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV") -> AapsClientLevel.URGENT
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < now                                 -> AapsClientLevel.WARN
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                                                  -> AapsClientLevel.WARN
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")                            -> AapsClientLevel.WARN
-                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")   -> AapsClientLevel.WARN
-                else                                                                                                                   -> AapsClientLevel.INFO
+                pumpData.clock + URGENT_CLOCK_MINUTES * 60 * 1000L < now                          -> AapsClientLevel.URGENT
+                pumpData.reservoir < URGENT_RESERVOIR                                             -> AapsClientLevel.URGENT
+                pumpData.isPercent && pumpData.percent < URGENT_BATTERY_PERCENT                   -> AapsClientLevel.URGENT
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < URGENT_BATTERY_VOLTAGE -> AapsClientLevel.URGENT
+                pumpData.clock + WARN_CLOCK_MINUTES * 60 * 1000L < now                            -> AapsClientLevel.WARN
+                pumpData.reservoir < WARN_RESERVOIR                                               -> AapsClientLevel.WARN
+                pumpData.isPercent && pumpData.percent < WARN_BATTERY_PERCENT                     -> AapsClientLevel.WARN
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < WARN_BATTERY_VOLTAGE -> AapsClientLevel.WARN
+                else                                                                              -> AapsClientLevel.INFO
             }
             // Format: "75% 3 min ago" (running mode excluded — already shown in RunningMode chip)
             val value = buildString {

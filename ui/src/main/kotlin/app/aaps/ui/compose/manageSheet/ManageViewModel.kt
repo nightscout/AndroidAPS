@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.aps.Loop
@@ -19,8 +18,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -33,7 +30,6 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.extensions.toStringMedium
@@ -68,10 +64,8 @@ class ManageViewModel @Inject constructor(
     private val config: Config,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val persistenceLayer: PersistenceLayer,
-    private val uel: UserEntryLogger,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
-    private val nsSettingStatus: NSSettingsStatus,
     private val preferences: Preferences,
     private val batchExecutor: BatchExecutor,
     private val nsClient: NsClient,
@@ -250,23 +244,4 @@ class ManageViewModel @Inject constructor(
         activePlugin.activePump.executeCustomAction(actionType)
     }
 
-    fun copyStatusLightsFromNightscout() {
-        val cageWarn = nsSettingStatus.getExtendedWarnValue("cage", "warn")?.toInt()
-        val cageCritical = nsSettingStatus.getExtendedWarnValue("cage", "urgent")?.toInt()
-        val iageWarn = nsSettingStatus.getExtendedWarnValue("iage", "warn")?.toInt()
-        val iageCritical = nsSettingStatus.getExtendedWarnValue("iage", "urgent")?.toInt()
-        val sageWarn = nsSettingStatus.getExtendedWarnValue("sage", "warn")?.toInt()
-        val sageCritical = nsSettingStatus.getExtendedWarnValue("sage", "urgent")?.toInt()
-        val bageWarn = nsSettingStatus.getExtendedWarnValue("bage", "warn")?.toInt()
-        val bageCritical = nsSettingStatus.getExtendedWarnValue("bage", "urgent")?.toInt()
-        cageWarn?.let { preferences.put(IntKey.OverviewCageWarning, it) }
-        cageCritical?.let { preferences.put(IntKey.OverviewCageCritical, it) }
-        iageWarn?.let { preferences.put(IntKey.OverviewIageWarning, it) }
-        iageCritical?.let { preferences.put(IntKey.OverviewIageCritical, it) }
-        sageWarn?.let { preferences.put(IntKey.OverviewSageWarning, it) }
-        sageCritical?.let { preferences.put(IntKey.OverviewSageCritical, it) }
-        bageWarn?.let { preferences.put(IntKey.OverviewBageWarning, it) }
-        bageCritical?.let { preferences.put(IntKey.OverviewBageCritical, it) }
-        uel.log(Action.NS_SETTINGS_COPIED, Sources.NSClient)
-    }
 }

@@ -48,8 +48,7 @@ class StatusLightsSettingsContentTest {
             CompositionLocalProvider(LocalPreferences provides preferences, LocalConfig provides config) {
                 MaterialTheme {
                     StatusLightsSettingsContent(
-                        settingsDef = PreferenceSubScreenDef(key = "statuslights", titleResId = CoreUiR.string.treatments),
-                        onCopyFromNightscout = {}
+                        settingsDef = PreferenceSubScreenDef(key = "statuslights", titleResId = CoreUiR.string.treatments)
                     )
                 }
             }

@@ -63,7 +63,6 @@ internal fun OverviewStatusSectionCollapsedPreview() {
             showPumpBatteryChange = true,
             onNavigate = {},
             statusLightsDef = previewStatusLightsDef,
-            onCopyFromNightscout = {},
             expanded = false,
             onExpandedChange = {}
         )
@@ -84,7 +83,6 @@ internal fun OverviewStatusSectionExpandedPreview() {
             showPumpBatteryChange = true,
             onNavigate = {},
             statusLightsDef = previewStatusLightsDef,
-            onCopyFromNightscout = {},
             expanded = true,
             onExpandedChange = {}
         )

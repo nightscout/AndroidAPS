@@ -180,7 +180,6 @@ fun OverviewScreenTablet(
                     commandsAllowed = commandsAllowed,
                     onNavigate = onNavigate,
                     statusLightsDef = statusLightsDef,
-                    onCopyFromNightscout = { manageViewModel.copyStatusLightsFromNightscout() },
                     expanded = statusExpanded,
                     onExpandedChange = { statusExpanded = it }
                 )

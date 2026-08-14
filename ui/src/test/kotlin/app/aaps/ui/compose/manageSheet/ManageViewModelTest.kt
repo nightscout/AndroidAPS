@@ -8,8 +8,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -59,10 +57,8 @@ internal class ManageViewModelTest {
     @Mock private lateinit var config: Config
     @Mock private lateinit var processedTbrEbData: ProcessedTbrEbData
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var dateUtil: DateUtil
-    @Mock private lateinit var nsSettingStatus: NSSettingsStatus
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var nsClient: NsClient
@@ -87,8 +83,8 @@ internal class ManageViewModelTest {
         pumpPlugin = mock()
         whenever(activePlugin.activePumpInternal).thenReturn(pumpPlugin)
         sut = ManageViewModel(
-            rh, activePlugin, profileFunction, loop, config, processedTbrEbData, persistenceLayer, uel,
-            rxBus, dateUtil, nsSettingStatus, preferences, batchExecutor, nsClient, visibilityContext,
+            rh, activePlugin, profileFunction, loop, config, processedTbrEbData, persistenceLayer,
+            rxBus, dateUtil, preferences, batchExecutor, nsClient, visibilityContext,
             CoroutineScope(UnconfinedTestDispatcher())
         )
     }
