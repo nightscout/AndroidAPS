@@ -108,6 +108,11 @@ androidx-activity = { group = "androidx.activity", name = "activity-ktx", versio
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.1" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.10.0" }
+# Declared rather than left to transitive resolution: it used to land on 1.1.0 in some modules and
+# 1.5.0 in others, and those are different generations of the same class (the newer one is a Kotlin
+# rewrite where size is also a property), so the same code did not compile everywhere. From 1.4.0 it
+# is multiplatform, which is what keeps LongSparseArray usable from shared code.
+androidx-collection = { group = "androidx.collection", name = "collection", version = "1.6.0" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.0" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }

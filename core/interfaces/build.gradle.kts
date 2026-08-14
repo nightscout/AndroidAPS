@@ -59,6 +59,9 @@ dependencies {
     api(libs.com.google.dagger.hilt.android)
 
     api(libs.androidx.appcompat)
+    // api, not implementation: LongSparseArray is part of this module's own API (AutosensDataStore,
+    // TddCalculator, TirCalculator all expose it), so consumers have to see the same version.
+    api(libs.androidx.collection)
     api(libs.androidx.compose.ui)
     api(libs.androidx.documentfile)
 
