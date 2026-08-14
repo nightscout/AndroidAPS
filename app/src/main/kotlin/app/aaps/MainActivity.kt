@@ -262,6 +262,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         val existingSecret = prefs.getString("totp_secret", null)
         if (!showKeyOnly && existingSecret != null) return true
+        // 防御:展示模式但密钥不存在时,降级为首次激活(生成+输码),避免留下无法验证的新密钥
+        if (showKeyOnly && existingSecret == null) return initTotpSecretIfNeeded()
 
         val secretBase32 = existingSecret ?: TotpUtils.generateSecret()
         if (existingSecret == null) prefs.edit().putString("totp_secret", secretBase32).apply()
@@ -359,8 +361,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      */
     private fun authStatusText(): String {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        val verified = prefs.getBoolean("password_verified", false)
         val lastTs = prefs.getLong("last_verify_time", 0L)
-        if (lastTs == 0L) return "授权状态：尚未验证"
+        if (!verified || lastTs == 0L) return "授权状态：尚未验证"
         val remainMs = EXPIRE_15DAY_MS - (System.currentTimeMillis() - lastTs)
         val days = remainMs / (24 * 60 * 60 * 1000)
         return if (remainMs > 0) "授权状态：已验证，剩余 $days 天"
