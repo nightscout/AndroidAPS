@@ -89,7 +89,10 @@ kotlin {
                 // The CMP runtime, so the compose compiler plugin has something to compile against on
                 // every target. On Android CMP delegates to androidx, so the composeBom still decides
                 // the Android versions and nothing about the Android build changes.
-                implementation(libs.cmp.runtime)
+                api(libs.cmp.runtime)
+                // ImageVector and friends live here, not in the runtime. Several interfaces in this
+                // module carry an icon, and that alone used to be enough to make them Android only.
+                api(libs.cmp.ui)
             }
         }
 
