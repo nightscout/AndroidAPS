@@ -429,7 +429,25 @@ class ActivateActivity : AppCompatActivity() {
                 setResult(RESULT_OK)
                 finish()
             } else {
+                // 邀请码错误: 醒目弹窗提示 + 清空输入框
                 ToastUtils.errorToast(this, "邀请码错误, 请核对后重试")
+                try {
+                    AlertDialog.Builder(this)
+                        .setTitle("❌ 邀请码错误")
+                        .setMessage("输入的邀请码不正确或已过期(30秒有效)。\n\n请确认:\n· 邀请码区分大小写\n· 30秒内输入完成\n· 与设备标识对应\n\n可点击\"获取密钥\"重新核对设备标识, 联系管理员重新生成邀请码。")
+                        .setPositiveButton("重新输入", { _, _ ->
+                            inputInvite.text.clear()
+                            inputInvite.requestFocus()
+                        })
+                        .setNegativeButton("复制设备标识", { _, _ ->
+                            val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            cm.setPrimaryClip(ClipData.newPlainText("deviceId", deviceId))
+                            ToastUtils.okToast(this, "设备标识已复制")
+                        })
+                        .show()
+                } catch (e2: Exception) {
+                    // 弹窗失败不致命, 已用 Toast 提示
+                }
             }
         } catch (e: Exception) {
             // 异常直接显示, 便于定位(正常不会走到这里)
