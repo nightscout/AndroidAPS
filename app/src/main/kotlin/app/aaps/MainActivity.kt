@@ -1,7 +1,6 @@
 package app.aaps
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -10,7 +9,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
-import android.text.InputType
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
@@ -22,11 +20,10 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -114,8 +111,14 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // 365天过期毫秒常量(变量名保留旧名 EXPIRE_15DAY_MS,避免大范围改名)
-    private val EXPIRE_15DAY_MS = 365L * 24 * 60 * 60 * 1000
+    // 激活页结果: RESULT_OK=验证成功进入主界面; 取消/退出=关闭应用
+    private val activateLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            Handler(Looper.getMainLooper()).postDelayed({ start() }, 200)
+        } else {
+            finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,7 +138,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val hasTotpSecret = prefs.getString("totp_secret", null) != null
         val lastVerifyTs = prefs.getLong("last_verify_time", 0L)
         val nowTs = System.currentTimeMillis()
-        val isExpired = lastVerifyTs > 0 && (nowTs - lastVerifyTs >= EXPIRE_15DAY_MS)
+        val isExpired = lastVerifyTs > 0 && (nowTs - lastVerifyTs >= TotpUtils.EXPIRE_MS)
 
         // 修复脏数据
         if (!hasTotpSecret && verified) {
@@ -145,13 +148,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 .apply()
         }
 
-        // 未验证 或 365天过期，强制弹窗拦截全部APP流程
+        // 未验证 或 365天过期 → 全屏激活页(唯一验证入口, 验证成功回 RESULT_OK)
         if (!verified || isExpired) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                                                            if (initTotpSecretIfNeeded()) {
-                                                                showPasswordVerificationDialog()
-                                                            }
-                                                        }, 200)
+            activateLauncher.launch(Intent(this, ActivateActivity::class.java))
             return
         }
 
@@ -161,274 +160,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                                                     }, 200)
     }
 
-    /**
-     * 原生TOTP工具，无第三方依赖
-     */
-    private object TotpUtils {
-        private const val DEFAULT_SECRET_SIZE = 16
-        private const val DEFAULT_CODE_DIGITS = 8
-        private const val DEFAULT_TIME_STEP = 30L
-        private const val DEFAULT_TOLERANCE = 1
-        // Base58 邀请码字符集: 去易混淆 0/O/1/I/l (与面板 local_proxy._totp_code 保持一致)
-        private val BASE58_CHARS = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-        private val HEX_CHARS = "0123456789abcdef".toCharArray()
 
-        private val BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ2345678".toCharArray()
-        private val BASE32_MAP = BASE32_CHARS.withIndex().associate { it.value to it.index }.toMap()
 
-        fun generateSecret(): String {
-            val random = java.security.SecureRandom()
-            val secret = ByteArray(DEFAULT_SECRET_SIZE)
-            random.nextBytes(secret)
-            return encodeBase32(secret)
-        }
-
-        /** 设备标识: 内部 Base32 密钥同字节的 32 位 hex (患者截图发给管理员, 管理员凭它出邀请码) */
-        fun deviceIdHex(secretBase32: String): String {
-            val sb = StringBuilder(DEFAULT_SECRET_SIZE * 2)
-            for (b in decodeBase32(secretBase32)) {
-                sb.append(HEX_CHARS[(b.toInt() shr 4) and 0xF])
-                sb.append(HEX_CHARS[b.toInt() and 0xF])
-            }
-            return sb.toString()
-        }
-
-        fun generateTotp(secretBase32: String, time: Long = System.currentTimeMillis() / 1000L): String {
-            val secret = decodeBase32(secretBase32)
-            val counter = time / DEFAULT_TIME_STEP
-            val counterBytes = ByteArray(8)
-            for (i in 7 downTo 0) {
-                counterBytes[i] = (counter shr (8 * (7 - i))).toByte()
-            }
-
-            val mac = javax.crypto.Mac.getInstance("HmacSHA1")
-            mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA1"))
-            val hash = mac.doFinal(counterBytes)
-
-            // 8 位 Base58 邀请码: 取 hash 前 8 字节拼 64bit, 连除 58 映射 (58^8≈1.28e14, 64bit 熵充足; 与面板同算法)
-            var v = 0L
-            for (i in 0 until 8) v = (v shl 8) or (hash[i].toLong() and 0xFF)
-            val sb = StringBuilder(DEFAULT_CODE_DIGITS)
-            repeat(DEFAULT_CODE_DIGITS) {
-                sb.append(BASE58_CHARS[(v % 58).toInt()])
-                v /= 58
-            }
-            return sb.toString()
-        }
-
-        fun verifyTotp(secretBase32: String, inputCode: String, tolerance: Int = DEFAULT_TOLERANCE): Boolean {
-            val currentTime = System.currentTimeMillis() / 1000L
-            for (offset in -tolerance..tolerance) {
-                val time = currentTime + offset * DEFAULT_TIME_STEP
-                val expectedCode = generateTotp(secretBase32, time)
-                if (expectedCode == inputCode) return true
-            }
-            return false
-        }
-
-        private fun encodeBase32(data: ByteArray): String {
-            val output = StringBuilder()
-            var i = 0
-            var n = 0
-            var bits = 0
-            while (i < data.size) {
-                n = n shl 8 or (data[i].toInt() and 0xFF)
-                bits += 8
-                while (bits >= 5) {
-                    bits -= 5
-                    output.append(BASE32_CHARS[n shr bits])
-                    n = n and ((1 shl bits) - 1)
-                }
-                i++
-            }
-            if (bits > 0) {
-                n = n shl (5 - bits)
-                output.append(BASE32_CHARS[n])
-            }
-            return output.toString()
-        }
-
-        private fun decodeBase32(encoded: String): ByteArray {
-            val cleanEncoded = encoded.uppercase().replace("=", "")
-            val output = mutableListOf<Byte>()
-            var i = 0
-            var n = 0
-            var bits = 0
-            for (c in cleanEncoded) {
-                val value = BASE32_MAP[c] ?: throw IllegalArgumentException("无效Base32字符")
-                n = n shl 5 or value
-                bits += 5
-                if (bits >= 8) {
-                    bits -= 8
-                    output.add((n shr bits).toByte())
-                    n = n and ((1 shl bits) - 1)
-                }
-            }
-            return output.toByteArray()
-        }
-    }
-
-    /**
-     * 密钥弹窗(仿"设备激活"交互: 设备标识+8位邀请码)
-     * showKeyOnly=true:仅展示当前设备标识+授权状态(从"获取密钥"进入),不输码、不重新生成
-     * showKeyOnly=false:首次激活流程,生成密钥+输码验证
-     */
-    private fun initTotpSecretIfNeeded(showKeyOnly: Boolean = false): Boolean {
-        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        val existingSecret = prefs.getString("totp_secret", null)
-        if (!showKeyOnly && existingSecret != null) return true
-        // 防御:展示模式但密钥不存在时,降级为首次激活(生成+输码),避免留下无法验证的新密钥
-        if (showKeyOnly && existingSecret == null) return initTotpSecretIfNeeded()
-
-        val secretBase32 = existingSecret ?: TotpUtils.generateSecret()
-        if (existingSecret == null) prefs.edit().putString("totp_secret", secretBase32).apply()
-        val deviceId = TotpUtils.deviceIdHex(secretBase32)
-        // 设备标识分两行显示 (16+16)
-        val deviceLine1 = deviceId.substring(0, 16)
-        val deviceLine2 = deviceId.substring(16)
-
-        val dialogView = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
-
-            if (showKeyOnly) {
-                addView(TextView(this@MainActivity).apply {
-                    text = "设备标识(发送给管理员可获取邀请码)"
-                    textSize = 14f
-                })
-            } else {
-                addView(TextView(this@MainActivity).apply {
-                    text = "欢迎使用AAPS"
-                    textSize = 18f
-                    setTextColor(Color.BLACK)
-                })
-                addView(TextView(this@MainActivity).apply {
-                    text = "请输入邀请码完成设备激活"
-                    textSize = 14f
-                    setPadding(0, dp2px(4), 0, dp2px(12))
-                })
-                addView(TextView(this@MainActivity).apply {
-                    text = "设备标识"
-                    textSize = 13f
-                    setTextColor(Color.GRAY)
-                })
-            }
-
-            // 设备标识 (两行 + 复制按钮)
-            val idRow = LinearLayout(this@MainActivity).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = android.view.Gravity.CENTER_VERTICAL
-                setPadding(0, dp2px(4), 0, dp2px(4))
-            }
-            idRow.addView(TextView(this@MainActivity).apply {
-                text = "$deviceLine1\n$deviceLine2"
-                textSize = 16f
-                typeface = android.graphics.Typeface.MONOSPACE
-                setTextColor(Color.RED)
-            })
-            idRow.addView(android.widget.Button(this@MainActivity).apply {
-                text = "复制"
-                textSize = 12f
-                setPadding(dp2px(8), 0, dp2px(8), 0)
-                setOnClickListener {
-                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                    cm.setPrimaryClip(android.content.ClipData.newPlainText("deviceId", deviceId))
-                    ToastUtils.okToast(this@MainActivity, "设备标识已复制")
-                }
-            })
-            addView(idRow)
-            addView(TextView(this@MainActivity).apply {
-                text = if (showKeyOnly) "发送设备标识给管理员可获取邀请码" else "请复制上方设备ID发送给管理员获取邀请码"
-                textSize = 13f
-                setTextColor(Color.GRAY)
-                setPadding(0, 0, 0, dp2px(8))
-            })
-
-            if (showKeyOnly) {
-                addView(TextView(this@MainActivity).apply {
-                    text = authStatusText()
-                    textSize = 12f
-                    setTextColor(Color.parseColor("#757575"))
-                    setPadding(0, 0, 0, dp2px(8))
-                })
-            }
-
-            if (!showKeyOnly) {
-                // 手机号(可选, 纯本地标识)
-                addView(TextView(this@MainActivity).apply {
-                    text = "手机号(选填)"
-                    textSize = 13f
-                    setTextColor(Color.GRAY)
-                })
-                addView(EditText(this@MainActivity).apply {
-                    id = android.R.id.text1
-                    inputType = InputType.TYPE_CLASS_PHONE
-                    hint = "用于管理员登记(选填)"
-                    maxLines = 1
-                    setPadding(0, 0, 0, dp2px(8))
-                })
-
-                // 8位邀请码 (区分大小写, 字母数字混合 → TYPE_CLASS_TEXT)
-                addView(TextView(this@MainActivity).apply {
-                    text = "邀请码"
-                    textSize = 13f
-                    setTextColor(Color.GRAY)
-                })
-                addView(EditText(this@MainActivity).apply {
-                    id = android.R.id.input
-                    inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    hint = "请输入8位邀请码"
-                    maxLines = 1
-                })
-                addView(TextView(this@MainActivity).apply {
-                    text = "邀请码区分大小写"
-                    textSize = 11f
-                    setTextColor(Color.GRAY)
-                })
-            }
-        }
-
-        MaterialAlertDialogBuilder(this, R.style.AlertDialog_Rounded)
-            .setTitle(if (showKeyOnly) "设备标识" else "设备激活")
-            .setView(dialogView)
-            .setCancelable(false)
-            .setPositiveButton(if (showKeyOnly) "知道了" else "确认") { dialog, _ ->
-                if (showKeyOnly) {
-                    dialog.dismiss()
-                    return@setPositiveButton
-                }
-                val inputCode = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
-                val phone = dialogView.findViewById<EditText>(android.R.id.text1).text.toString().trim()
-                if (phone.isNotEmpty()) prefs.edit().putString("phone", phone).apply()
-                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
-
-                if (TotpUtils.verifyTotp(secret, inputCode)) {
-                    ToastUtils.okToast(this, "授权码输入成功！365天后需要重新验证")
-                    // 首次验证写入时间戳
-                    prefs.edit()
-                        .putBoolean("password_verified", true)
-                        .putLong("last_verify_time", System.currentTimeMillis())
-                        .apply()
-                    // 首次验证成功后直接进入,不再重复弹第二次验证框
-                    dialog.dismiss()
-                    Handler(Looper.getMainLooper()).post { start() }
-                } else {
-                    ToastUtils.errorToast(this, "授权码错误，重新生成设备标识")
-                    prefs.edit().remove("totp_secret").apply()
-                    initTotpSecretIfNeeded()
-                }
-            }
-            .setNegativeButton(if (showKeyOnly) "返回" else "退出") { dialog, _ ->
-                if (showKeyOnly) dialog.dismiss() else finish()
-            }
-            .show()
-
-        return false
-    }
-
-    /**
-     * 重置密钥，清空验证状态与过期时间
-     */
     private fun resetTotpSecret() {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         prefs.edit()
@@ -436,7 +169,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .remove("password_verified")
             .remove("last_verify_time")
             .apply()
-        initTotpSecretIfNeeded()
+        activateLauncher.launch(Intent(this, ActivateActivity::class.java))
     }
 
     /**
@@ -447,83 +180,12 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val verified = prefs.getBoolean("password_verified", false)
         val lastTs = prefs.getLong("last_verify_time", 0L)
         if (!verified || lastTs == 0L) return "授权状态：尚未验证"
-        val remainMs = EXPIRE_15DAY_MS - (System.currentTimeMillis() - lastTs)
+        val remainMs = TotpUtils.EXPIRE_MS - (System.currentTimeMillis() - lastTs)
         val days = remainMs / (24 * 60 * 60 * 1000)
         return if (remainMs > 0) "授权状态：已验证，剩余 $days 天"
         else "授权状态：已过期 ${-days} 天，请重新验证"
     }
 
-    /**
-     * 全局置顶密码弹窗（带忘记密码重置）
-     */
-    private fun showPasswordVerificationDialog() {
-        val maskView = View(this)
-        maskView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        maskView.setBackgroundColor(Color.parseColor("#CC000000"))
-        maskView.isClickable = true
-        val rootView = window.decorView.findViewById<FrameLayout>(android.R.id.content)
-        rootView.addView(maskView)
-
-        val passwordInput = EditText(this)
-        passwordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-        passwordInput.hint = "请输入管理员发送的8位邀请码"
-        val padding = dp2px(16)
-        passwordInput.setPadding(padding, padding, padding, padding)
-
-        val dialogLayout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            addView(TextView(this@MainActivity).apply {
-                text = authStatusText()
-                textSize = 12f
-                setTextColor(Color.parseColor("#757575"))
-                setPadding(0, 0, 0, dp2px(12))
-            })
-            addView(passwordInput)
-        }
-
-        val dialog = MaterialAlertDialogBuilder(this, R.style.AlertDialog_Rounded)
-            .setTitle("APP授权码验证")
-            .setView(dialogLayout)
-            .setCancelable(false)
-            .setNeutralButton("获取密钥", null)
-            .setNegativeButton("退出") { _, _ -> finish() }
-            .setPositiveButton("验证") { dialog, _ ->
-                val inputPwd = passwordInput.text.toString()
-                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
-
-                if (TotpUtils.verifyTotp(secret, inputPwd)) {
-                    // 验证成功刷新过期时间
-                    prefs.edit()
-                        .putBoolean("password_verified", true)
-                        .putLong("last_verify_time", System.currentTimeMillis())
-                        .apply()
-                    rootView.removeView(maskView)
-                    dialog.dismiss()
-                    ToastUtils.okToast(this, "验证成功，365天后将再次校验")
-                    Handler(Looper.getMainLooper()).post { start() }
-                } else {
-                    ToastUtils.errorToast(this, "动态密码错误，请联系管理员")
-                    dialog.dismiss()
-                    showPasswordVerificationDialog()
-                }
-            }
-            .create()
-            .also { dlg ->
-                // 手动接管"获取密钥"按钮:点击不自动关闭验证窗(否则返回后只剩遮罩黑屏),返回后仍可继续输码
-                dlg.setOnShowListener {
-                    dlg.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
-                        val secret = getSharedPreferences("AppLock", Context.MODE_PRIVATE).getString("totp_secret", null)
-                        if (secret == null) initTotpSecretIfNeeded() else initTotpSecretIfNeeded(showKeyOnly = true)
-                    }
-                }
-            }
-            .show()
-    }
-
-    private fun dp2px(dp: Int): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics).toInt()
-    }
 
     private fun initAllComponents(savedInstanceState: Bundle?) {
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.mainDrawerLayout, R.string.open_navigation, R.string.close_navigation).also {
@@ -553,7 +215,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                            val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
                            val verified = prefs.getBoolean("password_verified", false)
                            val lastTs = prefs.getLong("last_verify_time", 0)
-                           val expired = lastTs > 0 && (System.currentTimeMillis() - lastTs >= EXPIRE_15DAY_MS)
+                           val expired = lastTs > 0 && (System.currentTimeMillis() - lastTs >= TotpUtils.EXPIRE_MS)
                            if (verified && !expired) start()
                        }, fabricPrivacy::logException)
 
@@ -563,7 +225,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
                 val verified = prefs.getBoolean("password_verified", false)
                 val lastTs = prefs.getLong("last_verify_time",0)
-                val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= EXPIRE_15DAY_MS)
+                val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= TotpUtils.EXPIRE_MS)
                 if (!verified || expired) {
                     finish()
                     return
@@ -742,7 +404,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         val verified = prefs.getBoolean("password_verified", false)
         val lastTs = prefs.getLong("last_verify_time",0)
-        val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= EXPIRE_15DAY_MS)
+        val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= TotpUtils.EXPIRE_MS)
         if (config.appInitialized && verified && !expired) binding.splash.visibility = View.GONE
         if (!isProtectionCheckActive && verified && !expired) {
             isProtectionCheckActive = true

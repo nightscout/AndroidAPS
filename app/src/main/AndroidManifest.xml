@@ -67,6 +67,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="app.aaps.ActivateActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop" />
+        <activity
             android:name="app.aaps.activities.PreferencesActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
