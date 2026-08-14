@@ -1,6 +1,5 @@
 package app.aaps.plugins.main.general.persistentNotification
 
-import app.aaps.TotpUtils
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -84,10 +83,11 @@ class PersistentNotificationPlugin @Inject constructor(
     override fun onStart() {
         super.onStart()
         // 授权锁: 未验证/过期前不创建通知渠道, 避免 OPPO 等系统在激活页弹出"允许发送通知"
+        // 常量与 app 模块 TotpUtils.EXPIRE_MS 保持一致(365天, 避免跨模块依赖)
         val prefs = context.getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         val verified = prefs.getBoolean("password_verified", false)
         val lastTs = prefs.getLong("last_verify_time", 0L)
-        val expired = lastTs > 0 && (System.currentTimeMillis() - lastTs >= TotpUtils.EXPIRE_MS)
+        val expired = lastTs > 0 && (System.currentTimeMillis() - lastTs >= 365L * 24 * 60 * 60 * 1000)
         if (verified && !expired) {
             notificationHolder.createNotificationChannel()
         }
