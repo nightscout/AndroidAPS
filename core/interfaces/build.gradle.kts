@@ -6,7 +6,12 @@ plugins {
     // "The 'com.android.library' (or 'com.android.application') plugin is not compatible with the
     // 'org.jetbrains.kotlin.multiplatform' plugin since AGP 9.0."
     alias(libs.plugins.android.kmp.library)
+    // The Compose COMPILER, which ships with Kotlin and compiles @Composable for every target.
     alias(libs.plugins.compose.compiler)
+    // The Compose Multiplatform framework. Needed because the compiler plugin above is applied per
+    // project rather than per target and fails any compilation with no Compose runtime on the class
+    // path - which is what kept the Apple targets out of this module at first.
+    alias(libs.plugins.compose.multiplatform)
     id("kotlinx-serialization")
 }
 
@@ -50,23 +55,18 @@ kotlin {
         }
     }
 
-    // Only the Android target for now. Not because of the source split - see below.
+    // Apple klibs cross compile on Windows. Linking and running still need a Mac, and those tasks
+    // report SKIPPED rather than failing.
     //
-    // The compose compiler plugin is applied per project, not per target, and it fails ANY
-    // compilation that has no Compose runtime on the class path - a plain jvm() target as much as an
-    // Apple one. This module needs that plugin for exactly one declaration:
-    // `UserEntryPresentationHelper.iconColor` is `@Composable`. Every other Compose reference here is
-    // a plain type (ImageVector, Color, AnnotatedString) and needs only the dependency.
+    // These are what keep commonMain honest. The split was made by compiling for iosArm64 and moving
+    // whatever failed, so keeping the target means a java.* import added to commonMain later fails
+    // the build instead of quietly compiling on Android.
     //
-    // So the way to open the other targets is to move that one interface to :core:ui - both of its
-    // consumers, :implementation and :ui, already depend on it - and drop the plugin from here. That
-    // touches another module's API, so it is deliberately left as its own change rather than folded
-    // into the source split.
-    //
-    // The split itself was done against the Apple compiler: every file in commonMain was placed by
-    // compiling for iosArm64 and moving whatever failed, so commonMain is platform neutral as of this
-    // commit. What is missing without that target is the *enforcement* - a java.* import added to
-    // commonMain later would compile fine on Android and nothing would object.
+    // Deliberately no jvm() target: it pulls in the desktop Compose surface (skiko-awt) and gives the
+    // module another way to fail without saying anything about iOS. Recorded in wave 17 of
+    // _docs/KMP_IOS_FEASIBILITY.md.
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
         commonMain {
@@ -86,6 +86,10 @@ kotlin {
                 // Multiplatform since 1.4.0, so LongSparseArray is usable from common code.
                 // AutosensDataStore, TddCalculator and TirCalculator all expose it, so it stays api.
                 api(libs.androidx.collection)
+                // The CMP runtime, so the compose compiler plugin has something to compile against on
+                // every target. On Android CMP delegates to androidx, so the composeBom still decides
+                // the Android versions and nothing about the Android build changes.
+                implementation(libs.cmp.runtime)
             }
         }
 
