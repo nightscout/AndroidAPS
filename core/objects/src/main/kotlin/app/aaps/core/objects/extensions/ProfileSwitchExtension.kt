@@ -4,6 +4,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.time.systemUtcOffsetAt
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.profile.SingleProfile
@@ -11,8 +12,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.offsetAt
 import org.json.JSONObject
-import java.util.TimeZone
+import kotlin.time.Instant
 
 fun PS.getCustomizedName(decimalFormatter: DecimalFormatter): String {
     var name: String = profileName
@@ -44,7 +47,7 @@ fun SingleProfile.toPureProfile(dateUtil: DateUtil): PureProfile? =
         icBlocks = ic,
         targetBlocks = target,
         glucoseUnit = if (mgdl) GlucoseUnit.MGDL else GlucoseUnit.MMOL,
-        timeZone = TimeZone.getDefault()
+        utcOffset = systemUtcOffsetAt(dateUtil.now())
     )
 
 /**
@@ -57,7 +60,13 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits
         val iCfg = JsonHelper.safeGetJSONObject(jsonObject, "iCfg", null)?.let {
             ICfg.fromJson(it)
         }
-        val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
+        // The offset AT THIS MOMENT, not the zone's standard offset. Taking `rawOffset` here is what
+        // made a summer Prague profile claim +01:00 and then get named after some unrelated zone that
+        // really is at +01:00 in July. `java.util.TimeZone.getTimeZone` quietly answered GMT for an id
+        // it did not know, and kotlinx throws instead, so that fallback is kept explicitly.
+        val zoneName = JsonHelper.safeGetString(jsonObject, "timezone", "UTC")
+        val zone = runCatching { TimeZone.of(zoneName) }.getOrDefault(TimeZone.UTC)
+        val utcOffset = zone.offsetAt(Instant.fromEpochMilliseconds(dateUtil.now())).totalSeconds * 1000L
 
         val isfBlocks = blockFromJsonArray(jsonObject.getJSONArray("sens"), dateUtil) ?: return null
         val icBlocks = blockFromJsonArray(jsonObject.getJSONArray("carbratio"), dateUtil)
@@ -73,7 +82,7 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits
             icBlocks = icBlocks,
             targetBlocks = targetBlocks,
             glucoseUnit = units,
-            timeZone = timezone,
+            utcOffset = utcOffset,
             iCfg = iCfg
         )
     } catch (_: Exception) {

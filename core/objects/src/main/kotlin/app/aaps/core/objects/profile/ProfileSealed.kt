@@ -1,6 +1,7 @@
 package app.aaps.core.objects.profile
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.time.systemUtcOffsetAt
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -40,7 +41,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.TimeZone
+import kotlin.time.Clock
 
 sealed class ProfileSealed(
     val id: Long,
@@ -127,7 +128,7 @@ sealed class ProfileSealed(
         null,
         0,
         100,
-        value.timeZone.rawOffset.toLong(),
+        value.utcOffset,
         activePlugin?.activeAPS
     ) {
 
@@ -154,7 +155,7 @@ sealed class ProfileSealed(
         null,
         0,
         100,
-        value.timeZone.rawOffset.toLong(),
+        value.utcOffset,
         null
     ), PumpProfile {
 
@@ -384,7 +385,7 @@ sealed class ProfileSealed(
             targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
             glucoseUnit = units,
             iCfg = iCfg,
-            timeZone = TimeZone.getDefault()
+            utcOffset = systemUtcOffsetAt(dateUtil.now())
         )
 
     /**
@@ -492,7 +493,7 @@ sealed class ProfileSealed(
                     icBlocks = icBlocks.shiftBlock(100.0 / percentage * iCfg.concentration, timeshift),
                     targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
                     glucoseUnit = units,
-                    timeZone = TimeZone.getDefault()
+                    utcOffset = systemUtcOffsetAt(Clock.System.now().toEpochMilliseconds())
                 ),
                 null
             )

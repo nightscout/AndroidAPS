@@ -21,7 +21,10 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import java.io.File
+import kotlinx.datetime.offsetAt
 import java.util.TimeZone
+import kotlin.time.Instant
+import kotlinx.datetime.TimeZone as KtTimeZone
 
 class AutotuneCoreTest : TestBaseWithProfile() {
 
@@ -94,7 +97,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
             val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
             val peak = JsonHelper.safeGetIntAllowNull(jsonObject, "insulinPeakTime") ?: return null
             val iCfg = ICfg("insulin", peak, dia, 1.0)
-            val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
+            val zone = runCatching { KtTimeZone.of(JsonHelper.safeGetString(jsonObject, "timezone", "UTC")) }.getOrDefault(KtTimeZone.UTC)
             val isfJson = jsonObject.getJSONObject("isfProfile")
             val isfBlocks = ArrayList<Block>(1).also {
                 val isfJsonArray = isfJson.getJSONArray("sensitivities")
@@ -117,7 +120,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 icBlocks = icBlocks,
                 targetBlocks = targetBlocks,
                 glucoseUnit = units,
-                timeZone = timezone
+                utcOffset = zone.offsetAt(Instant.fromEpochMilliseconds(dateUtil.now())).totalSeconds * 1000L
             )
             return ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), iCfg)
         } catch (_: Exception) {
