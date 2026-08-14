@@ -31,7 +31,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
@@ -141,9 +143,12 @@ class DetermineBasalResult @Inject constructor(
     }
 
     override fun newAndClone(): APSResult = apsResultProvider.get().with(result)
-    override fun json(): JSONObject {
+    override fun json(): JsonObject {
         reportNonFiniteResultFields()
-        return JSONObject(result.serialize())
+        // Straight to a tree. This used to serialise to text and parse it back with org.json, once per
+        // loop cycle. Same default Json either way, so a non-finite Double still throws here - see
+        // `reportNonFiniteResultFields`, that crash is the signal and must not be swallowed.
+        return Json.encodeToJsonElement(RT.serializer(), result).jsonObject
     }
 
     /**
@@ -155,9 +160,9 @@ class DetermineBasalResult @Inject constructor(
      *
      * We deliberately do NOT sanitize/swallow here — the crash is the signal driving the ongoing
      * DetermineBasal NaN hunt (see `DetermineBasalSMB` minPredBG pin, `OpenAPSSMBPlugin` invalidInputs
-     * guard). Instead, right before the (still-crashing) serialize, we report exactly which field is
+     * guard). Instead, right before the (still-crashing) encode, we report exactly which field is
      * non-finite plus the ISF inputs that feed it, so the next occurrence pinpoints the field and
-     * algorithm instead of an opaque framework trace. `[result.serialize]` runs unchanged afterwards.
+     * algorithm instead of an opaque framework trace. The encode runs unchanged afterwards.
      */
     private fun reportNonFiniteResultFields() {
         val offenders = buildList {

@@ -75,7 +75,10 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONObject
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.time.LocalDateTime
@@ -1135,7 +1138,7 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?) {
+    override fun exportApsResult(algorithm: String?, input: String, output: String?) {
         dataInbox.putAndEnqueue(ApsExportInbox, ApsResultExportWorker.ApsResultData(algorithm, input, output))
     }
 
@@ -1151,7 +1154,8 @@ class ImportExportPrefsImpl @Inject constructor(
         private val dataInbox: DataInbox
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
-        data class ApsResultData(val algorithm: String?, val input: JSONObject, val output: JSONObject?)
+        /** [input] and [output] are already serialised JSON documents. */
+        data class ApsResultData(val algorithm: String?, val input: String, val output: String?)
 
         override suspend fun doWorkAndLog(): Result {
             if (!config.isEngineeringMode()) return Result.success(workDataOf("Result" to "Export not enabled"))
@@ -1163,10 +1167,13 @@ class ImportExportPrefsImpl @Inject constructor(
             for (apsResultData in items) {
                 val newFile = prefFileList.newResultFile()
                 try {
-                    val jsonObject = JSONObject().apply {
-                        put("algorithm", apsResultData.algorithm)
-                        put("input", apsResultData.input)
-                        put("output", apsResultData.output)
+                    // parseToJsonElement, not put(key, text): the documents must be nested, and writing
+                    // them as text would quote and escape the whole thing into a single string value.
+                    val jsonObject = buildJsonObject {
+                        // A null algorithm left the key out before. Keep it out.
+                        apsResultData.algorithm?.let { put("algorithm", it) }
+                        put("input", Json.parseToJsonElement(apsResultData.input))
+                        apsResultData.output?.let { put("output", Json.parseToJsonElement(it)) }
                     }
                     storage.putFileContents(newFile, jsonObject.toString())
                 } catch (e: FileNotFoundException) {
@@ -1174,6 +1181,11 @@ class ImportExportPrefsImpl @Inject constructor(
                     hadFailure = true
                 } catch (e: IOException) {
                     aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                    hadFailure = true
+                } catch (e: SerializationException) {
+                    // Only reachable now that the documents arrive as text - a caller that hands us
+                    // something unparsable loses this one file instead of taking the worker down.
+                    aapsLogger.error(LTag.CORE, "APS result is not valid JSON", e)
                     hadFailure = true
                 }
             }

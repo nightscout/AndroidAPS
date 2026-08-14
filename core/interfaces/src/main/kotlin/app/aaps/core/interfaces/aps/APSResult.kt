@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.aps
 
 import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.constraints.Constraint
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 interface APSResult {
 
@@ -52,7 +52,7 @@ interface APSResult {
 
     suspend fun resultAsString(): String
     fun newAndClone(): APSResult
-    fun json(): JSONObject?
+    fun json(): JsonObject?
     fun predictions(): Predictions?
     fun rawData(): Any
 

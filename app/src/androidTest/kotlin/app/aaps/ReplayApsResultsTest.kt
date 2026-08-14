@@ -3,6 +3,7 @@ package app.aaps
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatusAutoIsf
@@ -118,7 +119,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         JSONAssert.assertEquals(
             "Error in file $filename",
             output.toString(),
-            result?.json()?.apply {
+            result?.jsonOrg()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
             }.toString(),
@@ -239,22 +240,22 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
 
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, result?.jsonOrg()?.getString("reason") ?: "")
         aapsLogger.debug(LTag.APS, resultKt.reason.toString())
         aapsLogger.debug(LTag.APS, "File: $filename")
 //        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
-        assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
-        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
-        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
-        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
-        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
-        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json()?.optDouble("units"))
-        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json()?.optDouble("sensitivityRatio"))
-        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json()?.optInt("duration"))
-        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json()?.optDouble("rate"))
-        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("COB"))
-        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("IOB"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result?.jsonOrg()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("eventualBG"))
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.jsonOrg()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.jsonOrg()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result?.jsonOrg()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("IOB"))
     }
 
     private fun testOpenAPSSMBDynamicISF(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
@@ -283,7 +284,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         JSONAssert.assertEquals(
             "Error in file $filename",
             output.toString(),
-            result?.json()?.apply {
+            result?.jsonOrg()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
             }.toString(),
@@ -404,23 +405,23 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
 
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, result?.jsonOrg()?.getString("reason") ?: "")
         aapsLogger.debug(LTag.APS, resultKt.reason.toString())
         aapsLogger.debug(LTag.APS, "File: $filename")
-//        assertThat(resultKt.reason.toString()).isEqualTo(result?.json()?.getString("reason"))
-        assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
-        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
-        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
-        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
-        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
-        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json()?.optDouble("units"))
-        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json()?.optDouble("sensitivityRatio"))
-        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json()?.optInt("duration"))
-        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json()?.optDouble("rate"))
-        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("COB"))
-        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("IOB"))
-        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json()?.optDouble("variable_sens"))
+//        assertThat(resultKt.reason.toString()).isEqualTo(result?.jsonOrg()?.getString("reason"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result?.jsonOrg()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("eventualBG"))
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.jsonOrg()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.jsonOrg()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result?.jsonOrg()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("IOB"))
+        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("variable_sens"))
     }
 
     private fun testOpenAPSAMA(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
@@ -442,7 +443,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         JSONAssert.assertEquals(
             "Error in file $filename",
             output.toString(),
-            result?.json()?.apply {
+            result?.jsonOrg()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
             }.toString(),
@@ -558,23 +559,23 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
 
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, result?.jsonOrg()?.getString("reason") ?: "")
         aapsLogger.debug(LTag.APS, resultKt.reason.toString())
         aapsLogger.debug(LTag.APS, "File: $filename")
-//        assertThat(resultKt.reason.toString()).isEqualTo(result?.json()?.getString("reason"))
-        assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
-        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
-        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
-        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
-        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
-        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json()?.optDouble("units"))
-        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json()?.optDouble("sensitivityRatio"))
-        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json()?.optInt("duration"))
-        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json()?.optDouble("rate"))
-        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("COB"))
-        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("IOB"))
-        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json()?.optDouble("variable_sens"))
+//        assertThat(resultKt.reason.toString()).isEqualTo(result?.jsonOrg()?.getString("reason"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result?.jsonOrg()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("eventualBG"))
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.jsonOrg()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.jsonOrg()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result?.jsonOrg()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("IOB"))
+        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("variable_sens"))
     }
 
     private fun testOpenAPSSMBAutoISF(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
@@ -599,7 +600,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         JSONAssert.assertEquals(
             "Error in file $filename",
             output.toString(),
-            result.json()?.apply {
+            result.jsonOrg()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
             }.toString(),
@@ -750,23 +751,23 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
 //
         // aapsLogger.info(LTag.APS, resultKt.toString())
 //
-        // aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
+        // aapsLogger.debug(LTag.APS, result?.jsonOrg()?.getString("reason") ?: "")
         // aapsLogger.debug(LTag.APS, resultKt.reason.toString())
         aapsLogger.debug(LTag.APS, "File: $filename")
 //      //   assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
-        assertThat(resultKt.tick ?: "").isEqualTo(result.json()?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: 0.0).isWithin(1.0).of(result.json()?.optDouble("eventualBG") ?: 0.0)
-        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result.json()?.optDouble("targetBG"))
-        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result.json()?.optDouble("insulinReq"))
-        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result.json()?.optInt("carbsReq"))
-        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result.json()?.optInt("carbsReqWithin"))
-        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result.json()?.optDouble("units"))
-        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result.json()?.optDouble("sensitivityRatio"))
-        assertThat(resultKt.duration ?: 0).isEqualTo(result.json()?.optInt("duration"))
-        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result.json()?.optDouble("rate"))
-        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result.json()?.optDouble("COB"))
-        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result.json()?.optDouble("IOB"))
-        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result.json()?.optDouble("variable_sens"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result.jsonOrg()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: 0.0).isWithin(1.0).of(result.jsonOrg()?.optDouble("eventualBG") ?: 0.0)
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result.jsonOrg()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result.jsonOrg()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result.jsonOrg()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("IOB"))
+        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result.jsonOrg()?.optDouble("variable_sens"))
     }
 
     enum class TestSource { ASSET, FILE }
@@ -804,4 +805,14 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
             TestSource.FILE  -> JSONObject(storage.getFileContents(File(path))).apply { put("filename", name) }
         }
     }
+
+    /**
+     * [APSResult.json] hands back an immutable kotlinx document now. Every assertion in this file was
+     * written against `org.json` and leans on its accessor defaults - `optDouble` gives NaN for a
+     * missing key, `optInt` gives 0, `optString` gives "" - and two places still add a timestamp to
+     * the document before comparing it. Reading the same bytes back through `org.json` keeps all of
+     * that exactly as written, which also makes this file say that the new document is the same
+     * document. This is androidTest, so the extra parse costs nothing.
+     */
+    private fun APSResult.jsonOrg(): JSONObject? = json()?.let { JSONObject(it.toString()) }
 }

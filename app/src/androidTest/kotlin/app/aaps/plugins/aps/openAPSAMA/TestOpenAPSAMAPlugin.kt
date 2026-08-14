@@ -36,6 +36,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
+import app.aaps.core.objects.extensions.with
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -43,6 +44,7 @@ import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
+import kotlinx.serialization.json.put
 import org.json.JSONException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -229,13 +231,18 @@ class TestOpenAPSAMAPlugin @Inject constructor(
                 false
             //determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()
-            determineBasalResultAMA.json()?.put("timestamp", dateUtil.toISOString(now))
             determineBasalResultAMA.inputConstraints = inputConstraints
             //lastDetermineBasalAdapter = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMAFromJS
             lastAPSRun = now
             if (config.isEnabled(ExternalOptions.UNFINISHED_MODE))
-                importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())
+                importExportPrefs.exportApsResult(
+                    this::class.simpleName,
+                    determineBasalAdapterAMAJS.json().toString(),
+                    // The timestamp used to be put into the stored document a few lines up. That document
+                    // is immutable now, so it goes on here, where it is actually used.
+                    determineBasalResultAMA.json()?.with { put("timestamp", dateUtil.toISOString(now)) }?.toString()
+                )
             rxBus.send(EventAPSCalculationFinished())
         }
         rxBus.send(EventOpenAPSUpdateGui())

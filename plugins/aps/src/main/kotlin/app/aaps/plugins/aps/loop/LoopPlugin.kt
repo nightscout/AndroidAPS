@@ -76,6 +76,7 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.objects.extensions.json
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
+import app.aaps.core.objects.extensions.with
 import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.aps.R
@@ -92,6 +93,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -946,36 +950,42 @@ class LoopPlugin @Inject constructor(
         aapsLogger.debug(LTag.NSCLIENT, "Building DeviceStatus for $reason")
         val profile = profileFunction.getProfile() ?: return
 
-        var apsResult: JSONObject? = null
+        var apsResult: JsonObject? = null
         var iob: JSONObject? = null
-        var enacted: JSONObject? = null
+        var enacted: JsonObject? = null
         lastRun?.let { lastRun ->
             if (lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
                 // do not send if result is older than 1 min
-                apsResult = lastRun.request?.json()?.also {
-                    it.put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
-                    it.put("isfMgdlForCarbs", profile.getIsfMgdlForCarbs(dateUtil.now(), "LoopPlugin", config, processedDeviceStatusData))
+                apsResult = lastRun.request?.json()?.with {
+                    put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
+                    put("isfMgdlForCarbs", profile.getIsfMgdlForCarbs(dateUtil.now(), "LoopPlugin", config, processedDeviceStatusData))
                 }
                 iob = lastRun.request?.iob?.json(dateUtil)?.also {
                     it.put("time", dateUtil.toISOString(lastRun.lastAPSRun))
                 }
-                val requested = JSONObject()
                 // Snapshot the mutable field once: the APS loop (invoke()) can null/reassign
                 // lastRun.tbrSetByPump concurrently, so re-dereferencing it with !! below raced and
                 // threw NPE. A single read is also a consistent snapshot (it was read 3x before).
                 val tbrSetByPump = lastRun.tbrSetByPump
                 if (tbrSetByPump?.enacted == true) { // enacted
-                    enacted = lastRun.request?.json()?.also {
-                        it.put("rate", tbrSetByPump.json(profile.getBasal())["rate"])
-                        it.put("duration", tbrSetByPump.json(profile.getBasal())["duration"])
-                        it.put("received", true)
+                    val pumpJson = tbrSetByPump.json(profile.getBasal())
+                    enacted = lastRun.request?.let { request ->
+                        request.json()?.with {
+                            // pumpJson is still an org.json document. get() throws on a missing entry
+                            // exactly as before, and passing the Number through unchanged keeps whatever
+                            // numeric type the pump result carried.
+                            put("rate", pumpJson.get("rate") as Number)
+                            put("duration", pumpJson.get("duration") as Number)
+                            put("received", true)
+                            putJsonObject("requested") {
+                                put("duration", request.duration)
+                                put("rate", request.rate)
+                                put("temp", "absolute")
+                                put("smb", request.smb)
+                            }
+                            put("smb", tbrSetByPump.bolusDelivered)
+                        }
                     }
-                    requested.put("duration", lastRun.request?.duration)
-                    requested.put("rate", lastRun.request?.rate)
-                    requested.put("temp", "absolute")
-                    requested.put("smb", lastRun.request?.smb)
-                    enacted?.put("requested", requested)
-                    enacted?.put("smb", tbrSetByPump.bolusDelivered)
                 }
             }
         }

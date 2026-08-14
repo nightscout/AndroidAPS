@@ -282,7 +282,9 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                     .isTempBasalRequested =
                     false
                 //determineBasalResultSMB.iob = iobArray[0]
-                determineBasalResultSMB.json()?.put("timestamp", dateUtil.toISOString(now))
+                // The timestamp put() that stood here wrote into the stored document for the export
+                // below, which is commented out. The document is immutable now, so it is added at the
+                // export instead - see the commented call and TestOpenAPSAMAPlugin for the live one.
                 determineBasalResultSMB.inputConstraints = inputConstraints
                 //lastDetermineBasalAdapter = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMBFromJS
@@ -293,7 +295,8 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                 //         is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName
                 //         is DetermineBasalAdapterSMBDynamicISFJS -> OpenAPSSMBDynamicISFPlugin::class.simpleName
                 //         else -> "Error"
-                //     }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
+                //     }, determineBasalAdapterSMBJS.json().toString(),
+                //     determineBasalResultSMB.json()?.with { put("timestamp", dateUtil.toISOString(now)) }?.toString()
                 // )
                 rxBus.send(EventAPSCalculationFinished())
             }

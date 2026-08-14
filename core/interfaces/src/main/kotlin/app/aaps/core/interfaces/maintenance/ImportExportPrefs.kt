@@ -3,7 +3,6 @@ package app.aaps.core.interfaces.maintenance
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.rx.weardata.CwfData
-import org.json.JSONObject
 
 /** Where to send the export. */
 enum class ExportDestination {
@@ -54,7 +53,13 @@ interface ImportExportPrefs {
     fun exportSharedPreferencesNonInteractive(password: String): Boolean
     fun exportUserEntriesCsv()
     suspend fun executeCsvExport(): ExportResult
-    fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?)
+    /**
+     * Write one APS run to a debug file (engineering mode only).
+     *
+     * [input] and [output] are whole JSON documents, already serialised. Nothing here reads them -
+     * they are wrapped in a small envelope and written out - so text is all this needs.
+     */
+    fun exportApsResult(algorithm: String?, input: String, output: String?)
 
     // Compose export support — discrete steps, no UI
 

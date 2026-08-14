@@ -7,13 +7,24 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.long
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-/** Covers the org.json [JSONObject] preference extensions: putIfThereIsValue skip rules + put/store round-trip. */
+/**
+ * Covers the [JSONObject] preference extensions (putIfThereIsValue skip rules + put/store round-trip)
+ * and their kotlinx twins, including [with], which replaced writing into an already built document.
+ */
 class JSONObjectExtTest {
 
     @Test
@@ -90,4 +101,84 @@ class JSONObjectExtTest {
         JSONObject().store(IntKey.OverviewCarbsButtonIncrement1, prefs) // key not present → no-op
         // nothing to verify beyond no exception; getInt on absent key would have thrown inside store
     }
+
+    // region kotlinx twins
+
+    @Test
+    fun kotlinxPutIfThereIsValue_writesNonZeroSkipsZeroAndNull() {
+        val j = buildJsonObject {
+            putIfThereIsValue("i", 5)
+            putIfThereIsValue("iz", 0)
+            putIfThereIsValue("inull", null as Int?)
+            putIfThereIsValue("l", 5L)
+            putIfThereIsValue("lz", 0L)
+            putIfThereIsValue("d", 1.5)
+            putIfThereIsValue("dz", 0.0)
+            putIfThereIsValue("s", "x")
+            putIfThereIsValue("se", "")
+        }
+        assertThat(j.getValue("i").jsonPrimitive.int).isEqualTo(5)
+        assertThat(j.containsKey("iz")).isFalse()
+        assertThat(j.containsKey("inull")).isFalse()
+        assertThat(j.getValue("l").jsonPrimitive.long).isEqualTo(5L)
+        assertThat(j.containsKey("lz")).isFalse()
+        assertThat(j.getValue("d").jsonPrimitive.double).isEqualTo(1.5)
+        assertThat(j.containsKey("dz")).isFalse()
+        assertThat(j.getValue("s").jsonPrimitive.content).isEqualTo("x")
+        assertThat(j.containsKey("se")).isFalse()
+    }
+
+    /**
+     * [with] replaces code that used to keep writing into a finished document, so it has to behave the
+     * same way a repeated `put` did: entries add, and a repeat of an existing name replaces it.
+     */
+    @Test
+    fun with_addsEntries() {
+        val base = buildJsonObject { put("a", 1) }
+
+        val merged = base.with { put("b", 2) }
+
+        assertThat(merged.getValue("a").jsonPrimitive.int).isEqualTo(1)
+        assertThat(merged.getValue("b").jsonPrimitive.int).isEqualTo(2)
+    }
+
+    @Test
+    fun with_laterEntryWinsOverExistingOne() {
+        val base = buildJsonObject { put("a", 1) }
+
+        val merged = base.with { put("a", 99) }
+
+        assertThat(merged.getValue("a").jsonPrimitive.int).isEqualTo(99)
+        assertThat(merged).hasSize(1)
+    }
+
+    /** The source is a value: merging must hand back a new document and leave the old one alone. */
+    @Test
+    fun with_leavesTheSourceUntouched() {
+        val base = buildJsonObject { put("a", 1) }
+
+        base.with { put("b", 2) }
+
+        assertThat(base.containsKey("b")).isFalse()
+        assertThat(base).hasSize(1)
+    }
+
+    @Test
+    fun with_addingNothingGivesAnEqualDocument() {
+        val base = buildJsonObject { put("a", 1); put("b", "x") }
+
+        assertThat(base.with { }).isEqualTo(base)
+    }
+
+    /** Nested values survive the copy - the merge is shallow, so the sub-document is carried over as is. */
+    @Test
+    fun with_keepsNestedDocuments() {
+        val base = buildJsonObject { putJsonObject("inner") { put("deep", 7) } }
+
+        val merged = base.with { put("a", 1) }
+
+        assertThat(merged.getValue("inner").jsonObject.getValue("deep").jsonPrimitive.int).isEqualTo(7)
+    }
+
+    // endregion
 }

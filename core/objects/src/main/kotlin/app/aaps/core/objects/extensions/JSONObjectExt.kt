@@ -7,7 +7,9 @@ import app.aaps.core.keys.interfaces.LongPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.json.JSONObject
 
@@ -92,3 +94,16 @@ fun JsonObjectBuilder.putIfThereIsValue(key: String, value: Double?) {
 fun JsonObjectBuilder.putIfThereIsValue(key: String, value: String?) {
     if (value != null && value.isNotEmpty()) put(key, value)
 }
+
+/**
+ * Copy of this document with [extra] entries added on top.
+ *
+ * A [JsonObject] cannot be written into after it is built, so code that used to take a finished
+ * document and keep putting into it needs a new document instead. Entries added here win over
+ * entries of the same name already present, which is what writing into the old object did.
+ */
+fun JsonObject.with(extra: JsonObjectBuilder.() -> Unit): JsonObject =
+    buildJsonObject {
+        this@with.forEach { (key, value) -> put(key, value) }
+        extra()
+    }

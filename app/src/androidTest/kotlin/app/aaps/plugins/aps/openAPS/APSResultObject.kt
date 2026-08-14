@@ -31,7 +31,9 @@ import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -147,14 +149,12 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         newResult.targetBG = targetBG
     }
 
-    override fun json(): JSONObject? {
-        val json = JSONObject()
+    override fun json(): JsonObject? = buildJsonObject {
         if (runBlocking { isChangeRequested() }) {
-            json.put("rate", rate)
-            json.put("duration", duration)
-            json.put("reason", reason)
+            put("rate", rate)
+            put("duration", duration)
+            put("reason", reason)
         }
-        return json
     }
 
     override val predictionsAsGv: MutableList<GV>
