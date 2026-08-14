@@ -1,6 +1,7 @@
 package app.aaps
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -291,8 +292,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             if (showKeyOnly) {
                 addView(TextView(this@MainActivity).apply {
                     text = authStatusText()
-                    textSize = 14f
-                    setTextColor(Color.parseColor("#FF8C00"))
+                    textSize = 12f
+                    setTextColor(Color.parseColor("#757575"))
                     setPadding(0, 0, 0, dp2px(8))
                 })
             }
@@ -307,7 +308,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             }
         }
 
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(this, R.style.AlertDialog_Rounded)
             .setTitle(if (showKeyOnly) "密钥信息" else "获取授权码")
             .setView(dialogView)
             .setCancelable(false)
@@ -391,22 +392,18 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             orientation = LinearLayout.VERTICAL
             addView(TextView(this@MainActivity).apply {
                 text = authStatusText()
-                textSize = 13f
-                setTextColor(Color.parseColor("#FF8C00"))
-                setPadding(0, 0, 0, dp2px(8))
+                textSize = 12f
+                setTextColor(Color.parseColor("#757575"))
+                setPadding(0, 0, 0, dp2px(12))
             })
             addView(passwordInput)
         }
 
-        MaterialAlertDialogBuilder(this)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.AlertDialog_Rounded)
             .setTitle("APP授权码验证")
             .setView(dialogLayout)
             .setCancelable(false)
-            .setNeutralButton("获取密钥") { _, _ ->
-                // 不再重置密钥:有密钥则只展示密钥信息(不输码、不重新生成),无密钥走首次激活
-                val secret = getSharedPreferences("AppLock", Context.MODE_PRIVATE).getString("totp_secret", null)
-                if (secret == null) initTotpSecretIfNeeded() else initTotpSecretIfNeeded(showKeyOnly = true)
-            }
+            .setNeutralButton("获取密钥", null)
             .setNegativeButton("退出") { _, _ -> finish() }
             .setPositiveButton("验证") { dialog, _ ->
                 val inputPwd = passwordInput.text.toString()
@@ -427,6 +424,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     ToastUtils.errorToast(this, "动态密码错误，请联系管理员")
                     dialog.dismiss()
                     showPasswordVerificationDialog()
+                }
+            }
+            .create()
+            .also { dlg ->
+                // 手动接管"获取密钥"按钮:点击不自动关闭验证窗(否则返回后只剩遮罩黑屏),返回后仍可继续输码
+                dlg.setOnShowListener {
+                    dlg.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
+                        val secret = getSharedPreferences("AppLock", Context.MODE_PRIVATE).getString("totp_secret", null)
+                        if (secret == null) initTotpSecretIfNeeded() else initTotpSecretIfNeeded(showKeyOnly = true)
+                    }
                 }
             }
             .show()

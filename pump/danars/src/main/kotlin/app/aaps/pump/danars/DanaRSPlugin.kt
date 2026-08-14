@@ -1,5 +1,6 @@
 package app.aaps.pump.danars
 
+import android.bluetooth.BluetoothManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -47,6 +48,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -605,6 +608,26 @@ class DanaRSPlugin @Inject constructor(
                     ctx = context, intentKey = DanaIntentKey.BtSelector, title = app.aaps.pump.dana.R.string.selectedpump,
                     intent = Intent(context, BLEScanActivity::class.java)
                 )
+            )
+            addPreference(
+                Preference(context).apply {
+                    title = "清除配对"
+                    summary = "清除蓝牙绑定和配对密钥（泵连接异常时使用）"
+                    setOnPreferenceClickListener {
+                        OKDialog.showConfirmation(context, "清除配对", "将清除当前泵的蓝牙绑定和配对密钥，清除后需要重新扫描配对。是否继续？", ok = {
+                            clearPairing()
+                            try {
+                                val bta = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+                                preferences.getIfExists(DanaStringKey.MacAddress)?.let { addr ->
+                                    bta?.getRemoteDevice(addr)?.let { dev -> dev.javaClass.getMethod("removeBond").invoke(dev) }
+                                }
+                            } catch (_: Exception) {
+                            }
+                            ToastUtils.okToast(context, "配对已清除，请重新扫描配对泵")
+                        })
+                        true
+                    }
+                }
             )
             addPreference(
                 AdaptiveStringPreference(
