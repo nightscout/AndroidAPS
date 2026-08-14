@@ -12,7 +12,10 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.objects.extensions.putIfThereIsValue
 import app.aaps.implementation.R
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,41 +82,43 @@ class PumpStatusProviderImpl @Inject constructor(
     /**
      * Generate JSON status of pump sent to the NS
      */
-    override suspend fun generatePumpJsonStatus(): JSONObject {
+    override suspend fun generatePumpJsonStatus(): JsonObject {
         val pump = activePlugin.activePump
         // do not send data older than 60 minutes
-        if (dateUtil.isOlderThan(date = pump.lastDataTime.value, minutes = 60)) return JSONObject()
+        if (dateUtil.isOlderThan(date = pump.lastDataTime.value, minutes = 60)) return JsonObject(emptyMap())
         // Do not send any info if there is no running profile
-        val profile = profileFunction.getProfile() ?: return JSONObject()
+        val profile = profileFunction.getProfile() ?: return JsonObject(emptyMap())
         val expectedPumpState = pumpSync.expectedPumpState()
         val now = System.currentTimeMillis()
         val runningMode = persistenceLayer.getRunningModeActiveAt(now)
+        val profileName = profileFunction.getProfileName()
 
-        val pumpJson = JSONObject()
-            .put("reservoir", pump.reservoirLevel.value.iU(profile.insulinConcentration()).toInt())
-            .put("clock", dateUtil.toISOString(now))
-        val battery = JSONObject().putIfThereIsValue("percent", pump.batteryLevel.value)
-        val status = JSONObject()
-            .put("status", translator.translate(runningMode.mode))
-            .put("timestamp", dateUtil.toISOString(pump.lastDataTime.value))
-        val extended = JSONObject()
-            .put("Version", config.VERSION_NAME + "-" + config.BUILD_VERSION)
-            .putIfThereIsValue("LastBolus", dateUtil.dateAndTimeStringNullable(pump.lastBolusTime.value))
-            .putIfThereIsValue("LastBolusAmount", pump.lastBolusAmount.value?.iU(profile.insulinConcentration()))
-            .putIfThereIsValue("TempBasalAbsoluteRate", expectedPumpState.temporaryBasal?.convertedToAbsolute(now, profile))
-            .putIfThereIsValue("TempBasalStart", dateUtil.dateAndTimeStringNullable(expectedPumpState.temporaryBasal?.timestamp))
-            .putIfThereIsValue("TempBasalRemaining", expectedPumpState.temporaryBasal?.plannedRemainingMinutes)
-            .putIfThereIsValue("ExtendedBolusAbsoluteRate", expectedPumpState.extendedBolus?.rate)
-            .putIfThereIsValue("ExtendedBolusStart", dateUtil.dateAndTimeStringNullable(expectedPumpState.extendedBolus?.timestamp))
-            .putIfThereIsValue("ExtendedBolusRemaining", expectedPumpState.extendedBolus?.plannedRemainingMinutes)
-            .putIfThereIsValue("BaseBasalRate", pump.baseBasalRate.iU(profile.insulinConcentration(), true))
-            .put("ActiveProfile", profileFunction.getProfileName())
-
-        // grab more values from pump if provided
-        pump.updateExtendedJsonStatus(extended)
-        return pumpJson
-            .put("battery", battery)
-            .put("status", status)
-            .put("extended", extended)
+        return buildJsonObject {
+            put("reservoir", pump.reservoirLevel.value.iU(profile.insulinConcentration()).toInt())
+            put("clock", dateUtil.toISOString(now))
+            putJsonObject("battery") {
+                putIfThereIsValue("percent", pump.batteryLevel.value)
+            }
+            putJsonObject("status") {
+                put("status", translator.translate(runningMode.mode))
+                put("timestamp", dateUtil.toISOString(pump.lastDataTime.value))
+            }
+            putJsonObject("extended") {
+                put("Version", config.VERSION_NAME + "-" + config.BUILD_VERSION)
+                putIfThereIsValue("LastBolus", dateUtil.dateAndTimeStringNullable(pump.lastBolusTime.value))
+                putIfThereIsValue("LastBolusAmount", pump.lastBolusAmount.value?.iU(profile.insulinConcentration()))
+                putIfThereIsValue("TempBasalAbsoluteRate", expectedPumpState.temporaryBasal?.convertedToAbsolute(now, profile))
+                putIfThereIsValue("TempBasalStart", dateUtil.dateAndTimeStringNullable(expectedPumpState.temporaryBasal?.timestamp))
+                putIfThereIsValue("TempBasalRemaining", expectedPumpState.temporaryBasal?.plannedRemainingMinutes)
+                putIfThereIsValue("ExtendedBolusAbsoluteRate", expectedPumpState.extendedBolus?.rate)
+                putIfThereIsValue("ExtendedBolusStart", dateUtil.dateAndTimeStringNullable(expectedPumpState.extendedBolus?.timestamp))
+                putIfThereIsValue("ExtendedBolusRemaining", expectedPumpState.extendedBolus?.plannedRemainingMinutes)
+                putIfThereIsValue("BaseBasalRate", pump.baseBasalRate.iU(profile.insulinConcentration(), true))
+                put("ActiveProfile", profileName)
+                // Driver specific entries last, matching the previous order - the driver used to be
+                // handed the finished object and could still add to it.
+                pump.extendedStatus().forEach { (key, value) -> put(key, value) }
+            }
+        }
     }
 }

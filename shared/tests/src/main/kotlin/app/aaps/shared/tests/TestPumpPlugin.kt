@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.implementation.pump.PumpEnactResultObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.json.JsonObject
 
 @Suppress("MemberVisibilityCanBePrivate")
 class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
@@ -93,6 +94,11 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override fun canHandleDST(): Boolean = true
     override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) { /* not needed */
     }
+
+    /** Entries this fake pump contributes to the Nightscout "extended" section. */
+    var extendedStatusExtras: JsonObject = JsonObject(emptyMap())
+
+    override fun extendedStatus(): JsonObject = extendedStatusExtras
 
     override fun selectedActivePump(): Pump = this
 }

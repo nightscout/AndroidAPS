@@ -92,8 +92,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.joda.time.DateTime
-import org.json.JSONObject
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
@@ -1224,14 +1226,10 @@ class ComboV2Plugin @Inject constructor(
     override suspend fun cancelExtendedBolus(): PumpEnactResult =
         createFailurePumpEnactResult(R.string.combov2_extended_bolus_not_supported)
 
-    override fun updateExtendedJsonStatus(extendedStatus: JSONObject) {
+    override fun extendedStatus(): JsonObject = buildJsonObject {
         when (val alert = lastComboAlert) {
-            is AlertScreenContent.Warning ->
-                extendedStatus.put("WarningCode", alert.code)
-
-            is AlertScreenContent.Error   ->
-                extendedStatus.put("ErrorCode", alert.code)
-
+            is AlertScreenContent.Warning -> put("WarningCode", alert.code)
+            is AlertScreenContent.Error   -> put("ErrorCode", alert.code)
             else                          -> Unit
         }
     }

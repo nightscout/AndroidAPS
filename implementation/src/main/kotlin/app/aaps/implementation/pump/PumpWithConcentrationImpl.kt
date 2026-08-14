@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.objects.constraints.ConstraintObject
 import kotlinx.coroutines.flow.StateFlow
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -63,7 +63,7 @@ class PumpWithConcentrationImpl @Inject constructor(
     override val batteryLevel: StateFlow<Int?> get() = activePumpInternal.batteryLevel
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = activePumpInternal.cancelTempBasal(enforceNew)
     override suspend fun cancelExtendedBolus(): PumpEnactResult = activePumpInternal.cancelExtendedBolus()
-    override fun updateExtendedJsonStatus(extendedStatus: JSONObject) = activePumpInternal.updateExtendedJsonStatus(extendedStatus)
+    override fun extendedStatus(): JsonObject = activePumpInternal.extendedStatus()
     override fun manufacturer(): ManufacturerType = activePumpInternal.manufacturer()
     override fun model(): PumpType = activePumpInternal.model()
     override fun serialNumber(): String = activePumpInternal.serialNumber()

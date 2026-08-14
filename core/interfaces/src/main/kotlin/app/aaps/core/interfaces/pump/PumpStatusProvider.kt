@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.pump
 
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 interface PumpStatusProvider {
 
@@ -12,5 +12,5 @@ interface PumpStatusProvider {
     /**
      * Generate JSON status of pump sent to the NS
      */
-    suspend fun generatePumpJsonStatus(): JSONObject
+    suspend fun generatePumpJsonStatus(): JsonObject
 }

@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
 import kotlinx.coroutines.flow.StateFlow
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 /**
  * This interface defines the communication from AAPS-core to pump drivers.
@@ -208,12 +208,17 @@ interface Pump {
     suspend fun cancelExtendedBolus(): PumpEnactResult
 
     /**
-     * Status to be passed to NS.
+     * Driver specific entries for the "extended" section of the Nightscout pump status.
      *
      * This info is displayed when user hover over pump pill in NS.
      * Except common information every driver can add own info here.
+     *
+     * The driver **returns** its entries and the caller merges them. It used to be handed a mutable
+     * object to write into, which cannot work once that document is an immutable tree - and a return
+     * value is the clearer contract anyway, since a driver can no longer accidentally remove or
+     * overwrite the common fields.
      */
-    fun updateExtendedJsonStatus(extendedStatus: JSONObject) {}
+    fun extendedStatus(): JsonObject = JsonObject(emptyMap())
 
     /**
      *  Manufacturer type. Usually defined by used plugin
