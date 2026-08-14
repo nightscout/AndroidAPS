@@ -74,16 +74,79 @@
         android:title="@string/pref_simplify_ui"
         android:summary="%s" />
 
+    <!-- Each complication slot is a pair: its "Show" toggle, then its data source picker. The
+         picker declares android:dependency on the toggle, so turning the slot off also grays out
+         the picker. That is cosmetic only - dependency disables a row, it never hides it - and is
+         a complement to filtering this screen by what the loaded watch face actually shows, not a
+         substitute for it. -->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_complication_1"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_complication1"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
     <Preference
+        android:dependency="@string/key_show_complication_1"
         android:key="@string/key_complication_1"
         android:title="@string/pref_complication_1" />
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_complication_2"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_complication2"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
     <Preference
+        android:dependency="@string/key_show_complication_2"
         android:key="@string/key_complication_2"
         android:title="@string/pref_complication_2" />
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_complication_3"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_complication3"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
     <Preference
+        android:dependency="@string/key_show_complication_3"
         android:key="@string/key_complication_3"
         android:title="@string/pref_complication_3" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_complication_4"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_complication4"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <Preference
+        android:dependency="@string/key_show_complication_4"
+        android:key="@string/key_complication_4"
+        android:title="@string/pref_complication_4" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_complication_5"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_complication5"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <Preference
+        android:dependency="@string/key_show_complication_5"
+        android:key="@string/key_complication_5"
+        android:title="@string/pref_complication_5" />
 
 </PreferenceScreen>

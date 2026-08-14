@@ -1,6 +1,5 @@
 package app.aaps.wear.interaction
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
@@ -11,12 +10,12 @@ import androidx.preference.PreferenceManager
 import androidx.wear.watchface.editor.EditorRequest
 import androidx.wear.watchface.editor.WatchFaceEditorContract
 import app.aaps.wear.R
-import app.aaps.wear.watchfaces.CustomWatchface
+import app.aaps.wear.watchfaces.utils.WatchFaceComplicationSlots
 
 /**
- * Shared "Complication N" preference-tap handling for CustomWatchface's config screen
- * (watch_face_configuration_custom.xml), reused by both entry points that can show it: the
- * system's long-press "Customize" ([ConfigurationActivity]) and the AAPS Settings menu
+ * Shared "Complication N" preference-tap handling for the config screen of whichever watch face
+ * declares complication rows, reused by both entry points that can show it: the system's long-press
+ * "Customize" ([ConfigurationActivity]) and the AAPS Settings menu
  * ([WatchfaceConfigurationActivity]). Both launches resolve back to [ConfigurationActivity] -
  * the only activity in this app registered for ACTION_WATCH_FACE_EDITOR - which recognizes
  * [ConfigurationActivity.EXTRA_COMPLICATION_SLOT_ID] and opens the picker instead of showing
@@ -26,6 +25,13 @@ import app.aaps.wear.watchfaces.CustomWatchface
  * [WatchfaceConfigurationActivity] via [SamsungWatchFaceEditor] - it is not specific to
  * complications (it is what makes any watch face's settings screen show a real editing session),
  * so it does not live here.
+ *
+ * Nothing here names a watch face, and nothing here decides how many complications a watch face has
+ * or which of them the user wants: it asks the active one for the slots it hosts
+ * ([WatchFaceComplicationSlots], reached through [WatchFaceCatalog]) and offers one picker per slot,
+ * on the settings row each slot names. A watch face with a fixed layout answers with a constant
+ * list, one built from a loaded template with a derived one - this class cannot tell the difference
+ * and does not need to.
  */
 internal class ComplicationPickerSupport(private val fragment: Fragment) {
 
@@ -33,32 +39,22 @@ internal class ComplicationPickerSupport(private val fragment: Fragment) {
 
         private const val CACHED_PROVIDER_NAME_PREFIX = "complication_provider_name_"
 
-        /** All CWF complication slot IDs, in the order they appear on the preference screen. */
-        private val slotIds = listOf(
-            CustomWatchface.COMPLICATION_SLOT_ID_1,
-            CustomWatchface.COMPLICATION_SLOT_ID_2,
-            CustomWatchface.COMPLICATION_SLOT_ID_3
-        )
+        /** The watch face these screens configure, and the slots it hosts - see [WatchFaceCatalog]. */
+        private val watchFace = WatchFaceCatalog.complicationWatchFace
+        private val slots = WatchFaceCatalog.complicationSlotsFor(watchFace)
+        private val slotIds = slots.map { it.id }
 
-        /** Maps a tapped preference to its complication slot ID, or null if it isn't one of the 3. */
-        fun slotIdFor(context: Context, preference: Preference): Int? = when (preference.key) {
-            context.getString(R.string.key_complication_1) -> CustomWatchface.COMPLICATION_SLOT_ID_1
-            context.getString(R.string.key_complication_2) -> CustomWatchface.COMPLICATION_SLOT_ID_2
-            context.getString(R.string.key_complication_3) -> CustomWatchface.COMPLICATION_SLOT_ID_3
-            else                                            -> null
-        }
+        /** Maps a tapped preference to its complication slot ID, or null if it isn't a slot row. */
+        fun slotIdFor(context: Context, preference: Preference): Int? =
+            slots.firstOrNull { context.getString(it.preferenceKey) == preference.key }?.id
 
-        private fun keyForSlot(context: Context, slotId: Int): String? = when (slotId) {
-            CustomWatchface.COMPLICATION_SLOT_ID_1 -> context.getString(R.string.key_complication_1)
-            CustomWatchface.COMPLICATION_SLOT_ID_2 -> context.getString(R.string.key_complication_2)
-            CustomWatchface.COMPLICATION_SLOT_ID_3 -> context.getString(R.string.key_complication_3)
-            else                                   -> null
-        }
+        private fun keyForSlot(context: Context, slotId: Int): String? =
+            slots.firstOrNull { it.id == slotId }?.let { context.getString(it.preferenceKey) }
 
-        /** True if [fragment] is showing CustomWatchface's screen, the only one with these entries. */
+        /** True if [fragment] is showing the screen that carries these complication rows. */
         fun hasComplicationPreferences(fragment: PreferenceFragmentCompat): Boolean {
             val context = fragment.context ?: return false
-            return slotIds.any { slotId -> keyForSlot(context, slotId)?.let { fragment.findPreference<Preference>(it) } != null }
+            return slots.any { fragment.findPreference<Preference>(context.getString(it.preferenceKey)) != null }
         }
 
         /**
@@ -119,14 +115,13 @@ internal class ComplicationPickerSupport(private val fragment: Fragment) {
             super.createIntent(context, input).putExtra(ConfigurationActivity.EXTRA_COMPLICATION_SLOT_ID, slotId)
     }
 
-    private val launchers: Map<Int, ActivityResultLauncher<EditorRequest>> = mapOf(
-        CustomWatchface.COMPLICATION_SLOT_ID_1 to fragment.registerForActivityResult(ComplicationPickerContract(CustomWatchface.COMPLICATION_SLOT_ID_1)) { },
-        CustomWatchface.COMPLICATION_SLOT_ID_2 to fragment.registerForActivityResult(ComplicationPickerContract(CustomWatchface.COMPLICATION_SLOT_ID_2)) { },
-        CustomWatchface.COMPLICATION_SLOT_ID_3 to fragment.registerForActivityResult(ComplicationPickerContract(CustomWatchface.COMPLICATION_SLOT_ID_3)) { }
-    )
+    // One launcher per slot, since the contract carries the slot id. Registered here, at construction
+    // time, because registerForActivityResult() must be called before the fragment reaches STARTED.
+    private val launchers: Map<Int, ActivityResultLauncher<EditorRequest>> =
+        slotIds.associateWith { slotId -> fragment.registerForActivityResult(ComplicationPickerContract(slotId)) { } }
 
     /**
-     * Returns true if [preference] was one of the 3 complication slots and the picker was launched.
+     * Returns true if [preference] was one of the complication slots and the picker was launched.
      *
      * Only reached on watches where [SamsungWatchFaceEditor.requestEditor] found no receiver,
      * because where it does, [WatchfaceConfigurationActivity] has already handed over to the system
@@ -145,9 +140,8 @@ internal class ComplicationPickerSupport(private val fragment: Fragment) {
     fun handlePreferenceClick(preference: Preference): Boolean {
         val context = fragment.requireContext()
         val slotId = slotIdFor(context, preference) ?: return false
-        launchers.getValue(slotId).launch(
-            EditorRequest(ComponentName(context, CustomWatchface::class.java), context.packageName, null)
-        )
+        val watchFaceComponent = WatchFaceCatalog.componentNameFor(context, watchFace) ?: return false
+        launchers.getValue(slotId).launch(EditorRequest(watchFaceComponent, context.packageName, null))
         return true
     }
 }

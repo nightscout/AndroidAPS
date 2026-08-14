@@ -60,7 +60,9 @@ import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
 import app.aaps.wear.watchfaces.utils.ComplicationRender
+import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
 import app.aaps.wear.watchfaces.utils.ComplicationStyleValues
+import app.aaps.wear.watchfaces.utils.WatchFaceComplicationSlots
 import app.aaps.wear.watchfaces.utils.WatchFaceComplications
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import kotlinx.coroutines.runBlocking
@@ -83,7 +85,19 @@ class CustomWatchface : BaseWatchFace() {
     private var resDataMap: CwfResDataMap = mutableMapOf()
     private var json = JSONObject()
     private var jsonString = ""
-    private var backgroundDrawable: Drawable? = null
+    /**
+     * A real [ImageView] for background, deliberately not part of `activity_custom.xml`.
+     *
+     * background must paint before complications, and everything in that layout paints after them
+     * (see [deferMainLayoutDraw]), so it cannot be a child there. Keeping a View anyway - just an
+     * unattached one, measured and laid out by hand in [resolveBackgroundDrawable] and drawn onto the
+     * Canvas in [onDraw] - means background is styled by the very same [ViewMap.customizeImageView]
+     * every other image goes through. Not a copy of it: the copy this replaced had already drifted,
+     * silently losing colour steps and the built-in drawable fallback.
+     *
+     * Per engine instance, never enum state: the editor runs a second, headless CustomWatchface.
+     */
+    private val backgroundView by lazy { ImageView(this) }
 
     // Order is a real preference order, not cosmetic: during data source selection the system walks
     // this list in order and picks the first entry a provider also supports (ComplicationSlot.kt's
@@ -136,20 +150,19 @@ class CustomWatchface : BaseWatchFace() {
      * The generic complication plumbing for *this* engine instance - see [WatchFaceComplications],
      * which holds everything that is not specific to this watch face.
      *
-     * The slot list is derived from [ViewMap]: an entry *is* a complication slot exactly when it
-     * declares a [ViewMap.slotId], so adding a slot means one new entry there and nothing here.
+     * The slot list comes straight from [ComplicationMap], so adding a slot means one new entry
+     * there (plus the [ViewMap] entry carrying its geometry) and nothing here.
      *
      * Deliberately an instance field rather than enum state. Complication state includes live objects
      * bound to this one engine (a `ComplicationDrawable` owning a renderer and an invalidate
      * callback), and the watch face editor runs a **second, headless** CustomWatchface instance
-     * concurrently. Enum entries - the pattern [ViewMap] uses for ordinary views - are process-wide
-     * singletons and could not hold that safely: the two instances would share one drawable. This is
-     * also why a `ComplicationMap` enum was rejected during design; it would have had exactly the
-     * same defect as putting the drawable on [ViewMap].
+     * concurrently. Enum entries - the pattern [ViewMap] and [ComplicationMap] use - are process-wide
+     * singletons and could not hold that safely: the two instances would share one drawable. Which is
+     * why [ComplicationMap] carries slot *identity* only, and never a drawable.
      */
     private val complications = WatchFaceComplications(
         context = this,
-        slotIds = ViewMap.entries.mapNotNull { it.slotId },
+        slotIds = complicationSlots.map { it.id },
         supportedTypes = complicationSupportedTypes,
         layoutSettingLabel = R.string.cwf_complication_layout,
         layoutSettingDescription = R.string.cwf_complication_layout_description
@@ -161,16 +174,18 @@ class CustomWatchface : BaseWatchFace() {
      */
     private val complicationStyle = ComplicationGlobalStyle(this)
 
-    companion object {
+    // internal, not public: [complicationSlots] hands out an internal type, and nothing outside this
+    // module has any business with this watch face's internals anyway.
+    internal companion object : WatchFaceComplicationSlots {
 
-        // Stable slot IDs: the system persists the chosen provider per (watch face component, slot
-        // id) across app updates, so these must never change once shipped. Public so the in-app
-        // complication picker (WatchfaceConfigurationActivity) can target the same slots.
-        const val COMPLICATION_SLOT_ID_1 = 101
-        const val COMPLICATION_SLOT_ID_2 = 102
-        const val COMPLICATION_SLOT_ID_3 = 103
-        const val COMPLICATION_SLOT_ID_4 = 104
-        const val COMPLICATION_SLOT_ID_5 = 105
+        /**
+         * This watch face's half of the [WatchFaceComplicationSlots] contract: what the settings
+         * screens ask for when they need one data source picker per slot.
+         *
+         * [ComplicationMap] itself is the answer - the entries are already in screen order - so
+         * neither the picker nor [WatchFaceComplications] ever sees [ViewMap] or the CWF json.
+         */
+        override val complicationSlots: List<ComplicationSlotInfo> = ComplicationMap.entries
 
         /**
          * The fixed coordinate space every CWF json declares its geometry in. A format constant
@@ -238,7 +253,7 @@ class CustomWatchface : BaseWatchFace() {
             null
         }
         return complications.createSlotsManager(currentUserStyleRepository) { slotId ->
-            slotBounds(storedJson?.optJSONObject(ViewMap.entries.firstOrNull { it.slotId == slotId }?.key))
+            slotBounds(storedJson?.optJSONObject(ViewMap.entries.firstOrNull { it.complication?.id == slotId }?.key))
         }
     }
 
@@ -463,8 +478,7 @@ class CustomWatchface : BaseWatchFace() {
         // Resolved from the ViewMap entries that declare a slot id, so a new complication slot needs
         // no change here - only its entry, and the matching FrameLayout in activity_custom.xml.
         complicationPlaceholders = ViewMap.entries
-            .filter { it.slotId != null }
-            .mapNotNull { view -> binding.root.findViewById<FrameLayout>(view.id)?.let { view.slotId!! to it } }
+            .mapNotNull { view -> view.complication?.let { slot -> binding.root.findViewById<FrameLayout>(view.id)?.let { slot.id to it } } }
             .toMap()
         setDefaultColors()
         runBlocking {
@@ -497,15 +511,14 @@ class CustomWatchface : BaseWatchFace() {
         // so it paints before complications) it needs the same check, or the CWF background image
         // paints over the simple UI.
         if (simpleUi.isEnabled(currentWatchMode)) return
-        backgroundDrawable?.let {
-            val size = (TEMPLE_RESOLUTION * zoomFactor).toInt()
-            it.setBounds(0, 0, size, size)
-            it.draw(canvas)
-        }
+        // Draws the view's background colour and its image, whichever of the two the CWF ended up
+        // with - View.draw() does not care that this view has no parent, only that
+        // resolveBackgroundDrawable() measured and laid it out.
+        backgroundView.draw(canvas)
         // super.onDraw() has just measured and laid out mainLayout, so the placeholders hold this
         // frame's geometry - the point at which the slots' own bounds can be brought into line with
-        // it. Not in complicationRender(): that runs per slot, while one pushed option covers all
-        // three at once.
+        // it. Not in complicationRender(): that runs per slot, while one pushed option covers every
+        // slot at once.
         complications.syncGeometry(::visibleSlotBounds)
     }
 
@@ -867,25 +880,51 @@ class CustomWatchface : BaseWatchFace() {
         binding.timePeriod.visibility = (binding.timePeriod.isVisible && DateFormat.is24HourFormat(this).not()).toVisibility()
     }
 
-    // background is drawn manually on the Canvas (see onDraw()), not through a View, so it can be
-    // painted before complications without disturbing mainLayout's own internal draw order (which
-    // must stay unchanged: chart, cover_chart, ..., cover_plate, hands, in their existing z-order).
+    // background is drawn manually on the Canvas (see onDraw()) from a View kept outside
+    // mainLayout, so it can be painted before complications without disturbing mainLayout's own
+    // internal draw order (which must stay unchanged: chart, cover_chart, ..., cover_plate, hands,
+    // in their existing z-order). Its own styling is not manual - see [backgroundView].
     // Resolved here - same setWatchfaceStyle() pass as everything else - so its BG-level-dependent
     // image (customHigh/customLow, and any DYNDATA step image) never lags a tick behind the rest
     // of the dial; onDraw() just paints whatever this last resolved to, every frame.
     private fun resolveBackgroundDrawable() {
+        // Styled exactly like every other image view - drawable, colour steps, built-in fallback,
+        // flat colour - because it is the same call, not a second implementation of it.
+        ViewMap.BACKGROUND.customizeImageView(backgroundView, this)
+        // Then forced to fill the dial and laid out by hand, since nothing else will: this view has
+        // no parent to measure it. Same override the View-based version applied (full size, no
+        // margins, always visible), so a CWF cannot shrink or hide the one layer that has to cover
+        // the screen - it is what stops the previous frame ghosting through.
         val size = (TEMPLE_RESOLUTION * zoomFactor).toInt()
-        ViewMap.BACKGROUND.width = size
-        ViewMap.BACKGROUND.height = size
-        val viewJson = ViewMap.BACKGROUND.viewJson
-        ViewMap.BACKGROUND.dynData = DynProvider.getDyn(
-            this,
-            viewJson?.optString(JsonKeys.DYNPREF.key) ?: "",
-            viewJson?.optString(JsonKeys.DYNDATA.key) ?: "",
-            size, size,
-            ViewMap.BACKGROUND.key
-        )
-        backgroundDrawable = ViewMap.BACKGROUND.drawable(this)
+        val spec = View.MeasureSpec.makeMeasureSpec(size, View.MeasureSpec.EXACTLY)
+        backgroundView.measure(spec, spec)
+        backgroundView.layout(0, 0, size, size)
+    }
+
+    /**
+     * Identity of each complication slot this watch face hosts: the [id] the framework knows it by,
+     * and the [preferenceKey] of the settings row that opens its data source picker.
+     *
+     * Both belong together and both are pure constants, so they live here rather than as loose
+     * constants: [ViewMap] points at an entry instead of repeating an id, and the settings screens
+     * get the whole list through [complicationSlots] instead of hardcoding rows of their own.
+     *
+     * The ids are a stable public contract - the system persists the chosen data source per (watch
+     * face component, slot id) - so they must never change once shipped, and must never be derived
+     * from something as movable as an enum ordinal.
+     *
+     * Note this holds identity only. Live per-slot state (a `ComplicationDrawable` and its
+     * invalidate callback) still must not live on an enum: entries are process-wide singletons,
+     * while the watch face editor runs a second, headless CustomWatchface concurrently, and the two
+     * would share one drawable. That state stays in `ComplicationSlotState`, one per engine.
+     */
+    private enum class ComplicationMap(override val id: Int, @StringRes override val preferenceKey: Int) : ComplicationSlotInfo {
+
+        COMPLICATION1(101, R.string.key_complication_1),
+        COMPLICATION2(102, R.string.key_complication_2),
+        COMPLICATION3(103, R.string.key_complication_3),
+        COMPLICATION4(104, R.string.key_complication_4),
+        COMPLICATION5(105, R.string.key_complication_5)
     }
 
     private enum class ViewMap(
@@ -898,22 +937,24 @@ class CustomWatchface : BaseWatchFace() {
         val customLow: ResFileMap? = null,
         val external: Int = 0,
         /**
-         * The `ComplicationSlot` id this entry carries the geometry for, or null for every ordinary
+         * The complication slot this entry carries the geometry for, or null for every ordinary
          * view. Non-null is what marks an entry as a complication placeholder, and
-         * `ComplicationHost` derives its whole slot list by filtering on it - so a new slot is one
-         * new entry here, not a second parallel list to keep in sync.
+         * [WatchFaceComplications] gets its whole slot list from [ComplicationMap] - so a new slot is
+         * one new entry there plus one here, not a third parallel list to keep in sync.
          *
          * Safe as enum state precisely because it is an immutable constructor constant, exactly like
          * [pref] or [key]. The state that must **not** live on this enum is live per-engine state -
          * a `ComplicationDrawable`, [viewJson], [width] - because entries are process-wide
          * singletons and the editor runs a second headless CustomWatchface concurrently.
          */
-        val slotId: Int? = null
+        val complication: ComplicationMap? = null
     ) {
 
         BACKGROUND(
             key = ViewKeys.BACKGROUND.key,
-            id = View.NO_ID, // no real View anymore - drawn manually, see CustomWatchface.onDraw()
+            // NO_ID because its View is not in mainLayout, so the loop that customizes views by id
+            // must not find it - CustomWatchface.resolveBackgroundDrawable() styles it instead.
+            id = View.NO_ID,
             defaultDrawable = R.drawable.background,
             customDrawable = ResFileMap.BACKGROUND,
             customHigh = ResFileMap.BACKGROUND_HIGH,
@@ -923,16 +964,14 @@ class CustomWatchface : BaseWatchFace() {
         // ComplicationSlots (see ComplicationHost / customizeComplicationView). They draw nothing
         // themselves - the framework renders the actual complication onto the Canvas.
         //
-        // These entries are the single source of truth for complication slot identity: the slot id,
-        // the json key, the placeholder view id and the pre-first-launch bounds all live here. The
-        // slot ids stay as named constants because they are a stable public contract (the system
-        // persists the chosen data source per watch face component + slot id) and must never be
-        // derived from something as movable as an enum ordinal.
-        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, PrefMap.SHOW_COMPLICATION_1, slotId = COMPLICATION_SLOT_ID_1),
-        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, PrefMap.SHOW_COMPLICATION_2, slotId = COMPLICATION_SLOT_ID_2),
-        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, PrefMap.SHOW_COMPLICATION_3, slotId = COMPLICATION_SLOT_ID_3),
-        COMPLICATION4(ViewKeys.COMPLICATION4.key, R.id.complication4, PrefMap.SHOW_COMPLICATION_4, slotId = COMPLICATION_SLOT_ID_4),
-        COMPLICATION5(ViewKeys.COMPLICATION5.key, R.id.complication5, PrefMap.SHOW_COMPLICATION_5, slotId = COMPLICATION_SLOT_ID_5),
+        // The json key, the placeholder view id, the visibility preference and the slot this entry
+        // draws for all meet here; the slot's own identity (id + settings row) lives in
+        // [ComplicationMap].
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, PrefMap.SHOW_COMPLICATION_1, complication = ComplicationMap.COMPLICATION1),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, PrefMap.SHOW_COMPLICATION_2, complication = ComplicationMap.COMPLICATION2),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, PrefMap.SHOW_COMPLICATION_3, complication = ComplicationMap.COMPLICATION3),
+        COMPLICATION4(ViewKeys.COMPLICATION4.key, R.id.complication4, PrefMap.SHOW_COMPLICATION_4, complication = ComplicationMap.COMPLICATION4),
+        COMPLICATION5(ViewKeys.COMPLICATION5.key, R.id.complication5, PrefMap.SHOW_COMPLICATION_5, complication = ComplicationMap.COMPLICATION5),
         CHART(ViewKeys.CHART.key, R.id.chart),
         COVER_CHART(
             key = ViewKeys.COVER_CHART.key,
@@ -1178,7 +1217,7 @@ class CustomWatchface : BaseWatchFace() {
             // space-ceding mechanism - rather than a reimplemented subset of them. It also builds
             // dynData, which the reads below depend on.
             customizeViewCommon(view, cwf)
-            val state = slotId?.let { cwf.complications.stateFor(it) } ?: return
+            val state = complication?.let { cwf.complications.stateFor(it.id) } ?: return
             val global = cwf.complicationStyle
             // Each chain: this slot's dynData step (only where DynProvider actually exposes one),
             // then this slot's own json key, then the CWF-wide complicationStyle value. dynData is

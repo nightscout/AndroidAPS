@@ -40,6 +40,42 @@ import androidx.wear.watchface.style.WatchFaceLayer
  * see [SyncLoadingCanvasComplication].
  */
 
+/**
+ * One complication slot of a watch face, as seen by code that must work for any watch face without
+ * naming one - the data source picker above all.
+ */
+internal interface ComplicationSlotInfo {
+
+    /**
+     * The slot id the framework knows this slot by. Stable forever once shipped: the system persists
+     * the chosen data source per (watch face component, slot id).
+     */
+    val id: Int
+
+    /** The key of the settings row that opens this slot's data source picker. */
+    @get:StringRes val preferenceKey: Int
+}
+
+/**
+ * The complication slots a watch face hosts.
+ *
+ * Implemented by the watch face itself (typically its companion object), because only it knows what
+ * its slots are: a fixed, constant list for a watch face with a hardcoded layout, or a list derived
+ * from a loaded template for one like the custom watch face. Both look the same from here.
+ *
+ * Nothing about visibility or user settings belongs in this contract. Which slots a watch face hosts
+ * is a property of the watch face; whether the user currently wants one shown is not, and is decided
+ * by the watch face or by its settings screen, never by the code reading this.
+ */
+internal interface WatchFaceComplicationSlots {
+
+    /**
+     * The slots this watch face hosts, in the order its settings screen presents them. Empty for a
+     * watch face with no complications.
+     */
+    val complicationSlots: List<ComplicationSlotInfo>
+}
+
 /** How a watch face wants one [ComplicationSlot] painted for the frame being rendered. */
 internal sealed interface ComplicationRender {
 

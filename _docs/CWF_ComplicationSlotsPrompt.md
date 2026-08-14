@@ -127,11 +127,82 @@ Not yet tested:
 For the exact current file-by-file diff, cross-reference Claude Code's end-of-session summary
 (requested separately) rather than treating the above as a line-level spec.
 
+**Background regression (introduced by the manual-canvas move, fixed)**
+- [x] Symptom: a CWF driving `background` through a `dynPref` colour step (e.g. `key_dark` →
+  `color1` black/white) stayed permanently black, while every other view in the same CWF flipped.
+- [x] Root cause, confirmed from source, not guessed: when `background` was pulled out of the View
+  hierarchy for z-order (commit `e5e8cceeceb`, `id = R.id.background` → `View.NO_ID`), it stopped
+  going through `ViewMap.customizeImageView` and got a bespoke path that only ever consulted
+  `ViewMap.BACKGROUND.drawable(cwf)` = `dynData?.getDrawable()` (the *image* steps `image1…`,
+  `invalidImage`) falling back to `rangeCustom`/`highCustom`/`lowCustom`. It never consulted
+  `getColorStep()` (`color1…`, `invalidColor`), never applied a `COLOR`/colour-step tint to the
+  image it did resolve, and never fell back to `defaultDrawable`. `customizeImageView` does all
+  three for every other image-backed view — background alone lost them.
+- [x] Fix keeps the manual canvas draw (still required: `deferMainLayoutDraw()` is true, so
+  `mainLayout` paints in `onDrawOverlay` *after* complications — putting background back in it
+  would paint it over them). `resolveBackgroundDrawable()` now mirrors `customizeImageView`'s
+  three steps, and `onDraw()` paints a flat colour when no drawable resolves.
+
+**Styling parameter audit — Phase 2 (real CWF json keys, not placeholders)**
+- [x] `JsonKeys` added: `ICONCOLOR`, `TITLESIZE`, `TITLESTYLE`, `FONTTITLE`, `FONTTITLECOLOR`,
+  `BORDERRADIUS`, `RINGWIDTH` (percentage of slot width), `RINGPRIMARYCOLOR`,
+  `RINGSECONDARYCOLOR`, `COMPLICATIONSTYLE` (the global section key). `FONT`/`FONTSTYLE`/
+  `FONTCOLOR`/`COLOR`/`TEXTSIZE` reused from the shared view vocabulary.
+- [x] Three-level cascade wired for every key: per-slot json → CWF-wide `complicationStyle` →
+  built-in default.
+- [x] **`BORDERRADIUS` confirmed to shape the background fill itself**, not just the content
+  inset — `width/2` on a square slot with an opaque `COLOR` background renders a visible
+  circle (device-confirmed); with the default transparent background, only the content shrinks,
+  no visible shape (nothing to fill). `getBorderRadius` clamps to `min(w,h)/2`, so anything
+  ≥ that is harmlessly capped at a full circle.
+- [x] **`TITLESTYLE`/`FONTSTYLE` combine with their typeface key** via
+  `Typeface.create(base, style)` — works for system font families (real bold/italic variants).
+  **Documented limitation**: no synthetic bold for a single-weight custom font resource
+  (`ComplicationStyle` exposes no `Paint` to fake it, unlike `TextView`) — affects
+  `FontMap`'s `roboto_condensed_*` entries specifically.
+- [x] `RINGWIDTH` (percentage-based) replaces the previous ratio-only fallback; `2dp` (the
+  library's own default) confirmed rejected — mixes two incompatible resolution-independence
+  systems (`dp` vs. this format's `zoomFactor`), and would be the one CWF dimension that
+  doesn't scale with its slot.
+- [x] **Closes the original "complications render thinner/less readable than OEM" observation.**
+  Root cause was the `borderRadius`-driven ~41% content-area inset (already fixed earlier by
+  forcing `borderRadius = 0` unless a CWF sets one), not text weight. Once content stopped
+  being shrunk, readability at the same declared size matched third-party watch faces — no
+  separate bold-by-default styling needed.
 ## Root causes found this session (keep for future maintainers)
 
 This feature had **five independent, unrelated bugs**, each producing symptoms that looked like
 — or masked — the others. Listed in the order they were found, because later ones were only
 reachable once earlier ones were fixed.
+
+**Subject 1 — Step 1: generalize picker to N slots** — *code done, device test pending*
+- [x] `PrefMap.SHOW_COMPLICATION_1..5` verified end to end. Found and fixed a real defect:
+  `CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION4`/`5` both carried the json key
+  `key_show_complication1`. It compiled, but `CustomWatchface`'s metadata→SharedPreferences loop
+  means a zip setting `key_show_complication1=false` turned off slots **1, 4 and 5** together, and
+  slots 4/5 could never be driven from a zip at all.
+- [x] Slot identity moved into its own enum, `CustomWatchface.ComplicationMap(id, preferenceKey)`,
+  replacing the five loose `COMPLICATION_SLOT_ID_N` constants. `ViewMap` now points at an entry
+  (`complication`) instead of repeating a raw id, so one enum entry carries the slot's whole
+  identity: system id + the settings row that opens its picker.
+- [x] `ComplicationPickerSupport` is now watch-face-agnostic: it names no watch face, hardcodes no
+  preference keys and no slot count. It asks the active watch face for the slots it hosts through
+  two neutral interfaces in `WatchFaceComplication.kt` — `ComplicationSlotInfo` (`id`,
+  `preferenceKey`) and `WatchFaceComplicationSlots` (`complicationSlots`) — reached via
+  `WatchFaceCatalog`, which stays the single place allowed to name a watch face. A watch face with
+  a fixed layout can answer with a constant list; CWF answers with a list derived from
+  `ComplicationMap`. Deliberately nothing about visibility or user settings is in that contract:
+  which slots exist is a property of the watch face, whether the user wants one shown is not.
+- [x] "Show Complication i" toggle added before each picker row in
+  `watch_face_configuration_custom.xml` for all 5 slots, with `android:dependency` graying the
+  picker row when its toggle is off. Cosmetic only — `dependency` disables, never hides — so it
+  complements Step 2's filtering rather than replacing it. First device test showed the disabled
+  row looking identical to an enabled one: `androidx.preference` only calls `setEnabled(false)` on
+  the row, and `preference_material_multiline.xml` (applied to *every* preference in the watch app)
+  hardcoded `android:textColor`. Now a colour state list — so disabled state renders on every
+  preference screen, not just these rows.
+- [ ] Device-confirm slots 4 and 5 (added by hand, never build-tested through the generic path)
+  actually render, tap, and persist a provider correctly. Build is green; not yet run on device.
 
 **1. Legacy-API false start.** The first implementation draft targeted the pre-AndroidX
 complications API (`android.support.wearable.complications.*`, manual `ComplicationDrawable`
@@ -152,6 +223,18 @@ Fixed with an explicit `daggerInjectionComplete` flag on `BaseWatchFace`, set ri
 injection completes, checked before touching `complicationDataRepository` — deliberately **not**
 a `catch (UninitializedPropertyAccessException)`, which would also mask unrelated lateinit bugs
 elsewhere in the same call chain.
+- Design reported, not yet approved or implemented. Scoping must gate on **watch face identity**,
+  not on which keys a screen contains: `watch_face_configuration_digitalstyle.xml` also declares
+  `key_show_date` and `key_show_week_number`, so key-presence duck typing would wrongly hide
+  Digital's rows. Both activities already resolve that identity before creating the fragment
+  (`ConfigurationActivity` from the editor intent's component, `WatchfaceConfigurationActivity`
+  from `key_selected_watchface` via `WatchFaceCatalog`), so it only has to be passed down.
+  `WatchFaceCatalog.complicationWatchFace` is the placeholder constant that becomes that per-screen
+  lookup. For the visibility query itself: `CustomWatchface` publishes the set of preference keys
+  used by at least one currently-visible view to SharedPreferences on CWF load — same pattern as
+  the metadata→preferences loop and as `cacheAssignedDataSourceNames` — and the screen filters on
+  it. Taken at load time from the json, never per frame: a `DynProvider`-driven row that appears
+  and vanishes as BG moves would be worse than no filtering.
 
 **3. `EditorSession` binding to a disconnected headless engine, crashing on close.** The
 long-press picker's `EditorSession` does not always attach to the live, on-screen engine

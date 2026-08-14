@@ -6,8 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".watchfaces.CustomWatchface">
 
-    <!-- background is drawn manually on the Canvas by CustomWatchface.onDraw() (before
-         complications), not as a View - see resolveBackgroundDrawable(). -->
+    <!-- background is not here on purpose: everything in this layout paints after complications,
+         and background must paint before them. It is still a real ImageView, created and styled by
+         CustomWatchface (see backgroundView / resolveBackgroundDrawable()) and drawn onto the
+         Canvas in onDraw(). -->
 
     <FrameLayout
         android:id="@+id/complication1"
