@@ -1,0 +1,53 @@
+name: Build AndroidAPS APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch oder Tag (z.B. 3.4.2.1 oder master)'
+        required: true
+        default: 'master'
+      build_type:
+        description: 'Build-Ziel'
+        required: true
+        default: 'assembleFullDebug'
+        type: choice
+        options:
+          - assembleFullDebug
+          - assembleFullRelease
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo auschecken
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: JDK 17 einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Android SDK einrichten
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle konfigurieren (Cache)
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: gradlew ausführbar machen
+        run: chmod +x ./gradlew
+
+      - name: APK bauen
+        run: ./gradlew ${{ inputs.build_type }} --no-daemon --stacktrace
+
+      - name: APK als Artifact hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: AndroidAPS-APK
+          path: app/build/outputs/apk/**/*.apk
+          retention-days: 14
