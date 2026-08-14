@@ -1,10 +1,9 @@
 package app.aaps.core.interfaces.utils
 
-import java.math.BigDecimal
-import java.security.InvalidParameterException
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.pow
 import kotlin.math.roundToLong
 
 /**
@@ -13,9 +12,12 @@ import kotlin.math.roundToLong
 object Round {
 
     fun roundTo(x: Double, step: Double): Double {
-        if (x.isNaN()) throw InvalidParameterException("Parameter is NaN")
+        // Was java.security.InvalidParameterException, which is a JCA class and not what argument
+        // checking is for. Nothing caught it - every use of it in this repo is a throw - so the type
+        // change reaches no handler.
+        require(!x.isNaN()) { "Parameter is NaN" }
         return if (x == 0.0) 0.0
-        else BigDecimal.valueOf((x / step).roundToLong()).multiply(BigDecimal.valueOf(step)).toDouble()
+        else times(x = (x / step).roundToLong(), step = step)
     }
 
     fun floorTo(x: Double, step: Double): Double {
@@ -27,7 +29,7 @@ object Round {
         // This never pushes the result above x, so the "must not deliver more than asked /
         // must not exceed the max constraint" invariant in SafetyPlugin still holds.
         val n = if (abs(q - q.roundToLong()) < 1e-9) q.roundToLong() else floor(q).toLong()
-        return BigDecimal.valueOf(n).multiply(BigDecimal.valueOf(step)).toDouble()
+        return times(x = n, step = step)
     }
 
     fun ceilTo(x: Double, step: Double): Double {
@@ -38,7 +40,43 @@ object Round {
         // grid when the quotient is within tolerance of an integer, else ceil. Never pushes the
         // result below x, so callers that round UP to stay within a limit keep that guarantee.
         val n = if (abs(q - q.roundToLong()) < 1e-9) q.roundToLong() else ceil(q).toLong()
-        return BigDecimal.valueOf(n).multiply(BigDecimal.valueOf(step)).toDouble()
+        return times(x = n, step = step)
+    }
+
+    /**
+     * `x * step`, giving the [Double] nearest to the **decimal** product.
+     *
+     * A plain `x * step` is not good enough here: `3 * 0.05` is `0.15000000000000002` and
+     * `12 * 0.05` is `0.6000000000000001`. Those are dose and rate values, so the extra digits
+     * travel into pump commands, comparisons and the Nightscout payload.
+     *
+     * This used to be `BigDecimal.valueOf(x).multiply(BigDecimal.valueOf(step)).toDouble()`, which is
+     * JVM only. The same answer comes out of integer arithmetic: `BigDecimal.valueOf(step)` is exactly
+     * the decimal that `step.toString()` spells, so reading that text back as `unscaled / 10^scale`
+     * loses nothing, the multiply is an exact [Long] one, and the single closing division is correctly
+     * rounded. So the result is the nearest double to the true decimal product - the same value the
+     * old code produced, by construction rather than by approximation.
+     *
+     * Limit worth knowing, which BigDecimal did not have: the product is exact while it stays under
+     * 2^53 (about 9.0e15), and it is roughly `|x * step| * 10^scale`. At the deepest step any pump
+     * uses (0.0001, so scale 4) that allows values up to about 9e11. Doses, rates and glucose values
+     * are far below it, so this is a note rather than a guard - a hard check here could stop the loop
+     * over an input that is merely large.
+     */
+    private fun times(x: Long, step: Double): Double {
+        // Shortest round-trip text, the same source BigDecimal.valueOf(double) reads. Below 1e-3 it
+        // arrives in scientific notation ("1.0E-4" for 0.0001, a step that is really used), so the
+        // exponent has to be folded into the scale rather than assumed absent.
+        val text = step.toString()
+        val e = text.indexOf('E')
+        val mantissa = if (e < 0) text else text.substring(0, e)
+        val exponent = if (e < 0) 0 else text.substring(e + 1).toInt()
+        val point = mantissa.indexOf('.')
+        val unscaled = (if (point < 0) mantissa else mantissa.substring(0, point) + mantissa.substring(point + 1)).toLong()
+        val scale = (if (point < 0) 0 else mantissa.length - point - 1) - exponent
+
+        val product = x * unscaled
+        return if (scale >= 0) product / 10.0.pow(scale) else product * 10.0.pow(-scale)
     }
 
     fun isSame(d1: Double, d2: Double): Boolean =
