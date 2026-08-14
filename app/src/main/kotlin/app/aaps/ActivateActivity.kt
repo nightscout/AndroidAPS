@@ -222,6 +222,29 @@ class ActivateActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER
                 setPadding(0, dp(10), 0, 0)
             })
+
+            // 复制带手机号(单独按钮, 不覆盖上方单复制设备标识)
+            addView(LinearLayout(this@ActivateActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER
+                setPadding(0, dp(10), 0, 0)
+                addView(Button(this@ActivateActivity).apply {
+                    text = "📋 复制标识+手机号"
+                    textSize = 13f
+                    setTextColor(Color.WHITE)
+                    isAllCaps = false
+                    background = rounded(dp(10), ACCENT, ACCENT, 0)
+                    setPadding(dp(16), dp(6), dp(16), dp(6))
+                    minHeight = 0
+                    setOnClickListener {
+                        val phone = inputPhone.text.toString().trim().takeIf { it.isNotBlank() }
+                        val text = if (phone != null) "设备标识: $deviceId\n手机号: $phone" else "设备标识: $deviceId"
+                        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        cm.setPrimaryClip(ClipData.newPlainText("deviceInfo", text))
+                        ToastUtils.okToast(this@ActivateActivity, if (phone != null) "设备标识+手机号已复制" else "设备标识已复制(未填手机号)")
+                    }
+                })
+            })
         }, cardParams())
 
         // ── 邀请码卡片 ──

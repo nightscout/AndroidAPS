@@ -609,26 +609,6 @@ class DanaRSPlugin @Inject constructor(
                 )
             )
             addPreference(
-                Preference(context).apply {
-                    title = "清除配对"
-                    summary = "清除蓝牙绑定和配对密钥（泵连接异常时使用）"
-                    setOnPreferenceClickListener {
-                        OKDialog.showConfirmation(context, "清除配对", "将清除当前泵的蓝牙绑定和配对密钥，清除后需要重新扫描配对。是否继续？", ok = {
-                            clearPairing()
-                            try {
-                                val bta = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-                                preferences.getIfExists(DanaStringKey.MacAddress)?.let { addr ->
-                                    bta?.getRemoteDevice(addr)?.let { dev -> dev.javaClass.getMethod("removeBond").invoke(dev) }
-                                }
-                            } catch (_: Exception) {
-                            }
-                            ToastUtils.okToast(context, "配对已清除，请重新扫描配对泵")
-                        })
-                        true
-                    }
-                }
-            )
-            addPreference(
                 AdaptiveStringPreference(
                     ctx = context, stringKey = DanaStringKey.Password, title = app.aaps.pump.dana.R.string.danars_password_title,
                     validatorParams = DefaultEditTextValidator.Parameters(
@@ -650,6 +630,27 @@ class DanaRSPlugin @Inject constructor(
             )
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.LogInsulinChange, title = app.aaps.pump.dana.R.string.rs_loginsulinchange_title, summary = app.aaps.pump.dana.R.string.rs_loginsulinchange_summary))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.LogCannulaChange, title = app.aaps.pump.dana.R.string.rs_logcanulachange_title, summary = app.aaps.pump.dana.R.string.rs_logcanulachange_summary))
+            // 清除配对挪到分类最底部, 避免误触
+            addPreference(
+                Preference(context).apply {
+                    title = "清除配对"
+                    summary = "清除蓝牙绑定和配对密钥（泵连接异常时使用）"
+                    setOnPreferenceClickListener {
+                        OKDialog.showConfirmation(context, "清除配对", "将清除当前泵的蓝牙绑定和配对密钥，清除后需要重新扫描配对。是否继续？", ok = {
+                            clearPairing()
+                            try {
+                                val bta = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+                                preferences.getIfExists(DanaStringKey.MacAddress)?.let { addr ->
+                                    bta?.getRemoteDevice(addr)?.let { dev -> dev.javaClass.getMethod("removeBond").invoke(dev) }
+                                }
+                            } catch (_: Exception) {
+                            }
+                            ToastUtils.okToast(context, "配对已清除，请重新扫描配对泵")
+                        })
+                        true
+                    }
+                }
+            )
         }
     }
 }
