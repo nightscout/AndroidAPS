@@ -397,7 +397,7 @@ public class AapsOmnipodErosManager {
 
         Date bolusStarted;
         try {
-            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.insulin), beepsEnabled, beepsEnabled,
+            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.getInsulin()), beepsEnabled, beepsEnabled,
                     detailedBolusInfo.getBolusType() == BS.Type.SMB ? null :
                             (estimatedUnitsDelivered, percentage) -> {
                                 bolusProgressData.updateProgress(new PumpInsulin(estimatedUnitsDelivered));
@@ -413,13 +413,13 @@ public class AapsOmnipodErosManager {
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
             if (detailedBolusInfo.getBolusType() == BS.Type.SMB) {
-                showNotification(NotificationId.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), NotificationLevel.IMPORTANT, isNotificationUncertainSmbSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
+                showNotification(NotificationId.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.getInsulin()), NotificationLevel.IMPORTANT, isNotificationUncertainSmbSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
             } else {
                 showErrorDialog(getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
             }
         }
 
-        detailedBolusInfo.timestamp = bolusStarted.getTime();
+        detailedBolusInfo.setTimestamp(bolusStarted.getTime());
         detailedBolusInfo.setPumpType(PumpType.OMNIPOD_EROS);
         detailedBolusInfo.setPumpSerial(serialNumber());
 
@@ -456,13 +456,13 @@ public class AapsOmnipodErosManager {
         OmnipodManager.BolusDeliveryResult bolusDeliveryResult =
                 bolusCommandResult.getDeliveryResultSubject().blockingGet();
 
-        detailedBolusInfo.insulin = bolusDeliveryResult.getUnitsDelivered();
+        detailedBolusInfo.setInsulin(bolusDeliveryResult.getUnitsDelivered());
 
         addBolusToHistory(detailedBolusInfo);
 
         preferences.remove(ErosStringNonPreferenceKey.ActiveBolus);
 
-        return pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
+        return pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(detailedBolusInfo.getInsulin());
     }
 
     public PumpEnactResult cancelBolus() {
@@ -726,17 +726,17 @@ public class AapsOmnipodErosManager {
     public void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo) {
         DetailedBolusInfo detailedBolusInfo = originalDetailedBolusInfo.copy();
 
-        detailedBolusInfo.setBolusTimestamp(detailedBolusInfo.timestamp);
+        detailedBolusInfo.setBolusTimestamp(detailedBolusInfo.getTimestamp());
         detailedBolusInfo.setPumpType(PumpType.OMNIPOD_EROS);
         detailedBolusInfo.setPumpSerial(serialNumber());
-        detailedBolusInfo.setBolusPumpId(addSuccessToHistory(detailedBolusInfo.timestamp, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs));
+        detailedBolusInfo.setBolusPumpId(addSuccessToHistory(detailedBolusInfo.getTimestamp(), PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.getInsulin() + ";" + detailedBolusInfo.getCarbs()));
 
-        if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.getCarbsTimestamp() != null) {
+        if (detailedBolusInfo.getCarbs() > 0 && detailedBolusInfo.getCarbsTimestamp() != null) {
             // split out a separate carbs record without a pumpId
             runSuspend(
                     (scope, continuation) -> pumpSync.syncCarbsWithTimestamp(
                             detailedBolusInfo.getCarbsTimestamp(),
-                            detailedBolusInfo.carbs,
+                            detailedBolusInfo.getCarbs(),
                             null,
                             PumpType.USER,
                             serialNumber(),
@@ -746,12 +746,12 @@ public class AapsOmnipodErosManager {
 
             // remove carbs from bolusInfo to not trigger any unwanted code paths in
             // TreatmentsPlugin.addToHistoryTreatment() method
-            detailedBolusInfo.carbs = 0;
+            detailedBolusInfo.setCarbs(0);
         }
         runSuspend(
                 (scope, continuation) -> pumpSync.syncBolusWithPumpId(
-                        detailedBolusInfo.timestamp,
-                        new PumpInsulin(detailedBolusInfo.insulin),
+                        detailedBolusInfo.getTimestamp(),
+                        new PumpInsulin(detailedBolusInfo.getInsulin()),
                         detailedBolusInfo.getBolusType(),
                         detailedBolusInfo.getBolusPumpId(),
                         detailedBolusInfo.getPumpType(),

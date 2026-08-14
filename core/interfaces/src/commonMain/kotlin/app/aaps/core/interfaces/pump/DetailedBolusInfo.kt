@@ -14,11 +14,11 @@ class DetailedBolusInfo {
     val id = Clock.System.now().toEpochMilliseconds()
 
     // Requesting parameters for driver
-    @JvmField var insulin = 0.0
-    @JvmField var carbs = 0.0
+    var insulin = 0.0
+    var carbs = 0.0
 
     // Additional requesting parameters
-    @JvmField var timestamp = Clock.System.now().toEpochMilliseconds()
+    var timestamp = Clock.System.now().toEpochMilliseconds()
     var lastKnownBolusTime: Long = 0 // for SMB check
     var deliverAtTheLatest: Long = 0 // SMB should be delivered within 1 min from this time
 

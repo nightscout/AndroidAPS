@@ -1,8 +1,5 @@
 package app.aaps.core.interfaces.plugin
 
-import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -174,15 +171,4 @@ abstract class PluginBase(
      * Override in subclasses to declare permissions.
      */
     open fun requiredPermissions(): List<PermissionGroup> = emptyList()
-
-    /**
-     * Returns [requiredPermissions] that are not yet granted.
-     * Special permission groups are excluded — they need dedicated checks.
-     */
-    fun missingPermissions(context: Context): List<PermissionGroup> =
-        requiredPermissions().filter { group ->
-            !group.special && group.permissions.any { permission ->
-                ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED
-            }
-        }
 }
