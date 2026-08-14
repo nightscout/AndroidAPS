@@ -254,21 +254,28 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
-     * 首次生成密钥弹窗
+     * 密钥弹窗
+     * showKeyOnly=true:仅展示当前密钥信息+提示(从"获取密钥"进入),不输码、不重新生成
+     * showKeyOnly=false:首次激活流程,生成密钥+输码验证
      */
-    private fun initTotpSecretIfNeeded(): Boolean {
+    private fun initTotpSecretIfNeeded(showKeyOnly: Boolean = false): Boolean {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        if (prefs.getString("totp_secret", null) != null) return true
+        val existingSecret = prefs.getString("totp_secret", null)
+        if (!showKeyOnly && existingSecret != null) return true
 
-        val secretBase32 = TotpUtils.generateSecret()
-        prefs.edit().putString("totp_secret", secretBase32).apply()
+        val secretBase32 = existingSecret ?: TotpUtils.generateSecret()
+        if (existingSecret == null) prefs.edit().putString("totp_secret", secretBase32).apply()
 
         val dialogView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用请先获取动态密钥：\n1.截图此页面32位密钥\n2.联系管理员，发送密钥截图\n3.获取6位授权码（授权码30秒内有效）"
+                text = if (showKeyOnly) {
+                    "当前授权密钥：\n1.截图此页面32位密钥\n2.联系管理员，发送密钥截图\n3.获取6位授权码（授权码30秒内有效）"
+                } else {
+                    "首次使用请先获取动态密钥：\n1.截图此页面32位密钥\n2.联系管理员，发送密钥截图\n3.获取6位授权码（授权码30秒内有效）"
+                }
                 textSize = 14f
             })
 
@@ -279,19 +286,25 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
-            addView(EditText(this@MainActivity).apply {
-                id = android.R.id.input
-                inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "请输入获取的动态授权码"
-                maxLines = 1
-            })
+            if (!showKeyOnly) {
+                addView(EditText(this@MainActivity).apply {
+                    id = android.R.id.input
+                    inputType = InputType.TYPE_CLASS_NUMBER
+                    hint = "请输入获取的动态授权码"
+                    maxLines = 1
+                })
+            }
         }
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("获取授权码")
+            .setTitle(if (showKeyOnly) "密钥信息" else "获取授权码")
             .setView(dialogView)
             .setCancelable(false)
-            .setPositiveButton("确认") { dialog, _ ->
+            .setPositiveButton(if (showKeyOnly) "知道了" else "确认") { dialog, _ ->
+                if (showKeyOnly) {
+                    dialog.dismiss()
+                    return@setPositiveButton
+                }
                 val inputCode = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
                 val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
@@ -311,7 +324,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     initTotpSecretIfNeeded()
                 }
             }
-            .setNegativeButton("退出") { _, _ -> finish() }
+            .setNegativeButton(if (showKeyOnly) "返回" else "退出") { dialog, _ ->
+                if (showKeyOnly) dialog.dismiss() else finish()
+            }
             .show()
 
         return false
@@ -352,12 +367,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .setView(passwordInput)
             .setCancelable(false)
             .setNeutralButton("获取密钥") { _, _ ->
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("确认获取密钥")
-                    .setMessage("将清除现有绑定，需复制密钥绑定验证器，确定继续？")
-                    .setPositiveButton("确认重置") { _, _ -> resetTotpSecret() }
-                    .setNegativeButton("取消", null)
-                    .show()
+                // 不再重置密钥:有密钥则只展示密钥信息(不输码、不重新生成),无密钥走首次激活
+                val secret = getSharedPreferences("AppLock", Context.MODE_PRIVATE).getString("totp_secret", null)
+                if (secret == null) initTotpSecretIfNeeded() else initTotpSecretIfNeeded(showKeyOnly = true)
             }
             .setNegativeButton("退出") { _, _ -> finish() }
             .setPositiveButton("验证") { dialog, _ ->
