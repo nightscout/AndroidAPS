@@ -165,10 +165,13 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * 原生TOTP工具，无第三方依赖
      */
     private object TotpUtils {
-        private const val DEFAULT_SECRET_SIZE = 20
-        private const val DEFAULT_CODE_DIGITS = 6
+        private const val DEFAULT_SECRET_SIZE = 16
+        private const val DEFAULT_CODE_DIGITS = 8
         private const val DEFAULT_TIME_STEP = 30L
         private const val DEFAULT_TOLERANCE = 1
+        // Base58 邀请码字符集: 去易混淆 0/O/1/I/l (与面板 local_proxy._totp_code 保持一致)
+        private val BASE58_CHARS = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+        private val HEX_CHARS = "0123456789abcdef".toCharArray()
 
         private val BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ2345678".toCharArray()
         private val BASE32_MAP = BASE32_CHARS.withIndex().associate { it.value to it.index }.toMap()
@@ -178,6 +181,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             val secret = ByteArray(DEFAULT_SECRET_SIZE)
             random.nextBytes(secret)
             return encodeBase32(secret)
+        }
+
+        /** 设备标识: 内部 Base32 密钥同字节的 32 位 hex (患者截图发给管理员, 管理员凭它出邀请码) */
+        fun deviceIdHex(secretBase32: String): String {
+            val sb = StringBuilder(DEFAULT_SECRET_SIZE * 2)
+            for (b in decodeBase32(secretBase32)) {
+                sb.append(HEX_CHARS[(b.toInt() shr 4) and 0xF])
+                sb.append(HEX_CHARS[b.toInt() and 0xF])
+            }
+            return sb.toString()
         }
 
         fun generateTotp(secretBase32: String, time: Long = System.currentTimeMillis() / 1000L): String {
@@ -192,14 +205,15 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA1"))
             val hash = mac.doFinal(counterBytes)
 
-            val offset = hash[hash.size - 1].toInt() and 0xF
-            var binary = (hash[offset].toInt() and 0x7F) shl 24
-            binary = binary or ((hash[offset + 1].toInt() and 0xFF) shl 16)
-            binary = binary or ((hash[offset + 2].toInt() and 0xFF) shl 8)
-            binary = binary or (hash[offset + 3].toInt() and 0xFF)
-
-            val otp = binary % 1000000
-            return otp.toString().padStart(DEFAULT_CODE_DIGITS, '0')
+            // 8 位 Base58 邀请码: 取 hash 前 8 字节拼 64bit, 连除 58 映射 (58^8≈1.28e14, 64bit 熵充足; 与面板同算法)
+            var v = 0L
+            for (i in 0 until 8) v = (v shl 8) or (hash[i].toLong() and 0xFF)
+            val sb = StringBuilder(DEFAULT_CODE_DIGITS)
+            repeat(DEFAULT_CODE_DIGITS) {
+                sb.append(BASE58_CHARS[(v % 58).toInt()])
+                v /= 58
+            }
+            return sb.toString()
         }
 
         fun verifyTotp(secretBase32: String, inputCode: String, tolerance: Int = DEFAULT_TOLERANCE): Boolean {
@@ -255,8 +269,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
-     * 密钥弹窗
-     * showKeyOnly=true:仅展示当前密钥信息+提示(从"获取密钥"进入),不输码、不重新生成
+     * 密钥弹窗(仿"设备激活"交互: 设备标识+8位邀请码)
+     * showKeyOnly=true:仅展示当前设备标识+授权状态(从"获取密钥"进入),不输码、不重新生成
      * showKeyOnly=false:首次激活流程,生成密钥+输码验证
      */
     private fun initTotpSecretIfNeeded(showKeyOnly: Boolean = false): Boolean {
@@ -268,25 +282,66 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         val secretBase32 = existingSecret ?: TotpUtils.generateSecret()
         if (existingSecret == null) prefs.edit().putString("totp_secret", secretBase32).apply()
+        val deviceId = TotpUtils.deviceIdHex(secretBase32)
+        // 设备标识分两行显示 (16+16)
+        val deviceLine1 = deviceId.substring(0, 16)
+        val deviceLine2 = deviceId.substring(16)
 
         val dialogView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
-            addView(TextView(this@MainActivity).apply {
-                text = if (showKeyOnly) {
-                    "当前授权密钥：\n1.截图此页面32位密钥\n2.联系管理员，发送密钥截图\n3.获取6位授权码（授权码30秒内有效）"
-                } else {
-                    "首次使用请先获取动态密钥：\n1.截图此页面32位密钥\n2.联系管理员，发送密钥截图\n3.获取6位授权码（授权码30秒内有效）"
-                }
-                textSize = 14f
-            })
+            if (showKeyOnly) {
+                addView(TextView(this@MainActivity).apply {
+                    text = "设备标识(发送给管理员可获取邀请码)"
+                    textSize = 14f
+                })
+            } else {
+                addView(TextView(this@MainActivity).apply {
+                    text = "欢迎使用AAPS"
+                    textSize = 18f
+                    setTextColor(Color.BLACK)
+                })
+                addView(TextView(this@MainActivity).apply {
+                    text = "请输入邀请码完成设备激活"
+                    textSize = 14f
+                    setPadding(0, dp2px(4), 0, dp2px(12))
+                })
+                addView(TextView(this@MainActivity).apply {
+                    text = "设备标识"
+                    textSize = 13f
+                    setTextColor(Color.GRAY)
+                })
+            }
 
-            addView(TextView(this@MainActivity).apply {
-                text = "密钥：$secretBase32"
-                textSize = 18f
+            // 设备标识 (两行 + 复制按钮)
+            val idRow = LinearLayout(this@MainActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                setPadding(0, dp2px(4), 0, dp2px(4))
+            }
+            idRow.addView(TextView(this@MainActivity).apply {
+                text = "$deviceLine1\n$deviceLine2"
+                textSize = 16f
+                typeface = android.graphics.Typeface.MONOSPACE
                 setTextColor(Color.RED)
-                setPadding(0, dp2px(16), 0, dp2px(16))
+            })
+            idRow.addView(android.widget.Button(this@MainActivity).apply {
+                text = "复制"
+                textSize = 12f
+                setPadding(dp2px(8), 0, dp2px(8), 0)
+                setOnClickListener {
+                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                    cm.setPrimaryClip(android.content.ClipData.newPlainText("deviceId", deviceId))
+                    ToastUtils.okToast(this@MainActivity, "设备标识已复制")
+                }
+            })
+            addView(idRow)
+            addView(TextView(this@MainActivity).apply {
+                text = if (showKeyOnly) "发送设备标识给管理员可获取邀请码" else "请复制上方设备ID发送给管理员获取邀请码"
+                textSize = 13f
+                setTextColor(Color.GRAY)
+                setPadding(0, 0, 0, dp2px(8))
             })
 
             if (showKeyOnly) {
@@ -299,17 +354,42 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             }
 
             if (!showKeyOnly) {
+                // 手机号(可选, 纯本地标识)
+                addView(TextView(this@MainActivity).apply {
+                    text = "手机号(选填)"
+                    textSize = 13f
+                    setTextColor(Color.GRAY)
+                })
+                addView(EditText(this@MainActivity).apply {
+                    id = android.R.id.text1
+                    inputType = InputType.TYPE_CLASS_PHONE
+                    hint = "用于管理员登记(选填)"
+                    maxLines = 1
+                    setPadding(0, 0, 0, dp2px(8))
+                })
+
+                // 8位邀请码 (区分大小写, 字母数字混合 → TYPE_CLASS_TEXT)
+                addView(TextView(this@MainActivity).apply {
+                    text = "邀请码"
+                    textSize = 13f
+                    setTextColor(Color.GRAY)
+                })
                 addView(EditText(this@MainActivity).apply {
                     id = android.R.id.input
-                    inputType = InputType.TYPE_CLASS_NUMBER
-                    hint = "请输入获取的动态授权码"
+                    inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    hint = "请输入8位邀请码"
                     maxLines = 1
+                })
+                addView(TextView(this@MainActivity).apply {
+                    text = "邀请码区分大小写"
+                    textSize = 11f
+                    setTextColor(Color.GRAY)
                 })
             }
         }
 
         MaterialAlertDialogBuilder(this, R.style.AlertDialog_Rounded)
-            .setTitle(if (showKeyOnly) "密钥信息" else "获取授权码")
+            .setTitle(if (showKeyOnly) "设备标识" else "设备激活")
             .setView(dialogView)
             .setCancelable(false)
             .setPositiveButton(if (showKeyOnly) "知道了" else "确认") { dialog, _ ->
@@ -318,6 +398,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     return@setPositiveButton
                 }
                 val inputCode = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
+                val phone = dialogView.findViewById<EditText>(android.R.id.text1).text.toString().trim()
+                if (phone.isNotEmpty()) prefs.edit().putString("phone", phone).apply()
                 val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
                 if (TotpUtils.verifyTotp(secret, inputCode)) {
@@ -331,7 +413,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     dialog.dismiss()
                     Handler(Looper.getMainLooper()).post { start() }
                 } else {
-                    ToastUtils.errorToast(this, "授权码错误，重新生成密钥")
+                    ToastUtils.errorToast(this, "授权码错误，重新生成设备标识")
                     prefs.edit().remove("totp_secret").apply()
                     initTotpSecretIfNeeded()
                 }
@@ -383,8 +465,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         rootView.addView(maskView)
 
         val passwordInput = EditText(this)
-        passwordInput.inputType = InputType.TYPE_CLASS_NUMBER
-        passwordInput.hint = "请输入管理员发送的授权码"
+        passwordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        passwordInput.hint = "请输入管理员发送的8位邀请码"
         val padding = dp2px(16)
         passwordInput.setPadding(padding, padding, padding, padding)
 
