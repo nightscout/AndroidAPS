@@ -77,7 +77,6 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.core.utils.JsonHelper
 import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
@@ -111,7 +110,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
 import java.util.Locale
@@ -974,8 +975,16 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                         @Suppress("UNCHECKED_CAST")
                         (versionCheckersUtils::class.declaredMemberProperties.find { it.name == "definition" } as KMutableProperty<Any>?)
                             ?.let {
-                                val merged = JsonHelper.merge(it.getter.call(versionCheckersUtils) as JSONObject, JSONObject(firebaseRemoteConfig.getString("defs")))
-                                it.setter.call(versionCheckersUtils, merged)
+                                // `definition` is read through reflection, so the cast below is unchecked and the
+                                // compiler cannot see it. It said JSONObject long after the property became a
+                                // kotlinx JsonObject, and the app crashed on start as soon as a remote config
+                                // fetch actually succeeded - which needs network and Play Services, so no test or
+                                // CI build ever reached it. Keep the two types here in step by hand.
+                                val current = it.getter.call(versionCheckersUtils) as JsonObject
+                                val remote = Json.parseToJsonElement(firebaseRemoteConfig.getString("defs")).jsonObject
+                                // Plus on the maps is a shallow merge with the remote keys winning, which is what
+                                // the JsonHelper.merge that used to be here did.
+                                it.setter.call(versionCheckersUtils, JsonObject(current + remote))
                             }
                     } else aapsLogger.error("RemoteConfig fetch failed")
                 }
