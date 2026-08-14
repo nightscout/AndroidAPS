@@ -13,18 +13,21 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 
 /**
- * 全屏设备激活页(仿深色激活 UI)。
+ * 全屏设备激活页(深色, 仿截图像素实测规范)。
  * 唯一验证入口: 首次激活 / 365天过期再验证 都走这里, MainActivity 不再弹窗, 杜绝重复验证。
  * 验证成功 → RESULT_OK 返回 MainActivity → 由其 start() 进入主界面。
  * showKeyOnly=true: 仅展示设备标识+授权状态(从"获取密钥"进入), 不输码、不重置。
+ * 适配: ScrollView 包裹 + 全 dp 尺寸 + 弹性宽度, 各机型/密度/小屏均可完整显示。
  */
 class ActivateActivity : AppCompatActivity() {
 
@@ -33,7 +36,7 @@ class ActivateActivity : AppCompatActivity() {
         private const val PREFS_NAME = "AppLock"
         // 视觉规范(截图像素实测)
         private const val BG = "#121212"
-        private const val CARD_BG = "#1F1F1F"
+        private const val CARD_BG = "#1E1E1E"
         private const val BORDER = "#3A3A3A"
         private const val TXT_TITLE = "#FFFFFF"
         private const val TXT_SUB = "#C8C8C8"
@@ -42,8 +45,8 @@ class ActivateActivity : AppCompatActivity() {
         private const val TXT_HINT = "#BBBBBB"
         private const val TXT_NOTE = "#B7B7B7"
         private const val TXT_ERR = "#F87171"
+        private const val LINK = "#8AB4F8"
         private const val ACCENT = "#4CAF50"
-        private const val ACCENT_DARK = "#3D8B40"
     }
 
     private var showKeyOnly = false
@@ -58,203 +61,405 @@ class ActivateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = Color.parseColor(BG)
         showKeyOnly = intent.getBooleanExtra(EXTRA_SHOW_KEY_ONLY, false)
+        deviceId = loadDeviceId()
+        if (deviceId.isEmpty() && !showKeyOnly) {
+            // 无密钥 → 生成新设备标识
+            val secret = TotpUtils.generateSecret()
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit().putString("totp_secret", secret).apply()
+            deviceId = TotpUtils.deviceIdHex(secret)
+        }
         setContentView(buildUi())
+
+        // 返回键: showKeyOnly → 直接退出; 激活页 → 无法绕过(退出应用)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (showKeyOnly) { setResult(RESULT_CANCELED); finish() }
-                else finish()  // 激活中禁止返回绕过, 直接退出
+                setResult(RESULT_CANCELED)
+                finish()
             }
         })
-        prepareSecret()
     }
 
-    /** 生成/读取密钥, 填充设备标识 */
-    private fun prepareSecret() {
+    private fun loadDeviceId(): String {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        var secret = prefs.getString("totp_secret", null)
-        if (!showKeyOnly && secret == null) {
-            secret = TotpUtils.generateSecret()
-            prefs.edit().putString("totp_secret", secret).apply()
+        val secret = prefs.getString("totp_secret", null) ?: return ""
+        return TotpUtils.deviceIdHex(secret)
+    }
+
+    /** 设备标识两行展示: 32位hex 拆 16+16 */
+    private fun deviceIdTwoLines(id: String): Pair<String, String> {
+        if (id.length <= 16) return id to ""
+        return id.substring(0, 16) to id.substring(16)
+    }
+
+    private fun buildUi(): View {
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(Color.parseColor(BG))
+            setPadding(dp(24), dp(20), dp(24), dp(28))
         }
-        deviceId = if (secret != null) TotpUtils.deviceIdHex(secret) else ""
-        idText.text = if (deviceId.length == 32) {
-            deviceId.substring(0, 16) + "\n" + deviceId.substring(16)
-        } else {
-            "尚未生成设备标识"
-        }
+
         if (showKeyOnly) {
-            inputPhone.visibility = View.GONE
-            inputInvite.visibility = View.GONE
-            btnConfirm.text = "知道了"
-            statusLine.text = authStatusText()
-            statusLine.visibility = View.VISIBLE
+            buildKeyOnlyUi(content)
         } else {
-            inputPhone.visibility = View.VISIBLE
-            inputInvite.visibility = View.VISIBLE
-            statusLine.visibility = View.GONE
+            buildActivateUi(content)
         }
+
+        val scroll = ScrollView(this).apply {
+            isFillViewport = false
+            addView(content)
+        }
+        return scroll
+    }
+
+    // ================= 激活页 (showKeyOnly=false) =================
+    private fun buildActivateUi(root: LinearLayout) {
+        // 顶部: AAPS 图标居中
+        root.addView(ImageView(this).apply {
+            setImageResource(R.drawable.aaps_logo)
+            layoutParams = LinearLayout.LayoutParams(dp(82), dp(82)).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+            }
+        })
+        // 标题居中
+        root.addView(TextView(this).apply {
+            text = "欢迎使用AAPS"
+            textSize = 28f
+            setTextColor(Color.parseColor(TXT_TITLE))
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setPadding(0, dp(14), 0, 0)
+        })
+        // 副标题居中
+        root.addView(TextView(this).apply {
+            text = "请输入邀请码完成设备激活"
+            textSize = 14f
+            setTextColor(Color.parseColor(TXT_SUB))
+            gravity = Gravity.CENTER
+            setPadding(0, dp(6), 0, dp(26))
+        })
+
+        // ── 手机号卡片 ──
+        root.addView(card().apply {
+            addView(label("📱 手机号(选填)"))
+            inputPhone = EditText(this@ActivateActivity).apply {
+                hint = "用于管理员登记"
+                setHintTextColor(Color.parseColor(TXT_HINT))
+                setTextColor(Color.parseColor(TXT_TITLE))
+                textSize = 15f
+                inputType = InputType.TYPE_CLASS_PHONE
+                background = rounded(dp(10), "#161616", BORDER, 1)
+                setPadding(dp(14), dp(12), dp(14), dp(12))
+                maxLines = 1
+            }
+            addView(inputPhone, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(48)))
+        }, cardParams())
+
+        // ── 设备标识卡片 ──
+        root.addView(card().apply {
+            val labelRow = LinearLayout(this@ActivateActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+            }
+            labelRow.addView(label("🆔 设备标识 · 丹纳RS泵"), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            labelRow.addView(Button(this@ActivateActivity).apply {
+                text = "📋 复制"
+                textSize = 12f
+                setTextColor(Color.parseColor(LINK))
+                background = rounded(dp(8), "#2A2A2A", "#3D4A5C", 1)
+                isAllCaps = false
+                setPadding(dp(12), dp(2), dp(12), dp(2))
+                minHeight = 0
+                setOnClickListener {
+                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    cm.setPrimaryClip(ClipData.newPlainText("deviceId", deviceId))
+                    ToastUtils.okToast(this@ActivateActivity, "设备标识已复制")
+                }
+            })
+            addView(labelRow)
+
+            // 泵图标(小) + 设备标识两行
+            val idRow = LinearLayout(this@ActivateActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(0, dp(10), 0, dp(4))
+            }
+            idRow.addView(ImageView(this@ActivateActivity).apply {
+                setImageResource(R.drawable.ic_dana_rs)
+                // 泵图标横放, 旋转 -90° 竖放(导管朝上)
+                rotation = -90f
+                layoutParams = LinearLayout.LayoutParams(dp(30), dp(48))
+            }, LinearLayout.LayoutParams(dp(30), dp(48)).apply { rightMargin = dp(14) })
+
+            val idLines = LinearLayout(this@ActivateActivity).apply {
+                orientation = LinearLayout.VERTICAL
+            }
+            idText = TextView(this@ActivateActivity).apply {
+                textSize = 16f
+                typeface = Typeface.MONOSPACE
+                setTextColor(Color.parseColor(TXT_TITLE))
+            }
+            val (l1, l2) = deviceIdTwoLines(deviceId)
+            idText.text = l1
+            idLines.addView(idText)
+            if (l2.isNotEmpty()) {
+                idLines.addView(TextView(this@ActivateActivity).apply {
+                    text = l2
+                    textSize = 16f
+                    typeface = Typeface.MONOSPACE
+                    setTextColor(Color.parseColor("#B9BEC4"))
+                })
+            }
+            idRow.addView(idLines, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            addView(idRow)
+
+            // 提示
+            addView(TextView(this@ActivateActivity).apply {
+                text = "请复制上方设备ID发送给管理员获取邀请码"
+                textSize = 12f
+                setTextColor(Color.parseColor(TXT_BODY))
+                gravity = Gravity.CENTER
+                setPadding(0, dp(10), 0, 0)
+            })
+        }, cardParams())
+
+        // ── 邀请码卡片 ──
+        root.addView(card().apply {
+            addView(label("🔑 邀请码"))
+            inputInvite = EditText(this@ActivateActivity).apply {
+                hint = "请输入8位邀请码"
+                setHintTextColor(Color.parseColor(TXT_HINT))
+                setTextColor(Color.parseColor(TXT_TITLE))
+                textSize = 15f
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                background = rounded(dp(10), "#161616", BORDER, 1)
+                setPadding(dp(14), dp(12), dp(14), dp(12))
+                maxLines = 1
+            }
+            addView(inputInvite, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(50)))
+
+            // 提示行: 区分大小写 + 获取密钥
+            val noteRow = LinearLayout(this@ActivateActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(0, dp(8), 0, 0)
+            }
+            noteRow.addView(TextView(this@ActivateActivity).apply {
+                text = "邀请码区分大小写 · 30秒有效"
+                textSize = 11f
+                setTextColor(Color.parseColor(TXT_NOTE))
+            }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            noteRow.addView(TextView(this@ActivateActivity).apply {
+                text = "获取密钥"
+                textSize = 12f
+                setTextColor(Color.parseColor(LINK))
+                setOnClickListener { showKeyOnlyDialog() }
+            })
+            addView(noteRow)
+        }, cardParams())
+
+        // 状态行(错误提示用)
+        statusLine = TextView(this).apply {
+            textSize = 12f
+            setTextColor(Color.parseColor(TXT_ERR))
+            setPadding(0, dp(8), 0, 0)
+            visibility = View.GONE
+        }
+        root.addView(statusLine)
+
+        // ── 确认按钮 ──
+        btnConfirm = Button(this).apply {
+            text = "确认激活"
+            textSize = 17f
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD
+            isAllCaps = false
+            background = rounded(dp(14), ACCENT, ACCENT, 0)
+            setOnClickListener { onConfirm() }
+        }
+        root.addView(btnConfirm, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(54)).apply {
+            topMargin = dp(14)
+        })
+
+        // 底部链接
+        root.addView(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+            setPadding(0, dp(14), 0, 0)
+            addView(link("重置设备标识") { onResetDevice() })
+            addView(TextView(this@ActivateActivity).apply {
+                text = "  ·  "
+                textSize = 13f
+                setTextColor(Color.parseColor(TXT_NOTE))
+            })
+            addView(link("退出") {
+                setResult(RESULT_CANCELED)
+                finish()
+            })
+        })
+    }
+
+    // ================= 只读展示页 (showKeyOnly=true) =================
+    private fun buildKeyOnlyUi(root: LinearLayout) {
+        root.addView(TextView(this).apply {
+            text = "🔑 获取密钥"
+            textSize = 22f
+            setTextColor(Color.parseColor(TXT_TITLE))
+            typeface = Typeface.DEFAULT_BOLD
+            setPadding(0, dp(8), 0, dp(6))
+        })
+        root.addView(card().apply {
+            addView(label("🆔 设备标识 · 丹纳RS泵"))
+            val (l1, l2) = deviceIdTwoLines(deviceId)
+            val idLines = LinearLayout(this@ActivateActivity).apply { orientation = LinearLayout.VERTICAL }
+            idLines.addView(TextView(this@ActivateActivity).apply {
+                text = l1
+                textSize = 18f
+                typeface = Typeface.MONOSPACE
+                setTextColor(Color.parseColor(TXT_TITLE))
+            })
+            if (l2.isNotEmpty()) {
+                idLines.addView(TextView(this@ActivateActivity).apply {
+                    text = l2
+                    textSize = 18f
+                    typeface = Typeface.MONOSPACE
+                    setTextColor(Color.parseColor("#B9BEC4"))
+                })
+            }
+            addView(idLines)
+            addView(TextView(this@ActivateActivity).apply {
+                text = "请将上方设备ID发给管理员获取邀请码"
+                textSize = 12f
+                setTextColor(Color.parseColor(TXT_BODY))
+                setPadding(0, dp(10), 0, 0)
+            })
+        }, cardParams())
+
+        statusLine = TextView(this).apply {
+            textSize = 12f
+            setTextColor(Color.parseColor(TXT_NOTE))
+            setPadding(0, dp(12), 0, dp(12))
+        }
+        root.addView(statusLine)
+        statusLine.text = authStatusText()
+
+        btnConfirm = Button(this).apply {
+            text = "知道了"
+            textSize = 15f
+            setTextColor(Color.WHITE)
+            isAllCaps = false
+            background = rounded(dp(12), ACCENT, ACCENT, 0)
+            setOnClickListener {
+                setResult(RESULT_CANCELED)
+                finish()
+            }
+        }
+        root.addView(btnConfirm, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(52)))
+    }
+
+    // ================= 获取密钥: 弹窗展示(不重置) =================
+    private fun showKeyOnlyDialog() {
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val (l1, l2) = deviceIdTwoLines(deviceId)
+        val msg = buildString {
+            append(l1)
+            if (l2.isNotEmpty()) append("\n").append(l2)
+            append("\n\n").append(authStatusText())
+            append("\n\n请将设备ID发给管理员获取邀请码")
+        }
+        AlertDialog.Builder(this)
+            .setTitle("设备标识")
+            .setMessage(msg)
+            .setPositiveButton("复制", { _, _ ->
+                val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                cm.setPrimaryClip(ClipData.newPlainText("deviceId", deviceId))
+                ToastUtils.okToast(this, "设备标识已复制")
+            })
+            .setNegativeButton("知道了", null)
+            .show()
     }
 
     private fun authStatusText(): String {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val verified = prefs.getBoolean("password_verified", false)
         val lastTs = prefs.getLong("last_verify_time", 0L)
-        if (!verified || lastTs == 0L) return "授权状态：尚未验证"
+        if (!verified || lastTs == 0L) return "授权状态: 尚未验证"
         val remainMs = TotpUtils.EXPIRE_MS - (System.currentTimeMillis() - lastTs)
         val days = remainMs / (24 * 60 * 60 * 1000)
-        return if (remainMs > 0) "授权状态：已验证，剩余 $days 天"
-        else "授权状态：已过期 ${-days} 天，请重新验证"
+        return if (remainMs > 0) "授权状态: 已验证, 剩余 $days 天"
+        else "授权状态: 已过期 ${-days} 天, 请重新验证"
     }
 
-    private fun buildUi(): View {
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.parseColor(BG))
-            setPadding(dp(28), dp(48), dp(28), dp(28))
-        }
-        // 标题
-        root.addView(TextView(this).apply {
-            text = "欢迎使用AAPS"
-            textSize = 22f
-            setTextColor(Color.parseColor(TXT_TITLE))
-            typeface = Typeface.DEFAULT_BOLD
-        })
-        // 副标题
-        root.addView(TextView(this).apply {
-            text = "请输入邀请码完成设备激活"
-            textSize = 14f
-            setTextColor(Color.parseColor(TXT_SUB))
-            setPadding(0, dp(6), 0, dp(24))
-        })
-        // 设备标识标签
-        root.addView(TextView(this).apply {
-            text = "设备标识"
-            textSize = 13f
-            setTextColor(Color.parseColor(TXT_LABEL))
-        })
-        // 设备标识 + 复制按钮
-        val idRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(0, dp(8), 0, dp(8))
-        }
-        idText = TextView(this).apply {
-            textSize = 16f
-            typeface = Typeface.MONOSPACE
-            setTextColor(Color.parseColor(TXT_TITLE))
-            setPadding(0, 0, dp(12), 0)
-        }
-        idRow.addView(idText, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        idRow.addView(Button(this).apply {
-            text = "复制"
-            textSize = 13f
-            setTextColor(Color.parseColor(TXT_BODY))
-            background = rounded(dp(8), "#2A2A2A", BORDER, 1)
-            setOnClickListener {
-                if (deviceId.isNotEmpty()) {
-                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    cm.setPrimaryClip(ClipData.newPlainText("deviceId", deviceId))
-                    ToastUtils.okToast(this@ActivateActivity, "设备标识已复制")
-                }
-            }
-        })
-        root.addView(idRow)
-        // 操作提示
-        root.addView(TextView(this).apply {
-            text = "请复制上方设备ID发送给管理员获取邀请码"
-            textSize = 13f
-            setTextColor(Color.parseColor(TXT_BODY))
-            setPadding(0, 0, 0, dp(20))
-        })
-        // 手机号(选填)
-        root.addView(TextView(this).apply {
-            text = "手机号(选填)"
-            textSize = 13f
-            setTextColor(Color.parseColor(TXT_LABEL))
-            setPadding(0, 0, 0, dp(6))
-        })
-        inputPhone = EditText(this).apply {
-            hint = "用于管理员登记(选填)"
-            setHintTextColor(Color.parseColor(TXT_HINT))
-            setTextColor(Color.parseColor(TXT_TITLE))
-            inputType = InputType.TYPE_CLASS_PHONE
-            background = rounded(dp(10), CARD_BG, BORDER, 1)
-            setPadding(dp(14), dp(12), dp(14), dp(12))
-            maxLines = 1
-        }
-        root.addView(inputPhone, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(48)).apply {
-            bottomMargin = dp(18)
-        })
-        // 邀请码标签
-        root.addView(TextView(this).apply {
-            text = "邀请码"
-            textSize = 13f
-            setTextColor(Color.parseColor(TXT_LABEL))
-            setPadding(0, 0, 0, dp(6))
-        })
-        inputInvite = EditText(this).apply {
-            hint = "请输入8位邀请码"
-            setHintTextColor(Color.parseColor(TXT_HINT))
-            setTextColor(Color.parseColor(TXT_TITLE))
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            background = rounded(dp(10), CARD_BG, BORDER, 1)
-            setPadding(dp(14), dp(12), dp(14), dp(12))
-            maxLines = 1
-        }
-        root.addView(inputInvite, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(48)).apply {
-            bottomMargin = dp(6)
-        })
-        // 区分大小写提示
-        root.addView(TextView(this).apply {
-            text = "邀请码区分大小写"
-            textSize = 11f
-            setTextColor(Color.parseColor(TXT_NOTE))
-            setPadding(0, 0, 0, dp(24))
-        })
-        // 状态行(仅 showKeyOnly 显示)
-        statusLine = TextView(this).apply {
-            textSize = 12f
-            setTextColor(Color.parseColor(TXT_NOTE))
-            setPadding(0, 0, 0, dp(12))
-            visibility = View.GONE
-        }
-        root.addView(statusLine)
-        // 确认按钮
-        btnConfirm = Button(this).apply {
-            text = if (showKeyOnly) "知道了" else "确认"
-            textSize = 15f
-            setTextColor(Color.WHITE)
-            background = rounded(dp(12), ACCENT, ACCENT, 0)
-            setOnClickListener { onConfirm() }
-        }
-        root.addView(btnConfirm, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(52)))
-        // 底部链接: 获取密钥 / 重置
-        val linkRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
-            setPadding(0, dp(16), 0, 0)
-        }
-        linkRow.addView(TextView(this).apply {
-            text = if (showKeyOnly) "重新验证" else "获取密钥"
-            textSize = 13f
-            setTextColor(Color.parseColor("#5B8DEF"))
-            setPadding(dp(8), dp(4), dp(8), dp(4))
-            setOnClickListener {
-                if (showKeyOnly) {
-                    // 返回上一实例(激活页), 不做新跳转
-                    finish()
-                } else {
-                    startActivity(Intent(this@ActivateActivity, ActivateActivity::class.java)
-                        .putExtra(EXTRA_SHOW_KEY_ONLY, true))
-                }
-            }
-        })
-        root.addView(linkRow)
+    private fun onResetDevice() {
+        AlertDialog.Builder(this)
+            .setTitle("重置设备标识")
+            .setMessage("重置后需重新获取邀请码激活, 确定继续?")
+            .setPositiveButton("重置", { _, _ ->
+                getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .remove("totp_secret")
+                    .remove("password_verified")
+                    .remove("last_verify_time")
+                    .apply()
+                ToastUtils.okToast(this, "已重置, 请重新激活")
+                setResult(RESULT_CANCELED)
+                finish()
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
 
-        val scroll = ScrollView(this).apply { addView(root) }
-        return scroll
+    private fun onConfirm() {
+        if (showKeyOnly) { setResult(RESULT_CANCELED); finish(); return }
+        val code = inputInvite.text.toString().trim()
+        if (code.isEmpty()) { ToastUtils.errorToast(this, "请输入8位邀请码"); return }
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val secret = prefs.getString("totp_secret", null)
+        if (secret == null) { ToastUtils.errorToast(this, "设备标识异常, 请重置"); return }
+        if (TotpUtils.verifyTotp(secret, code)) {
+            val phone = inputPhone.text.toString().trim()
+            prefs.edit()
+                .apply {
+                    if (phone.isNotEmpty()) putString("phone", phone)
+                    putBoolean("password_verified", true)
+                    putLong("last_verify_time", System.currentTimeMillis())
+                }
+                .apply()
+            ToastUtils.okToast(this, "验证成功!365天后需重新验证")
+            setResult(RESULT_OK)
+            finish()
+        } else {
+            statusLine.text = "邀请码错误, 请核对后重试"
+            statusLine.visibility = View.VISIBLE
+        }
+    }
+
+    // ================= UI 构建辅助 =================
+    private fun label(text: String): TextView = TextView(this).apply {
+        this.text = text
+        textSize = 12.5f
+        setTextColor(Color.parseColor(TXT_LABEL))
+        setPadding(0, 0, 0, dp(8))
+    }
+
+    private fun card(): LinearLayout = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        background = rounded(dp(14), CARD_BG, BORDER, 1)
+        setPadding(dp(16), dp(14), dp(16), dp(14))
+    }
+
+    private fun cardParams(): LinearLayout.LayoutParams =
+        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            bottomMargin = dp(14)
+        }
+
+    private fun link(text: String, onClick: () -> Unit): TextView = TextView(this).apply {
+        this.text = text
+        textSize = 13f
+        setTextColor(Color.parseColor(LINK))
+        setPadding(dp(8), dp(4), dp(8), dp(4))
+        setOnClickListener { onClick() }
     }
 
     private fun rounded(radius: Int, fill: String, stroke: String, strokeW: Int): GradientDrawable =
@@ -263,26 +468,4 @@ class ActivateActivity : AppCompatActivity() {
             setColor(Color.parseColor(fill))
             if (strokeW > 0) setStroke(strokeW, Color.parseColor(stroke))
         }
-
-    private fun onConfirm() {
-        if (showKeyOnly) { setResult(RESULT_CANCELED); finish(); return }
-        val code = inputInvite.text.toString().trim()
-        if (code.isEmpty()) { ToastUtils.errorToast(this, "请输入8位邀请码"); return }
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val secret = prefs.getString("totp_secret", null)
-        if (secret == null) { ToastUtils.errorToast(this, "设备标识异常，请重置"); return }
-        if (TotpUtils.verifyTotp(secret, code)) {
-            val phone = inputPhone.text.toString().trim()
-            if (phone.isNotEmpty()) prefs.edit().putString("phone", phone).apply()
-            prefs.edit()
-                .putBoolean("password_verified", true)
-                .putLong("last_verify_time", System.currentTimeMillis())
-                .apply()
-            ToastUtils.okToast(this, "授权码输入成功！365天后需要重新验证")
-            setResult(RESULT_OK)
-            finish()
-        } else {
-            ToastUtils.errorToast(this, "邀请码错误，请核对后重试")
-        }
-    }
 }
