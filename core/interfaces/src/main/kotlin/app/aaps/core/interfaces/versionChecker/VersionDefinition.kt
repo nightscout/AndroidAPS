@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.versionChecker
 
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 fun interface VersionDefinition {
 
-    fun invoke(): JSONObject
+    fun invoke(): JsonObject
 }

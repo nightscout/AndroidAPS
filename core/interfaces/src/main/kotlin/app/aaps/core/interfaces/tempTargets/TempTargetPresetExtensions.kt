@@ -5,8 +5,15 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import org.json.JSONArray
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.addJsonObject
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.put
 
 /**
  * Parse JSON string into a list of TTPreset.
@@ -19,17 +26,17 @@ fun String.toTTPresets(): List<TTPreset> {
         if (isEmpty() || this == "[]") {
             emptyList()
         } else {
-            val jsonArray = JSONArray(this)
-            (0 until jsonArray.length()).map { i ->
-                val obj = jsonArray.getJSONObject(i)
-                val reason = TT.Reason.fromString(obj.getString("reason"))
+            (Json.parseToJsonElement(this) as JsonArray).map { element ->
+                val obj = element.jsonObject
+                // `content` rather than the typed accessors so a quoted number still reads, which is
+                // what org.json's getDouble/getLong did and what documents in the wild contain.
                 TTPreset(
-                    id = obj.getString("id"),
-                    name = if (obj.has("name") && !obj.isNull("name")) obj.getString("name") else null,
-                    reason = reason,
-                    targetValue = obj.getDouble("targetValue"),
-                    duration = obj.getLong("duration"),
-                    isDeletable = obj.getBoolean("isDeletable")
+                    id = obj.getValue("id").jsonPrimitive.content,
+                    name = (obj["name"] as? JsonPrimitive)?.takeUnless { it is JsonNull }?.content,
+                    reason = TT.Reason.fromString(obj.getValue("reason").jsonPrimitive.content),
+                    targetValue = obj.getValue("targetValue").jsonPrimitive.content.toDouble(),
+                    duration = obj.getValue("duration").jsonPrimitive.content.toDouble().toLong(),
+                    isDeletable = obj.getValue("isDeletable").jsonPrimitive.content.toBooleanStrict()
                 )
             }
         }
@@ -42,21 +49,20 @@ fun String.toTTPresets(): List<TTPreset> {
  * Convert a list of TTPreset to JSON string.
  * nameRes is NOT persisted — Android resource IDs change between builds.
  */
-fun List<TTPreset>.toJson(): String {
-    val jsonArray = JSONArray()
-    forEach { preset ->
-        val obj = JSONObject().apply {
-            put("id", preset.id)
-            preset.name?.let { put("name", it) }
-            put("reason", preset.reason.text)
-            put("targetValue", preset.targetValue)
-            put("duration", preset.duration)
-            put("isDeletable", preset.isDeletable)
+fun List<TTPreset>.toJson(): String =
+    buildJsonArray {
+        this@toJson.forEach { preset ->
+            addJsonObject {
+                put("id", preset.id)
+                // Absent rather than null, as before - the reader treats the two the same either way.
+                preset.name?.let { put("name", it) }
+                put("reason", preset.reason.text)
+                put("targetValue", preset.targetValue)
+                put("duration", preset.duration)
+                put("isDeletable", preset.isDeletable)
+            }
         }
-        jsonArray.put(obj)
-    }
-    return jsonArray.toString()
-}
+    }.toString()
 
 /**
  * Get all TT presets from preferences.

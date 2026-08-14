@@ -11,7 +11,8 @@ import app.aaps.plugins.constraints.versionChecker.numericVersionPart
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.Lazy
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -47,7 +48,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
             "}"
 
     @BeforeEach fun setup() {
-        val definition = VersionDefinition { JSONObject(generateSupportedVersions()) }
+        val definition = VersionDefinition { Json.parseToJsonElement(generateSupportedVersions()).jsonObject }
         versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, notificationManager, definition)
     }
 

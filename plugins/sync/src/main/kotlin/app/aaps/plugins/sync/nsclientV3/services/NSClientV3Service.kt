@@ -262,7 +262,7 @@ class NSClientV3Service : DaggerService() {
         val collection = response.getString("colName")
         val docJson = response.getJSONObject("doc")
         val docString = response.getString("doc")
-        nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, docJson)
+        nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, docJson.toKotlinxJson())
         val srvModified = docJson.getLong("srvModified")
         // Don't advance the high-water-mark until the initial catch-up load chain
         // has finished after a (re)connect. Otherwise the Load*Worker chain would

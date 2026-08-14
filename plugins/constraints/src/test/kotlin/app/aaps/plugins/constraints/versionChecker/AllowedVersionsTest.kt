@@ -1,7 +1,8 @@
 package app.aaps.plugins.constraints.versionChecker
 
 import com.google.common.truth.Truth.assertThat
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.LocalDate
@@ -27,14 +28,14 @@ class AllowedVersionsTest {
 
     @Test
     fun generateSupportedVersionsTest() {
-        val definition = JSONObject(generateSupportedVersions())
+        val definition = Json.parseToJsonElement(generateSupportedVersions()).jsonObject
         assertThat(AllowedVersions.findByApi(definition, 0)).isNull()
         assertThat(AllowedVersions.findByApi(definition, 30)).isEqualTo("3.3.1")
     }
 
     @Test
     fun findByVersionTest() {
-        val definition = JSONObject(generateSupportedVersions())
+        val definition = Json.parseToJsonElement(generateSupportedVersions()).jsonObject
         assertThat(AllowedVersions.findByApi(definition, 0)).isNull()
         assertThat(AllowedVersions.findByApi(definition, 30)).isEqualTo("3.3.1")
         assertThat(AllowedVersions.findByVersion(definition, "3.2.9")).isNull()
@@ -44,7 +45,7 @@ class AllowedVersionsTest {
     @Suppress("SpellCheckingInspection")
     @Test
     fun endDateToMilliseconds() {
-        val definition = JSONObject(generateSupportedVersions())
+        val definition = Json.parseToJsonElement(generateSupportedVersions()).jsonObject
         val endDate = AllowedVersions.endDateToMilliseconds(AllowedVersions.findByVersion(definition, "3.3.0") ?: "") ?: 0L
         val dateTime = LocalDate.ofInstant(Instant.ofEpochMilli(endDate), ZoneId.systemDefault())
         assertThat(dateTime.year).isEqualTo(2025)

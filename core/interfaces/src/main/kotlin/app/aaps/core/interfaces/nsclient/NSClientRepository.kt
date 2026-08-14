@@ -1,10 +1,7 @@
 package app.aaps.core.interfaces.nsclient
 
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import org.json.JSONObject
 
 /**
  * Repository interface for NSClient UI state management.
@@ -46,11 +43,6 @@ interface NSClientRepository {
         addLog(action, logText, null as JsonElement?)
     }
 
-    /** Add a new log entry with JSONObject payload */
-    fun addLog(action: String, logText: String?, json: JSONObject) {
-        val jsonObject = json.let { Json.parseToJsonElement(it.toString()) as JsonObject }
-        addLog(action, logText, jsonObject)
-    }
 
     /** Clear all log entries */
     fun clearLog()

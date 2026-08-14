@@ -17,7 +17,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import dagger.Lazy
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +32,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
     versionDefinition: VersionDefinition
 ) : VersionCheckerUtils {
 
-    var definition: JSONObject = versionDefinition.invoke()
+    var definition: JsonObject = versionDefinition.invoke()
 
     override fun triggerCheckVersion() {
         val version: String? = AllowedVersions.findByApi(definition, Build.VERSION.SDK_INT)
