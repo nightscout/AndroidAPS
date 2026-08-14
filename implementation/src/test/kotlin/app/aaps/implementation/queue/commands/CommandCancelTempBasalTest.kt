@@ -31,7 +31,7 @@ class CommandCancelTempBasalTest : TestBaseWithProfile() {
         autoForced: Boolean = false,
         callback: Callback? = null
     ) = CommandCancelTempBasal(
-        aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider,
+        aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider::get,
         enforceNew, autoForced, callback
     )
 

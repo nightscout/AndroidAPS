@@ -8,13 +8,12 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import javax.inject.Provider
 
 class CommandInsightSetTBROverNotification(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val enabled: Boolean,
     override val callback: Callback?,
 ) : Command {
@@ -28,7 +27,7 @@ class CommandInsightSetTBROverNotification(
                 aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
             }
         } else {
-            pumpEnactResultProvider.get().success(true).enacted(false)
+            pumpEnactResultProvider().success(true).enacted(false)
         }
     }
 

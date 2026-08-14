@@ -1,13 +1,19 @@
 package app.aaps.core.interfaces.queue
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import javax.inject.Provider
 
 interface Command {
 
     val commandType: CommandType
     val callback: Callback?
-    val pumpEnactResultProvider: Provider<PumpEnactResult>
+    /**
+     * Makes a fresh [PumpEnactResult].
+     *
+     * A plain factory function rather than a `javax.inject.Provider`: that type is Dagger vocabulary,
+     * and it appeared in the public API of this interface, which pinned every implementer and this
+     * whole file to a JVM-only DI framework. Android still injects a `Provider` and passes its `::get`.
+     */
+    val pumpEnactResultProvider: () -> PumpEnactResult
 
     enum class CommandType {
         BOLUS,
@@ -45,6 +51,6 @@ interface Command {
      * Return success = true to avoid command failed dialog
      */
     fun cancel(commentResId: Int, success: Boolean = true) {
-        callback?.result(pumpEnactResultProvider.get().success(success).comment(commentResId))?.run()
+        callback?.result(pumpEnactResultProvider().success(success).comment(commentResId))?.run()
     }
 }

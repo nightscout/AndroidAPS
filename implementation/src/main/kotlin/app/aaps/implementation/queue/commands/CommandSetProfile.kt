@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
-import javax.inject.Provider
 
 class CommandSetProfile(
     private val aapsLogger: AAPSLogger,
@@ -25,7 +24,7 @@ class CommandSetProfile(
     private val commandQueue: CommandQueue,
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val profile: EffectiveProfile,
     private val hasNsId: Boolean,
     override val callback: Callback?,
@@ -36,7 +35,7 @@ class CommandSetProfile(
     override suspend fun execute(): PumpEnactResult {
         if (commandQueue.isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
-            return pumpEnactResultProvider.get().success(true).enacted(false)
+            return pumpEnactResultProvider().success(true).enacted(false)
         }
         val r = activePlugin.activePump.setNewBasalProfile(profile)
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted} profile: $profile")

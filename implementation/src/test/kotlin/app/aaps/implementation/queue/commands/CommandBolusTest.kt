@@ -25,7 +25,7 @@ class CommandBolusTest : TestBaseWithProfile() {
 
     private fun newCommand(type: Command.CommandType = Command.CommandType.BOLUS, callback: Callback? = null) =
         CommandBolus(
-            aapsLogger, rh, activePlugin, pumpEnactResultProvider, bolusProgressData,
+            aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, bolusProgressData,
             info, callback, type, BOLUS_GENERATION
         )
 

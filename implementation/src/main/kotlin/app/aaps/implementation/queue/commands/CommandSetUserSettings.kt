@@ -10,13 +10,12 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import javax.inject.Provider
 
 class CommandSetUserSettings(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     override val callback: Callback?,
 ) : Command {
 
@@ -28,7 +27,7 @@ class CommandSetUserSettings(
             is Dana    -> pump.setUserOptions()
             is Diaconn -> pump.setUserOptions()
             is Medtrum -> pump.setUserOptions()
-            else       -> pumpEnactResultProvider.get().success(true).enacted(false)
+            else       -> pumpEnactResultProvider().success(true).enacted(false)
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${result.success} enacted: ${result.enacted}")
         return result

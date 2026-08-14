@@ -16,7 +16,7 @@ import org.mockito.kotlin.whenever
 class CommandStopPumpTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandStopPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider, callback)
+        CommandStopPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
 
     @Test
     fun `execute on Insight pump returns pump's stopPump result`() = runTest {

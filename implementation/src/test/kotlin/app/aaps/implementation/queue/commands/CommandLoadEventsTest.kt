@@ -18,7 +18,7 @@ import org.mockito.kotlin.whenever
 class CommandLoadEventsTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandLoadEvents(aapsLogger, rh, activePlugin, pumpEnactResultProvider, callback)
+        CommandLoadEvents(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
 
     @Test
     fun `execute on Dana pump returns pump's loadEvents result`() = runTest {

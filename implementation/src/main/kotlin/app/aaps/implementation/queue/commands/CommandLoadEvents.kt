@@ -10,13 +10,12 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import javax.inject.Provider
 
 class CommandLoadEvents(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     override val callback: Callback?,
 ) : Command {
 
@@ -28,7 +27,7 @@ class CommandLoadEvents(
             is Dana    -> pump.loadEvents()
             is Diaconn -> pump.loadHistory()
             is Medtrum -> pump.loadEvents()
-            else       -> pumpEnactResultProvider.get().success(true).enacted(false)
+            else       -> pumpEnactResultProvider().success(true).enacted(false)
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${result.success} enacted: ${result.enacted}")
         return result

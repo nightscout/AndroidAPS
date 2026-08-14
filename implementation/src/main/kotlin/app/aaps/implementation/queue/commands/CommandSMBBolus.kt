@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import javax.inject.Provider
 
 class CommandSMBBolus(
     private val aapsLogger: AAPSLogger,
@@ -24,7 +23,7 @@ class CommandSMBBolus(
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     private val bolusProgressData: BolusProgressData,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val detailedBolusInfo: DetailedBolusInfo,
     override val callback: Callback?,
     private val bolusGeneration: Long,
@@ -38,11 +37,11 @@ class CommandSMBBolus(
         aapsLogger.debug(LTag.PUMPQUEUE, "Last bolus: $lastBolusTime ${dateUtil.dateAndTimeAndSecondsString(lastBolusTime)}")
         if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
-            r = pumpEnactResultProvider.get().enacted(false).success(false).comment("SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
+            r = pumpEnactResultProvider().enacted(false).success(false).comment("SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
         } else if (detailedBolusInfo.deliverAtTheLatest != 0L && detailedBolusInfo.deliverAtTheLatest + T.mins(1).msecs() > System.currentTimeMillis()) {
             r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         } else {
-            r = pumpEnactResultProvider.get().enacted(false).success(false).comment("SMB request too old")
+            r = pumpEnactResultProvider().enacted(false).success(false).comment("SMB request too old")
             aapsLogger.debug(LTag.PUMPQUEUE, "SMB bolus canceled. deliverAt: " + dateUtil.dateAndTimeString(detailedBolusInfo.deliverAtTheLatest))
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
